@@ -106,12 +106,12 @@ bool CGameClient::Init()
     return false;
   }
 
-  CLog::Log(LOGERROR, "GameClient: ------------------------------------");
-  CLog::Log(LOGERROR, "GameClient: Loaded DLL for %s", ID().c_str());
-  CLog::Log(LOGERROR, "GameClient: Client: %s at version %s", m_clientName.c_str(), m_clientVersion.c_str());
-  CLog::Log(LOGERROR, "GameClient: Valid extensions: %s", m_validExtensions.c_str());
-  CLog::Log(LOGERROR, "GameClient: Allow VFS: %s, require zip: %s", m_bAllowVFS ? "yes" : "no", m_bRequireZip ? "yes" : "no");
-  CLog::Log(LOGERROR, "GameClient: ------------------------------------");
+  CLog::Log(LOGINFO, "GameClient: ------------------------------------");
+  CLog::Log(LOGINFO, "GameClient: Loaded DLL for %s", ID().c_str());
+  CLog::Log(LOGINFO, "GameClient: Client: %s at version %s", m_clientName.c_str(), m_clientVersion.c_str());
+  CLog::Log(LOGINFO, "GameClient: Valid extensions: %s", m_validExtensions.c_str());
+  CLog::Log(LOGINFO, "GameClient: Allow VFS: %s, require zip: %s", m_bAllowVFS ? "yes" : "no", m_bRequireZip ? "yes" : "no");
+  CLog::Log(LOGINFO, "GameClient: ------------------------------------");
 
   return true;
 }
@@ -519,6 +519,7 @@ bool CGameClient::EnvironmentCallback(unsigned int cmd, void *data)
       // Validate the format
       switch (pix_fmt)
       {
+      case RETRO_PIXEL_FORMAT_RGB565:
       case RETRO_PIXEL_FORMAT_0RGB1555: // 5 bit color, high byte must be zero
       case RETRO_PIXEL_FORMAT_XRGB8888: // 8 bit color, high byte is ignored
         SetPixelFormat(pix_fmt);
