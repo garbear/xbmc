@@ -85,7 +85,10 @@ CRetroPlayerInput::CRetroPlayerInput() : m_bActive(false), m_gamepad()
 void CRetroPlayerInput::Begin()
 {
   memset(m_joypadState, 0, sizeof(m_joypadState));
-  m_gamepad = Gamepad();
+  for(int i =0; i < GAMEPAD_MAX_CONTROLLERS; i++)
+  {
+    m_gamepad[i] = Gamepad();
+  }  
   m_bActive = true;
 }
 
@@ -101,27 +104,27 @@ int16_t CRetroPlayerInput::GetInput(unsigned port, unsigned device, unsigned ind
 
   CSingleLock lock(m_statesGuard);
 
-  if (port == 0)
+  if (port < GAMEPAD_MAX_CONTROLLERS)
   {
     device &= RETRO_DEVICE_MASK;
 
     switch (device)
     {
     case RETRO_DEVICE_JOYPAD:
-      if (id < sizeof(m_joypadState) / sizeof(m_joypadState[0]))
-        return m_joypadState[id];
+      if (id < sizeof(m_joypadState[0]) / sizeof(m_joypadState[0][0]))
+        return m_joypadState[port][id];
       else
-        CLog::Log(LOGDEBUG, "RetroPlayerInput: GetInput() called with invalid ID: %d", id);
+        CLog::Log(LOGDEBUG, "RetroPlayerInput!!: Controller=%i, GetInput() called with invalid ID: %d", port, id);
       break;
     default: // Only RETRO_DEVICE_JOYPAD is supported currently
-      CLog::Log(LOGDEBUG, "RetroPlayerInput: GetInput() called with invalid device: %d", device);
+      CLog::Log(LOGDEBUG, "RetroPlayerInput!!: Controller=%i, GetInput() called with invalid device: %d", port, device);
       break;
     }
   }
   return 0;
 }
 
-void CRetroPlayerInput::ProcessKeyDown(const CKey &key)
+void CRetroPlayerInput::ProcessKeyDown(const CKey &key, unsigned controller_id)
 {
   // TODO: Use ID of current window, in case it defines joypad keys outside of
   // <FullscreenGame>. Maybe, if current window ID finds no action, then fallback
@@ -131,18 +134,18 @@ void CRetroPlayerInput::ProcessKeyDown(const CKey &key)
   CSingleLock lock(m_statesGuard);
 
   int id = TranslateActionID(action.GetID());
-  if (0 <= id && id < (int)(sizeof(m_joypadState) / sizeof(m_joypadState[0])))
+  if (0 <= id && id < (int)(sizeof(m_joypadState[0]) / sizeof(m_joypadState[0][0])))
   {
-    CLog::Log(LOGDEBUG, "RetroPlayerInput: KeyDown, action=%s, ID=%d", action.GetName().c_str(), id);
-    m_joypadState[id] = 1;
+    CLog::Log(LOGDEBUG, "RetroPlayerInput!!: Controller=%i, KeyDown, action=%s, ID=%d", controller_id, action.GetName().c_str(), id);
+    m_joypadState[controller_id][id] = 1;
   }
   else
   {
-    CLog::Log(LOGDEBUG, "RetroPlayerInput: Invalid KeyDown, action=%s, ID=%d", action.GetName().c_str(), action.GetID());
+    CLog::Log(LOGDEBUG, "RetroPlayerInput: Controller=%i, Invalid KeyDown, action=%s, ID=%d", controller_id, action.GetName().c_str(), action.GetID());
   }
 }
 
-void CRetroPlayerInput::ProcessKeyUp(const CKey &key)
+void CRetroPlayerInput::ProcessKeyUp(const CKey &key, unsigned controller_id)
 {
   // TODO: Use ID of current window, in case it defines joypad keys outside of
   // <FullscreenGame>. Maybe, if current window ID finds no action, then fallback
@@ -152,27 +155,30 @@ void CRetroPlayerInput::ProcessKeyUp(const CKey &key)
   CSingleLock lock(m_statesGuard);
 
   int id = TranslateActionID(action.GetID());
-  if (0 <= id && id < (int)(sizeof(m_joypadState) / sizeof(m_joypadState[0])))
+  if (0 <= id && id < (int)(sizeof(m_joypadState[0]) / sizeof(m_joypadState[0][0])))
   {
-    CLog::Log(LOGDEBUG, "RetroPlayerInput: KeyUp, action=%s, ID=%d", action.GetName().c_str(), id);
-    m_joypadState[id] = 0;
+    CLog::Log(LOGDEBUG, "RetroPlayerInput!!: Controller=%i, KeyUp, action=%s, ID=%d", controller_id, action.GetName().c_str(), id);
+    m_joypadState[controller_id][id] = 0;
   }
   else
   {
-    CLog::Log(LOGDEBUG, "RetroPlayerInput: Invalid KeyUp, action=%s, ID=%d", action.GetName().c_str(), action.GetID());
+    CLog::Log(LOGDEBUG, "RetroPlayerInput: Controller=%i, Invalid KeyUp, action=%s, ID=%d", controller_id, action.GetName().c_str(), action.GetID());
   }
 }
 
 void CRetroPlayerInput::ProcessGamepad(const Gamepad &gamepad)
 {
+  if (gamepad.id >= GAMEPAD_MAX_CONTROLLERS)
+    return;
+
   int window = !g_windowManager.HasModalDialog() ? g_windowManager.GetActiveWindow() : g_windowManager.GetTopMostModalDialogID();
 
   CSingleLock lock(m_statesGuard);
 
-  for (unsigned int b = 0; b < gamepad.buttonCount && b < m_gamepad.buttonCount; b++)
+  for (unsigned int b = 0; b < gamepad.buttonCount && b < m_gamepad[gamepad.id].buttonCount; b++)
   {
     // We only care if a change in state is detected
-    if (gamepad.buttons[b] == m_gamepad.buttons[b])
+    if (gamepad.buttons[b] == m_gamepad[gamepad.id].buttons[b])
       continue;
 
     // We only process button presses in WINDOW_FULLSCREEN_VIDEO. We check for
@@ -184,7 +190,7 @@ void CRetroPlayerInput::ProcessGamepad(const Gamepad &gamepad)
       continue;
 
     // Record the new state
-    m_gamepad.buttons[b] = gamepad.buttons[b];
+    m_gamepad[gamepad.id].buttons[b] = gamepad.buttons[b];
 
     int        actionID;
     CStdString actionName;
@@ -195,32 +201,32 @@ void CRetroPlayerInput::ProcessGamepad(const Gamepad &gamepad)
       continue;
 
     int id = TranslateActionID(actionID);
-    if (0 <= id && id < (int)(sizeof(m_joypadState) / sizeof(m_joypadState[0])))
+    if (0 <= id && id < (int)(sizeof(m_joypadState[0]) / sizeof(m_joypadState[0][0])))
     {
       // Record the new joypad state
-      m_joypadState[id] = gamepad.buttons[b];
-      CLog::Log(LOGDEBUG, "RetroPlayerInput: Gamepad %s button %s, action=%s, ID=%d", gamepad.name.c_str(),
+      m_joypadState[gamepad.id][id] = gamepad.buttons[b];
+      CLog::Log(LOGDEBUG, "RetroPlayerInput: Controller=%i, Gamepad %s button %s, action=%s, ID=%d", gamepad.id, gamepad.name.c_str(),
         gamepad.buttons[b] ? "press" : "unpress", actionName.c_str(), actionID);
     }
     else
     {
-      CLog::Log(LOGDEBUG, "RetroPlayerInput: Gamepad %s invalid button %s, action=%s, ID=%d", gamepad.name.c_str(),
+      CLog::Log(LOGDEBUG, "RetroPlayerInput: Controller=%i, Gamepad %s invalid button %s, action=%s, ID=%d", gamepad.id, gamepad.name.c_str(),
         gamepad.buttons[b] ? "press" : "unpress", actionName.c_str(), actionID);
     }
   }
 
-  for (unsigned int h = 0; h < gamepad.hatCount && h < m_gamepad.hatCount; h++)
+  for (unsigned int h = 0; h < gamepad.hatCount; h++)
   {
     // We only care if a change in state is detected
-    if (gamepad.hats[h] == m_gamepad.hats[h])
+    if (gamepad.hats[h] == m_gamepad[gamepad.id].hats[h])
       continue;
-    CLog::Log(LOGDEBUG, "RetroPlayerInput: Gamepad %s, new hat %d direction is %s",
-      gamepad.name.c_str(), h, gamepad.hats[h].GetDirection());
+    CLog::Log(LOGDEBUG, "RetroPlayerInput: Controller=%i, Gamepad %s, new hat %d direction is %s",
+      gamepad.id, gamepad.name.c_str(), h, gamepad.hats[h].GetDirection());
 
     // Using ordinal directions instead of cardinal directions lets us use a for loop efficiently
     for (unsigned int i = 0; i < 4; i++)
     {
-      if (gamepad.hats[h][i] == m_gamepad.hats[h][i])
+      if (gamepad.hats[h][i] == m_gamepad[gamepad.id].hats[h][i])
         continue;
 
       // Don't record presses outside of fullscreen video (unpresses are ok)
@@ -228,7 +234,7 @@ void CRetroPlayerInput::ProcessGamepad(const Gamepad &gamepad)
         continue;
 
       // Record the new state
-      m_gamepad.hats[h][i] = gamepad.hats[h][i];
+      m_gamepad[gamepad.id].hats[h][i] = gamepad.hats[h][i];
 
       // Compose button ID (SDL_HAT_UP is (1 << 0), SDL_HAT_RIGHT is (1 << 1), etc.)
       int        buttonID = (1 << i) << 16 | (h + 1); // Hat ID is h + 1
@@ -242,16 +248,16 @@ void CRetroPlayerInput::ProcessGamepad(const Gamepad &gamepad)
       static const char *dir[] = {"UP", "RIGHT", "DOWN", "LEFT"};
 
       int id = TranslateActionID(actionID);
-      if (0 <= id && id < (int)(sizeof(m_joypadState) / sizeof(m_joypadState[0])))
+      if (0 <= id && id < (int)(sizeof(m_joypadState[0]) / sizeof(m_joypadState[0][0])))
       {
         // Record the new joypad state
-        m_joypadState[id] = gamepad.hats[h][i];
-        CLog::Log(LOGDEBUG, "RetroPlayerInput: Hat %s %s, action=%s, ID=%d", dir[i],
+        m_joypadState[gamepad.id][id] = gamepad.hats[h][i];
+        CLog::Log(LOGDEBUG, "RetroPlayerInput: Controller=%i, Hat %s %s, action=%s, ID=%d", gamepad.id, dir[i],
           gamepad.hats[h][i] ? "press" : "unpress", actionName.c_str(), actionID);
       }
       else
       {
-        CLog::Log(LOGDEBUG, "RetroPlayerInput: Invalid hat %s %s, action=%s, ID=%d", dir[i],
+        CLog::Log(LOGDEBUG, "RetroPlayerInput: Controller=%i, Invalid hat %s %s, action=%s, ID=%d", gamepad.id, dir[i],
           gamepad.hats[h][i] ? "press" : "unpress", actionName.c_str(), actionID);
       }
     }

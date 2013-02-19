@@ -488,7 +488,7 @@ bool CApplication::OnEvent(XBMC_Event& newEvent)
       {
         CRetroPlayer* rp = dynamic_cast<CRetroPlayer*>(g_application.m_pPlayer);
         if (rp)
-          rp->GetInput().ProcessKeyUp(CKeyboardStat::TranslateKey(newEvent.key.keysym));
+          rp->GetInput().ProcessKeyUp(CKeyboardStat::TranslateKey(newEvent.key.keysym),0);
       }
       g_Keyboard.ProcessKeyUp();
       break;
@@ -2468,7 +2468,7 @@ bool CApplication::OnKey(const CKey& key)
       // Notify RetroPlayer's input system of the pressed key
       CRetroPlayer* rp = dynamic_cast<CRetroPlayer*>(m_pPlayer);
       if (rp)
-        rp->GetInput().ProcessKeyDown(key);
+        rp->GetInput().ProcessKeyDown(key,0);
 
       // Fetch action from <FullscreenGame> tag instead of <FullscreenVideo>
       action = CButtonTranslator::GetInstance().GetAction(WINDOW_FULLSCREEN_GAME, key);

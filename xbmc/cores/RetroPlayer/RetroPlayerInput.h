@@ -31,6 +31,7 @@
 #define GAMEPAD_BUTTON_COUNT 128 // WINJoystick
 #define GAMEPAD_HAT_COUNT    4   // WINJoystick
 #define GAMEPAD_AXIS_COUNT   64  // SDLJoystick
+#define GAMEPAD_MAX_CONTROLLERS 4
 
 class CRetroPlayerInput
 {
@@ -91,14 +92,14 @@ public:
    * Marks a key as pressed. This intercepts keys sent to CApplication::OnKey()
    * before they are translated into actions.
    */
-  void ProcessKeyDown(const CKey &key);
+  void ProcessKeyDown(const CKey &key, unsigned controller_id);
 
   /**
    * Marks a key as released. Because key releases aren't processed by
    * CApplication and aren't translated into actions, these are intercepted
    * at the raw event stage in CApplication::OnEvent().
    */
-  void ProcessKeyUp(const CKey &key);
+  void ProcessKeyUp(const CKey &key, unsigned controller_id);
 
   /**
    * Monitor gamepads for input changes. This is called by g_Joystick.Update()
@@ -119,8 +120,8 @@ private:
   bool m_bActive; // Unused currently
 
   // RETRO_DEVICE_ID_JOYPAD_R3 is the last key in libretro.h
-  int16_t m_joypadState[ACTION_JOYPAD_CONTROL_END - ACTION_GAME_CONTROL_START + 1];
-  Gamepad m_gamepad;
+  int16_t m_joypadState[GAMEPAD_MAX_CONTROLLERS][ACTION_JOYPAD_CONTROL_END - ACTION_GAME_CONTROL_START + 1];
+  Gamepad m_gamepad[GAMEPAD_MAX_CONTROLLERS];
 
   CCriticalSection m_statesGuard;
 };
