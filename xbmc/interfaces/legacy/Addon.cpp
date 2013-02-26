@@ -157,6 +157,22 @@ namespace XBMCAddon
         return ADDON::TranslateType(pAddon->Type());
       else if (strcmpi(id, "version") == 0)
         return pAddon->Version().asString();
+      else if (strcmpi(id, "platforms") == 0)
+      {
+        InfoMap::const_iterator it;
+        if ((it = pAddon->Props().extrainfo.find("platforms")) != pAddon->Props().extrainfo.end())
+          return String(it->second.c_str());
+        else
+          return String();
+      }
+      else if (strcmpi(id, "extensions") == 0)
+      {
+        InfoMap::const_iterator it;
+        if ((it = pAddon->Props().extrainfo.find("extensions")) != pAddon->Props().extrainfo.end())
+          return String(it->second.c_str());
+        else
+          return String();
+      }
       else
         throw AddonException("'%s' is an invalid Id", id);
     }

@@ -197,7 +197,7 @@ namespace XBMCAddon
       /// | author      | changelog   | description | disclaimer  |
       /// | fanart      | icon        | id          | name        |
       /// | path        | profile     | stars       | summary     |
-      /// | type        | version     |             |             |
+      /// | type        | version     | platforms   | extensions  |
       /// @return                        AddOn property as a string
       ///
       ///
