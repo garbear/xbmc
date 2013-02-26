@@ -42,12 +42,14 @@ namespace XBMCAddon
     ///
     ///-------------------------------------------------------------------------
     ///
-    /// \python_class{ xbmcaddon.Addon([id]) }
+    /// \python_class{ xbmcaddon.Addon([id, installed]) }
     ///
     /// Creates a new AddOn class.
     ///
     /// @param id                    [opt] string - id of the addon as
     ///                              specified in [addon.xml](http://kodi.wiki/view/Addon.xml)
+    /// @param installed             [opt] boolean - False to use an
+    ///                              uninstalled addon (default=True)
     ///
     /// @note Specifying the addon id is not needed.\n
     /// Important however is that the addon folder has the same name as the AddOn
@@ -75,7 +77,7 @@ namespace XBMCAddon
       String getAddonVersion();
 
     public:
-      Addon(const char* id = NULL);
+      Addon(const char* id = NULL, bool installed = true);
       virtual ~Addon();
 
 #ifdef DOXYGEN_SHOULD_USE_THIS
