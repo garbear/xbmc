@@ -250,6 +250,12 @@ namespace XBMCAddon
        *     - title         : string (In the last summer-1)
        *     - picturepath   : string (/home/username/pictures/img001.jpg)
        *     - exif*         : string (See CPictureInfoTag::TranslateString in PictureInfoTag.cpp for valid strings)
+       * - Game Value:
+       *     - title         : string (Pokemon Blue)
+       *     - platform      : string (Atari 2600) - see GameManager.cpp for a list of platforms
+       *     - region        : string (USA and Canada) - in the future, this might be a single letter (U/J)
+       *     - publisher     : string (Nintendo)
+       *     - gameclient    : string (gameclient.snes9x.next)
        * 
        * example:\n
        *   - self.list.getSelectedItem().setInfo('video', { 'genre': 'Comedy' })n\n
