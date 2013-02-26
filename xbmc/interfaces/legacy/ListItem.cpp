@@ -27,6 +27,8 @@
 #include "video/VideoInfoTag.h"
 #include "music/tags/MusicInfoTag.h"
 #include "pictures/PictureInfoTag.h"
+#include "games/tags/GameInfoTag.h"
+#include "games/GameTypes.h"
 #include "utils/log.h"
 #include "utils/Variant.h"
 #include "utils/StringUtils.h"
@@ -549,6 +551,31 @@ namespace XBMCAddon
             int info = CPictureInfoTag::TranslateString(StringUtils::Mid(exifkey,5));
             item->GetPictureInfoTag()->SetInfo(info, value);
           }
+        }
+      }
+      else if (strcmpi(type, "game") == 0)
+      {
+        for (InfoLabelDict::const_iterator it = infoLabels.begin(); it != infoLabels.end(); it++)
+        {
+          String key = it->first;
+          StringUtils::ToLower(key);
+
+          const InfoLabelValue& alt = it->second;
+          const String value(alt.which() == first ? alt.former() : emptyString);
+
+          if (key == "title")
+          {
+            item->m_strTitle = value;
+            item->GetGameInfoTag()->SetTitle(value);
+          }
+          else if (key == "platform")
+            item->GetGameInfoTag()->SetPlatform(value);
+          else if (key == "region")
+            item->GetGameInfoTag()->SetRegion(value);
+          else if (key == "publisher")
+            item->GetGameInfoTag()->SetPublisher(value);
+          else if (key == "gameclient")
+            item->SetProperty(FILEITEM_PROPERTY_GAME_CLIENT, value);
         }
       }
     } // end ListItem::setInfo
