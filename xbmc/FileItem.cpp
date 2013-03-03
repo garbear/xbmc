@@ -143,6 +143,7 @@ CFileItem::CFileItem(const CEpgInfoTag& tag)
   m_pvrRecordingInfoTag = NULL;
   m_pvrTimerInfoTag = NULL;
   m_pictureInfoTag = NULL;
+  m_gameInfoTag = NULL;
 
   Reset();
 
@@ -166,6 +167,7 @@ CFileItem::CFileItem(const CPVRChannel& channel)
   m_pvrRecordingInfoTag = NULL;
   m_pvrTimerInfoTag = NULL;
   m_pictureInfoTag = NULL;
+  m_gameInfoTag = NULL;
 
   Reset();
   CEpgInfoTag epgNow;
@@ -215,6 +217,7 @@ CFileItem::CFileItem(const CPVRRecording& record)
   m_pvrRecordingInfoTag = NULL;
   m_pvrTimerInfoTag = NULL;
   m_pictureInfoTag = NULL;
+  m_gameInfoTag = NULL;
 
   Reset();
 
@@ -234,6 +237,7 @@ CFileItem::CFileItem(const CPVRTimerInfoTag& timer)
   m_pvrRecordingInfoTag = NULL;
   m_pvrTimerInfoTag = NULL;
   m_pictureInfoTag = NULL;
+  m_gameInfoTag = NULL;
 
   Reset();
 
