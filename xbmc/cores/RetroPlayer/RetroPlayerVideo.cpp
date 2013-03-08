@@ -61,7 +61,7 @@ void CRetroPlayerVideo::StopThread(bool bWait /*= true*/)
 
 void CRetroPlayerVideo::Process()
 {
-  Frame frame = {};
+  static Frame frame = {}; // static for persistence
   DVDVideoPicture *pPicture = NULL;
 
   if (!m_dllSwScale.Load())
@@ -78,13 +78,12 @@ void CRetroPlayerVideo::Process()
       CSingleLock lock(m_critSection);
 
       // Only proceed if we have a frame to render
-      if (!m_queuedFrame.data)
+	  if (m_queuedFrame.data.empty())
         continue;
 
       // Deep copy
       frame = m_queuedFrame;
-      frame.data = new unsigned char[frame.pitch * frame.height];
-      memcpy(frame.data, m_queuedFrame.data, frame.pitch * frame.height);
+	  // std::vector's copy constructor already copied the data by value, no memcpy required
     }
 
     pPicture = CDVDCodecUtils::AllocatePicture(frame.width, frame.height);
@@ -116,7 +115,7 @@ void CRetroPlayerVideo::Process()
     }
 
     // Colorspace conversion
-    uint8_t *src[] = { frame.data, 0, 0, 0 };
+	uint8_t *src[] = { frame.data.data(), 0, 0, 0 };
     int      srcStride[] = { frame.pitch, 0, 0, 0 };
     uint8_t *dst[] = { pPicture->data[0], pPicture->data[1], pPicture->data[2], 0 };
     int      dstStride[] = { pPicture->iLineSize[0], pPicture->iLineSize[1], pPicture->iLineSize[2], 0 };
@@ -124,8 +123,7 @@ void CRetroPlayerVideo::Process()
     m_dllSwScale.sws_scale(m_swsContext, src, srcStride, 0, frame.height, dst, dstStride);
 
     // Clean up the data allocated in CRetroPlayer::OnVideoFrame()
-    delete[] frame.data;
-    frame.data = NULL;
+    frame.data.clear(); // static - don't delete memory, just contents
 
     // Get ready to drop the picture off on RenderManger's doorstep
     if (!g_renderManager.IsStarted())
@@ -143,14 +141,13 @@ void CRetroPlayerVideo::Process()
 
   {
     CSingleLock lock(m_critSection);
-    delete[] m_queuedFrame.data;
-    m_queuedFrame.data = NULL;
+	m_queuedFrame.data.clear();
     // Don't want to allocate more data in SendVideoFrame()
     m_bStop = true;
   }
 
   // In case we hit a break above
-  delete[] frame.data;
+  frame.data.clear();
   if (pPicture)
     CDVDCodecUtils::FreePicture(pPicture);
 
@@ -228,16 +225,10 @@ void CRetroPlayerVideo::SendVideoFrame(const void *data, unsigned width, unsigne
 
   if (!m_bStop && IsRunning())
   {
-    // If frame is allocated and the same size, we can avoid an extra allocation
-    if (!(m_queuedFrame.data && pitch * height == m_queuedFrame.pitch * m_queuedFrame.height))
-    {
-      delete[] m_queuedFrame.data;
-      m_queuedFrame.data = new unsigned char[pitch * height];
-      if (!m_queuedFrame.data)
-        return;
-    }
+    // No need for delete[] and new[], just resize
+	m_queuedFrame.data.resize(pitch * height);
 
-    memcpy(m_queuedFrame.data, data, pitch * height);
+    memcpy(m_queuedFrame.data.data(), data, pitch * height);
     m_queuedFrame.width  = width;
     m_queuedFrame.height = height;
     m_queuedFrame.pitch  = pitch;

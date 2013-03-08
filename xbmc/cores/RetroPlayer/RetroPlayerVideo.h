@@ -37,7 +37,7 @@ class CRetroPlayerVideo : public CThread
 public:
   struct Frame
   {
-    unsigned char *data;
+    std::vector<unsigned char> data;
     unsigned int  width;
     unsigned int  height;
     size_t        pitch;
