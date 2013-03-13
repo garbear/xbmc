@@ -16,7 +16,7 @@
  */
 
 /* Networking and other niceties for POSIX systems. */
-#include "env.h"
+// #include "env.h"  Causes conflict with mongo_env_close_socket
 #include "mongo.h"
 #include <string.h>
 #include <errno.h>
