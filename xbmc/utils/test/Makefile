@@ -5,6 +5,8 @@ SRCS=	\
 	TestAsyncFileCopy.cpp \
 	TestBase64.cpp \
 	TestBitstreamStats.cpp \
+	TestBSONVariantParser.cpp \
+	TestBSONVariantWriter.cpp \
 	TestCharsetConverter.cpp \
 	TestCPUInfo.cpp \
 	TestCrc32.cpp \
