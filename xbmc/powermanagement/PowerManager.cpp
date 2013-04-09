@@ -32,6 +32,11 @@
 #include "guilib/LocalizeStrings.h"
 #include "guilib/GraphicContext.h"
 #include "dialogs/GUIDialogKaiToast.h"
+#ifdef HAS_SDL_JOYSTICK
+#include "input/JoystickManager.h"
+#include "peripherals/devices/PeripheralImon.h"
+#endif
+
 
 #if defined(TARGET_DARWIN)
 #include "osx/CocoaPowerSyscall.h"
@@ -195,6 +200,11 @@ void CPowerManager::OnSleep()
   CBuiltins::Execute("LIRC.Stop");
 #endif
 
+#ifdef HAS_SDL_JOYSTICK
+  CLog::Log(LOGNOTICE, "%s: Stopping joystick manager", __FUNCTION__);
+  CJoystickManager::Get().SetEnabled(false);
+#endif
+
   g_application.SaveFileState(true);
   g_application.StopPlaying();
   g_application.StopShutdownTimer();
@@ -229,6 +239,12 @@ void CPowerManager::OnWake()
 #if defined(HAS_LIRC) || defined(HAS_IRSERVERSUITE)
   CLog::Log(LOGNOTICE, "%s: Restarting lirc", __FUNCTION__);
   CBuiltins::Execute("LIRC.Start");
+#endif
+
+#ifdef HAS_SDL_JOYSTICK
+  CLog::Log(LOGNOTICE, "%s: Restarting joystick manager", __FUNCTION__);
+  CJoystickManager::Get().SetEnabled(g_guiSettings.GetBool("input.enablejoystick") &&
+      PERIPHERALS::CPeripheralImon::GetCountOfImonsConflictWithDInput() == 0);
 #endif
 
   CAEFactory::Resume();
