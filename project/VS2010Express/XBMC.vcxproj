@@ -582,6 +582,7 @@
     <ClCompile Include="..\..\xbmc\filesystem\ZipDirectory.cpp" />
     <ClCompile Include="..\..\xbmc\filesystem\ZipFile.cpp" />
     <ClCompile Include="..\..\xbmc\filesystem\ZipManager.cpp" />
+    <ClCompile Include="..\..\xbmc\GitRevision.cpp" />
     <ClCompile Include="..\..\xbmc\GUIInfoManager.cpp" />
     <ClCompile Include="..\..\xbmc\GUILargeTextureManager.cpp" />
     <ClCompile Include="..\..\xbmc\guilib\AnimatedGif.cpp" />
@@ -1063,6 +1064,16 @@
     <ClInclude Include="..\..\xbmc\filesystem\VideoDatabaseDirectory\DirectoryNodeGrouped.h" />
     <ClInclude Include="..\..\xbmc\filesystem\windows\WINFileSMB.h" />
     <ClInclude Include="..\..\xbmc\filesystem\windows\WINSMBDirectory.h" />
+    <CustomBuild Include="..\..\xbmc\GitRevision.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">CALL update_git_rev.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">..\..\xbmc\win32\git_rev.h</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">..\..\.git\HEAD;..\..\xbmc\win32\git_rev.tmpl</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">CALL update_git_rev.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">..\..\xbmc\win32\git_rev.h</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">..\..\.git\HEAD;..\..\xbmc\win32\git_rev.tmpl</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">Retrieving the git revision</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">Retrieving the git revision</Message>
+    </CustomBuild>
     <ClInclude Include="..\..\xbmc\guilib\cximage.h" />
     <ClInclude Include="..\..\xbmc\guilib\GUIKeyboard.h" />
     <ClInclude Include="..\..\xbmc\guilib\GUIKeyboardFactory.h" />
@@ -2277,7 +2288,7 @@
     <ClInclude Include="..\..\xbmc\network\EventServer.h" />
     <ClInclude Include="..\..\xbmc\network\GUIDialogAccessPoints.h" />
     <ClInclude Include="..\..\xbmc\network\GUIDialogNetworkSetup.h" />
-    <ClInclude Include="..\..\xbmc\network\mdns\ZeroconfMDNS.h" />    
+    <ClInclude Include="..\..\xbmc\network\mdns\ZeroconfMDNS.h" />
     <ClInclude Include="..\..\xbmc\network\Network.h" />
     <ClInclude Include="..\..\xbmc\network\Socket.h" />
     <ClInclude Include="..\..\xbmc\network\TCPServer.h" />
@@ -2524,16 +2535,7 @@
     <ClInclude Include="..\..\xbmc\win32\PlatformDefs.h" />
     <ClInclude Include="..\..\xbmc\XBDateTime.h" />
     <ClInclude Include="..\..\xbmc\XbmcContext.h" />
-    <CustomBuild Include="..\..\xbmc\win32\PlatformInclude.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">CALL update_git_rev.bat</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">..\..\xbmc\win32\git_rev.h</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">..\..\.git\HEAD;..\..\xbmc\win32\git_rev.tmpl</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">CALL update_git_rev.bat</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">..\..\xbmc\win32\git_rev.h</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">..\..\.git\HEAD;..\..\xbmc\win32\git_rev.tmpl</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">Retrieving the git revision</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">Retrieving the git revision</Message>
-    </CustomBuild>
+    <ClInclude Include="..\..\xbmc\win32\PlatformInclude.h" />
     <ClInclude Include="..\..\xbmc\win32\stat_utf8.h" />
     <ClInclude Include="..\..\xbmc\win32\stdio_utf8.h" />
     <ClInclude Include="..\..\xbmc\win32\WIN32Util.h" />
