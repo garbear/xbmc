@@ -156,7 +156,7 @@ bool CGameFileLoader::GetGameInfo(LIBRETRO::retro_game_info &info) const
     length = vfsFile.GetLength();
 
     // Check for file size overflow (libretro accepts files <= size_t max)
-    if (length <= 0 || (long long)length >= (long long)std::numeric_limits<size_t>::max())
+    if (length <= 0 || (uint64_t)length > (uint64_t)std::numeric_limits<size_t>::max())
     {
       CLog::Log(LOGERROR, "GameClient: Invalid file size: %"PRId64" bytes", length);
       return false;
