@@ -454,6 +454,9 @@
     <Filter Include="input\keyboard\generic">
       <UniqueIdentifier>{54fee744-c14f-4525-a42f-dc67752e9f88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="games\tags">
+      <UniqueIdentifier>{35503fd5-67af-4b10-ae6e-aee24c3f4db7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3488,6 +3491,9 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystick.cpp">
       <Filter>input\keyboard\generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\tags\GameInfoTag.cpp">
+      <Filter>games\tags</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6779,6 +6785,9 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystickHandling.h">
       <Filter>input\keyboard\generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\tags\GameInfoTag.h">
+      <Filter>games\tags</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
