@@ -189,6 +189,14 @@
 					<selected>!Skin.HasSetting(HomeMenuNoMusicButton)</selected>
 					<onclick>Skin.ToggleSetting(HomeMenuNoMusicButton)</onclick>
 				</control>
+				<control type="radiobutton" id="620">
+					<label>$LOCALIZE[15016]</label>
+					<visible>System.GetBool(gamesgeneral.enable)</visible>
+					<width>1256</width>
+					<include>DefaultSettingButton</include>
+					<selected>!Skin.HasSetting(HomeMenuNoGamesButton)</selected>
+					<onclick>Skin.ToggleSetting(HomeMenuNoGamesButton)</onclick>
+				</control>
 				<control type="radiobutton" id="614">
 					<label>$LOCALIZE[24001]</label>
 					<width>1256</width>
