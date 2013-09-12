@@ -934,6 +934,7 @@ msgstr ""
 
 #: xbmc/pvr/windows/PVRGUIWindowRecordings.cpp
 #: xbmc/dialogs/GUIDialogPlayEject.cpp
+#: xbmc/games/windows/GUIWindowGames.cpp
 #: system/settings/settings.xml
 msgctxt "#208"
 msgid "Play"
@@ -4976,6 +4977,7 @@ msgctxt "#10139"
 msgid "Pictures / Info"
 msgstr ""
 
+#: addons/skin.estuary/1080i/MyGames.xml
 #: xbmc/guilib/WindowIDs.h
 msgctxt "#10140"
 msgid "Add-on settings"
@@ -13150,6 +13152,7 @@ msgstr ""
 #: addons/skin.estuary/1080i/MyVideoNav.xml
 #: addons/skin.estuary/1080i/MyPics.xml
 #: addons/skin.estuary/1080i/MyMusicNav.xml
+#: addons/skin.estuary/1080i/MyGames.xml
 msgctxt "#21452"
 msgid "Get more..."
 msgstr ""
@@ -13899,6 +13902,7 @@ msgid "Add-on options"
 msgstr ""
 
 #: xbmc/addons/ContextMenus.h
+#: xbmc/games/windows/GUIWindowGames.cpp
 msgctxt "#24003"
 msgid "Add-on information"
 msgstr ""
@@ -16078,6 +16082,7 @@ msgstr ""
 
 #. Name of game add-ons category
 #: xbmc/addons/Addon.cpp
+#: xbmc/games/windows/GUIViewStateWindowGames.cpp
 msgctxt "#35049"
 msgid "Game add-ons"
 msgstr ""
@@ -16535,7 +16540,13 @@ msgctxt "#35272"
 msgid "Load save"
 msgstr ""
 
-#empty strings from id 35273 to 35504
+#. Context menu item to manage savestates
+#: xbmc/games/windows/GUIWindowGames.cpp
+msgctxt "#35273"
+msgid "Manage saves"
+msgstr ""
+
+#empty strings from id 35274 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/addons/AddonCallbacksPVR.cpp

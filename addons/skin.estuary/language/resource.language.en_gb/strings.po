@@ -758,3 +758,10 @@ msgstr ""
 msgctxt "#31147"
 msgid "Download add-ons"
 msgstr ""
+
+#empty strings from id 31148 to 31198
+
+#: /1080i/Home.xml
+msgctxt "#31199"
+msgid "Play your personal games or download one of the many game add-ons from the official repository."
+msgstr ""

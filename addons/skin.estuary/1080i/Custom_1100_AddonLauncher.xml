@@ -38,6 +38,7 @@
 					<ondown>700</ondown>
 					<onright condition="String.IsEqual(Container(9000).ListItem.Property(id),video) + Control.IsVisible(500)">500</onright>
 					<onright condition="String.IsEqual(Container(9000).ListItem.Property(id),music) + Control.IsVisible(501)">501</onright>
+					<onright condition="String.IsEqual(Container(9000).ListItem.Property(id),game) + Control.IsVisible(508)">508</onright>
 					<onright condition="String.IsEqual(Container(9000).ListItem.Property(id),addons) + Control.IsVisible(502)">502</onright>
 					<onright condition="String.IsEqual(Container(9000).ListItem.Property(id),pictures) + Control.IsVisible(503)">503</onright>
 					<onright condition="String.IsEqual(Container(9000).ListItem.Property(id),outdated) + Control.IsVisible(504)">504</onright>
@@ -123,6 +124,14 @@
 							<thumb>icons/settings/music.png</thumb>
 							<property name="id">music</property>
 							<property name="path">addons://sources/audio/</property>
+						</item>
+						<item id="8">
+							<label>$LOCALIZE[35049]</label>
+							<visible>System.GetBool(gamesgeneral.enable)</visible>
+							<onclick>ActivateWindow(games,addons://sources/game/,return)</onclick>
+							<thumb>icons/settings/games.png</thumb>
+							<property name="id">game</property>
+							<property name="path">addons://sources/game/</property>
 						</item>
 						<item id="3">
 							<label>$LOCALIZE[1043]</label>
@@ -275,6 +284,12 @@
 					<param name="visible" value="Container(9000).HasFocus(5)" />
 					<param name="container_path" value="addons://sources/image/" />
 					<param name="container_target" value="pictures" />
+				</include>
+				<include content="AddonLauncherPanel">
+					<param name="container_id" value="508" />
+					<param name="visible" value="Container(9000).HasFocus(8)" />
+					<param name="container_path" value="addons://sources/game/" />
+					<param name="container_target" value="games" />
 				</include>
 				<!-- 			<include content="AddonLauncherPanel">
 				     <param name="container_id" value="504" />
