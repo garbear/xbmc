@@ -202,6 +202,20 @@
       <pageminus>SkipPrevious</pageminus>
     </remote>
   </FullscreenVideo>
+  <FullscreenVideo>
+    <remote>
+      <left>StepBack</left>
+      <right>StepForward</right>
+      <back>Back</back>
+      <menu>OSD</menu>
+      <contentsmenu>OSD</contentsmenu>
+      <rootmenu>OSD</rootmenu>
+      <start>OSD</start>
+      <select>OSD</select>
+      <title>CodecInfo</title>
+      <info>Info</info>
+    </remote>
+  </FullscreenVideo>
   <VideoTimeSeek>
     <remote>
       <select>Select</select>
