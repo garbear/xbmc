@@ -969,7 +969,7 @@ void CGameClient::OnKeyRelease(const CKey& key)
 
 bool CGameClient::AcceptsInput(void)
 {
-  return true; //g_windowManager.GetActiveWindowID() == WINDOW_FULLSCREEN_GAME; // TODO
+  return g_windowManager.GetActiveWindowID() == WINDOW_FULLSCREEN_GAME;
 }
 
 void CGameClient::LogAddonProperties(void) const

@@ -667,6 +667,15 @@ void CGUIWindowManager::PreviousWindow()
 
   // ok to go to the previous window now
 
+  // pause game when leaving fullscreen or resume game when entering fullscreen
+  if (g_application.m_pPlayer->IsPlayingGame())
+  {
+    if (previousWindow == WINDOW_FULLSCREEN_VIDEO && g_application.m_pPlayer->IsPaused())
+      g_application.m_pPlayer->Pause();
+    else if (currentWindow == WINDOW_FULLSCREEN_VIDEO && !g_application.m_pPlayer->IsPaused())
+      g_application.m_pPlayer->Pause();
+  }
+
   // tell our info manager which window we are going to
   g_infoManager.SetNextWindow(previousWindow);
 
@@ -791,6 +800,15 @@ void CGUIWindowManager::ActivateWindow_Internal(int iWindowID, const std::vector
     CLog::Log(LOGINFO, "Activate of window '%i' refused because there are active modal dialogs", iWindowID);
     g_audioManager.PlayActionSound(CAction(ACTION_ERROR));
     return;
+  }
+
+  // pause game when leaving fullscreen or resume game when entering fullscreen
+  if (g_application.m_pPlayer->IsPlayingGame())
+  {
+    if (GetActiveWindow() == WINDOW_FULLSCREEN_VIDEO && !g_application.m_pPlayer->IsPaused())
+      g_application.m_pPlayer->Pause();
+    else if (iWindowID == WINDOW_FULLSCREEN_VIDEO && g_application.m_pPlayer->IsPaused())
+      g_application.m_pPlayer->Pause();
   }
 
   g_infoManager.SetNextWindow(iWindowID);
@@ -1401,6 +1419,9 @@ int CGUIWindowManager::GetActiveWindowID()
     // check for LiveTV and switch to it's virtual window
     else if (g_PVRManager.IsStarted() && g_application.CurrentFileItem().HasPVRChannelInfoTag())
       iWin = WINDOW_FULLSCREEN_LIVETV;
+    // check if a game is playing
+    else if (g_application.m_pPlayer->IsPlayingGame())
+      iWin = WINDOW_FULLSCREEN_GAME;
   }
   // special casing for PVR radio
   if (iWin == WINDOW_VISUALISATION && g_PVRManager.IsStarted() && g_application.CurrentFileItem().HasPVRChannelInfoTag())

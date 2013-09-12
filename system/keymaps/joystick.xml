@@ -77,6 +77,35 @@
       <rightstickdown>VolumeDown</rightstickdown>
     </joystick>
   </FullscreenVideo>
+  <FullscreenGame>
+    <joystick>
+      <a>Pause</a>
+      <b>Stop</b>
+      <x>OSD</x>
+      <y>FullScreen</y>
+      <start>Info</start>
+      <back>Seek(-7)</back>
+      <guide>ActivateWindow(Home)</guide>
+      <up>ChapterOrBigStepForward</up>
+      <down>ChapterOrBigStepBack</down>
+      <right>StepForward</right>
+      <left>StepBack</left>
+      <leftthumb>ShowSubtitles</leftthumb>
+      <rightthumb>AspectRatio</rightthumb>
+      <lefttrigger>AnalogRewind</lefttrigger>
+      <righttrigger>AnalogFastForward</righttrigger>
+      <leftbumper>AnalogRewind</leftbumper>
+      <rightbumper>AnalogFastForward</rightbumper>
+      <leftstickleft>AnalogSeekBack</leftstickleft>
+      <leftstickright>AnalogSeekForward</leftstickright>
+      <leftstickup>AnalogSeekForward</leftstickup>
+      <leftstickdown>AnalogSeekBack</leftstickdown>
+      <rightstickleft>VolumeDown</rightstickleft>
+      <rightstickright>VolumeUp</rightstickright>
+      <rightstickup>VolumeUp</rightstickup>
+      <rightstickdown>VolumeDown</rightstickdown>
+    </joystick>
+  </FullscreenGame>
   <FullscreenLiveTV>
     <joystick>
       <up>ChannelUp</up>

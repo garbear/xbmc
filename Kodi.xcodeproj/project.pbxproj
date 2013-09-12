@@ -361,6 +361,14 @@
 		68D77D5A1CD1C813004C1735 /* GameFileAutoLauncher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D521CD1C813004C1735 /* GameFileAutoLauncher.cpp */; };
 		68D77D5B1CD1C813004C1735 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D541CD1C813004C1735 /* GameManager.cpp */; };
 		68D77D5C1CD1C813004C1735 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D541CD1C813004C1735 /* GameManager.cpp */; };
+		68D77D681CD1C86B004C1735 /* PixelConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D601CD1C86B004C1735 /* PixelConverter.cpp */; };
+		68D77D691CD1C86B004C1735 /* PixelConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D601CD1C86B004C1735 /* PixelConverter.cpp */; };
+		68D77D6A1CD1C86B004C1735 /* RetroPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D621CD1C86B004C1735 /* RetroPlayer.cpp */; };
+		68D77D6B1CD1C86B004C1735 /* RetroPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D621CD1C86B004C1735 /* RetroPlayer.cpp */; };
+		68D77D6C1CD1C86B004C1735 /* RetroPlayerAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D641CD1C86B004C1735 /* RetroPlayerAudio.cpp */; };
+		68D77D6D1CD1C86B004C1735 /* RetroPlayerAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D641CD1C86B004C1735 /* RetroPlayerAudio.cpp */; };
+		68D77D6E1CD1C86B004C1735 /* RetroPlayerVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D661CD1C86B004C1735 /* RetroPlayerVideo.cpp */; };
+		68D77D6F1CD1C86B004C1735 /* RetroPlayerVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D661CD1C86B004C1735 /* RetroPlayerVideo.cpp */; };
 		761170901C8B85F8006C6366 /* AddonGUIRenderingControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7611708C1C8B85F8006C6366 /* AddonGUIRenderingControl.cpp */; };
 		761170911C8B85F8006C6366 /* AddonGUIWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7611708E1C8B85F8006C6366 /* AddonGUIWindow.cpp */; };
 		76AEFB361C8F79BD00EF2EC0 /* AddonInterfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDED2E991C878F61000F5E80 /* AddonInterfaces.cpp */; };
@@ -2913,6 +2921,14 @@
 		68D77D541CD1C813004C1735 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameManager.cpp; path = games/GameManager.cpp; sourceTree = "<group>"; };
 		68D77D551CD1C813004C1735 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameManager.h; path = games/GameManager.h; sourceTree = "<group>"; };
 		68D77D561CD1C813004C1735 /* GameTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameTypes.h; path = games/GameTypes.h; sourceTree = "<group>"; };
+		68D77D601CD1C86B004C1735 /* PixelConverter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelConverter.cpp; path = RetroPlayer/PixelConverter.cpp; sourceTree = "<group>"; };
+		68D77D611CD1C86B004C1735 /* PixelConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelConverter.h; path = RetroPlayer/PixelConverter.h; sourceTree = "<group>"; };
+		68D77D621CD1C86B004C1735 /* RetroPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RetroPlayer.cpp; path = RetroPlayer/RetroPlayer.cpp; sourceTree = "<group>"; };
+		68D77D631CD1C86B004C1735 /* RetroPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RetroPlayer.h; path = RetroPlayer/RetroPlayer.h; sourceTree = "<group>"; };
+		68D77D641CD1C86B004C1735 /* RetroPlayerAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RetroPlayerAudio.cpp; path = RetroPlayer/RetroPlayerAudio.cpp; sourceTree = "<group>"; };
+		68D77D651CD1C86B004C1735 /* RetroPlayerAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RetroPlayerAudio.h; path = RetroPlayer/RetroPlayerAudio.h; sourceTree = "<group>"; };
+		68D77D661CD1C86B004C1735 /* RetroPlayerVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RetroPlayerVideo.cpp; path = RetroPlayer/RetroPlayerVideo.cpp; sourceTree = "<group>"; };
+		68D77D671CD1C86B004C1735 /* RetroPlayerVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RetroPlayerVideo.h; path = RetroPlayer/RetroPlayerVideo.h; sourceTree = "<group>"; };
 		6E97BDBF0DA2B620003A2A89 /* EventClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventClient.h; sourceTree = "<group>"; };
 		6E97BDC00DA2B620003A2A89 /* EventPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventPacket.h; sourceTree = "<group>"; };
 		6E97BDC10DA2B620003A2A89 /* EventServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventServer.h; sourceTree = "<group>"; };
@@ -6425,6 +6441,21 @@
 			name = playback;
 			sourceTree = "<group>";
 		};
+		68D77D5F1CD1C841004C1735 /* RetroPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				68D77D601CD1C86B004C1735 /* PixelConverter.cpp */,
+				68D77D611CD1C86B004C1735 /* PixelConverter.h */,
+				68D77D621CD1C86B004C1735 /* RetroPlayer.cpp */,
+				68D77D631CD1C86B004C1735 /* RetroPlayer.h */,
+				68D77D641CD1C86B004C1735 /* RetroPlayerAudio.cpp */,
+				68D77D651CD1C86B004C1735 /* RetroPlayerAudio.h */,
+				68D77D661CD1C86B004C1735 /* RetroPlayerVideo.cpp */,
+				68D77D671CD1C86B004C1735 /* RetroPlayerVideo.h */,
+			);
+			name = RetroPlayer;
+			sourceTree = "<group>";
+		};
 		76F4C37B1C8E927A00A1E64B /* InputStream */ = {
 			isa = PBXGroup;
 			children = (
@@ -8028,6 +8059,7 @@
 				E38E15D20D25F9FA00618676 /* paplayer */,
 				F5E56B11108284E6006E788A /* playercorefactory */,
 				E38E14F80D25F9F900618676 /* VideoPlayer */,
+				68D77D5F1CD1C841004C1735 /* RetroPlayer */,
 				DF923E5B1A11536A008CDB0C /* DataCacheCore.cpp */,
 				DF923E5C1A11536A008CDB0C /* DataCacheCore.h */,
 				7CF05049190A1D7200222135 /* FFmpeg.cpp */,
@@ -9905,6 +9937,7 @@
 				E38E1FAD0D25F9FD00618676 /* DVDSubtitleLineCollection.cpp in Sources */,
 				E38E1FAE0D25F9FD00618676 /* DVDSubtitleParserSubrip.cpp in Sources */,
 				E38E1FAF0D25F9FD00618676 /* DVDSubtitleStream.cpp in Sources */,
+				68D77D6C1CD1C86B004C1735 /* RetroPlayerAudio.cpp in Sources */,
 				E38E1FC50D25F9FD00618676 /* AudioDecoder.cpp in Sources */,
 				E38E1FC70D25F9FD00618676 /* CodecFactory.cpp in Sources */,
 				E38E1FE90D25F9FD00618676 /* LinuxRendererGL.cpp in Sources */,
@@ -10087,6 +10120,7 @@
 				E38E22400D25F9FE00618676 /* filcreat.cpp in Sources */,
 				E38E22410D25F9FE00618676 /* file.cpp in Sources */,
 				E38E22420D25F9FE00618676 /* filefn.cpp in Sources */,
+				68D77D6E1CD1C86B004C1735 /* RetroPlayerVideo.cpp in Sources */,
 				E38E22430D25F9FE00618676 /* filestr.cpp in Sources */,
 				E38E22440D25F9FE00618676 /* find.cpp in Sources */,
 				E38E22450D25F9FE00618676 /* getbits.cpp in Sources */,
@@ -10387,6 +10421,7 @@
 				18B7C7D31294222E009E7A26 /* GUIPanelContainer.cpp in Sources */,
 				18B7C7D41294222E009E7A26 /* GUIProgressControl.cpp in Sources */,
 				DF1D2DF01B6E85EE002BB9DB /* XbtFile.cpp in Sources */,
+				68D77D6A1CD1C86B004C1735 /* RetroPlayer.cpp in Sources */,
 				18B7C7D51294222E009E7A26 /* GUIRadioButtonControl.cpp in Sources */,
 				18B7C7D61294222E009E7A26 /* GUIRenderingControl.cpp in Sources */,
 				18B7C7D71294222E009E7A26 /* GUIResizeControl.cpp in Sources */,
@@ -10657,6 +10692,7 @@
 				DF2345E315FA639500A934F6 /* UPnPRenderer.cpp in Sources */,
 				DF2345E415FA639500A934F6 /* UPnPServer.cpp in Sources */,
 				AE84CB5A15A5B8A600A3810E /* TagLibVFSStream.cpp in Sources */,
+				68D77D681CD1C86B004C1735 /* PixelConverter.cpp in Sources */,
 				AEC0083115ACAC6E0099888C /* TagLoaderTagLib.cpp in Sources */,
 				DFDA3153160E34230047A626 /* DVDOverlayCodec.cpp in Sources */,
 				DFB0F472161B747500D744F4 /* AddonsOperations.cpp in Sources */,
@@ -10998,6 +11034,7 @@
 				E499115B174E5CC300741B6D /* filefn.cpp in Sources */,
 				E499115C174E5CC300741B6D /* filestr.cpp in Sources */,
 				E499115D174E5CC300741B6D /* find.cpp in Sources */,
+				68D77D691CD1C86B004C1735 /* PixelConverter.cpp in Sources */,
 				E499115E174E5CC300741B6D /* getbits.cpp in Sources */,
 				E499115F174E5CC300741B6D /* global.cpp in Sources */,
 				E4991160174E5CC300741B6D /* int64.cpp in Sources */,
@@ -11075,6 +11112,7 @@
 				E49911B5174E5D0A00741B6D /* emu_msvcrt.cpp in Sources */,
 				E49911B6174E5D0A00741B6D /* coff.cpp in Sources */,
 				E49911B7174E5D0A00741B6D /* dll.cpp in Sources */,
+				68D77D6F1CD1C86B004C1735 /* RetroPlayerVideo.cpp in Sources */,
 				397877D91AAAF87700F98A45 /* Temperature.cpp in Sources */,
 				E49911B8174E5D0A00741B6D /* dll_tracker.cpp in Sources */,
 				E49911B9174E5D0A00741B6D /* dll_tracker_file.cpp in Sources */,
@@ -11819,6 +11857,7 @@
 				E49914A8174E607200741B6D /* GUIWindowScreensaver.cpp in Sources */,
 				7C8E02441BA35D0B0072E8B2 /* SkinBuiltins.cpp in Sources */,
 				E49914A9174E607200741B6D /* GUIWindowScreensaverDim.cpp in Sources */,
+				68D77D6D1CD1C86B004C1735 /* RetroPlayerAudio.cpp in Sources */,
 				E49914AA174E607200741B6D /* GUIWindowStartup.cpp in Sources */,
 				E49914AB174E607200741B6D /* GUIWindowSystemInfo.cpp in Sources */,
 				7CFEA2B31C98618400A0B60B /* BinaryAddonCache.cpp in Sources */,
@@ -11927,6 +11966,7 @@
 				7C2612721825B6340086E04D /* DatabaseQuery.cpp in Sources */,
 				7C920CFA181669FF00DA1477 /* TextureOperations.cpp in Sources */,
 				DFEF0BAD180ADE6400AEAED1 /* FileItemListModification.cpp in Sources */,
+				68D77D6B1CD1C86B004C1735 /* RetroPlayer.cpp in Sources */,
 				DFE4BE061C661C5F0048EB03 /* AnnounceReceiver.mm in Sources */,
 				DFEF0BC2180ADEDA00AEAED1 /* SmartPlaylistFileItemListModifier.cpp in Sources */,
 				7CC82C9418284F9F0010DF30 /* CharsetDetection.cpp in Sources */,

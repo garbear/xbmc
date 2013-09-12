@@ -472,6 +472,9 @@
     <Filter Include="games\addons\savestates">
       <UniqueIdentifier>{479d6d68-e7a0-43f1-b873-cbf2fabada15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cores\RetroPlayer">
+      <UniqueIdentifier>{c37d9732-3387-48f7-adda-f8073a858362}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3547,6 +3550,18 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\games\addons\savestates\LinearMemoryStream.cpp">
       <Filter>games\addons\savestates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\RetroPlayer\PixelConverter.cpp">
+      <Filter>cores\RetroPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\RetroPlayer\RetroPlayer.cpp">
+      <Filter>cores\RetroPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerAudio.cpp">
+      <Filter>cores\RetroPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerVideo.cpp">
+      <Filter>cores\RetroPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6907,6 +6922,18 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\addons\savestates\LinearMemoryStream.h">
       <Filter>games\addons\savestates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\RetroPlayer\PixelConverter.h">
+      <Filter>cores\RetroPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayer.h">
+      <Filter>cores\RetroPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerAudio.h">
+      <Filter>cores\RetroPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerVideo.h">
+      <Filter>cores\RetroPlayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

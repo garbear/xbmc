@@ -140,6 +140,7 @@ public:
   bool  HasAudio() const;
   bool  HasMenu() const;
   bool  HasVideo() const;
+  bool  HasGame() const;
   bool  HasRDS() const;
   bool  IsCaching() const;
   bool  IsInMenu() const;
@@ -149,6 +150,7 @@ public:
   bool  IsPlaying() const;
   bool  IsPlayingAudio() const;
   bool  IsPlayingVideo() const;
+  bool  IsPlayingGame() const;
   bool  IsPlayingRDS() const;
   bool  IsRecording() const;
   void  LoadPage(int p, int sp, unsigned char* buffer);
