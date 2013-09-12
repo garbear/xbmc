@@ -148,6 +148,7 @@
 #define WINDOW_FULLSCREEN_RADIO           10801 // virtual window for PVR radio specific keymaps with fallback to WINDOW_VISUALISATION
 
 #define WINDOW_DIALOG_GAME_CONTROLLERS    10820
+#define WINDOW_GAMES                      10821
 
 //#define WINDOW_VIRTUAL_KEYBOARD           11000
 // WINDOW_ID's from 11100 to 11199 reserved for Skins

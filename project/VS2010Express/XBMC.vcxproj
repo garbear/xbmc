@@ -427,6 +427,8 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\games\ports\PortManager.cpp" />
     <ClCompile Include="..\..\xbmc\games\ports\PortMapper.cpp" />
     <ClCompile Include="..\..\xbmc\games\tags\GameInfoTag.cpp" />
+    <ClCompile Include="..\..\xbmc\games\windows\GUIViewStateWindowGames.cpp" />
+    <ClCompile Include="..\..\xbmc\games\windows\GUIWindowGames.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\DefaultJoystick.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.cpp" />
@@ -1167,6 +1169,8 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\games\ports\PortManager.h" />
     <ClInclude Include="..\..\xbmc\games\ports\PortMapper.h" />
     <ClInclude Include="..\..\xbmc\games\tags\GameInfoTag.h" />
+    <ClInclude Include="..\..\xbmc\games\windows\GUIViewStateWindowGames.h" />
+    <ClInclude Include="..\..\xbmc\games\windows\GUIWindowGames.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\DefaultJoystick.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.h" />

@@ -475,6 +475,9 @@
     <Filter Include="cores\RetroPlayer">
       <UniqueIdentifier>{c37d9732-3387-48f7-adda-f8073a858362}</UniqueIdentifier>
     </Filter>
+    <Filter Include="games\windows">
+      <UniqueIdentifier>{413ce90f-853a-4986-90a4-e841c83e96e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3562,6 +3565,12 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerVideo.cpp">
       <Filter>cores\RetroPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\windows\GUIViewStateWindowGames.cpp">
+      <Filter>games\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\windows\GUIWindowGames.cpp">
+      <Filter>games\windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6934,6 +6943,12 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerVideo.h">
       <Filter>cores\RetroPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\windows\GUIViewStateWindowGames.h">
+      <Filter>games\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\windows\GUIWindowGames.h">
+      <Filter>games\windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
