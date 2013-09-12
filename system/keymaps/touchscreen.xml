@@ -55,6 +55,14 @@
       <tap pointers="3">PlayPause</tap>
     </touch>
   </FullScreenVideo>
+  <FullScreenVideo>
+    <touch>
+      <swipe direction="left">StepBack</swipe>
+      <swipe direction="right">StepForward</swipe>
+      <swipe direction="left" pointers="2">Seek(-7)</swipe>
+      <tap pointers="3">PlayPause</tap>
+    </touch>
+  </FullScreenVideo>
   <PlayerControls>
     <touch>
       <swipe direction="down" pointers="3">Back</swipe>
