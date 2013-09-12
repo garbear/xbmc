@@ -105,4 +105,5 @@ private:
 };
 
 extern CRBP g_RBP;
+
 #endif
