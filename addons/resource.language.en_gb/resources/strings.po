@@ -16180,7 +16180,15 @@ msgctxt "#35211"
 msgid "The add-on %s is missing."
 msgstr ""
 
-#empty strings from id 35212 to 35504
+#empty strings from id 35212 to 35219
+
+#. Description of add-on category for game providers
+#: xbmc/filesystem/AddonsDirectory.cpp
+msgctxt "#35220"
+msgid "Game providers"
+msgstr ""
+
+#empty strings from id 35221 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/addons/AddonCallbacksPVR.cpp
