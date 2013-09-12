@@ -680,3 +680,9 @@ msgstr ""
 msgctxt "#31132"
 msgid "min"
 msgstr ""
+
+#empty strings from id 31133 to 31199
+
+msgctxt "#31200"
+msgid "Play your personal games or download one of the many game add-ons from the official repository."
+msgstr ""

@@ -824,6 +824,28 @@
 						</include>
 					</control>
 				</control>
+				<control type="group" id="16000">
+					<visible>String.IsEqual(Container(9000).ListItem.Property(id),games)</visible>
+					<scrolltime tween="cubic" easing="out">500</scrolltime>
+					<include>Visible_Right_Delayed</include>
+					<control type="grouplist" id="4001">
+						<orientation>vertical</orientation>
+						<include content="ImageWidgetHeader">
+							<param name="widget_header" value="$LOCALIZE[15016]" />
+							<param name="visible" value="true"/>
+						</include>
+						<include content="ImageWidget">
+							<param name="image_path" value="special://skin/extras/home-images/games.jpg"/>
+							<param name="text_label" value="$LOCALIZE[31200]" />
+							<param name="button_label" value="" />
+							<param name="button_onclick" value="ActivateWindow(games)"/>
+							<param name="button_id" value="4100"/>
+							<param name="visible" value="true"/>
+							<param name="visible_1" value="False"/>
+							<param name="visible_2" value="False"/>
+						</include>
+					</control>
+				</control>
 			</control>
 			<include content="TopBar">
 				<param name="breadcrumbs_label" value="" />
@@ -1063,6 +1085,13 @@
 								<thumb>icons/home/radio.png</thumb>
 								<property name="id">radio</property>
 								<visible>PVR.HasRadioChannels</visible>
+							</item>
+							<item>
+								<label>$LOCALIZE[15016]</label>
+								<onclick>ActivateWindow(Games)</onclick>
+								<thumb>icons/home/games.png</thumb>
+								<property name="id">games</property>
+								<visible>!Skin.HasSetting(HomeMenuNoGamesButton)</visible>
 							</item>
 							<item>
 								<label>$LOCALIZE[24001]</label>
