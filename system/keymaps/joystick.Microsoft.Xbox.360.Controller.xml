@@ -39,6 +39,7 @@
 <!-- 15              Back                      -->
 
 <!-- Linux alterations for default Xpad Driver -->
+<!-- xpad sometimes maps D-Pad to Axes		  -->
 <!-- 9               Guide                     -->
 <!-- 10              Left Stick Button         -->
 <!-- 11              Right Stick Button        -->
@@ -46,6 +47,8 @@
 <!-- 13              D-Pad Right               -->
 <!-- 14              D-Pad Up                  -->
 <!-- 15              D-Pad Down                -->
+<!-- 7               D-Pad L/R                 -->
+<!-- 8               D-Pad U/D                 -->
 <!-- Axis 6 +1/-1    Triggers - malfunctioning -->
 
 <!-- Axis Mappings:                   -->
@@ -144,6 +147,10 @@
       <button id="9">XBMC.ActivateWindow(Home)</button>
       <button id="10">XBMC.ActivateWindow(ShutdownMenu)</button>
       <button id="11">XBMC.ActivateWindow(PlayerControls)</button>
+      <axis id="8" limit="-1">Up</axis>
+      <axis id="8" limit="+1">Down</axis>
+      <axis id="7" limit="-1">Left</axis>
+      <axis id="7" limit="+1">Right</axis>
       <button id="12">Left</button>
       <button id="13">Right</button>
       <button id="14">Up</button>
@@ -337,6 +344,10 @@
       <button id="9">XBMC.ActivateWindow(Home)</button>  <!-- guide -->
       <button id="10">XBMC.ActivateWindow(ShutdownMenu)</button>  <!-- left stick -->
       <button id="11">AudioNextLanguage</button>  <!-- right stick -->
+      <axis id="8" limit="-1">BigStepForward</axis>
+      <axis id="8" limit="+1">BigStepBack</axis>
+      <axis id="7" limit="-1">StepBack</axis>
+      <axis id="7" limit ="+1">StepForward</axis>
       <button id="12">StepBack</button>
       <button id="13">StepForward</button>
       <button id="14">BigStepForward</button>
@@ -419,6 +430,10 @@
       <button id="13">JoypadRight</button>
       <button id="14">JoypadUp</button>
       <button id="15">JoypadDown</button>
+      <axis id="7" limit="-1">JoypadLeft</axis>
+      <axis id="7" limit="+1">JoypadRight</axis>
+      <axis id="8" limit="-1">JoypadUp</axis>
+      <axis id="8" limit="+1">JoypadDown</axis>
       <hat id="1" position="up">JoypadUp</hat>
       <hat id="1" position="down">JoypadDown</hat>
       <hat id="1" position="left">JoypadLeft</hat>
@@ -472,6 +487,10 @@
       <button id="13">NextChannelGroup</button>
       <button id="14">ChannelUp</button>
       <button id="15">ChannelDown</button>
+      <axis id="7" limit="-1">PreviousChannelGroup</axis>
+      <axis id="7" limit="+1">NextChannelGroup</axis>
+      <axis id="8" limit="-1">ChannelUp</axis>
+      <axis id="8" limit="+1">ChannelDown</axis>
       <hat id="1" position="up">ChannelUp</hat>
       <hat id="1" position="down">ChannelDown</hat>
       <hat id="1" position="left">PreviousChannelGroup</hat>
@@ -611,6 +630,10 @@
       <button id="13">NextPreset</button>
       <button id="14">SkipPrevious</button>
       <button id="15">SkipNext</button>
+      <axis id="8" limit="-1">PreviousPreset</axis>
+      <axis id="8" limit="+1">NextPreset</axis>
+      <axis id="7" limit="-1">SkipPrevious</axis>
+      <axis id="7" limit="+1">SkipNext</axis>
       <axis id="6" limit="-1">AnalogRewind</axis>
       <axis id="6" limit="+1">AnalogFastForward</axis>
       <hat id="1" position="up">SkipNext</hat>
@@ -775,6 +798,10 @@
       <button id="13">NextPicture</button>
       <button id="14">ZoomIn</button>
       <button id="15">ZoomOut</button>
+      <axis id="7" limit="-1">PreviousPicture</axis>
+      <axis id="7" limit="+1">NextPicture</axis>
+      <axis id="8" limit="-1">ZoomIn</axis>
+      <axis id="8" limit="+1">ZoomOut</axis>
       <axis id="1">AnalogMove</axis>
       <axis id="2">AnalogMove</axis>
       <axis id="6" limit="+1">ZoomOut</axis>
