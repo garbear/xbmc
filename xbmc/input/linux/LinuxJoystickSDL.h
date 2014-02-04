@@ -35,11 +35,9 @@ public:
 
   virtual ~CLinuxJoystickSDL() { }
   virtual void Update();
-  virtual const JOYSTICK::Joystick &GetState() const { return m_state; }
 
 private:
   CLinuxJoystickSDL(std::string name, SDL_Joystick *pJoystick, unsigned int id);
   
   SDL_Joystick *m_pJoystick;
-  JOYSTICK::Joystick m_state;
 };

@@ -22,28 +22,11 @@
 
 #include "IJoystick.h"
 #include "settings/ISettingCallback.h"
-#include "threads/SystemClock.h"
 
 #include <string>
 
-class CAction;
-
 namespace JOYSTICK
 {
-
-/**
- * Track key presses for deferred action repeats.
- */
-struct ActionTracker
-{
-  ActionTracker() { Reset(); }
-  void Reset();
-  void Track(const CAction &action);
-
-  int                  actionID; // Action ID, or 0 if not tracking any action
-  std::string          name; // Action name
-  XbmcThreads::EndTime timeout; // Timeout until action is repeated
-};
 
 /**
  * Class to manage all connected joysticks.
@@ -51,7 +34,7 @@ struct ActionTracker
 class CJoystickManager : public ISettingCallback
 {
 private:
-  CJoystickManager() : m_bEnabled(false), m_bWakeupChecked(false) { }
+  CJoystickManager() : m_bEnabled(false) { }
   virtual ~CJoystickManager() { DeInitialize(); }
 
 public:
@@ -62,7 +45,9 @@ public:
   void Update();
   unsigned int Count() const { return m_joysticks.size(); }
   void Reinitialize() { Initialize(); }
-  void Reset() { m_actionTracker.Reset(); }
+  void Reset() { 
+    //Action tracker removed, what does this do now? 
+  }
 
   // Inherited from ISettingCallback
   virtual void OnSettingChanged(const CSetting *setting);
@@ -71,28 +56,9 @@ private:
   void Initialize();
   void DeInitialize();
 
-  /**
-   * After updating, look for changes in state.
-   * @param oldState - previous joystick state, set to newState as a post-condition
-   * @param newState - the updated joystick state
-   * @param joyID - the ID of the joystick being processed
-   */
-  void ProcessStateChanges();
-  void ProcessButtonPresses(Joystick &oldState, const Joystick &newState, unsigned int joyID);
-  void ProcessHatPresses(Joystick &oldState, const Joystick &newState, unsigned int joyID);
-  void ProcessAxisMotion(Joystick &oldState, const Joystick &newState, unsigned int joyID);
-
-  // Returns true if this wakes up from the screensaver
-  bool Wakeup();
-  // Allows Wakeup() to perform another wakeup check
-  void ResetWakeup() { m_bWakeupChecked = false; }
-
   JoystickArray m_joysticks;
-  Joystick      m_states[GAMEPAD_MAX_CONTROLLERS];
   bool          m_bEnabled;
-  bool          m_bWakeupChecked; // true if WakeupCheck() has been called
 
-  ActionTracker m_actionTracker;
 };
 
 } // namespace INPUT

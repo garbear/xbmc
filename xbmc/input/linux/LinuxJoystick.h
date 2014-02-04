@@ -37,7 +37,6 @@ public:
 
   virtual ~CLinuxJoystick();
   virtual void Update();
-  virtual const JOYSTICK::Joystick &GetState() const { return m_state; }
 
 private:
   CLinuxJoystick(int fd, unsigned int id, const char *name, const std::string &filename, unsigned char buttons, unsigned char axes);
@@ -46,7 +45,6 @@ private:
   static int GetAxisMap(int fd, uint8_t *axisMap);
   static int DetermineIoctl(int fd, int *ioctls, uint16_t *buttonMap, int &ioctl_used);
 
-  JOYSTICK::Joystick m_state;
   int                m_fd;
   std::string        m_filename; // for debugging purposes
 };

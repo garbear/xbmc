@@ -47,8 +47,17 @@ public:
   virtual ~IJoystick() { }
 
   virtual void Update() = 0;
+  
+  void UpdateState() { m_oldstate -= m_state; };
+  
+  void ResetState() {
+    m_state.ResetState();
+    m_oldstate.ResetState();
+  }
 
-  virtual const JOYSTICK::Joystick &GetState() const = 0;
+protected:
+  JOYSTICK::JoystickState m_state;
+  JOYSTICK::JoystickState m_oldstate;
 };
 
 typedef std::vector<boost::shared_ptr<IJoystick> > JoystickArray;

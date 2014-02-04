@@ -32,7 +32,7 @@
 
 using namespace JOYSTICK;
 
-CLinuxJoystickSDL::CLinuxJoystickSDL(std::string name, SDL_Joystick *pJoystick, unsigned int id) : m_pJoystick(pJoystick), m_state()
+CLinuxJoystickSDL::CLinuxJoystickSDL(std::string name, SDL_Joystick *pJoystick, unsigned int id) : m_pJoystick(pJoystick)
 {
   m_state.id          = id;
   m_state.name        = name;

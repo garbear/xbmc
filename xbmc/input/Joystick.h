@@ -19,6 +19,7 @@
  *
  */
 
+#include "threads/SystemClock.h"
 #include <string>
 #include <vector>
 
@@ -37,9 +38,25 @@
 
 #define GAMEPAD_MAX_CONTROLLERS 4
 
+class CAction;
+
 namespace JOYSTICK
 {
 
+  /**
+ * Track key presses for deferred action repeats.
+ */
+struct ActionTracker
+{
+  ActionTracker() { Reset(); }
+  void Reset();
+  void Track(const CAction &action);
+
+  int                  actionID; // Action ID, or 0 if not tracking any action
+  std::string          name; // Action name
+  XbmcThreads::EndTime timeout; // Timeout until action is repeated
+};
+  
 /**
  * An arrow-based device on a gamepad. Legally, no more than two buttons can be
  * pressed, and only if they are adjacent. If no buttons are pressed (or the
@@ -82,10 +99,12 @@ struct Hat
  * effort should be made to decode these axes back to hats, as this processing
  * is done in CJoystickManager.
  */
-struct Joystick
+class JoystickState
 {
 public:
-  Joystick() : id(0) { ResetState(); }
+  JoystickState() : id(0), m_bWakeupChecked(false) { ResetState(); }
+                  JoystickState& operator-=(const JoystickState& rhs);
+                const JoystickState operator-(const JoystickState &other) const;
   void ResetState(unsigned int buttonCount = GAMEPAD_BUTTON_COUNT,
                   unsigned int hatCount = GAMEPAD_HAT_COUNT,
                   unsigned int axisCount = GAMEPAD_AXIS_COUNT);
@@ -100,6 +119,26 @@ public:
   std::vector<bool>  buttons;
   std::vector<Hat>   hats;
   std::vector<float> axes;
+  
+private:
+                 /**
+                * After updating, look for changes in state.
+                * @param oldState - previous joystick state, set to newState as a post-condition
+                * @param newState - the updated joystick state
+                * @param joyID - the ID of the joystick being processed
+                */
+                void ProcessButtonPresses(const JoystickState& rhs);
+                void ProcessHatPresses(const JoystickState& rhs);
+                void ProcessAxisMotion(const JoystickState& rhs);
+
+                // Returns true if this wakes up from the screensaver
+                bool Wakeup();
+                // Allows Wakeup() to perform another wakeup check
+                void ResetWakeup() { m_bWakeupChecked = false; }
+                bool          m_bWakeupChecked; // true if WakeupCheck() has been called
+
+                ActionTracker m_actionTracker;
+
 };
 
 } // namespace INPUT

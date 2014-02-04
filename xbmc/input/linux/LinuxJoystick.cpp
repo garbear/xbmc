@@ -85,7 +85,7 @@ static const char *button_names[KEY_MAX - BTN_MISC + 1] =
 };
 
 CLinuxJoystick::CLinuxJoystick(int fd, unsigned int id, const char *name, const std::string &filename,
-    unsigned char buttons, unsigned char axes) : m_state(), m_fd(fd), m_filename(filename)
+    unsigned char buttons, unsigned char axes) : m_fd(fd), m_filename(filename)
 {
   m_state.id          = id;
   m_state.name        = name;
