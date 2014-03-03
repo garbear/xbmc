@@ -1,0 +1,136 @@
+/*
+ *      Copyright (C) 2014-2016 Team Kodi
+ *      http://kodi.tv
+ *
+ *  This Program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2, or (at your option)
+ *  any later version.
+ *
+ *  This Program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this Program; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
+ *
+ */
+#ifndef KODI_GAME_CALLBACKS_H_
+#define KODI_GAME_CALLBACKS_H_
+
+#include "kodi_game_types.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct CB_GameLib
+{
+  // --- Game callbacks --------------------------------------------------------
+
+  /*!
+   * \brief Requests the frontend to stop the current game
+   */
+  void (*CloseGame)(void* addonData);
+
+  /*!
+   * \brief Create a video stream
+   * \param format The type of data accepted by this stream
+   * \param width The frame width for raw frames or unused for encoded data
+   * \param width The frame height for raw frames or unused for encoded data
+   * \return 0 on success or -1 if a video stream is already created
+   */
+  int (*OpenVideoStream)(void* addonData, GAME_VIDEO_FORMAT format, unsigned int width, unsigned int height);
+
+  /*!
+   * \brief Add video data to a video stream
+   * \param data The video stream data
+   * \param size The size of the data
+   */
+  void (*AddVideoData)(void* addonData, const uint8_t* data, unsigned int size);
+
+  /*!
+   * \brief Free the video stream
+   */
+  void (*CloseVideoStream)(void* addonData);
+
+  /*!
+   * \brief Create an audio stream
+   * \param format The type of data accepted by this stream
+   * \param samplerate The sample rate or unused for encoded data
+   * \param channels The channel layout or unused for encoded data
+   * \return 0 on success or -1 if an audio stream is already created
+   */
+  int (*OpenAudioStream)(void* addonData, GAME_AUDIO_FORMAT format, unsigned int samplerate, GAME_AUDIO_CHANNEL_LAYOUT channels);
+
+  /*!
+   * \brief Add audio data to an audio stream
+   * \param data The audio stream data
+   * \param size The size of the data
+   */
+  void (*AddAudioData)(void* addonData, const uint8_t* data, unsigned int size);
+
+  /*!
+   * \brief Free the audio stream
+   */
+  void (*CloseAudioStream)(void* addonData);
+
+  // -- Hardware rendering callbacks -------------------------------------------
+
+  /*!
+   * \brief Set info for hardware rendering
+   *
+   * \param hw_info A struct of properties for the hardware rendering system
+   */
+  void (*HwSetInfo)(void* addonData, const game_hw_info* hw_info);
+
+  /*!
+   * \brief Get the framebuffer for rendering
+   *
+   * \return The framebuffer
+   */
+  uintptr_t (*HwGetCurrentFramebuffer)(void* addonData);
+
+  /*!
+   * \brief Get a symbol from the hardware context
+   *
+   * \param symbol The symbol's name
+   *
+   * \return A function pointer for the specified symbol
+   */
+  game_proc_address_t (*HwGetProcAddress)(void* addonData, const char* symbol);
+
+  // --- Input callbacks -------------------------------------------------------
+
+  /*!
+   * \brief Begin reporting events for the specified port
+   *
+   * \param port The zero-indexed port number
+   */
+  bool (*OpenPort)(void* addonData, unsigned int port);
+
+  /*!
+   * \brief End reporting events for the specified port
+   *
+   * \param port The port number passed to OpenPort()
+   */
+  void (*ClosePort)(void* addonData, unsigned int port);
+
+  /*!
+   * \brief Set the rumble state of a controller
+   *
+   * \param port The number passed when opening the port
+   * \param effect Apply the rumble to the strong motor or the weak motor
+   * \param strength The magnitude of the feedback in the closed interval [0.0, 1.0]
+   */
+  void (*RumbleSetState)(void* addonData, unsigned int port, GAME_RUMBLE_EFFECT effect, float strength);
+
+} CB_GameLib;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // KODI_GAME_CALLBACKS_H_

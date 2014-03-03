@@ -26,6 +26,7 @@
 #include "AddonDatabase.h"
 #include "FileItem.h"
 #include "filesystem/Directory.h"
+#include "games/GameManager.h"
 #include "GUIDialogAddonSettings.h"
 #include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
 #include "dialogs/GUIDialogContextMenu.h"
@@ -418,6 +419,8 @@ void CGUIDialogAddonInfo::OnUninstall()
   // prompt user to be sure
   if (!CGUIDialogYesNo::ShowAndGetInput(CVariant{24037}, CVariant{750}))
     return;
+
+  GAME::CGameManager::GetInstance().ClearAutoLaunch(); // Enabling before uninstalling might launch a queued game
 
   CJobManager::GetInstance().AddJob(new CAddonUnInstallJob(m_localAddon),
                                     &CAddonInstaller::GetInstance());

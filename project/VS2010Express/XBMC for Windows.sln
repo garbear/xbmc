@@ -43,6 +43,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libKODI_inputstream", "..\.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libKODI_peripheral", "..\..\lib\addons\library.kodi.peripheral\project\VS2010Express\libKODI_peripheral.vcxproj", "{FEA71D39-CB68-486B-A978-246E661A3F89}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libKODI_game", "..\..\lib\addons\library.kodi.game\project\VS2010Express\libKODI_game.vcxproj", "{1400C916-B4AD-41D7-ACEE-A853F3B89B38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Testsuite|Win32 = Debug Testsuite|Win32
@@ -153,6 +155,12 @@ Global
 		{FEA71D39-CB68-486B-A978-246E661A3F89}.Debug|Win32.Build.0 = Debug|Win32
 		{FEA71D39-CB68-486B-A978-246E661A3F89}.Release|Win32.ActiveCfg = Release|Win32
 		{FEA71D39-CB68-486B-A978-246E661A3F89}.Release|Win32.Build.0 = Release|Win32
+		{1400C916-B4AD-41D7-ACEE-A853F3B89B38}.Debug Testsuite|Win32.ActiveCfg = Debug|Win32
+		{1400C916-B4AD-41D7-ACEE-A853F3B89B38}.Debug Testsuite|Win32.Build.0 = Debug|Win32
+		{1400C916-B4AD-41D7-ACEE-A853F3B89B38}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1400C916-B4AD-41D7-ACEE-A853F3B89B38}.Debug|Win32.Build.0 = Debug|Win32
+		{1400C916-B4AD-41D7-ACEE-A853F3B89B38}.Release|Win32.ActiveCfg = Release|Win32
+		{1400C916-B4AD-41D7-ACEE-A853F3B89B38}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

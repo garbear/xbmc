@@ -40,6 +40,11 @@ namespace ANNOUNCEMENT
 class CAnnouncementManager;
 }
 
+namespace GAME
+{
+class CGameManager;
+}
+
 namespace PVR
 {
 class CPVRManager;
@@ -58,6 +63,7 @@ public:
   XBPython& GetXBPython();
   PVR::CPVRManager& GetPVRManager();
   ActiveAE::CActiveAEDSP& GetADSPManager();
+  GAME::CGameManager& GetGameManager();
 
 protected:
   std::unique_ptr<ADDON::CAddonMgr> m_addonMgr;
@@ -66,4 +72,5 @@ protected:
   std::unique_ptr<XBPython> m_XBPython;
   std::unique_ptr<PVR::CPVRManager> m_PVRManager;
   std::unique_ptr<ActiveAE::CActiveAEDSP> m_ADSPManager;
+  std::unique_ptr<GAME::CGameManager> m_gameManager;
 };

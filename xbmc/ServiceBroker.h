@@ -34,6 +34,11 @@ namespace ANNOUNCEMENT
   class CAnnouncementManager;
 }
 
+namespace GAME
+{
+  class CGameManager;
+}
+
 namespace PVR
 {
   class CPVRManager;
@@ -50,4 +55,5 @@ public:
   static XBPython &GetXBPython();
   static PVR::CPVRManager &GetPVRManager();
   static ActiveAE::CActiveAEDSP& GetADSP();
+  static GAME::CGameManager& GetGameManager();
 };

@@ -457,6 +457,12 @@
     <Filter Include="games\tags">
       <UniqueIdentifier>{35503fd5-67af-4b10-ae6e-aee24c3f4db7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="games\addons">
+      <UniqueIdentifier>{bfb067bc-5775-409b-a1c3-41b11203d2a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="games\ports">
+      <UniqueIdentifier>{17fd93e7-2caf-416a-8328-3ede747ce102}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3494,6 +3500,33 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\games\tags\GameInfoTag.cpp">
       <Filter>games\tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\addons\AddonCallbacksGame.cpp">
+      <Filter>addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\GameFileAutoLauncher.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\GameManager.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\SerialState.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\GameClient.cpp">
+      <Filter>games\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\GameClientInput.cpp">
+      <Filter>games\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\GameClientProperties.cpp">
+      <Filter>games\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\ports\PortManager.cpp">
+      <Filter>games\ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\ports\PortMapper.cpp">
+      <Filter>games\ports</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6788,6 +6821,39 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\tags\GameInfoTag.h">
       <Filter>games\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\AddonCallbacksGame.h">
+      <Filter>addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\DllGameClient.h">
+      <Filter>addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\GameFileAutoLauncher.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\GameManager.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\GameTypes.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\SerialState.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\GameClient.h">
+      <Filter>games\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\GameClientInput.h">
+      <Filter>games\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\GameClientProperties.h">
+      <Filter>games\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\ports\PortManager.h">
+      <Filter>games\ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\ports\PortMapper.h">
+      <Filter>games\ports</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
