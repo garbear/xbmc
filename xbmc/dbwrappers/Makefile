@@ -1,6 +1,7 @@
 SRCS=Database.cpp \
      DatabaseQuery.cpp \
      dataset.cpp \
+     DynamicDatabase.cpp \
      mysqldataset.cpp \
      qry_dat.cpp \
      sqlitedataset.cpp \

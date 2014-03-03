@@ -454,12 +454,14 @@ msgctxt "#116"
 msgid "Move"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#117"
 msgid "Delete"
 msgstr ""
 
 #: xbmc/dialogs/GUIDialogFavourites.cpp
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#118"
 msgid "Rename"
@@ -480,6 +482,7 @@ msgctxt "#121"
 msgid "Confirm move"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#122"
 msgid "Confirm delete"
@@ -495,6 +498,7 @@ msgctxt "#124"
 msgid "Would you like to move the selected file(s)?"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#125"
 msgid "Would you like to delete the selected file(s)?[CR]Warning - this action can't be undone!"
@@ -2367,6 +2371,7 @@ msgctxt "#527"
 msgid "Manually add to library"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 msgctxt "#528"
 msgid "Enter title"
 msgstr ""
@@ -8606,11 +8611,13 @@ msgctxt "#16202"
 msgid "Failed to copy at least one file. Check the log for more information about this message."
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#16203"
 msgid "Move failed"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#16204"
 msgid "Failed to move at least one file. Check the log for more information about this message."
@@ -8621,6 +8628,7 @@ msgctxt "#16205"
 msgid "Delete failed"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#16206"
 msgid "Failed to delete at least one file. Check the log for more information about this message."
@@ -16069,7 +16077,7 @@ msgstr ""
 #empty strings from id 35019 to 35048
 
 #. Name of game add-ons category
-#: xbmc/filesystem/AddonsDirectory.cpp
+#: xbmc/addons/Addon.cpp
 msgctxt "#35049"
 msgid "Game add-ons"
 msgstr ""
@@ -16266,6 +16274,16 @@ msgctxt "#35102"
 msgid "Disable joystick when this device is present"
 msgstr ""
 
+#. Label for mouse buttons. Used in the controller mapping dialog.
+msgctxt "#35103"
+msgid "Buttons"
+msgstr ""
+
+#. Label for relative mounters like the mouse pointer. Used in the controller mapping dialog.
+msgctxt "#35104"
+msgid "Pointers"
+msgstr ""
+
 #empty strings from id 35103 to 35149
 
 #. Name of keyboard category in the settings category window
@@ -16274,7 +16292,7 @@ msgctxt "#35150"
 msgid "Keyboard"
 msgstr ""
 
-#. Name of group for configuring keyboard players
+#. Name of group in "Games -> Keyboard" for configuring keyboard players
 #: system/settings/settings.xml
 msgctxt "#35151"
 msgid "Player configuration"
@@ -16371,7 +16389,153 @@ msgctxt "#35200"
 msgid "ALL YOUR BASE ARE BELONG[CR]TO US"
 msgstr ""
 
-#empty strings from id 35201 to 35504
+#. Name of group in "Games -> General" for configuring gameplay
+#: system/settings/settings.xml
+msgctxt "#35201"
+msgid "Gameplay"
+msgstr ""
+
+#empty string with id 35202
+
+#: system/settings/settings.xml
+msgctxt "#35203"
+msgid "Enable rewind if supported"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35204"
+msgid "Enable real-time rewinding during game play, if supported. Press rewind or manually seek backwards using the seek bar."
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35205"
+msgid "Maximum rewind time"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35206"
+msgid "Maximum time possible to rewind, if supported. Large rewind histories can use a lot of RAM."
+msgstr ""
+
+#. Description of add-on category for emulators
+#: xbmc/filesystem/AddonsDirectory.cpp
+msgctxt "#35207"
+msgid "Emulators"
+msgstr ""
+
+#. Description of add-on category for standalone games
+#: xbmc/filesystem/AddonsDirectory.cpp
+msgctxt "#35208"
+msgid "Standalone games"
+msgstr ""
+
+#: xbmc/addons/Addon.cpp
+msgctxt "#35209"
+msgid "Game resources"
+msgstr ""
+
+#. Dialog title when gameplay fails
+#: xbmc/games/addons/GameClient.cpp
+#: xbmc/games/GameManager.cpp
+msgctxt "#35210"
+msgid "Failed to play game"
+msgstr ""
+
+#. Error dialog text when the game requires restricted files to play. %s - emulator ID
+#: xbmc/games/addons/GameClient.cpp
+msgctxt "#35211"
+msgid "This game requires the following add-on: %s"
+msgstr ""
+
+#. Error dialog text when launching a game and no emulators are compatible
+#: xbmc/games/GameUtils.cpp
+msgctxt "#35212"
+msgid "This game isn't compatible with any available emulators."
+msgstr ""
+
+#. Error dialog text when launching a game and the emulator has an internal error. %s - emulator name
+#: xbmc/games/GameClient.cpp
+msgctxt "#35213"
+msgid "The emulator \"%s\" had an internal error."
+msgstr ""
+
+#. Error dialog text when the game can't be played because it's not on a hard drive or partition
+#: xbmc/games/GameUtils.cpp
+msgctxt "#35214"
+msgid "This game can only be played directly from a hard drive or partition. Compressed files must be extracted."
+msgstr ""
+
+#. Error dialog text when libretro support is disabled
+#: xbmc/games/addons/GameClientProperties.cpp
+msgctxt "#35215"
+msgid "This game depends on a disabled add-on. Would you like to enable it?"
+msgstr ""
+
+#empty strings from id 35216 to 35219
+
+#. Description of add-on category for game providers
+#: xbmc/filesystem/AddonsDirectory.cpp
+msgctxt "#35220"
+msgid "Game providers"
+msgstr ""
+
+#empty strings from id 35221 to 35249
+
+#: xbmc/windows/GUIMediaWindow.cpp
+msgctxt "#35250"
+msgid "Add games..."
+msgstr ""
+
+#: xbmc/dialogs/GUIDialogMediaSource.cpp
+msgctxt "#35251"
+msgid "Add game source"
+msgstr ""
+
+#: xbmc/dialogs/GUIDialogMediaSource.cpp
+msgctxt "#35252"
+msgid "Edit game source"
+msgstr ""
+
+#: xbmc/games/windows/GUIWindowGames.cpp
+msgctxt "#35253"
+msgid "Install emulator"
+msgstr ""
+
+#: xbmc/games/windows/GUIWindowGames.cpp
+msgctxt "#35254"
+msgid "Manage emulators"
+msgstr ""
+
+#: xbmc/games/dialogs/GUIDialogSelectGameClient.cpp
+msgctxt "#35255"
+msgid "Browse all emulators"
+msgstr ""
+
+#empty strings from id 35256 to 35268
+
+#. Title of the save states dialog
+#: addons/skin.estuary/1080i/DialogSavestates.xml
+msgctxt "#35269"
+msgid "Saved game states"
+msgstr ""
+
+#: addons/skin.estuary/1080i/DialogSavestates.xml
+msgctxt "#35270"
+msgid "Save state"
+msgstr ""
+
+#: addons/skin.estuary/1080i/DialogSavestates.xml
+msgctxt "#35271"
+msgid "Clear saves"
+msgstr ""
+
+#. Presented as an option in the context menu for savestates in the savestate dialog
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
+msgctxt "#35272"
+msgid "Load save"
+msgstr ""
+
+#empty strings from id 35273 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/addons/AddonCallbacksPVR.cpp
