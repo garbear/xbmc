@@ -21,6 +21,7 @@
 #include "ServiceManager.h"
 #include "addons/BinaryAddonCache.h"
 #include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
+#include "games/GameManager.h"
 #include "utils/log.h"
 #include "interfaces/AnnouncementManager.h"
 #include "interfaces/generic/ScriptInvocationManager.h"
@@ -49,6 +50,7 @@ bool CServiceManager::Init2()
 
   m_ADSPManager.reset(new ActiveAE::CActiveAEDSP());
   m_PVRManager.reset(new PVR::CPVRManager());
+  m_gameManager.reset(new GAME::CGameManager());
 
   m_binaryAddonCache.reset( new ADDON::CBinaryAddonCache());
   m_binaryAddonCache->Init();
@@ -67,6 +69,7 @@ bool CServiceManager::Init3()
 void CServiceManager::Deinit()
 {
   m_binaryAddonCache.reset();
+  m_gameManager.reset();
   m_PVRManager.reset();
   m_ADSPManager.reset();
   m_addonMgr.reset();
@@ -103,4 +106,9 @@ PVR::CPVRManager& CServiceManager::GetPVRManager()
 ActiveAE::CActiveAEDSP& CServiceManager::GetADSPManager()
 {
   return *m_ADSPManager;
+}
+
+GAME::CGameManager& CServiceManager::GetGameManager()
+{
+  return *m_gameManager;
 }

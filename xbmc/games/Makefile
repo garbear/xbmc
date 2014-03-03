@@ -1,4 +1,6 @@
-SRCS=GameSettings.cpp \
+SRCS=GameFileAutoLauncher.cpp \
+     GameManager.cpp \
+     GameSettings.cpp \
 
 LIB=games.a
 

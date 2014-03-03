@@ -15894,7 +15894,7 @@ msgstr ""
 #empty strings from id 35011 to 35048
 
 #. Name of game add-ons category
-#: xbmc/filesystem/AddonsDirectory.cpp
+#: xbmc/addons/Addon.cpp
 msgctxt "#35049"
 msgid "Game add-ons"
 msgstr ""
@@ -16125,7 +16125,62 @@ msgctxt "#35201"
 msgid "Configure input for game add-ons."
 msgstr ""
 
-#empty strings from id 35202 to 35504
+#. Description of settings category "Games -> General" with label #16000
+#: system/settings/settings.xml
+msgctxt "#35202"
+msgid "No info available yet."
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35203"
+msgid "Enable rewind if supported"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35204"
+msgid "Enable real-time rewinding during game play, if supported. Press rewind or manually seek backwards using the seek bar."
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35205"
+msgid "Maximum rewind time"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35206"
+msgid "Maximum time possible to rewind, if supported. Large rewind histories can use a lot of RAM."
+msgstr ""
+
+#. Description of add-on category for emulators
+#: xbmc/filesystem/AddonsDirectory.cpp
+msgctxt "#35207"
+msgid "Emulators"
+msgstr ""
+
+#. Description of add-on category for standalone games
+#: xbmc/filesystem/AddonsDirectory.cpp
+msgctxt "#35208"
+msgid "Standalone games"
+msgstr ""
+
+#: xbmc/addons/Addon.cpp
+msgctxt "#35209"
+msgid "Game resources"
+msgstr ""
+
+#. Dialog title when gameplay fails and an optional add-on is imported
+#: xbmc/games/addons/GameClient.cpp
+msgctxt "#35210"
+msgid "Failed to play game"
+msgstr ""
+
+#. Dialog text when gameplay fails and an optional add-on is imported. %s - add-on ID
+#: xbmc/games/addons/GameClient.cpp
+msgctxt "#35211"
+msgid "The add-on %s is missing."
+msgstr ""
+
+#empty strings from id 35212 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/addons/AddonCallbacksPVR.cpp

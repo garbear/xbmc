@@ -1,0 +1,8 @@
+SRCS=GameClientBasicPlayback.cpp \
+     GameClientReversiblePlayback.cpp \
+     GameLoop.cpp \
+
+LIB=gameaddonplayback.a
+
+include ../../../../Makefile.include
+-include $(patsubst %.cpp,%.P,$(patsubst %.c,%.P,$(SRCS)))

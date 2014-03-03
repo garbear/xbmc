@@ -35,6 +35,7 @@
 #include "addons/Visualisation.h"
 #include "addons/Webinterface.h"
 #include "cores/AudioEngine/DSPAddons/ActiveAEDSPAddon.h"
+#include "games/addons/GameClient.h"
 #include "games/controllers/Controller.h"
 #include "peripherals/addons/PeripheralAddon.h"
 #include "addons/PVRClient.h"
@@ -105,6 +106,7 @@ std::shared_ptr<IAddon> CAddonBuilder::Build()
     case ADDON_SCRIPT_MODULE:
     case ADDON_SUBTITLE_MODULE:
     case ADDON_SCRIPT_WEATHER:
+    case ADDON_RESOURCE_GAMES:
       return std::make_shared<CAddon>(std::move(m_props));
     case ADDON_WEB_INTERFACE:
       return CWebinterface::FromExtension(std::move(m_props), m_extPoint);
@@ -137,6 +139,8 @@ std::shared_ptr<IAddon> CAddonBuilder::Build()
       return CInputStream::FromExtension(std::move(m_props), m_extPoint);
     case ADDON_PERIPHERALDLL:
       return PERIPHERALS::CPeripheralAddon::FromExtension(std::move(m_props), m_extPoint);
+    case ADDON_GAMEDLL:
+      return GAME::CGameClient::FromExtension(std::move(m_props), m_extPoint);
     case ADDON_SKIN:
       return CSkinInfo::FromExtension(std::move(m_props), m_extPoint);
     case ADDON_RESOURCE_IMAGES:
@@ -217,6 +221,8 @@ AddonPtr CAddonBuilder::FromProps(AddonProps addonProps)
       return AddonPtr(new PERIPHERALS::CPeripheralAddon(std::move(addonProps), false, false)); // TODO
     case ADDON_GAME_CONTROLLER:
       return AddonPtr(new GAME::CController(std::move(addonProps)));
+    case ADDON_GAMEDLL:
+      return AddonPtr(new GAME::CGameClient(std::move(addonProps), std::vector<std::string>(), false, false, false, false));
     default:
       break;
   }

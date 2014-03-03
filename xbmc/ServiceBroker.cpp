@@ -50,3 +50,8 @@ ActiveAE::CActiveAEDSP &CServiceBroker::GetADSP()
 {
   return g_application.m_ServiceManager->GetADSPManager();
 }
+
+GAME::CGameManager &CServiceBroker::GetGameManager()
+{
+  return g_application.m_ServiceManager->GetGameManager();
+}

@@ -457,6 +457,21 @@
     <Filter Include="games\tags">
       <UniqueIdentifier>{35503fd5-67af-4b10-ae6e-aee24c3f4db7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="games\addons">
+      <UniqueIdentifier>{bfb067bc-5775-409b-a1c3-41b11203d2a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="games\ports">
+      <UniqueIdentifier>{17fd93e7-2caf-416a-8328-3ede747ce102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="games\addons\playback">
+      <UniqueIdentifier>{2a3627ff-4a4e-4596-ae5a-077c16950480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\binary\interfaces\api1\Game">
+      <UniqueIdentifier>{9c1ff0c1-8273-4460-af49-7c20f7d293a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="games\addons\savestates">
+      <UniqueIdentifier>{479d6d68-e7a0-43f1-b873-cbf2fabada15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3484,6 +3499,54 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\games\tags\GameInfoTag.cpp">
       <Filter>games\tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\GameFileAutoLauncher.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\GameManager.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\GameClient.cpp">
+      <Filter>games\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\GameClientInput.cpp">
+      <Filter>games\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\GameClientProperties.cpp">
+      <Filter>games\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\ports\PortManager.cpp">
+      <Filter>games\ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\ports\PortMapper.cpp">
+      <Filter>games\ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\GameClientTiming.cpp">
+      <Filter>games\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\GameClientTranslator.cpp">
+      <Filter>games\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\playback\GameClientBasicPlayback.cpp">
+      <Filter>games\addons\playback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\playback\GameClientReversiblePlayback.cpp">
+      <Filter>games\addons\playback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\playback\GameLoop.cpp">
+      <Filter>games\addons\playback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\addons\binary\interfaces\api1\Game\AddonCallbacksGame.cpp">
+      <Filter>addons\binary\interfaces\api1\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\savestates\BasicMemoryStream.cpp">
+      <Filter>games\addons\savestates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\savestates\DeltaPairMemoryStream.cpp">
+      <Filter>games\addons\savestates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\savestates\LinearMemoryStream.cpp">
+      <Filter>games\addons\savestates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6769,6 +6832,81 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\tags\GameInfoTag.h">
       <Filter>games\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\DllGameClient.h">
+      <Filter>addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\GameFileAutoLauncher.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\GameManager.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\GameTypes.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\GameClient.h">
+      <Filter>games\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\GameClientInput.h">
+      <Filter>games\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\GameClientProperties.h">
+      <Filter>games\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\ports\PortManager.h">
+      <Filter>games\ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\ports\PortMapper.h">
+      <Filter>games\ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\GameClientCallbacks.h">
+      <Filter>games\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\GameClientTiming.h">
+      <Filter>games\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\GameClientTranslator.h">
+      <Filter>games\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientBasicPlayback.h">
+      <Filter>games\addons\playback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientReversiblePlayback.h">
+      <Filter>games\addons\playback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\playback\GameLoop.h">
+      <Filter>games\addons\playback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\playback\IGameClientPlayback.h">
+      <Filter>games\addons\playback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\binary\interfaces\api1\Game\AddonCallbacksGame.h">
+      <Filter>addons\binary\interfaces\api1\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\kodi-addon-dev-kit\include\kodi\kodi_game_callbacks.h">
+      <Filter>addons\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\kodi-addon-dev-kit\include\kodi\kodi_game_dll.h">
+      <Filter>addons\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\kodi-addon-dev-kit\include\kodi\kodi_game_types.h">
+      <Filter>addons\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\kodi-addon-dev-kit\include\kodi\libKODI_game.h">
+      <Filter>addons\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\BasicMemoryStream.h">
+      <Filter>games\addons\savestates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\DeltaPairMemoryStream.h">
+      <Filter>games\addons\savestates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\IMemoryStream.h">
+      <Filter>games\addons\savestates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\LinearMemoryStream.h">
+      <Filter>games\addons\savestates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

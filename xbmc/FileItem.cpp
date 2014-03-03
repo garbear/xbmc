@@ -59,6 +59,7 @@
 #include "utils/Variant.h"
 #include "utils/Mime.h"
 #include "utils/Random.h"
+#include "games/GameManager.h"
 #include "games/tags/GameInfoTag.h"
 
 #include <assert.h>
@@ -789,6 +790,9 @@ bool CFileItem::IsVideo() const
      return true;
   }
 
+  // TODO: If the file is a zip file, ask the game clients if any support this
+  // file before assuming it is video.
+
   return URIUtils::HasExtension(m_strPath, g_advancedSettings.m_videoExtensions);
 }
 
@@ -868,6 +872,9 @@ bool CFileItem::IsAudio() const
      return true;
   }
 
+  // TODO: If the file is a zip file, ask the game clients if any support this
+  // file before assuming it is audio
+
   return URIUtils::HasExtension(m_strPath, g_advancedSettings.GetMusicExtensions());
 }
 
@@ -885,7 +892,10 @@ bool CFileItem::IsGame() const
   if (HasPictureInfoTag())
     return false;
 
-  return false;
+  if (HasAddonInfo() && GetAddonInfo()->IsType(ADDON::ADDON_GAME))
+    return true;
+
+  return CGameManager::GetInstance().IsGame(m_strPath);
 }
 
 bool CFileItem::IsPicture() const

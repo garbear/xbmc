@@ -39,6 +39,9 @@ public:
 
   static const ControllerPtr EmptyPtr;
 
+  // implementation of IAddon via CAddon
+  virtual bool IsType(ADDON::TYPE type) const override;
+
   std::string Label(void);
   std::string ImagePath(void) const;
   std::string OverlayPath(void) const;

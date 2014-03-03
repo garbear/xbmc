@@ -40,6 +40,12 @@ CController::CController(ADDON::AddonProps addonprops) :
 {
 }
 
+bool CController::IsType(ADDON::TYPE type) const
+{
+  return type == ADDON::ADDON_GAME_CONTROLLER ||
+         type == ADDON::ADDON_GAME;
+}
+
 std::string CController::Label(void)
 {
   if (m_layout.Label() > 0)
