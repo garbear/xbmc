@@ -25,6 +25,10 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0A265E4018C53A350035A274 /* LinuxJoystickSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E3018C536410035A274 /* LinuxJoystickSDL.cpp */; };
+		0A265E4118C53A390035A274 /* LinuxJoystickSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E3018C536410035A274 /* LinuxJoystickSDL.cpp */; };
+		0A265E4218C53A4D0035A274 /* LinuxJoystickSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A265E3018C536410035A274 /* LinuxJoystickSDL.cpp */; };
+		0AF391F018C502E10000D016 /* JoystickHat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0AF391EF18C502E10000D016 /* JoystickHat.cpp */; };
 		0E3036EC1760F68A00D93596 /* FavouritesDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E3036EA1760F68A00D93596 /* FavouritesDirectory.cpp */; };
 		0E3036ED1760F68A00D93596 /* FavouritesDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E3036EA1760F68A00D93596 /* FavouritesDirectory.cpp */; };
 		0E3036EE1760F68A00D93596 /* FavouritesDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E3036EA1760F68A00D93596 /* FavouritesDirectory.cpp */; };
@@ -3277,6 +3281,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A265E3018C536410035A274 /* LinuxJoystickSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LinuxJoystickSDL.cpp; sourceTree = "<group>"; };
+		0A265E3118C536410035A274 /* LinuxJoystickSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinuxJoystickSDL.h; sourceTree = "<group>"; };
+		0AF391EF18C502E10000D016 /* JoystickHat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JoystickHat.cpp; sourceTree = "<group>"; };
+		0AF391F118C502EB0000D016 /* JoystickHat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoystickHat.h; sourceTree = "<group>"; };
 		0E3036EA1760F68A00D93596 /* FavouritesDirectory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FavouritesDirectory.cpp; sourceTree = "<group>"; };
 		0E3036EB1760F68A00D93596 /* FavouritesDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavouritesDirectory.h; sourceTree = "<group>"; };
 		180F6C7F17CE9A5700127892 /* smc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smc.h; sourceTree = "<group>"; };
@@ -4466,7 +4474,6 @@
 		DFF8C8C117F618D8005B16DB /* JoystickManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JoystickManager.cpp; sourceTree = "<group>"; };
 		DFF8C8C217F618D8005B16DB /* JoystickManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoystickManager.h; sourceTree = "<group>"; };
 		DFF8C8CC17F6191A005B16DB /* IInputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IInputHandler.h; sourceTree = "<group>"; };
-		DFF8C8D017F61937005B16DB /* IJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IJoystick.h; sourceTree = "<group>"; };
 		DFFC52CB17527B3100C937AB /* XBMC.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XBMC.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFFC52CF17527E8B00C937AB /* AppIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AppIcon.png; path = media/AppIcon.png; sourceTree = "<group>"; };
 		DFFC52D117527EFC00C937AB /* XBMC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = XBMC.png; path = xbmc/osx/atv2/XBMC.png; sourceTree = "<group>"; };
@@ -5853,6 +5860,15 @@
 			name = "System Libs and Frameworks";
 			sourceTree = "<group>";
 		};
+		0A265E2A18C536410035A274 /* linux */ = {
+			isa = PBXGroup;
+			children = (
+				0A265E3018C536410035A274 /* LinuxJoystickSDL.cpp */,
+				0A265E3118C536410035A274 /* LinuxJoystickSDL.h */,
+			);
+			path = linux;
+			sourceTree = "<group>";
+		};
 		18B49FF01152BEEB001AF8A6 /* addons */ = {
 			isa = PBXGroup;
 			children = (
@@ -6166,15 +6182,17 @@
 		18B7C8C61294252E009E7A26 /* input */ = {
 			isa = PBXGroup;
 			children = (
+				0A265E2A18C536410035A274 /* linux */,
 				E4991332174E5E5C00741B6D /* touch */,
 				18B7C8CB12942546009E7A26 /* ButtonTranslator.cpp */,
 				18B7C8CC12942546009E7A26 /* ButtonTranslator.h */,
 				DFF8C8CC17F6191A005B16DB /* IInputHandler.h */,
-				DFF8C8D017F61937005B16DB /* IJoystick.h */,
 				DFAB049613F8376700B70BFB /* InertialScrollingHandler.cpp */,
 				DFAB049713F8376700B70BFB /* InertialScrollingHandler.h */,
 				DFF8C8BF17F618D8005B16DB /* Joystick.cpp */,
 				DFF8C8C017F618D8005B16DB /* Joystick.h */,
+				0AF391EF18C502E10000D016 /* JoystickHat.cpp */,
+				0AF391F118C502EB0000D016 /* JoystickHat.h */,
 				DFF8C8C117F618D8005B16DB /* JoystickManager.cpp */,
 				DFF8C8C217F618D8005B16DB /* JoystickManager.h */,
 				18B7C8CD12942546009E7A26 /* KeyboardLayoutConfiguration.cpp */,
@@ -9994,6 +10012,7 @@
 				E38E20130D25F9FD00618676 /* FileFactory.cpp in Sources */,
 				E38E20230D25F9FD00618676 /* FTPDirectory.cpp in Sources */,
 				E38E20240D25F9FD00618676 /* FTPParse.cpp in Sources */,
+				0AF391F018C502E10000D016 /* JoystickHat.cpp in Sources */,
 				E38E20250D25F9FD00618676 /* HDDirectory.cpp in Sources */,
 				E38E20270D25F9FD00618676 /* IDirectory.cpp in Sources */,
 				E38E20280D25F9FD00618676 /* IFile.cpp in Sources */,
@@ -10893,6 +10912,7 @@
 				820023DB171A28A300667D1C /* OSXTextInputResponder.mm in Sources */,
 				DF529BAE1741697B00523FB4 /* Environment.cpp in Sources */,
 				DFE4095B17417FDF00473BD9 /* LegacyPathTranslation.cpp in Sources */,
+				0A265E4018C53A350035A274 /* LinuxJoystickSDL.cpp in Sources */,
 				0E3036EC1760F68A00D93596 /* FavouritesDirectory.cpp in Sources */,
 				551C3A45175A12010051AAAD /* VDA.cpp in Sources */,
 				DFBB431B178B5E6F006CC20A /* GitRevision.cpp in Sources */,
@@ -11676,6 +11696,7 @@
 				DFF0F36817528350002DA3A4 /* DPMSSupport.cpp in Sources */,
 				DFF0F36917528350002DA3A4 /* PowerManager.cpp in Sources */,
 				DFF0F36A17528350002DA3A4 /* GUIDialogLockSettings.cpp in Sources */,
+				0A265E4218C53A4D0035A274 /* LinuxJoystickSDL.cpp in Sources */,
 				DFF0F36B17528350002DA3A4 /* GUIDialogProfileSettings.cpp in Sources */,
 				DFF0F36C17528350002DA3A4 /* GUIWindowSettingsProfile.cpp in Sources */,
 				DFF0F36D17528350002DA3A4 /* Profile.cpp in Sources */,
@@ -12057,6 +12078,7 @@
 				E4991115174E566800741B6D /* X_MS_MediaReceiverRegistrarSCPD.cpp in Sources */,
 				E4991116174E567A00741B6D /* AVTransportSCPD.cpp in Sources */,
 				E4991117174E567A00741B6D /* PltMediaController.cpp in Sources */,
+				0A265E4118C53A390035A274 /* LinuxJoystickSDL.cpp in Sources */,
 				E4991118174E567A00741B6D /* PltMediaRenderer.cpp in Sources */,
 				E4991119174E567A00741B6D /* RdrConnectionManagerSCPD.cpp in Sources */,
 				E499111A174E567A00741B6D /* RenderingControlSCPD.cpp in Sources */,
