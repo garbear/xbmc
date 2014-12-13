@@ -298,12 +298,6 @@ AC_ARG_ENABLE([profiling],
   [use_profiling=$enableval],
   [use_profiling=no])
 
-AC_ARG_ENABLE([joystick],
-  [AS_HELP_STRING([--enable-joystick],
-  [enable SDL joystick support (default is auto)])],
-  [use_joystick=$enableval],
-  [use_joystick=auto])
-
 AC_ARG_ENABLE([x11],
   [AS_HELP_STRING([--enable-x11],
   [enable x11 (default is yes) 'Linux Only'])],
@@ -544,7 +538,6 @@ case $host in
      ARCH="i486-linux"
      use_arch="x86"
      use_cpu="i686"
-     use_joystick=no
      use_gles=yes
      use_optical_drive=no
      use_x11=no
@@ -592,7 +585,6 @@ case $host in
      MAKE="gmake"
      ;;
   arm-apple-darwin*)
-     use_joystick=no
      use_neon=yes
      use_libcec=no
      use_vtbdecoder=yes
@@ -611,14 +603,12 @@ case $host in
      AC_SUBST([DEPENDS_ROOT_FOR_XCODE])
      ;;
   *86*-apple-darwin*)
-     use_joystick=no
      use_vtbdecoder=no
      ARCH="x86-osx"
      DEPENDS_ROOT_FOR_XCODE=$(echo ${prefix%/*})
      AC_SUBST([DEPENDS_ROOT_FOR_XCODE])
      ;;
   powerpc-apple-darwin*)
-     use_joystick=no
      use_vtbdecoder=no
      ARCH="powerpc-osx"
      use_arch="ppc"
@@ -635,7 +625,6 @@ case $host in
      target_platform=target_linux
      ARCH="arm"
      use_arch="arm"
-     use_joystick=no
      use_neon=yes
      use_gles=yes
      use_gl=no
@@ -646,7 +635,6 @@ case $host in
      use_arch="arm"
      use_cpu=cortex-a9
      ARCH="arm"
-     use_joystick=no
      use_neon=yes
      use_gles=yes
      use_optical_drive=no
@@ -1175,23 +1163,6 @@ if test "x$use_dbus" != "xno"; then
 else
   AC_MSG_NOTICE($dbus_disabled)
 fi
-  #case "$host_vendor" != "apple"; determine availability of SDL or SDL2
-  # joystick
-  if test "$use_joystick" != "no"; then
-    PKG_CHECK_MODULES([SDL2], [sdl2],
-      [AC_DEFINE([HAVE_SDL_VERSION],[2],["SDL major version"])
-       AC_DEFINE([HAVE_SDL],[1],["Define to 1 if using sdl"])
-       INCLUDES="$INCLUDES $SDL2_CFLAGS"; LIBS="$LIBS $SDL2_LIBS"; use_joystick="yes"],
-      [if test "$use_joystick" = "yes"; then
-        AC_MSG_ERROR($sdl_joystick_not_found)
-      elif test "$use_joystick" != "no"; then
-        AC_MSG_NOTICE($sdl_joystick_not_found)
-        use_joystick="no"
-      fi
-     ])
-  else
-    AC_MSG_RESULT($sdl_joystick_not_found)
-  fi
 fi
 
 XB_FIND_SONAME([ASS],         [ass])
@@ -1933,13 +1904,6 @@ if test "$use_openmax" != "no"; then
   final_message="$final_message\n  OpenMax:\tYes"
 else
   final_message="$final_message\n  OpenMax:\tNo"
-fi
-
-if test "$use_joystick" = "yes"; then
-  final_message="$final_message\n  Joystick:\tYes"
-  AC_DEFINE([HAS_SDL_JOYSTICK],[1],["Define to 1 if using SDL joystick"])
-else
-  final_message="$final_message\n  Joystick:\tNo"
 fi
 
 if test "$use_touch_skin" = "yes"; then
