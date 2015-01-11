@@ -255,6 +255,20 @@
 		5EB3113C1A978B9B00551907 /* CueInfoLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EB3113A1A978B9B00551907 /* CueInfoLoader.cpp */; };
 		5EE4F9181A9FF36F002E20F8 /* CueInfoLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EB3113A1A978B9B00551907 /* CueInfoLoader.cpp */; };
 		5EF801001A97892A0035AA4D /* ReplayGain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF800FE1A97892A0035AA4D /* ReplayGain.cpp */; };
+		68034B8F1C3C9E6B00289C39 /* DriverPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B801C3C9E6B00289C39 /* DriverPrimitive.cpp */; };
+		68034B901C3C9E6B00289C39 /* DriverPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B801C3C9E6B00289C39 /* DriverPrimitive.cpp */; };
+		68034B911C3C9E6B00289C39 /* JoystickMonitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B871C3C9E6B00289C39 /* JoystickMonitor.cpp */; };
+		68034B921C3C9E6B00289C39 /* JoystickMonitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B871C3C9E6B00289C39 /* JoystickMonitor.cpp */; };
+		68034B931C3C9E6B00289C39 /* JoystickTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B891C3C9E6B00289C39 /* JoystickTranslator.cpp */; };
+		68034B941C3C9E6B00289C39 /* JoystickTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B891C3C9E6B00289C39 /* JoystickTranslator.cpp */; };
+		68034B951C3C9E6B00289C39 /* KeymapHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B8D1C3C9E6B00289C39 /* KeymapHandler.cpp */; };
+		68034B961C3C9E6B00289C39 /* KeymapHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B8D1C3C9E6B00289C39 /* KeymapHandler.cpp */; };
+		68034BA01C3C9E7800289C39 /* GenericJoystickButtonMapping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B9A1C3C9E7800289C39 /* GenericJoystickButtonMapping.cpp */; };
+		68034BA11C3C9E7800289C39 /* GenericJoystickButtonMapping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B9A1C3C9E7800289C39 /* GenericJoystickButtonMapping.cpp */; };
+		68034BA21C3C9E7800289C39 /* GenericJoystickInputHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B9C1C3C9E7800289C39 /* GenericJoystickInputHandling.cpp */; };
+		68034BA31C3C9E7800289C39 /* GenericJoystickInputHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68034B9C1C3C9E7800289C39 /* GenericJoystickInputHandling.cpp */; };
+		68B27C141C403881002EB93F /* GenericJoystickFeatureHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */; };
+		68B27C151C403881002EB93F /* GenericJoystickFeatureHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */; };
 		7C0B98A4154B79C30065A238 /* AEDeviceInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7C0B98A1154B79C30065A238 /* AEDeviceInfo.cpp */; };
 		7C140989183224B8009F9411 /* ISetting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7C14096F183224B8009F9411 /* ISetting.cpp */; };
 		7C14098A183224B8009F9411 /* ISetting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7C14096F183224B8009F9411 /* ISetting.cpp */; };
@@ -2677,6 +2691,27 @@
 		5EB3113B1A978B9B00551907 /* CueInfoLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CueInfoLoader.h; sourceTree = "<group>"; };
 		5EF800FE1A97892A0035AA4D /* ReplayGain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplayGain.cpp; sourceTree = "<group>"; };
 		5EF800FF1A97892A0035AA4D /* ReplayGain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayGain.h; sourceTree = "<group>"; };
+		68034B801C3C9E6B00289C39 /* DriverPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DriverPrimitive.cpp; path = joysticks/DriverPrimitive.cpp; sourceTree = "<group>"; };
+		68034B811C3C9E6B00289C39 /* DriverPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DriverPrimitive.h; path = joysticks/DriverPrimitive.h; sourceTree = "<group>"; };
+		68034B821C3C9E6B00289C39 /* IJoystickButtonMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IJoystickButtonMap.h; path = joysticks/IJoystickButtonMap.h; sourceTree = "<group>"; };
+		68034B831C3C9E6B00289C39 /* IJoystickButtonMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IJoystickButtonMapper.h; path = joysticks/IJoystickButtonMapper.h; sourceTree = "<group>"; };
+		68034B841C3C9E6B00289C39 /* IJoystickDriverHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IJoystickDriverHandler.h; path = joysticks/IJoystickDriverHandler.h; sourceTree = "<group>"; };
+		68034B851C3C9E6B00289C39 /* IJoystickInputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IJoystickInputHandler.h; path = joysticks/IJoystickInputHandler.h; sourceTree = "<group>"; };
+		68034B861C3C9E6B00289C39 /* IKeymapHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IKeymapHandler.h; path = joysticks/IKeymapHandler.h; sourceTree = "<group>"; };
+		68034B871C3C9E6B00289C39 /* JoystickMonitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JoystickMonitor.cpp; path = joysticks/JoystickMonitor.cpp; sourceTree = "<group>"; };
+		68034B881C3C9E6B00289C39 /* JoystickMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JoystickMonitor.h; path = joysticks/JoystickMonitor.h; sourceTree = "<group>"; };
+		68034B891C3C9E6B00289C39 /* JoystickTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JoystickTranslator.cpp; path = joysticks/JoystickTranslator.cpp; sourceTree = "<group>"; };
+		68034B8A1C3C9E6B00289C39 /* JoystickTranslator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JoystickTranslator.h; path = joysticks/JoystickTranslator.h; sourceTree = "<group>"; };
+		68034B8B1C3C9E6B00289C39 /* JoystickTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JoystickTypes.h; path = joysticks/JoystickTypes.h; sourceTree = "<group>"; };
+		68034B8C1C3C9E6B00289C39 /* JoystickUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JoystickUtils.h; path = joysticks/JoystickUtils.h; sourceTree = "<group>"; };
+		68034B8D1C3C9E6B00289C39 /* KeymapHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KeymapHandler.cpp; path = joysticks/KeymapHandler.cpp; sourceTree = "<group>"; };
+		68034B8E1C3C9E6B00289C39 /* KeymapHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeymapHandler.h; path = joysticks/KeymapHandler.h; sourceTree = "<group>"; };
+		68034B9A1C3C9E7800289C39 /* GenericJoystickButtonMapping.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericJoystickButtonMapping.cpp; path = joysticks/generic/GenericJoystickButtonMapping.cpp; sourceTree = "<group>"; };
+		68034B9B1C3C9E7800289C39 /* GenericJoystickButtonMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericJoystickButtonMapping.h; path = joysticks/generic/GenericJoystickButtonMapping.h; sourceTree = "<group>"; };
+		68034B9C1C3C9E7800289C39 /* GenericJoystickInputHandling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericJoystickInputHandling.cpp; path = joysticks/generic/GenericJoystickInputHandling.cpp; sourceTree = "<group>"; };
+		68034B9D1C3C9E7800289C39 /* GenericJoystickInputHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericJoystickInputHandling.h; path = joysticks/generic/GenericJoystickInputHandling.h; sourceTree = "<group>"; };
+		68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericJoystickFeatureHandling.cpp; path = joysticks/generic/GenericJoystickFeatureHandling.cpp; sourceTree = "<group>"; };
+		68B27C131C403881002EB93F /* GenericJoystickFeatureHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericJoystickFeatureHandling.h; path = joysticks/generic/GenericJoystickFeatureHandling.h; sourceTree = "<group>"; };
 		6E97BDBF0DA2B620003A2A89 /* EventClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventClient.h; sourceTree = "<group>"; };
 		6E97BDC00DA2B620003A2A89 /* EventPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventPacket.h; sourceTree = "<group>"; };
 		6E97BDC10DA2B620003A2A89 /* EventServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventServer.h; sourceTree = "<group>"; };
@@ -4558,7 +4593,7 @@
 		E46F7C2B0F77219700C25D29 /* ZeroconfOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZeroconfOSX.h; sourceTree = "<group>"; };
 		E46F7C2C0F77219700C25D29 /* ZeroconfOSX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZeroconfOSX.cpp; sourceTree = "<group>"; };
 		E47252BF175115F9001C1AAA /* Codesign.command */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Codesign.command; sourceTree = "<group>"; };
-		E4991089174D0D2600741B6D /* Kodi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kodi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4991089174D0D2600741B6D /* .app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = .app; path = Kodi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E499108B174D0D2600741B6D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		E499108D174D0D2600741B6D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		E499108F174D0D2600741B6D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
@@ -5239,6 +5274,7 @@
 		18B7C8C61294252E009E7A26 /* input */ = {
 			isa = PBXGroup;
 			children = (
+				68034B7F1C3C9E4900289C39 /* joysticks */,
 				E4991332174E5E5C00741B6D /* touch */,
 				18B7C8CB12942546009E7A26 /* ButtonTranslator.cpp */,
 				18B7C8CC12942546009E7A26 /* ButtonTranslator.h */,
@@ -5917,6 +5953,42 @@
 				7C779E2D104A57E500F444C4 /* WinSystemOSXGL.mm */,
 			);
 			path = osx;
+			sourceTree = "<group>";
+		};
+		68034B7F1C3C9E4900289C39 /* joysticks */ = {
+			isa = PBXGroup;
+			children = (
+				68034B971C3C9E6D00289C39 /* generic */,
+				68034B801C3C9E6B00289C39 /* DriverPrimitive.cpp */,
+				68034B811C3C9E6B00289C39 /* DriverPrimitive.h */,
+				68034B821C3C9E6B00289C39 /* IJoystickButtonMap.h */,
+				68034B831C3C9E6B00289C39 /* IJoystickButtonMapper.h */,
+				68034B841C3C9E6B00289C39 /* IJoystickDriverHandler.h */,
+				68034B851C3C9E6B00289C39 /* IJoystickInputHandler.h */,
+				68034B861C3C9E6B00289C39 /* IKeymapHandler.h */,
+				68034B871C3C9E6B00289C39 /* JoystickMonitor.cpp */,
+				68034B881C3C9E6B00289C39 /* JoystickMonitor.h */,
+				68034B891C3C9E6B00289C39 /* JoystickTranslator.cpp */,
+				68034B8A1C3C9E6B00289C39 /* JoystickTranslator.h */,
+				68034B8B1C3C9E6B00289C39 /* JoystickTypes.h */,
+				68034B8C1C3C9E6B00289C39 /* JoystickUtils.h */,
+				68034B8D1C3C9E6B00289C39 /* KeymapHandler.cpp */,
+				68034B8E1C3C9E6B00289C39 /* KeymapHandler.h */,
+			);
+			name = joysticks;
+			sourceTree = "<group>";
+		};
+		68034B971C3C9E6D00289C39 /* generic */ = {
+			isa = PBXGroup;
+			children = (
+				68034B9A1C3C9E7800289C39 /* GenericJoystickButtonMapping.cpp */,
+				68034B9B1C3C9E7800289C39 /* GenericJoystickButtonMapping.h */,
+				68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */,
+				68B27C131C403881002EB93F /* GenericJoystickFeatureHandling.h */,
+				68034B9C1C3C9E7800289C39 /* GenericJoystickInputHandling.cpp */,
+				68034B9D1C3C9E7800289C39 /* GenericJoystickInputHandling.h */,
+			);
+			name = generic;
 			sourceTree = "<group>";
 		};
 		7C14096E18322476009F9411 /* lib */ = {
@@ -9337,6 +9409,7 @@
 				E38E20B10D25F9FD00618676 /* GUIWindowHome.cpp in Sources */,
 				E38E20B20D25F9FD00618676 /* GUIWindowLoginScreen.cpp in Sources */,
 				E38E20B30D25F9FD00618676 /* GUIWindowMusicBase.cpp in Sources */,
+				68034B931C3C9E6B00289C39 /* JoystickTranslator.cpp in Sources */,
 				E38E20B40D25F9FD00618676 /* GUIDialogMusicInfo.cpp in Sources */,
 				E38E20B50D25F9FD00618676 /* GUIWindowMusicNav.cpp in Sources */,
 				E38E20B70D25F9FD00618676 /* GUIWindowMusicPlaylist.cpp in Sources */,
@@ -9502,6 +9575,7 @@
 				880DBE550DC224A100E26B71 /* MusicFileDirectory.cpp in Sources */,
 				8883CEA10DD817D1004E8B72 /* DVDOverlayCodecSSA.cpp in Sources */,
 				8883CEA70DD81807004E8B72 /* DVDSubtitleParserSSA.cpp in Sources */,
+				68034B911C3C9E6B00289C39 /* JoystickMonitor.cpp in Sources */,
 				8883CEA80DD81807004E8B72 /* DVDSubtitlesLibass.cpp in Sources */,
 				5EF801001A97892A0035AA4D /* ReplayGain.cpp in Sources */,
 				8863281D0E07B37200BB3DAB /* GUIDialogFullScreenInfo.cpp in Sources */,
@@ -9771,10 +9845,12 @@
 				DF3488E713FD958F0026A711 /* GUIAction.cpp in Sources */,
 				DF34892A13FD9C780026A711 /* AirPlayServer.cpp in Sources */,
 				DF34898213FDAAF60026A711 /* HttpParser.cpp in Sources */,
+				68034B8F1C3C9E6B00289C39 /* DriverPrimitive.cpp in Sources */,
 				18968DC814155D7C005BA742 /* ApplicationOperations.cpp in Sources */,
 				DF0E4AD41AD5986F00A75430 /* GUIDialogPVRRadioRDSInfo.cpp in Sources */,
 				DF448457140048A60069344B /* AirTunesServer.cpp in Sources */,
 				DF44845E140048C80069344B /* PipesManager.cpp in Sources */,
+				68034BA01C3C9E7800289C39 /* GenericJoystickButtonMapping.cpp in Sources */,
 				DF98D98C1434F47D00A6EBE1 /* SkinVariable.cpp in Sources */,
 				F5E10537140AA38100175026 /* PeripheralBusUSB.cpp in Sources */,
 				F5E10538140AA38100175026 /* PeripheralBus.cpp in Sources */,
@@ -10054,8 +10130,10 @@
 				7C7BCDC717727951004842FB /* StaticProvider.cpp in Sources */,
 				7C8FC6EE1829A4580045153D /* DirectoryProvider.cpp in Sources */,
 				7C4E6F721829AA9700F1068F /* GUIDialogSubtitles.cpp in Sources */,
+				68B27C141C403881002EB93F /* GenericJoystickFeatureHandling.cpp in Sources */,
 				7C140989183224B8009F9411 /* ISetting.cpp in Sources */,
 				7C14098C183224B8009F9411 /* ISettingControl.cpp in Sources */,
+				68034B951C3C9E6B00289C39 /* KeymapHandler.cpp in Sources */,
 				7C14098F183224B8009F9411 /* Setting.cpp in Sources */,
 				DF56EF241A798A5E00CAAEFB /* HttpRangeUtils.cpp in Sources */,
 				7C140992183224B8009F9411 /* SettingCategoryAccess.cpp in Sources */,
@@ -10123,6 +10201,7 @@
 				7CCDA18F192753E30074CF51 /* PltThreadTask.cpp in Sources */,
 				7CCDA198192753E30074CF51 /* PltUPnP.cpp in Sources */,
 				7CCDA1A1192753E30074CF51 /* PltMediaConnect.cpp in Sources */,
+				68034BA21C3C9E7800289C39 /* GenericJoystickInputHandling.cpp in Sources */,
 				7CCDA1AA192753E30074CF51 /* PltXbox360.cpp in Sources */,
 				7CCDA1AF192753E30074CF51 /* X_MS_MediaReceiverRegistrarSCPD.cpp in Sources */,
 				7CCDA1BA192753E30074CF51 /* AVTransportSCPD.cpp in Sources */,
@@ -10282,6 +10361,7 @@
 				E4991181174E5CE000741B6D /* AddonStatusHandler.cpp in Sources */,
 				E4991182174E5CE000741B6D /* AddonVersion.cpp in Sources */,
 				E4991183174E5CE000741B6D /* GUIDialogAddonInfo.cpp in Sources */,
+				68B27C151C403881002EB93F /* GenericJoystickFeatureHandling.cpp in Sources */,
 				E4991184174E5CE000741B6D /* GUIDialogAddonSettings.cpp in Sources */,
 				E4991185174E5CE000741B6D /* GUIViewStateAddonBrowser.cpp in Sources */,
 				E4991186174E5CE000741B6D /* GUIWindowAddonBrowser.cpp in Sources */,
@@ -10297,6 +10377,7 @@
 				E4991190174E5CE400741B6D /* Encoder.cpp in Sources */,
 				DFEA4B561B5271F600562321 /* ActiveAEDSPMode.cpp in Sources */,
 				228FA65E1C53F9D50023BBF0 /* InfoScanner.cpp in Sources */,
+				68034BA11C3C9E7800289C39 /* GenericJoystickButtonMapping.cpp in Sources */,
 				E4991191174E5CE400741B6D /* EncoderFFmpeg.cpp in Sources */,
 				E4991196174E5CEB00741B6D /* Exception.cpp in Sources */,
 				E4991197174E5CEB00741B6D /* ilog.cpp in Sources */,
@@ -10687,6 +10768,7 @@
 				E499134B174E5E5C00741B6D /* ITouchInputHandling.cpp in Sources */,
 				E499134D174E5EB700741B6D /* SkinVariable.cpp in Sources */,
 				E499134E174E5EBE00741B6D /* AddonsOperations.cpp in Sources */,
+				68034BA31C3C9E7800289C39 /* GenericJoystickInputHandling.cpp in Sources */,
 				E499134F174E5EBE00741B6D /* ApplicationOperations.cpp in Sources */,
 				E4991350174E5EBE00741B6D /* AudioLibrary.cpp in Sources */,
 				E4991351174E5EBE00741B6D /* FavouritesOperations.cpp in Sources */,
@@ -10790,6 +10872,7 @@
 				E49913BB174E5F3C00741B6D /* EventPacket.cpp in Sources */,
 				E49913BC174E5F3C00741B6D /* EventServer.cpp in Sources */,
 				E49913BD174E5F3C00741B6D /* GUIDialogAccessPoints.cpp in Sources */,
+				68034B921C3C9E6B00289C39 /* JoystickMonitor.cpp in Sources */,
 				E49913BE174E5F3C00741B6D /* GUIDialogNetworkSetup.cpp in Sources */,
 				E49913BF174E5F3C00741B6D /* Network.cpp in Sources */,
 				E49913C0174E5F3C00741B6D /* NetworkServices.cpp in Sources */,
@@ -10854,6 +10937,7 @@
 				E49913F7174E5FB000741B6D /* PVRChannelGroups.cpp in Sources */,
 				E49913F8174E5FB000741B6D /* PVRChannelGroupsContainer.cpp in Sources */,
 				E49913F9174E5FB000741B6D /* GUIDialogPVRChannelManager.cpp in Sources */,
+				68034B901C3C9E6B00289C39 /* DriverPrimitive.cpp in Sources */,
 				E49913FA174E5FB000741B6D /* GUIDialogPVRChannelsOSD.cpp in Sources */,
 				E49913FD174E5FB000741B6D /* GUIDialogPVRGroupManager.cpp in Sources */,
 				E49913FE174E5FB000741B6D /* GUIDialogPVRGuideInfo.cpp in Sources */,
@@ -11081,6 +11165,7 @@
 				E499155B174E656E00741B6D /* Keyboard.cpp in Sources */,
 				E499155C174E656E00741B6D /* LanguageHook.cpp in Sources */,
 				E499155D174E656E00741B6D /* ListItem.cpp in Sources */,
+				68034B941C3C9E6B00289C39 /* JoystickTranslator.cpp in Sources */,
 				E499155E174E656E00741B6D /* ModuleXbmc.cpp in Sources */,
 				E499155F174E656E00741B6D /* ModuleXbmcgui.cpp in Sources */,
 				E4991560174E656E00741B6D /* ModuleXbmcplugin.cpp in Sources */,
@@ -11255,6 +11340,7 @@
 				7CCDA834192756250074CF51 /* NptSystem.cpp in Sources */,
 				7CCDA83D192756250074CF51 /* NptThreads.cpp in Sources */,
 				7CCDA846192756250074CF51 /* NptTime.cpp in Sources */,
+				68034B961C3C9E6B00289C39 /* KeymapHandler.cpp in Sources */,
 				7CCDA84F192756250074CF51 /* NptTls.cpp in Sources */,
 				7CCDA852192756250074CF51 /* NptUri.cpp in Sources */,
 				7CCDA85B192756250074CF51 /* NptUtils.cpp in Sources */,
