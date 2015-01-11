@@ -391,6 +391,12 @@
     <Filter Include="input\joysticks\generic">
       <UniqueIdentifier>{80a8356f-f3be-46b5-be2e-714a42764ee1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="peripherals\addons">
+      <UniqueIdentifier>{15c34cc2-9101-4038-9df4-4357d83a9d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="peripherals\bus\virtual">
+      <UniqueIdentifier>{6b33e5ae-5edf-4c33-b87f-3ee9115eb01d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3300,6 +3306,36 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\GenericJoystickFeatureHandling.cpp">
       <Filter>input\joysticks\generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\addons\AddonCallbacksPeripheral.cpp">
+      <Filter>addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\addons\PeripheralAddonTranslator.cpp">
+      <Filter>peripherals\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\addons\AddonJoystickButtonMap.cpp">
+      <Filter>peripherals\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\addons\AddonJoystickButtonMapping.cpp">
+      <Filter>peripherals\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\addons\AddonJoystickInputHandling.cpp">
+      <Filter>peripherals\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\addons\PeripheralAddon.cpp">
+      <Filter>peripherals\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\bus\virtual\PeripheralBusAddon.cpp">
+      <Filter>peripherals\bus\virtual</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\devices\PeripheralJoystick.cpp">
+      <Filter>peripherals\devices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\EventScanner.cpp">
+      <Filter>peripherals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\EventScanRate.cpp">
+      <Filter>peripherals</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6367,6 +6403,39 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\GenericJoystickFeatureHandling.h">
       <Filter>input\joysticks\generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\AddonCallbacksPeripheral.h">
+      <Filter>addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\DllPeripheral.h">
+      <Filter>addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\addons\PeripheralAddonTranslator.h">
+      <Filter>peripherals\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\addons\AddonJoystickButtonMap.h">
+      <Filter>peripherals\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\addons\AddonJoystickButtonMapping.h">
+      <Filter>peripherals\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\addons\AddonJoystickInputHandling.h">
+      <Filter>peripherals\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\addons\PeripheralAddon.h">
+      <Filter>peripherals\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\bus\virtual\PeripheralBusAddon.h">
+      <Filter>peripherals\bus\virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\devices\PeripheralJoystick.h">
+      <Filter>peripherals\devices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\EventScanner.h">
+      <Filter>peripherals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\EventScanRate.h">
+      <Filter>peripherals</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

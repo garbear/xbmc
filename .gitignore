@@ -122,6 +122,7 @@ cmake_install.cmake
 /addons/audioencoder.*
 /addons/pvr.*
 /addons/adsp.*
+/addons/peripheral.*
 /addons/xbmc.addon/addon.xml
 /addons/xbmc.json/addon.xml
 /addons/kodi.guilib/addon.xml
@@ -140,6 +141,7 @@ cmake_install.cmake
 /lib/addons/library.kodi.adsp/Makefile
 /lib/addons/library.xbmc.pvr/Makefile
 /lib/addons/library.xbmc.codec/Makefile
+/lib/addons/library.kodi.peripheral/Makefile
 /lib/addons/library.xbmc.addon/project/VS2010Express/Release
 /lib/addons/library.xbmc.addon/project/VS2010Express/Debug
 /lib/addons/library.kodi.adsp/project/VS2010Express/Release
@@ -151,6 +153,8 @@ cmake_install.cmake
 /lib/addons/library.kodi.audioengine/Makefile
 /lib/addons/library.kodi.audioengine/project/VS2010Express/Release/
 /lib/addons/library.kodi.audioengine/project/VS2010Express/Debug/
+/lib/addons/library.kodi.peripheral/project/VS2010Express/Release
+/lib/addons/library.kodi.peripheral/project/VS2010Express/Debug
 
 # /lib/cpluff/
 /lib/cpluff/ABOUT-NLS
@@ -485,6 +489,7 @@ lib/cpluff/stamp-h1
 /xbmc/platform/darwin/osx/ios/IOS-Info.plist
 
 # /xbmc/peripherals/
+/xbmc/peripherals/addons/Makefile
 /xbmc/peripherals/bus/Makefile
 /xbmc/peripherals/devices/Makefile
 
@@ -652,6 +657,8 @@ lib/cpluff/stamp-h1
 /addons/library.xbmc.pvr/libXBMC_pvr.lib
 /addons/library.kodi.audioengine/libKODI_audioengine.dll
 /addons/library.kodi.audioengine/libKODI_audioengine.lib
+/addons/library.kodi.peripheral/libKODI_peripheral.dll
+/addons/library.kodi.peripheral/libKODI_peripheral.lib
 
 /pvr-addons
 /adsp-addons

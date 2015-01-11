@@ -13,6 +13,10 @@ ifneq ($(wildcard pvr-addons/Makefile.am),)
 BOOTSTRAP_SUBDIRS += pvr-addons/configure.ac
 endif
 
+ifneq ($(wildcard peripheral-addons/Makefile.am),)
+BOOTSTRAP_SUBDIRS += peripheral-addons/configure.ac
+endif
+
 BOOTSTRAP_TARGETS=$(basename $(BOOTSTRAP_SUBDIRS))
 all: $(BOOTSTRAP_TARGETS)
 

@@ -2227,12 +2227,14 @@ OUTPUT_FILES="Makefile \
     lib/addons/library.kodi.audioengine/Makefile \
     lib/addons/library.xbmc.codec/Makefile \
     lib/addons/library.kodi.guilib/Makefile \
+    lib/addons/library.kodi.peripheral/Makefile \
     lib/addons/library.xbmc.pvr/Makefile \
     tools/Linux/kodi.sh \
     tools/Linux/kodi-standalone.sh \
     tools/Linux/kodi-xsession.desktop \
     tools/EventClients/Makefile \
     tools/EventClients/Clients/OSXRemote/Makefile \
+    xbmc/peripherals/addons/Makefile \
     xbmc/peripherals/bus/Makefile \
     xbmc/peripherals/devices/Makefile \
     xbmc/platform/posix/Makefile \

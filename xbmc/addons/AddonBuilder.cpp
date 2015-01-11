@@ -33,6 +33,7 @@
 #include "addons/Visualisation.h"
 #include "addons/Webinterface.h"
 #include "cores/AudioEngine/DSPAddons/ActiveAEDSPAddon.h"
+#include "peripherals/addons/PeripheralAddon.h"
 #include "pvr/addons/PVRClient.h"
 
 
@@ -84,6 +85,7 @@ std::shared_ptr<IAddon> CAddonBuilder::Build()
     case ADDON_ADSPDLL:
     case ADDON_AUDIOENCODER:
     case ADDON_AUDIODECODER:
+    case ADDON_PERIPHERALDLL:
     { // begin temporary platform handling for Dlls
       // ideally platforms issues will be handled by C-Pluff
       // this is not an attempt at a solution
@@ -127,8 +129,11 @@ std::shared_ptr<IAddon> CAddonBuilder::Build()
         return CAudioEncoder::FromExtension(std::move(m_props), m_extPoint);
       else if (type == ADDON_AUDIODECODER)
         return CAudioDecoder::FromExtension(std::move(m_props), m_extPoint);
-      else
-        return std::make_shared<CScreenSaver>(std::move(m_props));;
+      else if (type == ADDON_SCREENSAVER)
+        return std::make_shared<CScreenSaver>(std::move(m_props));
+      else if (type == ADDON_PERIPHERALDLL)
+        return PERIPHERALS::CPeripheralAddon::FromExtension(std::move(m_props), m_extPoint);
+      break;
     }
     case ADDON_SKIN:
       return CSkinInfo::FromExtension(std::move(m_props), m_extPoint);
@@ -206,6 +211,8 @@ AddonPtr CAddonBuilder::FromProps(AddonProps addonProps)
       return AddonPtr(new CRepository(std::move(addonProps)));
     case ADDON_CONTEXT_ITEM:
       return AddonPtr(new CContextMenuAddon(std::move(addonProps)));
+    case ADDON_PERIPHERALDLL:
+      return AddonPtr(new PERIPHERALS::CPeripheralAddon(std::move(addonProps), false, false)); // TODO
     default:
       break;
   }

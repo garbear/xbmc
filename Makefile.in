@@ -67,6 +67,7 @@ DIRECTORY_ARCHIVES=$(VideoPlayer_ARCHIVES) \
                    xbmc/network/dacp/dacp.a \
                    xbmc/network/websocket/websocket.a \
                    xbmc/network/network.a \
+                   xbmc/peripherals/addons/peripheral-addons.a \
                    xbmc/peripherals/bus/peripheral-bus.a \
                    xbmc/peripherals/devices/peripheral-devices.a \
                    xbmc/peripherals/dialogs/peripheral-dialogs.a \
@@ -198,6 +199,7 @@ LIBADDON_DIRS=\
 	lib/addons/library.xbmc.codec \
 	lib/addons/library.xbmc.pvr \
 	lib/addons/library.kodi.guilib \
+	lib/addons/library.kodi.peripheral \
 
 CONFLUENCE_MEDIA=addons/skin.confluence/media
 SKIN_DIRS=$(CONFLUENCE_MEDIA)
@@ -323,6 +325,7 @@ libaddon: exports
 	$(MAKE) -C lib/addons/library.kodi.audioengine
 	$(MAKE) -C lib/addons/library.xbmc.codec
 	$(MAKE) -C lib/addons/library.kodi.guilib
+	$(MAKE) -C lib/addons/library.kodi.peripheral
 	$(MAKE) -C lib/addons/library.xbmc.pvr
 dvdpcodecs: dllloader
 	$(MAKE) -C lib/libdvd
