@@ -136,7 +136,7 @@ void CGenericJoystickInputHandler::OnAxisMotion(unsigned int index, float positi
   if (m_axisStates.size() <= index)
     m_axisStates.resize(index + 1);
 
-  if (m_axisStates[index] == position)
+  if (m_axisStates[index] == 0.0f && position == 0.0f)
     return;
 
   float oldPosition = m_axisStates[index];
