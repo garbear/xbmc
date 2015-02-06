@@ -186,7 +186,10 @@ void CGenericJoystickInputHandler::OnAxisMotion(unsigned int index, float positi
 
 void CGenericJoystickInputHandler::ProcessAxisMotions()
 {
-  for (std::set<JoystickFeatureID>::const_iterator it = m_featuresWithMotion.begin(); it != m_featuresWithMotion.end(); ++it)
+  std::set<JoystickFeatureID> featuresToProcess;
+  featuresToProcess.swap(m_featuresWithMotion);
+
+  for (std::set<JoystickFeatureID>::const_iterator it = featuresToProcess.begin(); it != featuresToProcess.end(); ++it)
   {
     const JoystickFeatureID action = *it;
     switch (action)
