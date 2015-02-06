@@ -20,6 +20,11 @@
 #pragma once
 
 #include "input/joysticks/IJoystickFeatureHandler.h"
+#include "threads/Timer.h"
+
+#include <set>
+
+class IJoystickActionHandler;
 
 /*!
  * \ingroup joysticks_generic
@@ -28,26 +33,31 @@
  *
  * \sa IJoystickFeatureHandler
  */
-class CGenericJoystickFeatureHandler : public IJoystickFeatureHandler
+class CGenericJoystickFeatureHandler : public IJoystickFeatureHandler, public ITimerCallback
 {
 public:
-  CGenericJoystickFeatureHandler() { }
+  CGenericJoystickFeatureHandler(void);
 
-  virtual ~CGenericJoystickFeatureHandler() { }
+  virtual ~CGenericJoystickFeatureHandler(void);
 
   // implementation of IJoystickFeatureHandler
   virtual bool OnButtonPress(JoystickFeatureID id);
-  virtual bool OnButtonMotion(JoystickFeatureID id, float magnitude);
-  virtual bool OnButtonHold(JoystickFeatureID id, unsigned int holdTimeMs);
-  virtual bool OnButtonDoublePress(JoystickFeatureID id);
-  virtual bool OnMultiPress(const std::vector<JoystickFeatureID>& ids);
   virtual bool OnButtonRelease(JoystickFeatureID id);
+  virtual bool OnButtonMotion(JoystickFeatureID id, float magnitude);
   virtual bool OnAnalogStickMotion(JoystickFeatureID id, float x, float y);
   virtual bool OnAccelerometerMotion(JoystickFeatureID id, float x, float y, float z);
 
-private:
-  static void SendDigitalButton(unsigned int keyId, unsigned int holdTimeMs = 0);
-  static void SendAnalogButton(unsigned int keyId, float amount);
+  virtual void OnTimeout(void);
 
-  static unsigned int GetButtonID(JoystickFeatureID id, float x = 0.0f, float y = 0.0f, float z = 0.0f);
+private:
+  void ProcessButtonPress(unsigned int buttonId);
+  void ProcessButtonRelease(unsigned int buttonId);
+
+  void StartHoldTimer(unsigned int buttonId);
+  void ClearHoldTimer(void);
+
+  IJoystickActionHandler* const m_actionHandler;
+  CTimer                        m_holdTimer;
+  unsigned int                  m_lastButtonPress;
+  std::set<unsigned int>        m_pressedButtons;
 };

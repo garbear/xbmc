@@ -34,7 +34,6 @@
 //  XBIRRemote.h
 //  XINPUT_IR_REMOTE-*
 
-// Analogue - don't change order
 #define KEY_BUTTON_A                        256
 #define KEY_BUTTON_B                        257
 #define KEY_BUTTON_X                        258
@@ -52,7 +51,6 @@
 #define KEY_BUTTON_RIGHT_THUMB_STICK_LEFT   268
 #define KEY_BUTTON_RIGHT_THUMB_STICK_RIGHT  269
 
-// Digital - don't change order
 #define KEY_BUTTON_DPAD_UP                  270
 #define KEY_BUTTON_DPAD_DOWN                271
 #define KEY_BUTTON_DPAD_LEFT                272

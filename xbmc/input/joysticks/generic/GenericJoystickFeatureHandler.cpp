@@ -19,29 +19,59 @@
  */
 
 #include "GenericJoystickFeatureHandler.h"
-#include "guilib/Key.h"
-#include "input/ButtonTranslator.h"
-#include "windowing/WinEvents.h"
-#include "Application.h"
+#include "GenericJoystickActionHandler.h"
+
+#include <algorithm>
+
+#define HOLD_TIMEOUT_MS    500 // TODO
+#define REPEAT_TIMEOUT_MS  250 // TODO
+
+#ifndef ABS
+#define ABS(x)  ((x) >= 0 ? (x) : (-x))
+#endif
+
+#ifndef MAX
+#define MAX(x, y)  ((x) >= (y) ? (x) : (y))
+#endif
+
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(x)  (sizeof(x) / sizeof((x)[0]))
+#endif
+
+CGenericJoystickFeatureHandler::CGenericJoystickFeatureHandler(void) :
+  m_actionHandler(new CGenericJoystickActionHandler),
+  m_holdTimer(this)
+{
+}
+
+CGenericJoystickFeatureHandler::~CGenericJoystickFeatureHandler(void)
+{
+  delete m_actionHandler;
+}
 
 bool CGenericJoystickFeatureHandler::OnButtonPress(JoystickFeatureID id)
 {
-  unsigned int keyId = GetButtonID(id);
-  if (keyId)
+  unsigned int buttonId = m_actionHandler->GetButtonID(id);
+  if (buttonId)
   {
-    CAction action(CButtonTranslator::GetInstance().GetAction(g_application.GetActiveWindowID(), CKey(keyId, 0)));
-    if (action.GetID() > 0)
-    {
-      if (CButtonTranslator::IsAnalog(action.GetID()))
-      {
-        SendAnalogButton(keyId, 1.0f);
-      }
-      else
-      {
-        SendDigitalButton(keyId);
-        // TODO: Start hold timer
-      }
-    }
+    if (m_actionHandler->IsAnalog(buttonId))
+      m_actionHandler->OnAnalogAction(buttonId, 1.0f);
+    else
+      ProcessButtonPress(buttonId);
+  }
+
+  return true;
+}
+
+bool CGenericJoystickFeatureHandler::OnButtonRelease(JoystickFeatureID id)
+{
+  unsigned int buttonId = m_actionHandler->GetButtonID(id);
+  if (buttonId)
+  {
+    if (m_actionHandler->IsAnalog(buttonId))
+      m_actionHandler->OnAnalogAction(buttonId, 0.0f);
+    else
+      ProcessButtonRelease(buttonId);
   }
 
   return true;
@@ -49,64 +79,21 @@ bool CGenericJoystickFeatureHandler::OnButtonPress(JoystickFeatureID id)
 
 bool CGenericJoystickFeatureHandler::OnButtonMotion(JoystickFeatureID id, float magnitude)
 {
-  unsigned int keyId = GetButtonID(id);
-  if (keyId)
+  unsigned int buttonId = m_actionHandler->GetButtonID(id);
+  if (buttonId)
   {
-    CAction action(CButtonTranslator::GetInstance().GetAction(g_application.GetActiveWindowID(), CKey(keyId, 0)));
-    if (action.GetID() > 0)
+    if (m_actionHandler->IsAnalog(buttonId))
     {
-      if (CButtonTranslator::IsAnalog(action.GetID()))
-      {
-        SendAnalogButton(keyId, magnitude);
-      }
-      else
-      {
-        bool hasHoldTimer = false;
-        if (magnitude >= 0.5f && !hasHoldTimer)
-        {
-          SendDigitalButton(id);
-          // TODO: Start hold timer
-        }
-        else if (magnitude < 0.5f && hasHoldTimer)
-        {
-          // TODO: Cancel hold timer
-        }
-      }
+      m_actionHandler->OnAnalogAction(buttonId, magnitude);
     }
-  }
-
-  return true;
-}
-
-bool CGenericJoystickFeatureHandler::OnButtonHold(JoystickFeatureID id, unsigned int holdTimeMs)
-{
-  SendDigitalButton(id, holdTimeMs);
-
-  return true;
-}
-
-bool CGenericJoystickFeatureHandler::OnButtonDoublePress(JoystickFeatureID id)
-{
-  return false; // TODO
-}
-
-bool CGenericJoystickFeatureHandler::OnMultiPress(const std::vector<JoystickFeatureID>& ids)
-{
-  return false; // TODO
-}
-
-bool CGenericJoystickFeatureHandler::OnButtonRelease(JoystickFeatureID id)
-{
-  unsigned int keyId = GetButtonID(id);
-  if (keyId)
-  {
-    CAction action(CButtonTranslator::GetInstance().GetAction(g_application.GetActiveWindowID(), CKey(keyId, 0)));
-    if (action.GetID() > 0)
+    else
     {
-      if (!CButtonTranslator::IsAnalog(action.GetID()))
-      {
-        // TODO: Cancel hold timer
-      }
+      std::set<unsigned int>::iterator it = m_pressedButtons.find(buttonId);
+
+      if (magnitude >= 0.5f && it == m_pressedButtons.end())
+        ProcessButtonPress(buttonId);
+      else if (magnitude < 0.5f && it != m_pressedButtons.end())
+        ProcessButtonRelease(buttonId);
     }
   }
 
@@ -115,102 +102,95 @@ bool CGenericJoystickFeatureHandler::OnButtonRelease(JoystickFeatureID id)
 
 bool CGenericJoystickFeatureHandler::OnAnalogStickMotion(JoystickFeatureID id, float x, float y)
 {
-  return false; // TODO
-}
+  unsigned int buttonId  = m_actionHandler->GetButtonID(id, x, y);
 
-bool CGenericJoystickFeatureHandler::OnAccelerometerMotion(JoystickFeatureID, float x, float y, float z)
-{
-  return false; // TODO
-}
+  float magnitude = MAX(ABS(x), ABS(y));
 
-void CGenericJoystickFeatureHandler::SendDigitalButton(unsigned int keyId, unsigned int holdTimeMs /* = 0 */)
-{
-  XBMC_Event newEvent;
-  memset(&newEvent, 0, sizeof(newEvent));
+  unsigned int buttonRightId = m_actionHandler->GetButtonID(id,  1.0f,  0.0f);
+  unsigned int buttonUpId    = m_actionHandler->GetButtonID(id,  0.0f,  1.0f);
+  unsigned int buttonLeftId  = m_actionHandler->GetButtonID(id, -1.0f,  0.0f);
+  unsigned int buttonDownId  = m_actionHandler->GetButtonID(id,  0.0f, -1.0f);
+  
+  unsigned int buttonIds[] = {buttonRightId, buttonUpId, buttonLeftId, buttonDownId};
 
-  newEvent.joystick.type = XBMC_JOYDIGITAL;
-  newEvent.joystick.button = keyId;
-  newEvent.joystick.holdtime = holdTimeMs;
-
-  CWinEvents::MessagePush(&newEvent);
-}
-
-void CGenericJoystickFeatureHandler::SendAnalogButton(unsigned int keyId, float amount)
-{
-  XBMC_Event newEvent;
-  memset(&newEvent, 0, sizeof(newEvent));
-
-  newEvent.joystick.type = XBMC_JOYANALOG;
-  newEvent.joystick.button = keyId;
-  newEvent.joystick.amount = amount;
-
-  CWinEvents::MessagePush(&newEvent);
-}
-
-unsigned int CGenericJoystickFeatureHandler::GetButtonID(JoystickFeatureID id, float x /* = 0.0f */, float y /* = 0.0f */, float z /* = 0.0f */)
-{
-  switch (id)
+  for (unsigned int i = 0; i < ARRAY_SIZE(buttonIds); i++)
   {
-  case JOY_ID_BUTTON_A:
-    return KEY_BUTTON_A;
-  case JOY_ID_BUTTON_B:
-    return KEY_BUTTON_B;
-  case JOY_ID_BUTTON_X:
-    return KEY_BUTTON_X;
-  case JOY_ID_BUTTON_Y:
-    return KEY_BUTTON_Y;
-  case JOY_ID_BUTTON_C:
-    return KEY_BUTTON_BLACK;
-  case JOY_ID_BUTTON_Z:
-    return KEY_BUTTON_WHITE;
-  case JOY_ID_BUTTON_START:
-    return KEY_BUTTON_START;
-  case JOY_ID_BUTTON_SELECT:
-    return KEY_BUTTON_BACK;
-  case JOY_ID_BUTTON_MODE:
-    return KEY_BUTTON_GUIDE;
-  case JOY_ID_BUTTON_L:
-    return KEY_BUTTON_LEFT_SHOULDER;
-  case JOY_ID_BUTTON_R:
-    return KEY_BUTTON_RIGHT_SHOULDER;
-  case JOY_ID_TRIGGER_L:
-    return KEY_BUTTON_LEFT_TRIGGER;
-  case JOY_ID_TRIGGER_R:
-    return KEY_BUTTON_RIGHT_TRIGGER;
-  case JOY_ID_BUTTON_L_STICK:
-    return KEY_BUTTON_LEFT_THUMB_BUTTON;
-  case JOY_ID_BUTTON_R_STICK:
-    return KEY_BUTTON_RIGHT_THUMB_BUTTON;
-  case JOY_ID_BUTTON_LEFT:
-    return KEY_BUTTON_DPAD_LEFT;
-  case JOY_ID_BUTTON_RIGHT:
-    return KEY_BUTTON_DPAD_RIGHT;
-  case JOY_ID_BUTTON_UP:
-    return KEY_BUTTON_DPAD_UP;
-  case JOY_ID_BUTTON_DOWN:
-    return KEY_BUTTON_DPAD_DOWN;
-  case JOY_ID_ANALOG_STICK_L:
-    if (y >= x && y > -x)
-      return KEY_BUTTON_LEFT_THUMB_STICK_UP;
-    else if (y <= x && y < -x)
-      return KEY_BUTTON_LEFT_THUMB_STICK_DOWN;
-    else if (y >= x && y < -x)
-      return KEY_BUTTON_LEFT_THUMB_STICK_LEFT;
+    if (!buttonIds[i])
+      continue;
+    
+    std::set<unsigned int>::iterator it = m_pressedButtons.find(buttonIds[i]);
+    
+    if (m_actionHandler->IsAnalog(buttonId))
+    {
+      if (buttonId == buttonIds[i])
+      {
+        if (it != m_pressedButtons.end())
+          m_pressedButtons.insert(buttonId);
+
+        m_actionHandler->OnAnalogAction(buttonId, magnitude);
+      }
+      else if (it != m_pressedButtons.end())
+      {
+        m_pressedButtons.erase(it);
+        m_actionHandler->OnAnalogAction(buttonId, 0.0f);
+      }
+    }
     else
-      return KEY_BUTTON_LEFT_THUMB_STICK_RIGHT;
-  case JOY_ID_ANALOG_STICK_R:
-    if (y >= x && y > -x)
-      return KEY_BUTTON_RIGHT_THUMB_STICK_UP;
-    else if (y <= x && y < -x)
-      return KEY_BUTTON_RIGHT_THUMB_STICK_DOWN;
-    else if (y >= x && y < -x)
-      return KEY_BUTTON_RIGHT_THUMB_STICK_LEFT;
-    else
-      return KEY_BUTTON_RIGHT_THUMB_STICK_RIGHT;
-  case JOY_ID_ACCELEROMETER:
-    return 0; // TODO
-  case JOY_ID_BUTTON_UNKNOWN:
-  default:
-    return 0;
+    {
+      if (buttonId == buttonIds[i])
+      {
+        if (magnitude >= 0.5f && it == m_pressedButtons.end())
+          ProcessButtonPress(buttonId);
+        else if (magnitude < 0.5f && it != m_pressedButtons.end())
+          ProcessButtonRelease(buttonId);
+      }
+      else if (it != m_pressedButtons.end())
+      {
+        ProcessButtonRelease(buttonId);
+      }
+    }
   }
+
+  return true;
+}
+
+bool CGenericJoystickFeatureHandler::OnAccelerometerMotion(JoystickFeatureID id, float x, float y, float z)
+{
+  return OnAnalogStickMotion(id, x, y); // TODO
+}
+
+void CGenericJoystickFeatureHandler::OnTimeout(void)
+{
+  if (m_lastButtonPress && m_holdTimer.GetElapsedMilliseconds() >= HOLD_TIMEOUT_MS)
+    m_actionHandler->OnDigitalAction(m_lastButtonPress, (unsigned int)m_holdTimer.GetElapsedMilliseconds());
+}
+
+void CGenericJoystickFeatureHandler::ProcessButtonPress(unsigned int buttonId)
+{
+  m_pressedButtons.insert(buttonId);
+  m_actionHandler->OnDigitalAction(buttonId);
+  StartHoldTimer(buttonId);
+}
+
+void CGenericJoystickFeatureHandler::ProcessButtonRelease(unsigned int buttonId)
+{
+  std::set<unsigned int>::iterator it = m_pressedButtons.find(buttonId);
+  if (it != m_pressedButtons.end())
+    m_pressedButtons.erase(it);
+
+  if (buttonId == m_lastButtonPress || m_pressedButtons.empty())
+    ClearHoldTimer();
+}
+
+void CGenericJoystickFeatureHandler::StartHoldTimer(unsigned int buttonId)
+{
+  ClearHoldTimer();
+  m_holdTimer.Start(REPEAT_TIMEOUT_MS, true);
+  m_lastButtonPress = buttonId;
+}
+
+void CGenericJoystickFeatureHandler::ClearHoldTimer(void)
+{
+  m_holdTimer.Stop(true);
+  m_lastButtonPress = 0;
 }

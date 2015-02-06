@@ -33,7 +33,7 @@ public:
   virtual ~IJoystickFeatureHandler(void) { }
 
   /*!
-   * \brief A button has been pressed
+   * \brief A digital button has been pressed
    *
    * \param id        The ID of the button or trigger
    * \param bPressed  The new state of the button or trigger
@@ -41,6 +41,15 @@ public:
    * \return True if the event was handled otherwise false
    */
   virtual bool OnButtonPress(JoystickFeatureID id) { return false; }
+ 
+  /*!
+   * \brief A digital button has been released
+   *
+   * \param id        The ID of the button or trigger
+   *
+   * \return True if the event was handled otherwise false
+   */
+  virtual bool OnButtonRelease(JoystickFeatureID id) { return false; }
 
   /*!
    * \brief A pressure-sensitive button has been pressed or a trigger has moved
@@ -51,42 +60,6 @@ public:
    * \return True if the event was handled otherwise false
    */
   virtual bool OnButtonMotion(JoystickFeatureID id, float magnitude) { return false; }
-
-  /*!
-   * \brief A button has been held past a timeout
-   *
-   * \param id        The ID of the button or trigger
-   *
-   * \return True if the event was handled otherwise false
-   */
-  virtual bool OnButtonHold(JoystickFeatureID id, unsigned int holdTimeMs) { return false; }
-
-  /*!
-   * \brief A button has been pressed twice within a small timeframe
-   *
-   * \param id        The ID of the button or trigger
-   *
-   * \return True if the event was handled otherwise false
-   */
-  virtual bool OnButtonDoublePress(JoystickFeatureID id) { return false; }
-
-  /*!
-   * \brief Multiple buttons have been pressed within a small timeframe
-   *
-   * \param ids        The IDs in order of pressed
-   *
-   * \return True if the event was handled otherwise false
-   */
-  virtual bool OnMultiPress(const std::vector<JoystickFeatureID>& ids) { return false; }
-
-  /*!
-   * \brief A button has been released
-   *
-   * \param id        The ID of the button or trigger
-   *
-   * \return True if the event was handled otherwise false
-   */
-  virtual bool OnButtonRelease(JoystickFeatureID id) { return false; }
 
   /*!
    * \brief An analog stick has moved

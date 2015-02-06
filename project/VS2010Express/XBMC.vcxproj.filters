@@ -3110,6 +3110,9 @@
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\GenericJoystickFeatureHandler.cpp">
       <Filter>input\joysticks\generic</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\xbmc\input\joysticks\generic\GenericJoystickActionHandler.cpp">
+      <Filter>input\joysticks\generic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\xbmc\win32\pch.h">
@@ -6090,6 +6093,12 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\GenericJoystickFeatureHandler.h">
       <Filter>input\joysticks\generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\input\joysticks\generic\GenericJoystickActionHandler.h">
+      <Filter>input\joysticks\generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\input\joysticks\IJoystickActionHandler.h">
+      <Filter>input\joysticks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
