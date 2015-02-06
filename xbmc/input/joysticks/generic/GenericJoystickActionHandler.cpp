@@ -71,25 +71,27 @@ unsigned int CGenericJoystickActionHandler::GetButtonID(JoystickFeatureID id, fl
       return KEY_BUTTON_LEFT_THUMB_STICK_UP;
     else if (y <= x && y < -x)
       return KEY_BUTTON_LEFT_THUMB_STICK_DOWN;
-    else if (y >= x && y < -x)
+    else if (y > x && y <= -x)
       return KEY_BUTTON_LEFT_THUMB_STICK_LEFT;
-    else
+    else if (y < x && y >= -x)
       return KEY_BUTTON_LEFT_THUMB_STICK_RIGHT;
   case JOY_ID_ANALOG_STICK_R:
     if (y >= x && y > -x)
       return KEY_BUTTON_RIGHT_THUMB_STICK_UP;
     else if (y <= x && y < -x)
       return KEY_BUTTON_RIGHT_THUMB_STICK_DOWN;
-    else if (y >= x && y < -x)
+    else if (y > x && y <= -x)
       return KEY_BUTTON_RIGHT_THUMB_STICK_LEFT;
-    else
+    else if (y < x && y >= -x)
       return KEY_BUTTON_RIGHT_THUMB_STICK_RIGHT;
   case JOY_ID_ACCELEROMETER:
     return 0; // TODO
   case JOY_ID_BUTTON_UNKNOWN:
   default:
-    return 0;
+    break;
   }
+
+  return 0;
 }
 
 bool CGenericJoystickActionHandler::IsAnalog(unsigned int buttonId)

@@ -35,7 +35,7 @@ public:
 
   virtual ~CGenericJoystickActionHandler() { }
   
-  // TODO: Choose how to handle ties (abs(x) == abs(y))
+  // Ties (when abs(x) == abs(y)) go clockwise
   virtual unsigned int GetButtonID(JoystickFeatureID id, float x = 0.0f, float y = 0.0f, float z = 0.0f);
 
   virtual bool IsAnalog(unsigned int buttonId);
