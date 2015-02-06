@@ -117,26 +117,16 @@ bool CGenericJoystickFeatureHandler::OnAnalogStickMotion(JoystickFeatureID id, f
   {
     if (!buttonIds[i])
       continue;
-    
-    std::set<unsigned int>::iterator it = m_pressedButtons.find(buttonIds[i]);
-    
+
     if (m_actionHandler->IsAnalog(buttonId))
     {
       if (buttonId == buttonIds[i])
-      {
-        if (it != m_pressedButtons.end())
-          m_pressedButtons.insert(buttonId);
-
         m_actionHandler->OnAnalogAction(buttonId, magnitude);
-      }
-      else if (it != m_pressedButtons.end())
-      {
-        m_pressedButtons.erase(it);
-        m_actionHandler->OnAnalogAction(buttonId, 0.0f);
-      }
     }
     else
     {
+      std::set<unsigned int>::iterator it = m_pressedButtons.find(buttonIds[i]);
+
       if (buttonId == buttonIds[i])
       {
         if (magnitude >= 0.5f && it == m_pressedButtons.end())
