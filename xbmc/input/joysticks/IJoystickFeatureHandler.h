@@ -25,12 +25,12 @@
 
 /*!
  * \ingroup joysticks
- * \brief Interface defining all supported joystick action events
+ * \brief Interface for handling joystick feature events
  */
-class IJoystickActionHandler
+class IJoystickFeatureHandler
 {
 public:
-  virtual ~IJoystickActionHandler(void) { }
+  virtual ~IJoystickFeatureHandler(void) { }
 
   /*!
    * \brief A button has been pressed
@@ -40,7 +40,7 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnButtonPress(JoystickActionID id) { return false; }
+  virtual bool OnButtonPress(JoystickFeatureID id) { return false; }
 
   /*!
    * \brief A pressure-sensitive button has been pressed or a trigger has moved
@@ -50,7 +50,7 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnButtonMotion(JoystickActionID id, float magnitude) { return false; }
+  virtual bool OnButtonMotion(JoystickFeatureID id, float magnitude) { return false; }
 
   /*!
    * \brief A button has been held past a timeout
@@ -59,7 +59,7 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnButtonHold(JoystickActionID id, unsigned int holdTimeMs) { return false; }
+  virtual bool OnButtonHold(JoystickFeatureID id, unsigned int holdTimeMs) { return false; }
 
   /*!
    * \brief A button has been pressed twice within a small timeframe
@@ -68,7 +68,7 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnButtonDoublePress(JoystickActionID id) { return false; }
+  virtual bool OnButtonDoublePress(JoystickFeatureID id) { return false; }
 
   /*!
    * \brief Multiple buttons have been pressed within a small timeframe
@@ -77,7 +77,7 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnMultiPress(const std::vector<JoystickActionID>& ids) { return false; }
+  virtual bool OnMultiPress(const std::vector<JoystickFeatureID>& ids) { return false; }
 
   /*!
    * \brief A button has been released
@@ -86,7 +86,7 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnButtonRelease(JoystickActionID id) { return false; }
+  virtual bool OnButtonRelease(JoystickFeatureID id) { return false; }
 
   /*!
    * \brief An analog stick has moved
@@ -97,7 +97,7 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnAnalogStickMotion(JoystickActionID id, float x, float y) { return false; }
+  virtual bool OnAnalogStickMotion(JoystickFeatureID id, float x, float y) { return false; }
 
   /*!
    * \brief An accelerometer's acceleration has changed
@@ -108,5 +108,5 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnAccelerometerMotion(JoystickActionID id, float x, float y, float z) { return false; }
+  virtual bool OnAccelerometerMotion(JoystickFeatureID id, float x, float y, float z) { return false; }
 };

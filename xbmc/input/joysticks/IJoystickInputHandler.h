@@ -54,4 +54,6 @@ public:
    * \param position  The position of the axis in the closed interval [-1.0, 1.0]
    */
   virtual void OnAxisMotion(unsigned int index, float position) = 0;
+  
+  virtual void ProcessAxisMotions(void) = 0;
 };

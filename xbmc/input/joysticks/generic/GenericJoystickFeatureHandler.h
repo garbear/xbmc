@@ -19,35 +19,35 @@
  */
 #pragma once
 
-#include "input/joysticks/IJoystickActionHandler.h"
+#include "input/joysticks/IJoystickFeatureHandler.h"
 
 /*!
  * \ingroup joysticks_generic
- * \brief Generic implementation of IJoystickActionHandler to translate
+ * \brief Generic implementation of IJoystickFeatureHandler to translate
  *        joystick actions into XBMC specific and mappable actions.
  *
- * \sa IJoystickActionHandler
+ * \sa IJoystickFeatureHandler
  */
-class CGenericJoystickActionHandler : public IJoystickActionHandler
+class CGenericJoystickFeatureHandler : public IJoystickFeatureHandler
 {
 public:
-  CGenericJoystickActionHandler() { }
+  CGenericJoystickFeatureHandler() { }
 
-  virtual ~CGenericJoystickActionHandler() { }
+  virtual ~CGenericJoystickFeatureHandler() { }
 
-  // implementation of IJoystickActionHandler
-  virtual bool OnButtonPress(JoystickActionID id);
-  virtual bool OnButtonMotion(JoystickActionID id, float magnitude);
-  virtual bool OnButtonHold(JoystickActionID id, unsigned int holdTimeMs);
-  virtual bool OnButtonDoublePress(JoystickActionID id);
-  virtual bool OnMultiPress(const std::vector<JoystickActionID>& ids);
-  virtual bool OnButtonRelease(JoystickActionID id);
-  virtual bool OnAnalogStickMotion(JoystickActionID id, float x, float y);
-  virtual bool OnAccelerometerMotion(JoystickActionID id, float x, float y, float z);
+  // implementation of IJoystickFeatureHandler
+  virtual bool OnButtonPress(JoystickFeatureID id);
+  virtual bool OnButtonMotion(JoystickFeatureID id, float magnitude);
+  virtual bool OnButtonHold(JoystickFeatureID id, unsigned int holdTimeMs);
+  virtual bool OnButtonDoublePress(JoystickFeatureID id);
+  virtual bool OnMultiPress(const std::vector<JoystickFeatureID>& ids);
+  virtual bool OnButtonRelease(JoystickFeatureID id);
+  virtual bool OnAnalogStickMotion(JoystickFeatureID id, float x, float y);
+  virtual bool OnAccelerometerMotion(JoystickFeatureID id, float x, float y, float z);
 
 private:
   static void SendDigitalButton(unsigned int keyId, unsigned int holdTimeMs = 0);
   static void SendAnalogButton(unsigned int keyId, float amount);
 
-  static unsigned int GetButtonID(JoystickActionID id, float x = 0.0f, float y = 0.0f, float z = 0.0f);
+  static unsigned int GetButtonID(JoystickFeatureID id, float x = 0.0f, float y = 0.0f, float z = 0.0f);
 };

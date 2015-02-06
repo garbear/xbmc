@@ -35,22 +35,22 @@ namespace PERIPHERALS
 
     // Implementation of IJoystickButtonMap
     virtual bool Load(void);
-    JoystickActionID GetAction(const CInputPrimitive& button);
-    bool GetInputPrimitive(JoystickActionID id, CInputPrimitive& button);
-    bool GetAnalogStick(JoystickActionID id, int& horizIndex, bool& horizInverted,
-                                             int& vertIndex,  bool& vertInverted);
-    bool GetAccelerometer(JoystickActionID id, int& xIndex, bool& xInverted,
-                                               int& yIndex, bool& yInverted,
-                                               int& zIndex, bool& zInverted);
+    JoystickFeatureID GetAction(const CInputPrimitive& button);
+    bool GetInputPrimitive(JoystickFeatureID id, CInputPrimitive& button);
+    bool GetAnalogStick(JoystickFeatureID id, int& horizIndex, bool& horizInverted,
+                                              int& vertIndex,  bool& vertInverted);
+    bool GetAccelerometer(JoystickFeatureID id, int& xIndex, bool& xInverted,
+                                                int& yIndex, bool& yInverted,
+                                                int& zIndex, bool& zInverted);
 
   private:
-    static std::map<CInputPrimitive, JoystickActionID> GetActionMap(const JoystickFeatureMap& features);
+    static std::map<CInputPrimitive, JoystickFeatureID> GetActionMap(const JoystickFeatureMap& features);
     static HatDirection      ToHatDirection(JOYSTICK_DRIVER_HAT_DIRECTION driverDirection);
     static SemiAxisDirection ToSemiAxisDirection(JOYSTICK_DRIVER_SEMIAXIS_DIRECTION dir);
 
     const PeripheralAddonPtr m_addon;
     const unsigned int       m_index;
-    std::map<CInputPrimitive, JoystickActionID> m_actions;
+    std::map<CInputPrimitive, JoystickFeatureID> m_actions;
     JoystickFeatureMap       m_features;
   };
 }

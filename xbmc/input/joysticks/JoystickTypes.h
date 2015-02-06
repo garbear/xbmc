@@ -19,13 +19,11 @@
  */
 #pragma once
 
-#include "guilib/Key.h"
-
 /*!
  * \ingroup joysticks
- * \brief Action IDs for physical elements on a joystick
+ * \brief Feature IDs for physical elements on a joystick
  */
-enum JoystickActionID
+enum JoystickFeatureID
 {
   JOY_ID_BUTTON_UNKNOWN = 0,
   JOY_ID_BUTTON_A,

@@ -33,19 +33,19 @@ bool CAddonJoystickButtonMap::Load(void)
   if (!m_addon->GetJoystickFeatures(m_index, m_features))
     return false;
 
-  std::map<CInputPrimitive, JoystickActionID> actionMap = GetActionMap(m_features);
+  std::map<CInputPrimitive, JoystickFeatureID> actionMap = GetActionMap(m_features);
   m_actions.swap(actionMap);
 
   return true;
 }
 
-std::map<CInputPrimitive, JoystickActionID> CAddonJoystickButtonMap::GetActionMap(const JoystickFeatureMap& features)
+std::map<CInputPrimitive, JoystickFeatureID> CAddonJoystickButtonMap::GetActionMap(const JoystickFeatureMap& features)
 {
-  std::map<CInputPrimitive, JoystickActionID> actionMap;
+  std::map<CInputPrimitive, JoystickFeatureID> actionMap;
 
   for (JoystickFeatureMap::const_iterator it = features.begin(); it != features.end(); ++it)
   {
-    const JoystickActionID              id      = it->first;
+    const JoystickFeatureID              id      = it->first;
     const ADDON::JoystickFeature* const feature = it->second.get();
 
     switch (feature->Type())
@@ -101,18 +101,18 @@ std::map<CInputPrimitive, JoystickActionID> CAddonJoystickButtonMap::GetActionMa
   return actionMap;
 }
 
-JoystickActionID CAddonJoystickButtonMap::GetAction(const CInputPrimitive& source)
+JoystickFeatureID CAddonJoystickButtonMap::GetAction(const CInputPrimitive& source)
 {
-  JoystickActionID id(JOY_ID_BUTTON_UNKNOWN);
+  JoystickFeatureID id(JOY_ID_BUTTON_UNKNOWN);
 
-  std::map<CInputPrimitive, JoystickActionID>::const_iterator it = m_actions.find(source);
+  std::map<CInputPrimitive, JoystickFeatureID>::const_iterator it = m_actions.find(source);
   if (it != m_actions.end())
     id = it->second;
 
   return id;
 }
 
-bool CAddonJoystickButtonMap::GetInputPrimitive(JoystickActionID id, CInputPrimitive& button)
+bool CAddonJoystickButtonMap::GetInputPrimitive(JoystickFeatureID id, CInputPrimitive& button)
 {
   bool retVal(false);
 
@@ -157,7 +157,7 @@ bool CAddonJoystickButtonMap::GetInputPrimitive(JoystickActionID id, CInputPrimi
   return retVal;
 }
 
-bool CAddonJoystickButtonMap::GetAnalogStick(JoystickActionID id, 
+bool CAddonJoystickButtonMap::GetAnalogStick(JoystickFeatureID id, 
     int& horizIndex, bool& horizInverted,
     int& vertIndex,  bool& vertInverted)
 {
@@ -189,7 +189,7 @@ bool CAddonJoystickButtonMap::GetAnalogStick(JoystickActionID id,
   return retVal;
 }
 
-bool CAddonJoystickButtonMap::GetAccelerometer(JoystickActionID id,
+bool CAddonJoystickButtonMap::GetAccelerometer(JoystickFeatureID id,
     int& xIndex, bool& xInverted,
     int& yIndex, bool& yInverted,
     int& zIndex, bool& zInverted)

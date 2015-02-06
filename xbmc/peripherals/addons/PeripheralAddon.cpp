@@ -493,7 +493,7 @@ const char *CPeripheralAddon::ToString(const PERIPHERAL_ERROR error)
   }
 }
 
-JoystickActionID CPeripheralAddon::ToJoystickID(JOYSTICK_FEATURE_ID id)
+JoystickFeatureID CPeripheralAddon::ToJoystickID(JOYSTICK_FEATURE_ID id)
 {
   switch (id)
   {
@@ -523,7 +523,7 @@ JoystickActionID CPeripheralAddon::ToJoystickID(JOYSTICK_FEATURE_ID id)
   }
 }
 
-JOYSTICK_FEATURE_ID CPeripheralAddon::ToFeatureID(JoystickActionID id)
+JOYSTICK_FEATURE_ID CPeripheralAddon::ToFeatureID(JoystickFeatureID id)
 {
   switch (id)
   {

@@ -18,13 +18,13 @@
  *
  */
 
-#include "GenericJoystickActionHandler.h"
+#include "GenericJoystickFeatureHandler.h"
 #include "guilib/Key.h"
 #include "input/ButtonTranslator.h"
 #include "windowing/WinEvents.h"
 #include "Application.h"
 
-bool CGenericJoystickActionHandler::OnButtonPress(JoystickActionID id)
+bool CGenericJoystickFeatureHandler::OnButtonPress(JoystickFeatureID id)
 {
   unsigned int keyId = GetButtonID(id);
   if (keyId)
@@ -47,7 +47,7 @@ bool CGenericJoystickActionHandler::OnButtonPress(JoystickActionID id)
   return true;
 }
 
-bool CGenericJoystickActionHandler::OnButtonMotion(JoystickActionID id, float magnitude)
+bool CGenericJoystickFeatureHandler::OnButtonMotion(JoystickFeatureID id, float magnitude)
 {
   unsigned int keyId = GetButtonID(id);
   if (keyId)
@@ -78,24 +78,24 @@ bool CGenericJoystickActionHandler::OnButtonMotion(JoystickActionID id, float ma
   return true;
 }
 
-bool CGenericJoystickActionHandler::OnButtonHold(JoystickActionID id, unsigned int holdTimeMs)
+bool CGenericJoystickFeatureHandler::OnButtonHold(JoystickFeatureID id, unsigned int holdTimeMs)
 {
   SendDigitalButton(id, holdTimeMs);
 
   return true;
 }
 
-bool CGenericJoystickActionHandler::OnButtonDoublePress(JoystickActionID id)
+bool CGenericJoystickFeatureHandler::OnButtonDoublePress(JoystickFeatureID id)
 {
   return false; // TODO
 }
 
-bool CGenericJoystickActionHandler::OnMultiPress(const std::vector<JoystickActionID>& ids)
+bool CGenericJoystickFeatureHandler::OnMultiPress(const std::vector<JoystickFeatureID>& ids)
 {
   return false; // TODO
 }
 
-bool CGenericJoystickActionHandler::OnButtonRelease(JoystickActionID id)
+bool CGenericJoystickFeatureHandler::OnButtonRelease(JoystickFeatureID id)
 {
   unsigned int keyId = GetButtonID(id);
   if (keyId)
@@ -113,17 +113,17 @@ bool CGenericJoystickActionHandler::OnButtonRelease(JoystickActionID id)
   return true;
 }
 
-bool CGenericJoystickActionHandler::OnAnalogStickMotion(JoystickActionID id, float x, float y)
+bool CGenericJoystickFeatureHandler::OnAnalogStickMotion(JoystickFeatureID id, float x, float y)
 {
   return false; // TODO
 }
 
-bool CGenericJoystickActionHandler::OnAccelerometerMotion(JoystickActionID, float x, float y, float z)
+bool CGenericJoystickFeatureHandler::OnAccelerometerMotion(JoystickFeatureID, float x, float y, float z)
 {
   return false; // TODO
 }
 
-void CGenericJoystickActionHandler::SendDigitalButton(unsigned int keyId, unsigned int holdTimeMs /* = 0 */)
+void CGenericJoystickFeatureHandler::SendDigitalButton(unsigned int keyId, unsigned int holdTimeMs /* = 0 */)
 {
   XBMC_Event newEvent;
   memset(&newEvent, 0, sizeof(newEvent));
@@ -135,7 +135,7 @@ void CGenericJoystickActionHandler::SendDigitalButton(unsigned int keyId, unsign
   CWinEvents::MessagePush(&newEvent);
 }
 
-void CGenericJoystickActionHandler::SendAnalogButton(unsigned int keyId, float amount)
+void CGenericJoystickFeatureHandler::SendAnalogButton(unsigned int keyId, float amount)
 {
   XBMC_Event newEvent;
   memset(&newEvent, 0, sizeof(newEvent));
@@ -147,7 +147,7 @@ void CGenericJoystickActionHandler::SendAnalogButton(unsigned int keyId, float a
   CWinEvents::MessagePush(&newEvent);
 }
 
-unsigned int CGenericJoystickActionHandler::GetButtonID(JoystickActionID id, float x /* = 0.0f */, float y /* = 0.0f */, float z /* = 0.0f */)
+unsigned int CGenericJoystickFeatureHandler::GetButtonID(JoystickFeatureID id, float x /* = 0.0f */, float y /* = 0.0f */, float z /* = 0.0f */)
 {
   switch (id)
   {

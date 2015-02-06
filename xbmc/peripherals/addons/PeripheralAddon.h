@@ -41,8 +41,8 @@ namespace PERIPHERALS
   typedef boost::shared_ptr<CPeripheralAddon> PeripheralAddonPtr;
   typedef std::vector<PeripheralAddonPtr>     PeripheralAddonVector;
 
-  typedef boost::shared_ptr<ADDON::JoystickFeature>      JoystickFeaturePtr;
-  typedef std::map<JoystickActionID, JoystickFeaturePtr> JoystickFeatureMap;
+  typedef boost::shared_ptr<ADDON::JoystickFeature>       JoystickFeaturePtr;
+  typedef std::map<JoystickFeatureID, JoystickFeaturePtr> JoystickFeatureMap;
 
   class CPeripheralAddon : public ADDON::CAddonDll<DllPeripheral, PeripheralAddon, PERIPHERAL_PROPERTIES>
   {
@@ -95,8 +95,8 @@ namespace PERIPHERALS
     virtual bool CheckAPIVersion(void);
 
   private:
-    static JoystickActionID    ToJoystickID(JOYSTICK_FEATURE_ID id);
-    static JOYSTICK_FEATURE_ID ToFeatureID(JoystickActionID id);
+    static JoystickFeatureID    ToJoystickID(JOYSTICK_FEATURE_ID id);
+    static JOYSTICK_FEATURE_ID ToFeatureID(JoystickFeatureID id);
     static HatDirection        ToHatDirection(JOYSTICK_STATE_HAT state);
 
     /*!

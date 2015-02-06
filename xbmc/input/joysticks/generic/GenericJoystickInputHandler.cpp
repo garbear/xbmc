@@ -20,12 +20,12 @@
 
 #include "GenericJoystickInputHandler.h"
 #include "input/joysticks/InputPrimitive.h"
-#include "input/joysticks/IJoystickActionHandler.h"
+#include "input/joysticks/IJoystickFeatureHandler.h"
 #include "input/joysticks/IJoystickButtonMap.h"
 
 #define ANALOG_DIGITAL_THRESHOLD  0.5f
 
-CGenericJoystickInputHandler::CGenericJoystickInputHandler(IJoystickActionHandler *handler, IJoystickButtonMap* buttonMap)
+CGenericJoystickInputHandler::CGenericJoystickInputHandler(IJoystickFeatureHandler *handler, IJoystickButtonMap* buttonMap)
  : m_handler(handler),
    m_buttonMap(buttonMap)
 {
@@ -44,7 +44,7 @@ void CGenericJoystickInputHandler::OnButtonMotion(unsigned int index, bool bPres
   char& oldState = m_buttonStates[index];
 
   CInputPrimitive button(index);
-  JoystickActionID action = m_buttonMap->GetAction(button);
+  JoystickFeatureID action = m_buttonMap->GetAction(button);
 
   if (action)
   {
@@ -68,14 +68,14 @@ void CGenericJoystickInputHandler::OnHatMotion(unsigned int index, HatDirection 
   if (!(oldDirection & HatDirectionLeft) && (direction & HatDirectionLeft))
   {
     CInputPrimitive left(index, HatDirectionLeft);
-    JoystickActionID action = m_buttonMap->GetAction(left);
+    JoystickFeatureID action = m_buttonMap->GetAction(left);
     if (action)
       m_handler->OnButtonPress(action);
   }
   else if ((oldDirection & HatDirectionLeft) && !(direction & HatDirectionLeft))
   {
     CInputPrimitive left(index, HatDirectionLeft);
-    JoystickActionID action = m_buttonMap->GetAction(left);
+    JoystickFeatureID action = m_buttonMap->GetAction(left);
     if (action)
       m_handler->OnButtonRelease(action);
   }
@@ -84,14 +84,14 @@ void CGenericJoystickInputHandler::OnHatMotion(unsigned int index, HatDirection 
   if (!(oldDirection & HatDirectionRight) && (direction & HatDirectionRight))
   {
     CInputPrimitive right(index, HatDirectionRight);
-    JoystickActionID action = m_buttonMap->GetAction(right);
+    JoystickFeatureID action = m_buttonMap->GetAction(right);
     if (action)
       m_handler->OnButtonPress(action);
   }
   else if ((oldDirection & HatDirectionRight) && !(direction & HatDirectionRight))
   {
     CInputPrimitive right(index, HatDirectionRight);
-    JoystickActionID action = m_buttonMap->GetAction(right);
+    JoystickFeatureID action = m_buttonMap->GetAction(right);
     if (action)
       m_handler->OnButtonRelease(action);
   }
@@ -100,14 +100,14 @@ void CGenericJoystickInputHandler::OnHatMotion(unsigned int index, HatDirection 
   if (!(oldDirection & HatDirectionUp) && (direction & HatDirectionUp))
   {
     CInputPrimitive up(index, HatDirectionUp);
-    JoystickActionID action = m_buttonMap->GetAction(up);
+    JoystickFeatureID action = m_buttonMap->GetAction(up);
     if (action)
       m_handler->OnButtonPress(action);
   }
   else if ((oldDirection & HatDirectionUp) && !(direction & HatDirectionUp))
   {
     CInputPrimitive up(index, HatDirectionUp);
-    JoystickActionID action = m_buttonMap->GetAction(up);
+    JoystickFeatureID action = m_buttonMap->GetAction(up);
     if (action)
       m_handler->OnButtonRelease(action);
   }
@@ -116,14 +116,14 @@ void CGenericJoystickInputHandler::OnHatMotion(unsigned int index, HatDirection 
   if (!(oldDirection & HatDirectionDown) && (direction & HatDirectionDown))
   {
     CInputPrimitive down(index, HatDirectionDown);
-    JoystickActionID action = m_buttonMap->GetAction(down);
+    JoystickFeatureID action = m_buttonMap->GetAction(down);
     if (action)
       m_handler->OnButtonPress(action);
   }
   else if ((oldDirection & HatDirectionDown) && !(direction & HatDirectionDown))
   {
     CInputPrimitive down(index, HatDirectionDown);
-    JoystickActionID action = m_buttonMap->GetAction(down);
+    JoystickFeatureID action = m_buttonMap->GetAction(down);
     if (action)
       m_handler->OnButtonRelease(action);
   }
@@ -145,8 +145,8 @@ void CGenericJoystickInputHandler::OnAxisMotion(unsigned int index, float positi
   CInputPrimitive positiveAxis(index, SemiAxisDirectionPositive);
   CInputPrimitive negativeAxis(index, SemiAxisDirectionNegative);
 
-  JoystickActionID positiveAction = m_buttonMap->GetAction(positiveAxis);  
-  JoystickActionID negativeAction = m_buttonMap->GetAction(negativeAxis);
+  JoystickFeatureID positiveAction = m_buttonMap->GetAction(positiveAxis);  
+  JoystickFeatureID negativeAction = m_buttonMap->GetAction(negativeAxis);
 
   if (!positiveAction && !negativeAction)
   {
@@ -186,9 +186,9 @@ void CGenericJoystickInputHandler::OnAxisMotion(unsigned int index, float positi
 
 void CGenericJoystickInputHandler::ProcessAxisMotions()
 {
-  for (std::set<JoystickActionID>::const_iterator it = m_featuresWithMotion.begin(); it != m_featuresWithMotion.end(); ++it)
+  for (std::set<JoystickFeatureID>::const_iterator it = m_featuresWithMotion.begin(); it != m_featuresWithMotion.end(); ++it)
   {
-    const JoystickActionID action = *it;
+    const JoystickFeatureID action = *it;
     switch (action)
     {
     case JOY_ID_ANALOG_STICK_L:

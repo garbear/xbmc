@@ -25,7 +25,7 @@
 #include <string>
 
 class IJoystickInputHandler;
-class IJoystickActionHandler;
+class IJoystickFeatureHandler;
 class IJoystickButtonMap;
 
 namespace PERIPHERALS
@@ -46,8 +46,8 @@ namespace PERIPHERALS
     virtual void ProcessAxisMotions();
 
   protected:
-    IJoystickInputHandler*  m_inputHandler;
-    IJoystickActionHandler* m_actionHandler;
-    IJoystickButtonMap*     m_buttonMap;
+    IJoystickInputHandler*   m_inputHandler;
+    IJoystickFeatureHandler* m_featureHandler;
+    IJoystickButtonMap*      m_buttonMap;
   };
 }
