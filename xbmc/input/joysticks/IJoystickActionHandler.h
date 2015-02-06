@@ -23,18 +23,55 @@
 
 /*!
  * \ingroup joysticks
- * \brief Interface for handling joystick feature events
+ * \brief Interface for handling events for button IDs used in joystick.xml
  */
 class IJoystickActionHandler
 {
 public:
   virtual ~IJoystickActionHandler(void) { }
-  
+
+  /*!
+   * \brief Get the button ID, as defined in guilib/Key.h, for the specified
+   *        joystick feature/direction
+   *
+   * To obtain the ID of analog stick directions (e.g. the "rightthumbstickup"
+   * button), a direction vector can be provided in the optional parameters.
+   * Ties are resolved by assuming the clockwise direction; up right (x=0.5, y=0.5)
+   * will resolve to right.
+   *
+   * \param id        The joystick feature ID
+   * \param x         The x component of the direction being queried
+   * \param y         The y component of the direction being queried
+   * \param z         The z component of the direction being queried
+   *
+   * \return True if the event was handled otherwise false
+   */
   virtual unsigned int GetButtonID(JoystickFeatureID id, float x = 0.0f, float y = 0.0f, float z = 0.0f) = 0;
 
+  /*!
+   * \brief Determine if the button ID is mapped to a digital or analog action
+   *
+   * \param buttonId       The button ID
+   *
+   * \return True if the button ID is mapped to a digital action, otherwise false
+   *
+   * \sa CButtonTranslator::IsAnalog()
+   */
   virtual bool IsAnalog(unsigned int buttonId) = 0;
 
+  /*!
+   * \brief A button mapped to a digital action has been pressed
+   *
+   * \param buttonId        The button ID
+   * \param holdTimeMs      For repeat events, the duration the button has been held
+   */
   virtual void OnDigitalAction(unsigned int buttonId, unsigned int holdTimeMs = 0) = 0;
 
+  /*!
+   * \brief A button ID mapped to an analog action has experienced a motion
+   *
+   * \param buttonId        The button ID
+   * \param amount          The amount of motion in the closed interval [0.0, 1.0]
+   */
   virtual void OnAnalogAction(unsigned int buttonId, float amount) = 0;
 };

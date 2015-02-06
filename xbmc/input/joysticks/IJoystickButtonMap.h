@@ -33,7 +33,7 @@
 class IJoystickButtonMap
 {
 public:
-  virtual ~IJoystickButtonMap() { }
+  virtual ~IJoystickButtonMap(void) { }
 
   /*!
    * \brief Load the button map into memory

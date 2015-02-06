@@ -29,7 +29,7 @@ class IJoystickActionHandler;
 /*!
  * \ingroup joysticks_generic
  * \brief Generic implementation of IJoystickFeatureHandler to translate
- *        joystick actions into XBMC specific and mappable actions.
+ *        joystick features into joystick.xml buttons
  *
  * \sa IJoystickFeatureHandler
  */
@@ -47,6 +47,7 @@ public:
   virtual bool OnAnalogStickMotion(JoystickFeatureID id, float x, float y);
   virtual bool OnAccelerometerMotion(JoystickFeatureID id, float x, float y, float z);
 
+  // implementation of ITimerCallback
   virtual void OnTimeout(void);
 
 private:

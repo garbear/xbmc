@@ -25,7 +25,8 @@
 
 /*!
  * \ingroup joysticks
- * \brief Interface for handling joystick feature events
+ * \brief Interface for handling events for physical joystick features like
+ *        buttons, triggers and analog sticks
  */
 class IJoystickFeatureHandler
 {
@@ -36,7 +37,6 @@ public:
    * \brief A digital button has been pressed
    *
    * \param id        The ID of the button or trigger
-   * \param bPressed  The new state of the button or trigger
    *
    * \return True if the event was handled otherwise false
    */
@@ -52,10 +52,13 @@ public:
   virtual bool OnButtonRelease(JoystickFeatureID id) { return false; }
 
   /*!
-   * \brief A pressure-sensitive button has been pressed or a trigger has moved
+   * \brief An analog button has changed state
+   *
+   * This could be a trigger or a pressure-sensitive button.
    *
    * \param id        The ID of the button or trigger
-   * \param magnitude The button pressure or trigger travel distance in the interval [0, 1]
+   * \param magnitude The button pressure or trigger travel distance in the
+   *                  closed interval [0, 1]
    *
    * \return True if the event was handled otherwise false
    */

@@ -29,8 +29,7 @@ class IJoystickButtonMap;
 
 /*!
  * \brief Generic implementation of IJoystickInputHandler to translate raw
- *        actions into physical actions associated with an action ID using the
- *        provided button map.
+ *        actions into physical joystick features using the provided button map
  */
 class CGenericJoystickInputHandler : public IJoystickInputHandler
 {

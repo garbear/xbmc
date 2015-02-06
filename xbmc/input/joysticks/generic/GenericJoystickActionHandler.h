@@ -23,24 +23,21 @@
 
 /*!
  * \ingroup joysticks_generic
- * \brief Generic implementation of IJoystickFeatureHandler to translate
- *        joystick actions into XBMC specific and mappable actions.
+ * \brief Generic implementation of IJoystickActionHandler to dispatch button IDs
+ *        to the event handler
  *
- * \sa IJoystickFeatureHandler
+ * \sa IJoystickActionHandler
  */
 class CGenericJoystickActionHandler : public IJoystickActionHandler
 {
 public:
-  CGenericJoystickActionHandler() { }
+  CGenericJoystickActionHandler(void) { }
 
-  virtual ~CGenericJoystickActionHandler() { }
+  virtual ~CGenericJoystickActionHandler(void) { }
   
-  // Ties (when abs(x) == abs(y)) go clockwise
+  // implementation of IJoystickActionHandler
   virtual unsigned int GetButtonID(JoystickFeatureID id, float x = 0.0f, float y = 0.0f, float z = 0.0f);
-
   virtual bool IsAnalog(unsigned int buttonId);
-
   virtual void OnDigitalAction(unsigned int buttonId, unsigned int holdTimeMs = 0);
-
   virtual void OnAnalogAction(unsigned int buttonId, float amount);
 };

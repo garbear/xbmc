@@ -23,18 +23,18 @@
 
 /*!
  * \ingroup joysticks
- * \brief Interface defining methods to handle raw joystick events (buttons,
- *        hats, axes)
+ * \brief Interface defining methods to handle joystick events for raw driver
+ *        elements (buttons, hats, axes)
  */
 class IJoystickInputHandler
 {
 public:
-  virtual ~IJoystickInputHandler() { }
+  virtual ~IJoystickInputHandler(void) { }
 
   /*!
    * \brief Handle button motion
    *
-   * \param index     The index of the raw button
+   * \param index     The index of the button as reported by the driver
    * \param bPressed  true for press motion, false for release motion
    */
   virtual void OnButtonMotion(unsigned int index, bool bPressed) = 0;
@@ -42,7 +42,7 @@ public:
   /*!
    * \brief Handle hat motion
    *
-   * \param index      The index of the raw hat
+   * \param index      The index of the hat as reported by the driver
    * \param direction  The direction the hat is now being pressed
    */
   virtual void OnHatMotion(unsigned int index, HatDirection direction) = 0;
@@ -50,10 +50,20 @@ public:
   /*!
    * \brief Handle axis motion
    *
-   * \param index     The index of the raw axis
+   * If a joystick feature requires multiple axes (analog sticks, accelerometers),
+   * they can be buffered for later processing.
+   *
+   * \param index     The index of the axis as reported by the driver
    * \param position  The position of the axis in the closed interval [-1.0, 1.0]
    */
   virtual void OnAxisMotion(unsigned int index, float position) = 0;
   
+  /*!
+   * \brief Handle buffered axis positions for features that require multiple axes
+   *
+   * This allows the driver to report motion for individual axes without
+   * knowledge of how the axes map to physical features. ProcessAxisMotions() is
+   * called at the end of the frame when all axis motions have been reported.
+   */
   virtual void ProcessAxisMotions(void) = 0;
 };
