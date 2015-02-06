@@ -69,21 +69,23 @@ unsigned int CGenericJoystickActionHandler::GetButtonID(JoystickFeatureID id, fl
   case JOY_ID_ANALOG_STICK_L:
     if (y >= x && y > -x)
       return KEY_BUTTON_LEFT_THUMB_STICK_UP;
+    else if (y < x && y >= -x)
+      return KEY_BUTTON_LEFT_THUMB_STICK_RIGHT;
     else if (y <= x && y < -x)
       return KEY_BUTTON_LEFT_THUMB_STICK_DOWN;
     else if (y > x && y <= -x)
       return KEY_BUTTON_LEFT_THUMB_STICK_LEFT;
-    else if (y < x && y >= -x)
-      return KEY_BUTTON_LEFT_THUMB_STICK_RIGHT;
+    break;
   case JOY_ID_ANALOG_STICK_R:
     if (y >= x && y > -x)
       return KEY_BUTTON_RIGHT_THUMB_STICK_UP;
+    else if (y < x && y >= -x)
+      return KEY_BUTTON_RIGHT_THUMB_STICK_RIGHT;
     else if (y <= x && y < -x)
       return KEY_BUTTON_RIGHT_THUMB_STICK_DOWN;
     else if (y > x && y <= -x)
       return KEY_BUTTON_RIGHT_THUMB_STICK_LEFT;
-    else if (y < x && y >= -x)
-      return KEY_BUTTON_RIGHT_THUMB_STICK_RIGHT;
+    break;
   case JOY_ID_ACCELEROMETER:
     return 0; // TODO
   case JOY_ID_BUTTON_UNKNOWN:
