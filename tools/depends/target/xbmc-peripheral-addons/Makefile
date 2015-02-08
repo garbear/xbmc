@@ -2,7 +2,7 @@ include ../../Makefile.include
 #DEPS= ../../Makefile.include Makefile
 
 LIBNAME=xbmc-peripheral-addons
-VERSION=7dcc019909510ce27af37d05f797a0b77e1e6f29
+VERSION=729e98e3b354d8a3d71f27d5ba86e4ec8bb2dcc3
 GIT_DIR=$(TARBALLS_LOCATION)/$(LIBNAME).git
 BASE_URL=git://github.com/garbear/$(LIBNAME).git
 DYLIB=$(PLATFORM)/addons/peripheral.joysticks/.libs/libjoysticks-addon.so
@@ -66,5 +66,3 @@ clean:
 distclean::
 	rm -rf $(PLATFORM) .installed-$(PLATFORM)
 	rm -rf $(GIT_DIR)/current
-
-
