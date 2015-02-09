@@ -40,7 +40,8 @@
 
 CGenericJoystickFeatureHandler::CGenericJoystickFeatureHandler(void) :
   m_actionHandler(new CGenericJoystickActionHandler),
-  m_holdTimer(this)
+  m_holdTimer(this),
+  m_lastButtonPress(0)
 {
 }
 
@@ -110,7 +111,7 @@ bool CGenericJoystickFeatureHandler::OnAnalogStickMotion(JoystickFeatureID id, f
   unsigned int buttonUpId    = m_actionHandler->GetButtonID(id,  0.0f,  1.0f);
   unsigned int buttonLeftId  = m_actionHandler->GetButtonID(id, -1.0f,  0.0f);
   unsigned int buttonDownId  = m_actionHandler->GetButtonID(id,  0.0f, -1.0f);
-  
+
   unsigned int buttonIds[] = {buttonRightId, buttonUpId, buttonLeftId, buttonDownId};
 
   for (unsigned int i = 0; i < ARRAY_SIZE(buttonIds); i++)
