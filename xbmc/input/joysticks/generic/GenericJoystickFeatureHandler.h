@@ -20,6 +20,7 @@
 #pragma once
 
 #include "input/joysticks/IJoystickFeatureHandler.h"
+#include "threads/CriticalSection.h"
 #include "threads/Timer.h"
 
 #include <vector>
@@ -61,4 +62,5 @@ private:
   CTimer                        m_holdTimer;
   unsigned int                  m_lastButtonPress;
   std::vector<unsigned int>     m_pressedButtons;
+  CCriticalSection              m_digitalMutex;
 };

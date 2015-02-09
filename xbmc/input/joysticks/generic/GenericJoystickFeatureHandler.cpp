@@ -20,6 +20,7 @@
 
 #include "GenericJoystickFeatureHandler.h"
 #include "GenericJoystickActionHandler.h"
+#include "threads/SingleLock.h"
 
 #include <algorithm>
 
@@ -152,12 +153,18 @@ bool CGenericJoystickFeatureHandler::OnAccelerometerMotion(JoystickFeatureID id,
 
 void CGenericJoystickFeatureHandler::OnTimeout(void)
 {
+  CSingleLock lock(m_digitalMutex);
+
   if (m_lastButtonPress && m_holdTimer.GetElapsedMilliseconds() >= HOLD_TIMEOUT_MS)
     m_actionHandler->OnDigitalAction(m_lastButtonPress, (unsigned int)m_holdTimer.GetElapsedMilliseconds());
 }
 
 void CGenericJoystickFeatureHandler::ProcessButtonPress(unsigned int buttonId)
 {
+  ClearHoldTimer();
+
+  CSingleLock lock(m_digitalMutex);
+
   m_pressedButtons.push_back(buttonId);
   m_actionHandler->OnDigitalAction(buttonId);
   StartHoldTimer(buttonId);
@@ -175,7 +182,6 @@ void CGenericJoystickFeatureHandler::ProcessButtonRelease(unsigned int buttonId)
 
 void CGenericJoystickFeatureHandler::StartHoldTimer(unsigned int buttonId)
 {
-  ClearHoldTimer();
   m_holdTimer.Start(REPEAT_TIMEOUT_MS, true);
   m_lastButtonPress = buttonId;
 }
