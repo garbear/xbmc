@@ -22,7 +22,7 @@
 #include "input/joysticks/IJoystickFeatureHandler.h"
 #include "threads/Timer.h"
 
-#include <set>
+#include <vector>
 
 class IJoystickActionHandler;
 
@@ -60,5 +60,5 @@ private:
   IJoystickActionHandler* const m_actionHandler;
   CTimer                        m_holdTimer;
   unsigned int                  m_lastButtonPress;
-  std::set<unsigned int>        m_pressedButtons;
+  std::vector<unsigned int>     m_pressedButtons;
 };

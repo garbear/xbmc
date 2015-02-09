@@ -57,7 +57,7 @@ bool CGenericJoystickFeatureHandler::OnButtonPress(JoystickFeatureID id)
   {
     if (m_actionHandler->IsAnalog(buttonId))
       m_actionHandler->OnAnalogAction(buttonId, 1.0f);
-    else
+    else if (std::find(m_pressedButtons.begin(), m_pressedButtons.end(), buttonId) == m_pressedButtons.end())
       ProcessButtonPress(buttonId);
   }
 
@@ -89,7 +89,7 @@ bool CGenericJoystickFeatureHandler::OnButtonMotion(JoystickFeatureID id, float 
     }
     else
     {
-      std::set<unsigned int>::iterator it = m_pressedButtons.find(buttonId);
+      std::vector<unsigned int>::iterator it = std::find(m_pressedButtons.begin(), m_pressedButtons.end(), buttonId);
 
       if (magnitude >= 0.5f && it == m_pressedButtons.end())
         ProcessButtonPress(buttonId);
@@ -126,7 +126,7 @@ bool CGenericJoystickFeatureHandler::OnAnalogStickMotion(JoystickFeatureID id, f
     }
     else
     {
-      std::set<unsigned int>::iterator it = m_pressedButtons.find(buttonIds[i]);
+      std::vector<unsigned int>::iterator it = std::find(m_pressedButtons.begin(), m_pressedButtons.end(), buttonIds[i]);
 
       if (buttonId == buttonIds[i])
       {
@@ -158,14 +158,14 @@ void CGenericJoystickFeatureHandler::OnTimeout(void)
 
 void CGenericJoystickFeatureHandler::ProcessButtonPress(unsigned int buttonId)
 {
-  m_pressedButtons.insert(buttonId);
+  m_pressedButtons.push_back(buttonId);
   m_actionHandler->OnDigitalAction(buttonId);
   StartHoldTimer(buttonId);
 }
 
 void CGenericJoystickFeatureHandler::ProcessButtonRelease(unsigned int buttonId)
 {
-  std::set<unsigned int>::iterator it = m_pressedButtons.find(buttonId);
+  std::vector<unsigned int>::iterator it = std::find(m_pressedButtons.begin(), m_pressedButtons.end(), buttonId);
   if (it != m_pressedButtons.end())
     m_pressedButtons.erase(it);
 
