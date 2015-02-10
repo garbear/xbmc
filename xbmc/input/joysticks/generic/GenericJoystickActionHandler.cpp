@@ -117,7 +117,8 @@ void CGenericJoystickActionHandler::OnDigitalAction(unsigned int buttonId, unsig
   newEvent.joystick.button = buttonId;
   newEvent.joystick.holdtime = holdTimeMs;
 
-  CWinEvents::MessagePush(&newEvent);
+  //CWinEvents::MessagePush(&newEvent);
+  g_application.OnEvent(newEvent);
 }
 
 void CGenericJoystickActionHandler::OnAnalogAction(unsigned int buttonId, float amount)
@@ -129,5 +130,6 @@ void CGenericJoystickActionHandler::OnAnalogAction(unsigned int buttonId, float 
   newEvent.joystick.button = buttonId;
   newEvent.joystick.amount = amount;
 
-  CWinEvents::MessagePush(&newEvent);
+  //CWinEvents::MessagePush(&newEvent);
+  g_application.OnEvent(newEvent);
 }
