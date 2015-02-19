@@ -287,6 +287,14 @@
 		68046D081C643F3700F1009E /* EventScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68046D031C643F3700F1009E /* EventScanner.cpp */; };
 		68046D091C643F3700F1009E /* EventScanRate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68046D051C643F3700F1009E /* EventScanRate.cpp */; };
 		68046D0A1C643F3700F1009E /* EventScanRate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68046D051C643F3700F1009E /* EventScanRate.cpp */; };
+		68120E2A1C645D6A00A95D39 /* Controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E201C645D6A00A95D39 /* Controller.cpp */; };
+		68120E2B1C645D6A00A95D39 /* Controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E201C645D6A00A95D39 /* Controller.cpp */; };
+		68120E2C1C645D6A00A95D39 /* ControllerFeature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E231C645D6A00A95D39 /* ControllerFeature.cpp */; };
+		68120E2D1C645D6A00A95D39 /* ControllerFeature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E231C645D6A00A95D39 /* ControllerFeature.cpp */; };
+		68120E2E1C645D6A00A95D39 /* ControllerLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E251C645D6A00A95D39 /* ControllerLayout.cpp */; };
+		68120E2F1C645D6A00A95D39 /* ControllerLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E251C645D6A00A95D39 /* ControllerLayout.cpp */; };
+		68120E301C645D6A00A95D39 /* ControllerTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E271C645D6A00A95D39 /* ControllerTranslator.cpp */; };
+		68120E311C645D6A00A95D39 /* ControllerTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E271C645D6A00A95D39 /* ControllerTranslator.cpp */; };
 		68B27C141C403881002EB93F /* GenericJoystickFeatureHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */; };
 		68B27C151C403881002EB93F /* GenericJoystickFeatureHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */; };
 		7C0B98A4154B79C30065A238 /* AEDeviceInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7C0B98A1154B79C30065A238 /* AEDeviceInfo.cpp */; };
@@ -2755,6 +2763,16 @@
 		68046D041C643F3700F1009E /* EventScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventScanner.h; sourceTree = "<group>"; };
 		68046D051C643F3700F1009E /* EventScanRate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventScanRate.cpp; sourceTree = "<group>"; };
 		68046D061C643F3700F1009E /* EventScanRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventScanRate.h; sourceTree = "<group>"; };
+		68120E201C645D6A00A95D39 /* Controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Controller.cpp; path = games/controllers/Controller.cpp; sourceTree = "<group>"; };
+		68120E211C645D6A00A95D39 /* Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Controller.h; path = games/controllers/Controller.h; sourceTree = "<group>"; };
+		68120E221C645D6A00A95D39 /* ControllerDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerDefinitions.h; path = games/controllers/ControllerDefinitions.h; sourceTree = "<group>"; };
+		68120E231C645D6A00A95D39 /* ControllerFeature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerFeature.cpp; path = games/controllers/ControllerFeature.cpp; sourceTree = "<group>"; };
+		68120E241C645D6A00A95D39 /* ControllerFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerFeature.h; path = games/controllers/ControllerFeature.h; sourceTree = "<group>"; };
+		68120E251C645D6A00A95D39 /* ControllerLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerLayout.cpp; path = games/controllers/ControllerLayout.cpp; sourceTree = "<group>"; };
+		68120E261C645D6A00A95D39 /* ControllerLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerLayout.h; path = games/controllers/ControllerLayout.h; sourceTree = "<group>"; };
+		68120E271C645D6A00A95D39 /* ControllerTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerTranslator.cpp; path = games/controllers/ControllerTranslator.cpp; sourceTree = "<group>"; };
+		68120E281C645D6A00A95D39 /* ControllerTranslator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerTranslator.h; path = games/controllers/ControllerTranslator.h; sourceTree = "<group>"; };
+		68120E291C645D6A00A95D39 /* ControllerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerTypes.h; path = games/controllers/ControllerTypes.h; sourceTree = "<group>"; };
 		68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericJoystickFeatureHandling.cpp; path = joysticks/generic/GenericJoystickFeatureHandling.cpp; sourceTree = "<group>"; };
 		68B27C131C403881002EB93F /* GenericJoystickFeatureHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericJoystickFeatureHandling.h; path = joysticks/generic/GenericJoystickFeatureHandling.h; sourceTree = "<group>"; };
 		6E97BDBF0DA2B620003A2A89 /* EventClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventClient.h; sourceTree = "<group>"; };
@@ -6062,6 +6080,31 @@
 			name = addons;
 			sourceTree = "<group>";
 		};
+		68120E1E1C645D3C00A95D39 /* games */ = {
+			isa = PBXGroup;
+			children = (
+				68120E1F1C645D4E00A95D39 /* controllers */,
+			);
+			name = games;
+			sourceTree = "<group>";
+		};
+		68120E1F1C645D4E00A95D39 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				68120E201C645D6A00A95D39 /* Controller.cpp */,
+				68120E211C645D6A00A95D39 /* Controller.h */,
+				68120E221C645D6A00A95D39 /* ControllerDefinitions.h */,
+				68120E231C645D6A00A95D39 /* ControllerFeature.cpp */,
+				68120E241C645D6A00A95D39 /* ControllerFeature.h */,
+				68120E251C645D6A00A95D39 /* ControllerLayout.cpp */,
+				68120E261C645D6A00A95D39 /* ControllerLayout.h */,
+				68120E271C645D6A00A95D39 /* ControllerTranslator.cpp */,
+				68120E281C645D6A00A95D39 /* ControllerTranslator.h */,
+				68120E291C645D6A00A95D39 /* ControllerTypes.h */,
+			);
+			name = controllers;
+			sourceTree = "<group>";
+		};
 		7C14096E18322476009F9411 /* lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -7508,6 +7551,7 @@
 				DF29BCD41B5D911700904347 /* events */,
 				431376E912D6439900680C15 /* dialogs */,
 				E38E16940D25F9FA00618676 /* filesystem */,
+				68120E1E1C645D3C00A95D39 /* games */,
 				18B7C3AA1294219F009E7A26 /* guilib */,
 				18B7C8C61294252E009E7A26 /* input */,
 				4367217312D6640E002508E6 /* interfaces */,
@@ -9341,6 +9385,7 @@
 				E38E1F980D25F9FD00618676 /* DVDFactoryInputStream.cpp in Sources */,
 				E38E1F990D25F9FD00618676 /* DVDInputStream.cpp in Sources */,
 				DF6A0D841A4584E80075BBFC /* OverrideFile.cpp in Sources */,
+				68120E301C645D6A00A95D39 /* ControllerTranslator.cpp in Sources */,
 				E38E1F9A0D25F9FD00618676 /* DVDInputStreamFFmpeg.cpp in Sources */,
 				E38E1F9B0D25F9FD00618676 /* DVDInputStreamFile.cpp in Sources */,
 				E38E1F9D0D25F9FD00618676 /* DVDInputStreamMemory.cpp in Sources */,
@@ -9560,6 +9605,7 @@
 				68046CF91C643EFE00F1009E /* PeripheralAddonTranslator.cpp in Sources */,
 				E38E22600D25F9FE00618676 /* system.cpp in Sources */,
 				E38E22610D25F9FE00618676 /* timefn.cpp in Sources */,
+				68120E2C1C645D6A00A95D39 /* ControllerFeature.cpp in Sources */,
 				E38E22620D25F9FE00618676 /* ulinks.cpp in Sources */,
 				E38E22630D25F9FE00618676 /* unicode.cpp in Sources */,
 				E38E22680D25F9FE00618676 /* volume.cpp in Sources */,
@@ -9972,6 +10018,7 @@
 				DF93D69B1444A8B1007C6459 /* FileCache.cpp in Sources */,
 				3994427A1A8DD920006C39E9 /* VideoLibraryScanningJob.cpp in Sources */,
 				68046CF71C643EFE00F1009E /* PeripheralAddon.cpp in Sources */,
+				68120E2A1C645D6A00A95D39 /* Controller.cpp in Sources */,
 				DF93D69C1444A8B1007C6459 /* CDDAFile.cpp in Sources */,
 				DF93D69D1444A8B1007C6459 /* CurlFile.cpp in Sources */,
 				DF93D69F1444A8B1007C6459 /* DirectoryFactory.cpp in Sources */,
@@ -9991,6 +10038,7 @@
 				2AC7EB601C34893700BDAA95 /* PVRRecordingsPath.cpp in Sources */,
 				DF93D6B11444A8B1007C6459 /* UDFFile.cpp in Sources */,
 				DF93D6B21444A8B1007C6459 /* UPnPFile.cpp in Sources */,
+				68120E2E1C645D6A00A95D39 /* ControllerLayout.cpp in Sources */,
 				DF93D6B31444A8B1007C6459 /* ZipFile.cpp in Sources */,
 				7C1A85661520522500C63311 /* TextureCacheJob.cpp in Sources */,
 				7C1F6EBB13ECCFA7001726AB /* LibraryDirectory.cpp in Sources */,
@@ -10699,6 +10747,7 @@
 				E49912A0174E5D9900741B6D /* PlaylistFileDirectory.cpp in Sources */,
 				E49912A1174E5D9900741B6D /* PluginDirectory.cpp in Sources */,
 				E49912A2174E5D9900741B6D /* PVRDirectory.cpp in Sources */,
+				68120E2B1C645D6A00A95D39 /* Controller.cpp in Sources */,
 				395C29DC1A98A11C00EBC7AD /* WsgiResponse.cpp in Sources */,
 				E49912A3174E5D9900741B6D /* PVRFile.cpp in Sources */,
 				E49912A4174E5D9900741B6D /* RarDirectory.cpp in Sources */,
@@ -10806,6 +10855,7 @@
 				E4991308174E5DAD00741B6D /* GUIProgressControl.cpp in Sources */,
 				E4991309174E5DAD00741B6D /* GUIRadioButtonControl.cpp in Sources */,
 				E499130A174E5DAD00741B6D /* GUIRenderingControl.cpp in Sources */,
+				68120E311C645D6A00A95D39 /* ControllerTranslator.cpp in Sources */,
 				E499130B174E5DAD00741B6D /* GUIResizeControl.cpp in Sources */,
 				395897161AAD94F00033D27C /* KeyboardLayoutManager.cpp in Sources */,
 				395C2A251AA4C32100EBC7AD /* AudioDecoder.cpp in Sources */,
@@ -11033,6 +11083,7 @@
 				E49913F9174E5FB000741B6D /* GUIDialogPVRChannelManager.cpp in Sources */,
 				68034B901C3C9E6B00289C39 /* DriverPrimitive.cpp in Sources */,
 				E49913FA174E5FB000741B6D /* GUIDialogPVRChannelsOSD.cpp in Sources */,
+				68120E2D1C645D6A00A95D39 /* ControllerFeature.cpp in Sources */,
 				E49913FD174E5FB000741B6D /* GUIDialogPVRGroupManager.cpp in Sources */,
 				E49913FE174E5FB000741B6D /* GUIDialogPVRGuideInfo.cpp in Sources */,
 				E49913FF174E5FB000741B6D /* GUIDialogPVRGuideOSD.cpp in Sources */,
@@ -11457,6 +11508,7 @@
 				7CCDAC8719275CA70074CF51 /* NptBsdNetwork.cpp in Sources */,
 				7CCDAC9019275CA70074CF51 /* NptBsdResolver.cpp in Sources */,
 				7CCDAC9319275CA70074CF51 /* NptBsdSockets.cpp in Sources */,
+				68120E2F1C645D6A00A95D39 /* ControllerLayout.cpp in Sources */,
 				7CCDACA819275D1F0074CF51 /* NptStdcDebug.cpp in Sources */,
 				DF29BCFB1B5D911800904347 /* GUIViewStateEventLog.cpp in Sources */,
 				7CCDACB119275D1F0074CF51 /* NptStdcEnvironment.cpp in Sources */,
