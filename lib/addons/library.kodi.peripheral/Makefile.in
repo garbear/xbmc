@@ -2,10 +2,10 @@ ARCH=@ARCH@
 INCLUDES=-I. -I../../../xbmc/addons/include
 DEFINES+=
 CXXFLAGS=-fPIC
-LIBNAME=libXBMC_peripheral
+LIBNAME=libKODI_peripheral
 OBJS=$(LIBNAME).o
 
-LIB_SHARED=../../../addons/library.xbmc.peripheral/$(LIBNAME)-$(ARCH).so
+LIB_SHARED=../../../addons/library.kodi.peripheral/$(LIBNAME)-$(ARCH).so
 
 all: $(LIB_SHARED)
 

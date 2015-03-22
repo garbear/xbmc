@@ -20,7 +20,7 @@
 #pragma once
 
 #include "libXBMC_addon.h"
-#include "xbmc_peripheral_callbacks.h"
+#include "kodi_peripheral_callbacks.h"
 
 #include <string>
 #include <stdio.h>
@@ -30,10 +30,10 @@
 #endif
 
 #ifdef _WIN32
-  #define PERIPHERAL_HELPER_DLL "\\library.xbmc.peripheral\\libXBMC_peripheral" ADDON_HELPER_EXT
+  #define PERIPHERAL_HELPER_DLL "\\library.kodi.peripheral\\libKODI_peripheral" ADDON_HELPER_EXT
 #else
-  #define PERIPHERAL_HELPER_DLL_NAME "libXBMC_peripheral-" ADDON_HELPER_ARCH ADDON_HELPER_EXT
-  #define PERIPHERAL_HELPER_DLL "/library.xbmc.peripheral/" PERIPHERAL_HELPER_DLL_NAME
+  #define PERIPHERAL_HELPER_DLL_NAME "libKODI_peripheral-" ADDON_HELPER_ARCH ADDON_HELPER_EXT
+  #define PERIPHERAL_HELPER_DLL "/library.kodi.peripheral/" PERIPHERAL_HELPER_DLL_NAME
 #endif
 
 #define PERIPHERAL_REGISTER_SYMBOL(dll, functionPtr) \
@@ -101,9 +101,9 @@ public:
       return false;
     }
 
-    if (!PERIPHERAL_REGISTER_SYMBOL(m_libXBMC_peripheral, PERIPHERAL_register_me)) return false;
-    if (!PERIPHERAL_REGISTER_SYMBOL(m_libXBMC_peripheral, PERIPHERAL_unregister_me)) return false;
-    if (!PERIPHERAL_REGISTER_SYMBOL(m_libXBMC_peripheral, PERIPHERAL_trigger_scan)) return false;
+    if (!PERIPHERAL_REGISTER_SYMBOL(m_libKODI_peripheral, PERIPHERAL_register_me)) return false;
+    if (!PERIPHERAL_REGISTER_SYMBOL(m_libXKODI_peripheral, PERIPHERAL_unregister_me)) return false;
+    if (!PERIPHERAL_REGISTER_SYMBOL(m_libKODI_peripheral, PERIPHERAL_trigger_scan)) return false;
 
     m_callbacks = PERIPHERAL_register_me(m_handle);
     return m_callbacks != NULL;
@@ -122,7 +122,7 @@ protected:
 private:
   void*             m_handle;
   CB_PeripheralLib* m_callbacks;
-  void*             m_libXBMC_peripheral;
+  void*             m_libKODI_peripheral;
 
   struct cb_array
   {

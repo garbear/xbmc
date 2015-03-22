@@ -19,7 +19,7 @@
  */
 
 #include "addons/AddonCallbacks.h"
-#include "addons/include/xbmc_peripheral_types.h"
+#include "addons/include/kodi_peripheral_types.h"
 
 #include <stdio.h>
 

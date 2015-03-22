@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include "xbmc_peripheral_types.h"
+#include "kodi_peripheral_types.h"
 
 #include <cstring>
 #include <map>
@@ -153,7 +153,7 @@ namespace ADDON
   /*!
    * ADDON::JoystickFeature
    *
-   * Base class for joystick features. In xbmc_peripheral_types.h, the various
+   * Base class for joystick features. In kodi_peripheral_types.h, the various
    * driver types are stored as an union. Here, we use polymorphism to allow for
    * extra driver information.
    */

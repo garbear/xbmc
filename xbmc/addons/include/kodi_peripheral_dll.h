@@ -20,7 +20,7 @@
 #ifndef __PERIPHERAL_DLL_H__
 #define __PERIPHERAL_DLL_H__
 
-#include "xbmc_peripheral_types.h"
+#include "kodi_peripheral_types.h"
 
 #define PERIPHERAL_ADDON_JOYSTICKS // TODO
 
@@ -33,7 +33,7 @@ extern "C"
   ///{
   /*!
    * @brief  Get the PERIPHERAL_API_VERSION used to compile this peripheral add-on
-   * @return XBMC_PERIPHERAL_API_VERSION from xbmc_peripheral_types
+   * @return KODI_PERIPHERAL_API_VERSION from kodi_peripheral_types
    * @remarks Valid implementation required
    *
    * Used to check if the implementation is compatible with the frontend.
@@ -41,8 +41,8 @@ extern "C"
   const char* GetPeripheralAPIVersion(void);
 
   /*!
-   * @brief Get the XBMC_PERIPHERAL_MIN_API_VERSION used to compile this peripheral add-on
-   * @return XBMC_PERIPHERAL_MIN_API_VERSION from xbmc_peripheral_types
+   * @brief Get the KODI_PERIPHERAL_MIN_API_VERSION used to compile this peripheral add-on
+   * @return KODI_PERIPHERAL_MIN_API_VERSION from kodi_peripheral_types
    * @remarks Valid implementation required
    *
    * Used to check if the implementation is compatible with the frontend.
@@ -104,9 +104,9 @@ extern "C"
 
   /// @name Joystick operations
   /*!
-   * @note #define PERIPHERAL_ADDON_JOYSTICKS before including xbmc_peripheral_dll.h
+   * @note #define PERIPHERAL_ADDON_JOYSTICKS before including kodi_peripheral_dll.h
    * in the add-on if the add-on provides joysticks and add provides_joysticks="true"
-   * to the xbmc.peripheral extension point node in addon.xml.
+   * to the kodi.peripheral extension point node in addon.xml.
    */
   ///{
 #ifdef PERIPHERAL_ADDON_JOYSTICKS
