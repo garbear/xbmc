@@ -43,7 +43,7 @@ void CGameSettings::OnSettingAction(const CSetting* setting)
   if (settingId == "gamesgeneral.manageaddons")
   {
     std::vector<std::string> params;
-    params.push_back("addons://all/xbmc.gameclient");
+    params.push_back("addons://all/kodi.gameclient");
     g_windowManager.ActivateWindow(WINDOW_ADDON_BROWSER, params);
   }
 }

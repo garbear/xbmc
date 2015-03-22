@@ -20,7 +20,7 @@
  */
 
 #include "libXBMC_addon.h"
-#include "xbmc_game_callbacks.h"
+#include "kodi_game_callbacks.h"
 
 #include <string>
 #include <stdio.h>
@@ -30,31 +30,31 @@
 #endif
 
 #ifdef _WIN32
-  #define GAME_HELPER_DLL "\\library.xbmc.game\\libXBMC_game" ADDON_HELPER_EXT
+  #define GAME_HELPER_DLL "\\library.kodi.game\\libKODI_game" ADDON_HELPER_EXT
 #else
-  #define GAME_HELPER_DLL_NAME "libXBMC_game-" ADDON_HELPER_ARCH ADDON_HELPER_EXT
-  #define GAME_HELPER_DLL "/library.xbmc.game/" GAME_HELPER_DLL_NAME
+  #define GAME_HELPER_DLL_NAME "libKODI_game-" ADDON_HELPER_ARCH ADDON_HELPER_EXT
+  #define GAME_HELPER_DLL "/library.kodi.game/" GAME_HELPER_DLL_NAME
 #endif
 
 #define GAME_REGISTER_SYMBOL(dll, functionPtr) \
-  CHelper_libXBMC_game::RegisterSymbol(dll, functionPtr, #functionPtr)
+  CHelper_libKODI_game::RegisterSymbol(dll, functionPtr, #functionPtr)
 
-class CHelper_libXBMC_game
+class CHelper_libKODI_game
 {
 public:
-  CHelper_libXBMC_game(void)
+  CHelper_libKODI_game(void)
   {
     m_handle       = NULL;
     m_callbacks    = NULL;
-    m_libXBMC_game = NULL;
+    m_libKODI_game = NULL;
   }
 
-  ~CHelper_libXBMC_game(void)
+  ~CHelper_libKODI_game(void)
   {
-    if (m_libXBMC_game)
+    if (m_libKODI_game)
     {
       GAME_unregister_me(m_handle, m_callbacks);
-      dlclose(m_libXBMC_game);
+      dlclose(m_libKODI_game);
     }
   }
 
@@ -86,8 +86,8 @@ public:
       }
 #endif
 
-    m_libXBMC_game = dlopen(libBasePath.c_str(), RTLD_LAZY);
-    if (m_libXBMC_game == NULL)
+    m_libKODI_game = dlopen(libBasePath.c_str(), RTLD_LAZY);
+    if (m_libKODI_game == NULL)
     {
       fprintf(stderr, "Unable to load %s\n", dlerror());
       return false;
@@ -95,38 +95,38 @@ public:
 
     try
     {
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_register_me)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_unregister_me)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_close_game)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_open_port)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_close_port)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_environment_set_rotation)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_environment_get_overscan)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_environment_can_dupe)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_environment_set_system_av_info)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_video_frame)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_audio_frames)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_rumble_set_state)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_perf_get_time_usec)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_perf_get_counter)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_perf_get_cpu_features)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_perf_log)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_perf_register)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_perf_start)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_perf_stop)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_camera_set_info)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_camera_start)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_camera_stop)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_location_start)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_location_stop)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_location_get_position)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_location_set_interval)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_location_initialized)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_location_deinitialized)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_frame_time_set_reference)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_hw_set_info)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_hw_get_current_framebuffer)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libXBMC_game, GAME_hw_get_proc_address)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_register_me)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_unregister_me)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_close_game)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_open_port)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_close_port)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_environment_set_rotation)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_environment_get_overscan)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_environment_can_dupe)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_environment_set_system_av_info)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_video_frame)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_audio_frames)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_rumble_set_state)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_perf_get_time_usec)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_perf_get_counter)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_perf_get_cpu_features)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_perf_log)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_perf_register)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_perf_start)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_perf_stop)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_camera_set_info)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_camera_start)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_camera_stop)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_location_start)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_location_stop)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_location_get_position)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_location_set_interval)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_location_initialized)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_location_deinitialized)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_frame_time_set_reference)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_hw_set_info)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_hw_get_current_framebuffer)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_hw_get_proc_address)) throw false;
     }
     catch (const bool& bSuccess)
     {
@@ -325,7 +325,7 @@ protected:
 private:
   void*        m_handle;
   CB_GameLib*  m_callbacks;
-  void*        m_libXBMC_game;
+  void*        m_libKODI_game;
 
   struct cb_array
   {

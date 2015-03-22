@@ -2,10 +2,10 @@ ARCH=@ARCH@
 INCLUDES=-I. -I../../../xbmc/addons/include
 DEFINES+=
 CXXFLAGS=-fPIC
-LIBNAME=libXBMC_game
+LIBNAME=libKODI_game
 OBJS=$(LIBNAME).o
 
-LIB_SHARED=../../../addons/library.xbmc.game/$(LIBNAME)-$(ARCH).so
+LIB_SHARED=../../../addons/library.kodi.game/$(LIBNAME)-$(ARCH).so
 
 all: $(LIB_SHARED)
 

@@ -7,7 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\libXBMC_game.cpp">
+    <ClCompile Include="..\..\libKODI_game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

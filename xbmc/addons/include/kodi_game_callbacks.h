@@ -17,10 +17,10 @@
  *  <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef XBMC_GAME_CALLBACKS_H_
-#define XBMC_GAME_CALLBACKS_H_
+#ifndef KODI_GAME_CALLBACKS_H_
+#define KODI_GAME_CALLBACKS_H_
 
-#include "xbmc_game_types.h"
+#include "kodi_game_types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -301,4 +301,4 @@ typedef struct CB_GameLib
 }
 #endif
 
-#endif // XBMC_GAME_CALLBACKS_H_
+#endif // KODI_GAME_CALLBACKS_H_

@@ -19,7 +19,7 @@
  */
 
 #include "addons/AddonCallbacks.h"
-#include "addons/include/xbmc_game_types.h"
+#include "addons/include/kodi_game_types.h"
 
 #include <stdio.h>
 

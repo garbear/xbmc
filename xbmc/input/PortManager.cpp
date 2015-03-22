@@ -50,9 +50,6 @@ void CPortManager::OpenPort(IJoystickInputHandler* handler)
 
   SPort newPort = { handler, 0 };
   m_ports.push_back(newPort);
-
-  SetChanged();
-  NotifyObservers(ObservableMessagePortsChanged);
 }
 
 void CPortManager::ClosePort(IJoystickInputHandler* handler)
@@ -60,9 +57,6 @@ void CPortManager::ClosePort(IJoystickInputHandler* handler)
   CSingleLock lock(m_mutex);
 
   m_ports.erase(std::remove_if(m_ports.begin(), m_ports.end(), InputHandlerEqual(handler)), m_ports.end());
-
-  SetChanged();
-  NotifyObservers(ObservableMessagePortsChanged);
 }
 
 void CPortManager::GetPortMap(const std::vector<PERIPHERALS::CPeripheral*>& devices,
@@ -75,23 +69,20 @@ void CPortManager::GetPortMap(const std::vector<PERIPHERALS::CPeripheral*>& devi
     ports = m_ports; // Modify copy so device count starts from zero next time
   }
 
-  if (!ports.empty())
+  for (std::vector<CPeripheral*>::const_iterator it = devices.begin(); it != devices.end(); ++it)
   {
-    for (std::vector<CPeripheral*>::const_iterator it = devices.begin(); it != devices.end(); ++it)
+    int requestedPort = JOYSTICK_PORT_UNKNOWN;
+    if ((*it)->Type() == PERIPHERAL_JOYSTICK)
     {
-      int requestedPort = JOYSTICK_PORT_UNKNOWN;
-      if ((*it)->Type() == PERIPHERAL_JOYSTICK)
-      {
-        CPeripheralJoystick* joystick = static_cast<CPeripheralJoystick*>(*it);
-        if (joystick->RequestedPort() != JOYSTICK_PORT_UNKNOWN && joystick->RequestedPort() <= (int)m_ports.size())
-          requestedPort = joystick->RequestedPort() - 1;
-      }
-
-      unsigned int targetPort = GetNextOpenPort(ports, requestedPort);
-
-      portMap[*it] = ports[targetPort].handler;
-      ports[targetPort].deviceCount++;
+      CPeripheralJoystick* joystick = static_cast<CPeripheralJoystick*>(*it);
+      if (joystick->RequestedPort() != JOYSTICK_PORT_UNKNOWN && joystick->RequestedPort() <= (int)m_ports.size())
+        requestedPort = joystick->RequestedPort() - 1;
     }
+
+    unsigned int targetPort = GetNextOpenPort(ports, requestedPort);
+
+    portMap[*it] = ports[targetPort].handler;
+    ports[targetPort].deviceCount++;
   }
 }
 

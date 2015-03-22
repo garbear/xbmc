@@ -17,10 +17,10 @@
  *  <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef XBMC_GAME_DLL_H_
-#define XBMC_GAME_DLL_H_
+#ifndef KODI_GAME_DLL_H_
+#define KODI_GAME_DLL_H_
 
-#include "xbmc_game_types.h"
+#include "kodi_game_types.h"
 
 /*! Functions that the game client add-on must implement */
 #ifdef __cplusplus
@@ -266,7 +266,7 @@ GAME_ERROR CameraFrameRawBuffer(const uint32_t *buffer, unsigned width, unsigned
 GAME_ERROR CameraFrameOpenglTexture(unsigned texture_id, unsigned texture_target, const float *affine);
 
 /*!
- * Called by XBMC to assign the function pointers of this add-on to pClient.
+ * Called by Kodi to assign the function pointers of this add-on to pClient.
  * Note that get_addon() is defined here, so it will be available in all
  * compiled game clients.
  */
@@ -312,4 +312,4 @@ void __declspec(dllexport) get_addon(struct GameClient* pClient)
 };
 #endif
 
-#endif // XBMC_GAME_DLL_H_
+#endif // KODI_GAME_DLL_H_

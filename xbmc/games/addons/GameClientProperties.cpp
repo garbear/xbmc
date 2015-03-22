@@ -20,7 +20,7 @@
 
 #include "GameClientProperties.h"
 #include "GameClient.h"
-#include "addons/include/xbmc_game_types.h"
+#include "addons/include/kodi_game_types.h"
 #include "filesystem/SpecialProtocol.h"
 
 using namespace GAME;

@@ -20,7 +20,7 @@
  */
 
 #include "AddonCallbacks.h"
-#include "include/xbmc_game_callbacks.h"
+#include "include/kodi_game_callbacks.h"
 
 namespace GAME { class CGameClient; }
 class CRetroPlayer;

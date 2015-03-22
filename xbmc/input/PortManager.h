@@ -20,7 +20,6 @@
 #pragma once
 
 #include "threads/CriticalSection.h"
-#include "utils/Observer.h"
 
 #include <map>
 #include <vector>
@@ -35,7 +34,7 @@ struct SPort
   unsigned int           deviceCount;
 };
 
-class CPortManager : public Observable
+class CPortManager
 {
 private:
   CPortManager(void) { }

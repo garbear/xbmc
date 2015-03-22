@@ -28,32 +28,32 @@
  * callbacks is documented here.
  *
  * The Game API is layed out in three files:
- *   - xbmc_game_dll.h        (API function declarations)
- *   - xbmc_game_callbacks.h  (API callback pointers)
- *   - xbmc_game_types.h      (API enums and structs)
+ *   - kodi_game_dll.h        (API function declarations)
+ *   - kodi_game_callbacks.h  (API callback pointers)
+ *   - kodi_game_types.h      (API enums and structs)
  *
  * To add a new API function:
- *   1.  Declare the function in xbmc_game_dll.h with some helpful documentation
+ *   1.  Declare the function in kodi_game_dll.h with some helpful documentation
  *   2.  Assign the function pointer in get_addon() of the same file. get_addon()
  *       (aliased to GetAddon()) is called in AddonDll.h immediately after
  *       loading the shared library.
- *   3.  Add the function to the GameClient struct in xbmc_game_types.h. This
+ *   3.  Add the function to the GameClient struct in kodi_game_types.h. This
  *       struct contains pointers to all the API functions. It is populated in
  *       get_addon(). CGameClient invokes API functions through this struct.
  *   4.  Define the function in the cpp file of the game client project
  *
  * To add a new API callback:
  *   1.  Declare the callback as a function pointer in the CB_GameLib struct of
- *       xbmc_game_callbacks.h with some helpful documentation. The first
+ *       kodi_game_callbacks.h with some helpful documentation. The first
  *       parameter, addonData, is the CAddonCallbacksGame object associated with
  *       the game client instance.
  *   2.  Declare the callback as a static member function of CAddonCallbacksGame
  *   3.  Define the function in AddonCallbacksGame.cpp and assign the callback
  *       to the callbacks table in the constructor.
- *   4.  Expose the function to the game client in libXBMC_game.cpp. This shared
+ *   4.  Expose the function to the game client in libKODI_game.cpp. This shared
  *       library allows for ABI compatibility if the API is unchanged across
  *       releases.
- *   5.  Add the callback to the helper class in libXBMC_game.h. Requires three
+ *   5.  Add the callback to the helper class in libKODI_game.h. Requires three
  *       modifications: register the symbol exported from the shared library,
  *       expose the callback using a member function wrapper, and declare the
  *       function pointer as a protected member variable.

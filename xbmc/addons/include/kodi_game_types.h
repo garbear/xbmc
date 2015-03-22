@@ -17,8 +17,8 @@
  *  <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef XBMC_GAME_TYPES_H_
-#define XBMC_GAME_TYPES_H_
+#ifndef KODI_GAME_TYPES_H_
+#define KODI_GAME_TYPES_H_
 
 /* current game API version */
 #define GAME_API_VERSION                "1.0.0"
@@ -385,7 +385,7 @@ typedef struct game_client_properties
   const char* save_directory;
 } game_client_properties;
 
-/*! Structure to transfer the methods from xbmc_game_dll.h to XBMC */
+/*! Structure to transfer the methods from kodi_game_dll.h to Kodi */
 typedef struct GameClient
 {
   const char* (__cdecl* GetGameAPIVersion)(void);
@@ -428,4 +428,4 @@ typedef struct GameClient
 }
 #endif
 
-#endif // XBMC_GAME_TYPES_H_
+#endif // KODI_GAME_TYPES_H_

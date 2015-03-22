@@ -29,7 +29,7 @@ namespace GAME
 class CGameClient;
 
 /**
- * A wrapper for game client properties declared in xbmc_game_types.h. The
+ * A wrapper for game client properties declared in kodi_game_types.h. The
  * definitions of all properties are encapsulated within this class.
  */
 class CGameClientProperties

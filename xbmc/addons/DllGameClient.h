@@ -20,7 +20,7 @@
  */
 
 #include "DllAddon.h"
-#include "include/xbmc_game_types.h"
+#include "include/kodi_game_types.h"
 
 class DllGameClient : public DllAddon<GameClient, game_client_properties>
 {

@@ -109,7 +109,7 @@ bool CRetroPlayerDialogs::GameLauchDialog(const CFileItem &file, GameClientPtr &
     CGameManager::Get().SetAutoLaunch(fileCopy);
     CLog::Log(LOGDEBUG, "RetroPlayer: User chose to go to the add-on manager");
     std::vector<std::string> params;
-    params.push_back("addons://all/xbmc.gameclient");
+    params.push_back("addons://all/kodi.gameclient");
     g_windowManager.ActivateWindow(WINDOW_ADDON_BROWSER, params);
   }
   else
@@ -333,7 +333,7 @@ bool CRetroPlayerDialogs::ChooseGameClientDialog(const std::vector<std::string> 
 
     CLog::Log(LOGDEBUG, "RetroPlayer: User chose to go to the add-on manager");
     std::vector<std::string> params;
-    params.push_back("addons://all/xbmc.gameclient");
+    params.push_back("addons://all/kodi.gameclient");
     g_windowManager.ActivateWindow(WINDOW_ADDON_BROWSER, params);
     return false;
   }
