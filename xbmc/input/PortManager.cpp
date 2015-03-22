@@ -19,7 +19,6 @@
 
 #include "PortManager.h"
 #include "peripherals/devices/PeripheralJoystick.h"
-#include "peripherals/Peripherals.h"
 #include "threads/SingleLock.h"
 
 #include <algorithm>
@@ -30,49 +29,27 @@ using namespace PERIPHERALS;
 
 struct InputHandlerEqual
 {
-  InputHandlerEqual(IJoystickInputHandler* handler) : m_handler(handler) { }
+  InputHandlerEqual(IJoystickInputHandler* handler) : handler(handler) { }
 
-  bool operator()(const SPort& port) { return port.handler == m_handler; }
+  bool operator()(const SPort& port) { return port.handler == handler; }
 
-private:
-  IJoystickInputHandler* const m_handler;
+  IJoystickInputHandler* const handler;
 };
 
 // --- CPortManager ------------------------------------------------------------
 
-CPortManager::CPortManager(void)
-{
-  g_peripherals.RegisterObserver(this);
-}
-
-CPortManager& CPortManager::Get()
+CPortManager& CPortManager::Get(void)
 {
   static CPortManager instance;
   return instance;
-}
-
-CPortManager::~CPortManager(void)
-{
-  g_peripherals.UnregisterObserver(this);
-}
-
-void CPortManager::ClearDevices(void)
-{
-  for (std::vector<SPort>::iterator itPort = m_ports.begin(); itPort != m_ports.end(); ++itPort)
-    itPort->devices.clear();
 }
 
 void CPortManager::OpenPort(IJoystickInputHandler* handler)
 {
   CSingleLock lock(m_mutex);
 
-  SPort port;
-
-  port.handler = handler;
-
-  m_ports.push_back(port);
-
-  ProcessDevices();
+  SPort newPort = { handler, 0 };
+  m_ports.push_back(newPort);
 }
 
 void CPortManager::ClosePort(IJoystickInputHandler* handler)
@@ -80,56 +57,18 @@ void CPortManager::ClosePort(IJoystickInputHandler* handler)
   CSingleLock lock(m_mutex);
 
   m_ports.erase(std::remove_if(m_ports.begin(), m_ports.end(), InputHandlerEqual(handler)), m_ports.end());
-
-  ProcessDevices();
 }
 
-void CPortManager::Notify(const Observable &obs, const ObservableMessage msg)
+void CPortManager::GetPortMap(const std::vector<PERIPHERALS::CPeripheral*>& devices,
+                              std::map<PERIPHERALS::CPeripheral*, IJoystickInputHandler*>& portMap) const
 {
-  switch (msg)
+  std::vector<SPort> ports;
+
   {
-    case ObservableMessagePeripheralsChanged:
-    {
-      CSingleLock lock(m_mutex);
-
-      ProcessDevices();
-
-      break;
-    }
-    default:
-      break;
+    CSingleLock lock(m_mutex);
+    ports = m_ports; // Modify copy so device count starts from zero next time
   }
-}
 
-void CPortManager::ProcessDevices(void)
-{
-  // Record the old handler-device map for later processing
-  DeviceMap oldDeviceMap = GetDeviceMap();
-
-  // Clear the previous assignments
-  ClearDevices();
-
-  // Scan for peripherals
-  std::vector<CPeripheral*> peripherals = ScanPeripherals();
-
-  // Assign devices to ports
-  AssignDevices(peripherals);
-
-  // Notify devices whose ports have changed
-  ProcessHandlers(oldDeviceMap);
-}
-
-std::vector<CPeripheral*> CPortManager::ScanPeripherals(void) const
-{
-  std::vector<CPeripheral*> peripherals;
-
-  g_peripherals.GetPeripheralsWithFeature(peripherals, FEATURE_JOYSTICK);
-
-  return peripherals;
-}
-
-void CPortManager::AssignDevices(const std::vector<CPeripheral*>& devices)
-{
   for (std::vector<CPeripheral*>::const_iterator it = devices.begin(); it != devices.end(); ++it)
   {
     int requestedPort = JOYSTICK_PORT_UNKNOWN;
@@ -140,72 +79,38 @@ void CPortManager::AssignDevices(const std::vector<CPeripheral*>& devices)
         requestedPort = joystick->RequestedPort() - 1;
     }
 
-    const unsigned int targetPort = GetNextOpenPort(requestedPort);
+    unsigned int targetPort = GetNextOpenPort(ports, requestedPort);
 
-    m_ports[targetPort].devices.push_back(*it);
+    portMap[*it] = ports[targetPort].handler;
+    ports[targetPort].deviceCount++;
   }
 }
 
-void CPortManager::ProcessHandlers(const DeviceMap& oldDeviceMap) const
+unsigned int CPortManager::GetNextOpenPort(const std::vector<SPort>& ports, unsigned int startPort /* = 0 */)
 {
-  DeviceMap newDeviceMap = GetDeviceMap();
+  const unsigned int minDeviceCount = GetMinDeviceCount(ports);
 
-  for (DeviceMap::const_iterator itNew = newDeviceMap.begin(); itNew != newDeviceMap.end(); ++itNew)
+  for (unsigned int i = 0, port = startPort; i < ports.size(); i++, port = (port + 1) % ports.size())
   {
-    DeviceMap::const_iterator itOld = oldDeviceMap.find(itNew->first);
-
-    IJoystickInputHandler* oldHandler = itOld != oldDeviceMap.end() ? itOld->second : NULL;
-    IJoystickInputHandler* newHandler = itNew->second;
-
-    if (oldHandler != newHandler) // Check if handler changed
-    {
-      CPeripheralJoystick* joystick = static_cast<CPeripheralJoystick*>(itNew->first);
-
-      // Unregister old handler
-      if (oldHandler != NULL)
-        joystick->UnregisterInputHandler(oldHandler);
-
-      // Register new handler
-      joystick->RegisterInputHandler(newHandler);
-    }
-  }
-}
-
-unsigned int CPortManager::GetNextOpenPort(unsigned int startPort /* = 0 */) const
-{
-  unsigned int minDeviceDepth = GetMinDeviceDepth();
-
-  for (unsigned int i = 0, port = startPort; i < m_ports.size(); i++, port = (port + 1) % m_ports.size())
-  {
-    if (m_ports[port].devices.size() == minDeviceDepth)
+    // Will match at least one port
+    if (ports[port].deviceCount == minDeviceCount)
       return port;
   }
 
   return 0;
 }
 
-CPortManager::DeviceMap CPortManager::GetDeviceMap(void) const
+unsigned int CPortManager::GetMinDeviceCount(const std::vector<SPort>& ports)
 {
-  DeviceMap deviceMap;
+  unsigned int minDeviceCount = 0;
 
-  for (std::vector<SPort>::const_iterator itPort = m_ports.begin(); itPort != m_ports.end(); ++itPort)
+  if (!ports.empty())
   {
-    for (std::vector<CPeripheral*>::const_iterator itDevice = itPort->devices.begin();
-         itDevice != itPort->devices.end(); ++itDevice)
-    {
-      deviceMap[*itDevice] = itPort->handler;
-    }
+    minDeviceCount = 9999; // large enough
+
+    for (std::vector<SPort>::const_iterator itPort = ports.begin(); itPort != ports.end(); ++itPort)
+      minDeviceCount = std::min(minDeviceCount, itPort->deviceCount);
   }
 
-  return deviceMap;
-}
-
-unsigned int CPortManager::GetMinDeviceDepth(void) const
-{
-  size_t minDeviceDepth = 0xffff;
-
-  for (std::vector<SPort>::const_iterator itPort = m_ports.begin(); itPort != m_ports.end(); ++itPort)
-    minDeviceDepth = std::min(minDeviceDepth, itPort->devices.size());
-
-  return minDeviceDepth;
+  return minDeviceCount;
 }

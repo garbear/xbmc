@@ -20,7 +20,6 @@
 #pragma once
 
 #include "threads/CriticalSection.h"
-#include "utils/Observer.h"
 
 #include <map>
 #include <string>
@@ -32,39 +31,28 @@ namespace PERIPHERALS { class CPeripheral; }
 
 struct SPort
 {
-  IJoystickInputHandler*                 handler;
-  std::vector<PERIPHERALS::CPeripheral*> devices;
+  IJoystickInputHandler* handler;
+  unsigned int           deviceCount;
 };
 
-class CPortManager : public Observer
+class CPortManager
 {
 private:
-  CPortManager(void);
+  CPortManager(void) { }
 
 public:
   static CPortManager& Get(void);
 
-  virtual ~CPortManager(void);
-
   void OpenPort(IJoystickInputHandler* handler);
   void ClosePort(IJoystickInputHandler* handler);
 
-  virtual void Notify(const Observable &obs, const ObservableMessage msg);
+  void GetPortMap(const std::vector<PERIPHERALS::CPeripheral*>& devices,
+                  std::map<PERIPHERALS::CPeripheral*, IJoystickInputHandler*>& portMap) const;
 
 private:
-  typedef std::map<PERIPHERALS::CPeripheral*, IJoystickInputHandler*> DeviceMap;
-
-  void ClearDevices(void);
-
-  void ProcessDevices(void);
-  std::vector<PERIPHERALS::CPeripheral*> ScanPeripherals(void) const;
-  void AssignDevices(const std::vector<PERIPHERALS::CPeripheral*>& devices);
-  void ProcessHandlers(const DeviceMap& oldDeviceMap) const;
-
   // Utility functions
-  unsigned int GetNextOpenPort(unsigned int startPort = 0) const;
-  DeviceMap GetDeviceMap(void) const;
-  unsigned int GetMinDeviceDepth(void) const;
+  static unsigned int GetNextOpenPort(const std::vector<SPort>& ports, unsigned int startPort = 0);
+  static unsigned int GetMinDeviceCount(const std::vector<SPort>& ports);
 
   std::vector<SPort> m_ports;
   CCriticalSection   m_mutex;
