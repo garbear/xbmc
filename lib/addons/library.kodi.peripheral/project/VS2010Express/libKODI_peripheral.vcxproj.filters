@@ -11,7 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\libXBMC_peripheral.cpp">
+    <ClCompile Include="..\..\libKODI_peripheral.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

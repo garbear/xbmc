@@ -259,7 +259,7 @@ LIBADDON_DIRS=\
 	lib/addons/library.xbmc.pvr \
 	lib/addons/library.kodi.guilib \
 	lib/addons/library.xbmc.game \
-	lib/addons/library.xbmc.peripheral \
+	lib/addons/library.kodi.peripheral \
 
 CONFLUENCE_MEDIA=addons/skin.confluence/media
 SKIN_DIRS=$(CONFLUENCE_MEDIA)
@@ -412,7 +412,7 @@ libaddon: exports
 	$(MAKE) -C lib/addons/library.xbmc.codec
 	$(MAKE) -C lib/addons/library.kodi.guilib
 	$(MAKE) -C lib/addons/library.xbmc.game
-	$(MAKE) -C lib/addons/library.xbmc.peripheral
+	$(MAKE) -C lib/addons/library.kodi.peripheral
 	$(MAKE) -C lib/addons/library.xbmc.pvr
 dvdpcodecs: dllloader
 	$(MAKE) -C lib/libdvd

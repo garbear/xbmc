@@ -108,7 +108,7 @@ extern "C"
   /*!
    * @brief Peripheral add-on capabilities.
    * If a capability is set to true, then the corresponding methods from
-   * xbmc_peripheral_dll.h need to be implemented.
+   * kodi_peripheral_dll.h need to be implemented.
    */
   typedef struct PERIPHERAL_CAPABILITIES
   {
@@ -290,7 +290,7 @@ extern "C"
   // TODO: Mouse, light gun, multitouch
 
   /*!
-   * @brief Structure to transfer the methods from xbmc_peripheral_dll.h to the frontend
+   * @brief Structure to transfer the methods from kodi_peripheral_dll.h to the frontend
    */
   typedef struct PeripheralAddon
   {
