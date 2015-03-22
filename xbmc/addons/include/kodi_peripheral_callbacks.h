@@ -20,7 +20,7 @@
 #ifndef __PERIPHERAL_CALLBACKS_H__
 #define __PERIPHERAL_CALLBACKS_H__
 
-#include "xbmc_peripheral_types.h"
+#include "kodi_peripheral_types.h"
 
 #ifdef __cplusplus
 extern "C"

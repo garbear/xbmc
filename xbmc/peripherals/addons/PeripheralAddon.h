@@ -21,8 +21,8 @@
 
 #include "addons/AddonDll.h"
 #include "addons/DllPeripheral.h"
-#include "addons/include/xbmc_peripheral_types.h"
-#include "addons/include/xbmc_peripheral_utils.hpp"
+#include "addons/include/kodi_peripheral_types.h"
+#include "addons/include/kodi_peripheral_utils.hpp"
 #include "input/joysticks/JoystickTypes.h"
 #include "peripherals/PeripheralTypes.h"
 #include "threads/Thread.h"

@@ -20,7 +20,7 @@
 
 #include "AddonCallbacksPeripheral.h"
 #include "AddonCallbacks.h"
-#include "include/xbmc_peripheral_callbacks.h"
+#include "include/kodi_peripheral_callbacks.h"
 #include "peripherals/Peripherals.h"
 #include "peripherals/addons/PeripheralAddon.h"
 #include "peripherals/devices/Peripheral.h"

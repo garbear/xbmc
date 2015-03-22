@@ -20,7 +20,7 @@
  */
 
 #include "DllAddon.h"
-#include "include/xbmc_peripheral_types.h"
+#include "include/kodi_peripheral_types.h"
 
 class DllPeripheral : public DllAddon<PeripheralAddon, PERIPHERAL_PROPERTIES>
 {
