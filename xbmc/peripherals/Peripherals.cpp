@@ -57,12 +57,14 @@ using namespace std;
 
 CPeripherals::CPeripherals(void)
 {
+  RegisterObserver(&m_portMapper);
   Clear();
 }
 
 CPeripherals::~CPeripherals(void)
 {
   Clear();
+  UnregisterObserver(&m_portMapper);
 }
 
 CPeripherals &CPeripherals::Get(void)
