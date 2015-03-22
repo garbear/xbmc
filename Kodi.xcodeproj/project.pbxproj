@@ -367,6 +367,9 @@
 		689345D31ABD4E1D004421A9 /* JoystickTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 689345D21ABD4E1D004421A9 /* JoystickTranslator.cpp */; };
 		689345D41ABD4E1D004421A9 /* JoystickTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 689345D21ABD4E1D004421A9 /* JoystickTranslator.cpp */; };
 		689345D51ABD4E1D004421A9 /* JoystickTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 689345D21ABD4E1D004421A9 /* JoystickTranslator.cpp */; };
+		689BEFDC1ABEC4EB003D9D6F /* PortMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 689BEFDA1ABEC4EB003D9D6F /* PortMapper.cpp */; };
+		689BEFDD1ABEC4EB003D9D6F /* PortMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 689BEFDA1ABEC4EB003D9D6F /* PortMapper.cpp */; };
+		689BEFDE1ABEC4EB003D9D6F /* PortMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 689BEFDA1ABEC4EB003D9D6F /* PortMapper.cpp */; };
 		68A172861ABD3A8C00454C8B /* GUIDialogControllerInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68A172841ABD3A8C00454C8B /* GUIDialogControllerInput.cpp */; };
 		68A172871ABD3A8C00454C8B /* GUIDialogControllerInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68A172841ABD3A8C00454C8B /* GUIDialogControllerInput.cpp */; };
 		68A172881ABD3A8C00454C8B /* GUIDialogControllerInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68A172841ABD3A8C00454C8B /* GUIDialogControllerInput.cpp */; };
@@ -3860,6 +3863,8 @@
 		6838402A1ABBFA480011BFE9 /* PortManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortManager.h; sourceTree = "<group>"; };
 		689345D11ABD4DD9004421A9 /* JoystickTranslator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JoystickTranslator.h; path = joysticks/JoystickTranslator.h; sourceTree = "<group>"; };
 		689345D21ABD4E1D004421A9 /* JoystickTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JoystickTranslator.cpp; path = joysticks/JoystickTranslator.cpp; sourceTree = "<group>"; };
+		689BEFDA1ABEC4EB003D9D6F /* PortMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PortMapper.cpp; sourceTree = "<group>"; };
+		689BEFDB1ABEC4EB003D9D6F /* PortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortMapper.h; sourceTree = "<group>"; };
 		68A172841ABD3A8C00454C8B /* GUIDialogControllerInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIDialogControllerInput.cpp; path = games/windows/GUIDialogControllerInput.cpp; sourceTree = "<group>"; };
 		68A172851ABD3A8C00454C8B /* GUIDialogControllerInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDialogControllerInput.h; path = games/windows/GUIDialogControllerInput.h; sourceTree = "<group>"; };
 		68A4F44F1ABC5B9200EA8E8C /* GenericJoystickDriverHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericJoystickDriverHandler.cpp; path = joysticks/generic/GenericJoystickDriverHandler.cpp; sourceTree = "<group>"; };
@@ -10116,6 +10121,8 @@
 				F5E10533140AA38000175026 /* Peripherals.cpp */,
 				F5E10534140AA38000175026 /* Peripherals.h */,
 				F5E10535140AA38000175026 /* PeripheralTypes.h */,
+				689BEFDA1ABEC4EB003D9D6F /* PortMapper.cpp */,
+				689BEFDB1ABEC4EB003D9D6F /* PortMapper.h */,
 			);
 			path = peripherals;
 			sourceTree = "<group>";
@@ -11006,6 +11013,7 @@
 				F5E55B66107412DE006E788A /* GUIDialogTeletext.cpp in Sources */,
 				F5E55B7010741340006E788A /* Teletext.cpp in Sources */,
 				F5E560BC10770F9F006E788A /* OggCallback.cpp in Sources */,
+				689BEFDC1ABEC4EB003D9D6F /* PortMapper.cpp in Sources */,
 				43348AA4107747CD00F859CF /* Edl.cpp in Sources */,
 				43348AAE1077486D00F859CF /* PlayerCoreFactory.cpp in Sources */,
 				43348AAF1077486D00F859CF /* PlayerSelectionRule.cpp in Sources */,
@@ -12510,6 +12518,7 @@
 				DFF0F44617528350002DA3A4 /* SectionLoader.cpp in Sources */,
 				DFF0F44717528350002DA3A4 /* SystemGlobals.cpp in Sources */,
 				DFF0F44917528350002DA3A4 /* TextureCache.cpp in Sources */,
+				689BEFDE1ABEC4EB003D9D6F /* PortMapper.cpp in Sources */,
 				DFF0F44A17528350002DA3A4 /* TextureCacheJob.cpp in Sources */,
 				DFF0F44B17528350002DA3A4 /* TextureDatabase.cpp in Sources */,
 				DFF0F44C17528350002DA3A4 /* ThumbLoader.cpp in Sources */,
@@ -13647,6 +13656,7 @@
 				DF56EF251A798A5E00CAAEFB /* HttpRangeUtils.cpp in Sources */,
 				E4991582174E682F00741B6D /* AutoPool.mm in Sources */,
 				E4991583174E684000741B6D /* CocoaInterface.mm in Sources */,
+				689BEFDD1ABEC4EB003D9D6F /* PortMapper.cpp in Sources */,
 				E4991584174E684000741B6D /* DarwinUtils.mm in Sources */,
 				6838402C1ABBFA480011BFE9 /* PortManager.cpp in Sources */,
 				E4991586174E684000741B6D /* OSXGNUReplacements.c in Sources */,
