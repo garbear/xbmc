@@ -1,0 +1,1 @@
+mingw-rt-dev http://mirrors.kodi.tv/build-deps/win32/mingw-msys/mingwrt-3.20-mingw32-dev.tar.gz

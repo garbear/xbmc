@@ -1,0 +1,1 @@
+mads http://mirrors.kodi.tv/build-deps/win32/mingw-msys/mads_1.9.3.7z
