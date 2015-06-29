@@ -3,9 +3,7 @@ project(kodi-addons-depends)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
+set(CMAKE_BUILD_TYPE Debug)
 
 if(NOT CORE_SYSTEM_NAME)
   string(TOLOWER ${CMAKE_SYSTEM_NAME} CORE_SYSTEM_NAME)
