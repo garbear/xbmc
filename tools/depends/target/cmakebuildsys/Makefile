@@ -3,12 +3,7 @@
 VERSION.TXT := $(CMAKE_SOURCE_DIR)/version.txt
 APP_NAME=$(shell awk '/APP_NAME/ {print tolower($$2)}' $(VERSION.TXT))
 
-ifeq ($(Configuration),)
-  Configuration = Release
-  ifeq ($(DEBUG_BUILD),yes)
-    Configuration = Debug
-  endif
-endif
+Configuration = Debug
 
 ifeq ($(OS),darwin_embedded)
   # cmake toolset option buildsystem selects the legacy xcode build system
