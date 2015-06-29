@@ -36,6 +36,7 @@ function(add_addon_depends addon searchpath)
             file MATCHES noinstall.txt OR
             file MATCHES flags.txt OR
             file MATCHES deps.txt OR
+            file MATCHES "[a-z]+-deps[.]txt" OR
             file MATCHES platforms.txt))
       message(STATUS "Processing ${file}")
       file(STRINGS ${file} def)
@@ -148,8 +149,11 @@ function(add_addon_depends addon searchpath)
           set(INSTALL_COMMAND INSTALL_COMMAND "")
         endif()
 
-        # check if there's a deps.txt containing dependencies on other libraries
-        if(EXISTS ${dir}/deps.txt)
+        # check if there's a platform-specific or generic deps.txt containing dependencies on other libraries
+        if(EXISTS ${dir}/${CORE_SYSTEM_NAME}-deps.txt)
+          file(STRINGS ${dir}/${CORE_SYSTEM_NAME}-deps.txt deps)
+          message(STATUS "${id} depends: ${deps}")
+        elseif(EXISTS ${dir}/deps.txt)
           file(STRINGS ${dir}/deps.txt deps)
           message(STATUS "${id} depends: ${deps}")
         else()
