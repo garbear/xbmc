@@ -99,6 +99,7 @@ public:
       if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_unregister_me)) throw false;
       if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_close_game)) throw false;
       if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_video_frame)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_video_frame_h264)) throw false;
       if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_audio_frames)) throw false;
       if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_hw_set_info)) throw false;
       if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_hw_get_current_framebuffer)) throw false;
@@ -125,6 +126,11 @@ public:
   void VideoFrame(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, GAME_RENDER_FORMAT format)
   {
     return GAME_video_frame(m_handle, m_callbacks, data, size, width, height, format);
+  }
+
+  bool VideoFrameH264(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height)
+  {
+    return GAME_video_frame_h264(m_handle, m_callbacks, data, size, width, height);
   }
 
   void AudioFrames(const uint8_t* data, unsigned int size, unsigned int frames, GAME_AUDIO_FORMAT format)
@@ -167,6 +173,7 @@ protected:
   void (*GAME_unregister_me)(void* handle, CB_GameLib* cb);
   void (*GAME_close_game)(void* handle, CB_GameLib* cb);
   void (*GAME_video_frame)(void* handle, CB_GameLib* cb, const uint8_t*, unsigned int, unsigned int, unsigned int, GAME_RENDER_FORMAT);
+  bool (*GAME_video_frame_h264)(void* handle, CB_GameLib* cb, const uint8_t*, int, unsigned int, unsigned int);
   void (*GAME_audio_frames)(void* handle, CB_GameLib* cb, const uint8_t*, unsigned int, unsigned int, GAME_AUDIO_FORMAT);
   void (*GAME_hw_set_info)(void* handle, CB_GameLib* cb, const struct game_hw_info*);
   uintptr_t (*GAME_hw_get_current_framebuffer)(void* handle, CB_GameLib* cb);

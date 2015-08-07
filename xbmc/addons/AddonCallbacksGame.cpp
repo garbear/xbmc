@@ -38,6 +38,7 @@ CAddonCallbacksGame::CAddonCallbacksGame(CAddon* addon)
   /* write XBMC game specific add-on function addresses to callback table */
   m_callbacks->CloseGame                      = CloseGame;
   m_callbacks->VideoFrame                     = VideoFrame;
+  m_callbacks->VideoFrameH264                 = VideoFrameH264;
   m_callbacks->AudioFrames                    = AudioFrames;
   m_callbacks->HwSetInfo                      = HwSetInfo;
   m_callbacks->HwGetCurrentFramebuffer        = HwGetCurrentFramebuffer;
@@ -130,6 +131,15 @@ void CAddonCallbacksGame::VideoFrame(void* addonData, const uint8_t* data, unsig
     return;
 
   retroPlayer->VideoFrame(data, size, width, height, pixelFormat);
+}
+
+bool CAddonCallbacksGame::VideoFrameH264(void* addonData, const uint8_t* data, unsigned int size, unsigned int width, unsigned int height)
+{
+  CRetroPlayer* retroPlayer = GetRetroPlayer(addonData, __FUNCTION__);
+  if (!retroPlayer)
+    return false;
+
+  return retroPlayer->VideoFrameH264(data, size, width, height);
 }
 
 void CAddonCallbacksGame::AudioFrames(void* addonData, const uint8_t* data, unsigned int size, unsigned int frames, GAME_AUDIO_FORMAT format)

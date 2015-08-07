@@ -47,6 +47,16 @@ typedef struct CB_GameLib
   void (*VideoFrame)(void* addonData, const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, GAME_RENDER_FORMAT format);
 
   /*!
+   * \brief Render a H264 frame
+   *
+   * \param data The frame's data
+   * \param size The size of the data
+   * \param width The width, in pixels
+   * \param height The height, in pixels
+   */
+  bool (*VideoFrameH264)(void* addonData, const uint8_t* data, unsigned int size, unsigned int width, unsigned int height);
+
+  /*!
    * \brief Render a chunk of audio data
    *
    * \param data The audio data

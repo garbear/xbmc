@@ -46,6 +46,7 @@ public:
 
   static void CloseGame(void* addonData);
   static void VideoFrame(void* addonData, const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, GAME_RENDER_FORMAT format);
+  static bool VideoFrameH264(void* addonData, const uint8_t* data, unsigned int size, unsigned int width, unsigned int height);
   static void AudioFrames(void* addonData, const uint8_t* data, unsigned int size, unsigned int frames, GAME_AUDIO_FORMAT format);
   static void HwSetInfo(void* addonData, const game_hw_info* hw_info);
   static uintptr_t HwGetCurrentFramebuffer(void* addonData);
