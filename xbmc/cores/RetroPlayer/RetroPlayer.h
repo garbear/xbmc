@@ -128,6 +128,7 @@ public:
 
   // Game API
   void VideoFrame(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, AVPixelFormat format) { m_video.VideoFrame(data, size, width, height, format); }
+  bool VideoFrameH264(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height) { return m_video.VideoFrameH264(data, size, width, height); }
   void AudioFrames(const uint8_t* data, unsigned int size, unsigned int frames, AEDataFormat format) { m_audio.AudioFrames(data, size, frames, format); }
 
 protected:

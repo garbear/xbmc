@@ -39,7 +39,10 @@ CRetroPlayerVideo::CRetroPlayerVideo(void)
     m_format(AV_PIX_FMT_NONE),
     m_picture(NULL),
     m_swsContext(NULL),
-    m_bFrameReady(false)
+    m_bFrameReady(false),
+    m_codec(NULL),
+    m_codec_context(NULL),
+    m_frame(NULL)
 {
 }
 
@@ -55,6 +58,21 @@ void CRetroPlayerVideo::Cleanup(void)
   {
     CDVDCodecUtils::FreePicture(m_picture);
     m_picture = NULL;
+  }
+
+  if (m_codec)
+    m_codec = NULL;
+
+  if (m_codec_context)
+  {
+    avcodec_close(m_codec_context);
+    m_codec_context = NULL;
+  }
+
+  if (m_frame)
+  {
+    av_frame_free(&m_frame);
+    m_frame = NULL;
   }
 }
 
@@ -82,6 +100,43 @@ bool CRetroPlayerVideo::VideoFrame(const uint8_t* data, unsigned int size, unsig
       ColorspaceConversion(data, size, width, height, *m_picture);
       SetFrameReady(true);
       return true;
+    }
+    else
+    {
+      Stop();
+    }
+  }
+
+  return false;
+}
+
+/* Render H264 frame */
+bool CRetroPlayerVideo::VideoFrameH264(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height)
+{
+  AVPacket packet;
+  int got_picture_ptr = 0;
+  int len = 0;
+
+  if (!m_bStop && !IsFrameReady())
+  {
+    if (Configure(width, height, PIX_FMT_YUV420P, true))
+    {
+      av_init_packet(&packet);
+      packet.data = const_cast<uint8_t*>(data);
+      packet.size = size;
+
+      len = avcodec_decode_video2(m_codec_context, m_frame, &got_picture_ptr, &packet);
+      if (len < 0)
+      {
+        CLog::Log(LOGERROR, "RetroPlayerVideo: Error while decoding frame");
+        return false;
+      }
+      if (got_picture_ptr)
+      {
+        sws_scale(m_swsContext, m_frame->data, m_frame->linesize, 0, m_frame->height, m_picture->data, m_picture->iLineSize);
+        SetFrameReady(true);
+        return true;
+      }
     }
     else
     {
@@ -128,13 +183,14 @@ void CRetroPlayerVideo::Process(void)
   Cleanup();
 }
 
-bool CRetroPlayerVideo::Configure(unsigned int width, unsigned int height, AVPixelFormat format)
+bool CRetroPlayerVideo::Configure(unsigned int width, unsigned int height, AVPixelFormat format, bool setupH264)
 {
   if (!g_renderManager.IsConfigured() ||
       m_format           != format    ||
       m_picture          == NULL      ||
       m_picture->iWidth  != width     ||
-      m_picture->iHeight != height)
+      m_picture->iHeight != height	  ||
+      (setupH264 && m_codec == NULL))
   {
     // Determine RenderManager flags
     unsigned int flags = CONF_FLAGS_YUVCOEF_BT601 | // color_matrix = 4
@@ -152,6 +208,30 @@ bool CRetroPlayerVideo::Configure(unsigned int width, unsigned int height, AVPix
     }
 
     Cleanup();
+
+    if (setupH264)
+    {
+      m_codec = avcodec_find_decoder(AV_CODEC_ID_H264);
+      if (!m_codec)
+      {
+        CLog::Log(LOGERROR, "RetroPlayerVideo: Unable to find H264 codec");
+        return false;
+      }
+
+      m_codec_context = avcodec_alloc_context3(m_codec);
+      if (m_codec->capabilities & CODEC_CAP_TRUNCATED)
+      {
+        m_codec_context->flags |= CODEC_FLAG_TRUNCATED;
+      }
+
+      if (avcodec_open2(m_codec_context, m_codec, NULL) < 0)
+      {
+        CLog::Log(LOGERROR, "RetroPlayerVideo: Unable to open codec context.");
+        return false;
+      }
+
+      m_frame = av_frame_alloc();
+    }
 
     m_swsContext = sws_getContext(width, height, format,
                                   width, height, PIX_FMT_YUV420P,

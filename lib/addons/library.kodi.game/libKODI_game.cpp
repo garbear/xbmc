@@ -69,6 +69,13 @@ DLLEXPORT void GAME_video_frame(AddonCB* frontend, CB_GameLib* cb, const uint8_t
   return cb->VideoFrame(frontend->addonData, data, size, width, height, format);
 }
 
+DLLEXPORT bool GAME_video_frame_h264(AddonCB* frontend, CB_GameLib* cb, const uint8_t* data, unsigned int size, unsigned int width, unsigned int height)
+{
+  if (frontend == NULL || cb == NULL)
+    return false;
+  return cb->VideoFrameH264(frontend->addonData, data, size, width, height);
+}
+
 DLLEXPORT void GAME_audio_frames(AddonCB* frontend, CB_GameLib* cb, const uint8_t* data, unsigned int size, unsigned int frames, GAME_AUDIO_FORMAT format)
 {
   if (frontend == NULL || cb == NULL)

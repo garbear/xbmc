@@ -27,6 +27,9 @@
 
 struct DVDVideoPicture;
 struct SwsContext;
+struct AVCodec;
+struct AVCodecContext;
+struct AVFrame;
 
 class CRetroPlayerVideo : protected CThread
 {
@@ -39,13 +42,15 @@ public:
 
   bool VideoFrame(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, AVPixelFormat format);
 
+  bool VideoFrameH264(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height);
+
 protected:
   virtual void Process(void);
 
 private:
   void Cleanup(void);
 
-  bool Configure(unsigned int width, unsigned int height, AVPixelFormat format);
+  bool Configure(unsigned int width, unsigned int height, AVPixelFormat format, bool setupH264=false);
 
   void ColorspaceConversion(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, DVDVideoPicture &output);
 
@@ -59,4 +64,7 @@ private:
   bool              m_bFrameReady;
   CCriticalSection  m_frameReadyMutex;
   CEvent            m_frameReadyEvent;
+  AVCodec*          m_codec;
+  AVCodecContext*   m_codec_context;
+  AVFrame*          m_frame;
 };
