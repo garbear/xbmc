@@ -26,6 +26,7 @@
 #include "filesystem/Directory.h"
 #include "filesystem/SpecialProtocol.h"
 #include "games/GameManager.h"
+#include "input/InputManager.h"
 #include "input/joysticks/JoystickTypes.h"
 #include "input/PortManager.h"
 #include "settings/Settings.h"
@@ -154,8 +155,8 @@ CGameClient::CGameClient(const AddonProps& props)
     m_bSupportsVFS = (it->second == "true" || it->second == "yes");
   if ((it = props.extrainfo.find("supports_no_game")) != props.extrainfo.end())
     m_bSupportsStandalone = (it->second == "true" || it->second == "yes");
-  if ((it = props.extrainfo.find("supports_directory")) != props.extrainfo.end())
-    m_bSupportsDirectory = (it->second == "true" || it->second == "yes");
+  if ((it = props.extrainfo.find("supports_keyboard")) != props.extrainfo.end())
+    m_bSupportsKeyboard = (it->second == "true" || it->second == "yes");
 }
 
 CGameClient::CGameClient(const cp_extension_t* ext)
@@ -194,11 +195,11 @@ CGameClient::CGameClient(const cp_extension_t* ext)
       Props().extrainfo.insert(make_pair("supports_no_game", strSupportsStandalone));
       m_bSupportsStandalone = (strSupportsStandalone == "true" || strSupportsStandalone == "yes");
     }
-    std::string strSupportsDirectory = CAddonMgr::Get().GetExtValue(ext->configuration, "supports_directory");
-    if (!strSupportsDirectory.empty())
+    std::string strSupportsKeyboard = CAddonMgr::Get().GetExtValue(ext->configuration, "supports_keyboard");
+    if (!strSupportsKeyboard.empty())
     {
-      Props().extrainfo.insert(make_pair("supports_directory", strSupportsDirectory));
-      m_bSupportsDirectory = (strSupportsDirectory == "true" || strSupportsDirectory == "yes");
+      Props().extrainfo.insert(make_pair("supports_keyboard", strSupportsKeyboard));
+      m_bSupportsKeyboard = (strSupportsKeyboard == "true" || strSupportsKeyboard == "yes");
     }
   }
 }
@@ -207,7 +208,7 @@ void CGameClient::InitializeProperties(void)
 {
   m_bSupportsVFS = false;
   m_bSupportsStandalone = false;
-  m_bSupportsDirectory = false;
+  m_bSupportsKeyboard = false;
   m_bIsPlaying = false;
   m_player = NULL;
   m_region = GAME_REGION_NTSC;
@@ -478,6 +479,9 @@ bool CGameClient::OpenFile(const CFileItem& file, IPlayer* player)
 
     InitSerialization();
 
+    if (m_bSupportsKeyboard)
+      OpenKeyboard();
+
     return true;
   }
 
@@ -592,6 +596,9 @@ void CGameClient::CloseFile()
   }
 
   ClearPorts();
+
+  if (m_bSupportsKeyboard)
+    CloseKeyboard();
 
   m_bIsPlaying = false;
   m_filePath.clear();
@@ -709,6 +716,16 @@ void CGameClient::UpdatePort(unsigned int port, const GameControllerPtr& control
   }
 }
 
+void CGameClient::OpenKeyboard(void)
+{
+  CInputManager::Get().RegisterKeyboardHandler(this);
+}
+
+void CGameClient::CloseKeyboard(void)
+{
+  CInputManager::Get().UnregisterKeyboardHandler(this);
+}
+
 GameControllerVector CGameClient::GetControllers(void) const
 {
   GameControllerVector controllers;
@@ -819,6 +836,56 @@ bool CGameClient::OnAccelerometerMotion(int port, const std::string& feature, fl
   return bHandled;
 }
 
+bool CGameClient::OnKeyPress(const CKey& key)
+{
+  bool bHandled = false;
+
+  game_input_event event;
+
+  event.type            = GAME_INPUT_EVENT_KEY;
+  event.port            = 0;
+  event.controller_id   = ""; // TODO
+  event.feature_name    = ""; // TODO
+  event.key.pressed     = true;
+  event.key.character   = key.GetVKey();
+  event.key.modifiers   = GetModifiers(static_cast<CKey::Modifier>(key.GetModifiers()));
+
+  CLog::Log(LOGDEBUG, "KEY PRESSED *******");
+  CLog::Log(LOGDEBUG, "KEY button code: 0x%08x", key.GetButtonCode());
+  CLog::Log(LOGDEBUG, "KEY button code & 0xff: 0x%02x", key.GetButtonCode() & 0xff);
+  CLog::Log(LOGDEBUG, "KEY unicode: 0x%08x", key.GetUnicode());
+  CLog::Log(LOGDEBUG, "KEY vkey: 0x%02x", key.GetVKey());
+  CLog::Log(LOGDEBUG, "KEY modifiers: 0x%04x", key.GetModifiers());
+
+  try { bHandled = m_pStruct->InputEvent(0, &event); }
+  catch (...) { LogException("InputEvent()"); }
+
+  return bHandled;
+}
+
+void CGameClient::OnKeyRelease(const CKey& key)
+{
+  game_input_event event;
+
+  event.type            = GAME_INPUT_EVENT_KEY;
+  event.port            = 0;
+  event.controller_id   = ""; // TODO
+  event.feature_name    = ""; // TODO
+  event.key.pressed     = false;
+  event.key.character   = key.GetVKey();
+  event.key.modifiers   = GetModifiers(static_cast<CKey::Modifier>(key.GetModifiers()));
+
+  CLog::Log(LOGDEBUG, "KEY RELEASED *******");
+  CLog::Log(LOGDEBUG, "KEY button code: 0x%08x", key.GetButtonCode());
+  CLog::Log(LOGDEBUG, "KEY button code & 0xff: 0x%02x", key.GetButtonCode() & 0xff);
+  CLog::Log(LOGDEBUG, "KEY unicode: 0x%08x", key.GetUnicode());
+  CLog::Log(LOGDEBUG, "KEY vkey: 0x%02x", key.GetVKey());
+  CLog::Log(LOGDEBUG, "KEY modifiers: 0x%04x", key.GetModifiers());
+
+  try { m_pStruct->InputEvent(0, &event); }
+  catch (...) { LogException("InputEvent()"); }
+}
+
 void CGameClient::SetFrameRateCorrection(double correctionFactor)
 {
   if (correctionFactor != 0.0)
@@ -865,6 +932,24 @@ void CGameClient::SetPlatforms(const string& strPlatformList)
   }
 }
 */
+
+GAME_KEY_MOD operator|(GAME_KEY_MOD lhs, GAME_KEY_MOD rhs)
+{
+  return static_cast<GAME_KEY_MOD>(static_cast<int>(lhs) | static_cast<int>(rhs));
+}
+
+GAME_KEY_MOD CGameClient::GetModifiers(CKey::Modifier modifier)
+{
+  GAME_KEY_MOD mods = GAME_KEY_MOD_NONE;
+
+  if (modifier & CKey::MODIFIER_CTRL)  mods = mods | GAME_KEY_MOD_CTRL;
+  if (modifier & CKey::MODIFIER_SHIFT) mods = mods | GAME_KEY_MOD_SHIFT;
+  if (modifier & CKey::MODIFIER_ALT)   mods = mods | GAME_KEY_MOD_ALT;
+  if (modifier & CKey::MODIFIER_RALT)  mods = mods | GAME_KEY_MOD_ALT;
+  if (modifier & CKey::MODIFIER_META)  mods = mods | GAME_KEY_MOD_META;
+
+  return mods;
+}
 
 bool CGameClient::LogError(GAME_ERROR error, const char* strMethod) const
 {
