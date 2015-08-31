@@ -99,7 +99,10 @@ void CPeripherals::Initialise(void)
     /* initialise all known busses */
     for (int iBusPtr = (int)m_busses.size() - 1; iBusPtr >= 0; iBusPtr--)
     {
-      if (!m_busses.at(iBusPtr)->Initialise())
+      lock.Leave();
+      bool bInitializeSuccess = m_busses.at(iBusPtr)->Initialise();
+      lock.Enter();
+      if (!bInitializeSuccess)
       {
         CLog::Log(LOGERROR, "%s - failed to initialise bus %s", __FUNCTION__, PeripheralTypeTranslator::BusTypeToString(m_busses.at(iBusPtr)->Type()));
         delete m_busses.at(iBusPtr);

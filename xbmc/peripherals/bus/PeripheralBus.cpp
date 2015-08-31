@@ -108,7 +108,6 @@ void CPeripheralBus::UnregisterRemovedDevices(const PeripheralScanResults &resul
 
 void CPeripheralBus::RegisterNewDevices(const PeripheralScanResults &results)
 {
-  CSingleLock lock(m_critSection);
   for (unsigned int iResultPtr = 0; iResultPtr < results.m_results.size(); iResultPtr++)
   {
     const PeripheralScanResult& result = results.m_results.at(iResultPtr);
@@ -225,12 +224,16 @@ bool CPeripheralBus::Initialise(void)
   if (!m_bIsStarted)
   {
     /* do an initial scan of the bus */
-    m_bIsStarted = ScanForDevices();
-
-    if (m_bIsStarted && m_bNeedsPolling)
     {
       lock.Leave();
-      m_triggerEvent.Reset();
+      TriggerDeviceScan();
+      lock.Enter();
+    }
+    m_bIsStarted = true;
+
+    if (m_bNeedsPolling)
+    {
+      lock.Leave();
       Create();
       SetPriority(-1);
     }
