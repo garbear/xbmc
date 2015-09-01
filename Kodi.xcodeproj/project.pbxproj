@@ -13862,6 +13862,7 @@
 					"-lGLEW",
 					"-lSDL",
 					"-lbson",
+					"-lleveldb",
 				);
 				PRODUCT_NAME = Kodi;
 				USE_HEADERMAP = NO;
@@ -13931,6 +13932,7 @@
 					"-lGLEW",
 					"-lSDL",
 					"-lbson",
+					"-lleveldb",
 				);
 				PRODUCT_NAME = Kodi;
 				USE_HEADERMAP = NO;
