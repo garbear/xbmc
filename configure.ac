@@ -1155,6 +1155,10 @@ int main() {
   )])
 AC_LANG_POP([C++])
 
+
+PKG_CHECK_MODULES([BSON], [libbson-1.0],
+  [INCLUDES="$INCLUDES $BSON_CFLAGS"; LIBS="$LIBS $BSON_LIBS"],
+  [AC_MSG_ERROR([libbson-1.0 not found])])
 AC_CHECK_LIB([leveldb], [main],, [AC_MSG_ERROR("leveldb not found")])
 
 PKG_CHECK_MODULES([YAJL], [yajl >= 2],
