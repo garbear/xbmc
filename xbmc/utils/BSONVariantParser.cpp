@@ -21,7 +21,7 @@
 #include "BSONVariantParser.h"
 #include "Base64.h"
 #include "system.h" // include before bson.h
-#include "bson.h"
+#include <bson.h>
 
 CVariant CBSONVariantParser::Parse(const char *bsonData, unsigned int length)
 {
