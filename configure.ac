@@ -1155,9 +1155,7 @@ int main() {
   )])
 AC_LANG_POP([C++])
 
-AC_MSG_CHECKING("for libleveldb")
-PKG_CHECK_MODULES([LEVELDB], [leveldb])
-LIBS="$LIBS -lleveldb"
+AC_CHECK_LIB([leveldb], [main],, [AC_MSG_ERROR("leveldb not found")])
 
 PKG_CHECK_MODULES([YAJL], [yajl >= 2],
   [INCLUDES="$INCLUDES $YAJL_CFLAGS"; LIBS="$LIBS $YAJL_LIBS"; YAJL_FOUND="true"],
