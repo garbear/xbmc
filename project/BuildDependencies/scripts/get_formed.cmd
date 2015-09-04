@@ -17,8 +17,10 @@ IF EXIST %FORMED_OK_FLAG% (
 CALL :setStageName Starting downloads of formed packages...
 SET SCRIPT_PATH=%CD%
 CD %DL_PATH% || EXIT /B 10
+call :processFile libbson-1.1.10-win32.zip https://dl.dropboxusercontent.com/u/50838998
+IF ERRORLEVEL 1 EXIT /B %ERRORLEVEL%
 FOR /F "eol=; tokens=1" %%f IN (%SCRIPT_PATH%\0_package.list) DO (
-CALL :processFile %%f
+CALL :processFile %%f http://mirrors.xbmc.org/build-deps/win32
 IF ERRORLEVEL 1 EXIT /B %ERRORLEVEL%
 )
 
@@ -36,7 +38,7 @@ IF EXIST %1 (
   ECHO Using downloaded %1
 ) ELSE (
   CALL :setSubStageName Downloading %1...
-  %WGET% "http://mirrors.xbmc.org/build-deps/win32/%1" || EXIT /B 7
+  %WGET% --no-check-certificate "%2/%1" || EXIT /B 7
   TITLE Getting %1
 )
 
