@@ -25,14 +25,12 @@ endif
 	cd $(PLATFORM); $(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(TARBALLS_LOCATION)/$(ARCHIVE)
 
 $(LIBDYLIB): $(PLATFORM)
-	cd $(PLATFORM); ./configure
+	cd $(PLATFORM); autoreconf -vif
+	cd $(PLATFORM); ./configure --prefix=$(PREFIX) --disable-shared --enable-static
 	$(MAKE) -C $(PLATFORM)
 
 .installed-$(PLATFORM): $(LIBDYLIB)
-	@[ -d $(PREFIX)/include ] || mkdir -p $(PREFIX)/include
-	@[ -d $(PREFIX)/lib ] || mkdir $(PREFIX)/lib
-	cp -r $(PLATFORM)/src/bson/*.h $(PREFIX)/include/
-	cp $(LIBDYLIB) $(PREFIX)/lib/
+	$(MAKE) -C $(PLATFORM) install
 	touch $@
 
 clean:
