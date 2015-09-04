@@ -86,7 +86,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;yajl.lib;dxguid.lib;bson-static-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;yajl.lib;dxguid.lib;bson-static-1.0.lib;leveldb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <IgnoreSpecificDefaultLibraries>libcpmt;libc;msvcrt;libcmt;msvcrtd;msvcprtd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>
@@ -118,7 +118,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;strmiids.lib;dxguid.lib;mfuuid.lib;comctl32.lib;yajl.lib;bson-static-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;strmiids.lib;dxguid.lib;mfuuid.lib;comctl32.lib;yajl.lib;bson-static-1.0.lib;leveldb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-test.exe</OutputFile>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
@@ -152,7 +152,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;yajl.lib;dxguid.lib;bson-static-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;yajl.lib;dxguid.lib;bson-static-1.0.lib;leveldb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <IgnoreSpecificDefaultLibraries>libc;msvcrt;libci;msvcprt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>libxslt.dll;dnssd.dll;dwmapi.dll;ssh.dll;sqlite3.dll;avcodec-56.dll;avfilter-5.dll;avformat-56.dll;avutil-54.dll;postproc-53.dll;swresample-1.dll;swscale-3.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
