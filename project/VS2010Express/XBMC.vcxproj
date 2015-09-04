@@ -262,6 +262,9 @@
     <ClCompile Include="..\..\xbmc\dbwrappers\DatabaseQuery.cpp" />
     <ClCompile Include="..\..\xbmc\dbwrappers\dataset.cpp" />
     <ClCompile Include="..\..\xbmc\dbwrappers\mysqldataset.cpp" />
+    <ClCompile Include="..\..\xbmc\dbwrappers\nosql\GenericDocumentStore.cpp" />
+    <ClCompile Include="..\..\xbmc\dbwrappers\nosql\LevelDbDatastore.cpp" />
+    <ClCompile Include="..\..\xbmc\dbwrappers\nosql\NoSqlDatabase.cpp" />
     <ClCompile Include="..\..\xbmc\dbwrappers\qry_dat.cpp" />
     <ClCompile Include="..\..\xbmc\dbwrappers\sqlitedataset.cpp" />
     <ClCompile Include="..\..\xbmc\dialogs\GUIDialogBoxBase.cpp" />
@@ -928,6 +931,11 @@
     <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerDialogs.h" />
     <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerVideo.h" />
     <ClInclude Include="..\..\xbmc\cores\VideoRenderers\OverlayRendererGUI.h" />
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\GenericDocumentStore.h" />
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\IDocumentStore.h" />
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\IKeyValueStore.h" />
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\LevelDbDatastore.h" />
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\NoSqlDatabase.h" />
     <ClInclude Include="..\..\xbmc\dialogs\GUIDialogKeyboardGeneric.h" />
     <ClInclude Include="..\..\xbmc\DbUrl.h" />
     <ClInclude Include="..\..\xbmc\dialogs\GUIDialogMediaFilter.h" />

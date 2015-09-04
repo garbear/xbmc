@@ -363,6 +363,15 @@
 		68AFC9BB1ACC5E2700DD5173 /* GenericJoystickKeyboardHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AFC9B01ACC5E2700DD5173 /* GenericJoystickKeyboardHandler.cpp */; };
 		68AFC9BC1ACC5E2700DD5173 /* GenericJoystickKeyboardHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AFC9B01ACC5E2700DD5173 /* GenericJoystickKeyboardHandler.cpp */; };
 		68AFC9BD1ACC5E2700DD5173 /* GenericJoystickKeyboardHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AFC9B01ACC5E2700DD5173 /* GenericJoystickKeyboardHandler.cpp */; };
+		68C1D1E41B99A0D50062BAA6 /* GenericDocumentStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C1D1DC1B99A0D50062BAA6 /* GenericDocumentStore.cpp */; };
+		68C1D1E51B99A0D50062BAA6 /* GenericDocumentStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C1D1DC1B99A0D50062BAA6 /* GenericDocumentStore.cpp */; };
+		68C1D1E61B99A0D50062BAA6 /* GenericDocumentStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C1D1DC1B99A0D50062BAA6 /* GenericDocumentStore.cpp */; };
+		68C1D1E71B99A0D50062BAA6 /* LevelDbDatastore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C1D1E01B99A0D50062BAA6 /* LevelDbDatastore.cpp */; };
+		68C1D1E81B99A0D50062BAA6 /* LevelDbDatastore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C1D1E01B99A0D50062BAA6 /* LevelDbDatastore.cpp */; };
+		68C1D1E91B99A0D50062BAA6 /* LevelDbDatastore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C1D1E01B99A0D50062BAA6 /* LevelDbDatastore.cpp */; };
+		68C1D1EA1B99A0D50062BAA6 /* NoSqlDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C1D1E21B99A0D50062BAA6 /* NoSqlDatabase.cpp */; };
+		68C1D1EB1B99A0D50062BAA6 /* NoSqlDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C1D1E21B99A0D50062BAA6 /* NoSqlDatabase.cpp */; };
+		68C1D1EC1B99A0D50062BAA6 /* NoSqlDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C1D1E21B99A0D50062BAA6 /* NoSqlDatabase.cpp */; };
 		68CB84DC1ACC85C40015C5E7 /* AddonCallbacksPeripheral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68CB84DA1ACC85C40015C5E7 /* AddonCallbacksPeripheral.cpp */; };
 		68CB84DD1ACC85C40015C5E7 /* AddonCallbacksPeripheral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68CB84DA1ACC85C40015C5E7 /* AddonCallbacksPeripheral.cpp */; };
 		68CB84DE1ACC85C40015C5E7 /* AddonCallbacksPeripheral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68CB84DA1ACC85C40015C5E7 /* AddonCallbacksPeripheral.cpp */; };
@@ -3840,6 +3849,14 @@
 		68AFC9AD1ACC5E2700DD5173 /* DigitalAnalogButtonConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DigitalAnalogButtonConverter.h; path = joysticks/generic/DigitalAnalogButtonConverter.h; sourceTree = "<group>"; };
 		68AFC9B01ACC5E2700DD5173 /* GenericJoystickKeyboardHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericJoystickKeyboardHandler.cpp; path = joysticks/generic/GenericJoystickKeyboardHandler.cpp; sourceTree = "<group>"; };
 		68AFC9B11ACC5E2700DD5173 /* GenericJoystickKeyboardHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericJoystickKeyboardHandler.h; path = joysticks/generic/GenericJoystickKeyboardHandler.h; sourceTree = "<group>"; };
+		68C1D1DC1B99A0D50062BAA6 /* GenericDocumentStore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericDocumentStore.cpp; path = nosql/GenericDocumentStore.cpp; sourceTree = "<group>"; };
+		68C1D1DD1B99A0D50062BAA6 /* GenericDocumentStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericDocumentStore.h; path = nosql/GenericDocumentStore.h; sourceTree = "<group>"; };
+		68C1D1DE1B99A0D50062BAA6 /* IDocumentStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IDocumentStore.h; path = nosql/IDocumentStore.h; sourceTree = "<group>"; };
+		68C1D1DF1B99A0D50062BAA6 /* IKeyValueStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IKeyValueStore.h; path = nosql/IKeyValueStore.h; sourceTree = "<group>"; };
+		68C1D1E01B99A0D50062BAA6 /* LevelDbDatastore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LevelDbDatastore.cpp; path = nosql/LevelDbDatastore.cpp; sourceTree = "<group>"; };
+		68C1D1E11B99A0D50062BAA6 /* LevelDbDatastore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LevelDbDatastore.h; path = nosql/LevelDbDatastore.h; sourceTree = "<group>"; };
+		68C1D1E21B99A0D50062BAA6 /* NoSqlDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NoSqlDatabase.cpp; path = nosql/NoSqlDatabase.cpp; sourceTree = "<group>"; };
+		68C1D1E31B99A0D50062BAA6 /* NoSqlDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoSqlDatabase.h; path = nosql/NoSqlDatabase.h; sourceTree = "<group>"; };
 		68CB84DA1ACC85C40015C5E7 /* AddonCallbacksPeripheral.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AddonCallbacksPeripheral.cpp; sourceTree = "<group>"; };
 		68CB84DB1ACC85C40015C5E7 /* AddonCallbacksPeripheral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddonCallbacksPeripheral.h; sourceTree = "<group>"; };
 		68CF9B871B2C8A750016931A /* ControllerManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerManager.cpp; path = games/ControllerManager.cpp; sourceTree = "<group>"; };
@@ -6855,6 +6872,7 @@
 		4313773012D647BB00680C15 /* dbwrappers */ = {
 			isa = PBXGroup;
 			children = (
+				68C1D1DB1B99A0AD0062BAA6 /* nosql */,
 				E38E16800D25F9FA00618676 /* Database.cpp */,
 				E38E16810D25F9FA00618676 /* Database.h */,
 				7C26126F1825B6340086E04D /* DatabaseQuery.cpp */,
@@ -7239,6 +7257,21 @@
 				68AFC9B11ACC5E2700DD5173 /* GenericJoystickKeyboardHandler.h */,
 			);
 			name = generic;
+			sourceTree = "<group>";
+		};
+		68C1D1DB1B99A0AD0062BAA6 /* nosql */ = {
+			isa = PBXGroup;
+			children = (
+				68C1D1DC1B99A0D50062BAA6 /* GenericDocumentStore.cpp */,
+				68C1D1DD1B99A0D50062BAA6 /* GenericDocumentStore.h */,
+				68C1D1DE1B99A0D50062BAA6 /* IDocumentStore.h */,
+				68C1D1DF1B99A0D50062BAA6 /* IKeyValueStore.h */,
+				68C1D1E01B99A0D50062BAA6 /* LevelDbDatastore.cpp */,
+				68C1D1E11B99A0D50062BAA6 /* LevelDbDatastore.h */,
+				68C1D1E21B99A0D50062BAA6 /* NoSqlDatabase.cpp */,
+				68C1D1E31B99A0D50062BAA6 /* NoSqlDatabase.h */,
+			);
+			name = nosql;
 			sourceTree = "<group>";
 		};
 		68D2799A1ACC6DAF00B25E88 /* addons */ = {
@@ -10772,6 +10805,7 @@
 				395C29F01A98A16300EBC7AD /* HTTPPythonWsgiInvoker.cpp in Sources */,
 				E38E22500D25F9FE00618676 /* rarvm.cpp in Sources */,
 				E38E22520D25F9FE00618676 /* rawread.cpp in Sources */,
+				68C1D1EA1B99A0D50062BAA6 /* NoSqlDatabase.cpp in Sources */,
 				E38E22530D25F9FE00618676 /* rdwrfn.cpp in Sources */,
 				E38E22540D25F9FE00618676 /* recvol.cpp in Sources */,
 				E38E22550D25F9FE00618676 /* resource.cpp in Sources */,
@@ -11476,6 +11510,7 @@
 				7C15DCBC1892481400FCE564 /* InfoBool.cpp in Sources */,
 				395C2A1F1A9F96A700EBC7AD /* ContextItemAddon.cpp in Sources */,
 				F5CC228B1814F7E9006B5E91 /* AESinkDARWINOSX.cpp in Sources */,
+				68C1D1E41B99A0D50062BAA6 /* GenericDocumentStore.cpp in Sources */,
 				F5CC22EB1814FF3B006B5E91 /* ActiveAE.cpp in Sources */,
 				F5CC22EC1814FF3B006B5E91 /* ActiveAEBuffer.cpp in Sources */,
 				F5CC22EE1814FF3B006B5E91 /* ActiveAESink.cpp in Sources */,
@@ -11591,6 +11626,7 @@
 				7CCDAAA0192756250074CF51 /* NptPosixThreads.cpp in Sources */,
 				7CCDAAA9192756250074CF51 /* NptPosixTime.cpp in Sources */,
 				7CCDAAB2192756250074CF51 /* NptSelectableMessageQueue.cpp in Sources */,
+				68C1D1E71B99A0D50062BAA6 /* LevelDbDatastore.cpp in Sources */,
 				7CCDAC8619275CA70074CF51 /* NptBsdNetwork.cpp in Sources */,
 				7CCDAC8F19275CA70074CF51 /* NptBsdResolver.cpp in Sources */,
 				7CCDAC9219275CA70074CF51 /* NptBsdSockets.cpp in Sources */,
@@ -11845,6 +11881,7 @@
 				DFF0F1EA17528350002DA3A4 /* BlurayDirectory.cpp in Sources */,
 				DFF0F1EB17528350002DA3A4 /* CacheStrategy.cpp in Sources */,
 				DFF0F1EC17528350002DA3A4 /* CDDADirectory.cpp in Sources */,
+				68C1D1E61B99A0D50062BAA6 /* GenericDocumentStore.cpp in Sources */,
 				DFF0F1ED17528350002DA3A4 /* CDDAFile.cpp in Sources */,
 				DFF0F1EE17528350002DA3A4 /* CircularCache.cpp in Sources */,
 				DFF0F1EF17528350002DA3A4 /* CurlFile.cpp in Sources */,
@@ -11864,6 +11901,7 @@
 				DFF0F1FD17528350002DA3A4 /* FileFactory.cpp in Sources */,
 				DFF0F1FE17528350002DA3A4 /* FileReaderFile.cpp in Sources */,
 				DFF0F1FF17528350002DA3A4 /* FTPDirectory.cpp in Sources */,
+				68C1D1EC1B99A0D50062BAA6 /* NoSqlDatabase.cpp in Sources */,
 				DFF0F20017528350002DA3A4 /* FTPParse.cpp in Sources */,
 				DFF0F20317528350002DA3A4 /* HDHomeRunDirectory.cpp in Sources */,
 				DFF0F20417528350002DA3A4 /* HDHomeRunFile.cpp in Sources */,
@@ -12209,6 +12247,7 @@
 				DFF0F34C17528350002DA3A4 /* PeripheralDisk.cpp in Sources */,
 				DFF0F34D17528350002DA3A4 /* PeripheralHID.cpp in Sources */,
 				DFF0F34E17528350002DA3A4 /* PeripheralImon.cpp in Sources */,
+				68C1D1E91B99A0D50062BAA6 /* LevelDbDatastore.cpp in Sources */,
 				DFF0F34F17528350002DA3A4 /* PeripheralNIC.cpp in Sources */,
 				397877DA1AAAF87700F98A45 /* Temperature.cpp in Sources */,
 				DFF0F35017528350002DA3A4 /* PeripheralNyxboard.cpp in Sources */,
@@ -12886,6 +12925,7 @@
 				E4991226174E5D5A00741B6D /* RenderManager.cpp in Sources */,
 				E4991227174E5D5A00741B6D /* DummyVideoPlayer.cpp in Sources */,
 				E4991228174E5D6100741B6D /* Database.cpp in Sources */,
+				68C1D1E51B99A0D50062BAA6 /* GenericDocumentStore.cpp in Sources */,
 				E4991229174E5D6100741B6D /* dataset.cpp in Sources */,
 				E499122A174E5D6100741B6D /* mysqldataset.cpp in Sources */,
 				E499122B174E5D6100741B6D /* qry_dat.cpp in Sources */,
@@ -13451,9 +13491,11 @@
 				E499146B174E605900741B6D /* RingBuffer.cpp in Sources */,
 				68AFC9B61ACC5E2700DD5173 /* DigitalAnalogButtonConverter.cpp in Sources */,
 				E499146C174E605900741B6D /* RssManager.cpp in Sources */,
+				68C1D1EB1B99A0D50062BAA6 /* NoSqlDatabase.cpp in Sources */,
 				E499146D174E605900741B6D /* RssReader.cpp in Sources */,
 				E499146E174E605900741B6D /* ScraperParser.cpp in Sources */,
 				E499146F174E605900741B6D /* ScraperUrl.cpp in Sources */,
+				68C1D1E81B99A0D50062BAA6 /* LevelDbDatastore.cpp in Sources */,
 				E4991470174E605900741B6D /* Screenshot.cpp in Sources */,
 				E4991471174E605900741B6D /* SeekHandler.cpp in Sources */,
 				42DAC16F1A6E789E0066B4C8 /* PVRActionListener.cpp in Sources */,

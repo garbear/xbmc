@@ -373,6 +373,9 @@
     <Filter Include="games\windows">
       <UniqueIdentifier>{b27eff5a-49e1-4e7d-b4c2-f4e46d18629a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dbwrappers\nosql">
+      <UniqueIdentifier>{85fbc7e8-051e-4359-adbc-6b1428551f5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3279,6 +3282,15 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\utils\test\TestBSONVariantWriter.cpp">
       <Filter>utils\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\dbwrappers\nosql\LevelDbDatastore.cpp">
+      <Filter>dbwrappers\nosql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\dbwrappers\nosql\NoSqlDatabase.cpp">
+      <Filter>dbwrappers\nosql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\dbwrappers\nosql\GenericDocumentStore.cpp">
+      <Filter>dbwrappers\nosql</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6349,6 +6361,21 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\utils\BSONVariantWriter.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\LevelDbDatastore.h">
+      <Filter>dbwrappers\nosql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\NoSqlDatabase.h">
+      <Filter>dbwrappers\nosql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\GenericDocumentStore.h">
+      <Filter>dbwrappers\nosql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\IDocumentStore.h">
+      <Filter>dbwrappers\nosql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\dbwrappers\nosql\IKeyValueStore.h">
+      <Filter>dbwrappers\nosql</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
