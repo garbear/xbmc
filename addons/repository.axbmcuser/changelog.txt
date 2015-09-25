@@ -1,0 +1,47 @@
+[B]1.2.3[/B] (2024-07-10)
+
+Updated icon
+
+[B]1.2.2[/B] (2024-07-05)
+
+Added new repo tree for Kodi 22 (Piers)
+Minor improvements to addon.xml and changelog
+
+[B]1.2.1[/B] (2023-12-11)
+
+Added new repo tree for Kodi 21 (Omega)
+
+[B]1.2.0[/B] (2023-12-08)
+
+Version in sync for major rework of "A Confluence ZEITGEIST" 3.6.0
+(Version numbers vary on other Kodi generations)
+
+New addon icon
+
+[B]1.1.8[/B] (2019-11-17)
+
+New repo icon (higher resolution)
+
+[B]1.1.7[/B] (2019-08-24)
+
+Cleanup (Bye Jarvis)
+
+[B]1.1.6[/B] (2019-08-24)
+
+Added Kodi 19 (Matrix) repo
+
+[B]1.1.5[/B] (2017-01-16)
+
+Minor cleanup
+
+[B]1.1.4[/B] (2017-01-16)
+
+Now supporting Kodi 18 (Leia)
+
+[B]1.1.3[/B] (2016-08-03)
+
+Minor cleanup
+
+[B]1.1.2[/B] (2016-07-23)
+
+Changes for Kodi 17 (Krypton): Repo is multi-dir based again (for now)
