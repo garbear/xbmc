@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.osmcskin" name="OSMC Skin Repository" version="1.0.0" provider-name="OSMC">
+        <extension point="xbmc.addon.repository" name="OSMC Skin Repository">
+                <dir minversion="21.0.0" maxversion="21.9.9">
+                        <info>http://download.osmc.tv/kodi/skin-repo/v21/addons.xml.gz</info>
+                        <checksum verify="sha256">http://download.osmc.tv/kodi/skin-repo/v21/addons.xml.gz?sha256</checksum>
+                        <datadir>http://download.osmc.tv/kodi/skin-repo/v21</datadir>
+                        <hashes>sha256</hashes>
+                </dir>
+                <dir minversion="20.0.0" maxversion="20.9.9">
+                        <info>http://download.osmc.tv/kodi/skin-repo/v20/addons.xml.gz</info>
+                        <checksum verify="sha256">http://download.osmc.tv/kodi/skin-repo/v20/addons.xml.gz?sha256</checksum>
+                        <datadir>http://download.osmc.tv/kodi/skin-repo/v20</datadir>
+                        <hashes>sha256</hashes>
+                </dir>
+                <dir minversion="19.0.0" maxversion="19.9.9">
+                        <info>http://download.osmc.tv/kodi/skin-repo/v19/addons.xml.gz</info>
+                        <checksum verify="sha256">http://download.osmc.tv/kodi/skin-repo/v19/addons.xml.gz?sha256</checksum>
+                        <datadir>http://download.osmc.tv/kodi/skin-repo/v19</datadir>
+                        <hashes>sha256</hashes>
+                </dir>
+                <dir minversion="18.0.0" maxversion="18.9.9">
+                        <info>http://download.osmc.tv/kodi/skin-repo/v18/addons.xml.gz</info>
+                        <checksum verify="sha256">http://download.osmc.tv/kodi/skin-repo/v18/addons.xml.gz?sha256</checksum>
+                        <datadir>http://download.osmc.tv/kodi/skin-repo/v18</datadir>
+                        <hashes>sha256</hashes>
+                </dir>
+        </extension>
+        <extension point="xbmc.addon.metadata">
+                <summary>OSMC Skin Repository</summary>
+                <description>A repository to make the OSMC Skin available on non OSMC installations of Kodi</description>
+                <platform>all</platform>
+                <assets>
+                        <icon>icon.jpg</icon>
+                </assets>
+        </extension>
+</addon>
