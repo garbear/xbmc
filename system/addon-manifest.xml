@@ -52,4 +52,5 @@
   <addon>xbmc.python</addon>
   <addon>xbmc.webinterface</addon>
   <addon optional="true">peripheral.joystick</addon>
+  <addon optional="true">repository.zachmorris</addon>
 </addons>
