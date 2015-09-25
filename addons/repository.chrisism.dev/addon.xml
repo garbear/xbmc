@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<addon id="repository.chrisism.dev" name="Chrisism's BETA repository" provider-name="chrisism" version="1.0.2">
+    <requires>
+        <import addon="xbmc.addon" version="12.0.0" />
+    </requires>
+    <extension name="Chrisism's BETA repository" point="xbmc.addon.repository">
+        <dir>
+            <info compressed="false">https://github.com/chrisism/repository.chrisism.dev/raw/main/repository/addons.xml</info>
+            <checksum>https://github.com/chrisism/repository.chrisism.dev/raw/main/repository/addons.xml.md5</checksum>
+            <datadir zip="true">https://github.com/chrisism/repository.chrisism.dev/raw/main/repository/</datadir>
+        </dir>
+        <dir minversion="18.9.700">
+            <info compressed="false">https://github.com/chrisism/repository.chrisism.dev/raw/main/matrix/addons.xml</info>
+            <checksum>https://github.com/chrisism/repository.chrisism.dev/raw/main/matrix/addons.xml.md5</checksum>
+            <datadir zip="true">https://github.com/chrisism/repository.chrisism.dev/raw/main/matrix/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en">Kodi repository for BETA version addons</summary>
+        <description lang="en">Kodi repository for BETA version addons</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.jpg</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
