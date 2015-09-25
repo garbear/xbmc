@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<addon id="repository.chrisism" name="Chrisism's repository" provider-name="chrisism" version="1.1.0">
+    <requires>
+        <import addon="xbmc.addon" version="12.0.0" />
+    </requires>    
+    <extension name="Chrisism's repository" point="xbmc.addon.repository">
+        <dir>
+            <info compressed="false">https://github.com/chrisism/repository.chrisism/raw/master/repository/addons.xml</info>
+            <checksum>https://github.com/chrisism/repository.chrisism/raw/master/repository/addons.xml.md5</checksum>
+            <datadir zip="true">https://github.com/chrisism/repository.chrisism/raw/master/repository/</datadir>
+        </dir>
+        <dir minversion="18.9.700">
+            <info compressed="false">https://github.com/chrisism/repository.chrisism/raw/master/matrix/addons.xml</info>
+            <checksum>https://github.com/chrisism/repository.chrisism/raw/master/matrix/addons.xml.md5</checksum>
+            <datadir zip="true">https://github.com/chrisism/repository.chrisism/raw/master/matrix/</datadir>
+        </dir>
+        <dir maxversion="18.9.0">
+            <info compressed="false">https://github.com/chrisism/repository.chrisism/raw/master/leia/addons.xml</info>
+            <checksum>https://github.com/chrisism/repository.chrisism/raw/master/leia/addons.xml.md5</checksum>
+            <datadir zip="true">https://github.com/chrisism/repository.chrisism/raw/master/leia/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en">Kodi repository for addons</summary>
+        <description lang="en">Kodi repository for addons</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
