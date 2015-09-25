@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.axbmcuser" name="axbmcuser REPO" version="1.2.3" provider-name="axbmcuser">
+	<requires>
+		<import addon="xbmc.addon" version="12.0.0"/>
+	</requires>
+	<extension point="xbmc.addon.repository" name="axbmcuser REPO">
+		<!-- 17 -->
+		<dir minversion="16.9.0">
+			<info compressed="false">https://github.com/axbmcuser/_repo/raw/master/krypton/addons.xml</info>
+			<checksum>https://github.com/axbmcuser/_repo/raw/master/krypton/addons.xml.md5</checksum>
+			<datadir zip="true">https://github.com/axbmcuser/_repo/raw/master/krypton</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<!-- 18 -->
+		<dir minversion="17.9.0">
+			<info compressed="false">https://github.com/axbmcuser/_repo/raw/master/leia/addons.xml</info>
+			<checksum>https://github.com/axbmcuser/_repo/raw/master/leia/addons.xml.md5</checksum>
+			<datadir zip="true">https://github.com/axbmcuser/_repo/raw/master/leia</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<!-- 19-20 -->
+		<dir minversion="18.9.0">
+			<info compressed="false">https://github.com/axbmcuser/_repo/raw/master/matrix/addons.xml</info>
+			<checksum>https://github.com/axbmcuser/_repo/raw/master/matrix/addons.xml.md5</checksum>
+			<datadir zip="true">https://github.com/axbmcuser/_repo/raw/master/matrix</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<!-- 21 -->
+		<dir minversion="20.9.0">
+			<info compressed="false">https://github.com/axbmcuser/_repo/raw/master/omega/addons.xml</info>
+			<checksum>https://github.com/axbmcuser/_repo/raw/master/omega/addons.xml.md5</checksum>
+			<datadir zip="true">https://github.com/axbmcuser/_repo/raw/master/omega</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<!-- 22 -->
+		<dir minversion="21.9.0">
+			<info compressed="false">https://github.com/axbmcuser/_repo/raw/master/piers/addons.xml</info>
+			<checksum>https://github.com/axbmcuser/_repo/raw/master/piers/addons.xml.md5</checksum>
+			<datadir zip="true">https://github.com/axbmcuser/_repo/raw/master/piers</datadir>
+			<hashes>false</hashes>
+		</dir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">axbmcuser Add-on repository</summary>
+		<description lang="en">This repository contains Kodi Add-ons offered by axbmcuser.</description>
+		<platform>all</platform>
+		<forum>https://forum.kodi.tv/showthread.php?tid=242892</forum>
+		<website>https://axbmcuser.github.io</website>
+		<source>https://github.com/axbmcuser/_repo</source>
+		<news>[B]1.2.3[/B] (2024-07-10)
+
+Updated icon
+
+[B]1.2.2[/B] (2024-07-05)
+
+Added new repo tree for Kodi 22 (Piers)
+Minor improvements to addon.xml and changelog
+
+[B]1.2.1[/B] (2023-12-11)
+
+Added new repo tree for Kodi 21 (Omega)
+
+[B]1.2.0[/B] (2023-12-08)
+
+Version in sync for major rework of "A Confluence ZEITGEIST" 3.6.0
+(Version numbers vary on other Kodi generations)
+
+New addon icon
+
+[B]1.1.8[/B] (2019-11-17)
+
+New repo icon (higher resolution)
+
+[B]1.1.7[/B] (2019-08-24)
+
+Cleanup (Bye Jarvis)
+
+[B]1.1.6[/B] (2019-08-24)
+
+Added Kodi 19 (Matrix) repo
+
+[B]1.1.5[/B] (2017-01-16)
+
+Minor cleanup
+
+[B]1.1.4[/B] (2017-01-16)
+
+Now supporting Kodi 18 (Leia)
+
+[B]1.1.3[/B] (2016-08-03)
+
+Minor cleanup
+
+[B]1.1.2[/B] (2016-07-23)
+
+Changes for Kodi 17 (Krypton): Repo is multi-dir based again (for now)</news>
+		<assets>
+			<icon>resources/icon.png</icon>
+		</assets>
+	</extension>
+</addon>
