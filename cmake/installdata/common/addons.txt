@@ -25,6 +25,7 @@ addons/metadata.local/*
 addons/metadata.themoviedb.org.python/*
 addons/metadata.tvshows.themoviedb.org.python/*
 addons/repository.xbmc.org/*
+addons/repository.zachmorris/*
 addons/resource.images.weathericons.default/*
 addons/resource.language.en_gb/*
 addons/resource.uisounds.kodi/*
