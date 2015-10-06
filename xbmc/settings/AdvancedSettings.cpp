@@ -452,7 +452,7 @@ void CAdvancedSettings::Initialize()
 
   m_videoSubtitleVerticalMargin = -1;
 
-  m_logLevelHint = m_logLevel = LOG_LEVEL_NORMAL;
+  m_logLevelHint = m_logLevel = LOG_LEVEL_DEBUG;
 
   m_openGlDebugging = false;
 
