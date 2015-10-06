@@ -26,10 +26,12 @@
 <keymap>
   <global>
     <keyboard>
+      <f5>ReloadSkin()</f5>
       <p>Play</p>
       <q>Queue</q>
       <f>FastForward</f>
       <r>Rewind</r>
+      <r mod="ctrl">ReloadSkin()</r>
       <y>SwitchPlayer</y>
       <left>Left</left>
       <right>Right</right>
@@ -199,7 +201,6 @@
       <f mod="ctrl">SkipNext</f>          <!-- Skip -->
       <b mod="ctrl">SkipPrevious</b>      <!-- Replay -->
       <d mod="ctrl">Info</d>              <!-- MCE Details -->
-      <r mod="ctrl">Record</r>            <!-- Record -->
       <f4 mod="alt">PreviousMenu</f4>     <!-- Exit -->
       <f10>VolumeUp</f10>                 <!-- MCE Vol up -->
       <f9>VolumeDown</f9>                 <!-- MCE Vol down -->
