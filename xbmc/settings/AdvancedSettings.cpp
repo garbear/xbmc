@@ -450,7 +450,7 @@ void CAdvancedSettings::Initialize()
   m_stereoscopicregex_sbs = "[-. _]h?sbs[-. _]";
   m_stereoscopicregex_tab = "[-. _]h?tab[-. _]";
 
-  m_logLevelHint = m_logLevel = LOG_LEVEL_NORMAL;
+  m_logLevelHint = m_logLevel = LOG_LEVEL_DEBUG;
 
   m_openGlDebugging = false;
 
