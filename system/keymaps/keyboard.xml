@@ -26,6 +26,7 @@
 <keymap>
   <global>
     <keyboard>
+      <f5>ReloadSkin()</f5>
       <p>Play</p>
       <q>Queue</q>
       <f>FastForward</f>
