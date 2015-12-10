@@ -34,8 +34,10 @@ using namespace GAME;
 #define ESC_KEY_CODE  27
 #define SKIPPING_DETECTION_MS  200
 
-CGUIConfigurationWizard::CGUIConfigurationWizard() :
+CGUIConfigurationWizard::CGUIConfigurationWizard(bool bEmulation, unsigned int controllerNumber /* = 0 */) :
   CThread("GUIConfigurationWizard"),
+  m_bEmulation(bEmulation),
+  m_controllerNumber(controllerNumber),
   m_callback(nullptr),
   m_bInMotion(false)
 {
@@ -268,14 +270,19 @@ void CGUIConfigurationWizard::InstallHooks(void)
 
   g_peripherals.RegisterJoystickButtonMapper(this);
   g_peripherals.RegisterObserver(this);
-  CInputManager::GetInstance().RegisterKeyboardHandler(this);
+
+  // If we're not using emulation, allow keyboard input to abort prompt
+  if (!m_bEmulation)
+    CInputManager::GetInstance().RegisterKeyboardHandler(this);
 }
 
 void CGUIConfigurationWizard::RemoveHooks(void)
 {
   using namespace PERIPHERALS;
 
-  CInputManager::GetInstance().UnregisterKeyboardHandler(this);
+  if (!m_bEmulation)
+    CInputManager::GetInstance().UnregisterKeyboardHandler(this);
+
   g_peripherals.UnregisterObserver(this);
   g_peripherals.UnregisterJoystickButtonMapper(this);
 }
