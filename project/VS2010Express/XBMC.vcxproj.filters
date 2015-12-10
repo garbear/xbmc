@@ -448,6 +448,12 @@
     <Filter Include="games\controllers\windows">
       <UniqueIdentifier>{9e3dd585-08e1-4dae-bc21-05e49697ef94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="input\keyboard">
+      <UniqueIdentifier>{72637a59-9464-48b3-80e5-b57012bbf432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input\keyboard\generic">
+      <UniqueIdentifier>{54fee744-c14f-4525-a42f-dc67752e9f88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3467,6 +3473,21 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\games\GameSettings.cpp">
       <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\bus\virtual\PeripheralBusApplication.cpp">
+      <Filter>peripherals\bus\virtual</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\GameSettings.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\peripherals\devices\PeripheralJoystickEmulation.cpp">
+      <Filter>peripherals\devices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystickHandling.cpp">
+      <Filter>input\keyboard\generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystick.cpp">
+      <Filter>input\keyboard\generic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6740,6 +6761,24 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\GameSettings.h">
       <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\bus\virtual\PeripheralBusApplication.h">
+      <Filter>peripherals\bus\virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\GameSettings.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\peripherals\devices\PeripheralJoystickEmulation.h">
+      <Filter>peripherals\devices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\input\keyboard\IKeyboardHandler.h">
+      <Filter>input\keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystick.h">
+      <Filter>input\keyboard\generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystickHandling.h">
+      <Filter>input\keyboard\generic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -62,8 +62,8 @@ bool CGUIControllerWindow::OnMessage(CGUIMessage& message)
   {
     case GUI_MSG_WINDOW_INIT:
     {
-      // TODO: Process parameter
-      //std::string strParam = message.GetStringParam();
+      // TODO: Process params here, don't just record them for later
+      m_param = message.GetStringParam();
       break;
     }
     case GUI_MSG_CLICKED:
@@ -151,7 +151,7 @@ void CGUIControllerWindow::OnInitWindow(void)
 
   if (!m_featureList)
   {
-    m_featureList = new CGUIFeatureList(this);
+    m_featureList = new CGUIFeatureList(this, m_param);
     if (!m_featureList->Initialize())
     {
       delete m_featureList;

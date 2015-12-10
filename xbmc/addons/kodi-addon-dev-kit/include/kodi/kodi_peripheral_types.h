@@ -50,7 +50,7 @@
 #endif
 
 /* current Peripheral API version */
-#define PERIPHERAL_API_VERSION "1.0.18"
+#define PERIPHERAL_API_VERSION "1.0.19"
 
 /* min. Peripheral API version */
 #define PERIPHERAL_MIN_API_VERSION "1.0.18"
@@ -83,6 +83,7 @@ extern "C"
   {
     PERIPHERAL_TYPE_UNKNOWN,
     PERIPHERAL_TYPE_JOYSTICK,
+    PERIPHERAL_TYPE_KEYBOARD,
   } PERIPHERAL_TYPE;
 
   typedef struct PERIPHERAL_INFO
