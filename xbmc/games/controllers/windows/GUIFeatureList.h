@@ -32,7 +32,7 @@ namespace GAME
   class CGUIFeatureList : public IFeatureList
   {
   public:
-    CGUIFeatureList(CGUIWindow* window);
+    CGUIFeatureList(CGUIWindow* window, const std::string& windowParam);
     virtual ~CGUIFeatureList(void);
 
     // implementation of IFeatureList

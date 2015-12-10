@@ -412,6 +412,8 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\FeatureHandling.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\InputHandling.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\RumbleGenerator.cpp" />
+    <ClCompile Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystick.cpp" />
+    <ClCompile Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystickHandling.cpp" />
     <ClCompile Include="..\..\xbmc\music\windows\MusicFileItemListModifier.cpp" />
     <ClCompile Include="..\..\xbmc\filesystem\MusicDatabaseFile.cpp" />
     <ClCompile Include="..\..\xbmc\filesystem\MusicFileDirectory.cpp" />
@@ -710,7 +712,9 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\peripherals\addons\PeripheralAddon.cpp" />
     <ClCompile Include="..\..\xbmc\peripherals\addons\PeripheralAddonTranslator.cpp" />
     <ClCompile Include="..\..\xbmc\peripherals\bus\virtual\PeripheralBusAddon.cpp" />
+    <ClCompile Include="..\..\xbmc\peripherals\bus\virtual\PeripheralBusApplication.cpp" />
     <ClCompile Include="..\..\xbmc\peripherals\devices\PeripheralJoystick.cpp" />
+    <ClCompile Include="..\..\xbmc\peripherals\devices\PeripheralJoystickEmulation.cpp" />
     <ClCompile Include="..\..\xbmc\peripherals\EventScanner.cpp" />
     <ClCompile Include="..\..\xbmc\peripherals\EventScanRate.cpp" />
     <ClCompile Include="..\..\xbmc\network\httprequesthandler\HTTPRequestHandlerUtils.cpp" />
@@ -1124,6 +1128,9 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\input\joysticks\IInputHandler.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IInputReceiver.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\RumbleGenerator.h" />
+    <ClInclude Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystick.h" />
+    <ClInclude Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystickHandling.h" />
+    <ClInclude Include="..\..\xbmc\input\keyboard\IKeyboardHandler.h" />
     <ClInclude Include="..\..\xbmc\music\ContextMenus.h" />
     <ClInclude Include="..\..\xbmc\music\windows\MusicFileItemListModifier.h" />
     <ClInclude Include="..\..\xbmc\filesystem\OverrideDirectory.h" />
@@ -1269,7 +1276,9 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\peripherals\addons\PeripheralAddon.h" />
     <ClInclude Include="..\..\xbmc\peripherals\addons\PeripheralAddonTranslator.h" />
     <ClInclude Include="..\..\xbmc\peripherals\bus\virtual\PeripheralBusAddon.h" />
+    <ClInclude Include="..\..\xbmc\peripherals\bus\virtual\PeripheralBusApplication.h" />
     <ClInclude Include="..\..\xbmc\peripherals\devices\PeripheralJoystick.h" />
+    <ClInclude Include="..\..\xbmc\peripherals\devices\PeripheralJoystickEmulation.h" />
     <ClInclude Include="..\..\xbmc\peripherals\EventScanner.h" />
     <ClInclude Include="..\..\xbmc\peripherals\EventScanRate.h" />
     <ClInclude Include="..\..\xbmc\network\httprequesthandler\HTTPRequestHandlerUtils.h" />

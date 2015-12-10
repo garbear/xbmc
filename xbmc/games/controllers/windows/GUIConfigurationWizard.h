@@ -41,7 +41,7 @@ namespace GAME
                                   protected CThread
   {
   public:
-    CGUIConfigurationWizard();
+    CGUIConfigurationWizard(bool bEmulation, unsigned int controllerNumber = 0);
 
     virtual ~CGUIConfigurationWizard(void) { }
 
@@ -52,6 +52,8 @@ namespace GAME
 
     // implementation of IButtonMapper
     virtual std::string ControllerID(void) const override { return m_strControllerId; }
+    virtual bool Emulation(void) const override { return m_bEmulation; }
+    virtual unsigned int ControllerNumber(void) const override { return m_controllerNumber; }
     virtual bool MapPrimitive(JOYSTICK::IButtonMap* buttonMap, const JOYSTICK::CDriverPrimitive& primitive) override;
 
     // implementation of IKeyboardHandler
@@ -70,6 +72,10 @@ namespace GAME
 
     void InstallHooks(void);
     void RemoveHooks(void);
+
+    // Construction parameters
+    const bool                           m_bEmulation;
+    const unsigned int                   m_controllerNumber;
 
     // Run() parameters
     std::string                          m_strControllerId;
