@@ -295,6 +295,24 @@
 		68120E2F1C645D6A00A95D39 /* ControllerLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E251C645D6A00A95D39 /* ControllerLayout.cpp */; };
 		68120E301C645D6A00A95D39 /* ControllerTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E271C645D6A00A95D39 /* ControllerTranslator.cpp */; };
 		68120E311C645D6A00A95D39 /* ControllerTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E271C645D6A00A95D39 /* ControllerTranslator.cpp */; };
+		68120E421C6460DA00A95D39 /* GUIAnalogStickButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E381C6460DA00A95D39 /* GUIAnalogStickButton.cpp */; };
+		68120E431C6460DA00A95D39 /* GUIAnalogStickButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E381C6460DA00A95D39 /* GUIAnalogStickButton.cpp */; };
+		68120E441C6460DA00A95D39 /* GUIControllerButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E3A1C6460DA00A95D39 /* GUIControllerButton.cpp */; };
+		68120E451C6460DA00A95D39 /* GUIControllerButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E3A1C6460DA00A95D39 /* GUIControllerButton.cpp */; };
+		68120E461C6460DA00A95D39 /* GUIFeatureButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E3C1C6460DA00A95D39 /* GUIFeatureButton.cpp */; };
+		68120E471C6460DA00A95D39 /* GUIFeatureButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E3C1C6460DA00A95D39 /* GUIFeatureButton.cpp */; };
+		68120E481C6460DA00A95D39 /* GUIGameController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E3E1C6460DA00A95D39 /* GUIGameController.cpp */; };
+		68120E491C6460DA00A95D39 /* GUIGameController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E3E1C6460DA00A95D39 /* GUIGameController.cpp */; };
+		68120E4A1C6460DA00A95D39 /* GUIScalarFeatureButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E401C6460DA00A95D39 /* GUIScalarFeatureButton.cpp */; };
+		68120E4B1C6460DA00A95D39 /* GUIScalarFeatureButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E401C6460DA00A95D39 /* GUIScalarFeatureButton.cpp */; };
+		68120E561C6460E400A95D39 /* GUIConfigurationWizard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E4C1C6460E400A95D39 /* GUIConfigurationWizard.cpp */; };
+		68120E571C6460E400A95D39 /* GUIConfigurationWizard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E4C1C6460E400A95D39 /* GUIConfigurationWizard.cpp */; };
+		68120E581C6460E400A95D39 /* GUIControllerList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E4F1C6460E400A95D39 /* GUIControllerList.cpp */; };
+		68120E591C6460E400A95D39 /* GUIControllerList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E4F1C6460E400A95D39 /* GUIControllerList.cpp */; };
+		68120E5A1C6460E400A95D39 /* GUIControllerWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E511C6460E400A95D39 /* GUIControllerWindow.cpp */; };
+		68120E5B1C6460E400A95D39 /* GUIControllerWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E511C6460E400A95D39 /* GUIControllerWindow.cpp */; };
+		68120E5C1C6460E400A95D39 /* GUIFeatureList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E531C6460E400A95D39 /* GUIFeatureList.cpp */; };
+		68120E5D1C6460E400A95D39 /* GUIFeatureList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68120E531C6460E400A95D39 /* GUIFeatureList.cpp */; };
 		68B27C141C403881002EB93F /* GenericJoystickFeatureHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */; };
 		68B27C151C403881002EB93F /* GenericJoystickFeatureHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */; };
 		68BAD4761C6D29300074FF4C /* DefaultJoystick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68BAD4741C6D29300074FF4C /* DefaultJoystick.cpp */; };
@@ -2775,6 +2793,26 @@
 		68120E271C645D6A00A95D39 /* ControllerTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerTranslator.cpp; path = games/controllers/ControllerTranslator.cpp; sourceTree = "<group>"; };
 		68120E281C645D6A00A95D39 /* ControllerTranslator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerTranslator.h; path = games/controllers/ControllerTranslator.h; sourceTree = "<group>"; };
 		68120E291C645D6A00A95D39 /* ControllerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerTypes.h; path = games/controllers/ControllerTypes.h; sourceTree = "<group>"; };
+		68120E381C6460DA00A95D39 /* GUIAnalogStickButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIAnalogStickButton.cpp; path = games/controllers/guicontrols/GUIAnalogStickButton.cpp; sourceTree = "<group>"; };
+		68120E391C6460DA00A95D39 /* GUIAnalogStickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIAnalogStickButton.h; path = games/controllers/guicontrols/GUIAnalogStickButton.h; sourceTree = "<group>"; };
+		68120E3A1C6460DA00A95D39 /* GUIControllerButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIControllerButton.cpp; path = games/controllers/guicontrols/GUIControllerButton.cpp; sourceTree = "<group>"; };
+		68120E3B1C6460DA00A95D39 /* GUIControllerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIControllerButton.h; path = games/controllers/guicontrols/GUIControllerButton.h; sourceTree = "<group>"; };
+		68120E3C1C6460DA00A95D39 /* GUIFeatureButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIFeatureButton.cpp; path = games/controllers/guicontrols/GUIFeatureButton.cpp; sourceTree = "<group>"; };
+		68120E3D1C6460DA00A95D39 /* GUIFeatureButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIFeatureButton.h; path = games/controllers/guicontrols/GUIFeatureButton.h; sourceTree = "<group>"; };
+		68120E3E1C6460DA00A95D39 /* GUIGameController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIGameController.cpp; path = games/controllers/guicontrols/GUIGameController.cpp; sourceTree = "<group>"; };
+		68120E3F1C6460DA00A95D39 /* GUIGameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIGameController.h; path = games/controllers/guicontrols/GUIGameController.h; sourceTree = "<group>"; };
+		68120E401C6460DA00A95D39 /* GUIScalarFeatureButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIScalarFeatureButton.cpp; path = games/controllers/guicontrols/GUIScalarFeatureButton.cpp; sourceTree = "<group>"; };
+		68120E411C6460DA00A95D39 /* GUIScalarFeatureButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIScalarFeatureButton.h; path = games/controllers/guicontrols/GUIScalarFeatureButton.h; sourceTree = "<group>"; };
+		68120E4C1C6460E400A95D39 /* GUIConfigurationWizard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIConfigurationWizard.cpp; path = games/controllers/windows/GUIConfigurationWizard.cpp; sourceTree = "<group>"; };
+		68120E4D1C6460E400A95D39 /* GUIConfigurationWizard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIConfigurationWizard.h; path = games/controllers/windows/GUIConfigurationWizard.h; sourceTree = "<group>"; };
+		68120E4E1C6460E400A95D39 /* GUIControllerDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIControllerDefines.h; path = games/controllers/windows/GUIControllerDefines.h; sourceTree = "<group>"; };
+		68120E4F1C6460E400A95D39 /* GUIControllerList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIControllerList.cpp; path = games/controllers/windows/GUIControllerList.cpp; sourceTree = "<group>"; };
+		68120E501C6460E400A95D39 /* GUIControllerList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIControllerList.h; path = games/controllers/windows/GUIControllerList.h; sourceTree = "<group>"; };
+		68120E511C6460E400A95D39 /* GUIControllerWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIControllerWindow.cpp; path = games/controllers/windows/GUIControllerWindow.cpp; sourceTree = "<group>"; };
+		68120E521C6460E400A95D39 /* GUIControllerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIControllerWindow.h; path = games/controllers/windows/GUIControllerWindow.h; sourceTree = "<group>"; };
+		68120E531C6460E400A95D39 /* GUIFeatureList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIFeatureList.cpp; path = games/controllers/windows/GUIFeatureList.cpp; sourceTree = "<group>"; };
+		68120E541C6460E400A95D39 /* GUIFeatureList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIFeatureList.h; path = games/controllers/windows/GUIFeatureList.h; sourceTree = "<group>"; };
+		68120E551C6460E400A95D39 /* IConfigurationWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IConfigurationWindow.h; path = games/controllers/windows/IConfigurationWindow.h; sourceTree = "<group>"; };
 		68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericJoystickFeatureHandling.cpp; path = joysticks/generic/GenericJoystickFeatureHandling.cpp; sourceTree = "<group>"; };
 		68B27C131C403881002EB93F /* GenericJoystickFeatureHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericJoystickFeatureHandling.h; path = joysticks/generic/GenericJoystickFeatureHandling.h; sourceTree = "<group>"; };
 		68BAD4741C6D29300074FF4C /* DefaultJoystick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DefaultJoystick.cpp; path = joysticks/DefaultJoystick.cpp; sourceTree = "<group>"; };
@@ -6097,6 +6135,8 @@
 		68120E1F1C645D4E00A95D39 /* controllers */ = {
 			isa = PBXGroup;
 			children = (
+				68120E371C6460CA00A95D39 /* guicontrols */,
+				68120E361C6460C500A95D39 /* windows */,
 				68120E201C645D6A00A95D39 /* Controller.cpp */,
 				68120E211C645D6A00A95D39 /* Controller.h */,
 				68120E221C645D6A00A95D39 /* ControllerDefinitions.h */,
@@ -6109,6 +6149,40 @@
 				68120E291C645D6A00A95D39 /* ControllerTypes.h */,
 			);
 			name = controllers;
+			sourceTree = "<group>";
+		};
+		68120E361C6460C500A95D39 /* windows */ = {
+			isa = PBXGroup;
+			children = (
+				68120E4C1C6460E400A95D39 /* GUIConfigurationWizard.cpp */,
+				68120E4D1C6460E400A95D39 /* GUIConfigurationWizard.h */,
+				68120E4E1C6460E400A95D39 /* GUIControllerDefines.h */,
+				68120E4F1C6460E400A95D39 /* GUIControllerList.cpp */,
+				68120E501C6460E400A95D39 /* GUIControllerList.h */,
+				68120E511C6460E400A95D39 /* GUIControllerWindow.cpp */,
+				68120E521C6460E400A95D39 /* GUIControllerWindow.h */,
+				68120E531C6460E400A95D39 /* GUIFeatureList.cpp */,
+				68120E541C6460E400A95D39 /* GUIFeatureList.h */,
+				68120E551C6460E400A95D39 /* IConfigurationWindow.h */,
+			);
+			name = windows;
+			sourceTree = "<group>";
+		};
+		68120E371C6460CA00A95D39 /* guicontrols */ = {
+			isa = PBXGroup;
+			children = (
+				68120E381C6460DA00A95D39 /* GUIAnalogStickButton.cpp */,
+				68120E391C6460DA00A95D39 /* GUIAnalogStickButton.h */,
+				68120E3A1C6460DA00A95D39 /* GUIControllerButton.cpp */,
+				68120E3B1C6460DA00A95D39 /* GUIControllerButton.h */,
+				68120E3C1C6460DA00A95D39 /* GUIFeatureButton.cpp */,
+				68120E3D1C6460DA00A95D39 /* GUIFeatureButton.h */,
+				68120E3E1C6460DA00A95D39 /* GUIGameController.cpp */,
+				68120E3F1C6460DA00A95D39 /* GUIGameController.h */,
+				68120E401C6460DA00A95D39 /* GUIScalarFeatureButton.cpp */,
+				68120E411C6460DA00A95D39 /* GUIScalarFeatureButton.h */,
+			);
+			name = guicontrols;
 			sourceTree = "<group>";
 		};
 		7C14096E18322476009F9411 /* lib */ = {
@@ -9457,6 +9531,7 @@
 				E38E203E0D25F9FD00618676 /* DirectoryNodeArtist.cpp in Sources */,
 				E38E20400D25F9FD00618676 /* DirectoryNodeOverview.cpp in Sources */,
 				E38E20410D25F9FD00618676 /* DirectoryNodeRoot.cpp in Sources */,
+				68120E5C1C6460E400A95D39 /* GUIFeatureList.cpp in Sources */,
 				E38E20420D25F9FD00618676 /* DirectoryNodeSong.cpp in Sources */,
 				E38E20430D25F9FD00618676 /* DirectoryNodeSongTop100.cpp in Sources */,
 				E38E20440D25F9FD00618676 /* DirectoryNodeTop100.cpp in Sources */,
@@ -9576,6 +9651,7 @@
 				E38E223A0D25F9FE00618676 /* crypt.cpp in Sources */,
 				E38E223C0D25F9FE00618676 /* encname.cpp in Sources */,
 				E38E223D0D25F9FE00618676 /* errhnd.cpp in Sources */,
+				68120E4A1C6460DA00A95D39 /* GUIScalarFeatureButton.cpp in Sources */,
 				E38E223E0D25F9FE00618676 /* extinfo.cpp in Sources */,
 				E38E223F0D25F9FE00618676 /* extract.cpp in Sources */,
 				E38E22400D25F9FE00618676 /* filcreat.cpp in Sources */,
@@ -9659,6 +9735,7 @@
 				E38E22D80D25F9FE00618676 /* InfoLoader.cpp in Sources */,
 				E38E22DB0D25F9FE00618676 /* LabelFormatter.cpp in Sources */,
 				E38E22DF0D25F9FE00618676 /* log.cpp in Sources */,
+				68120E421C6460DA00A95D39 /* GUIAnalogStickButton.cpp in Sources */,
 				E38E22E40D25F9FE00618676 /* MusicAlbumInfo.cpp in Sources */,
 				E38E22E50D25F9FE00618676 /* MusicInfoScraper.cpp in Sources */,
 				E38E22E70D25F9FE00618676 /* Network.cpp in Sources */,
@@ -9681,6 +9758,7 @@
 				E38E23040D25F9FE00618676 /* XBApplicationEx.cpp in Sources */,
 				E38E25780D263BF600618676 /* unpack.cpp in Sources */,
 				E38E257C0D263C4400618676 /* rar.cpp in Sources */,
+				68120E441C6460DA00A95D39 /* GUIControllerButton.cpp in Sources */,
 				E38E25C00D263DC100618676 /* DVDFactoryDemuxer.cpp in Sources */,
 				E38E25C30D263DE200618676 /* DVDDemuxFFmpeg.cpp in Sources */,
 				E3A4780A0D29029A00F3C3A6 /* GUIDialogCache.cpp in Sources */,
@@ -9712,6 +9790,7 @@
 				8883CEA80DD81807004E8B72 /* DVDSubtitlesLibass.cpp in Sources */,
 				5EF801001A97892A0035AA4D /* ReplayGain.cpp in Sources */,
 				8863281D0E07B37200BB3DAB /* GUIDialogFullScreenInfo.cpp in Sources */,
+				68120E461C6460DA00A95D39 /* GUIFeatureButton.cpp in Sources */,
 				8863281E0E07B37200BB3DAB /* GUIViewStatePictures.cpp in Sources */,
 				8863281F0E07B37200BB3DAB /* GUIViewStatePrograms.cpp in Sources */,
 				889B4D8E0E0EF86C00FAD25E /* RSSDirectory.cpp in Sources */,
@@ -9812,6 +9891,7 @@
 				F50FE04E11A3411A00C8B8CD /* EncoderFFmpeg.cpp in Sources */,
 				183FDF8A11AF0B0500B81E9C /* PluginSource.cpp in Sources */,
 				F58E293911FFC103006F4D46 /* DVDInputStreamBluray.cpp in Sources */,
+				68120E5A1C6460E400A95D39 /* GUIControllerWindow.cpp in Sources */,
 				F5BDB80C120202F400F0B710 /* DVDSubtitleTagSami.cpp in Sources */,
 				F5BDB81A1202032400F0B710 /* DVDSubtitleTagMicroDVD.cpp in Sources */,
 				7CF1FB0C123B1AF000B2CBCB /* Variant.cpp in Sources */,
@@ -9849,6 +9929,7 @@
 				18B7C7BE1294222E009E7A26 /* GUIFadeLabelControl.cpp in Sources */,
 				18B7C7BF1294222E009E7A26 /* GUIFixedListContainer.cpp in Sources */,
 				18B7C7C01294222E009E7A26 /* GUIFont.cpp in Sources */,
+				68120E581C6460E400A95D39 /* GUIControllerList.cpp in Sources */,
 				18B7C7C11294222E009E7A26 /* GUIFontManager.cpp in Sources */,
 				18B7C7C21294222E009E7A26 /* GUIFontTTF.cpp in Sources */,
 				18B7C7C31294222E009E7A26 /* GUIFontTTFDX.cpp in Sources */,
@@ -9896,6 +9977,7 @@
 				18B7C7EA1294222E009E7A26 /* GUIVideoControl.cpp in Sources */,
 				18B7C7EB1294222E009E7A26 /* GUIVisualisationControl.cpp in Sources */,
 				18B7C7EC1294222E009E7A26 /* GUIWindow.cpp in Sources */,
+				68120E561C6460E400A95D39 /* GUIConfigurationWizard.cpp in Sources */,
 				18B7C7ED1294222E009E7A26 /* GUIWindowManager.cpp in Sources */,
 				7C973CF11B5037EF0002A874 /* ActiveAEDSP.cpp in Sources */,
 				18B7C7EE1294222E009E7A26 /* GUIWrappingListContainer.cpp in Sources */,
@@ -10025,6 +10107,7 @@
 				3994427A1A8DD920006C39E9 /* VideoLibraryScanningJob.cpp in Sources */,
 				68046CF71C643EFE00F1009E /* PeripheralAddon.cpp in Sources */,
 				68120E2A1C645D6A00A95D39 /* Controller.cpp in Sources */,
+				68120E481C6460DA00A95D39 /* GUIGameController.cpp in Sources */,
 				DF93D69C1444A8B1007C6459 /* CDDAFile.cpp in Sources */,
 				DF93D69D1444A8B1007C6459 /* CurlFile.cpp in Sources */,
 				DF93D69F1444A8B1007C6459 /* DirectoryFactory.cpp in Sources */,
@@ -10476,8 +10559,10 @@
 				E4991166174E5CC300741B6D /* rar.cpp in Sources */,
 				E4991167174E5CC300741B6D /* rarvm.cpp in Sources */,
 				E4991168174E5CC300741B6D /* rawread.cpp in Sources */,
+				68120E571C6460E400A95D39 /* GUIConfigurationWizard.cpp in Sources */,
 				E4991169174E5CC300741B6D /* rdwrfn.cpp in Sources */,
 				E499116A174E5CC300741B6D /* recvol.cpp in Sources */,
+				68120E4B1C6460DA00A95D39 /* GUIScalarFeatureButton.cpp in Sources */,
 				E499116B174E5CC300741B6D /* resource.cpp in Sources */,
 				E499116C174E5CC300741B6D /* rijndael.cpp in Sources */,
 				E499116D174E5CC300741B6D /* rs.cpp in Sources */,
@@ -10602,6 +10687,7 @@
 				E49911F5174E5D4500741B6D /* DVDAudio.cpp in Sources */,
 				E49911F6174E5D4500741B6D /* DVDClock.cpp in Sources */,
 				E49911F7174E5D4500741B6D /* DVDDemuxSPU.cpp in Sources */,
+				68120E451C6460DA00A95D39 /* GUIControllerButton.cpp in Sources */,
 				E49911F8174E5D4500741B6D /* DVDFileInfo.cpp in Sources */,
 				E49911F9174E5D4500741B6D /* DVDMessage.cpp in Sources */,
 				E49911FA174E5D4500741B6D /* DVDMessageQueue.cpp in Sources */,
@@ -10844,6 +10930,7 @@
 				E49912F9174E5DAD00741B6D /* GUIIncludes.cpp in Sources */,
 				E49912FA174E5DAD00741B6D /* GUIInfoTypes.cpp in Sources */,
 				E49912FB174E5DAD00741B6D /* GUIKeyboardFactory.cpp in Sources */,
+				68120E471C6460DA00A95D39 /* GUIFeatureButton.cpp in Sources */,
 				E49912FC174E5DAD00741B6D /* GUILabel.cpp in Sources */,
 				E49912FD174E5DAD00741B6D /* GUILabelControl.cpp in Sources */,
 				E49912FE174E5DAD00741B6D /* GUIListContainer.cpp in Sources */,
@@ -10908,6 +10995,7 @@
 				E499132C174E5DAD00741B6D /* TextureDX.cpp in Sources */,
 				E499132D174E5DAD00741B6D /* TextureGL.cpp in Sources */,
 				E499132E174E5DAD00741B6D /* TextureManager.cpp in Sources */,
+				68120E591C6460E400A95D39 /* GUIControllerList.cpp in Sources */,
 				E499132F174E5DAD00741B6D /* VisibleEffect.cpp in Sources */,
 				E4991330174E5DAD00741B6D /* XBTF.cpp in Sources */,
 				DFEA4B541B5271F200562321 /* ActiveAEDSPDatabase.cpp in Sources */,
@@ -10971,6 +11059,7 @@
 				DF54F8041B6580C8000FCBA4 /* ContextMenuAddon.cpp in Sources */,
 				E4991388174E5F0E00741B6D /* MusicInfoTag.cpp in Sources */,
 				E499138A174E5F0E00741B6D /* MusicInfoTagLoaderCDDA.cpp in Sources */,
+				68120E431C6460DA00A95D39 /* GUIAnalogStickButton.cpp in Sources */,
 				E499138B174E5F0E00741B6D /* MusicInfoTagLoaderDatabase.cpp in Sources */,
 				E499138C174E5F0E00741B6D /* MusicInfoTagLoaderFactory.cpp in Sources */,
 				E499138F174E5F0E00741B6D /* MusicInfoTagLoaderShn.cpp in Sources */,
@@ -11055,6 +11144,7 @@
 				E49913D8174E5F8D00741B6D /* GUIWindowPictures.cpp in Sources */,
 				E49913D9174E5F8D00741B6D /* GUIWindowSlideShow.cpp in Sources */,
 				E49913DA174E5F8D00741B6D /* Picture.cpp in Sources */,
+				68120E5B1C6460E400A95D39 /* GUIControllerWindow.cpp in Sources */,
 				E49913DB174E5F8D00741B6D /* PictureInfoLoader.cpp in Sources */,
 				E49913DC174E5F8D00741B6D /* PictureInfoTag.cpp in Sources */,
 				E49913DD174E5F8D00741B6D /* PictureThumbLoader.cpp in Sources */,
@@ -11074,6 +11164,7 @@
 				68046CF61C643EFE00F1009E /* AddonJoystickInputHandling.cpp in Sources */,
 				E49913EA174E5F9900741B6D /* PowerManager.cpp in Sources */,
 				E49913EB174E5FB000741B6D /* GUIDialogLockSettings.cpp in Sources */,
+				68120E5D1C6460E400A95D39 /* GUIFeatureList.cpp in Sources */,
 				E49913EC174E5FB000741B6D /* GUIDialogProfileSettings.cpp in Sources */,
 				E49913ED174E5FB000741B6D /* GUIWindowSettingsProfile.cpp in Sources */,
 				E49913EE174E5FB000741B6D /* Profile.cpp in Sources */,
@@ -11094,6 +11185,7 @@
 				68120E2D1C645D6A00A95D39 /* ControllerFeature.cpp in Sources */,
 				E49913FD174E5FB000741B6D /* GUIDialogPVRGroupManager.cpp in Sources */,
 				E49913FE174E5FB000741B6D /* GUIDialogPVRGuideInfo.cpp in Sources */,
+				68120E491C6460DA00A95D39 /* GUIGameController.cpp in Sources */,
 				E49913FF174E5FB000741B6D /* GUIDialogPVRGuideOSD.cpp in Sources */,
 				39C38CCB1BBFF1EE000F59F5 /* InputCodingTableKorean.cpp in Sources */,
 				E4991400174E5FB000741B6D /* GUIDialogPVRGuideSearch.cpp in Sources */,
