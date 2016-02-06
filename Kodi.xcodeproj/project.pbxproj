@@ -2813,6 +2813,7 @@
 		68120E531C6460E400A95D39 /* GUIFeatureList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIFeatureList.cpp; path = games/controllers/windows/GUIFeatureList.cpp; sourceTree = "<group>"; };
 		68120E541C6460E400A95D39 /* GUIFeatureList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIFeatureList.h; path = games/controllers/windows/GUIFeatureList.h; sourceTree = "<group>"; };
 		68120E551C6460E400A95D39 /* IConfigurationWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IConfigurationWindow.h; path = games/controllers/windows/IConfigurationWindow.h; sourceTree = "<group>"; };
+		6832280F1C65B0A80022E979 /* IKeyboardHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IKeyboardHandler.h; path = keyboard/IKeyboardHandler.h; sourceTree = "<group>"; };
 		68B27C121C403881002EB93F /* GenericJoystickFeatureHandling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericJoystickFeatureHandling.cpp; path = joysticks/generic/GenericJoystickFeatureHandling.cpp; sourceTree = "<group>"; };
 		68B27C131C403881002EB93F /* GenericJoystickFeatureHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericJoystickFeatureHandling.h; path = joysticks/generic/GenericJoystickFeatureHandling.h; sourceTree = "<group>"; };
 		68BAD4741C6D29300074FF4C /* DefaultJoystick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DefaultJoystick.cpp; path = joysticks/DefaultJoystick.cpp; sourceTree = "<group>"; };
@@ -5383,6 +5384,7 @@
 			isa = PBXGroup;
 			children = (
 				68034B7F1C3C9E4900289C39 /* joysticks */,
+				6832280D1C65B0800022E979 /* keyboard */,
 				E4991332174E5E5C00741B6D /* touch */,
 				18B7C8CB12942546009E7A26 /* ButtonTranslator.cpp */,
 				18B7C8CC12942546009E7A26 /* ButtonTranslator.h */,
@@ -6183,6 +6185,14 @@
 				68120E411C6460DA00A95D39 /* GUIScalarFeatureButton.h */,
 			);
 			name = guicontrols;
+			sourceTree = "<group>";
+		};
+		6832280D1C65B0800022E979 /* keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				6832280F1C65B0A80022E979 /* IKeyboardHandler.h */,
+			);
+			name = keyboard;
 			sourceTree = "<group>";
 		};
 		7C14096E18322476009F9411 /* lib */ = {
