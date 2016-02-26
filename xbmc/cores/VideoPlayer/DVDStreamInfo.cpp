@@ -52,6 +52,7 @@ void CDVDStreamInfo::Clear()
   extradata = NULL;
   extrasize = 0;
 
+  pixfmt   = AV_PIX_FMT_NONE;
   fpsscale = 0;
   fpsrate  = 0;
   rfpsscale= 0;
@@ -98,7 +99,8 @@ bool CDVDStreamInfo::Equal(const CDVDStreamInfo& right, bool withextradata)
   }
 
   // VIDEO
-  if( fpsscale != right.fpsscale
+  if( pixfmt   != right.pixfmt
+  ||  fpsscale != right.fpsscale
   ||  fpsrate  != right.fpsrate
   ||  rfpsscale!= right.rfpsscale
   ||  rfpsrate != right.rfpsrate
@@ -164,6 +166,7 @@ void CDVDStreamInfo::Assign(const CDVDStreamInfo& right, bool withextradata)
   }
 
   // VIDEO
+  pixfmt   = right.pixfmt;
   fpsscale = right.fpsscale;
   fpsrate  = right.fpsrate;
   rfpsscale= right.rfpsscale;
@@ -228,6 +231,7 @@ void CDVDStreamInfo::Assign(const CDemuxStream& right, bool withextradata)
   else if(  right.type == STREAM_VIDEO )
   {
     const CDemuxStreamVideo *stream = static_cast<const CDemuxStreamVideo*>(&right);
+    pixfmt    = stream->pixfmt;
     fpsscale  = stream->iFpsScale;
     fpsrate   = stream->iFpsRate;
     rfpsscale = stream->irFpsScale;
