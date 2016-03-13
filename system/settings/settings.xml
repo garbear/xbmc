@@ -1887,6 +1887,34 @@
       </group>
     </category>
   </section>
+  <section id="games" label="15016" help="35200">
+    <category id="gamesinput" label="15087" help="35201">
+      <group id="1">
+        <setting id="gamesinput.controllerconfig" type="action" label="35063" help="35064">
+          <level>0</level>
+          <dependencies>
+            <dependency type="enable" on="property" name="SupportsPeripheralControllers" />
+          </dependencies>
+          <control type="button" format="action" />
+        </setting>
+        <setting id="gamesinput.testrumble" type="action" label="35051" help="35052">
+          <level>2</level>
+          <dependencies>
+            <dependency type="enable" on="property" name="HasRumbleFeature" />
+          </dependencies>
+          <control type="button" format="action" />
+        </setting>
+        <setting id="gamesinput.controllerpoweroff" type="boolean" label="35088" help="35089">
+          <level>0</level>
+          <default>false</default>
+          <dependencies>
+            <dependency type="enable" on="property" name="SupportsPeripheralControllers" />
+          </dependencies>
+          <control type="toggle" />
+        </setting>
+      </group>
+    </category>
+  </section>
   <section id="system" label="13000" help="36349">
     <category id="display" label="14220" help="36603">
       <group id="1" label="16000">
@@ -2966,28 +2994,6 @@
           <level>0</level>
           <control type="toggle" />
           <default>true</default>
-        </setting>
-        <setting id="input.controllerconfig" type="action" label="35063" help="35064">
-          <level>0</level>
-          <dependencies>
-            <dependency type="enable" on="property" name="SupportsPeripheralControllers" />
-          </dependencies>
-          <control type="button" format="action" />
-        </setting>
-        <setting id="input.testrumble" type="action" label="35051" help="35052">
-          <level>2</level>
-          <dependencies>
-            <dependency type="enable" on="property" name="HasRumbleFeature" />
-          </dependencies>
-          <control type="button" format="action" />
-        </setting>
-        <setting id="input.controllerpoweroff" type="boolean" label="35088" help="35089">
-          <level>0</level>
-          <default>false</default>
-          <dependencies>
-            <dependency type="enable" on="property" name="SupportsPeripheralControllers" />
-          </dependencies>
-          <control type="toggle" />
         </setting>
       </group>
       <group id="3" label="14275">		

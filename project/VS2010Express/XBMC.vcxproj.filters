@@ -3458,6 +3458,9 @@
     <ClCompile Include="..\..\xbmc\input\joysticks\RumbleGenerator.cpp">
       <Filter>input\joysticks</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\GameSettings.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\xbmc\win32\pch.h">
@@ -6721,6 +6724,9 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\input\joysticks\RumbleGenerator.h">
       <Filter>input\joysticks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\GameSettings.h">
+      <Filter>games</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

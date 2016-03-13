@@ -327,9 +327,6 @@ public:
   static const std::string SETTING_AUDIOOUTPUT_VOLUMESTEPS;
   static const std::string SETTING_INPUT_PERIPHERALS;
   static const std::string SETTING_INPUT_ENABLEMOUSE;
-  static const std::string SETTING_INPUT_CONTROLLERCONFIG;
-  static const std::string SETTING_INPUT_TESTRUMBLE;
-  static const std::string SETTING_INPUT_CONTROLLERPOWEROFF;
   static const std::string SETTING_INPUT_APPLEREMOTEMODE;
   static const std::string SETTING_INPUT_APPLEREMOTEALWAYSON;
   static const std::string SETTING_INPUT_APPLEREMOTESEQUENCETIME;
@@ -372,6 +369,9 @@ public:
   static const std::string SETTING_ADDONS_ALLOW_UNKNOWN_SOURCES;
   static const std::string SETTING_GENERAL_ADDONFOREIGNFILTER;
   static const std::string SETTING_GENERAL_ADDONBROKENFILTER;
+  static const std::string SETTING_GAMES_CONTROLLERCONFIG;
+  static const std::string SETTING_GAMES_TESTRUMBLE;
+  static const std::string SETTING_GAMES_CONTROLLERPOWEROFF;
 
   /*!
    \brief Creates a new settings wrapper around a new settings manager.

@@ -897,10 +897,6 @@ void CPeripherals::OnSettingAction(const CSetting *setting)
       }
     } while (pDialog->IsConfirmed());
   }
-  else if (settingId == CSettings::SETTING_INPUT_CONTROLLERCONFIG)
-    g_windowManager.ActivateWindow(WINDOW_DIALOG_GAME_CONTROLLERS);
-  else if (settingId == CSettings::SETTING_INPUT_TESTRUMBLE)
-    TestFeature(FEATURE_RUMBLE);
 }
 
 void CPeripherals::OnApplicationMessage(KODI::MESSAGING::ThreadMessage* pMsg)
