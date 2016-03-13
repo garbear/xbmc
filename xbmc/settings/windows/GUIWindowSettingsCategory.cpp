@@ -39,6 +39,7 @@
 #define SETTINGS_SERVICE                WINDOW_SETTINGS_SERVICE - WINDOW_SETTINGS_START
 #define SETTINGS_APPEARANCE             WINDOW_SETTINGS_APPEARANCE - WINDOW_SETTINGS_START
 #define SETTINGS_PVR                    WINDOW_SETTINGS_MYPVR - WINDOW_SETTINGS_START
+#define SETTINGS_GAMES                  WINDOW_SETTINGS_MYGAMES - WINDOW_SETTINGS_START
 
 #define CONTRL_BTN_LEVELS               20
 
@@ -55,8 +56,9 @@ static const SettingGroup s_settingGroupMap[] = { { SETTINGS_PICTURES,    "pictu
                                                   { SETTINGS_VIDEOS,      "videos" },
                                                   { SETTINGS_SERVICE,     "services" },
                                                   { SETTINGS_APPEARANCE,  "appearance" },
-                                                  { SETTINGS_PVR,         "pvr" } };
-                                                  
+                                                  { SETTINGS_PVR,         "pvr" },
+                                                  { SETTINGS_GAMES,       "games" } };
+
 #define SettingGroupSize sizeof(s_settingGroupMap) / sizeof(SettingGroup)
 
 CGUIWindowSettingsCategory::CGUIWindowSettingsCategory()
@@ -78,6 +80,7 @@ CGUIWindowSettingsCategory::CGUIWindowSettingsCategory()
   m_idRange.push_back(WINDOW_SETTINGS_SERVICE);
   m_idRange.push_back(WINDOW_SETTINGS_APPEARANCE);
   m_idRange.push_back(WINDOW_SETTINGS_MYPVR);
+  m_idRange.push_back(WINDOW_SETTINGS_MYGAMES);
 }
 
 CGUIWindowSettingsCategory::~CGUIWindowSettingsCategory()

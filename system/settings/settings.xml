@@ -1943,6 +1943,26 @@
       </group>
     </category>
   </section>
+  <section id="games" label="15016" help="35200">
+    <category id="gamesinput" label="15087" help="35201">
+      <group id="1">
+        <setting id="gamesinput.controllerconfig" type="action" label="35063" help="35064">
+          <level>0</level>
+          <dependencies>
+            <dependency type="enable" on="property" name="SupportsPeripheralControllers" />
+          </dependencies>
+          <control type="button" format="action" />
+        </setting>
+        <setting id="gamesinput.testrumble" type="action" label="35051" help="35052">
+          <level>2</level>
+          <dependencies>
+            <dependency type="enable" on="property" name="HasRumbleFeature" />
+          </dependencies>
+          <control type="button" format="action" />
+        </setting>
+      </group>
+    </category>
+  </section>
   <section id="pictures" label="1" help="36304">
     <category id="pictures" label="14081" help="36305">
       <group id="1">
@@ -2737,20 +2757,6 @@
           <level>0</level>
           <control type="toggle" />
           <default>true</default>
-        </setting>
-        <setting id="input.controllerconfig" type="action" label="35063" help="35064">
-          <level>0</level>
-          <dependencies>
-            <dependency type="enable" on="property" name="SupportsPeripheralControllers" />
-          </dependencies>
-          <control type="button" format="action" />
-        </setting>
-        <setting id="input.testrumble" type="action" label="35051" help="35052">
-          <level>2</level>
-          <dependencies>
-            <dependency type="enable" on="property" name="HasRumbleFeature" />
-          </dependencies>
-          <control type="button" format="action" />
         </setting>
       </group>
     </category>

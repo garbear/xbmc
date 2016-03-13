@@ -405,6 +405,7 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\filesystem\MultiPathFile.cpp" />
     <ClCompile Include="..\..\xbmc\filesystem\MusicDatabaseDirectory.cpp" />
     <ClCompile Include="..\..\xbmc\filesystem\MusicDatabaseDirectory\DirectoryNodeGrouped.cpp" />
+    <ClCompile Include="..\..\xbmc\games\GameSettings.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\DefaultJoystick.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.cpp" />
@@ -1110,6 +1111,7 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\filesystem\DAVFile.h" />
     <ClInclude Include="..\..\xbmc\filesystem\ImageFile.h" />
     <ClInclude Include="..\..\xbmc\filesystem\MusicDatabaseDirectory\DirectoryNodeGrouped.h" />
+    <ClInclude Include="..\..\xbmc\games\GameSettings.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\DefaultJoystick.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.h" />

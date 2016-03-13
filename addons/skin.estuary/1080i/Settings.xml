@@ -119,9 +119,9 @@
 					<icon>icons/settings/pictures.png</icon>
 				</item>
 				<item>
-					<label>$LOCALIZE[8]</label>
-					<onclick>ActivateWindow(WeatherSettings)</onclick>
-					<icon>icons/settings/weather.png</icon>
+					<label>$LOCALIZE[15016]</label>
+					<onclick>ActivateWindow(GameSettings)</onclick>
+					<icon>icons/settings/games.png</icon>
 				</item>
 				<item>
 					<label>$LOCALIZE[14036]</label>
@@ -149,9 +149,9 @@
 					<icon>icons/settings/sysinfo.png</icon>
 				</item>
 				<item>
-					<label>$LOCALIZE[20077]</label>
-					<onclick>ActivateWindow(SkinSettings)</onclick>
-					<icon>icons/settings/skin.png</icon>
+					<label>$LOCALIZE[8]</label>
+					<onclick>ActivateWindow(WeatherSettings)</onclick>
+					<icon>icons/settings/weather.png</icon>
 				</item>
 			</content>
 		</control>

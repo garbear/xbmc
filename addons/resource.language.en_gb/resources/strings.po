@@ -7544,6 +7544,7 @@ msgctxt "#15015"
 msgid "Remove"
 msgstr ""
 
+#: system/settings/settings.xml
 #: xbmc/settings/dialogs/GUIDialogAudioDSPSettings.cpp
 msgctxt "#15016"
 msgid "Games"
@@ -7810,6 +7811,7 @@ msgid "Post-process"
 msgstr ""
 
 #. Audio DSP process chain indication
+#: system/settings.xml
 #: xbmc/settings/dialogs/GUIDialogAudioDSPSettings.cpp
 msgctxt "#15087"
 msgid "Input"
@@ -15716,7 +15718,19 @@ msgctxt "#35102"
 msgid "Disable joystick when this device is present"
 msgstr ""
 
-#empty strings from id 35103 to 35504
+#empty strings from id 35103 to 35199
+
+#: system/settings/settings.xml
+msgctxt "#35200"
+msgid "ALL YOUR BASE ARE BELONG[CR]TO US"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35201"
+msgid "Configure input for game add-ons."
+msgstr ""
+
+#empty strings from id 35202 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/addons/AddonCallbacksPVR.cpp
