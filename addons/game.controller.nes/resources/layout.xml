@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout name="NES" label="30000" image="layout.png" costmap="button-costmap.png" width="558" height="262">
+	<category name="face" label="35074">
+		<button name="a" type="digital" label="30001" geometry="circle" x="466" y="164" radius="25"/>
+		<button name="b" type="digital" label="30002" geometry="circle" x="400" y="164" radius="25"/>
+		<button name="start" type="digital" label="30003" geometry="rectangle" x1="287" y1="175" x2="335" y2="189"/>
+		<button name="select" type="digital" label="30004" geometry="rectangle" x1="223" y1="175" x2="271" y2="189"/>
+		<button name="up" type="digital" label="30005" geometry="rectangle" x1="101" y1="92" x2="141" y2="128"/>
+		<button name="right" type="digital" label="30007" geometry="rectangle" x1="139" y1="126" x2="172" y2="162"/>
+		<button name="down" type="digital" label="30006" geometry="rectangle" x1="101" y1="160" x2="141" y2="194"/>
+		<button name="left" type="digital" label="30008" geometry="rectangle" x1="70" y1="126" x2="103" y2="162"/>
+	</category>
+</layout>

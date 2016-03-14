@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout name="GBA" label="30000" image="layout.png">
+  <category name="face" label="35074">
+    <button name="a" type="digital" label="30001"/>
+    <button name="b" type="digital" label="30002"/>
+    <button name="start" type="digital" label="30003"/>
+    <button name="select" type="digital" label="30004"/>
+    <button name="up" type="digital" label="30005" direction="up"/>
+    <button name="right" type="digital" label="30007" direction="right"/>
+    <button name="down" type="digital" label="30006" direction="down"/>
+    <button name="left" type="digital" label="30008" direction="left"/>
+  </category>
+  <category name="shoulder" label="35075">
+    <button name="leftbumper" type="digital" label="30009"/>
+    <button name="rightbumper" type="digital" label="30010"/>
+  </category>
+</layout>
