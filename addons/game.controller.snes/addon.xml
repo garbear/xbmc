@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.snes"
+        name="SNES Controller"
+        version="1.0.3"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary>SNES controller</summary>
+        <description>The SNES controller adds two additional face buttons (X and Y), as well as two shoulder buttons, to the NES iteration.
+
+Image credit: Alphathon (alphathon.deviantart.com)</description>
+        <disclaimer></disclaimer>
+        <platform>all</platform>
+        <nofanart>true</nofanart>
+    </extension>
+</addon>

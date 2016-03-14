@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.gba"
+        name="Game Boy Advance"
+        version="1.0.3"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary>Game Boy Advance</summary>
+        <description>The Game Boy Advance is a 32-bit handheld video game console developed, manufactured and marketed by Nintendo.
+
+Image credit: ThaFake (thafake.deviantart.com)</description>
+        <disclaimer></disclaimer>
+        <platform>all</platform>
+        <nofanart>true</nofanart>
+    </extension>
+</addon>
