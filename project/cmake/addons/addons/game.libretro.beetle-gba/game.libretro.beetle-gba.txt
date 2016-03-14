@@ -1,0 +1,1 @@
+game.libretro.beetle-gba https://github.com/kodi-game/game.libretro.beetle-gba master
