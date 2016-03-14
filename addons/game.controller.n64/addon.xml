@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.n64"
+        name="N64 Controller"
+        version="1.0.3"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary>Nintendo 64 controller</summary>
+        <description>The Nintendo 64 controller, released in 1996, features ten buttons, a D-pad and an analog stick, all laid out in an "M" shape.
+
+Image credit: Andrew Moore</description>
+        <disclaimer></disclaimer>
+        <platform>all</platform>
+        <nofanart>true</nofanart>
+    </extension>
+</addon>
