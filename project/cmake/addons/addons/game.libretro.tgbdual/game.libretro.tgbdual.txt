@@ -1,0 +1,1 @@
+game.libretro.tgbdual https://github.com/kodi-game/game.libretro.tgbdual master

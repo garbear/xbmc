@@ -1,0 +1,1 @@
+game.libretro.scummvm https://github.com/kodi-game/game.libretro.scummvm master

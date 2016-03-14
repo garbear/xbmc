@@ -1,0 +1,1 @@
+game.libretro.vecx https://github.com/kodi-game/game.libretro.vecx master

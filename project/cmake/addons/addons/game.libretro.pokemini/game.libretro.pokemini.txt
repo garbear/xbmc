@@ -1,0 +1,1 @@
+game.libretro.pokemini https://github.com/kodi-game/game.libretro.pokemini master

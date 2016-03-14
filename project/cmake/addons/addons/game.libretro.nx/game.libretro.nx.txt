@@ -1,0 +1,1 @@
+game.libretro.nx https://github.com/kodi-game/game.libretro.nx master

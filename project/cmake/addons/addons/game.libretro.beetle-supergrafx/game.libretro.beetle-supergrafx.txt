@@ -1,0 +1,1 @@
+game.libretro.beetle-supergrafx https://github.com/kodi-game/game.libretro.beetle-supergrafx master
