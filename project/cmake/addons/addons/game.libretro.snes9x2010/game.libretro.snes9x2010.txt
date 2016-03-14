@@ -1,0 +1,1 @@
+game.libretro.snes9x2010 https://github.com/kodi-game/game.libretro.snes9x2010 master

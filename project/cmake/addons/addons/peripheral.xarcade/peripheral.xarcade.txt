@@ -1,0 +1,1 @@
+peripheral.xarcade https://github.com/kodi-game/peripheral.xarcade master
