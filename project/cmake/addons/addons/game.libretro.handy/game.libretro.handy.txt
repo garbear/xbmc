@@ -1,0 +1,1 @@
+game.libretro.handy https://github.com/kodi-game/game.libretro.handy master

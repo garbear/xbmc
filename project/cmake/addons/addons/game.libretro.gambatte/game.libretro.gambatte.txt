@@ -1,0 +1,1 @@
+game.libretro.gambatte https://github.com/kodi-game/game.libretro.gambatte master
