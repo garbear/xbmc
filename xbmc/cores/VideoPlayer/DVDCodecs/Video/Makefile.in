@@ -3,6 +3,7 @@ INCLUDES+=-I@abs_top_srcdir@/xbmc/cores/VideoPlayer
 SRCS  = DVDVideoCodec.cpp
 SRCS += DVDVideoCodecFFmpeg.cpp
 SRCS += DVDVideoPPFFmpeg.cpp
+SRCS += PixelConverter.cpp
 
 ifeq (@USE_VDPAU@,1)
 SRCS += VDPAU.cpp
