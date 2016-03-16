@@ -463,6 +463,12 @@
     <Filter Include="games\ports">
       <UniqueIdentifier>{17fd93e7-2caf-416a-8328-3ede747ce102}</UniqueIdentifier>
     </Filter>
+    <Filter Include="addons\binary\interfaces\api1\Game">
+      <UniqueIdentifier>{174a697b-1d92-4acd-bd56-52b28586c2be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="games\windows">
+      <UniqueIdentifier>{3d729da4-cbee-4da5-9173-d5cf836efd39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3501,9 +3507,6 @@
     <ClCompile Include="..\..\xbmc\games\tags\GameInfoTag.cpp">
       <Filter>games\tags</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xbmc\addons\AddonCallbacksGame.cpp">
-      <Filter>addons</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xbmc\games\GameFileAutoLauncher.cpp">
       <Filter>games</Filter>
     </ClCompile>
@@ -3527,6 +3530,27 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\games\ports\PortMapper.cpp">
       <Filter>games\ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\addons\binary\interfaces\api1\Game\AddonCallbacksGame.cpp">
+      <Filter>addons\binary\interfaces\api1\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\VideoPlayer\DVDCodecs\Video\PixelConverter.cpp">
+      <Filter>cores\VideoPlayer\DVDCodecs\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\VideoPlayer\DVDInputStreams\InputStreamGame.cpp">
+      <Filter>cores\VideoPlayer\DVDInputStreams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\windows\GUIViewStateWindowGames.cpp">
+      <Filter>games\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\windows\GUIWindowGames.cpp">
+      <Filter>games\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\VideoPlayer\DVDDemuxers\DVDDemuxGame.cpp">
+      <Filter>cores\VideoPlayer\DVDDemuxers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\GameSettings.cpp">
+      <Filter>games</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6822,9 +6846,6 @@
     <ClInclude Include="..\..\xbmc\games\tags\GameInfoTag.h">
       <Filter>games\tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xbmc\addons\AddonCallbacksGame.h">
-      <Filter>addons</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xbmc\addons\DllGameClient.h">
       <Filter>addons</Filter>
     </ClInclude>
@@ -6854,6 +6875,36 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\ports\PortMapper.h">
       <Filter>games\ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\binary\interfaces\api1\Game\AddonCallbacksGame.h">
+      <Filter>addons\binary\interfaces\api1\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\kodi-addon-dev-kit\include\kodi\kodi_game_callbacks.h">
+      <Filter>addons\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\kodi-addon-dev-kit\include\kodi\kodi_game_dll.h">
+      <Filter>addons\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\kodi-addon-dev-kit\include\kodi\kodi_game_types.h">
+      <Filter>addons\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\VideoPlayer\DVDCodecs\Video\PixelConverter.h">
+      <Filter>cores\VideoPlayer\DVDCodecs\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\VideoPlayer\DVDInputStreams\InputStreamGame.h">
+      <Filter>cores\VideoPlayer\DVDInputStreams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\windows\GUIWindowGames.h">
+      <Filter>games\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\windows\GUIViewStateWindowGames.h">
+      <Filter>games\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\VideoPlayer\DVDDemuxers\DVDDemuxGame.h">
+      <Filter>cores\VideoPlayer\DVDDemuxers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\GameSettings.h">
+      <Filter>games</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
