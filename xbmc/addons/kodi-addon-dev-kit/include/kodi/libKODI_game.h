@@ -57,7 +57,7 @@ public:
     GAME_hw_get_proc_address(nullptr),
     GAME_open_port(nullptr),
     GAME_close_port(nullptr),
-    GAME_rumble_set_state(nullptr),
+    GAME_input_event(nullptr),
     m_handle(nullptr),
     m_callbacks(nullptr),
     m_libKODI_game(nullptr)
@@ -124,7 +124,7 @@ public:
       if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_hw_get_proc_address)) throw false;
       if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_open_port)) throw false;
       if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_close_port)) throw false;
-      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_rumble_set_state)) throw false;
+      if (!GAME_REGISTER_SYMBOL(m_libKODI_game, GAME_input_event)) throw false;
     }
     catch (const bool& bSuccess)
     {
@@ -196,9 +196,9 @@ public:
     return GAME_close_port(m_handle, m_callbacks, port);
   }
 
-  void RumbleSetState(unsigned int port, GAME_RUMBLE_EFFECT effect, float strength)
+  bool InputEvent(const game_input_event& event)
   {
-    return GAME_rumble_set_state(m_handle, m_callbacks, port, effect, strength);
+    return GAME_input_event(m_handle, m_callbacks, &event);
   }
 
 protected:
@@ -216,7 +216,7 @@ protected:
   game_proc_address_t (*GAME_hw_get_proc_address)(void* handle, CB_GameLib* cb, const char*);
   bool (*GAME_open_port)(void* handle, CB_GameLib* cb, unsigned int);
   void (*GAME_close_port)(void* handle, CB_GameLib* cb, unsigned int);
-  void (*GAME_rumble_set_state)(void* handle, CB_GameLib* cb, unsigned int, GAME_RUMBLE_EFFECT, float);
+  bool (*GAME_input_event)(void* handle, CB_GameLib* cb, const game_input_event* event);
 
 private:
   void*        m_handle;

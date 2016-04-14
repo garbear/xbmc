@@ -21,6 +21,7 @@
 #include "GameClientInput.h"
 #include "GameClient.h"
 #include "games/controllers/Controller.h"
+#include "input/joysticks/IInputReceiver.h"
 
 #include <algorithm>
 #include <assert.h>
@@ -77,4 +78,14 @@ bool CGameClientInput::OnAnalogStickMotion(const std::string& feature, float x, 
 bool CGameClientInput::OnAccelerometerMotion(const std::string& feature, float x, float y, float z)
 {
   return m_addon->OnAccelerometerMotion(m_port, feature, x, y, z);
+}
+
+bool CGameClientInput::SetRumble(const std::string& feature, float magnitude)
+{
+  bool bHandled = false;
+
+  if (InputReceiver())
+    bHandled = InputReceiver()->SetRumbleState(feature, magnitude);
+
+  return bHandled;
 }

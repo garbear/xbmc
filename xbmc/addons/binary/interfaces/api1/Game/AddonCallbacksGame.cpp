@@ -55,7 +55,7 @@ CAddonCallbacksGame::CAddonCallbacksGame(CAddon* addon) :
   m_callbacks->HwGetProcAddress               = HwGetProcAddress;
   m_callbacks->OpenPort                       = OpenPort;
   m_callbacks->ClosePort                      = ClosePort;
-  m_callbacks->RumbleSetState                 = RumbleSetState;
+  m_callbacks->InputEvent                     = InputEvent;
 }
 
 CAddonCallbacksGame::~CAddonCallbacksGame()
@@ -256,9 +256,16 @@ void CAddonCallbacksGame::ClosePort(void* addonData, unsigned int port)
   gameClient->ClosePort(port);
 }
 
-void CAddonCallbacksGame::RumbleSetState(void* addonData, unsigned int port, GAME_RUMBLE_EFFECT effect, float strength)
+bool CAddonCallbacksGame::InputEvent(void* addonData, const game_input_event* event)
 {
-  // TODO
+  CGameClient* gameClient = GetGameClient(addonData, __FUNCTION__);
+  if (!gameClient)
+    return false;
+
+  if (event == nullptr)
+    return false;
+
+  return gameClient->ReceiveInputEvent(*event);
 }
 
 } /* namespace Game */

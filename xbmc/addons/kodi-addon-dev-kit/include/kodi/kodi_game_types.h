@@ -21,10 +21,10 @@
 #define KODI_GAME_TYPES_H_
 
 /* current game API version */
-#define GAME_API_VERSION                "1.0.16"
+#define GAME_API_VERSION                "1.0.17"
 
 /* min. game API version */
-#define GAME_MIN_API_VERSION            "1.0.16"
+#define GAME_MIN_API_VERSION            "1.0.17"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -116,6 +116,7 @@ typedef enum GAME_INPUT_EVENT_SOURCE
   GAME_INPUT_EVENT_KEY,
   GAME_INPUT_EVENT_RELATIVE_POINTER,
   GAME_INPUT_EVENT_ABSOLUTE_POINTER,
+  GAME_INPUT_EVENT_MOTOR,
 } GAME_INPUT_EVENT_SOURCE;
 
 /*! Returned from game_get_region() */
@@ -208,12 +209,6 @@ typedef enum GAME_SIMD
   GAME_SIMD_VFPU                     = (1 << 13),
 } GAME_SIMD;
 
-typedef enum GAME_RUMBLE_EFFECT
-{
-  GAME_RUMBLE_STRONG,
-  GAME_RUMBLE_WEAK,
-} GAME_RUMBLE_EFFECT;
-
 // TODO
 typedef enum GAME_HW_FRAME_BUFFER
 {
@@ -249,6 +244,7 @@ typedef struct game_controller
   unsigned int key_count;
   unsigned int rel_pointer_count;
   unsigned int abs_pointer_count;
+  unsigned int motor_count;
 } ATTRIBUTE_PACKED game_controller;
 
 typedef struct game_digital_button_event
@@ -294,6 +290,11 @@ typedef struct game_abs_pointer_event
   float        y;
 } ATTRIBUTE_PACKED game_abs_pointer_event;
 
+typedef struct game_motor_event
+{
+  float        magnitude;
+} ATTRIBUTE_PACKED game_motor_event;
+
 typedef struct game_input_event
 {
   GAME_INPUT_EVENT_SOURCE type;
@@ -309,6 +310,7 @@ typedef struct game_input_event
     struct game_key_event            key;
     struct game_rel_pointer_event    rel_pointer;
     struct game_abs_pointer_event    abs_pointer;
+    struct game_motor_event          motor;
   };
 } ATTRIBUTE_PACKED game_input_event;
 

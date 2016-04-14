@@ -57,7 +57,7 @@ public:
   static game_proc_address_t HwGetProcAddress(void* addonData, const char* sym);
   static bool OpenPort(void* addonData, unsigned int port);
   static void ClosePort(void* addonData, unsigned int port);
-  static void RumbleSetState(void* addonData, unsigned int port, GAME_RUMBLE_EFFECT effect, float strength);
+  static bool InputEvent(void* addonData, const game_input_event* event);
 
 private:
   static GAME::CGameClient* GetGameClient(void* addonData, const char* strFunction);

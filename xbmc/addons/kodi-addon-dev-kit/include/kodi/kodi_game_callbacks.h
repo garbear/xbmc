@@ -119,13 +119,16 @@ typedef struct CB_GameLib
   void (*ClosePort)(void* addonData, unsigned int port);
 
   /*!
-   * \brief Set the rumble state of a controller
-   *
-   * \param port The number passed when opening the port
-   * \param effect Apply the rumble to the strong motor or the weak motor
-   * \param strength The magnitude of the feedback in the closed interval [0.0, 1.0]
-   */
-  void (*RumbleSetState)(void* addonData, unsigned int port, GAME_RUMBLE_EFFECT effect, float strength);
+  * \brief Notify the port of an input event
+  *
+  * \param event The input event
+  *
+  * Input events can arrive for the following sources:
+  *   - GAME_INPUT_EVENT_RUMBLE
+  *
+  * \return true if the event was handled, false otherwise
+  */
+  bool (*InputEvent)(void* addonData, const game_input_event* event);
 
 } CB_GameLib;
 

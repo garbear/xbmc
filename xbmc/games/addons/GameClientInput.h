@@ -31,7 +31,7 @@ namespace GAME
   public:
     CGameClientInput(CGameClient* addon, int port, const ControllerPtr& controller);
 
-    // Implementation of IJoystickInputHandler
+    // Implementation of IInputHandler
     virtual std::string ControllerID(void) const override;
     virtual bool HasFeature(const std::string& feature) const override;
     virtual JOYSTICK::INPUT_TYPE GetInputType(const std::string& feature) const override;
@@ -40,7 +40,7 @@ namespace GAME
     virtual bool OnAnalogStickMotion(const std::string& feature, float x, float y) override;
     virtual bool OnAccelerometerMotion(const std::string& feature, float x, float y, float z) override;
 
-    //const ControllerPtr& Controller(void) const { return m_controller; }
+    bool SetRumble(const std::string& feature, float magnitude);
 
   private:
     CGameClient* const  m_addon;

@@ -145,11 +145,11 @@ DLLEXPORT void GAME_close_port(AddonCB* frontend, CB_GameLib* cb, unsigned int p
   return cb->ClosePort(frontend->addonData, port);
 }
 
-DLLEXPORT void GAME_rumble_set_state(AddonCB* frontend, CB_GameLib* cb, unsigned int port, GAME_RUMBLE_EFFECT effect, float strength)
+DLLEXPORT bool GAME_input_event(AddonCB* frontend, CB_GameLib* cb, const game_input_event* event)
 {
   if (frontend == NULL || cb == NULL)
-    return;
-  return cb->RumbleSetState(frontend->addonData, port, effect, strength);
+    return false;
+  return cb->InputEvent(frontend->addonData, event);
 }
 
 #ifdef __cplusplus

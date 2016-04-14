@@ -406,7 +406,7 @@ void CGameClient::CloseFile()
     m_inputRateHandle->Release();
     m_inputRateHandle.reset();
   }
-  m_demuxer = NULL;
+  m_demuxer = nullptr;
 
   FlushDemux();
 }
@@ -608,12 +608,12 @@ void CGameClient::ClosePort(unsigned int port)
   if (port >= m_controllers.size())
     return;
 
-  if (m_controllers[port] != NULL)
+  if (m_controllers[port] != nullptr)
   {
     CPortManager::GetInstance().ClosePort(m_controllers[port]);
 
     delete m_controllers[port];
-    m_controllers[port] = NULL;
+    m_controllers[port] = nullptr;
 
     UpdatePort(port, CController::EmptyPtr);
   }
@@ -635,13 +635,14 @@ void CGameClient::UpdatePort(unsigned int port, const ControllerPtr& controller)
     controllerStruct.key_count            = 0; // TODO
     controllerStruct.rel_pointer_count    = 0; // TODO
     controllerStruct.abs_pointer_count    = 0; // TODO
+    controllerStruct.motor_count          = controller->Layout().FeatureCount(FEATURE_TYPE::MOTOR);
 
     try { m_pStruct->UpdatePort(port, true, &controllerStruct); }
     catch (...) { LogException("UpdatePort()"); }
   }
   else
   {
-    try { m_pStruct->UpdatePort(port, false, NULL); }
+    try { m_pStruct->UpdatePort(port, false, nullptr); }
     catch (...) { LogException("UpdatePort()"); }
   }
 }
@@ -795,6 +796,33 @@ bool CGameClient::OnAccelerometerMotion(int port, const std::string& feature, fl
 
   try { bHandled = m_pStruct->InputEvent(&event); }
   catch (...) { LogException("InputEvent()"); }
+
+  return bHandled;
+}
+
+bool CGameClient::ReceiveInputEvent(const game_input_event& event)
+{
+  bool bHandled = false;
+
+  switch (event.type)
+  {
+  case GAME_INPUT_EVENT_MOTOR:
+    if (event.feature_name)
+      bHandled = SetRumble(event.port, event.feature_name, event.motor.magnitude);
+    break;
+  default:
+    break;
+  }
+
+  return bHandled;
+}
+
+bool CGameClient::SetRumble(unsigned int port, const std::string& feature, float magnitude)
+{
+  bool bHandled = false;
+
+  if (port < m_controllers.size() && m_controllers[port] != nullptr)
+    bHandled = m_controllers[port]->SetRumble(feature, magnitude);
 
   return bHandled;
 }
