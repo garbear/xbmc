@@ -163,12 +163,11 @@ bool HasFeature(const char* controller_id, const char* feature_name);
 /*!
  * \brief Notify the add-on of an input event
  *
- * \param port The port number passed to OpenPort()
  * \param event The input event
  *
  * \return true if the event was handled, false otherwise
  */
-bool InputEvent(unsigned int port, const game_input_event* event);
+bool InputEvent(const game_input_event* event);
 
 // --- Serialization operations ------------------------------------------------
 
