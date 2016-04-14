@@ -407,6 +407,7 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\filesystem\MusicDatabaseDirectory\DirectoryNodeGrouped.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\DefaultJoystick.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.cpp" />
+    <ClCompile Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\FeatureHandling.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\InputHandling.cpp" />
     <ClCompile Include="..\..\xbmc\music\windows\MusicFileItemListModifier.cpp" />
@@ -1110,12 +1111,15 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\filesystem\MusicDatabaseDirectory\DirectoryNodeGrouped.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\DefaultJoystick.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.h" />
+    <ClInclude Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\FeatureHandling.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\InputHandling.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IButtonMap.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IButtonMapper.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IDriverHandler.h" />
+    <ClInclude Include="..\..\xbmc\input\joysticks\IDriverReceiver.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IInputHandler.h" />
+    <ClInclude Include="..\..\xbmc\input\joysticks\IInputReceiver.h" />
     <ClInclude Include="..\..\xbmc\music\ContextMenus.h" />
     <ClInclude Include="..\..\xbmc\music\windows\MusicFileItemListModifier.h" />
     <ClInclude Include="..\..\xbmc\filesystem\OverrideDirectory.h" />
