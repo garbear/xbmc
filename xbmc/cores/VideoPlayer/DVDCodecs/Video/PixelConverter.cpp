@@ -108,6 +108,9 @@ void CPixelConverter::Dispose()
 
 int CPixelConverter::Decode(uint8_t* pData, int iSize, double dts, double pts)
 {
+  if (pData == nullptr || iSize == 0)
+    return VC_BUFFER;
+
   int ret = VC_ERROR;
 
   if (m_swsContext)
@@ -150,7 +153,7 @@ bool CPixelConverter::GetPicture(DVDVideoPicture* pDvdVideoPicture)
     pDvdVideoPicture->iLineSize[i] = m_buf->iLineSize[i];
   }
 
-  pDvdVideoPicture->iFlags         = DVP_FLAG_ALLOCATED;
+  pDvdVideoPicture->iFlags         = 0; // *not* DVP_FLAG_ALLOCATED
   pDvdVideoPicture->color_matrix   = 4; // CONF_FLAGS_YUVCOEF_BT601
   pDvdVideoPicture->color_range    = 0; // *not* CONF_FLAGS_YUV_FULLRANGE
   pDvdVideoPicture->iWidth         = m_width;
