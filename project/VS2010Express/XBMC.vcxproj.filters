@@ -3455,6 +3455,9 @@
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.cpp">
       <Filter>input\joysticks\generic</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\xbmc\input\joysticks\RumbleGenerator.cpp">
+      <Filter>input\joysticks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\xbmc\win32\pch.h">
@@ -6714,6 +6717,9 @@
       <Filter>input\joysticks\generic</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xbmc\input\joysticks\IInputReceiver.h">
+      <Filter>input\joysticks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\input\joysticks\RumbleGenerator.h">
       <Filter>input\joysticks</Filter>
     </ClInclude>
   </ItemGroup>

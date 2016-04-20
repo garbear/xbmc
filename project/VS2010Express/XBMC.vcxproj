@@ -410,6 +410,7 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\FeatureHandling.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\InputHandling.cpp" />
+    <ClCompile Include="..\..\xbmc\input\joysticks\RumbleGenerator.cpp" />
     <ClCompile Include="..\..\xbmc\music\windows\MusicFileItemListModifier.cpp" />
     <ClCompile Include="..\..\xbmc\filesystem\MusicDatabaseFile.cpp" />
     <ClCompile Include="..\..\xbmc\filesystem\MusicFileDirectory.cpp" />
@@ -1120,6 +1121,7 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\input\joysticks\IDriverReceiver.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IInputHandler.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IInputReceiver.h" />
+    <ClInclude Include="..\..\xbmc\input\joysticks\RumbleGenerator.h" />
     <ClInclude Include="..\..\xbmc\music\ContextMenus.h" />
     <ClInclude Include="..\..\xbmc\music\windows\MusicFileItemListModifier.h" />
     <ClInclude Include="..\..\xbmc\filesystem\OverrideDirectory.h" />
