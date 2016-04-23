@@ -64,7 +64,7 @@ void CGameSettings::OnSettingAction(const CSetting* setting)
   }
   else if (StringUtils::StartsWith(settingId, SETTING_GAMES_EMULATEDCONTROLLER_PREFIX))
   {
-    std::string strControllerIndex = settingId.substr(std::strlen(SETTING_GAMES_EMULATEDCONTROLLER_PREFIX));
+    std::string strControllerIndex = settingId.substr(strlen(SETTING_GAMES_EMULATEDCONTROLLER_PREFIX));
     g_windowManager.ActivateWindow(WINDOW_DIALOG_GAME_CONTROLLERS, strControllerIndex);
   }
 }
