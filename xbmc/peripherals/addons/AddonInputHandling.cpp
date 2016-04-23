@@ -43,8 +43,7 @@ CAddonInputHandling::CAddonInputHandling(CPeripheral* peripheral, IInputHandler*
     m_buttonMap.reset(new CAddonButtonMap(peripheral, addon, handler->ControllerID()));
     if (m_buttonMap->Load())
     {
-      if (handler)
-        m_driverHandler.reset(new CInputHandling(handler, m_buttonMap.get()));
+      m_driverHandler.reset(new CInputHandling(handler, m_buttonMap.get()));
 
       if (receiver)
       {
@@ -53,6 +52,10 @@ CAddonInputHandling::CAddonInputHandling(CPeripheral* peripheral, IInputHandler*
         // Interfaces are connected here because they share button map as a common resource
         handler->SetInputReceiver(m_inputReceiver.get());
       }
+    }
+    else
+    {
+      m_buttonMap.reset();
     }
   }
 }
