@@ -16955,3 +16955,8 @@ msgstr ""
 msgctxt "#38016"
 msgid "%d fps"
 msgstr ""
+
+#: \xbmc\addons\Addon.cpp
+msgctxt "#38031"
+msgid "Image encoder"
+msgstr ""

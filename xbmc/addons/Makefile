@@ -18,6 +18,7 @@ SRCS=Addon.cpp \
      GUIDialogAddonSettings.cpp \
      GUIViewStateAddonBrowser.cpp \
      GUIWindowAddonBrowser.cpp \
+     ImageEncoder.cpp \
      LanguageResource.cpp \
      PluginSource.cpp \
      Repository.cpp \

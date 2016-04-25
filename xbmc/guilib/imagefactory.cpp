@@ -21,7 +21,12 @@
 #include "imagefactory.h"
 #include "guilib/JpegIO.h"
 #include "guilib/cximage.h"
+#include "FFmpegImage.h"
 #include "utils/Mime.h"
+
+#include <algorithm>
+
+using namespace ADDON;
 
 IImage* ImageFactory::CreateLoader(const std::string& strFileName)
 {
@@ -39,8 +44,23 @@ IImage* ImageFactory::CreateLoader(const CURL& url)
 
 IImage* ImageFactory::CreateLoaderFromMimeType(const std::string& strMimeType)
 {
+  VECADDONS codecs;
+  CAddonMgr::GetInstance().GetAddons(ADDON_IMAGE_ENCODER, codecs);
+  for (auto& codec : codecs)
+  {
+    std::shared_ptr<CImageEncoder> enc(std::static_pointer_cast<CImageEncoder>(codec));
+    std::vector<std::string> mime = StringUtils::Split(enc->GetMimetypes(), "|");
+    if (std::find(mime.begin(), mime.end(), strMimeType) != mime.end())
+    {
+      CImageEncoder* result = new CImageEncoder(*enc);
+      result->Create(strMimeType);
+      return result;
+    }
+  }
+
   if(strMimeType == "image/jpeg" || strMimeType == "image/tbn" || strMimeType == "image/jpg")
     return new CJpegIO();
+
   return new CXImage(strMimeType);
 }
 
