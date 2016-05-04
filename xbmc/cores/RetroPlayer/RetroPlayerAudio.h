@@ -38,7 +38,10 @@ namespace GAME
     virtual void AddData(const uint8_t* data, unsigned int size) override;
     virtual void CloseStream() override;
 
+    void Enable(bool bEnabled) { m_bAudioEnabled = bEnabled; }
+
   private:
     IAEStream* m_pAudioStream;
+    bool       m_bAudioEnabled;
   };
 }

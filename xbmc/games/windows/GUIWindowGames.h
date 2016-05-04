@@ -48,10 +48,6 @@ namespace GAME
     bool OnClickMsg(int controlId, int actionId);
     void OnItemInfo(int itemNumber);
     bool PlayGame(const CFileItem &item);
-    std::string GetGameClient(const CFileItem &item);
-    std::string InstallByChoice();
-    std::string ChooseGameClient(const GameClientVector& gameClients);
-    void ActivateAddonMgr();
 
     CGUIDialogProgress *m_dlgProgress;
   };

@@ -61,6 +61,7 @@ DIRECTORY_ARCHIVES=$(VideoPlayer_ARCHIVES) \
                    xbmc/games/controllers/controllers.a \
                    xbmc/games/controllers/guicontrols/controllerguicontrols.a \
                    xbmc/games/controllers/windows/controllerwindows.a \
+                   xbmc/games/dialogs/gamedialogs.a \
                    xbmc/games/games.a \
                    xbmc/games/ports/gameports.a \
                    xbmc/games/tags/gameinfotags.a \

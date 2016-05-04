@@ -412,8 +412,6 @@ void CGUIDialogAddonInfo::OnUninstall()
   if (!CGUIDialogYesNo::ShowAndGetInput(CVariant{24037}, CVariant{750}))
     return;
 
-  GAME::CGameManager::GetInstance().ClearAutoLaunch(); // Enabling before uninstalling might launch a queued game
-
   CJobManager::GetInstance().AddJob(new CAddonUnInstallJob(m_localAddon),
                                     &CAddonInstaller::GetInstance());
   Close();

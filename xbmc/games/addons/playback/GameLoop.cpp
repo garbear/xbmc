@@ -22,7 +22,6 @@
 #include "games/addons/GameClient.h"
 #include "threads/SingleLock.h"
 #include "threads/SystemClock.h"
-#include "utils/log.h"
 
 #include <cmath>
 
@@ -35,7 +34,7 @@ CGameLoop::CGameLoop(IGameLoopCallback* callback, double fps) :
   CThread("GameLoop"),
   m_callback(callback),
   m_fps(fps ? fps : DEFAULT_FPS),
-  m_speedFactor(1.0),
+  m_speedFactor(0.0),
   m_lastFrameMs(0.0)
 {
 }
@@ -63,7 +62,7 @@ void CGameLoop::SetSpeed(double speedFactor)
 
 void CGameLoop::Process(void)
 {
-  double nextFrameMs = static_cast<double>(XbmcThreads::SystemClockMillis());
+  double nextFrameMs = NowMs();
 
   CSingleLock lock(m_mutex);
 
@@ -81,9 +80,6 @@ void CGameLoop::Process(void)
 
     // Record frame time
     m_lastFrameMs = nextFrameMs;
-
-    // Calculate next frame time
-    nextFrameMs += FrameTimeMs();
 
     // Calculate sleep time
     double nowMs = NowMs();
@@ -104,6 +100,9 @@ void CGameLoop::Process(void)
       nowMs = NowMs();
       sleepTimeMs = SleepTimeMs(nowMs);
     }
+
+    // Calculate next frame time
+    nextFrameMs += FrameTimeMs();
 
     // If sleep time goes negative, we fell behind, so fast-forward to now
     if (sleepTimeMs < 0.0)

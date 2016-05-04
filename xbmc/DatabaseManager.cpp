@@ -27,6 +27,7 @@
 #include "video/VideoDatabase.h"
 #include "pvr/PVRDatabase.h"
 #include "epg/EpgDatabase.h"
+#include "games/addons/savestates/SavestateDatabase.h"
 #include "settings/AdvancedSettings.h"
 #include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
 
@@ -65,6 +66,7 @@ void CDatabaseManager::Initialize(bool addonsOnly)
   { CPVRDatabase db; UpdateDatabase(db, &g_advancedSettings.m_databaseTV); }
   { CEpgDatabase db; UpdateDatabase(db, &g_advancedSettings.m_databaseEpg); }
   { CActiveAEDSPDatabase db; UpdateDatabase(db, &g_advancedSettings.m_databaseADSP); }
+  { GAME::CSavestateDatabase db; UpdateDatabase(db, &g_advancedSettings.m_databaseSavestates); }
   CLog::Log(LOGDEBUG, "%s, updating databases... DONE", __FUNCTION__);
 }
 

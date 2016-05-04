@@ -44,6 +44,12 @@ void CGameSettings::OnSettingChanged(const CSetting *setting)
     return;
 
   const std::string& settingId = setting->GetId();
+  if (settingId == CSettings::SETTING_GAMES_ENABLEREWIND ||
+      settingId == CSettings::SETTING_GAMES_REWINDTIME)
+  {
+    SetChanged();
+    NotifyObservers(ObservableMessageSettingsChanged);
+  }
   if (settingId == CSettings::SETTING_GAMES_EMULATEDCONTROLLERS)
   {
     PERIPHERALS::g_peripherals.TriggerDeviceScan(PERIPHERALS::PERIPHERAL_BUS_APPLICATION);

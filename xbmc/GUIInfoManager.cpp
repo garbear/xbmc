@@ -43,6 +43,7 @@
 #include "pictures/PictureInfoTag.h"
 #include "music/tags/MusicInfoTag.h"
 #include "games/tags/GameInfoTag.h"
+#include "games/addons/savestates/SavestateDefines.h"
 #include "guilib/IGUIContainer.h"
 #include "guilib/GUIWindowManager.h"
 #include "PlayListPlayer.h"
@@ -9620,6 +9621,11 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
       {
         if (item->GetMusicInfoTag()->GetDuration() > 0)
           duration = StringUtils::SecondsToTimeString(item->GetMusicInfoTag()->GetDuration());
+      }
+      else if (item->HasProperty(FILEITEM_PROPERTY_SAVESTATE_DURATION))
+      {
+        long iDuration = static_cast<long>(item->GetProperty(FILEITEM_PROPERTY_SAVESTATE_DURATION).asInteger());
+        duration = StringUtils::SecondsToTimeString(iDuration);
       }
       return duration;
     }

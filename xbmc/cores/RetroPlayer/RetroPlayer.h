@@ -63,7 +63,7 @@ namespace GAME
     virtual void SeekPercentage(float fPercent = 0) override;
     virtual float GetPercentage() override;
     virtual float GetCachePercentage() override;
-    //virtual void SetMute(bool bOnOff) override { }
+    virtual void SetMute(bool bOnOff) override;
     //virtual void SetVolume(float volume) override { }
     //virtual bool ControlsVolume() override { return false; }
     //virtual void SetDynamicRangeCompression(long drc) override { }
@@ -114,8 +114,8 @@ namespace GAME
     //virtual bool HasMenu() const override { return false; }
     //virtual void DoAudioWork() override { }
     //virtual bool OnAction(const CAction &action) override { return false; }
-    //virtual std::string GetPlayerState() override { return ""; }
-    //virtual bool SetPlayerState(const std::string& state) override { return false; }
+    virtual std::string GetPlayerState() override;
+    virtual bool SetPlayerState(const std::string& state) override;
     //virtual std::string GetPlayingTitle() override { return ""; }
     //virtual bool SwitchChannel(const PVR::CPVRChannelPtr &channel) override { return false; }
     //virtual void OMXGetRenderFeatures(std::vector<int> &renderFeatures) override { }

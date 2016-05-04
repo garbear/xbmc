@@ -134,5 +134,19 @@ namespace GAME
      * \return The number of frames rewound
      */
     virtual unsigned int RewindFrames(unsigned int frameCount) = 0;
+
+    /*!
+     * \brief Get the total number of frames played until the current frame
+     *
+     * \return The history of the current frame, or 0 for unknown
+     */
+    virtual uint64_t GetFrameCounter() const = 0;
+
+    /*!
+     * \brief Set the total number of frames played until the current frame
+     *
+     * \param frameCount The history of the current frame
+     */
+    virtual void SetFrameCounter(uint64_t frameCount) = 0;
   };
 }

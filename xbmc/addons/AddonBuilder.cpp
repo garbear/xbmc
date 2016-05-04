@@ -222,7 +222,7 @@ AddonPtr CAddonBuilder::FromProps(AddonProps addonProps)
     case ADDON_GAME_CONTROLLER:
       return AddonPtr(new GAME::CController(std::move(addonProps)));
     case ADDON_GAMEDLL:
-      return AddonPtr(new GAME::CGameClient(std::move(addonProps), std::vector<std::string>(), false, false, false, false));
+      return AddonPtr(new GAME::CGameClient(std::move(addonProps)));
     default:
       break;
   }

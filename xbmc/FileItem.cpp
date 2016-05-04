@@ -895,7 +895,7 @@ bool CFileItem::IsGame() const
   if (HasAddonInfo() && GetAddonInfo()->IsType(ADDON::ADDON_GAME))
     return true;
 
-  return CGameManager::GetInstance().IsGame(m_strPath);
+  return CGameManager::GetInstance().HasGameExtension(m_strPath);
 }
 
 bool CFileItem::IsPicture() const

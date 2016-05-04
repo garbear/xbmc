@@ -32,8 +32,11 @@ void CDeltaPairMemoryStream::Reset()
 
 void CDeltaPairMemoryStream::SubmitFrameInternal()
 {
-  m_rewindBuffer.push_back(DeltaPairVector());
-  DeltaPairVector& buffer = m_rewindBuffer.back();
+  m_rewindBuffer.push_back(MemoryFrame());
+  MemoryFrame& frame = m_rewindBuffer.back();
+
+  // Record frame history
+  frame.frameHistoryCount = m_currentFrameHistory++;
 
   uint32_t* currentFrame = m_currentFrame.get();
   uint32_t* nextFrame = m_nextFrame.get();
@@ -44,12 +47,14 @@ void CDeltaPairMemoryStream::SubmitFrameInternal()
     if (xor_val)
     {
       DeltaPair pair = { i, xor_val };
-      buffer.push_back(pair);
+      frame.buffer.push_back(pair);
     }
   }
 
   // Delta is generated, bring the new frame forward (m_nextFrame is now disposable)
   std::swap(m_currentFrame, m_nextFrame);
+
+  m_bHasNextFrame = false;
 
   if (PastFramesAvailable() + 1 > MaxFrameCount())
     CullPastFrames(1);
@@ -69,14 +74,18 @@ unsigned int CDeltaPairMemoryStream::RewindFrames(unsigned int frameCount)
     if (m_rewindBuffer.empty())
       break;
 
-    const DeltaPair *buffer = m_rewindBuffer.back().data();
+    const MemoryFrame& frame = m_rewindBuffer.back();
+    const DeltaPair* buffer = frame.buffer.data();
 
-    size_t bufferSize = m_rewindBuffer.back().size();
+    size_t bufferSize = frame.buffer.size();
 
     // buffer pointer redirection violates data-dependency requirements...
     // no vectorization for us :(
     for (size_t i = 0; i < bufferSize; i++)
       m_currentFrame[buffer[i].pos] ^= buffer[i].delta;
+
+    // Restore frame history
+    m_currentFrameHistory = frame.frameHistoryCount;
 
     m_rewindBuffer.pop_back();
   }

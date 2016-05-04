@@ -76,6 +76,10 @@ namespace GAME
     const std::string& GetCartridgeType() const { return m_strCartridgeType; }
     void SetCartridgeType(const std::string& strCartridgeType) { m_strCartridgeType = strCartridgeType; }
 
+    // Savestate path
+    const std::string& GetSavestate() const { return m_strSavestate; }
+    void SetSavestate(const std::string& strSavestate) { m_strSavestate = strSavestate; }
+
     virtual void Archive(CArchive& ar) override;
     virtual void Serialize(CVariant& value) const override;
     virtual void ToSortable(SortItem& sortable, Field field) const override;
@@ -90,5 +94,6 @@ namespace GAME
     std::string m_strPublisher;
     std::string m_strFormat;
     std::string m_strCartridgeType;
+    std::string m_strSavestate;
   };
 }

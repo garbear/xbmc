@@ -21,7 +21,7 @@
 #define KODI_GAME_TYPES_H_
 
 /* current game API version */
-#define GAME_API_VERSION                "1.0.20"
+#define GAME_API_VERSION                "1.0.21"
 
 /* min. game API version */
 #define GAME_MIN_API_VERSION            "1.0.20"

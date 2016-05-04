@@ -45,6 +45,8 @@ namespace GAME
     virtual unsigned int   AdvanceFrames(unsigned int frameCount) override { return 0; }
     virtual unsigned int   PastFramesAvailable() const override            { return 0; }
     virtual unsigned int   RewindFrames(unsigned int frameCount) override  { return 0; }
+    virtual uint64_t       GetFrameCounter() const override                { return 0; }
+    virtual void           SetFrameCounter(uint64_t frameCount) override   { };
 
   private:
     size_t                     m_frameSize;

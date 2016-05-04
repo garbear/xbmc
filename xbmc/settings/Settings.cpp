@@ -1197,6 +1197,8 @@ void CSettings::InitializeISettingCallbacks()
   m_settingsManager->RegisterCallback(&CWakeOnAccess::GetInstance(), settingSet);
 
   settingSet.clear();
+  settingSet.insert(CSettings::SETTING_GAMES_ENABLEREWIND);
+  settingSet.insert(CSettings::SETTING_GAMES_REWINDTIME);
   settingSet.insert(CSettings::SETTING_GAMES_CONTROLLERCONFIG);
   settingSet.insert(CSettings::SETTING_GAMES_TESTRUMBLE);
   settingSet.insert(CSettings::SETTING_GAMES_EMULATEDCONTROLLERS);

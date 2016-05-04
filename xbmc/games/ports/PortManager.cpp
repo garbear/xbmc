@@ -92,7 +92,7 @@ void CPortManager::MapDevices(const std::vector<CPeripheral*>& devices,
   for (SPort& port : m_ports)
     port.device = nullptr;
 
-  // Prioritize devices by serveral criteria
+  // Prioritize devices by several criteria
   std::vector<CPeripheral*> devicesCopy = devices;
   std::sort(devicesCopy.begin(), devicesCopy.end(),
     [](CPeripheral* lhs, CPeripheral* rhs)

@@ -28,7 +28,8 @@
 using namespace GAME;
 
 CRetroPlayerAudio::CRetroPlayerAudio() :
-  m_pAudioStream(NULL)
+  m_pAudioStream(NULL),
+  m_bAudioEnabled(true)
 {
 }
 
@@ -113,7 +114,7 @@ bool CRetroPlayerAudio::OpenEncodedStream(AVCodecID codec, unsigned int samplera
 
 void CRetroPlayerAudio::AddData(const uint8_t* data, unsigned int size)
 {
-  if (m_pAudioStream)
+  if (m_pAudioStream && m_bAudioEnabled)
   {
     const unsigned int frameSize = m_pAudioStream->GetChannelCount() * (CAEUtil::DataFormatToBits(m_pAudioStream->GetDataFormat()) >> 3);
     m_pAudioStream->AddData(&data, 0, size / frameSize);

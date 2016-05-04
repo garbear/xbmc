@@ -1,6 +1,11 @@
 SRCS=BasicMemoryStream.cpp \
      DeltaPairMemoryStream.cpp \
      LinearMemoryStream.cpp \
+     Savestate.cpp \
+     SavestateDatabase.cpp \
+     SavestateReader.cpp \
+     SavestateUtils.cpp \
+     SavestateWriter.cpp \
 
 LIB=gamesavestates.a
 

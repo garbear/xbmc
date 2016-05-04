@@ -454,12 +454,14 @@ msgctxt "#116"
 msgid "Move"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#117"
 msgid "Delete"
 msgstr ""
 
 #: xbmc/dialogs/GUIDialogFavourites.cpp
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#118"
 msgid "Rename"
@@ -480,6 +482,7 @@ msgctxt "#121"
 msgid "Confirm move"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#122"
 msgid "Confirm delete"
@@ -495,6 +498,7 @@ msgctxt "#124"
 msgid "Would you like to move the selected file(s)?"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#125"
 msgid "Would you like to delete the selected file(s)?[CR]Warning - this action can't be undone!"
@@ -2362,6 +2366,7 @@ msgctxt "#527"
 msgid "Manually add to library"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 msgctxt "#528"
 msgid "Enter title"
 msgstr ""
@@ -4974,6 +4979,7 @@ msgctxt "#10139"
 msgid "Pictures / Info"
 msgstr ""
 
+#: addons/skin.estuary/1080i/MyGames.xml
 #: xbmc/guilib/WindowIDs.h
 msgctxt "#10140"
 msgid "Add-on settings"
@@ -8546,11 +8552,13 @@ msgctxt "#16202"
 msgid "Failed to copy at least one file. Check the log for more information about this message."
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#16203"
 msgid "Move failed"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#16204"
 msgid "Failed to move at least one file. Check the log for more information about this message."
@@ -8561,6 +8569,7 @@ msgctxt "#16205"
 msgid "Delete failed"
 msgstr ""
 
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
 msgctxt "#16206"
 msgid "Failed to delete at least one file. Check the log for more information about this message."
@@ -13044,6 +13053,7 @@ msgstr ""
 #: addons/skin.estuary/1080i/MyVideoNav.xml
 #: addons/skin.estuary/1080i/MyPics.xml
 #: addons/skin.estuary/1080i/MyMusicNav.xml
+#: addons/skin.estuary/1080i/MyGames.xml
 msgctxt "#21452"
 msgid "Get more..."
 msgstr ""
@@ -16171,8 +16181,9 @@ msgctxt "#35209"
 msgid "Game resources"
 msgstr ""
 
-#. Dialog title when gameplay fails and an optional add-on is imported
+#. Dialog title when gameplay fails
 #: xbmc/games/addons/GameClient.cpp
+#: xbmc/games/GameManager.cpp
 msgctxt "#35210"
 msgid "Failed to play game"
 msgstr ""
@@ -16183,7 +16194,13 @@ msgctxt "#35211"
 msgid "The add-on %s is missing."
 msgstr ""
 
-#empty strings from id 35212 to 35219
+#. Error dialog text when launching a game and no emulators are compatible
+#: xbmc/games/GameManager.cpp
+msgctxt "#35212"
+msgid "This game isn't compatible with any available emulators."
+msgstr ""
+
+#empty strings from id 35213 to 35219
 
 #. Description of add-on category for game providers
 #: xbmc/filesystem/AddonsDirectory.cpp
@@ -16218,7 +16235,42 @@ msgctxt "#35254"
 msgid "Manage emulators"
 msgstr ""
 
-#empty strings from id 35255 to 35504
+#: xbmc/games/dialogs/GUIDialogSelectGameClient.cpp
+msgctxt "#35255"
+msgid "Browse all emulators"
+msgstr ""
+
+#empty strings from id 35256 to 35268
+
+#. Title of the save states dialog
+#: addons/skin.estuary/1080i/DialogSavestates.xml
+msgctxt "#35269"
+msgid "Saved game states"
+msgstr ""
+
+#: addons/skin.estuary/1080i/DialogSavestates.xml
+msgctxt "#35270"
+msgid "Save state"
+msgstr ""
+
+#: addons/skin.estuary/1080i/DialogSavestates.xml
+msgctxt "#35271"
+msgid "Clear saves"
+msgstr ""
+
+#. Presented as an option in the context menu for savestates in the savestate dialog
+#: xbmc/games/dialogs/GUIDialogSavestates.cpp
+msgctxt "#35272"
+msgid "Load save"
+msgstr ""
+
+#. Context menu item to manage savestates
+#: xbmc/games/windows/GUIWindowGames.cpp
+msgctxt "#35273"
+msgid "Manage saves"
+msgstr ""
+
+#empty strings from id 35274 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/addons/AddonCallbacksPVR.cpp

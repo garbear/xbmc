@@ -295,6 +295,7 @@ core_link_library(KODI_audioengine addons/library.kodi.audioengine/libKODI_audio
 core_link_library(KODI_guilib addons/library.kodi.guilib/libKODI_guilib nowrap)
 core_link_library(KODI_inputstream addons/library.kodi.inputstream/libKODI_inputstream nowrap)
 core_link_library(KODI_peripheral addons/library.kodi.peripheral/libKODI_peripheral nowrap)
+core_link_library(KODI_game addons/library.kodi.game/libKODI_game nowrap)
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/system/players/VideoPlayer)
 add_custom_target(wrap-libraries ALL DEPENDS ${WRAP_FILES})

@@ -21,14 +21,15 @@
 #include "RetroPlayer.h"
 #include "RetroPlayerAudio.h"
 #include "RetroPlayerVideo.h"
-#include "addons/AddonManager.h"
 #include "cores/VideoPlayer/Process/ProcessInfo.h"
 #include "games/addons/playback/IGameClientPlayback.h"
 #include "games/addons/GameClient.h"
 #include "games/tags/GameInfoTag.h"
+#include "games/GameManager.h"
 #include "utils/log.h"
 #include "windowing/WindowingFactory.h"
 #include "FileItem.h"
+#include "URL.h"
 
 using namespace GAME;
 
@@ -47,42 +48,50 @@ CRetroPlayer::~CRetroPlayer()
 
 bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options)
 {
-  CLog::Log(LOGINFO, "RetroPlayer: Opening: %s", file.GetPath().c_str());
+  std::string redactedPath = CURL::GetRedacted(file.GetPath());
+  CLog::Log(LOGINFO, "RetroPlayer: Opening: %s", redactedPath.c_str());
 
   if (IsPlaying())
     CloseFile();
 
   PrintGameInfo(file);
 
-  // Get the game client ID from the file properties
-  std::string gameClientId = file.GetProperty(FILEITEM_PROPERTY_GAME_CLIENT).asString();
-
-  // If the fileitem's add-on is a game client, fall back to that
-  if (gameClientId.empty())
-  {
-    if (file.HasAddonInfo() && file.GetAddonInfo()->Type() == ADDON::ADDON_GAMEDLL)
-      gameClientId = file.GetAddonInfo()->ID();
-  }
-
-  // Resolve ID to game client ptr
-  if (!gameClientId.empty())
-  {
-    ADDON::AddonPtr addon;
-    if (ADDON::CAddonMgr::GetInstance().GetAddon(gameClientId, addon, ADDON::ADDON_GAMEDLL))
-      m_gameClient = std::dynamic_pointer_cast<GAME::CGameClient>(addon);
-  }
-
   bool bSuccess = false;
 
-  if (m_gameClient && m_gameClient->Initialize())
+  m_gameClient = CGameManager::GetInstance().OpenGameClient(file);
+  if (m_gameClient)
   {
-    m_audio.reset(new CRetroPlayerAudio);
-    m_video.reset(new CRetroPlayerVideo(m_clock, m_renderManager, *m_processInfo));
-    bSuccess = m_gameClient->OpenFile(file, m_audio.get(), m_video.get());
+    if (m_gameClient->Initialize())
+    {
+      m_audio.reset(new CRetroPlayerAudio);
+      m_video.reset(new CRetroPlayerVideo(m_clock, m_renderManager, *m_processInfo));
+      if (m_gameClient->OpenFile(file, m_audio.get(), m_video.get()))
+      {
+        CLog::Log(LOGDEBUG, "RetroPlayer: Using game client %s", m_gameClient->ID().c_str());
+        bSuccess = true;
+      }
+      else
+        CLog::Log(LOGERROR, "RetroPlayer: Failed to open file using %s", m_gameClient->ID().c_str());
+    }
+    else
+      CLog::Log(LOGERROR, "RetroPlayer: Failed to initialize %s", m_gameClient->ID().c_str());
   }
+  else
+    CLog::Log(LOGERROR, "RetroPlayer: Can't find add-on for game file");
 
   if (bSuccess)
   {
+    if (file.m_lStartOffset == STARTOFFSET_RESUME && file.HasGameInfoTag())
+    {
+      const std::string& savestatePath = file.GetGameInfoTag()->GetSavestate();
+      std::string redactedSavestatePath = CURL::GetRedacted(savestatePath);
+      CLog::Log(LOGDEBUG, "RetroPlayer: Loading savestate %s", redactedSavestatePath.c_str());
+      if (!SetPlayerState(savestatePath))
+        CLog::Log(LOGERROR, "RetroPlayer: Failed to load savestate from %s", redactedSavestatePath.c_str());
+    }
+
+    ToFFRW(1);
+
     m_callback.OnPlayBackStarted();
   }
   else
@@ -102,6 +111,8 @@ bool CRetroPlayer::CloseFile(bool reopen /* = false */)
   if (m_gameClient)
   {
     m_gameClient->CloseFile();
+    m_gameClient->Unload();
+    m_gameClient.reset();
     m_callback.OnPlayBackEnded();
   }
 
@@ -133,6 +144,7 @@ void CRetroPlayer::Pause()
   if (m_gameClient)
   {
     m_gameClient->GetPlayback()->PauseUnpause();
+    m_audio->Enable(m_gameClient->GetPlayback()->GetSpeed() == 1.0);
 
     if (IsPaused())
       m_callback.OnPlayBackPaused();
@@ -202,8 +214,8 @@ float CRetroPlayer::GetPercentage()
 {
   if (m_gameClient)
   {
-    const float timeMs = m_gameClient->GetPlayback()->GetTimeMs();
-    const float totalMs = m_gameClient->GetPlayback()->GetTotalTimeMs();
+    const float timeMs = static_cast<float>(m_gameClient->GetPlayback()->GetTimeMs());
+    const float totalMs = static_cast<float>(m_gameClient->GetPlayback()->GetTotalTimeMs());
 
     if (totalMs != 0.0f)
       return timeMs / totalMs * 100.0f;
@@ -216,13 +228,18 @@ float CRetroPlayer::GetCachePercentage()
 {
   if (m_gameClient)
   {
-    const float cacheMs = m_gameClient->GetPlayback()->GetCacheTimeMs();
-    const float totalMs = m_gameClient->GetPlayback()->GetTotalTimeMs();
+    const float cacheMs = static_cast<float>(m_gameClient->GetPlayback()->GetCacheTimeMs());
+    const float totalMs = static_cast<float>(m_gameClient->GetPlayback()->GetTotalTimeMs());
 
     if (totalMs != 0.0f)
       return cacheMs / totalMs * 100.0f;
   }
   return 0.0f;
+}
+
+void CRetroPlayer::SetMute(bool bOnOff)
+{
+  m_audio->Enable(!bOnOff);
 }
 
 void CRetroPlayer::SeekTime(int64_t iTime /* = 0 */)
@@ -231,7 +248,10 @@ void CRetroPlayer::SeekTime(int64_t iTime /* = 0 */)
     return;
 
   if (m_gameClient)
-    m_gameClient->GetPlayback()->SeekTimeMs(iTime);
+  {
+    m_gameClient->GetPlayback()->SeekTimeMs(static_cast<unsigned int>(iTime));
+    m_audio->Enable(m_gameClient->GetPlayback()->GetSpeed() == 1.0);
+  }
 }
 
 bool CRetroPlayer::SeekTimeRelative(int64_t iTime)
@@ -267,7 +287,24 @@ bool CRetroPlayer::GetStreamDetails(CStreamDetails &details)
 void CRetroPlayer::ToFFRW(int iSpeed /* = 0 */)
 {
   if (m_gameClient)
-    m_gameClient->GetPlayback()->SetSpeed(iSpeed);
+  {
+    m_gameClient->GetPlayback()->SetSpeed(static_cast<double>(iSpeed));
+    m_audio->Enable(m_gameClient->GetPlayback()->GetSpeed() == 1.0);
+  }
+}
+
+std::string CRetroPlayer::GetPlayerState()
+{
+  if (m_gameClient)
+    return m_gameClient->GetPlayback()->CreateManualSavestate();
+  return "";
+}
+
+bool CRetroPlayer::SetPlayerState(const std::string& state)
+{
+  if (m_gameClient)
+    return m_gameClient->GetPlayback()->LoadSavestate(state);
+  return false;
 }
 
 void CRetroPlayer::PrintGameInfo(const CFileItem &file) const

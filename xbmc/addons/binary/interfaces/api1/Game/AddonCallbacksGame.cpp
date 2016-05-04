@@ -21,9 +21,10 @@
 #include "AddonCallbacksGame.h"
 #include "cores/AudioEngine/Utils/AEChannelInfo.h"
 #include "games/addons/GameClient.h"
+#include "guilib/WindowIDs.h"
+#include "input/Key.h"
+#include "messaging/ApplicationMessenger.h"
 #include "utils/log.h"
-
-//#include "libavutil/avconfig.h"
 
 #include <string>
 
@@ -78,11 +79,9 @@ CGameClient* CAddonCallbacksGame::GetGameClient(void* addonData, const char* str
 
 void CAddonCallbacksGame::CloseGame(void* addonData)
 {
-  CGameClient* gameClient = GetGameClient(addonData, __FUNCTION__);
-  if (!gameClient)
-    return;
+  using namespace KODI::MESSAGING;
 
-  return gameClient->CloseFile();
+  CApplicationMessenger::GetInstance().PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1, static_cast<void*>(new CAction(ACTION_STOP)));
 }
 
 int CAddonCallbacksGame::OpenPixelStream(void* addonData, GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height)

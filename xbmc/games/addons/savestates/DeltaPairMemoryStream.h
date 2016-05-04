@@ -63,6 +63,13 @@ namespace GAME
     };
 
     typedef std::vector<DeltaPair> DeltaPairVector;
-    std::deque<DeltaPairVector>    m_rewindBuffer;
+
+    struct MemoryFrame
+    {
+      DeltaPairVector buffer;
+      uint64_t        frameHistoryCount;
+    };
+
+    std::deque<MemoryFrame> m_rewindBuffer;
   };
 }

@@ -45,13 +45,15 @@ namespace GAME
     virtual unsigned int   AdvanceFrames(unsigned int frameCount) override { return 0; }
     virtual unsigned int   PastFramesAvailable() const override = 0;
     virtual unsigned int   RewindFrames(unsigned int frameCount) override = 0;
+    virtual uint64_t       GetFrameCounter() const override                { return m_currentFrameHistory; }
+    virtual void           SetFrameCounter(uint64_t frameCount) override   { m_currentFrameHistory = frameCount; }
 
   protected:
     virtual void SubmitFrameInternal() = 0;
     virtual void CullPastFrames(unsigned int frameCount) = 0;
 
     // Helper function
-    unsigned int FrameCount() const;
+    unsigned int BufferSize() const;
 
     size_t m_paddedFrameSize;
     unsigned int m_maxFrames;
@@ -65,6 +67,8 @@ namespace GAME
     std::unique_ptr<uint32_t[]> m_nextFrame;
     bool                        m_bHasCurrentFrame;
     bool                        m_bHasNextFrame;
+
+    uint64_t m_currentFrameHistory;
 
   private:
     size_t m_frameSize;

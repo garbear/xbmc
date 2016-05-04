@@ -22,17 +22,22 @@
 #include "IGameClientPlayback.h"
 #include "GameLoop.h"
 #include "threads/CriticalSection.h"
+#include "utils/Observer.h"
 
 #include <memory>
 #include <stddef.h>
+#include <stdint.h>
 
 namespace GAME
 {
   class CGameClient;
+  class CSavestateReader;
+  class CSavestateWriter;
   class IMemoryStream;
 
   class CGameClientReversiblePlayback : public IGameClientPlayback,
-                                        public IGameLoopCallback
+                                        public IGameLoopCallback,
+                                        public Observer
   {
   public:
     CGameClientReversiblePlayback(CGameClient* gameClient, double fps, size_t serializeSize);
@@ -48,16 +53,24 @@ namespace GAME
     virtual unsigned int GetTotalTimeMs() const override { return m_totalTimeMs; }
     virtual unsigned int GetCacheTimeMs() const override { return m_cacheTimeMs; }
     virtual void SeekTimeMs(unsigned int timeMs) override;
-    virtual void SetSpeed(float speedFactor) override;
+    virtual double GetSpeed() const;
+    virtual void SetSpeed(double speedFactor) override;
+    virtual std::string CreateManualSavestate() override;
+    virtual bool LoadSavestate(const std::string& path) override;
 
     // implementation of IGameLoopCallback
     virtual void FrameEvent() override;
     virtual void RewindEvent() override;
 
+    // implementation of Observer
+    virtual void Notify(const Observable &obs, const ObservableMessage msg) override;
+
   private:
+    void AddFrame();
     void RewindFrames(unsigned int frames);
     void AdvanceFrames(unsigned int frames);
     void UpdatePlaybackStats();
+    void UpdateMemoryStream();
 
     // Construction parameter
     CGameClient* const m_gameClient;
@@ -67,7 +80,12 @@ namespace GAME
     std::unique_ptr<IMemoryStream> m_memoryStream;
     CCriticalSection               m_mutex;
 
+    // Savestate functionality
+    std::unique_ptr<CSavestateWriter> m_savestateWriter;
+    std::unique_ptr<CSavestateReader> m_savestateReader;
+
     // Playback stats
+    uint64_t     m_totalFrameCount;
     unsigned int m_pastFrameCount;
     unsigned int m_futureFrameCount;
     unsigned int m_playTimeMs;

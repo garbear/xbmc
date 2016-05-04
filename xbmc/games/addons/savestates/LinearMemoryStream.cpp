@@ -48,6 +48,7 @@ void CLinearMemoryStream::Reset()
   m_nextFrame.reset();
   m_bHasCurrentFrame = false;
   m_bHasNextFrame = false;
+  m_currentFrameHistory = 0;
 }
 
 void CLinearMemoryStream::SetMaxFrameCount(size_t maxFrameCount)
@@ -58,7 +59,7 @@ void CLinearMemoryStream::SetMaxFrameCount(size_t maxFrameCount)
   }
   else
   {
-    const unsigned int frameCount = FrameCount();
+    const unsigned int frameCount = BufferSize();
     if (maxFrameCount < frameCount)
       CullPastFrames(frameCount - maxFrameCount);
   }
@@ -73,21 +74,22 @@ uint8_t* CLinearMemoryStream::BeginFrame()
 
   if (!m_bHasCurrentFrame)
   {
-    m_currentFrame.reset(new uint32_t[m_paddedFrameSize]);
+    if (!m_currentFrame)
+      m_currentFrame.reset(new uint32_t[m_paddedFrameSize]);
     return reinterpret_cast<uint8_t*>(m_currentFrame.get());
   }
 
-  if (!m_bHasNextFrame)
+  if (!m_nextFrame)
     m_nextFrame.reset(new uint32_t[m_paddedFrameSize]);
-
-  m_bHasNextFrame = false;
-
   return reinterpret_cast<uint8_t*>(m_nextFrame.get());
 }
 
 const uint8_t* CLinearMemoryStream::CurrentFrame() const
 {
-  return reinterpret_cast<const uint8_t*>(m_currentFrame.get());
+  if (m_bHasCurrentFrame)
+    return reinterpret_cast<const uint8_t*>(m_currentFrame.get());
+
+  return nullptr;
 }
 
 void CLinearMemoryStream::SubmitFrame()
@@ -102,10 +104,12 @@ void CLinearMemoryStream::SubmitFrame()
   }
 
   if (m_bHasNextFrame)
+  {
     SubmitFrameInternal();
+  }
 }
 
-unsigned int CLinearMemoryStream::FrameCount() const
+unsigned int CLinearMemoryStream::BufferSize() const
 {
   return PastFramesAvailable() + (m_bHasCurrentFrame ? 1 : 0);
 }

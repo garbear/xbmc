@@ -20,16 +20,17 @@
 
 #include "GameClientTiming.h"
 #include "GameClientCallbacks.h"
+#include "utils/MathUtils.h"
 
 #include <cmath>
 
 using namespace GAME;
 
-CGameClientTiming::CGameClientTiming() :
-  m_framerate(0.0),
-  m_samplerate(0.0),
-  m_audioCorrectionFactor(1.0)
+void CGameClientTiming::Reset()
 {
+  m_framerate = 0.0;
+  m_samplerate = 0.0;
+  m_audioCorrectionFactor = 1.0;
 }
 
 bool CGameClientTiming::NormalizeAudio(IGameAudioCallback* audio)
@@ -43,10 +44,10 @@ bool CGameClientTiming::NormalizeAudio(IGameAudioCallback* audio)
 
 double CGameClientTiming::GetFrameRate() const 
 {
-  return m_framerate * m_audioCorrectionFactor; 
+  return m_framerate * m_audioCorrectionFactor;
 }
 
 unsigned int CGameClientTiming::GetSampleRate() const 
 {
-  return static_cast<unsigned int>(m_samplerate * m_audioCorrectionFactor + 0.5); 
+  return MathUtils::round_int(m_samplerate * m_audioCorrectionFactor);
 }

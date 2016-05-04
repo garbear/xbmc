@@ -133,10 +133,18 @@ bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, DVDVi
 {
   bool bHasPicture = false;
 
-  if (m_pixelConverter && m_pixelConverter->Decode(data, size))
+  int lateframes;
+  double renderPts;
+  int queued, discard;
+  m_renderManager.GetStats(lateframes, renderPts, queued, discard);
+
+  if (queued == 0)
   {
-    m_pixelConverter->GetPicture(picture);
-    bHasPicture = true;
+    if (m_pixelConverter && m_pixelConverter->Decode(data, size))
+    {
+      m_pixelConverter->GetPicture(picture);
+      bHasPicture = true;
+    }
   }
 
   return bHasPicture;
@@ -146,23 +154,14 @@ void CRetroPlayerVideo::SendPicture(DVDVideoPicture& picture)
 {
   std::atomic_bool bAbortOutput(false); // TODO
 
-  int buffer = m_renderManager.WaitForBuffer(bAbortOutput);
-  if (buffer < 0)
+  int index = m_renderManager.AddVideoPicture(picture);
+  if (index < 0)
   {
-    // There was a timeout waiting for buffer, drop the frame
+    // Video device might not be done yet, drop the frame
     m_droppedFrames++;
   }
   else
   {
-    int index = m_renderManager.AddVideoPicture(picture);
-    if (index < 0)
-    {
-      // Video device might not be done yet, drop the frame
-      m_droppedFrames++;
-    }
-    else
-    {
-      m_renderManager.FlipPage(bAbortOutput);
-    }
+    m_renderManager.FlipPage(bAbortOutput);
   }
 }

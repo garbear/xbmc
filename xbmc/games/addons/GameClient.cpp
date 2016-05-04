@@ -24,8 +24,6 @@
 #include "GameClientTranslator.h"
 #include "addons/AddonManager.h"
 #include "cores/AudioEngine/Utils/AEChannelInfo.h"
-#include "cores/VideoPlayer/DVDDemuxers/DVDDemuxPacket.h"
-#include "cores/VideoPlayer/DVDDemuxers/DVDDemuxUtils.h"
 #include "dialogs/GUIDialogOK.h"
 #include "FileItem.h"
 #include "filesystem/Directory.h"
@@ -41,6 +39,7 @@
 #include "input/joysticks/DefaultJoystick.h" // for DEFAULT_CONTROLLER_ID
 #include "input/joysticks/JoystickTypes.h"
 #include "peripherals/Peripherals.h"
+#include "profiles/ProfilesManager.h"
 #include "settings/Settings.h"
 #include "threads/SingleLock.h"
 #include "URL.h"
@@ -57,6 +56,12 @@ using namespace GAME;
 #define EXTENSION_SEPARATOR          "|"
 #define EXTENSION_WILDCARD           "*"
 #define BUTTON_INDEX_MASK            0x01ff
+
+#define GAME_PROPERTY_EXTENSIONS           "extensions"
+#define GAME_PROPERTY_SUPPORTS_GAME_LOOP   "supports_game_loop"
+#define GAME_PROPERTY_SUPPORTS_VFS         "supports_vfs"
+#define GAME_PROPERTY_SUPPORTS_STANDALONE  "supports_standalone"
+#define GAME_PROPERTY_SUPPORTS_KEYBOARD    "supports_keyboard"
 
 // --- NormalizeExtension ------------------------------------------------------
 
@@ -87,53 +92,77 @@ std::unique_ptr<CGameClient> CGameClient::FromExtension(ADDON::AddonProps props,
 {
   using namespace ADDON;
 
-  std::string strExtensions = CAddonMgr::GetInstance().GetExtValue(ext->configuration, "extensions");
-  std::vector<std::string> extensions = StringUtils::Split(strExtensions, EXTENSION_SEPARATOR);
+  static const std::vector<std::string> properties = {
+      GAME_PROPERTY_EXTENSIONS,
+      GAME_PROPERTY_SUPPORTS_GAME_LOOP,
+      GAME_PROPERTY_SUPPORTS_VFS,
+      GAME_PROPERTY_SUPPORTS_STANDALONE,
+      GAME_PROPERTY_SUPPORTS_KEYBOARD,
+  };
 
-  // Empty value defaults to true
-  std::string strSupportsGameLoop = CAddonMgr::GetInstance().GetExtValue(ext->configuration, "supports_game_loop");
-  bool bSupportsGameLoop = (strSupportsGameLoop.empty() || strSupportsGameLoop == "true" || strSupportsGameLoop == "yes");
+  for (const auto& property : properties)
+  {
+    std::string strProperty = CAddonMgr::GetInstance().GetExtValue(ext->configuration, property.c_str());
+    if (!strProperty.empty())
+      props.extrainfo[property] = strProperty;
+  }
 
-  std::string strSupportsVFS = CAddonMgr::GetInstance().GetExtValue(ext->configuration, "supports_vfs");
-  bool bSupportsVFS = (strSupportsVFS == "true" || strSupportsVFS == "yes");
-
-  std::string strSupportsStandalone = CAddonMgr::GetInstance().GetExtValue(ext->configuration, "supports_no_game");
-  bool bSupportsStandalone = (strSupportsStandalone == "true" || strSupportsStandalone == "yes");
-
-  std::string strSupportsKeyboard = CAddonMgr::GetInstance().GetExtValue(ext->configuration, "supports_keyboard");
-  bool bSupportsKeyboard = (strSupportsKeyboard == "true" || strSupportsKeyboard == "yes");
-
-  return std::unique_ptr<CGameClient>(new CGameClient(std::move(props), extensions, bSupportsVFS, bSupportsGameLoop, bSupportsStandalone, bSupportsKeyboard));
+  return std::unique_ptr<CGameClient>(new CGameClient(std::move(props)));
 }
 
-CGameClient::CGameClient(ADDON::AddonProps props,
-                         const std::vector<std::string>& extensions,
-                         bool bSupportsVFS,
-                         bool bSupportsGameLoop,
-                         bool bSupportsStandalone,
-                         bool bSupportsKeyboard) :
+CGameClient::CGameClient(ADDON::AddonProps props) :
   CAddonDll<DllGameClient, GameClient, game_client_properties>(std::move(props)),
   m_apiVersion("0.0.0"),
   m_libraryProps(this, m_pInfo),
-  m_bSupportsVFS(bSupportsVFS),
-  m_bSupportsGameLoop(bSupportsGameLoop),
-  m_bSupportsStandalone(bSupportsStandalone),
-  m_bSupportsKeyboard(bSupportsKeyboard),
+  m_bSupportsVFS(false),
+  m_bSupportsGameLoop(false),
+  m_bSupportsStandalone(false),
+  m_bSupportsKeyboard(false),
+  m_bIsPlaying(false),
+  m_serializeSize(0),
   m_audio(nullptr),
   m_video(nullptr),
   m_region(GAME_REGION_UNKNOWN)
 {
-  std::transform(extensions.begin(), extensions.end(),
-    std::inserter(m_extensions, m_extensions.begin()), NormalizeExtension);
+  const ADDON::InfoMap& extraInfo = m_props.extrainfo;
+  ADDON::InfoMap::const_iterator it;
+
+  it = extraInfo.find(GAME_PROPERTY_EXTENSIONS);
+  if (it != extraInfo.end())
+  {
+    std::vector<std::string> extensions = StringUtils::Split(it->second, EXTENSION_SEPARATOR);
+    std::transform(extensions.begin(), extensions.end(),
+      std::inserter(m_extensions, m_extensions.begin()), NormalizeExtension);
+  }
+
+  it = extraInfo.find(GAME_PROPERTY_SUPPORTS_GAME_LOOP);
+  if (it != extraInfo.end())
+  {
+    m_bSupportsGameLoop = (it->second == "true" || it->second == "yes");
+  }
+  else
+  {
+    // Empty value defaults to true
+    m_bSupportsGameLoop = true;
+  }
+
+  it = extraInfo.find(GAME_PROPERTY_SUPPORTS_VFS);
+  if (it != extraInfo.end())
+    m_bSupportsVFS = (it->second == "true" || it->second == "yes");
+
+  it = extraInfo.find(GAME_PROPERTY_SUPPORTS_STANDALONE);
+  if (it != extraInfo.end())
+    m_bSupportsStandalone = (it->second == "true" || it->second == "yes");
+
+  it = extraInfo.find(GAME_PROPERTY_SUPPORTS_KEYBOARD);
+  if (it != extraInfo.end())
+    m_bSupportsKeyboard = (it->second == "true" || it->second == "yes");
+
   ResetPlayback();
 }
 
 CGameClient::~CGameClient(void)
 {
-  /* TODO
-  if (m_bIsPlaying && m_demuxer)
-    m_player->CloseFile();
-  */
 }
 
 bool CGameClient::IsType(ADDON::TYPE type) const
@@ -215,6 +244,11 @@ bool CGameClient::Initialize(void)
   if (!CDirectory::Exists(Profile()))
     CDirectory::Create(Profile());
 
+  // Ensure directory exists for savestates
+  std::string savestatesDir = URIUtils::AddFileToFolder(CProfilesManager::GetInstance().GetSavestatesFolder(), ID());
+  if (!CDirectory::Exists(savestatesDir))
+    CDirectory::Create(savestatesDir);
+
   m_libraryProps.InitializeProperties();
 
   if (Create() == ADDON_STATUS_OK)
@@ -224,6 +258,11 @@ bool CGameClient::Initialize(void)
   }
 
   return false;
+}
+
+void CGameClient::Unload()
+{
+  Destroy();
 }
 
 bool CGameClient::OpenFile(const CFileItem& file, IGameAudioCallback* audio, IGameVideoCallback* video)
@@ -240,19 +279,19 @@ bool CGameClient::OpenFile(const CFileItem& file, IGameAudioCallback* audio, IGa
 
   bool bSuccess = false;
 
-  if (m_bSupportsStandalone)
-  {
-    CLog::Log(LOGDEBUG, "GameClient: Loading %s in standalone mode", ID().c_str());
-
-    try { bSuccess = LogError(m_pStruct->LoadStandalone(), "LoadStandalone()"); }
-    catch (...) { LogException("LoadStandalone()"); }
-  }
-  else
+  if (CanOpen(file))
   {
     CLog::Log(LOGDEBUG, "GameClient: Loading %s", file.GetPath().c_str());
 
     try { bSuccess = LogError(m_pStruct->LoadGame(file.GetPath().c_str()), "LoadGame()"); }
     catch (...) { LogException("LoadGame()"); }
+  }
+  else if (m_bSupportsStandalone)
+  {
+    CLog::Log(LOGDEBUG, "GameClient: Loading %s in standalone mode", ID().c_str());
+
+    try { bSuccess = LogError(m_pStruct->LoadStandalone(), "LoadStandalone()"); }
+    catch (...) { LogException("LoadStandalone()"); }
   }
 
   // If gameplay failed, check for missing optional resources
@@ -262,6 +301,8 @@ bool CGameClient::OpenFile(const CFileItem& file, IGameAudioCallback* audio, IGa
   if (bSuccess && LoadGameInfo(file.GetPath()) && NormalizeAudio(audio))
   {
     m_bIsPlaying      = true;
+    m_gamePath        = file.GetPath();
+    m_serializeSize   = GetSerializeSize();
     m_audio           = audio;
     m_video           = video;
     m_inputRateHandle = PERIPHERALS::g_peripherals.SetEventScanRate(m_timing.GetFrameRate()); // TODO: Convert event scanner to double
@@ -293,7 +334,7 @@ bool CGameClient::NormalizeAudio(IGameAudioCallback* audioCallback)
     }
     else
     {
-      CLog::Log(LOGDEBUG, "GAME: Audio sample is supported, no scaling or resampling needed");
+      CLog::Log(LOGDEBUG, "GAME: Audio sample rate is supported, no scaling or resampling needed");
     }
   }
   else
@@ -369,12 +410,7 @@ void CGameClient::CreatePlayback()
 {
   if (m_bSupportsGameLoop)
   {
-    const bool bRewindEnabled = CSettings::GetInstance().GetBool(CSettings::SETTING_GAMES_ENABLEREWIND);
-    const size_t serializeSize = SerializeSize();
-    if (bRewindEnabled && serializeSize > 0)
-      m_playback.reset(new CGameClientReversiblePlayback(this, m_timing.GetFrameRate(), serializeSize));
-    else
-      m_playback.reset(new CGameClientBasicPlayback(this, m_timing.GetFrameRate()));
+    m_playback.reset(new CGameClientReversiblePlayback(this, m_timing.GetFrameRate(), m_serializeSize));
   }
   else
   {
@@ -387,47 +423,6 @@ void CGameClient::ResetPlayback()
   m_playback.reset(new CGameClientDummyPlayback);
 }
 
-/*
-bool CGameClient::InitSerialization()
-{
-  // Check if serialization is supported so savestates and rewind can be used
-  unsigned int serializeSize;
-  try { serializeSize = m_pStruct->SerializeSize(); }
-  catch (...) { LogException("SerializeSize()"); return false; }
-
-  if (serializeSize == 0)
-  {
-    CLog::Log(LOGINFO, "GAME: Serialization not supported, continuing without save or rewind");
-    return false;
-  }
-
-  m_serializeSize = serializeSize;
-  m_bRewindEnabled = CSettings::GetInstance().GetBool("gamesgeneral.enablerewind");
-
-  // Set up rewind functionality
-  if (m_bRewindEnabled)
-  {
-    m_serialState.Init(m_serializeSize, (size_t)(CSettings::GetInstance().GetInt("gamesgeneral.rewindtime") * m_frameRate));
-
-    bool bSuccess = false;
-    try { bSuccess = LogError(m_pStruct->Serialize(m_serialState.GetState(), m_serialState.GetFrameSize()), "Serialize()"); }
-    catch (...) { LogException("Serialize()"); }
-
-    if (!bSuccess)
-    {
-      m_serializeSize = 0;
-      m_bRewindEnabled = false;
-      m_serialState.Reset();
-      CLog::Log(LOGERROR, "GAME: Unable to serialize state, proceeding without save or rewind");
-      return false;
-    }
-  }
-
-  m_bSerializationInited = true;
-
-  return true;
-}
-*/
 void CGameClient::Reset()
 {
   ResetPlayback();
@@ -461,6 +456,8 @@ void CGameClient::CloseFile()
     CloseKeyboard();
 
   m_bIsPlaying = false;
+  m_gamePath.clear();
+  m_serializeSize = 0;
   if (m_inputRateHandle)
   {
     m_inputRateHandle->Release();
@@ -469,6 +466,7 @@ void CGameClient::CloseFile()
 
   m_audio = nullptr;
   m_video = nullptr;
+  m_timing.Reset();
 }
 
 void CGameClient::RunFrame()
@@ -608,7 +606,7 @@ void CGameClient::CloseStream(GAME_STREAM_TYPE stream)
   }
 }
 
-size_t CGameClient::SerializeSize()
+size_t CGameClient::GetSerializeSize()
 {
   CSingleLock lock(m_critSection);
 
@@ -624,6 +622,9 @@ size_t CGameClient::SerializeSize()
 
 bool CGameClient::Serialize(uint8_t* data, size_t size)
 {
+  if (data == nullptr || size == 0)
+    return false;
+
   CSingleLock lock(m_critSection);
 
   bool bSuccess = false;
@@ -638,6 +639,9 @@ bool CGameClient::Serialize(uint8_t* data, size_t size)
 
 bool CGameClient::Deserialize(const uint8_t* data, size_t size)
 {
+  if (data == nullptr || size == 0)
+    return false;
+
   CSingleLock lock(m_critSection);
 
   bool bSuccess = false;

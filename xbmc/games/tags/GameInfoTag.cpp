@@ -37,6 +37,7 @@ void CGameInfoTag::Reset()
   m_strPublisher.clear();
   m_strFormat.clear();
   m_strCartridgeType.clear();
+  m_strSavestate.clear();
 }
 
 const CGameInfoTag& CGameInfoTag::operator=(const CGameInfoTag& tag)
@@ -52,6 +53,7 @@ const CGameInfoTag& CGameInfoTag::operator=(const CGameInfoTag& tag)
     m_strPublisher     = tag.m_strPublisher;
     m_strFormat        = tag.m_strFormat;
     m_strCartridgeType = tag.m_strCartridgeType;
+    m_strSavestate     = tag.m_strSavestate;
   }
   return *this;
 }
@@ -71,6 +73,7 @@ bool CGameInfoTag::operator==(const CGameInfoTag& tag) const
     if (m_strPublisher     != tag.m_strPublisher)     return false;
     if (m_strFormat        != tag.m_strFormat)        return false;
     if (m_strCartridgeType != tag.m_strCartridgeType) return false;
+    if (m_strSavestate     != tag.m_strSavestate)     return false;
   }
   return true;
 }
@@ -88,6 +91,7 @@ void CGameInfoTag::Archive(CArchive& ar)
     ar << std::string(m_strPublisher);
     ar << std::string(m_strFormat);
     ar << std::string(m_strCartridgeType);
+    ar << std::string(m_strSavestate);
   }
   else
   {
@@ -100,6 +104,7 @@ void CGameInfoTag::Archive(CArchive& ar)
     ar >> m_strPublisher;
     ar >> m_strFormat;
     ar >> m_strCartridgeType;
+    ar >> m_strSavestate;
   }
 }
 
@@ -114,6 +119,7 @@ void CGameInfoTag::Serialize(CVariant& value) const
   value["publisher"]     = m_strPublisher;
   value["format"]        = m_strFormat;
   value["cartridgetype"] = m_strCartridgeType;
+  value["savestate"]     = m_strSavestate;
 }
 
 void CGameInfoTag::ToSortable(SortItem& sortable, Field field) const

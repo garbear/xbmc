@@ -95,12 +95,7 @@ class CGameClient : public ADDON::CAddonDll<DllGameClient, GameClient, game_clie
 public:
   static std::unique_ptr<CGameClient> FromExtension(ADDON::AddonProps props, const cp_extension_t* ext);
 
-  CGameClient(ADDON::AddonProps props, 
-              const std::vector<std::string>& extensions,
-              bool bSupportsVFS, 
-              bool bSupportsGameLoop,
-              bool bSupportsStandalone, 
-              bool bSupportsKeyboard);
+  CGameClient(ADDON::AddonProps props);
 
   virtual ~CGameClient(void);
 
@@ -119,13 +114,16 @@ public:
 
   // Start/stop gameplay
   bool Initialize(void);
+  void Unload();
   bool OpenFile(const CFileItem& file, IGameAudioCallback* audio, IGameVideoCallback* video);
   void Reset();
   void CloseFile();
+  const std::string& GetGamePath() const { return m_gamePath; }
 
   // Playback control
   bool IsPlaying() const { return m_bIsPlaying; }
   IGameClientPlayback* GetPlayback() { return m_playback.get(); }
+  const CGameClientTiming& Timing() const { return m_timing; }
   void RunFrame();
 
   // Audio/video callbacks
@@ -137,7 +135,7 @@ public:
   void CloseStream(GAME_STREAM_TYPE stream);
 
   // Access memory
-  size_t SerializeSize();
+  size_t SerializeSize() const { return m_serializeSize; }
   bool Serialize(uint8_t* data, size_t size);
   bool Deserialize(const uint8_t* data, size_t size);
 
@@ -174,6 +172,9 @@ private:
   ControllerVector GetControllers(void) const;
   bool AcceptsInput(void);
 
+  // Private memory stream functions
+  size_t GetSerializeSize();
+
   // Helper functions
   void LogAddonProperties(void) const;
   bool LogError(GAME_ERROR error, const char* strMethod) const;
@@ -193,6 +194,8 @@ private:
 
   // Properties of the current playing file
   std::atomic_bool      m_bIsPlaying;          // True between OpenFile() and CloseFile()
+  std::string           m_gamePath;
+  size_t                m_serializeSize;
   IGameAudioCallback*   m_audio;               // The audio callback passed to OpenFile()
   IGameVideoCallback*   m_video;               // The video callback passed to OpenFile()
   CGameClientTiming     m_timing;              // Class to scale playback to avoid resampling audio
