@@ -1,4 +1,5 @@
-SRCS=GUIDialogSelectGameClient.cpp \
+SRCS=GUIDialogSavestates.cpp \
+     GUIDialogSelectGameClient.cpp \
 
 LIB=gamedialogs.a
 
