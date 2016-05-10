@@ -26,7 +26,9 @@
 
 using namespace JOYSTICK;
 
-#define ANALOG_DIGITAL_THRESHOLD  0.5f
+#define JOYSTICK_DEADZONE                 0.2f // TODO: Get from settings
+#define ANALOG_DIGITAL_THRESHOLD_PERCENT  40 // % of original axis before deadzone filtering
+#define ANALOG_DIGITAL_THRESHOLD_VALUE    ((1.0f - JOYSTICK_DEADZONE) * ANALOG_DIGITAL_THRESHOLD_PERCENT / 100)
 
 // --- CJoystickFeature --------------------------------------------------------
 
@@ -73,7 +75,7 @@ bool CScalarFeature::OnAnalogMotion(const CDriverPrimitive& source, float magnit
 
   if (m_inputType == INPUT_TYPE::DIGITAL)
   {
-    bHandled = OnDigitalMotion(source, magnitude >= ANALOG_DIGITAL_THRESHOLD);
+    bHandled = OnDigitalMotion(source, magnitude >= ANALOG_DIGITAL_THRESHOLD_VALUE);
   }
   else if (m_inputType == INPUT_TYPE::ANALOG)
   {
