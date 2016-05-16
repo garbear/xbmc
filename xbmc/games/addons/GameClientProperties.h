@@ -64,6 +64,12 @@ private:
   // Equal to special://profile/addon_data/<parent's id>/save
   const char* GetSaveDirectory(void);
 
+  // List of extensions from addon.xml
+  const char** GetExtensions(void);
+
+  // Number of extensions
+  unsigned int GetExtensionCount(void) const { return m_extensions.size(); }
+
   // Helper functions
   bool AddProxyDll(const std::string& strLibPath);
   bool HasProxyDll(const std::string& strLibPath) const;
@@ -78,6 +84,7 @@ private:
   std::string        m_strSystemDirectory;  // immutable
   std::string        m_strContentDirectory; // immutable
   std::string        m_strSaveDirectory;    // immutable
+  std::vector<char*> m_extensions;          // mutable
 };
 
 } // namespace GAME

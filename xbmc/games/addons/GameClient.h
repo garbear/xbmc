@@ -108,6 +108,7 @@ public:
 
   // Query properties of the game client
   bool                         IsStandalone() const { return m_bSupportsStandalone; }
+  bool                         SupportsVFS() const { return m_bSupportsVFS; }
   const std::set<std::string>& GetExtensions() const { return m_extensions; }
   bool                         IsExtensionValid(const std::string& strExtension) const;
   bool                         CanOpen(const CFileItem& file) const;

@@ -48,6 +48,10 @@ void CGameClientProperties::ReleaseResources(void)
   for (std::vector<char*>::const_iterator it = m_proxyDllPaths.begin(); it != m_proxyDllPaths.end(); ++it)
     delete[] *it;
   m_proxyDllPaths.clear();
+
+  for (std::vector<char*>::const_iterator it = m_extensions.begin(); it != m_extensions.end(); ++it)
+    delete[] *it;
+  m_extensions.clear();
 }
 
 void CGameClientProperties::InitializeProperties(void)
@@ -60,6 +64,9 @@ void CGameClientProperties::InitializeProperties(void)
   m_properties.system_directory     = GetSystemDirectory();
   m_properties.content_directory    = GetContentDirectory();
   m_properties.save_directory       = GetSaveDirectory();
+  m_properties.supports_vfs         = m_parent->SupportsVFS();
+  m_properties.extensions           = GetExtensions();
+  m_properties.extension_count      = GetExtensionCount();
 }
 
 const char* CGameClientProperties::GetLibraryPath(void)
@@ -111,6 +118,18 @@ const char* CGameClientProperties::GetSaveDirectory(void)
       CDirectory::Create(m_strSaveDirectory);
   }
   return m_strSaveDirectory.c_str();
+}
+
+const char** CGameClientProperties::GetExtensions(void)
+{
+  for (auto& extension : m_parent->GetExtensions())
+  {
+    char* ext = new char[extension.length() + 1];
+    std::strcpy(ext, extension.c_str());
+    m_extensions.push_back(ext);
+  }
+
+  return !m_extensions.empty() ? const_cast<const char**>(m_extensions.data()) : nullptr;
 }
 
 bool CGameClientProperties::AddProxyDll(const std::string& strAddonId)

@@ -21,7 +21,7 @@
 #define KODI_GAME_TYPES_H_
 
 /* current game API version */
-#define GAME_API_VERSION                "1.0.21"
+#define GAME_API_VERSION                "1.0.22"
 
 /* min. game API version */
 #define GAME_MIN_API_VERSION            "1.0.20"
@@ -417,6 +417,20 @@ typedef struct game_client_properties
    */
   const char* save_directory;
 
+  /*!
+   * The value of the <supports_vfs> property from addon.xml
+   */
+  bool supports_vfs;
+
+  /*!
+   * The extensions in the <extensions> property from addon.xml
+   */
+  const char** extensions;
+
+  /*!
+   * Number of extensions provided
+   */
+  unsigned int extension_count;
 } game_client_properties;
 
 /*! Structure to transfer the methods from kodi_game_dll.h to Kodi */
