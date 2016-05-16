@@ -359,4 +359,155 @@ void CGPUMEM::Flush()
   vcsm_clean_invalid( &iocache );
 }
 
+#include "cores/VideoPlayer/DVDClock.h"
+#include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
+#include "utils/log.h"
+
+extern "C"
+{
+  #include "libswscale/swscale.h"
+  #include "libavutil/imgutils.h"
+  #include "libavcodec/avcodec.h"
+}
+
+CPixelConverter::CPixelConverter() :
+  m_width(0),
+  m_height(0),
+  m_swsContext(nullptr),
+  m_buf(nullptr),
+  m_processInfo(CProcessInfo::CreateInstance())
+{
+}
+
+bool CPixelConverter::Open(AVPixelFormat pixfmt, AVPixelFormat targetfmt, unsigned int width, unsigned int height, void *opaque)
+{
+  CLog::Log(LOGDEBUG, "CPixelConverter::%s: pixfmt:%d tarfgetfmt:%d %dx%d opaque:%p", __FUNCTION__, pixfmt, targetfmt, width, height, opaque);
+  if (pixfmt == targetfmt || width == 0 || height == 0)
+    return false;
+
+  m_vcffmpeg = new CDVDVideoCodecFFmpeg(*m_processInfo);
+  m_decoder = new MMAL::CDecoder;
+
+  memset(&m_avctx, 0, sizeof m_avctx);
+  m_avctx.pix_fmt = AV_PIX_FMT_YUV420P;
+  m_avctx.opaque = (void *)m_vcffmpeg;
+  CDVDStreamInfo hints = {};
+  hints.codec = AV_CODEC_ID_H264; // dummy
+  CDVDCodecOptions options =  {};
+  if (!m_vcffmpeg->Open(hints, options))
+    CLog::Log(LOGERROR, "%s: Unable to open DVDVideoCodecFFMpeg", __FUNCTION__);
+
+  m_avctx.hwaccel_context = opaque;
+  if (m_decoder->Open(&m_avctx, &m_avctx, m_avctx.pix_fmt, 1))
+    m_vcffmpeg->SetHardware(m_decoder);
+  else
+    CLog::Log(LOGERROR, "%s: Unable to open MMALFFmpeg", __FUNCTION__);
+
+  m_width = width;
+  m_height = height;
+
+  m_swsContext = sws_getContext(width, height, pixfmt,
+                                width, height, targetfmt,
+                                SWS_FAST_BILINEAR, NULL, NULL, NULL);
+  if (!m_swsContext)
+  {
+    CLog::Log(LOGERROR, "%s: Failed to create swscale context", __FUNCTION__);
+    return false;
+  }
+
+  return true;
+}
+
+// allocate a new picture (AV_PIX_FMT_YUV420P)
+AVFrame* CPixelConverter::AllocatePicture(int iWidth, int iHeight)
+{
+  AVFrame* frame = new AVFrame;
+  if (frame)
+  {
+    frame->width = iWidth;
+    frame->height = iHeight;
+    frame->format = m_avctx.pix_fmt;
+    m_decoder->FFGetBuffer(&m_avctx, frame, 0);
+  }
+  return frame;
+}
+
+void CPixelConverter::FreePicture(AVFrame* frame)
+{
+  assert(frame);
+  AVBufferRef *buf = frame->buf[0];
+  CGPUMEM *gmem = (CGPUMEM *)av_buffer_get_opaque(buf);
+  m_decoder->FFReleaseBuffer(gmem, nullptr);
+  delete frame;
+}
+
+void CPixelConverter::Dispose()
+{
+  delete m_vcffmpeg;
+  m_vcffmpeg = nullptr;
+
+  m_decoder->Close();
+  m_decoder = nullptr;
+
+  delete m_processInfo;
+  m_processInfo = nullptr;
+
+  if (m_swsContext)
+  {
+    sws_freeContext(m_swsContext);
+    m_swsContext = nullptr;
+  }
+
+  if (m_buf)
+  {
+    FreePicture(m_buf);
+    m_buf = nullptr;
+  }
+}
+
+bool CPixelConverter::Decode(const uint8_t* pData, unsigned int size)
+{
+  if (pData == nullptr || size == 0 || m_swsContext == nullptr)
+    return false;
+
+  if (m_buf)
+    FreePicture(m_buf);
+  m_buf = AllocatePicture(m_width, m_height);
+  if (!m_buf)
+  {
+    CLog::Log(LOGERROR, "%s: Failed to allocate picture of dimensions %dx%d", __FUNCTION__, m_width, m_height);
+    return false;
+  }
+
+  uint8_t* dataMutable = const_cast<uint8_t*>(pData);
+
+  const int stride = size / m_height;
+
+  uint8_t* src[] =       { dataMutable,         0,                   0,                   0 };
+  int      srcStride[] = { stride,              0,                   0,                   0 };
+  uint8_t* dst[] =       { m_buf->data[0],      m_buf->data[1],      m_buf->data[2],      0 };
+  int      dstStride[] = { m_buf->linesize[0],  m_buf->linesize[1],  m_buf->linesize[2],  0 };
+
+  sws_scale(m_swsContext, src, srcStride, 0, m_height, dst, dstStride);
+
+  return true;
+}
+
+void CPixelConverter::GetPicture(DVDVideoPicture& dvdVideoPicture)
+{
+  if (!m_decoder->GetPicture(&m_avctx, m_buf, &dvdVideoPicture))
+    CLog::Log(LOGERROR, "CPixelConverter::AllocatePicture, failed to GetPicture.");
+
+  dvdVideoPicture.dts            = DVD_NOPTS_VALUE;
+  dvdVideoPicture.pts            = DVD_NOPTS_VALUE;
+
+  dvdVideoPicture.iFlags         = 0; // *not* DVP_FLAG_ALLOCATED
+  dvdVideoPicture.color_matrix   = 4; // CONF_FLAGS_YUVCOEF_BT601
+  dvdVideoPicture.color_range    = 0; // *not* CONF_FLAGS_YUV_FULLRANGE
+  dvdVideoPicture.iWidth         = m_width;
+  dvdVideoPicture.iHeight        = m_height;
+  dvdVideoPicture.iDisplayWidth  = m_width; // TODO: Update if aspect ratio changes
+  dvdVideoPicture.iDisplayHeight = m_height;
+}
+
 #endif

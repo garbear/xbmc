@@ -276,7 +276,7 @@ bool CDecoder::Open(AVCodecContext *avctx, AVCodecContext* mainctx, enum AVPixel
 
   m_renderer = (CMMALRenderer *)mainctx->hwaccel_context;
 
-  CLog::Log(LOGNOTICE, "%s::%s - m_renderer:%p", CLASSNAME, __FUNCTION__, m_renderer);
+  CLog::Log(LOGNOTICE, "%s::%s - m_renderer:%p fmt:%d", CLASSNAME, __FUNCTION__, m_renderer, fmt);
   assert(m_renderer);
   mainctx->hwaccel_context = nullptr;
 

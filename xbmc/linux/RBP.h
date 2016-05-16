@@ -105,4 +105,41 @@ private:
 };
 
 extern CRBP g_RBP;
+
+
+#include "libavutil/pixfmt.h"
+
+#include <stdint.h>
+
+struct DVDVideoPicture;
+struct SwsContext;
+struct AVCodecContext;
+#include "cores/VideoPlayer/DVDCodecs/Video/MMALFFmpeg.h"
+
+class CPixelConverter
+{
+public:
+  CPixelConverter();
+  ~CPixelConverter() { Dispose(); }
+
+  bool Open(AVPixelFormat pixfmt, AVPixelFormat target, unsigned int width, unsigned int height, void *opaque);
+  void Dispose();
+  bool Decode(const uint8_t* pData, unsigned int size);
+  void GetPicture(DVDVideoPicture& dvdVideoPicture);
+  AVFrame* AllocatePicture(int iWidth, int iHeight);
+  void FreePicture(AVFrame* pPicture);
+
+private:
+  unsigned int     m_width;
+  unsigned int     m_height;
+  SwsContext*      m_swsContext;
+  AVFrame* m_buf;
+  std::deque<CGPUMEM *> m_freeBuffers;
+  bool m_closing;
+  AVCodecContext m_avctx;
+  CProcessInfo *m_processInfo;
+  MMAL::CDecoder *m_decoder;
+  CDVDVideoCodecFFmpeg *m_vcffmpeg;
+};
+
 #endif
