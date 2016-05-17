@@ -24,6 +24,7 @@
 #include "cores/VideoPlayer/DVDClock.h"
 #include "games/GameTypes.h"
 #include "guilib/DispResource.h"
+#include "threads/CriticalSection.h"
 
 #include <memory>
 
@@ -164,5 +165,6 @@ namespace GAME
     std::unique_ptr<CRetroPlayerAudio> m_audio;
     std::unique_ptr<CRetroPlayerVideo> m_video;
     GameClientPtr                      m_gameClient;
+    CCriticalSection                   m_mutex;
   };
 }

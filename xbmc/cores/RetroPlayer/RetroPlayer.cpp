@@ -26,6 +26,7 @@
 #include "games/addons/GameClient.h"
 #include "games/tags/GameInfoTag.h"
 #include "games/GameManager.h"
+#include "threads/SingleLock.h"
 #include "utils/log.h"
 #include "windowing/WindowingFactory.h"
 #include "FileItem.h"
@@ -50,6 +51,8 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
 {
   std::string redactedPath = CURL::GetRedacted(file.GetPath());
   CLog::Log(LOGINFO, "RetroPlayer: Opening: %s", redactedPath.c_str());
+
+  CSingleLock lock(m_mutex);
 
   if (IsPlaying())
     CloseFile();
@@ -107,6 +110,8 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
 bool CRetroPlayer::CloseFile(bool reopen /* = false */)
 {
   CLog::Log(LOGDEBUG, "RetroPlayer: Closing file");
+
+  CSingleLock lock(m_mutex);
 
   if (m_gameClient)
   {
