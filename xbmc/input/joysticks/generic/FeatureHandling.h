@@ -100,6 +100,7 @@ namespace JOYSTICK
     const INPUT_TYPE m_inputType;
     bool             m_bDigitalState;
     float            m_analogState;
+    bool             m_bLastHandled;
   };
 
   /*!
