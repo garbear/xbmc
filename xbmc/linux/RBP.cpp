@@ -379,17 +379,41 @@ CPixelConverter::CPixelConverter() :
 {
 }
 
+static struct {
+  AVPixelFormat pixfmt;
+  AVPixelFormat targetfmt;
+} pixfmt_target_table[] =
+{
+   {AV_PIX_FMT_BGR0,      AV_PIX_FMT_BGR0},
+   {AV_PIX_FMT_RGB565LE,  AV_PIX_FMT_RGB565LE},
+   {AV_PIX_FMT_NONE,      AV_PIX_FMT_NONE}
+};
+
+static AVPixelFormat pixfmt_to_target(AVPixelFormat pixfmt)
+{
+  unsigned int i;
+  for (i = 0; pixfmt_target_table[i].pixfmt != AV_PIX_FMT_NONE; i++)
+    if (pixfmt_target_table[i].pixfmt == pixfmt)
+      break;
+  return pixfmt_target_table[i].targetfmt;
+}
+
 bool CPixelConverter::Open(AVPixelFormat pixfmt, AVPixelFormat targetfmt, unsigned int width, unsigned int height, void *opaque)
 {
-  CLog::Log(LOGDEBUG, "CPixelConverter::%s: pixfmt:%d tarfgetfmt:%d %dx%d opaque:%p", __FUNCTION__, pixfmt, targetfmt, width, height, opaque);
-  if (pixfmt == targetfmt || width == 0 || height == 0)
+  targetfmt = pixfmt_to_target(pixfmt);
+  CLog::Log(LOGDEBUG, "CPixelConverter::%s: pixfmt:%d(%s) targetfmt:%d(%s) %dx%d opaque:%p", __FUNCTION__, pixfmt, av_get_pix_fmt_name(pixfmt), targetfmt, av_get_pix_fmt_name(targetfmt), width, height, opaque);
+  if (targetfmt == AV_PIX_FMT_NONE || width == 0 || height == 0)
+  {
+    CLog::Log(LOGERROR, "%s: Invalid target pixel format: %d", __FUNCTION__, targetfmt);
+    assert(0);
     return false;
+  }
 
   m_vcffmpeg = new CDVDVideoCodecFFmpeg(*m_processInfo);
   m_decoder = new MMAL::CDecoder;
 
   memset(&m_avctx, 0, sizeof m_avctx);
-  m_avctx.pix_fmt = AV_PIX_FMT_YUV420P;
+  m_avctx.pix_fmt = targetfmt;
   m_avctx.opaque = (void *)m_vcffmpeg;
   CDVDStreamInfo hints = {};
   hints.codec = AV_CODEC_ID_H264; // dummy
@@ -407,7 +431,7 @@ bool CPixelConverter::Open(AVPixelFormat pixfmt, AVPixelFormat targetfmt, unsign
   m_height = height;
 
   m_swsContext = sws_getContext(width, height, pixfmt,
-                                width, height, targetfmt,
+                                width, height, m_avctx.pix_fmt,
                                 SWS_FAST_BILINEAR, NULL, NULL, NULL);
   if (!m_swsContext)
   {
