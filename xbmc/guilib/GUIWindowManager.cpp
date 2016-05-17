@@ -677,9 +677,9 @@ void CGUIWindowManager::PreviousWindow()
   if (g_application.m_pPlayer->IsPlayingGame())
   {
     if (previousWindow == WINDOW_FULLSCREEN_VIDEO && g_application.m_pPlayer->IsPaused())
-      g_application.m_pPlayer->Pause();
+      g_application.OnAction(ACTION_PAUSE);
     else if (currentWindow == WINDOW_FULLSCREEN_VIDEO && !g_application.m_pPlayer->IsPaused())
-      g_application.m_pPlayer->Pause();
+      g_application.OnAction(ACTION_PAUSE);
   }
 
   // tell our info manager which window we are going to
@@ -812,9 +812,9 @@ void CGUIWindowManager::ActivateWindow_Internal(int iWindowID, const std::vector
   if (g_application.m_pPlayer->IsPlayingGame())
   {
     if (GetActiveWindow() == WINDOW_FULLSCREEN_VIDEO && !g_application.m_pPlayer->IsPaused())
-      g_application.m_pPlayer->Pause();
+      g_application.OnAction(ACTION_PAUSE);
     else if (iWindowID == WINDOW_FULLSCREEN_VIDEO && g_application.m_pPlayer->IsPaused())
-      g_application.m_pPlayer->Pause();
+      g_application.OnAction(ACTION_PAUSE);
   }
 
   g_infoManager.SetNextWindow(iWindowID);
