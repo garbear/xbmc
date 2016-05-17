@@ -86,11 +86,11 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
   {
     if (file.m_lStartOffset == STARTOFFSET_RESUME && file.HasGameInfoTag())
     {
-      const std::string& savestatePath = file.GetGameInfoTag()->GetSavestate();
-      std::string redactedSavestatePath = CURL::GetRedacted(savestatePath);
+      std::string redactedSavestatePath = CURL::GetRedacted(file.GetGameInfoTag()->GetSavestate());
       CLog::Log(LOGDEBUG, "RetroPlayer: Loading savestate %s", redactedSavestatePath.c_str());
-      if (!SetPlayerState(savestatePath))
-        CLog::Log(LOGERROR, "RetroPlayer: Failed to load savestate from %s", redactedSavestatePath.c_str());
+
+      if (!SetPlayerState(file.GetGameInfoTag()->GetSavestate()))
+        CLog::Log(LOGERROR, "RetroPlayer: Failed to load savestate");
     }
 
     ToFFRW(1);
