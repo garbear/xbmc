@@ -80,6 +80,7 @@ namespace JOYSTICK
     const FeatureName            m_name;
     IInputHandler* const m_handler;
     IButtonMap* const    m_buttonMap;
+    const bool           m_bEnabled;
   };
 
   class CScalarFeature : public CJoystickFeature
