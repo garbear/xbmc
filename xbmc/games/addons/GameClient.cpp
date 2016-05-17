@@ -762,6 +762,11 @@ bool CGameClient::HasFeature(const std::string& controller, const std::string& f
   return false;
 }
 
+bool CGameClient::AcceptsInput(void)
+{
+  return g_windowManager.GetActiveWindowID() == WINDOW_FULLSCREEN_GAME;
+}
+
 void CGameClient::ClearPorts(void)
 {
   for (unsigned int i = 0; i < m_ports.size(); i++)
@@ -984,11 +989,6 @@ void CGameClient::OnKeyRelease(const CKey& key)
     try { m_pStruct->InputEvent(&event); }
     catch (...) { LogException("InputEvent()"); }
   }
-}
-
-bool CGameClient::AcceptsInput(void)
-{
-  return g_windowManager.GetActiveWindowID() == WINDOW_FULLSCREEN_GAME;
 }
 
 void CGameClient::LogAddonProperties(void) const

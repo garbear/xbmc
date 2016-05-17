@@ -147,6 +147,7 @@ public:
 
   // Input functions
   bool HasFeature(const std::string& controller, const std::string& feature);
+  bool AcceptsInput(void);
   bool OnButtonPress(int port, const std::string& feature, bool bPressed);
   bool OnButtonMotion(int port, const std::string& feature, float magnitude);
   bool OnAnalogStickMotion(int port, const std::string& feature, float x, float y);
@@ -171,7 +172,6 @@ private:
   void OpenKeyboard(void);
   void CloseKeyboard(void);
   ControllerVector GetControllers(void) const;
-  bool AcceptsInput(void);
 
   // Private memory stream functions
   size_t GetSerializeSize();

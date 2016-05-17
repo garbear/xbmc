@@ -47,6 +47,11 @@ bool CGameClientInput::HasFeature(const std::string& feature) const
   return m_addon->HasFeature(m_controller->ID(), feature);
 }
 
+bool CGameClientInput::AcceptsInput(void)
+{
+  return m_addon->AcceptsInput();
+}
+
 JOYSTICK::INPUT_TYPE CGameClientInput::GetInputType(const std::string& feature) const
 {
   const std::vector<CControllerFeature>& features = m_controller->Layout().Features();
