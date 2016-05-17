@@ -103,9 +103,7 @@ bool CInputHandling::OnAnalogMotion(const CDriverPrimitive& source, float magnit
       feature = FeaturePtr(CreateFeature(featureName));
 
     if (feature)
-      feature->OnAnalogMotion(source, magnitude);
-
-    bHandled = true;
+      bHandled = feature->OnAnalogMotion(source, magnitude);
   }
 
   return bHandled;
