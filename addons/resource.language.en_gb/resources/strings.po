@@ -16200,7 +16200,13 @@ msgctxt "#35212"
 msgid "This game isn't compatible with any available emulators."
 msgstr ""
 
-#empty strings from id 35213 to 35219
+#. Error dialog text when launching a game and the emulator has an internal error. %s - emulator name
+#: xbmc/games/GameManager.cpp
+msgctxt "#35213"
+msgid "The emulator \"%s\" had an internal error."
+msgstr ""
+
+#empty strings from id 35214 to 35219
 
 #. Description of add-on category for game providers
 #: xbmc/filesystem/AddonsDirectory.cpp

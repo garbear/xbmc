@@ -294,9 +294,22 @@ bool CGameClient::OpenFile(const CFileItem& file, IGameAudioCallback* audio, IGa
     catch (...) { LogException("LoadStandalone()"); }
   }
 
-  // If gameplay failed, check for missing optional resources
   if (!bSuccess)
-    NotifyMissingDep();
+  {
+    std::string missingDep = GetMissingDep();
+    if (!missingDep.empty())
+    {
+      // Failed to play game
+      // The add-on %s is missing.
+      CGUIDialogOK::ShowAndGetInput(g_localizeStrings.Get(35210), StringUtils::Format(g_localizeStrings.Get(35211).c_str(), missingDep.c_str()));
+    }
+    else
+    {
+      // Failed to play game
+      // The emulator "%s" had an internal error.
+      CGUIDialogOK::ShowAndGetInput(g_localizeStrings.Get(35210), StringUtils::Format(g_localizeStrings.Get(35213).c_str(), Name().c_str()));
+    }
+  }
 
   if (bSuccess && LoadGameInfo(file.GetPath()) && NormalizeAudio(audio))
   {
@@ -382,9 +395,11 @@ bool CGameClient::LoadGameInfo(const std::string& logPath)
   return true;
 }
 
-void CGameClient::NotifyMissingDep()
+std::string CGameClient::GetMissingDep()
 {
   using namespace ADDON;
+
+  std::string strAddonId;
 
   const ADDONDEPS& dependencies = GetDeps();
   for (ADDONDEPS::const_iterator it = dependencies.begin(); it != dependencies.end(); ++it)
@@ -392,18 +407,18 @@ void CGameClient::NotifyMissingDep()
     const bool bOptional = it->second.second;
     if (bOptional)
     {
-      const std::string& strAddonId = it->first;
-      AddonPtr dummy;
-      const bool bInstalled = CAddonMgr::GetInstance().GetAddon(strAddonId, dummy);
+      const std::string& strDependencyId = it->first;
+      AddonPtr addon;
+      const bool bInstalled = CAddonMgr::GetInstance().GetAddon(strDependencyId, addon);
       if (!bInstalled)
       {
-        // Failed to play game
-        // The add-on %s is missing.
-        CGUIDialogOK::ShowAndGetInput(g_localizeStrings.Get(35209), StringUtils::Format(g_localizeStrings.Get(35210).c_str(), strAddonId.c_str()));
+        strAddonId = strDependencyId;
         break;
       }
     }
   }
+
+  return strAddonId;
 }
 
 void CGameClient::CreatePlayback()
