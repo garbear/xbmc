@@ -155,13 +155,9 @@ void CGUIWindowGames::GetContextButtons(int itemNumber, CContextButtons &buttons
 
   if (item && !item->GetProperty("pluginreplacecontextitems").asBoolean())
   {
-    if (m_vecItems->IsSourcesPath())
+    if (m_vecItems->IsVirtualDirectoryRoot() || m_vecItems->IsSourcesPath())
     {
       // Context buttons for a sources path, like "Add source", "Remove Source", etc.
-      CGUIDialogContextMenu::GetContextButtons("games", item, buttons);
-    }
-    else if (m_vecItems->IsVirtualDirectoryRoot() || m_vecItems->GetPath() == "sources://games/")
-    {
       CGUIDialogContextMenu::GetContextButtons("games", item, buttons);
     }
     else
@@ -203,11 +199,11 @@ bool CGUIWindowGames::OnContextButton(int itemNumber, CONTEXT_BUTTON button)
   CFileItemPtr item = m_vecItems->Get(itemNumber);
   if (item)
   {
-    if (m_vecItems->IsSourcesPath())
+    if (m_vecItems->IsVirtualDirectoryRoot() || m_vecItems->IsSourcesPath())
     {
       if (CGUIDialogContextMenu::OnContextButton("games", item, button))
       {
-        Update("sources://games/");
+        Update(m_vecItems->GetPath());
         return true;
       }
     }
