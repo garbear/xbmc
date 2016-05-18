@@ -259,6 +259,7 @@ void __declspec(dllexport) get_addon(GameClient* pClient)
   pClient->HwContextReset           = HwContextReset;
   pClient->HwContextDestroy         = HwContextDestroy;
   pClient->UpdatePort               = UpdatePort;
+  pClient->HasFeature               = HasFeature;
   pClient->InputEvent               = InputEvent;
   pClient->SerializeSize            = SerializeSize;
   pClient->Serialize                = Serialize;
