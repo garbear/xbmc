@@ -76,8 +76,16 @@ namespace JOYSTICK
      */
     virtual void ProcessMotions(void) = 0;
 
+    /*!
+     * \brief
+     *
+     *
+     * \return
+     */
+    bool AcceptsInput();
+
   protected:
-    const FeatureName            m_name;
+    const FeatureName    m_name;
     IInputHandler* const m_handler;
     IButtonMap* const    m_buttonMap;
     const bool           m_bEnabled;
@@ -95,8 +103,8 @@ namespace JOYSTICK
     virtual void ProcessMotions(void) override { } // Actions are dispatched immediately
 
   private:
-    bool OnDigitalMotion(bool bPressed);
-    bool OnAnalogMotion(float magnitude);
+    void OnDigitalMotion(bool bPressed);
+    void OnAnalogMotion(float magnitude);
 
     const INPUT_TYPE m_inputType;
     bool             m_bDigitalState;
