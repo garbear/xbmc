@@ -40,7 +40,7 @@ namespace GAME
 
     virtual ~CRetroPlayerVideo();
 
-    // implementation of IRetroPlayerVideoCallback
+    // implementation of IGameVideoCallback
     virtual bool OpenPixelStream(AVPixelFormat pixfmt, unsigned int width, unsigned int height, double framerate) override;
     virtual bool OpenEncodedStream(AVCodecID codec) override;
     virtual void AddData(const uint8_t* data, unsigned int size) override;

@@ -31,7 +31,7 @@ namespace GAME
     CRetroPlayerAudio();
     virtual ~CRetroPlayerAudio() { CloseStream(); }
 
-    // implementation of IRetroPlayerAudioCallback
+    // implementation of IGameAudioCallback
     virtual unsigned int NormalizeSamplerate(unsigned int samplerate) const override;
     virtual bool OpenPCMStream(AEDataFormat format, unsigned int samplerate, const CAEChannelInfo& channelLayout) override;
     virtual bool OpenEncodedStream(AVCodecID codec, unsigned int samplerate, const CAEChannelInfo& channelLayout) override;
