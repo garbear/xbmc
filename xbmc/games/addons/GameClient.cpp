@@ -622,14 +622,14 @@ void CGameClient::CloseStream(GAME_STREAM_TYPE stream)
   {
   case GAME_STREAM_AUDIO:
   {
-    if (m_video)
-      m_video->CloseStream();
+    if (m_audio)
+      m_audio->CloseStream();
     break;
   }
   case GAME_STREAM_VIDEO:
   {
-    if (m_audio)
-      m_audio->CloseStream();
+    if (m_video)
+      m_video->CloseStream();
     break;
   }
   default:
