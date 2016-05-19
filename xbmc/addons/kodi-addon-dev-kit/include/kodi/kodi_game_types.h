@@ -21,10 +21,10 @@
 #define KODI_GAME_TYPES_H_
 
 /* current game API version */
-#define GAME_API_VERSION                "1.0.22"
+#define GAME_API_VERSION                "1.0.23"
 
 /* min. game API version */
-#define GAME_MIN_API_VERSION            "1.0.20"
+#define GAME_MIN_API_VERSION            "1.0.23"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -94,6 +94,14 @@ typedef enum GAME_VIDEO_CODEC
   GAME_VIDEO_CODEC_H264,
   GAME_VIDEO_CODEC_THEORA,
 } GAME_VIDEO_CODEC;
+
+typedef enum GAME_VIDEO_ROTATION // Counter-clockwise
+{
+  GAME_VIDEO_ROTATION_0,
+  GAME_VIDEO_ROTATION_90,
+  GAME_VIDEO_ROTATION_180,
+  GAME_VIDEO_ROTATION_270,
+} GAME_VIDEO_ROTATION;
 
 typedef enum GAME_PCM_FORMAT
 {

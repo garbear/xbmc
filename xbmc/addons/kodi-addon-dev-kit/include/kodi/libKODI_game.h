@@ -141,9 +141,9 @@ public:
     return GAME_close_game(m_handle, m_callbacks);
   }
 
-  bool OpenPixelStream(GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height)
+  bool OpenPixelStream(GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height, GAME_VIDEO_ROTATION rotation)
   {
-    return GAME_open_pixel_stream(m_handle, m_callbacks, format, width, height) == 0;
+    return GAME_open_pixel_stream(m_handle, m_callbacks, format, width, height, rotation) == 0;
   }
 
   bool OpenVideoStream(GAME_VIDEO_CODEC codec)
@@ -205,7 +205,7 @@ protected:
   CB_GameLib* (*GAME_register_me)(void* handle);
   void (*GAME_unregister_me)(void* handle, CB_GameLib* cb);
   void (*GAME_close_game)(void* handle, CB_GameLib* cb);
-  int (*GAME_open_pixel_stream)(void* handle, CB_GameLib* cb, GAME_PIXEL_FORMAT, unsigned int, unsigned int);
+  int (*GAME_open_pixel_stream)(void* handle, CB_GameLib* cb, GAME_PIXEL_FORMAT, unsigned int, unsigned int, GAME_VIDEO_ROTATION);
   int (*GAME_open_video_stream)(void* handle, CB_GameLib* cb, GAME_VIDEO_CODEC);
   int (*GAME_open_pcm_stream)(void* handle, CB_GameLib* cb, GAME_PCM_FORMAT, const GAME_AUDIO_CHANNEL*);
   int (*GAME_open_audio_stream)(void* handle, CB_GameLib* cb, GAME_AUDIO_CODEC, const GAME_AUDIO_CHANNEL*);

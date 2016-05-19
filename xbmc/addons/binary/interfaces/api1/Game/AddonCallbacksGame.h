@@ -46,7 +46,7 @@ public:
   CB_GameLib* GetCallbacks() const { return m_callbacks; }
 
   static void CloseGame(void* addonData);
-  static int OpenPixelStream(void* addonData, GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height);
+  static int OpenPixelStream(void* addonData, GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height, GAME_VIDEO_ROTATION rotation);
   static int OpenVideoStream(void* addonData, GAME_VIDEO_CODEC codec);
   static int OpenPCMStream(void* addonData, GAME_PCM_FORMAT format, const GAME_AUDIO_CHANNEL* channel_map);
   static int OpenAudioStream(void* addonData, GAME_AUDIO_CODEC codec, const GAME_AUDIO_CHANNEL* channel_map);

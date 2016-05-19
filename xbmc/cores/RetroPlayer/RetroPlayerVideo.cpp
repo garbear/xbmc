@@ -47,11 +47,12 @@ CRetroPlayerVideo::~CRetroPlayerVideo()
   m_renderManager.UnInit();
 }
 
-bool CRetroPlayerVideo::OpenPixelStream(AVPixelFormat pixfmt, unsigned int width, unsigned int height, double framerate)
+bool CRetroPlayerVideo::OpenPixelStream(AVPixelFormat pixfmt, unsigned int width, unsigned int height, double framerate, unsigned int orientationDeg)
 {
   CLog::Log(LOGINFO, "RetroPlayerVideo: Creating video stream with pixel format: %i, %dx%d", pixfmt, width, height);
 
   m_framerate = framerate;
+  m_orientation = orientationDeg;
   m_bConfigured = false;
   m_droppedFrames = 0;
   m_pixelConverter.reset(new CPixelConverter);
@@ -119,11 +120,9 @@ bool CRetroPlayerVideo::Configure(DVDVideoPicture& picture)
     unsigned int flags = CONF_FLAGS_YUVCOEF_BT601 | // color_matrix = 4
                          CONF_FLAGS_FULLSCREEN;     // Allow fullscreen
 
-    const int orientation = 0; // (90 = 5, 180 = 2, 270 = 7) if we ever want to use RETRO_ENVIRONMENT_SET_ROTATION
-
     const int buffers = 1; // TODO
 
-    m_bConfigured = m_renderManager.Configure(picture, static_cast<float>(m_framerate), flags, orientation, buffers);
+    m_bConfigured = m_renderManager.Configure(picture, static_cast<float>(m_framerate), flags, m_orientation, buffers);
   }
 
   return m_bConfigured;

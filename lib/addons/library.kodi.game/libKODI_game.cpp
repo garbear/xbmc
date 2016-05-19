@@ -62,12 +62,12 @@ DLLEXPORT void GAME_close_game(AddonCB* frontend, CB_GameLib* cb)
   return cb->CloseGame(frontend->addonData);
 }
 
-DLLEXPORT int GAME_open_pixel_stream(AddonCB* frontend, CB_GameLib* cb, GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height)
+DLLEXPORT int GAME_open_pixel_stream(AddonCB* frontend, CB_GameLib* cb, GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height, GAME_VIDEO_ROTATION rotation)
 {
   if (frontend == NULL || cb == NULL)
     return -1;
 
-  return cb->OpenPixelStream(frontend->addonData, format, width, height);
+  return cb->OpenPixelStream(frontend->addonData, format, width, height, rotation);
 }
 
 DLLEXPORT int GAME_open_video_stream(AddonCB* frontend, CB_GameLib* cb, GAME_VIDEO_CODEC codec)

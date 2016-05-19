@@ -41,7 +41,7 @@ namespace GAME
     virtual ~CRetroPlayerVideo();
 
     // implementation of IGameVideoCallback
-    virtual bool OpenPixelStream(AVPixelFormat pixfmt, unsigned int width, unsigned int height, double framerate) override;
+    virtual bool OpenPixelStream(AVPixelFormat pixfmt, unsigned int width, unsigned int height, double framerate, unsigned int orientationDeg) override;
     virtual bool OpenEncodedStream(AVCodecID codec) override;
     virtual void AddData(const uint8_t* data, unsigned int size) override;
     virtual void CloseStream() override;
@@ -64,6 +64,7 @@ namespace GAME
 
     // Stream properties
     double       m_framerate;
+    unsigned int m_orientation; // Degrees counter-clockwise
     bool         m_bConfigured; // Need first picture to configure the render manager
     unsigned int m_droppedFrames;
     std::unique_ptr<CPixelConverter> m_pixelConverter;

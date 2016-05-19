@@ -495,7 +495,7 @@ void CGameClient::RunFrame()
   }
 }
 
-bool CGameClient::OpenPixelStream(GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height)
+bool CGameClient::OpenPixelStream(GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height, GAME_VIDEO_ROTATION rotation)
 {
   if (!m_video)
     return false;
@@ -507,7 +507,23 @@ bool CGameClient::OpenPixelStream(GAME_PIXEL_FORMAT format, unsigned int width, 
     return false;
   }
 
-  return m_video->OpenPixelStream(pixelFormat, width, height, m_timing.GetFrameRate());
+  unsigned int orientation = 0;
+  switch (rotation)
+  {
+  case GAME_VIDEO_ROTATION_90:
+    orientation = 90;
+    break;
+  case GAME_VIDEO_ROTATION_180:
+    orientation = 180;
+    break;
+  case GAME_VIDEO_ROTATION_270:
+    orientation = 270;
+    break;
+  default:
+    break;
+  }
+
+  return m_video->OpenPixelStream(pixelFormat, width, height, m_timing.GetFrameRate(), orientation);
 }
 
 bool CGameClient::OpenVideoStream(GAME_VIDEO_CODEC codec)

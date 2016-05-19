@@ -84,13 +84,13 @@ void CAddonCallbacksGame::CloseGame(void* addonData)
   CApplicationMessenger::GetInstance().PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1, static_cast<void*>(new CAction(ACTION_STOP)));
 }
 
-int CAddonCallbacksGame::OpenPixelStream(void* addonData, GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height)
+int CAddonCallbacksGame::OpenPixelStream(void* addonData, GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height, GAME_VIDEO_ROTATION rotation)
 {
   CGameClient* gameClient = GetGameClient(addonData, __FUNCTION__);
   if (!gameClient)
     return -1;
 
-  return gameClient->OpenPixelStream(format, width, height) ? 0 : -1;
+  return gameClient->OpenPixelStream(format, width, height, rotation) ? 0 : -1;
 }
 
 int CAddonCallbacksGame::OpenVideoStream(void* addonData, GAME_VIDEO_CODEC codec)

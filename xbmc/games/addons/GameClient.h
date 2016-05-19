@@ -128,7 +128,7 @@ public:
   void RunFrame();
 
   // Audio/video callbacks
-  bool OpenPixelStream(GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height);
+  bool OpenPixelStream(GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height, GAME_VIDEO_ROTATION rotation);
   bool OpenVideoStream(GAME_VIDEO_CODEC codec);
   bool OpenPCMStream(GAME_PCM_FORMAT format, const GAME_AUDIO_CHANNEL* channelMap);
   bool OpenAudioStream(GAME_AUDIO_CODEC codec, const GAME_AUDIO_CHANNEL* channelMap);

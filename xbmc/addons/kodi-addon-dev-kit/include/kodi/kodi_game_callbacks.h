@@ -41,10 +41,11 @@ typedef struct CB_GameLib
    * \param format The type of pixel data accepted by this stream
    * \param width The frame width
    * \param height The frame height
+   * \param rotation The rotation (counter-clockwise) of the video frames
    *
    * \return 0 on success or -1 if a video stream is already created
    */
-  int (*OpenPixelStream)(void* addonData, GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height);
+  int (*OpenPixelStream)(void* addonData, GAME_PIXEL_FORMAT format, unsigned int width, unsigned int height, GAME_VIDEO_ROTATION rotation);
 
   /*!
    * \brief Create a video stream for encoded video data
