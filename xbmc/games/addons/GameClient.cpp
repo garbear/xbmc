@@ -511,13 +511,13 @@ bool CGameClient::OpenPixelStream(GAME_PIXEL_FORMAT format, unsigned int width, 
   switch (rotation)
   {
   case GAME_VIDEO_ROTATION_90:
-    orientation = 90;
+    orientation = 360 - 90;
     break;
   case GAME_VIDEO_ROTATION_180:
-    orientation = 180;
+    orientation = 360 - 180;
     break;
   case GAME_VIDEO_ROTATION_270:
-    orientation = 270;
+    orientation = 360 - 270;
     break;
   default:
     break;
