@@ -138,7 +138,7 @@ CGameClient::CGameClient(ADDON::AddonProps props) :
   it = extraInfo.find(GAME_PROPERTY_SUPPORTS_GAME_LOOP);
   if (it != extraInfo.end())
   {
-    m_bSupportsGameLoop = (it->second == "true" || it->second == "yes");
+    m_bSupportsGameLoop = (it->second == "true");
   }
   else
   {
@@ -148,15 +148,15 @@ CGameClient::CGameClient(ADDON::AddonProps props) :
 
   it = extraInfo.find(GAME_PROPERTY_SUPPORTS_VFS);
   if (it != extraInfo.end())
-    m_bSupportsVFS = (it->second == "true" || it->second == "yes");
+    m_bSupportsVFS = (it->second == "true");
 
   it = extraInfo.find(GAME_PROPERTY_SUPPORTS_STANDALONE);
   if (it != extraInfo.end())
-    m_bSupportsStandalone = (it->second == "true" || it->second == "yes");
+    m_bSupportsStandalone = (it->second == "true");
 
   it = extraInfo.find(GAME_PROPERTY_SUPPORTS_KEYBOARD);
   if (it != extraInfo.end())
-    m_bSupportsKeyboard = (it->second == "true" || it->second == "yes");
+    m_bSupportsKeyboard = (it->second == "true");
 
   ResetPlayback();
 }
