@@ -820,13 +820,6 @@ ControllerVector CGameClient::GetControllers(void) const
 
 bool CGameClient::OnButtonPress(int port, const std::string& feature, bool bPressed)
 {
-  // Only allow activated input in fullscreen game
-  if (bPressed && !AcceptsInput())
-  {
-    CLog::Log(LOGDEBUG, "GameClient: button press ignored, not in fullscreen game");
-    return false;
-  }
-
   std::string strControllerId = m_ports[port]->ControllerID();
 
   bool bHandled = false;
@@ -847,10 +840,6 @@ bool CGameClient::OnButtonPress(int port, const std::string& feature, bool bPres
 
 bool CGameClient::OnButtonMotion(int port, const std::string& feature, float magnitude)
 {
-  // Only allow activated input in fullscreen game
-  if (magnitude && !AcceptsInput())
-    return false;
-
   std::string strControllerId = m_ports[port]->ControllerID();
 
   bool bHandled = false;
@@ -871,10 +860,6 @@ bool CGameClient::OnButtonMotion(int port, const std::string& feature, float mag
 
 bool CGameClient::OnAnalogStickMotion(int port, const std::string& feature, float x, float y)
 {
-  // Only allow activated input in fullscreen game
-  if ((x || y) && !AcceptsInput())
-    return false;
-
   std::string strControllerId = m_ports[port]->ControllerID();
 
   bool bHandled = false;
@@ -896,10 +881,6 @@ bool CGameClient::OnAnalogStickMotion(int port, const std::string& feature, floa
 
 bool CGameClient::OnAccelerometerMotion(int port, const std::string& feature, float x, float y, float z)
 {
-  // Only allow activated input in fullscreen game
-  if ((x || y || z) && !AcceptsInput())
-    return false;
-
   std::string strControllerId = m_ports[port]->ControllerID();
 
   bool bHandled = false;
