@@ -77,12 +77,14 @@ namespace JOYSTICK
     virtual void ProcessMotions(void) = 0;
 
     /*!
-     * \brief
+     * \brief Check if the input handler is accepting input
      *
+     * \param bActivation True if the motion is activating (true or positive),
+     *                    false if the motion is deactivating (false or zero)
      *
-     * \return
+     * \return True if input should be sent to the input handler, false otherwise
      */
-    bool AcceptsInput();
+    bool AcceptsInput(bool bActivation);
 
   protected:
     const FeatureName    m_name;
