@@ -144,11 +144,18 @@ bool CGUIWindowGames::OnClick(int iItem, const std::string &player /* = "" */)
   CFileItemPtr item = m_vecItems->Get(iItem);
   if (item)
   {
+    // Compensate for DIR_FLAG_NO_FILE_DIRS flag
     if (URIUtils::IsArchive(item->GetPath()))
     {
       bool bIsGame = false;
 
-      // TODO: Set bIsGame to true if archive is a zip and contains no games
+      // If zip file contains no games, assume it is a game
+      CFileItemList items;
+      if (m_rootDir.GetDirectory(CURL(item->GetPath()), items))
+      {
+        if (items.Size() == 0)
+          bIsGame = true;
+      }
 
       if (!bIsGame)
         item->m_bIsFolder = true;
