@@ -128,25 +128,40 @@ bool CGUIWindowGames::OnClickMsg(int controlId, int actionId)
 void CGUIWindowGames::SetupShares()
 {
   CGUIMediaWindow::SetupShares();
-  // XBMC downloads a list of supported extensions from the remote add-ons
-  // repo. Zip files are treated as directories and scanned recursively; if
-  // they don't contain valid extensions (such as MAME arcade games), the
-  // entire zip will be missing from the MyGames window. Skipping the recursive
-  // scan always shows zip files (note: entering the zip will show an empty
-  // folder) and speeds up directory listing as a nice side effect.
-  //m_rootDir.SetFlags(XFILE::DIR_FLAG_NO_FILE_DIRS);
+
+  // Don't convert zip files to directories. Otherwise, the files will be
+  // opened and scanned for games with a valid extension. If none are found,
+  // the .zip won't be shown.
+  //
+  // This is a problem for MAME roms, because the files inside the .zip don't
+  // have standard extensions.
+  //
+  m_rootDir.SetFlags(XFILE::DIR_FLAG_NO_FILE_DIRS);
 }
 
 bool CGUIWindowGames::OnClick(int iItem, const std::string &player /* = "" */)
 {
   CFileItemPtr item = m_vecItems->Get(iItem);
-  if (item && !item->m_bIsFolder)
+  if (item)
   {
-    PlayGame(*item);
-    return true;
+    if (URIUtils::IsArchive(item->GetPath()))
+    {
+      bool bIsGame = false;
+
+      // TODO: Set bIsGame to true if archive is a zip and contains no games
+
+      if (!bIsGame)
+        item->m_bIsFolder = true;
+    }
+
+    if (!item->m_bIsFolder)
+    {
+      PlayGame(*item);
+      return true;
+    }
   }
 
-  return CGUIMediaWindow::OnClick(iItem);
+  return CGUIMediaWindow::OnClick(iItem, player);
 }
 
 void CGUIWindowGames::GetContextButtons(int itemNumber, CContextButtons &buttons)
