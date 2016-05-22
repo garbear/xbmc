@@ -938,7 +938,6 @@ void CGameClient::CloseKeyboard(void)
   CInputManager::GetInstance().UnregisterKeyboardHandler(this);
 }
 
-
 bool CGameClient::OnKeyPress(const CKey& key)
 {
   // Only allow activated input in fullscreen game
@@ -953,7 +952,7 @@ bool CGameClient::OnKeyPress(const CKey& key)
   game_input_event event;
 
   event.type            = GAME_INPUT_EVENT_KEY;
-  event.port            = 0;
+  event.port            = -1;
   event.controller_id   = ""; // TODO
   event.feature_name    = ""; // TODO
   event.key.pressed     = true;
