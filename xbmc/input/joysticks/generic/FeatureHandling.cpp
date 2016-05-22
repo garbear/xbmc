@@ -42,16 +42,19 @@ CJoystickFeature::CJoystickFeature(const FeatureName& name, IInputHandler* handl
 
 bool CJoystickFeature::AcceptsInput(bool bActivation)
 {
-  if (!m_bEnabled)
-    return false;
+  bool bAcceptsInput = false;
 
-  if (bActivation)
+  if (m_bEnabled)
   {
-    if (!m_handler->AcceptsInput())
-      return false;
+    if (m_handler->AcceptsInput())
+      bAcceptsInput = true;
+
+    // Avoid sticking
+    if (!bActivation)
+      bAcceptsInput = true;
   }
 
-  return true;
+  return bAcceptsInput;
 }
 
 // --- CScalarFeature ----------------------------------------------------------
