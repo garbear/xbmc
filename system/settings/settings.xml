@@ -1889,7 +1889,7 @@
   </section>
   <section id="games" label="15016" help="35200">
     <category id="gamesgeneral" label="16000" help="35202">
-      <group id="1">
+      <group id="1" label="35197">
         <setting id="gamesgeneral.enablerewind" type="boolean" label="35203" help="35204">
           <level>0</level>
           <default>true</default>
@@ -1913,7 +1913,7 @@
       </group>
     </category>
     <category id="gamesinput" label="15087" help="35201">
-      <group id="1">
+      <group id="1" label="35198">
         <setting id="gamesinput.controllerconfig" type="action" label="35063" help="35064">
           <level>0</level>
           <dependencies>
@@ -1937,7 +1937,7 @@
           <control type="toggle" />
         </setting>
       </group>
-      <group id="2">
+      <group id="2" label="35199">
         <setting id="gamesinput.emulatedcontrollers" type="integer" label="35066" help="35067">
           <level>0</level>
           <default>0</default>

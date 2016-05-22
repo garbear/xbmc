@@ -16126,7 +16126,22 @@ msgctxt "#35102"
 msgid "Disable joystick when this device is present"
 msgstr ""
 
-#empty strings from id 35103 to 35199
+#empty strings from id 35103 to 35196
+
+#: system/settings/settings.xml
+msgctxt "#35197"
+msgid "Gameplay"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35198"
+msgid "Controllers"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#35199"
+msgid "Keyboard"
+msgstr ""
 
 #: system/settings/settings.xml
 msgctxt "#35200"
