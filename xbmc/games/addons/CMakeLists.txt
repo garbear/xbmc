@@ -13,3 +13,7 @@ set(HEADERS GameClient.h
 
 core_add_library(gameaddons)
 add_dependencies(gameaddons libcpluff)
+
+if(ENABLE_INTERNAL_FFMPEG)
+  add_dependencies(gameaddons ffmpeg)
+endif()

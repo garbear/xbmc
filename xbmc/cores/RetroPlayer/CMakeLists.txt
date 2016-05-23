@@ -10,3 +10,7 @@ set(HEADERS PixelConverter.h
 
 core_add_library(retroplayer)
 add_dependencies(retroplayer libcpluff)
+
+if(ENABLE_INTERNAL_FFMPEG)
+  add_dependencies(retroplayer ffmpeg)
+endif()
