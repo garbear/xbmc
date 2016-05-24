@@ -361,8 +361,6 @@
 		68D77D391CD1C7EB004C1735 /* GameClientTiming.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D2E1CD1C7EB004C1735 /* GameClientTiming.cpp */; };
 		68D77D3A1CD1C7EB004C1735 /* GameClientTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D301CD1C7EB004C1735 /* GameClientTranslator.cpp */; };
 		68D77D3B1CD1C7EB004C1735 /* GameClientTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D301CD1C7EB004C1735 /* GameClientTranslator.cpp */; };
-		68D77D441CD1C7F3004C1735 /* GameClientBasicPlayback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D3C1CD1C7F3004C1735 /* GameClientBasicPlayback.cpp */; };
-		68D77D451CD1C7F3004C1735 /* GameClientBasicPlayback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D3C1CD1C7F3004C1735 /* GameClientBasicPlayback.cpp */; };
 		68D77D461CD1C7F3004C1735 /* GameClientReversiblePlayback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D3F1CD1C7F3004C1735 /* GameClientReversiblePlayback.cpp */; };
 		68D77D471CD1C7F3004C1735 /* GameClientReversiblePlayback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D3F1CD1C7F3004C1735 /* GameClientReversiblePlayback.cpp */; };
 		68D77D481CD1C7F3004C1735 /* GameLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D411CD1C7F3004C1735 /* GameLoop.cpp */; };
@@ -2805,6 +2803,7 @@
 		6815C1401CC7BADB000DB91A /* RumbleGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RumbleGenerator.h; path = joysticks/RumbleGenerator.h; sourceTree = "<group>"; };
 		6818418A1CE81BC300B460E4 /* GUIDialogSelectGameClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIDialogSelectGameClient.cpp; path = games/dialogs/GUIDialogSelectGameClient.cpp; sourceTree = "<group>"; };
 		6818418B1CE81BC300B460E4 /* GUIDialogSelectGameClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDialogSelectGameClient.h; path = games/dialogs/GUIDialogSelectGameClient.h; sourceTree = "<group>"; };
+		682846281CF3E6B200087028 /* GameClientRealtimePlayback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameClientRealtimePlayback.h; path = games/addons/playback/GameClientRealtimePlayback.h; sourceTree = "<group>"; };
 		6861B9E81CC248EE00F62655 /* DriverReceiving.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DriverReceiving.cpp; path = joysticks/generic/DriverReceiving.cpp; sourceTree = "<group>"; };
 		6861B9E91CC248EE00F62655 /* DriverReceiving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DriverReceiving.h; path = joysticks/generic/DriverReceiving.h; sourceTree = "<group>"; };
 		6861B9EC1CC248F600F62655 /* IDriverReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IDriverReceiver.h; path = joysticks/IDriverReceiver.h; sourceTree = "<group>"; };
@@ -2938,8 +2937,6 @@
 		68D77D2F1CD1C7EB004C1735 /* GameClientTiming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameClientTiming.h; path = games/addons/GameClientTiming.h; sourceTree = "<group>"; };
 		68D77D301CD1C7EB004C1735 /* GameClientTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameClientTranslator.cpp; path = games/addons/GameClientTranslator.cpp; sourceTree = "<group>"; };
 		68D77D311CD1C7EB004C1735 /* GameClientTranslator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameClientTranslator.h; path = games/addons/GameClientTranslator.h; sourceTree = "<group>"; };
-		68D77D3C1CD1C7F3004C1735 /* GameClientBasicPlayback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameClientBasicPlayback.cpp; path = games/addons/playback/GameClientBasicPlayback.cpp; sourceTree = "<group>"; };
-		68D77D3D1CD1C7F3004C1735 /* GameClientBasicPlayback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameClientBasicPlayback.h; path = games/addons/playback/GameClientBasicPlayback.h; sourceTree = "<group>"; };
 		68D77D3F1CD1C7F3004C1735 /* GameClientReversiblePlayback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameClientReversiblePlayback.cpp; path = games/addons/playback/GameClientReversiblePlayback.cpp; sourceTree = "<group>"; };
 		68D77D401CD1C7F3004C1735 /* GameClientReversiblePlayback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameClientReversiblePlayback.h; path = games/addons/playback/GameClientReversiblePlayback.h; sourceTree = "<group>"; };
 		68D77D411CD1C7F3004C1735 /* GameLoop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameLoop.cpp; path = games/addons/playback/GameLoop.cpp; sourceTree = "<group>"; };
@@ -6491,8 +6488,7 @@
 		68D77D261CD1C7D9004C1735 /* playback */ = {
 			isa = PBXGroup;
 			children = (
-				68D77D3C1CD1C7F3004C1735 /* GameClientBasicPlayback.cpp */,
-				68D77D3D1CD1C7F3004C1735 /* GameClientBasicPlayback.h */,
+				682846281CF3E6B200087028 /* GameClientRealtimePlayback.h */,
 				68D77D3F1CD1C7F3004C1735 /* GameClientReversiblePlayback.cpp */,
 				68D77D401CD1C7F3004C1735 /* GameClientReversiblePlayback.h */,
 				68D77D411CD1C7F3004C1735 /* GameLoop.cpp */,
@@ -9989,7 +9985,6 @@
 				E38E1F990D25F9FD00618676 /* DVDInputStream.cpp in Sources */,
 				DF6A0D841A4584E80075BBFC /* OverrideFile.cpp in Sources */,
 				E38E1F9A0D25F9FD00618676 /* DVDInputStreamFFmpeg.cpp in Sources */,
-				68D77D441CD1C7F3004C1735 /* GameClientBasicPlayback.cpp in Sources */,
 				E38E1F9B0D25F9FD00618676 /* DVDInputStreamFile.cpp in Sources */,
 				68AE5C1D1C92438E00C4D527 /* GUIFeatureButton.cpp in Sources */,
 				E38E1F9D0D25F9FD00618676 /* DVDInputStreamMemory.cpp in Sources */,
@@ -11660,7 +11655,6 @@
 				68AE5C0E1C92437900C4D527 /* GUIFeatureList.cpp in Sources */,
 				E499139D174E5F0E00741B6D /* GUIViewStateMusic.cpp in Sources */,
 				E499139E174E5F0E00741B6D /* MusicDatabase.cpp in Sources */,
-				68D77D451CD1C7F3004C1735 /* GameClientBasicPlayback.cpp in Sources */,
 				9A2FAD6B1C972BE10049652A /* ContextMenus.cpp in Sources */,
 				E499139F174E5F0E00741B6D /* MusicDbUrl.cpp in Sources */,
 				E49913A0174E5F0E00741B6D /* MusicInfoLoader.cpp in Sources */,
