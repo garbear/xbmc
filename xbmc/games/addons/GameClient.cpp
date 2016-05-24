@@ -28,6 +28,7 @@
 #include "FileItem.h"
 #include "filesystem/Directory.h"
 #include "filesystem/SpecialProtocol.h"
+#include "games/addons/playback/GameClientRealtimePlayback.h"
 #include "games/addons/playback/GameClientReversiblePlayback.h"
 #include "games/controllers/Controller.h"
 #include "games/ports/PortManager.h"
@@ -434,7 +435,7 @@ void CGameClient::CreatePlayback()
 
 void CGameClient::ResetPlayback()
 {
-  m_playback.reset(new CGameClientDummyPlayback);
+  m_playback.reset(new CGameClientRealtimePlayback);
 }
 
 void CGameClient::Reset()

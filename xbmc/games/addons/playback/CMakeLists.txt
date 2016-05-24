@@ -1,7 +1,8 @@
 set(SOURCES GameClientReversiblePlayback.cpp
             GameLoop.cpp)
 
-set(HEADERS GameClientReversiblePlayback.h
+set(HEADERS GameClientRealtimePlayback.h
+            GameClientReversiblePlayback.h
             GameLoop.h
             IGameClientPlayback.h)
 

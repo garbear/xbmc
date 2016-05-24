@@ -33,11 +33,9 @@ namespace GAME
     virtual bool CanPause() const = 0;
     virtual bool CanSeek() const = 0;
 
-    // Basic playback
+    // Control playback
     virtual bool IsPaused() const = 0;
     virtual void PauseUnpause() = 0;
-
-    // Reversible playback
     virtual unsigned int GetTimeMs() const = 0;
     virtual unsigned int GetTotalTimeMs() const = 0;
     virtual unsigned int GetCacheTimeMs() const = 0;
@@ -48,25 +46,5 @@ namespace GAME
     // Savestates
     virtual std::string CreateManualSavestate() = 0; // Returns the path of savestate on success
     virtual bool LoadSavestate(const std::string& path) = 0;
-  };
-
-  class CGameClientDummyPlayback : public IGameClientPlayback
-  {
-  public:
-    virtual ~CGameClientDummyPlayback() = default;
-
-    // implementation of IGameClientPlayback
-    virtual bool CanPause() const override { return false; }
-    virtual bool CanSeek() const override { return false; }
-    virtual bool IsPaused() const override { return false; }
-    virtual void PauseUnpause() override { }
-    virtual unsigned int GetTimeMs() const override { return 0; }
-    virtual unsigned int GetTotalTimeMs() const override { return 0; }
-    virtual unsigned int GetCacheTimeMs() const override { return 0; }
-    virtual void SeekTimeMs(unsigned int timeMs) override { }
-    virtual double GetSpeed() const override { return 1.0; }
-    virtual void SetSpeed(double speedFactor) override { }
-    virtual std::string CreateManualSavestate() override { return ""; }
-    virtual bool LoadSavestate(const std::string& path) override { return false; }
   };
 }
