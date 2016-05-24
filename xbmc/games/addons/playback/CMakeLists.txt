@@ -1,9 +1,7 @@
-set(SOURCES GameClientBasicPlayback.cpp
-            GameClientReversiblePlayback.cpp
+set(SOURCES GameClientReversiblePlayback.cpp
             GameLoop.cpp)
 
-set(HEADERS GameClientBasicPlayback.h
-            GameClientReversiblePlayback.h
+set(HEADERS GameClientReversiblePlayback.h
             GameLoop.h
             IGameClientPlayback.h)
 

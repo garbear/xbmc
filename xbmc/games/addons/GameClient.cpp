@@ -28,7 +28,6 @@
 #include "FileItem.h"
 #include "filesystem/Directory.h"
 #include "filesystem/SpecialProtocol.h"
-#include "games/addons/playback/GameClientBasicPlayback.h"
 #include "games/addons/playback/GameClientReversiblePlayback.h"
 #include "games/controllers/Controller.h"
 #include "games/ports/PortManager.h"

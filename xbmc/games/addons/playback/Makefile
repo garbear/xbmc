@@ -1,5 +1,4 @@
-SRCS=GameClientBasicPlayback.cpp \
-     GameClientReversiblePlayback.cpp \
+SRCS=GameClientReversiblePlayback.cpp \
      GameLoop.cpp \
 
 LIB=gameaddonplayback.a
