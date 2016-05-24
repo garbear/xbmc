@@ -413,7 +413,6 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\filesystem\MusicDatabaseDirectory\DirectoryNodeGrouped.cpp" />
     <ClCompile Include="..\..\xbmc\games\addons\GameClientTiming.cpp" />
     <ClCompile Include="..\..\xbmc\games\addons\GameClientTranslator.cpp" />
-    <ClCompile Include="..\..\xbmc\games\addons\playback\GameClientBasicPlayback.cpp" />
     <ClCompile Include="..\..\xbmc\games\addons\playback\GameClientReversiblePlayback.cpp" />
     <ClCompile Include="..\..\xbmc\games\addons\playback\GameLoop.cpp" />
     <ClCompile Include="..\..\xbmc\games\addons\savestates\BasicMemoryStream.cpp" />
@@ -1159,7 +1158,7 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\games\addons\GameClientCallbacks.h" />
     <ClInclude Include="..\..\xbmc\games\addons\GameClientTiming.h" />
     <ClInclude Include="..\..\xbmc\games\addons\GameClientTranslator.h" />
-    <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientBasicPlayback.h" />
+    <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientRealtimePlayback.h" />
     <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientReversiblePlayback.h" />
     <ClInclude Include="..\..\xbmc\games\addons\playback\GameLoop.h" />
     <ClInclude Include="..\..\xbmc\games\addons\playback\IGameClientPlayback.h" />

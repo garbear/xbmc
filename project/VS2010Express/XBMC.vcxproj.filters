@@ -3533,9 +3533,6 @@
     <ClCompile Include="..\..\xbmc\games\addons\GameClientTranslator.cpp">
       <Filter>games\addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xbmc\games\addons\playback\GameClientBasicPlayback.cpp">
-      <Filter>games\addons\playback</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xbmc\games\addons\playback\GameClientReversiblePlayback.cpp">
       <Filter>games\addons\playback</Filter>
     </ClCompile>
@@ -6914,9 +6911,6 @@
     <ClInclude Include="..\..\xbmc\games\addons\GameClientTranslator.h">
       <Filter>games\addons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientBasicPlayback.h">
-      <Filter>games\addons\playback</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientReversiblePlayback.h">
       <Filter>games\addons\playback</Filter>
     </ClInclude>
@@ -7000,6 +6994,9 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\dialogs\GUIDialogSelectGameClient.h">
       <Filter>games\dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientRealtimePlayback.h">
+      <Filter>games\addons\playback</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
