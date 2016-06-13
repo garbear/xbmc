@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mappings for the X-Arcade Tankstick -->
+<!-- https://www.xgaming.com/service/images/Layouts/PC-MAC_Mode_1_Button_Layout.jpg -->
+<keymap>
+  <global>
+    <keyboard>
+      <!-- Player 1 -->
+
+      <!-- A -->
+      <key id='61648'>Select</key> <!-- Left control -->
+      <!-- B -->
+      <key id='61652'>Back</key> <!-- Left alt -->
+      <!-- C -->
+      <space></space>
+      <!-- X -->
+      <key id='61650'>ContextMenu</key> <!-- Left shift -->
+      <!-- Y -->
+      <z>FullScreen</z>
+      <!-- Z -->
+      <x></x>
+      <!-- Left trigger -->
+      <c>PageUp</c>
+      <!-- Right trigger -->
+      <five>PageDown</five>
+      <!-- Joystick left -->
+      <left>Left</left>
+      <!-- Joystick right -->
+      <right>Right</right>
+      <!-- Joystick up -->
+      <up>Up</up>
+      <!-- Joystick down -->
+      <down>Down</down>
+      <!-- Start (1 player) -->
+      <one>ActivateWindow(PlayerControls)</one>
+      <!-- Select (side coin) -->
+      <three></three>
+
+      <!-- Player 2 -->
+
+      <!-- A -->
+      <a>Select</a>
+      <!-- B -->
+      <s>Back</s>
+      <!-- C -->
+      <q></q>
+      <!-- X -->
+      <w>ContextMenu</w>
+      <!-- Y -->
+      <e>FullScreen</e>
+      <!-- Z -->
+      <key id='61531'></key> <!-- Left brace -->
+      <!-- Left trigger -->
+      <key id='61533'>PageUp</key> <!-- Right brace -->
+      <!-- Right trigger -->
+      <six>PageDown</six>
+      <!-- Joystick left -->
+      <d>Left</d>
+      <!-- Joystick right -->
+      <g>Right</g>
+      <!-- Joystick up -->
+      <r>Up</r>
+      <!-- Joystick down -->
+      <f>Down</f>
+      <!-- Start (2 player) -->
+      <two>ActivateWindow(PlayerControls)</two>
+      <!-- Select (side coin) -->
+      <four></four>
+    </keyboard>
+  </global>
+</keymap>
