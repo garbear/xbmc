@@ -76,6 +76,8 @@ public:
   IHardwareDecoder * GetHardware() { return m_pHardware; };
   void SetHardware(IHardwareDecoder* hardware);
 
+  static const char* GetPixelFormatName(AVPixelFormat pixfmt);
+
 protected:
   void Dispose();
   static enum AVPixelFormat GetFormat(struct AVCodecContext * avctx, const AVPixelFormat * fmt);
