@@ -35,6 +35,8 @@
 
 using namespace GAME;
 
+#define AUDIO_DECODER_NONE  "none" // Audio decoder name to display for PCM audio
+
 CRetroPlayerAudio::CRetroPlayerAudio(CProcessInfo& processInfo) :
   m_processInfo(processInfo),
   m_pAudioStream(nullptr),
@@ -80,6 +82,8 @@ bool CRetroPlayerAudio::OpenPCMStream(AEDataFormat format, unsigned int samplera
 
   CLog::Log(LOGINFO, "RetroPlayerAudio: Creating audio stream, sample rate = %d", samplerate);
 
+  m_processInfo.ResetAudioCodecInfo();
+
   // Resampling is not supported
   if (NormalizeSamplerate(samplerate) != samplerate)
   {
@@ -99,11 +103,18 @@ bool CRetroPlayerAudio::OpenPCMStream(AEDataFormat format, unsigned int samplera
     return false;
   }
 
+  m_processInfo.SetAudioDecoderName(AUDIO_DECODER_NONE);
+  m_processInfo.SetAudioChannels(channelLayout);
+  m_processInfo.SetAudioSampleRate(samplerate);
+  m_processInfo.SetAudioBitsPerSample(CAEUtil::DataFormatToBits(format));
+
   return true;
 }
 
 bool CRetroPlayerAudio::OpenEncodedStream(AVCodecID codec, unsigned int samplerate, const CAEChannelInfo& channelLayout)
 {
+  m_processInfo.ResetAudioCodecInfo();
+
   CDemuxStreamAudio audioStream;
 
   // Stream
@@ -126,6 +137,9 @@ bool CRetroPlayerAudio::OpenEncodedStream(AVCodecID codec, unsigned int samplera
     CLog::Log(LOGERROR, "RetroPlayerAudio: Failed to create audio codec (codec=%d, samplerate=%u)", codec, samplerate);
     return false;
   }
+
+  m_processInfo.SetAudioChannels(channelLayout);
+  m_processInfo.SetAudioSampleRate(samplerate);
 
   return true;
 }
@@ -155,6 +169,8 @@ void CRetroPlayerAudio::AddData(const uint8_t* data, unsigned int size)
           const AEAudioFormat& format = audioframe.format;
           if (!OpenPCMStream(format.m_dataFormat, format.m_sampleRate, format.m_channelLayout))
             m_pAudioCodec.reset();
+          else
+            m_processInfo.SetAudioBitsPerSample(CAEUtil::DataFormatToBits(format.m_dataFormat));
         }
 
         if (m_pAudioStream)
