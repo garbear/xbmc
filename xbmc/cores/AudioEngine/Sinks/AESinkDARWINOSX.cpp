@@ -466,7 +466,7 @@ inline void LogLevel(unsigned int got, unsigned int wanted)
   {
     if (got != lastReported)
     {
-      CLog::Log(LOGWARNING, "DARWINOSX: %sflow (%u vs %u bytes)", got > wanted ? "over" : "under", got, wanted);
+      //CLog::Log(LOGWARNING, "DARWINOSX: %sflow (%u vs %u bytes)", got > wanted ? "over" : "under", got, wanted);
       lastReported = got;
     }    
   }
