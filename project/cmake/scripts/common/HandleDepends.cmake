@@ -171,6 +171,7 @@ function(add_addon_depends addon searchpath)
             externalproject_add(${id}
                                 GIT_REPOSITORY ${url}
                                 GIT_TAG ${revision}
+                                GIT_SHALLOW 1
                                 "${EXTERNALPROJECT_SETUP}")
 
             # For patchfiles to work, disable (users globally set) autocrlf=true
