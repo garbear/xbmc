@@ -66,12 +66,29 @@ namespace JOYSTICK
     virtual void RevertButtonMap() override;
 
   private:
+    /*!
+     * \brief Process the primitive mapping command
+     *
+     * First, this function checks if the input should be dropped. If so, it
+     * returns true with no effect. Otherwise, the mapping command is sent to
+     * m_buttonMapper.
+     *
+     * \param primitive The primitive being mapped
+     * \return True if the mapping command was handled, false otherwise
+     */
     bool MapPrimitive(const CDriverPrimitive& primitive);
 
-    void Activate(const CDriverPrimitive& semiAxis);
-    void Deactivate(const CDriverPrimitive& semiAxis);
-    bool IsActive(const CDriverPrimitive& semiAxis);
+    // Motion functions
+    void OnMotion(const CDriverPrimitive& semiaxis);
+    void OnMotionless(const CDriverPrimitive& semiaxis);
+    bool IsMoving();
 
+    // Action functions
+    void Activate(const CDriverPrimitive& semiaxis);
+    void Deactivate(const CDriverPrimitive& semiaxis);
+    bool IsActive(const CDriverPrimitive& semiaxis);
+
+    // Construction parameters
     IButtonMapper* const m_buttonMapper;
     IButtonMap* const    m_buttonMap;
     IActionMap* const    m_actionMap;
@@ -82,7 +99,9 @@ namespace JOYSTICK
       bool             bEmitted; // true if this axis has emited a button-mapping command
     };
 
+    std::vector<CDriverPrimitive> m_movingAxes;
     std::vector<ActivatedAxis> m_activatedAxes;
     unsigned int               m_lastAction;
+    bool                       m_bIsMoving;
   };
 }
