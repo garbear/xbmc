@@ -29,6 +29,7 @@
 #include "threads/SingleLock.h"
 #include "utils/log.h"
 #include "utils/MathUtils.h"
+#include "utils/StringUtils.h"
 #include "windowing/WindowingFactory.h"
 #include "FileItem.h"
 #include "URL.h"
@@ -345,13 +346,19 @@ void CRetroPlayer::PrintGameInfo(const CFileItem &file) const
     CLog::Log(LOGDEBUG, "RetroPlayer: ---------------------------------------");
     CLog::Log(LOGDEBUG, "RetroPlayer: Game tag loaded");
     CLog::Log(LOGDEBUG, "RetroPlayer: URL: %s", tag->GetURL().c_str());
-    CLog::Log(LOGDEBUG, "RetroPlayer: Platform: %s", tag->GetPlatform().c_str());
     CLog::Log(LOGDEBUG, "RetroPlayer: Title: %s", tag->GetTitle().c_str());
+    CLog::Log(LOGDEBUG, "RetroPlayer: Platform: %s", tag->GetPlatform().c_str());
+    CLog::Log(LOGDEBUG, "RetroPlayer: Genres: %s", StringUtils::Join(tag->GetGenres(), ", ").c_str());
+    CLog::Log(LOGDEBUG, "RetroPlayer: Developer: %s", tag->GetDeveloper().c_str());
+    if (tag->GetYear() > 0)
+      CLog::Log(LOGDEBUG, "RetroPlayer: Year: %u", tag->GetYear());
     CLog::Log(LOGDEBUG, "RetroPlayer: Game Code: %s", tag->GetID().c_str());
     CLog::Log(LOGDEBUG, "RetroPlayer: Region: %s", tag->GetRegion().c_str());
     CLog::Log(LOGDEBUG, "RetroPlayer: Publisher: %s", tag->GetPublisher().c_str());
     CLog::Log(LOGDEBUG, "RetroPlayer: Format: %s", tag->GetFormat().c_str());
-    CLog::Log(LOGDEBUG, "RetroPlayer: Cartridge Type: %s", tag->GetCartridgeType().c_str());
+    CLog::Log(LOGDEBUG, "RetroPlayer: Cartridge type: %s", tag->GetCartridgeType().c_str());
+    CLog::Log(LOGDEBUG, "RetroPlayer: Save state: %s", tag->GetSavestate().c_str());
+    CLog::Log(LOGDEBUG, "RetroPlayer: Game client: %s", tag->GetGameClient().c_str());
     CLog::Log(LOGDEBUG, "RetroPlayer: ---------------------------------------");
   }
 }
