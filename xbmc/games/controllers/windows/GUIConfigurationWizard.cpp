@@ -48,10 +48,6 @@ void CGUIConfigurationWizard::InitializeState(void)
   m_currentDirection = JOYSTICK::ANALOG_STICK_DIRECTION::UNKNOWN;
   m_history.clear();
   m_lastMappingActionMs = 0;
-
-  // Reset synchronization variables
-  m_inputEvent.Reset();
-  m_motionlessEvent.Reset();
 }
 
 void CGUIConfigurationWizard::Run(const std::string& strControllerId, const std::vector<IFeatureButton*>& buttons, IConfigurationWizardCallback* callback)
@@ -65,6 +61,10 @@ void CGUIConfigurationWizard::Run(const std::string& strControllerId, const std:
     m_strControllerId = strControllerId;
     m_buttons = buttons;
     m_callback = callback;
+
+    // Reset synchronization variables
+    m_inputEvent.Reset();
+    m_motionlessEvent.Reset();
 
     // Initialize state variables
     InitializeState();
