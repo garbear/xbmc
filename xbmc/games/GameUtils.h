@@ -31,6 +31,10 @@ class CURL;
 
 namespace GAME
 {
+  /*!
+   * \ingroup games
+   * \brief Game related utilities.
+   */
   class CGameUtils
   {
   public:

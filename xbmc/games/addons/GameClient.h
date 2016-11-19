@@ -49,6 +49,10 @@ class IGameVideoCallback;
 
 // --- CGameClient -------------------------------------------------------------
 
+/*!
+ * \ingroup games
+ * \brief Interface between Kodi and Game add-ons.
+ */
 class CGameClient : public ADDON::CAddonDll<DllGameClient, GameClient, game_client_properties>
 {
 public:
