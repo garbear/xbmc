@@ -33,6 +33,7 @@ namespace GAME
 class CGameClient;
 
 /**
+ * \ingroup games
  * \brief C++ wrapper for game client properties declared in kodi_game_types.h
  */
 class CGameClientProperties

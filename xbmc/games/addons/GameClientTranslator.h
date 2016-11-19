@@ -28,17 +28,71 @@
 
 namespace GAME
 {
+  /*!
+   * \ingroup games
+   * \brief Translates data types from Game API to the corresponding format in Kodi.
+   *
+   * This class is stateless.
+   */
   class CGameClientTranslator
   {
+    CGameClientTranslator() = delete;
+
   public:
-    static const char*   ToString(GAME_ERROR error);
+    /*!
+     * \brief Translates game errors to string representation (e.g. for logging).
+     * \param error The error to translate.
+     * \return Translated error.
+     */
+    static const char* ToString(GAME_ERROR error);
+
+    /*!
+     * \brief Translate pixel format (Game API to FFMPEG).
+     * \param format The pixel format to translate.
+     * \return Translated pixel format.
+     */
     static AVPixelFormat TranslatePixelFormat(GAME_PIXEL_FORMAT format);
-    static AVCodecID     TranslateVideoCodec(GAME_VIDEO_CODEC codec);
-    static AEDataFormat  TranslatePCMFormat(GAME_PCM_FORMAT format);
-    static AEChannel     TranslateAudioChannel(GAME_AUDIO_CHANNEL channel);
-    static AVCodecID     TranslateAudioCodec(GAME_AUDIO_CODEC codec);
+
+    /*!
+     * \brief Translate video codec (Game API to FFMPEG).
+     * \param format The video codec to translate.
+     * \return Translated video codec format.
+     */
+    static AVCodecID TranslateVideoCodec(GAME_VIDEO_CODEC codec);
+
+    /*!
+     * \brief Translate audio PCM format (Game API to AudioEngine).
+     * \param format The audio PCM format to translate.
+     * \return Translated audio PCM format.
+     */
+    static AEDataFormat TranslatePCMFormat(GAME_PCM_FORMAT format);
+
+    /*!
+     * \brief Translate audio channels (Game API to AudioEngine).
+     * \param format The audio channels to translate.
+     * \return Translated audio channels.
+     */
+    static AEChannel TranslateAudioChannel(GAME_AUDIO_CHANNEL channel);
+
+    /*!
+     * \brief Translate audio codec (Game API to FFMPEG).
+     * \param format The audio codec to translate.
+     * \return Translated audio codec format.
+     */
+    static AVCodecID TranslateAudioCodec(GAME_AUDIO_CODEC codec);
+
+    /*!
+     * \brief Translate key modifiers (Kodi to Game API).
+     * \param modifiers The key modifiers to translate (e.g. Shift, Ctrl).
+     * \return Translated key modifiers.
+     */
     static GAME_KEY_MOD  GetModifiers(CKey::Modifier modifier);
-    static const char*   TranslateRegion(GAME_REGION region);
-    
+
+    /*!
+     * \brief Translate region to string representation (e.g. for logging).
+     * \param error The region to translate (e.g. PAL, NTSC).
+     * \return Translated region.
+     */
+    static const char* TranslateRegion(GAME_REGION region);
   };
 }

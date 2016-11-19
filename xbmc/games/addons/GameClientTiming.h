@@ -24,6 +24,7 @@ namespace GAME
   class IGameAudioCallback;
 
   /*!
+   * \ingroup games
    * \brief Class to normalize audio and video timing to avoid audio resampling
    *
    * For example, assume the audio callback supports two sample rates:

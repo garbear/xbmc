@@ -180,6 +180,11 @@
 */
 
 /*!
+    \defgroup games
+    Everything about RetroPlayer.
+*/
+
+/*!
 	\defgroup interface Interfaces
 	Everything around interfaces
 */
