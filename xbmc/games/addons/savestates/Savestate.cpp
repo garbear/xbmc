@@ -111,8 +111,8 @@ bool CSavestate::Serialize(const std::string& path) const
   XMLUtils::SetString(pElement, SAVESTATE_FIELD_GAMECLIENT, m_gameClient);
   XMLUtils::SetString(pElement, SAVESTATE_FIELD_GAME_PATH, m_gamePath);
   XMLUtils::SetString(pElement, SAVESTATE_FIELD_GAME_CRC, m_gameCRC);
-  XMLUtils::SetLong(pElement, SAVESTATE_FIELD_FRAMES, m_playtimeFrames);
-  XMLUtils::SetFloat(pElement, SAVESTATE_FIELD_WALLCLOCK, m_playtimeWallClock);
+  XMLUtils::SetLong(pElement, SAVESTATE_FIELD_FRAMES, static_cast<long>(m_playtimeFrames));
+  XMLUtils::SetFloat(pElement, SAVESTATE_FIELD_WALLCLOCK, static_cast<float>(m_playtimeWallClock));
   XMLUtils::SetString(pElement, SAVESTATE_FIELD_TIMESTAMP, m_timestamp.GetAsDBDateTime());
   XMLUtils::SetString(pElement, SAVESTATE_FIELD_THUMBNAIL, m_thumbnail);
 
