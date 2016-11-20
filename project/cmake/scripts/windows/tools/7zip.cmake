@@ -27,11 +27,11 @@ else()
   endif()
 
   # copy 7za.exe into the output directory
-  file(INSTALL ${7ZIP_BINARY_PATH} DESTINATION ${DEPENDS_PATH}/bin)
+  file(INSTALL ${7ZIP_BINARY_PATH} DESTINATION ${ADDON_DEPENDS_PATH}/bin)
 
   # make sure that cmake can find the copied 7za.exe
   find_program(7ZIP_FOUND NAMES 7z 7za 7z.exe 7za.exe)
   if(NOT 7ZIP_FOUND)
-    message(FATAL_ERROR "ERROR installing 7-Zip utility from ${7ZIP_BINARY_PATH} to ${DEPENDS_PATH}/bin")
+    message(FATAL_ERROR "ERROR installing 7-Zip utility from ${7ZIP_BINARY_PATH} to ${ADDON_DEPENDS_PATH}/bin")
   endif()
 endif()

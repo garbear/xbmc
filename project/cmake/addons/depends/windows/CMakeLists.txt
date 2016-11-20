@@ -49,7 +49,7 @@ function(add_7zip id url inputfile)
                       INSTALL_COMMAND ${CMAKE_COMMAND}
                                       -DINPUTDIR=${PROJECT_BINARY_DIR}/build/${id}/src/${id}
                                       -DINPUTFILE=${inputfile}
-                                      -DDESTDIR=${DEPENDS_PATH}
+                                      -DDESTDIR=${ADDON_DEPENDS_PATH}
                                       -P ${PROJECT_SOURCE_DIR}/Install.cmake
                      )
 endfunction()
@@ -66,7 +66,7 @@ function(add_direct id url inputfile)
                       INSTALL_COMMAND ${CMAKE_COMMAND}
                                       -DINPUTDIR=${PROJECT_BINARY_DIR}/build/${id}/src/${id}
                                       -DINPUTFILE=${inputfile}
-                                      -DDESTDIR=${DEPENDS_PATH}
+                                      -DDESTDIR=${ADDON_DEPENDS_PATH}
                                       -P ${PROJECT_SOURCE_DIR}/Install.cmake
                      )
 endfunction()
