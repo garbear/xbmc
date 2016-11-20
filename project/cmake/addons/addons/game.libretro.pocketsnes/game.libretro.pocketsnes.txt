@@ -1,1 +1,0 @@
-game.libretro.pocketsnes https://github.com/kodi-game/game.libretro.pocketsnes master
