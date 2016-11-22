@@ -139,7 +139,8 @@ static bool IsGameAddon(const AddonPtr& addon)
 {
   return IsGameType(addon->Type()) ||
          IsStandaloneGame(addon) ||
-         IsGameProvider(addon);
+         IsGameProvider(addon) ||
+         IsGameResource(addon);
 }
 
 static bool IsDependecyType(TYPE type)
