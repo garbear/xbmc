@@ -59,6 +59,7 @@ const auto CATEGORY_EMULATORS = "category.emulators";
 const auto CATEGORY_STANDALONE_GAMES = "category.standalonegames";
 const auto CATEGORY_GAME_PROVIDERS = "category.gameproviders";
 const auto CATEGORY_GAME_RESOURCES = "category.gameresources";
+const auto CATEGORY_GAME_SUPPORT_ADDONS = "category.gamesupport";
 
 const std::set<TYPE> dependencyTypes = {
     ADDON_SCRAPER_LIBRARY,
@@ -135,12 +136,20 @@ static bool IsGameResource(const AddonPtr& addon)
   return addon->Type() == ADDON_RESOURCE_GAMES;
 }
 
+static bool IsGameSupportAddon(const AddonPtr& addon)
+{
+  return addon->Type() == ADDON_GAMEDLL &&
+         !std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsPath() &&
+         !std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsStandalone();
+}
+
 static bool IsGameAddon(const AddonPtr& addon)
 {
   return IsGameType(addon->Type()) ||
          IsStandaloneGame(addon) ||
          IsGameProvider(addon) ||
-         IsGameResource(addon);
+         IsGameResource(addon) ||
+         IsGameSupportAddon(addon);
 }
 
 static bool IsDependecyType(TYPE type)
@@ -283,6 +292,23 @@ static void GenerateGameListing(const CURL& path, const VECADDONS& addons, CFile
       break;
     }
   }
+  // Game support add-ons
+  for (const auto& addon : addons)
+  {
+    if (IsGameSupportAddon(addon))
+    {
+      CFileItemPtr item(new CFileItem(g_localizeStrings.Get(35216))); // Support add-ons
+      CURL itemPath = path;
+      itemPath.SetFileName(CATEGORY_GAME_SUPPORT_ADDONS);
+      item->SetPath(itemPath.Get());
+      item->m_bIsFolder = true;
+      std::string thumb = GetIcon(ADDON_GAMEDLL);
+      if (!thumb.empty() && g_TextureManager.HasTexture(thumb))
+        item->SetArt("thumb", thumb);
+      items.Add(item);
+      break;
+    }
+  }
 }
 
 //Creates the top-level category list
@@ -380,6 +406,13 @@ static void GenerateCategoryListing(const CURL& path, VECADDONS& addons,
     addons.erase(std::remove_if(addons.begin(), addons.end(),
                                 [](const AddonPtr& addon){ return !IsGameResource(addon); }), addons.end());
     CAddonsDirectory::GenerateAddonListing(path, addons, items, g_localizeStrings.Get(35209)); // Game resources
+  }
+  else if (category == CATEGORY_GAME_SUPPORT_ADDONS)
+  {
+    items.SetProperty("addoncategory", g_localizeStrings.Get(35216)); // Support add-ons
+    addons.erase(std::remove_if(addons.begin(), addons.end(),
+      [](const AddonPtr& addon) { return !IsGameSupportAddon(addon); }), addons.end());
+    CAddonsDirectory::GenerateAddonListing(path, addons, items, g_localizeStrings.Get(35216)); // Support add-ons
   }
   else
   { // fallback to addon type

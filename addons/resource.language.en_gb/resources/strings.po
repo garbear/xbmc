@@ -16476,7 +16476,13 @@ msgctxt "#35215"
 msgid "This game depends on a disabled add-on. Would you like to enable it?"
 msgstr ""
 
-#empty strings from id 35216 to 35219
+#. Description of add-on category for game support add-ons like game.libretro (the libretro wrapper)
+#: xbmc/filesystem/AddonsDirectory.cpp
+msgctxt "#35216"
+msgid "Support add-ons"
+msgstr ""
+
+#empty strings from id 35217 to 35219
 
 #. Description of add-on category for game providers
 #: xbmc/filesystem/AddonsDirectory.cpp
