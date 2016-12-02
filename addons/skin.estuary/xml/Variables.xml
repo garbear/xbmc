@@ -418,4 +418,8 @@
 		<value condition="String.IsEqual(Skin.String(background_overlay),0)">$LOCALIZE[231]</value>
 		<value>$INFO[Skin.String(background_overlay),$LOCALIZE[467] ]</value>
 	</variable>
+	<variable name="BookmarkLabel">
+		<value condition="Window.IsActive(videobookmarks)">$LOCALIZE[31155]</value>
+		<value condition="Window.IsActive(gamesavestates)">$LOCALIZE[31162]</value>
+	</variable>
 </includes>

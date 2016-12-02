@@ -35,6 +35,7 @@ public:
   CGUIDialogVideoBookmarks(void);
   virtual ~CGUIDialogVideoBookmarks(void);
   virtual bool OnMessage(CGUIMessage& message);
+  virtual void OnInitWindow();
   virtual void OnWindowLoaded();
   virtual void OnWindowUnload();
   virtual bool OnAction(const CAction &action);

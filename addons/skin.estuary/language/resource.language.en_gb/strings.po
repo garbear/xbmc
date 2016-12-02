@@ -686,7 +686,7 @@ msgctxt "#31154"
 msgid "Press OK to switch between locations"
 msgstr ""
 
-#: /1080i/VideoOSDBookmarks.xml
+#: /1080i/DialogBookmarks.xml
 msgctxt "#31155"
 msgid "No bookmarks created yet."
 msgstr ""
@@ -719,6 +719,11 @@ msgstr ""
 #: /xml/DialogNumeric.xml
 msgctxt "#31161"
 msgid "Numeric pad"
+msgstr ""
+
+#: /1080i/DialogBookmarks.xml
+msgctxt "#31162"
+msgid "No game states saved yet."
 msgstr ""
 
 #empty strings from id 31148 to 31198
