@@ -3285,6 +3285,8 @@ bool CFileItem::LoadGameTag()
   //! @todo
   GetGameInfoTag();
 
+  m_gameInfoTag->SetLoaded(true);
+
   return false;
 }
 
