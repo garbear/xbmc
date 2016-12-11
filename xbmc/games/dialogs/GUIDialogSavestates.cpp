@@ -51,11 +51,6 @@ CGUIDialogSavestates::CGUIDialogSavestates() :
   m_loadType = LOAD_EVERY_TIME;
 }
 
-CGUIDialogSavestates::~CGUIDialogSavestates()
-{
-  delete m_vecItems;
-}
-
 bool CGUIDialogSavestates::OnMessage(CGUIMessage& message)
 {
   switch (message.GetMessage())
