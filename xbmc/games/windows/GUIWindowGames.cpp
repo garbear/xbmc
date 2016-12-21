@@ -206,9 +206,6 @@ void CGUIWindowGames::GetContextButtons(int itemNumber, CContextButtons &buttons
           buttons.Add(CONTEXT_BUTTON_MANAGE_SAVESTATES, 35273); // Manage saves
       }
 
-      if (!m_vecItems->IsPlugin() && item->HasAddonInfo())
-        buttons.Add(CONTEXT_BUTTON_INFO, 24003); // Add-on information
-
       if (CSettings::GetInstance().GetBool("filelists.allowfiledeletion") && !item->IsReadOnly())
       {
         buttons.Add(CONTEXT_BUTTON_DELETE, 117);
