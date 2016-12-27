@@ -16560,7 +16560,13 @@ msgctxt "#35272"
 msgid "Load save"
 msgstr ""
 
-#empty strings from id 35273 to 35504
+#. Context menu item to manage savestates
+#: xbmc/games/windows/GUIWindowGames.cpp
+msgctxt "#35273"
+msgid "Manage saves"
+msgstr ""
+
+#empty strings from id 35274 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/addons/AddonCallbacksPVR.cpp
