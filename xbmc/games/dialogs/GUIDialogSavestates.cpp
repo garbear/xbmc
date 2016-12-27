@@ -248,22 +248,25 @@ void CGUIDialogSavestates::CreateSavestate()
   {
     // Allow the user to rename the savestate
     CSavestateDatabase db;
-    CSavestate newSave;
-    if (db.GetSavestate(savePath, newSave))
+    if (db.Open())
     {
-      std::string label = newSave.Label();
-      // Enter title
-      if (CGUIKeyboardFactory::ShowAndGetInput(label, g_localizeStrings.Get(528), true))
+      CSavestate newSave;
+      if (db.GetSavestate(savePath, newSave))
       {
-        if (label != newSave.Label())
-          db.RenameSavestate(savePath, label);
+        std::string label = newSave.Label();
+        // Enter title
+        if (CGUIKeyboardFactory::ShowAndGetInput(label, g_localizeStrings.Get(528), true))
+        {
+          if (label != newSave.Label())
+            db.RenameSavestate(savePath, label);
+        }
+        else
+        {
+          db.DeleteSavestate(savePath);
+        }
       }
-      else
-      {
-        db.DeleteSavestate(savePath);
-      }
+      Update();
     }
-    Update();
   }
 }
 
@@ -274,11 +277,14 @@ void CGUIDialogSavestates::ClearSavestates()
   if (CGUIDialogYesNo::ShowAndGetInput(122, 125))
   {
     CSavestateDatabase db;
-    if (!db.ClearSavestatesOfGame(m_gamePath, m_gameClient))
+    if (db.Open())
     {
-      // Delete
-      // Failed to delete at least one file. Check the log for more information about this message.
-      CGUIDialogOK::ShowAndGetInput(117, 16206);
+      if (!db.ClearSavestatesOfGame(m_gamePath, m_gameClient))
+      {
+        // Delete
+        // Failed to delete at least one file. Check the log for more information about this message.
+        CGUIDialogOK::ShowAndGetInput(117, 16206);
+      }
     }
 
     Update();
@@ -316,13 +322,16 @@ void CGUIDialogSavestates::RenameSavestate(const CFileItem& save)
     if (label != save.GetLabel())
     {
       CSavestateDatabase db;
-      if (db.RenameSavestate(save.GetPath(), label))
-        Update();
-      else
+      if (db.Open())
       {
-        // Moved failed
-        // Failed to move at least one file. Check the log for more information about this message.
-        CGUIDialogOK::ShowAndGetInput(16203, 16204);
+        if (db.RenameSavestate(save.GetPath(), label))
+          Update();
+        else
+        {
+          // Moved failed
+          // Failed to move at least one file. Check the log for more information about this message.
+          CGUIDialogOK::ShowAndGetInput(16203, 16204);
+        }
       }
     }
   }
@@ -335,15 +344,18 @@ void CGUIDialogSavestates::DeleteSavestate(const CFileItem& save)
   if (CGUIDialogYesNo::ShowAndGetInput(122, 125))
   {
     CSavestateDatabase db;
-    if (!db.DeleteSavestate(save.GetPath()))
+    if (db.Open())
     {
-      // Delete
-      // Failed to delete at least one file. Check the log for more information about this message.
-      CGUIDialogOK::ShowAndGetInput(117, 16206);
-    }
-    else
-    {
-      Update();
+      if (!db.DeleteSavestate(save.GetPath()))
+      {
+        // Delete
+        // Failed to delete at least one file. Check the log for more information about this message.
+        CGUIDialogOK::ShowAndGetInput(117, 16206);
+      }
+      else
+      {
+        Update();
+      }
     }
   }
 }
@@ -353,7 +365,10 @@ void CGUIDialogSavestates::Update()
   m_vecItems->Clear();
 
   CSavestateDatabase db;
-  db.GetSavestatesNav(*m_vecItems, m_gamePath, m_gameClient);
+  if (db.Open())
+  {
+    db.GetSavestatesNav(*m_vecItems, m_gamePath, m_gameClient);
+  }
 
   // Lock our display, as this window is rendered from the player thread
   g_graphicsContext.Lock();
