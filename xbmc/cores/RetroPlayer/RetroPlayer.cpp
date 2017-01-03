@@ -41,13 +41,10 @@ CRetroPlayer::CRetroPlayer(IPlayerCallback& callback) :
   m_renderManager(m_clock, this),
   m_processInfo(CProcessInfo::CreateInstance())
 {
-  g_Windowing.Register(this);
 }
 
 CRetroPlayer::~CRetroPlayer()
 {
-  g_Windowing.Unregister(this);
-
   CloseFile();
 }
 
@@ -110,12 +107,17 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
     }
   }
 
+  if (bSuccess)
+    g_Windowing.Register(this);
+
   return bSuccess;
 }
 
 bool CRetroPlayer::CloseFile(bool reopen /* = false */)
 {
   CLog::Log(LOGDEBUG, "RetroPlayer: Closing file");
+
+  g_Windowing.Unregister(this);
 
   CSingleLock lock(m_mutex);
 
