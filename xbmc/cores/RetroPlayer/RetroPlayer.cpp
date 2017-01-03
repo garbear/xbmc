@@ -56,56 +56,58 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
   std::string redactedPath = CURL::GetRedacted(file.GetPath());
   CLog::Log(LOGINFO, "RetroPlayer: Opening: %s", redactedPath.c_str());
 
-  CSingleLock lock(m_mutex);
-
-  if (IsPlaying())
-    CloseFile();
-
-  PrintGameInfo(file);
-
   bool bSuccess = false;
 
-  m_gameClient = CGameUtils::OpenGameClient(file);
-  if (m_gameClient)
   {
-    if (m_gameClient->Initialize())
+    CSingleLock lock(m_mutex);
+
+    if (IsPlaying())
+      CloseFile();
+
+    PrintGameInfo(file);
+
+    m_gameClient = CGameUtils::OpenGameClient(file);
+    if (m_gameClient)
     {
-      m_audio.reset(new CRetroPlayerAudio(*m_processInfo));
-      m_video.reset(new CRetroPlayerVideo(m_clock, m_renderManager, *m_processInfo));
-      if (m_gameClient->OpenFile(file, m_audio.get(), m_video.get()))
+      if (m_gameClient->Initialize())
       {
-        CLog::Log(LOGDEBUG, "RetroPlayer: Using game client %s", m_gameClient->ID().c_str());
-        bSuccess = true;
+        m_audio.reset(new CRetroPlayerAudio(*m_processInfo));
+        m_video.reset(new CRetroPlayerVideo(m_clock, m_renderManager, *m_processInfo));
+        if (m_gameClient->OpenFile(file, m_audio.get(), m_video.get()))
+        {
+          CLog::Log(LOGDEBUG, "RetroPlayer: Using game client %s", m_gameClient->ID().c_str());
+          bSuccess = true;
+        }
+        else
+          CLog::Log(LOGERROR, "RetroPlayer: Failed to open file using %s", m_gameClient->ID().c_str());
       }
       else
-        CLog::Log(LOGERROR, "RetroPlayer: Failed to open file using %s", m_gameClient->ID().c_str());
+        CLog::Log(LOGERROR, "RetroPlayer: Failed to initialize %s", m_gameClient->ID().c_str());
     }
     else
-      CLog::Log(LOGERROR, "RetroPlayer: Failed to initialize %s", m_gameClient->ID().c_str());
-  }
-  else
-    CLog::Log(LOGERROR, "RetroPlayer: Can't find add-on for game file");
+      CLog::Log(LOGERROR, "RetroPlayer: Can't find add-on for game file");
 
-  if (bSuccess)
-  {
-    if (file.m_lStartOffset == STARTOFFSET_RESUME && file.HasGameInfoTag())
+    if (bSuccess)
     {
-      std::string redactedSavestatePath = CURL::GetRedacted(file.GetGameInfoTag()->GetSavestate());
-      CLog::Log(LOGDEBUG, "RetroPlayer: Loading savestate %s", redactedSavestatePath.c_str());
+      if (file.m_lStartOffset == STARTOFFSET_RESUME && file.HasGameInfoTag())
+      {
+        std::string redactedSavestatePath = CURL::GetRedacted(file.GetGameInfoTag()->GetSavestate());
+        CLog::Log(LOGDEBUG, "RetroPlayer: Loading savestate %s", redactedSavestatePath.c_str());
 
-      if (!SetPlayerState(file.GetGameInfoTag()->GetSavestate()))
-        CLog::Log(LOGERROR, "RetroPlayer: Failed to load savestate");
+        if (!SetPlayerState(file.GetGameInfoTag()->GetSavestate()))
+          CLog::Log(LOGERROR, "RetroPlayer: Failed to load savestate");
+      }
+
+      SetSpeed(1);
+
+      m_callback.OnPlayBackStarted();
     }
-
-    SetSpeed(1);
-
-    m_callback.OnPlayBackStarted();
-  }
-  else
-  {
-    m_gameClient.reset();
-    m_audio.reset();
-    m_video.reset();
+    else
+    {
+      m_gameClient.reset();
+      m_audio.reset();
+      m_video.reset();
+    }
   }
 
   return bSuccess;
