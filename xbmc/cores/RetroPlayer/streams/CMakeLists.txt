@@ -4,8 +4,11 @@ set(SOURCES RetroPlayerAudio.cpp
             RPStreamManager.cpp
 )
 
-set(HEADERS IRetroPlayerStream.h
+set(HEADERS IDataCompression.h
+            IDataStream.h
+            IRetroPlayerStream.h
             IStreamManager.h
+            ITimeSeriesStream.h
             RetroPlayerAudio.h
             RetroPlayerStreamTypes.h
             RetroPlayerVideo.h
