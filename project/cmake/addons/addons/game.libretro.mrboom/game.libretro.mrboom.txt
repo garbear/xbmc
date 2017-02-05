@@ -1,0 +1,1 @@
+game.libretro.mrboom https://github.com/kodi-game/game.libretro.mrboom master

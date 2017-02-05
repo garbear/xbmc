@@ -1,0 +1,1 @@
+game.libretro.fbalpha https://github.com/kodi-game/game.libretro.fbalpha master

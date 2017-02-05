@@ -1,0 +1,1 @@
+game.libretro.beetle-saturn https://github.com/kodi-game/game.libretro.beetle-saturn master
