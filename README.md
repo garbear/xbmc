@@ -1,80 +1,46 @@
-![Kodi Logo](docs/resources/banner.png)
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=Moh67r0iBGA
+" target="_blank"><img src="http://img.youtube.com/vi/Moh67r0iBGA/0.jpg" 
+alt="retroplayer" width="240" height="180" border="10"/></a>
 
-<p align="center">
-  <strong>
-    <a href="https://kodi.tv/">website</a>
-    •
-    <a href="https://kodi.wiki/view/Main_Page">docs</a>
-    •
-    <a href="https://forum.kodi.tv/">community</a>
-    •
-    <a href="https://kodi.tv/addons">add-ons</a>
-  </strong>
-</p>
+# Overview
 
-<p align="center">
-  <a href="LICENSE.md"><img alt="License" src="https://img.shields.io/badge/license-GPLv2-blue.svg?style=flat-square"></a>
-  <a href="http://hits.dwyl.io/xbmc/xbmc"><img alt="HitCount" src="http://hits.dwyl.io/xbmc/xbmc.svg"></a>
-  <a href="https://docs.kodi.tv/"><img alt="Documentation" src="https://img.shields.io/badge/code-documented-brightgreen.svg?style=flat-square"></a>
-  <a href="https://github.com/xbmc/xbmc/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
-  <a href="#how-to-contribute"><img alt="Contributions Welcome" src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square"></a>
-  <a href="http://jenkins.kodi.tv/"><img alt="Build" src="https://img.shields.io/badge/CI-jenkins-brightgreen.svg?style=flat-square"></a>
-  <a href="https://github.com/xbmc/xbmc/commits/master"><img alt="Commits" src="https://img.shields.io/github/commits-since/xbmc/xbmc/latest.svg?style=flat-square"></a>
-</p>
+RetroPlayer is a new player core for Kodi Entertainment Center. It is similar to the video and audio players, but it plays games instead of movies and music.
 
-<h1 align="center">
-  Welcome to Kodi Home Theater Software!
-</h1>
+# Design and Components
 
-Kodi is an award-winning **free and open source** software media player and entertainment hub for digital media. Available as a native application for **Android, Linux, BSD, macOS, iOS, and Windows operating systems**, Kodi runs on most common processor architectures.
+**RetroPlayer:** Player core that plays games on the virtual file system (VFS) using game add-ons. Despite its name, it can play all types of games, not just retro ones. It borrows many ideas from the video player. Games can be paused, fast-forwarded, and rewound in realtime (watch little Mario run backwards!). Instead of bookmarks, save states are created and allow for quick browsing of the game's play history.
 
-Created in 2003 by a group of like minded programmers, Kodi is a non-profit project run by the XBMC Foundation and developed by volunteers located around the world. More than 500 software developers have contributed to Kodi to date, and 100-plus translators have worked to expand its reach, making it available in more than 70 languages.
+**Game Add-ons:** Standalone games, emulators and game streamers. From day one, RetroPlayer has been compatible with the [libretro](http://www.libretro.com/) ecosystem.
 
-While Kodi functions very well as a standard media player application for your computer, it has been designed to be the perfect companion for your HTPC. With its **beautiful interface and powerful skinning engine**, Kodi feels very natural to use from the couch with a remote control and is the ideal solution for your home theater.
+**Peripheral Add-ons:** Add-ons that expose hardware devices to Kodi. Communication with devices takes place over a bus. The peripheral add-on API is a virtual bus, alongside USB and PCI, that allows third parties to expose hardware devices to Kodi.
 
-## Give your media the love it deserves
-Kodi can be used to play almost all popular audio and video formats around. It was designed for network playback, so you can stream your multimedia from anywhere in the house or directly from the internet using practically any protocol available.
+**Joystick input:** Various joystick APIs (DirectX, XInput, SDL, etc.) provide access to raw hardware events, like button presses and axis positions. The joystick input system maps these to physical elements on the controller, such as the X button, left trigger or right analog stick. The gesture recognition from touch input has been converted to monitor holding, double-pressing, analog stick rotation and (someday) accelerometer gestures.
 
-Point Kodi to your media and watch it **scan and automagically create a personalized library** complete with box covers, descriptions, and fanart. There are playlist and slideshow functions, a weather forecast feature and many audio visualizations. Once installed, your computer or HTPC will become a fully functional multimedia jukebox.
+**Media readers:** Plugging a cartridge into [Retrode](http://www.retrode.org/)-like devices can display game metadata and automatically launch the game. Removing a cartridge from the media reader can take a save-state so that the next time the game is inserted, gameplay begins from where it left off. Games can be cached indefinitely, so there is no need to insert the cartridge a second time (although it's possibly quicker than browsing for the cached game!). Game filenames aren't available, so game metadata is extracted from the ROM itself using [PyRomInfo](https://github.com/garbear/pyrominfo).
 
-<p align="center">
-  <img src="docs/resources/kodi.gif" alt="Kodi">
-</p>
+Many of these features are still works-in-progress, so fork the code and help out!
 
-## Getting Started
-Kodi's developers work hard to make it support a large range of devices and operating systems. We provide final as well as development builds. To get started, head over to the **[downloads section](https://kodi.tv/download)** and simply select the platform that you want to install it on. A **[quick start guide](https://kodi.wiki/view/quick_start_guide)** to help you get acquainted with Kodi is available in our wiki.
+# Building Kodi and games
 
-## How to Contribute
-Kodi is created by users for users and **we welcome every contribution**. There are no highly paid developers or poorly paid support personnel on the phones ready to take your call. There are only users who have seen a problem and done their best to fix it. This means Kodi will always need the contributions of users like you. How can you get involved?
+Build Kodi per usual. If you are developing binary add-ons using a local prefix, specifying it during the `cmake` step:
 
-* **Coding:** Developers can help Kodi by **[fixing a bug](https://github.com/xbmc/xbmc/issues)**, adding new features, making our technology smaller and faster and making development easier for others. Kodi's codebase consists mainly of C++ with small parts written in a variety of coding languages. Our add-ons mainly consist of python and XML. For more information, please have a look at our **[contributing guide](docs/CONTRIBUTING.md)**.
-* **Helping users:** Our support process relies on enthusiastic contributors like you to help others get the most out of Kodi. The #1 priority is always answering questions in our **[support forums](https://forum.kodi.tv/)**. Everyday new people discover Kodi, and everyday they are virtually guaranteed to have questions.
-* **Localization:** Translate **[Kodi](https://www.transifex.com/teamxbmc/kodi-main/)**, **[add-ons](https://www.transifex.com/teamxbmc/xbmc-addons/)** and **[skins](https://www.transifex.com/teamxbmc/xbmc-skins/)** into your native language.
-* **Add-ons:** **[Add-ons](https://kodi.tv/addons)** are what make Kodi the most extensible and customizable entertainment hub available. **[Get started building an add-on](https://kodi.tv/create-an-addon)**.
-* **Documentation:** Kodi's **[wiki pages](https://kodi.wiki/)** are the hub for information about Kodi and surrounding ecosystem. Help make our documentation better by writing new content or correcting existing material.
+```
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$HOME/kodi
+make -j8
+```
 
-**Not enough free time?** No problem! There are other ways to help Kodi.
+Joystick support is now provided through a binary add-on. Follow the out-of-tree instructions at https://github.com/kodi-game/peripheral.joystick.
 
-* **Spread the word:** Share Kodi with the world! Tell your friends and family about how Kodi creates an amazing entertainment experience. Stay up to date on the latest stories about Kodi reading our **[news](https://kodi.tv/blog)** section, follow us on **[Twitter](https://twitter.com/koditv)** and **[Facebook](https://www.facebook.com/XBMC/)**, or **star Kodi's repo** if you want to follow development.
-* **Donate:** We are always happy to receive a **[donation](https://kodi.tv/contribute/donate)**. Donations are typically used for travel to attend conferences, any necessary paperwork and legal fees, and the yearly XBMC Foundation Developers Conference, where a great deal of coding and planning for the following year occurs. Donations may also be used to purchase necessary hardware and licenses for developers, along with t-shirts, stickers, and other accessories for conferences.
-* **Buy Kodi merchandise:** Purchasing Kodi gear helps just as much as a donation, and you get something in return! Checkout our **[store](https://kodi.tv/store)** for Kodi branded gear. We regularly add new products so check back often.
+Game add-ons are hosted separately at https://github.com/kodi-game. If you would like to compile all game add-ons in one fell swoop, create a build directory out-of-tree and run the following commands:
 
-## Building
-Kodi uses CMake as its building system but instructions are highly dependent on your operating system and target platform. Fortunately **[we've got you covered](docs/README.md)**.
+```
+cmake -DADDONS_TO_BUILD=game.* \
+      -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_INSTALL_PREFIX=$HOME/workspace/kodi/addons \
+      -DPACKAGE_ZIP=1 \
+      $HOME/workspace/kodi/cmake/addons
+make
+```
 
-## Acknowledgements
-Kodi couldn't exist without
-
-* All the **[contributors](https://github.com/xbmc/xbmc/graphs/contributors)**. Big or small a change, it does make a difference.
-* All the developers that write the fantastic **software and libraries** that Kodi uses. We stand on the shoulders of giants.
-* Our **[fantastic community](https://forum.kodi.tv/)** for the never ending support, inspiration, feedback, and for keeping us on our toes when we screw up!
-* **[Our sponsors](https://kodi.tv/sponsors)**. Without them, keeping a huge project like this alive would be next to impossible.
-
-## License
-Kodi is **[GPLv2 licensed](LICENSE.md)**. You may use, distribute and copy it under the license terms.
-
-<a href="https://github.com/xbmc/xbmc/graphs/contributors"><img src="https://forthebadge.com/images/badges/built-by-developers.svg" height="25"></a>
-<a href="https://github.com/xbmc/xbmc"><img src="https://forthebadge.com/images/badges/certified-cousin-terio.svg" height="25"></a>
-<a href="https://github.com/xbmc/xbmc"><img src="https://forthebadge.com/images/badges/approved-by-george-costanza.svg" height="25"></a>
-<a href="https://kodi.tv/download"><img src="https://forthebadge.com/images/badges/check-it-out.svg" height="25"></a>
-<a href="https://github.com/xbmc/xbmc"><img src="https://forthebadge.com/images/badges/winter-is-coming.svg" height="25"></a>
+where `$HOME/workspace/kodi` symlinks to the directory you cloned Kodi into.
