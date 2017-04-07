@@ -1,1 +1,1 @@
-binary-addons https://github.com/AlwinEsch/repo-binary-addons.git master
+binary-addons https://github.com/kodi-game/repo-binary-addons.git retroplayer
