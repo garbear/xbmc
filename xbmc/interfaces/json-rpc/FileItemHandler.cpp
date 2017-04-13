@@ -13,6 +13,7 @@
 #include "AudioLibrary.h"
 #include "VideoLibrary.h"
 #include "FileOperations.h"
+#include "media/MediaStore.h" //! @todo
 #include "utils/SortUtils.h"
 #include "utils/URIUtils.h"
 #include "utils/ISerializable.h"
@@ -31,6 +32,7 @@
 #include "pvr/epg/Epg.h"
 #include "pvr/recordings/PVRRecording.h"
 #include "pvr/timers/PVRTimerInfoTag.h"
+#include "ServiceBroker.h" //! @todo
 
 using namespace MUSIC_INFO;
 using namespace JSONRPC;
@@ -362,7 +364,12 @@ void CFileItemHandler::HandleFileItem(const char *ID, bool allowFile, const char
     if (item->HasPVRTimerInfoTag())
       FillDetails(item->GetPVRTimerInfoTag().get(), item, fields, object, thumbLoader);
     if (item->HasVideoInfoTag())
+    {
       FillDetails(item->GetVideoInfoTag(), item, fields, object, thumbLoader);
+
+      //! @todo
+      object["pinned"] = CServiceBroker::GetMediaStore().IsPinned(item->GetVideoInfoTag()->GetPath());
+    }
     if (item->HasMusicInfoTag())
       FillDetails(item->GetMusicInfoTag(), item, fields, object, thumbLoader);
     if (item->HasPictureInfoTag())

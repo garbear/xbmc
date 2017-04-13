@@ -7,6 +7,8 @@
  */
 
 #include "VideoLibrary.h"
+#include "filesystem/MediaFile.h"
+#include "media/MediaStore.h" //! @todo
 #include "messaging/ApplicationMessenger.h"
 #include "TextureDatabase.h"
 #include "Util.h"
@@ -16,9 +18,10 @@
 #include "utils/Variant.h"
 #include "video/VideoDatabase.h"
 #include "video/VideoLibraryQueue.h"
+#include "ServiceBroker.h" //! @todo
 
 using namespace JSONRPC;
-using namespace KODI::MESSAGING;
+using namespace KODI;
 
 JSONRPC_STATUS CVideoLibrary::GetMovies(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
 {
@@ -507,6 +510,66 @@ JSONRPC_STATUS CVideoLibrary::GetTags(const std::string &method, ITransportLayer
   return OK;
 }
 
+JSONRPC_STATUS CVideoLibrary::AddMovie(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
+{
+  if (!parameterObject.isMember("path"))
+    return InvalidParams;
+
+  //! @todo
+  if (parameterObject["pinned"].asBoolean())
+  {
+    result["movieid"] = CServiceBroker::GetMediaStore().PinMedia(parameterObject["path"].asString());
+    return OK;
+  }
+
+  return InternalError;
+}
+
+JSONRPC_STATUS CVideoLibrary::AddMovieSet(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
+{
+  return InternalError;
+}
+
+JSONRPC_STATUS CVideoLibrary::AddTvShow(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
+{
+  return InternalError;
+}
+
+JSONRPC_STATUS CVideoLibrary::AddSeason(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
+{
+  return InternalError;
+}
+
+JSONRPC_STATUS CVideoLibrary::AddEpisode(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
+{
+  if (!parameterObject.isMember("path"))
+    return InvalidParams;
+
+  if (parameterObject["pinned"].asBoolean())
+  {
+    //! @todo: Special handling of pinned objects
+    result["episodeid"] = CServiceBroker::GetMediaStore().PinMedia(parameterObject["path"].asString());
+    return OK;
+  }
+
+  return InternalError;
+}
+
+JSONRPC_STATUS CVideoLibrary::AddMusicVideo(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
+{
+  if (!parameterObject.isMember("path"))
+    return InvalidParams;
+
+  if (parameterObject["pinned"].asBoolean())
+  {
+    //! @todo: Special handling of pinned objects
+    result["musivdieoid"] = CServiceBroker::GetMediaStore().PinMedia(parameterObject["path"].asString());
+    return OK;
+  }
+
+  return InternalError;
+}
+
 JSONRPC_STATUS CVideoLibrary::SetMovieDetails(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
 {
   int id = (int)parameterObject["movieid"].asInteger();
@@ -873,7 +936,7 @@ JSONRPC_STATUS CVideoLibrary::Scan(const std::string &method, ITransportLayer *t
   std::string directory = parameterObject["directory"].asString();
   std::string cmd = StringUtils::Format("updatelibrary(video, %s, %s)", StringUtils::Paramify(directory).c_str(), parameterObject["showdialogs"].asBoolean() ? "true" : "false");
 
-  CApplicationMessenger::GetInstance().SendMsg(TMSG_EXECUTE_BUILT_IN, -1, -1, nullptr, cmd);
+  MESSAGING::CApplicationMessenger::GetInstance().SendMsg(TMSG_EXECUTE_BUILT_IN, -1, -1, nullptr, cmd);
   return ACK;
 }
 
@@ -894,7 +957,7 @@ JSONRPC_STATUS CVideoLibrary::Export(const std::string &method, ITransportLayer 
     cmd += ")";
   }
 
-  CApplicationMessenger::GetInstance().SendMsg(TMSG_EXECUTE_BUILT_IN, -1, -1, nullptr, cmd);
+  MESSAGING::CApplicationMessenger::GetInstance().SendMsg(TMSG_EXECUTE_BUILT_IN, -1, -1, nullptr, cmd);
   return ACK;
 }
 
@@ -906,7 +969,8 @@ JSONRPC_STATUS CVideoLibrary::Clean(const std::string &method, ITransportLayer *
   else
     cmd = StringUtils::Format("cleanlibrary({0}, {1})", parameterObject["content"].asString(), parameterObject["showdialogs"].asBoolean() ? "true" : "false");
 
-  CApplicationMessenger::GetInstance().SendMsg(TMSG_EXECUTE_BUILT_IN, -1, -1, nullptr, cmd);
+  MESSAGING::CApplicationMessenger::GetInstance().SendMsg(TMSG_EXECUTE_BUILT_IN, -1, -1, nullptr, cmd);
+
   return ACK;
 }
 
@@ -970,7 +1034,18 @@ bool CVideoLibrary::FillFileItemList(const CVariant &parameterObject, CFileItemL
   if (episodeID > 0)
   {
     CVideoInfoTag details;
-    if (videodatabase.GetEpisodeInfo("", details, episodeID) && !details.IsEmpty())
+
+    //! @todo
+    if (CServiceBroker::GetMediaStore().IsPinned(episodeID))
+    {
+      std::string mediaStorePath = XFILE::CMediaFile::GetMediaStorePath(episodeID);
+      details.SetFileNameAndPath(mediaStorePath);
+      CFileItemPtr item(new CFileItem(details));
+      item->SetPath(mediaStorePath);
+      list.Add(item);
+      success = true;
+    }
+    else if (videodatabase.GetEpisodeInfo("", details, episodeID) && !details.IsEmpty())
     {
       list.Add(CFileItemPtr(new CFileItem(details)));
       success = true;
@@ -1033,13 +1108,31 @@ JSONRPC_STATUS CVideoLibrary::RemoveVideo(const CVariant &parameterObject)
     return InternalError;
 
   if (parameterObject.isMember("movieid"))
-    videodatabase.DeleteMovie((int)parameterObject["movieid"].asInteger());
+  {
+    int movieId = (int)parameterObject["movieid"].asInteger();
+    if (movieId >= 0 && CServiceBroker::GetMediaStore().IsPinned(movieId))
+      CServiceBroker::GetMediaStore().UnpinMedia(movieId);
+    else
+      videodatabase.DeleteMovie(movieId);
+  }
   else if (parameterObject.isMember("tvshowid"))
     videodatabase.DeleteTvShow((int)parameterObject["tvshowid"].asInteger());
   else if (parameterObject.isMember("episodeid"))
-    videodatabase.DeleteEpisode((int)parameterObject["episodeid"].asInteger());
+  {
+    int episodeId = (int)parameterObject["episodeid"].asInteger();
+    if (episodeId >= 0 && CServiceBroker::GetMediaStore().IsPinned(episodeId))
+      CServiceBroker::GetMediaStore().UnpinMedia(episodeId);
+    else
+      videodatabase.DeleteEpisode(episodeId);
+  }
   else if (parameterObject.isMember("musicvideoid"))
-    videodatabase.DeleteMusicVideo((int)parameterObject["musicvideoid"].asInteger());
+  {
+    int musicVideoId = (int)parameterObject["musicvideoid"].asInteger();
+    if (musicVideoId >= 0 && CServiceBroker::GetMediaStore().IsPinned(musicVideoId))
+      CServiceBroker::GetMediaStore().UnpinMedia(musicVideoId);
+    else
+      videodatabase.DeleteMusicVideo(musicVideoId);
+  }
 
   CJSONRPCUtils::NotifyItemUpdated();
   return ACK;

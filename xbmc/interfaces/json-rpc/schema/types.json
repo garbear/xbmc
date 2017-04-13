@@ -686,13 +686,13 @@
                 "imdbnumber", "runtime", "set", "showlink", "streamdetails",
                 "top250", "votes", "fanart", "thumbnail", "file", "sorttitle",
                 "resume", "setid", "dateadded", "tag", "art", "userrating",
-                "ratings", "premiered", "uniqueid" ]
+                "ratings", "premiered", "uniqueid", "pinned" ]
     }
   },
   "Video.Fields.MovieSet": {
     "extends": "Item.Fields.Base",
     "items": { "type": "string",
-      "enum": [ "title", "playcount", "fanart", "thumbnail", "art", "plot" ]
+      "enum": [ "title", "playcount", "fanart", "thumbnail", "art", "plot", "pinned" ]
     }
   },
   "Video.Fields.TVShow": {
@@ -705,14 +705,14 @@
                 "fanart", "thumbnail", "file", "originaltitle",
                 "sorttitle", "episodeguide", "season", "watchedepisodes",
                 "dateadded", "tag", "art", "userrating", "ratings",
-                "runtime", "uniqueid" ]
+                "runtime", "uniqueid", "pinned" ]
     }
   },
   "Video.Fields.Season": {
     "extends": "Item.Fields.Base",
     "items": { "type": "string",
       "enum": [ "season", "showtitle", "playcount", "episode", "fanart", "thumbnail", "tvshowid",
-                "watchedepisodes", "art", "userrating", "title" ]
+                "watchedepisodes", "art", "userrating", "title", "pinned" ]
     }
   },
   "Video.Fields.Episode": {
@@ -725,7 +725,7 @@
                 "showtitle", "cast", "streamdetails", "lastplayed", "fanart",
                 "thumbnail", "file", "resume", "tvshowid", "dateadded",
                 "uniqueid", "art", "specialsortseason", "specialsortepisode", "userrating",
-                "seasonid", "ratings" ]
+                "seasonid", "ratings", "pinned" ]
     }
   },
   "Video.Fields.MusicVideo": {
@@ -736,7 +736,7 @@
                 "studio", "year", "plot", "album", "artist",
                 "genre", "track", "streamdetails", "lastplayed",
                 "fanart", "thumbnail", "file", "resume", "dateadded",
-                "tag", "art", "rating", "userrating", "premiered" ]
+                "tag", "art", "rating", "userrating", "premiered", "pinned" ]
     }
   },
   "Video.Cast": {
@@ -805,7 +805,8 @@
   "Video.Details.Media": {
     "extends": "Video.Details.Base",
     "properties": {
-      "title": { "type": "string" }
+      "title": { "type": "string" },
+      "pinned": { "type": "boolean" }
     }
   },
   "Video.Details.Item": {

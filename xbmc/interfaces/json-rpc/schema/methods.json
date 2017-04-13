@@ -1520,6 +1520,203 @@
       }
     }
   },
+  "VideoLibrary.AddMovie": {
+    "type": "method",
+    "description": "Add the given movie with the given details",
+    "transport": "Response",
+    "permission": "UpdateData",
+    "params": [
+      { "name": "path", "type": "string", "required": true },
+      { "name": "title", "$ref": "Optional.String" },
+      { "name": "playcount", "$ref": "Optional.Integer" },
+      { "name": "runtime", "$ref": "Optional.Integer", "description": "Runtime in seconds" },
+      { "name": "director", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "studio", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "year", "$ref": "Optional.Integer", "description": "linked with premiered. Overridden by premiered parameter" },
+      { "name": "plot", "$ref": "Optional.String" },
+      { "name": "genre", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "rating", "$ref": "Optional.Number" },
+      { "name": "mpaa", "$ref": "Optional.String" },
+      { "name": "imdbnumber", "$ref": "Optional.String" },
+      { "name": "votes", "$ref": "Optional.String" },
+      { "name": "lastplayed", "$ref": "Optional.String" },
+      { "name": "originaltitle", "$ref": "Optional.String" },
+      { "name": "trailer", "$ref": "Optional.String" },
+      { "name": "tagline", "$ref": "Optional.String" },
+      { "name": "plotoutline", "$ref": "Optional.String" },
+      { "name": "writer", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "country", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "top250", "$ref": "Optional.Integer" },
+      { "name": "sorttitle", "$ref": "Optional.String" },
+      { "name": "set", "$ref": "Optional.String" },
+      { "name": "showlink", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "thumbnail", "$ref": "Optional.String" },
+      { "name": "fanart", "$ref": "Optional.String" },
+      { "name": "tag", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "art", "type": [ "null", { "$ref": "Media.Artwork.Set", "required": true } ], "default": null },
+      { "name": "resume", "type": [ "null", { "$ref": "Video.Resume", "required": true } ], "default": null },
+      { "name": "userrating", "$ref": "Optional.Integer" },
+      { "name": "ratings", "$ref": "Video.Ratings.Set" },
+      { "name": "dateadded", "$ref": "Optional.String" },
+      { "name": "premiered", "$ref": "Optional.String", "description": "linked with year. Overrides year" },
+      { "name": "uniqueid", "type": [ "null", { "$ref": "Media.UniqueID.Set", "required": true } ], "default": null },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
+    ],
+    "returns": {
+      "type": "object",
+      "properties": {
+        "movieid": { "$ref": "Library.Id", "required": true }
+      }
+    }
+  },
+  "VideoLibrary.AddMovieSetDetails": {
+    "type": "method",
+    "description": "Add the given movie set with the given details",
+    "transport": "Response",
+    "permission": "UpdateData",
+    "params": [
+      { "name": "title", "$ref": "Optional.String" },
+      { "name": "art", "type": [ "null", { "$ref": "Media.Artwork.Set", "required": true } ], "default": null },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
+    ],
+    "returns": {
+      "type": "object",
+      "properties": {
+        "setid": { "$ref": "Library.Id", "required": true }
+      }
+    }
+  },
+  "VideoLibrary.AddTVShow": {
+    "type": "method",
+    "description": "Add the given tvshow with the given details",
+    "transport": "Response",
+    "permission": "UpdateData",
+    "params": [
+      { "name": "title", "$ref": "Optional.String" },
+      { "name": "playcount", "$ref": "Optional.Integer" },
+      { "name": "studio", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "plot", "$ref": "Optional.String" },
+      { "name": "genre", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "rating", "$ref": "Optional.Number" },
+      { "name": "mpaa", "$ref": "Optional.String" },
+      { "name": "imdbnumber", "$ref": "Optional.String" },
+      { "name": "premiered", "$ref": "Optional.String" },
+      { "name": "votes", "$ref": "Optional.String" },
+      { "name": "lastplayed", "$ref": "Optional.String" },
+      { "name": "originaltitle", "$ref": "Optional.String" },
+      { "name": "sorttitle", "$ref": "Optional.String" },
+      { "name": "episodeguide", "$ref": "Optional.String" },
+      { "name": "thumbnail", "$ref": "Optional.String" },
+      { "name": "fanart", "$ref": "Optional.String" },
+      { "name": "tag", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "art", "type": [ "null", { "$ref": "Media.Artwork.Set", "required": true } ], "default": null },
+      { "name": "userrating", "$ref": "Optional.Integer" },
+      { "name": "ratings", "$ref": "Video.Ratings.Set" },
+      { "name": "dateadded", "$ref": "Optional.String" },
+      { "name": "runtime", "$ref": "Optional.Integer", "description": "Runtime in seconds" },
+      { "name": "status", "$ref": "Optional.String" },
+      { "name": "uniqueid", "type": [ "null", { "$ref": "Media.UniqueID.Set", "required": true } ], "default": null },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
+    ],
+    "returns": {
+      "type": "object",
+      "properties": {
+        "tvshowid": { "$ref": "Library.Id", "required": true }
+      }
+    }
+  },
+  "VideoLibrary.AddSeason": {
+    "type": "method",
+    "description": "Add the given season with the given details",
+    "transport": "Response",
+    "permission": "UpdateData",
+    "params": [
+      { "name": "art", "type": [ "null", { "$ref": "Media.Artwork.Set", "required": true } ], "default": null },
+      { "name": "userrating", "$ref": "Optional.Integer" },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
+    ],
+    "returns": {
+      "type": "object",
+      "properties": {
+        "seasonid": { "$ref": "Library.Id", "required": true }
+      }
+    }
+  },
+  "VideoLibrary.AddEpisode": {
+    "type": "method",
+    "description": "Add the given episode with the given details",
+    "transport": "Response",
+    "permission": "UpdateData",
+    "params": [
+      { "name": "path", "type": "string", "required": true },
+      { "name": "title", "$ref": "Optional.String" },
+      { "name": "playcount", "$ref": "Optional.Integer" },
+      { "name": "runtime", "$ref": "Optional.Integer", "description": "Runtime in seconds" },
+      { "name": "director", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "plot", "$ref": "Optional.String" },
+      { "name": "rating", "$ref": "Optional.Number" },
+      { "name": "votes", "$ref": "Optional.String" },
+      { "name": "lastplayed", "$ref": "Optional.String" },
+      { "name": "writer", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "firstaired", "$ref": "Optional.String" },
+      { "name": "productioncode", "$ref": "Optional.String" },
+      { "name": "season", "$ref": "Optional.Integer" },
+      { "name": "episode", "$ref": "Optional.Integer" },
+      { "name": "originaltitle", "$ref": "Optional.String" },
+      { "name": "thumbnail", "$ref": "Optional.String" },
+      { "name": "fanart", "$ref": "Optional.String" },
+      { "name": "art", "type": [ "null", { "$ref": "Media.Artwork.Set", "required": true } ], "default": null },
+      { "name": "resume", "type": [ "null", { "$ref": "Video.Resume", "required": true } ], "default": null },
+      { "name": "userrating", "$ref": "Optional.Integer" },
+      { "name": "ratings", "$ref": "Video.Ratings.Set" },
+      { "name": "dateadded", "$ref": "Optional.String" },
+      { "name": "uniqueid", "type": [ "null", { "$ref": "Media.UniqueID.Set", "required": true } ], "default": null },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
+    ],
+    "returns": {
+      "type": "object",
+      "properties": {
+        "episodeid": { "$ref": "Library.Id", "required": true }
+      }
+    }
+  },
+  "VideoLibrary.AddMusicVideo": {
+    "type": "method",
+    "description": "Add the given music video with the given details",
+    "transport": "Response",
+    "permission": "UpdateData",
+    "params": [
+      { "name": "path", "type": "string", "required": true },
+      { "name": "title", "$ref": "Optional.String" },
+      { "name": "playcount", "$ref": "Optional.Integer" },
+      { "name": "runtime", "$ref": "Optional.Integer", "description": "Runtime in seconds" },
+      { "name": "director", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "studio", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "year", "$ref": "Optional.Integer", "description": "linked with premiered. Overridden by premiered parameter" },
+      { "name": "plot", "$ref": "Optional.String" },
+      { "name": "album", "$ref": "Optional.String" },
+      { "name": "artist", "type": [ "null", { "$ref": "Array.String", "required": true } ] },
+      { "name": "genre", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "track", "$ref": "Optional.Integer" },
+      { "name": "lastplayed", "$ref": "Optional.String" },
+      { "name": "thumbnail", "$ref": "Optional.String" },
+      { "name": "fanart", "$ref": "Optional.String" },
+      { "name": "tag", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
+      { "name": "art", "type": [ "null", { "$ref": "Media.Artwork.Set", "required": true } ], "default": null },
+      { "name": "resume", "type": [ "null", { "$ref": "Video.Resume", "required": true } ], "default": null },
+      { "name": "rating", "$ref": "Optional.Number" },
+      { "name": "userrating", "$ref": "Optional.Integer" },
+      { "name": "dateadded", "$ref": "Optional.String" },
+      { "name": "premiered", "$ref": "Optional.String", "description": "linked with year. Overrides year" },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
+    ],
+    "returns": {
+      "type": "object",
+      "properties": {
+        "musicvideoid": { "$ref": "Library.Id", "required": true }
+      }
+    }
+  },
   "VideoLibrary.SetMovieDetails": {
     "type": "method",
     "description": "Update the given movie with the given details",
@@ -1559,7 +1756,8 @@
       { "name": "ratings", "$ref": "Video.Ratings.Set" },
       { "name": "dateadded", "$ref": "Optional.String" },
       { "name": "premiered", "$ref": "Optional.String", "description": "linked with year. Overrides year" },
-      { "name": "uniqueid", "type": [ "null", { "$ref": "Media.UniqueID.Set", "required": true } ], "default": null }
+      { "name": "uniqueid", "type": [ "null", { "$ref": "Media.UniqueID.Set", "required": true } ], "default": null },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
     ],
     "returns": "string"
   },
@@ -1573,6 +1771,7 @@
       { "name": "title", "$ref": "Optional.String" },
       { "name": "art", "type": [ "null", { "$ref": "Media.Artwork.Set", "required": true } ], "default": null },
       { "name": "plot", "$ref": "Optional.String" }
+      { "name": "pinned", "$ref": "Optional.Boolean"}
     ],
     "returns": "string"
   },
@@ -1606,7 +1805,8 @@
       { "name": "dateadded", "$ref": "Optional.String" },
       { "name": "runtime", "$ref": "Optional.Integer", "description": "Runtime in seconds" },
       { "name": "status", "$ref": "Optional.String" },
-      { "name": "uniqueid", "type": [ "null", { "$ref": "Media.UniqueID.Set", "required": true } ], "default": null }
+      { "name": "uniqueid", "type": [ "null", { "$ref": "Media.UniqueID.Set", "required": true } ], "default": null },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
     ],
     "returns": "string"
   },
@@ -1620,6 +1820,7 @@
       { "name": "art", "type": [ "null", { "$ref": "Media.Artwork.Set", "required": true } ], "default": null },
       { "name": "userrating", "$ref": "Optional.Integer" },
       { "name": "title", "$ref": "Optional.String" }
+      { "name": "pinned", "$ref": "Optional.Boolean"}
     ],
     "returns": "string"
   },
@@ -1651,7 +1852,8 @@
       { "name": "userrating", "$ref": "Optional.Integer" },
       { "name": "ratings", "$ref": "Video.Ratings.Set" },
       { "name": "dateadded", "$ref": "Optional.String" },
-      { "name": "uniqueid", "type": [ "null", { "$ref": "Media.UniqueID.Set", "required": true } ], "default": null }
+      { "name": "uniqueid", "type": [ "null", { "$ref": "Media.UniqueID.Set", "required": true } ], "default": null },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
     ],
     "returns": "string"
   },
@@ -1682,7 +1884,8 @@
       { "name": "rating", "$ref": "Optional.Number" },
       { "name": "userrating", "$ref": "Optional.Integer" },
       { "name": "dateadded", "$ref": "Optional.String" },
-      { "name": "premiered", "$ref": "Optional.String", "description": "linked with year. Overrides year" }
+      { "name": "premiered", "$ref": "Optional.String", "description": "linked with year. Overrides year" },
+      { "name": "pinned", "$ref": "Optional.Boolean"}
     ],
     "returns": "string"
   },
