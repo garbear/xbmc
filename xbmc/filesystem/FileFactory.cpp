@@ -70,6 +70,7 @@
 #include "UDFFile.h"
 #include "ImageFile.h"
 #include "ResourceFile.h"
+#include "MediaFile.h"
 #include "Application.h"
 #include "URL.h"
 #include "utils/log.h"
@@ -148,6 +149,7 @@ IFile* CFileFactory::CreateLoader(const CURL& url)
   else if (url.IsProtocol("bluray")) return new CBlurayFile();
 #endif
   else if (url.IsProtocol("resource")) return new CResourceFile();
+  else if (url.IsProtocol("mediastore")) return new CMediaFile;
 
   bool networkAvailable = g_application.getNetwork().IsAvailable();
   if (networkAvailable)

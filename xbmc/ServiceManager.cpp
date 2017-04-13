@@ -25,6 +25,7 @@
 #include "cores/DataCacheCore.h"
 #include "favourites/FavouritesService.h"
 #include "games/GameServices.h"
+#include "media/MediaStore.h"
 #include "peripherals/Peripherals.h"
 #include "PlayListPlayer.h"
 #include "profiles/ProfilesManager.h"
@@ -35,9 +36,13 @@
 #include "pvr/PVRManager.h"
 #include "settings/Settings.h"
 
+
+using namespace KODI;
+
 CServiceManager::CServiceManager() :
   m_gameServices(new GAME::CGameServices),
-  m_peripherals(new PERIPHERALS::CPeripherals)
+  m_peripherals(new PERIPHERALS::CPeripherals),
+  m_mediaStore(new MEDIA::CMediaStore)
 {
 }
 
@@ -84,6 +89,8 @@ bool CServiceManager::Init2()
 
   m_favouritesService.reset(new CFavouritesService(CProfilesManager::GetInstance().GetProfileUserDataFolder()));
   m_contextMenuManager.reset(new CContextMenuManager(*m_addonMgr.get()));
+
+  m_mediaStore->Initialize();
 
   init_level = 2;
   return true;
@@ -133,6 +140,7 @@ void CServiceManager::Deinit()
 {
   m_gameServices->Deinit();
   m_peripherals.reset();
+  m_mediaStore->Deinitialize();
   m_contextMenuManager.reset();
   m_favouritesService.reset();
   m_binaryAddonCache.reset();
@@ -219,6 +227,11 @@ PERIPHERALS::CPeripherals& CServiceManager::GetPeripherals()
 CFavouritesService& CServiceManager::GetFavouritesService()
 {
   return *m_favouritesService;
+}
+
+MEDIA::CMediaStore& CServiceManager::GetMediaStore()
+{
+  return *m_mediaStore;
 }
 
 // deleters for unique_ptr

@@ -61,6 +61,14 @@ namespace PERIPHERALS
   class CPeripherals;
 }
 
+namespace KODI
+{
+namespace MEDIA
+{
+  class CMediaStore;
+}
+}
+
 class CServiceBroker
 {
 public:
@@ -77,5 +85,6 @@ public:
   static GAME::CGameServices& GetGameServices();
   static PERIPHERALS::CPeripherals& GetPeripherals();
   static CFavouritesService& GetFavouritesService();
+  static KODI::MEDIA::CMediaStore& GetMediaStore();
   static bool IsBinaryAddonCacheUp();
 };

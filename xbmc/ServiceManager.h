@@ -66,6 +66,14 @@ namespace PERIPHERALS
   class CPeripherals;
 }
 
+namespace KODI
+{
+  namespace MEDIA
+  {
+    class CMediaStore;
+  }
+}
+
 class CServiceManager
 {
 public:
@@ -100,6 +108,8 @@ public:
 
   CSettings& GetSettings();
   CFavouritesService& GetFavouritesService();
+
+  KODI::MEDIA::CMediaStore& GetMediaStore();
 
 protected:
   struct delete_dataCacheCore
@@ -138,4 +148,5 @@ protected:
   std::unique_ptr<GAME::CGameServices> m_gameServices;
   std::unique_ptr<PERIPHERALS::CPeripherals> m_peripherals;
   std::unique_ptr<CFavouritesService, delete_favouritesService> m_favouritesService;
+  std::unique_ptr<KODI::MEDIA::CMediaStore> m_mediaStore;
 };

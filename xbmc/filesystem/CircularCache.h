@@ -42,6 +42,7 @@ public:
     virtual int64_t WaitForData(unsigned int minimum, unsigned int iMillis) ;
 
     virtual int64_t Seek(int64_t pos) ;
+    virtual int64_t SeekWrite(int64_t iFilePosition, int whence) override { return -1; }
     virtual bool Reset(int64_t pos, bool clearAnyway=true) ;
 
     virtual int64_t CachedDataEndPosIfSeekTo(int64_t iFilePosition);
