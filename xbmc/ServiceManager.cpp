@@ -18,6 +18,7 @@
 #include "favourites/FavouritesService.h"
 #include "games/controllers/ControllerManager.h"
 #include "games/GameServices.h"
+#include "media/MediaStore.h"
 #include "peripherals/Peripherals.h"
 #include "PlayListPlayer.h"
 #include "profiles/ProfileManager.h"
@@ -34,7 +35,8 @@
 
 using namespace KODI;
 
-CServiceManager::CServiceManager()
+CServiceManager::CServiceManager() :
+  m_mediaStore(new MEDIA::CMediaStore)
 {
 }
 
@@ -138,6 +140,8 @@ bool CServiceManager::InitStageTwo(const CAppParamParser &params, const std::str
 
   m_serviceAddons.reset(new ADDON::CServiceAddonManager(*m_addonMgr));
 
+  m_mediaStore->Initialize();
+
   m_contextMenuManager.reset(new CContextMenuManager(*m_addonMgr));
 
   m_gameControllerManager.reset(new GAME::CControllerManager);
@@ -206,6 +210,7 @@ void CServiceManager::DeinitStageTwo()
   m_peripherals.reset();
   m_inputManager.reset();
   m_gameControllerManager.reset();
+  m_mediaStore->Deinitialize();
   m_contextMenuManager.reset();
   m_serviceAddons.reset();
   m_favouritesService.reset();
@@ -332,6 +337,11 @@ CFileExtensionProvider& CServiceManager::GetFileExtensionProvider()
 CPowerManager &CServiceManager::GetPowerManager()
 {
   return *m_powerManager;
+}
+
+MEDIA::CMediaStore& CServiceManager::GetMediaStore()
+{
+  return *m_mediaStore;
 }
 
 // deleters for unique_ptr

@@ -227,6 +227,31 @@ int64_t CSimpleFileCache::Seek(int64_t iFilePosition)
   return iFilePosition;
 }
 
+int64_t CSimpleFileCache::SeekWrite(int64_t iFilePosition, int whence)
+{
+  int64_t iTarget = iFilePosition;
+
+  if (whence == SEEK_SET)
+  {
+    iTarget -= m_nStartPosition;
+
+    if (iTarget < 0)
+    {
+      CLog::Log(LOGERROR, "CSimpleFileCache::Seek, request seek before start of cache (%d)", iTarget);
+      return CACHE_RC_ERROR;
+    }
+  }
+
+  m_nWritePosition = m_cacheFileWrite->Seek(iTarget, whence);
+  if (m_nWritePosition != iTarget)
+  {
+    CLog::Log(LOGERROR, "CSimpleFileCache::Seek, can't seek file to position %d", iTarget);
+    return CACHE_RC_ERROR;
+  }
+
+  return iFilePosition;
+}
+
 bool CSimpleFileCache::Reset(int64_t iSourcePosition, bool clearAnyway)
 {
   if (!clearAnyway && IsCachedPosition(iSourcePosition))
@@ -331,6 +356,11 @@ int64_t CDoubleCache::Seek(int64_t iFilePosition)
   }
 
   return m_pCache->Seek(iFilePosition); // Normal seek
+}
+
+int64_t CDoubleCache::SeekWrite(int64_t iFilePosition, int whence)
+{
+  return m_pCache->SeekWrite(iFilePosition, whence); // Normal seek
 }
 
 bool CDoubleCache::Reset(int64_t iSourcePosition, bool clearAnyway)

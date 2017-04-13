@@ -53,6 +53,7 @@
 #include "UDFFile.h"
 #include "ImageFile.h"
 #include "ResourceFile.h"
+#include "MediaFile.h"
 #include "URL.h"
 #include "utils/log.h"
 #include "network/WakeOnAccess.h"
@@ -129,6 +130,7 @@ IFile* CFileFactory::CreateLoader(const CURL& url)
 #ifdef TARGET_WINDOWS_STORE
   else if (CWinLibraryFile::IsValid(url)) return new CWinLibraryFile();
 #endif
+  else if (url.IsProtocol("mediastore")) return new CMediaFile;
 
   if (url.IsProtocol("ftp")
   ||  url.IsProtocol("ftps")

@@ -34,6 +34,8 @@ public:
   virtual int64_t WaitForData(unsigned int iMinAvail, unsigned int iMillis) = 0;
 
   virtual int64_t Seek(int64_t iFilePosition) = 0;
+  virtual int64_t SeekWrite(int64_t iFilePosition, int whence) = 0;
+
 
   /*!
    \brief Reset cache position
@@ -75,6 +77,7 @@ public:
   int64_t WaitForData(unsigned int iMinAvail, unsigned int iMillis) override;
 
   int64_t Seek(int64_t iFilePosition) override;
+  int64_t SeekWrite(int64_t iFilePosition, int whence) override;
   bool Reset(int64_t iSourcePosition, bool clearAnyway=true) override;
   void EndOfInput() override;
 
@@ -111,6 +114,7 @@ public:
   int64_t WaitForData(unsigned int iMinAvail, unsigned int iMillis) override;
 
   int64_t Seek(int64_t iFilePosition) override;
+  int64_t SeekWrite(int64_t iFilePosition, int whence) override;
   bool Reset(int64_t iSourcePosition, bool clearAnyway=true) override;
   void EndOfInput() override;
   bool IsEndOfInput() override;

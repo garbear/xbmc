@@ -63,6 +63,14 @@ namespace PERIPHERALS
   class CPeripherals;
 }
 
+namespace KODI
+{
+namespace MEDIA
+{
+  class CMediaStore;
+}
+}
+
 class CInputManager;
 class CFileExtensionProvider;
 class CPlayerCoreFactory;
@@ -121,6 +129,8 @@ public:
 
   CDatabaseManager &GetDatabaseManager();
 
+  KODI::MEDIA::CMediaStore& GetMediaStore();
+
 protected:
   struct delete_dataCacheCore
   {
@@ -163,4 +173,5 @@ protected:
   std::unique_ptr<CWeatherManager> m_weatherManager;
   std::unique_ptr<CPlayerCoreFactory> m_playerCoreFactory;
   std::unique_ptr<CDatabaseManager> m_databaseManager;
+  std::unique_ptr<KODI::MEDIA::CMediaStore> m_mediaStore;
 };

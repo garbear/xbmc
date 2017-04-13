@@ -29,6 +29,8 @@ void CServiceBroker::UnregisterAnnouncementManager()
   m_pAnnouncementManager.reset();
 }
 
+using namespace KODI;
+
 ADDON::CAddonMgr &CServiceBroker::GetAddonMgr()
 {
   return g_application.m_ServiceManager->GetAddonMgr();
@@ -141,6 +143,11 @@ CFileExtensionProvider& CServiceBroker::GetFileExtensionProvider()
 CNetworkBase& CServiceBroker::GetNetwork()
 {
   return g_application.m_ServiceManager->GetNetwork();
+}
+
+MEDIA::CMediaStore& CServiceBroker::GetMediaStore()
+{
+  return g_application.m_ServiceManager->GetMediaStore();
 }
 
 bool CServiceBroker::IsBinaryAddonCacheUp()

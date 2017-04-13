@@ -73,6 +73,14 @@ namespace PERIPHERALS
   class CPeripherals;
 }
 
+namespace KODI
+{
+namespace MEDIA
+{
+  class CMediaStore;
+}
+}
+
 class CServiceBroker
 {
 public:
@@ -98,6 +106,7 @@ public:
   static ADDON::CRepositoryUpdater& GetRepositoryUpdater();
   static CInputManager& GetInputManager();
   static CFileExtensionProvider &GetFileExtensionProvider();
+  static KODI::MEDIA::CMediaStore& GetMediaStore();
   static bool IsBinaryAddonCacheUp();
   static bool IsServiceManagerUp();
   static CNetworkBase& GetNetwork();
