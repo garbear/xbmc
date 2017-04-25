@@ -37,4 +37,6 @@ typedef struct DemuxPacket
   bool recoveryPoint = false;
 
   std::shared_ptr<DemuxCryptoInfo> cryptoInfo;
+
+  bool bKeyFrame = false;
 } DemuxPacket;

@@ -1071,6 +1071,8 @@ DemuxPacket* CDVDDemuxFFmpeg::Read()
         // store internal id until we know the continuous id presented to player
         // the stream might not have been created yet
         pPacket->iStreamId = m_pkt.pkt.stream_index;
+
+        pPacket->bKeyFrame = (m_pkt.pkt.flags & AV_PKT_FLAG_KEY) != 0;
       }
       m_pkt.result = -1;
       av_packet_unref(&m_pkt.pkt);
