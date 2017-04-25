@@ -24,8 +24,8 @@ public:
     void Close() override;
 
     size_t GetMaxWriteSize(const size_t& iRequestSize) override;
-    int WriteToCache(const char *buf, size_t len) override;
-    int ReadFromCache(char *buf, size_t len) override;
+    int WriteToCache(const uint8_t* buf, size_t len) override;
+    int ReadFromCache(uint8_t* buf, size_t len) override;
     int64_t WaitForData(unsigned int minimum, unsigned int iMillis) override;
 
     int64_t Seek(int64_t pos) override;

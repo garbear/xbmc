@@ -97,7 +97,7 @@ size_t CCircularCache::GetMaxWriteSize(const size_t& iRequestSize)
  *
  * Multiple calls may be needed to fill buffer completely.
  */
-int CCircularCache::WriteToCache(const char *buf, size_t len)
+int CCircularCache::WriteToCache(const uint8_t *buf, size_t len)
 {
   CSingleLock lock(m_sync);
 
@@ -141,7 +141,7 @@ int CCircularCache::WriteToCache(const char *buf, size_t len)
  * the buffer wrap point. So multiple calls
  * may be needed to empty the whole cache
  */
-int CCircularCache::ReadFromCache(char *buf, size_t len)
+int CCircularCache::ReadFromCache(uint8_t *buf, size_t len)
 {
   CSingleLock lock(m_sync);
 

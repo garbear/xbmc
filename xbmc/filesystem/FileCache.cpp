@@ -243,7 +243,7 @@ void CFileCache::Process()
   }
 
   // create our read buffer
-  std::unique_ptr<char[]> buffer(new char[m_chunkSize]);
+  std::unique_ptr<uint8_t[]> buffer(new uint8_t[m_chunkSize]);
   if (buffer.get() == NULL)
   {
     CLog::Log(LOGERROR, "%s - failed to allocate read buffer", __FUNCTION__);
@@ -476,7 +476,7 @@ ssize_t CFileCache::Read(void* lpBuf, size_t uiBufSize)
 
 retry:
   // attempt to read
-  iRc = m_pCache->ReadFromCache((char *)lpBuf, uiBufSize);
+  iRc = m_pCache->ReadFromCache(static_cast<uint8_t*>(lpBuf), uiBufSize);
   if (iRc > 0)
   {
     m_readPos += iRc;
