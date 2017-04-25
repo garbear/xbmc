@@ -63,7 +63,7 @@ protected:
 */
 class CSimpleFileCache : public CCacheStrategy {
 public:
-  CSimpleFileCache();
+  CSimpleFileCache(const std::string& filename = "");
   ~CSimpleFileCache() override;
 
   int Open() override;
@@ -88,6 +88,7 @@ public:
 
 protected:
   std::string m_filename;
+  bool m_bTemporaryFilename;
   IFile*   m_cacheFileRead;
   IFile*   m_cacheFileWrite;
   CEvent*  m_hDataAvailEvent;

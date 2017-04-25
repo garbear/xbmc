@@ -46,8 +46,10 @@ void CCacheStrategy::ClearEndOfInput()
   m_bEndOfInput = false;
 }
 
-CSimpleFileCache::CSimpleFileCache()
-  : m_cacheFileRead(new CacheLocalFile())
+CSimpleFileCache::CSimpleFileCache(const std::string& filename /* = "" */)
+  : m_filename(filename)
+  , m_bTemporaryFilename(false)
+  , m_cacheFileRead(new CacheLocalFile())
   , m_cacheFileWrite(new CacheLocalFile())
   , m_hDataAvailEvent(NULL)
 {
@@ -66,12 +68,16 @@ int CSimpleFileCache::Open()
 
   m_hDataAvailEvent = new CEvent;
 
-  m_filename = CSpecialProtocol::TranslatePath(CUtil::GetNextFilename("special://temp/filecache%03d.cache", 999));
   if (m_filename.empty())
   {
-    CLog::Log(LOGERROR, "%s - Unable to generate a new filename", __FUNCTION__);
-    Close();
-    return CACHE_RC_ERROR;
+    m_filename = CSpecialProtocol::TranslatePath(CUtil::GetNextFilename("special://temp/filecache%03d.cache", 999));
+    m_bTemporaryFilename = true;
+    if (m_filename.empty())
+    {
+      CLog::Log(LOGERROR, "%s - Unable to generate a new filename", __FUNCTION__);
+      Close();
+      return CACHE_RC_ERROR;
+    }
   }
 
   CURL fileURL(m_filename);
@@ -103,10 +109,13 @@ void CSimpleFileCache::Close()
   m_cacheFileWrite->Close();
   m_cacheFileRead->Close();
 
-  if (!m_filename.empty() && !m_cacheFileRead->Delete(CURL(m_filename)))
-    CLog::LogF(LOGWARNING, "failed to delete temporary file \"%s\"", m_filename.c_str());
+  if (m_bTemporaryFilename)
+  {
+    if (!m_filename.empty() && !m_cacheFileRead->Delete(CURL(m_filename)))
+      CLog::LogF(LOGWARNING, "failed to delete temporary file \"%s\"", m_filename.c_str());
 
-  m_filename.clear();
+    m_filename.clear();
+  }
 }
 
 size_t CSimpleFileCache::GetMaxWriteSize(const size_t& iRequestSize)
