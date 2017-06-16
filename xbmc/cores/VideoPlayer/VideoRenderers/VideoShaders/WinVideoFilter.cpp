@@ -44,6 +44,7 @@ CYUV2RGBMatrix::CYUV2RGBMatrix()
   m_flags = 0;
   m_limitedRange = false;
   m_format = BUFFER_FMT_NONE;
+  m_scalingMethod = VS_SCALINGMETHOD_AUTO;
 }
 
 void CYUV2RGBMatrix::SetParameters(float contrast, float blacklevel, unsigned int flags, EBufferFormat format)
@@ -510,12 +511,18 @@ void COutputShader::CreateDitherView()
 
 //==================================================================================
 
-bool CYUV2RGBShader::Create(EBufferFormat fmt, COutputShader *pCLUT)
+bool CYUV2RGBShader::Create(EBufferFormat fmt, COutputShader *pCLUT, ESCALINGMETHOD scalingMethod)
 {
   m_format = fmt;
   m_pOutShader = pCLUT;
+  m_scalingMethod = scalingMethod;
+
+  auto isNearest = (m_scalingMethod == VS_SCALINGMETHOD_NEAREST);
 
   DefinesMap defines;
+
+  if (isNearest)
+    defines["SAMP_NEAREST"] = "";
 
   switch (fmt)
   {
@@ -572,8 +579,10 @@ bool CYUV2RGBShader::Create(EBufferFormat fmt, COutputShader *pCLUT)
   return true;
 }
 
-void CYUV2RGBShader::Render(CRect sourceRect, CPoint dest[], float contrast, float brightness, CRenderBuffer* videoBuffer, CD3DTexture *target)
+void CYUV2RGBShader::Render(CRect sourceRect, CPoint dest[], float contrast, float brightness, CRenderBuffer* videoBuffer,
+  CD3DTexture *target, ESCALINGMETHOD scalingMethod)
 {
+  HandleScalerChange(scalingMethod);
   PrepareParameters(videoBuffer, sourceRect, dest, contrast, brightness);
   SetShaderParameters(videoBuffer);
   Execute({ target }, 4);
@@ -586,6 +595,17 @@ CYUV2RGBShader::CYUV2RGBShader()
   , m_pOutShader(nullptr)
 {
   memset(&m_texSteps, 0, sizeof(m_texSteps));
+}
+
+void CYUV2RGBShader::HandleScalerChange(ESCALINGMETHOD scalingMethod)
+{
+  if (m_scalingMethod != scalingMethod &&
+     (m_scalingMethod == VS_SCALINGMETHOD_NEAREST || scalingMethod == VS_SCALINGMETHOD_NEAREST))
+  {
+    // Scaler has changed from/to nearest neighbour to/from something
+    // else, we need to recompile the shader
+    Create(m_format, m_pOutShader, scalingMethod);
+  }
 }
 
 CYUV2RGBShader::~CYUV2RGBShader()

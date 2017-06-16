@@ -623,7 +623,7 @@ void CWinRenderer::UpdatePSVideoFilter()
   }
 
   m_colorShader = new CYUV2RGBShader();
-  if (!m_colorShader->Create(m_bufferFormat, m_bUseHQScaler ? nullptr : m_outputShader.get()))
+  if (!m_colorShader->Create(m_bufferFormat, m_bUseHQScaler ? nullptr : m_outputShader.get(), m_scalingMethod))
   {
     if (m_bUseHQScaler)
     {
@@ -834,7 +834,7 @@ void CWinRenderer::RenderPS(CD3DTexture* target)
   m_colorShader->Render(m_sourceRect, destPoints,
                         CMediaSettings::GetInstance().GetCurrentVideoSettings().m_Contrast,
                         CMediaSettings::GetInstance().GetCurrentVideoSettings().m_Brightness,
-                        &m_renderBuffers[m_iYV12RenderBuffer], target);
+                        &m_renderBuffers[m_iYV12RenderBuffer], target, m_scalingMethod);
   // Restore our view port.
   g_Windowing.RestoreViewPort();
 }
@@ -1035,6 +1035,11 @@ bool CWinRenderer::Supports(ESCALINGMETHOD method)
         return true;
       if (!g_advancedSettings.m_DXVAAllowHqScaling || m_renderOrientation)
         return false;
+    }
+    else // RENDER_PS
+    {
+      if (method == VS_SCALINGMETHOD_NEAREST)
+        return true;
     }
 
     if ( method == VS_SCALINGMETHOD_AUTO
