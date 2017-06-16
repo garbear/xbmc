@@ -67,6 +67,8 @@ protected:
   virtual void SetStepParams(UINT stepIndex) { }
   virtual bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC *layout, unsigned numElements);
 
+  static const std::vector<float>& GetColorRange(bool isLimitedRange);
+
   CD3DEffect   m_effect;
   CD3DTexture* m_target{ nullptr };
 

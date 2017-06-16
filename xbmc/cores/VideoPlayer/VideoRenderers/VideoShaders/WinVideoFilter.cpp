@@ -248,6 +248,14 @@ bool CWinShader::Execute(const std::vector<CD3DTexture*> &targets, unsigned int 
   return true;
 }
 
+const std::vector<float>& CWinShader::GetColorRange(bool isLimitedRange)
+{
+  static const std::vector<float> fullRange{ 0.f, 1.f };
+  static const std::vector<float> limitedRange{ 16.f / 255.f, (235.f - 16.f) / 255.f };
+
+  return isLimitedRange ? limitedRange : fullRange;
+}
+
 //==================================================================================
 
 COutputShader::~COutputShader()
@@ -869,12 +877,8 @@ void CConvolutionShader1Pass::SetShaderParameters(CD3DTexture &sourceTexture, fl
   D3D11_VIEWPORT viewPort = {};
   g_Windowing.Get3D11Context()->RSGetViewports(&numVP, &viewPort);
   m_effect.SetFloatArray("g_viewPort", &viewPort.Width, 2);
-  float colorRange[2] =
-  {
-    (useLimitRange ?  16.f / 255.f : 0.f),
-    (useLimitRange ? 219.f / 255.f : 1.f),
-  };
-  m_effect.SetFloatArray("g_colorRange", colorRange, _countof(colorRange));
+  auto &range = GetColorRange(useLimitRange);
+  m_effect.SetFloatArray("g_colorRange", range.data(), range.size());
   if (m_pOutShader)
     m_pOutShader->ApplyEffectParameters(m_effect, sourceTexture.GetWidth(), sourceTexture.GetHeight());
 }
@@ -1116,12 +1120,8 @@ void CConvolutionShaderSeparable::SetShaderParameters(CD3DTexture &sourceTexture
   m_effect.SetTexture( "g_Texture",  sourceTexture );
   m_effect.SetTexture( "g_KernelTexture", m_HQKernelTexture );
   m_effect.SetFloatArray("g_StepXY", texSteps, texStepsCount);
-  float colorRange[2] =
-  {
-    (useLimitRange ?  16.f / 255.f : 0.f),
-    (useLimitRange ? 219.f / 255.f : 1.f)
-  };
-  m_effect.SetFloatArray("g_colorRange", colorRange, _countof(colorRange));
+  auto &range = GetColorRange(useLimitRange);
+  m_effect.SetFloatArray("g_colorRange", range.data(), range.size());
   if (m_pOutShader)
     m_pOutShader->ApplyEffectParameters(m_effect, sourceTexture.GetWidth(), sourceTexture.GetHeight());
 }
