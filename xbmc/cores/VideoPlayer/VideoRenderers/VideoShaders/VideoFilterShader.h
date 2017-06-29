@@ -36,7 +36,7 @@ namespace Shaders {
   {
   public:
     BaseVideoFilterShader();
-    void Free() { CGLSLShaderProgram::Free(); }
+    void Free() override { CGLSLShaderProgram::Free(); }
     virtual void  SetSourceTexture(GLint ytex) { m_sourceTexUnit = ytex; }
     virtual void  SetWidth(int w)     { m_width  = w; m_stepX = w>0?1.0f/w:0; }
     virtual void  SetHeight(int h)    { m_height = h; m_stepY = h>0?1.0f/h:0; }
@@ -61,13 +61,13 @@ namespace Shaders {
   {
   public:
     ConvolutionFilterShader(ESCALINGMETHOD method, bool stretch, GLSLOutput *output=NULL);
-    ~ConvolutionFilterShader();
-    void OnCompiledAndLinked();
-    bool OnEnabled();
-    void OnDisabled();
-    void Free();
+    ~ConvolutionFilterShader() override;
+    void OnCompiledAndLinked() override;
+    bool OnEnabled() override;
+    void OnDisabled() override;
+    void Free() override;
 
-    virtual bool GetTextureFilter(GLint& filter) { filter = GL_NEAREST; return true; }
+    bool GetTextureFilter(GLint& filter) override { filter = GL_NEAREST; return true; }
 
   protected:
     // kernel textures
@@ -87,15 +87,15 @@ namespace Shaders {
   {
     public:
       StretchFilterShader();
-      void  OnCompiledAndLinked();
-      bool  OnEnabled();
+      void  OnCompiledAndLinked() override;
+      bool  OnEnabled() override;
   };
 
   class DefaultFilterShader : public BaseVideoFilterShader
   {
     public:
-      void  OnCompiledAndLinked();
-      bool  OnEnabled();
+      void  OnCompiledAndLinked() override;
+      bool  OnEnabled() override;
   };
 
 } // end namespace

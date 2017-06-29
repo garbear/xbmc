@@ -94,7 +94,7 @@ public:
     m_message = msg;
   }
 
-  virtual ~CDVDMsg()
+  ~CDVDMsg() override
   {
   }
 
@@ -136,8 +136,8 @@ class CDVDMsgGeneralSynchronize : public CDVDMsg
 {
 public:
   CDVDMsgGeneralSynchronize(unsigned int timeout, unsigned int sources);
- ~CDVDMsgGeneralSynchronize();
-  virtual long Release();
+ ~CDVDMsgGeneralSynchronize() override;
+  long Release() override;
 
   // waits until all threads waiting, released the object
   // if abort is set somehow
@@ -260,7 +260,7 @@ class CDVDMsgDemuxerPacket : public CDVDMsg
 {
 public:
   CDVDMsgDemuxerPacket(DemuxPacket* packet, bool drop = false);
-  virtual ~CDVDMsgDemuxerPacket();
+  ~CDVDMsgDemuxerPacket() override;
   DemuxPacket* GetPacket()      { return m_packet; }
   unsigned int GetPacketSize();
   bool         GetPacketDrop()  { return m_drop; }

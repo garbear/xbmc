@@ -115,28 +115,28 @@ class CLinuxRendererGL : public CBaseRenderer
 {
 public:
   CLinuxRendererGL();
-  virtual ~CLinuxRendererGL();
+  ~CLinuxRendererGL() override;
 
   // Player functions
-  virtual bool Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height, float fps, unsigned flags, ERenderFormat format, void *hwPic, unsigned int orientation);
-  virtual bool IsConfigured() { return m_bConfigured; }
-  virtual int GetImage(YV12Image *image, int source = AUTOSOURCE, bool readonly = false);
-  virtual void ReleaseImage(int source, bool preserve = false);
-  virtual void FlipPage(int source);
-  virtual void PreInit();
-  virtual void UnInit();
-  virtual void Reset(); /* resets renderer after seek for example */
-  virtual void Flush();
-  virtual void SetBufferSize(int numBuffers) { m_NumYV12Buffers = numBuffers; }
-  virtual void RenderUpdate(bool clear, DWORD flags = 0, DWORD alpha = 255);
-  virtual void Update();
-  virtual bool RenderCapture(CRenderCapture* capture);
-  virtual CRenderInfo GetRenderInfo();
+  bool Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height, float fps, unsigned flags, ERenderFormat format, void *hwPic, unsigned int orientation) override;
+  bool IsConfigured() override { return m_bConfigured; }
+  int GetImage(YV12Image *image, int source = AUTOSOURCE, bool readonly = false) override;
+  void ReleaseImage(int source, bool preserve = false) override;
+  void FlipPage(int source) override;
+  void PreInit() override;
+  void UnInit() override;
+  void Reset() override; /* resets renderer after seek for example */
+  void Flush() override;
+  void SetBufferSize(int numBuffers) override { m_NumYV12Buffers = numBuffers; }
+  void RenderUpdate(bool clear, DWORD flags = 0, DWORD alpha = 255) override;
+  void Update() override;
+  bool RenderCapture(CRenderCapture* capture) override;
+  CRenderInfo GetRenderInfo() override;
 
   // Feature support
-  virtual bool SupportsMultiPassRendering();
-  virtual bool Supports(ERENDERFEATURE feature);
-  virtual bool Supports(ESCALINGMETHOD method);
+  bool SupportsMultiPassRendering() override;
+  bool Supports(ERENDERFEATURE feature) override;
+  bool Supports(ESCALINGMETHOD method) override;
 
 protected:
   virtual void Render(DWORD flags, int renderBuffer);

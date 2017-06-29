@@ -28,15 +28,15 @@ class CDVDInputStreamStack : public CDVDInputStream
 {
 public:
   CDVDInputStreamStack(const CFileItem& fileitem);
-  virtual ~CDVDInputStreamStack();
+  ~CDVDInputStreamStack() override;
 
-  virtual bool    Open();
-  virtual void    Close();
-  virtual int     Read(uint8_t* buf, int buf_size);
-  virtual int64_t Seek(int64_t offset, int whence);
-  virtual bool Pause(double dTime) { return false; };
-  virtual bool    IsEOF();
-  virtual int64_t GetLength();
+  bool    Open() override;
+  void    Close() override;
+  int     Read(uint8_t* buf, int buf_size) override;
+  int64_t Seek(int64_t offset, int whence) override;
+  bool Pause(double dTime) override { return false; };
+  bool    IsEOF() override;
+  int64_t GetLength() override;
 
 protected:
 

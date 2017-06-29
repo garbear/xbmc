@@ -26,6 +26,6 @@ class CProcessInfoLinux : public CProcessInfo
 {
 public:
   CProcessInfoLinux();
-  virtual ~CProcessInfoLinux();
+  ~CProcessInfoLinux() override;
   void SetSwDeinterlacingMethods() override;
 };

@@ -90,7 +90,7 @@ public:
     const char* GetTextPtr()
     { return m_text.c_str(); }
 
-    virtual ~CElementText()
+    ~CElementText() override
     {  }
 
   };
@@ -139,7 +139,7 @@ public:
     }
   }
 
-  virtual ~CDVDOverlayText()
+  ~CDVDOverlayText() override
   {
     while (m_pHead)
     {
@@ -149,7 +149,7 @@ public:
     }
   }
 
-  virtual CDVDOverlayText* Clone()
+  CDVDOverlayText* Clone() override
   {
     return new CDVDOverlayText(*this);
   }

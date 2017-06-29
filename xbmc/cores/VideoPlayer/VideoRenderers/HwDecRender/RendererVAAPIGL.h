@@ -28,32 +28,32 @@ class CRendererVAAPI : public CLinuxRendererGL
 {
 public:
   CRendererVAAPI();
-  virtual ~CRendererVAAPI();
+  ~CRendererVAAPI() override;
 
-  virtual bool Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height,
+  bool Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height,
                          float fps, unsigned flags, ERenderFormat format, void *hwPic, unsigned int orientation) override;
 
   // Player functions
-  virtual void AddVideoPictureHW(VideoPicture &picture, int index) override;
-  virtual void ReleaseBuffer(int idx) override;
-  virtual CRenderInfo GetRenderInfo() override;
-  virtual bool ConfigChanged(void *hwPic) override;
+  void AddVideoPictureHW(VideoPicture &picture, int index) override;
+  void ReleaseBuffer(int idx) override;
+  CRenderInfo GetRenderInfo() override;
+  bool ConfigChanged(void *hwPic) override;
 
   // Feature support
-  virtual bool Supports(ERENDERFEATURE feature) override;
-  virtual bool Supports(ESCALINGMETHOD method) override;
+  bool Supports(ERENDERFEATURE feature) override;
+  bool Supports(ESCALINGMETHOD method) override;
 
 protected:
-  virtual bool LoadShadersHook() override;
-  virtual bool RenderHook(int idx) override;
-  virtual void AfterRenderHook(int idx) override;
+  bool LoadShadersHook() override;
+  bool RenderHook(int idx) override;
+  void AfterRenderHook(int idx) override;
 
   // textures
-  virtual bool UploadTexture(int index) override;
-  virtual void DeleteTexture(int index) override;
-  virtual bool CreateTexture(int index) override;
+  bool UploadTexture(int index) override;
+  void DeleteTexture(int index) override;
+  bool CreateTexture(int index) override;
 
-  virtual EShaderFormat GetShaderFormat(ERenderFormat renderFormat) override;
+  EShaderFormat GetShaderFormat(ERenderFormat renderFormat) override;
 
   bool m_isVAAPIBuffer = true;
 };

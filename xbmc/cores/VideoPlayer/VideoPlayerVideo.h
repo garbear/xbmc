@@ -64,7 +64,7 @@ public:
                  ,CDVDMessageQueue& parent
                  ,CRenderManager& renderManager,
                  CProcessInfo &processInfo);
-  virtual ~CVideoPlayerVideo();
+  ~CVideoPlayerVideo() override;
 
   bool OpenStream(CDVDStreamInfo hint) override;
   void CloseStream(bool bWaitForBuffers) override;
@@ -96,8 +96,8 @@ public:
 
 protected:
 
-  virtual void OnExit() override;
-  virtual void Process() override;
+  void OnExit() override;
+  void Process() override;
   bool ProcessDecoderOutput(double &frametime, double &pts);
 
   int OutputPicture(const VideoPicture* src, double pts);

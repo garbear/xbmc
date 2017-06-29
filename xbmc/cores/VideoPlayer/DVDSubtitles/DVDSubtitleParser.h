@@ -45,16 +45,16 @@ class CDVDSubtitleParserCollection
 {
 public:
   CDVDSubtitleParserCollection(const std::string& strFile) : m_filename(strFile) {}
-  virtual ~CDVDSubtitleParserCollection() { }
-  virtual CDVDOverlay* Parse(double iPts)
+  ~CDVDSubtitleParserCollection() override { }
+  CDVDOverlay* Parse(double iPts) override
   {
     CDVDOverlay* o = m_collection.Get(iPts);
     if(o == NULL)
       return o;
     return o->Clone();
   }
-  virtual void         Reset()            { m_collection.Reset(); }
-  virtual void         Dispose()          { m_collection.Clear(); }
+  void         Reset() override            { m_collection.Reset(); }
+  void         Dispose() override          { m_collection.Clear(); }
 
 protected:
   CDVDSubtitleLineCollection m_collection;
@@ -71,7 +71,7 @@ public:
   {
   }
 
-  virtual ~CDVDSubtitleParserText() = default;
+  ~CDVDSubtitleParserText() override = default;
 
 protected:
   using CDVDSubtitleParserCollection::Open;
