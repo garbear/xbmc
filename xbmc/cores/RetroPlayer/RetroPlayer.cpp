@@ -54,6 +54,8 @@ using namespace KODI;
 using namespace GAME;
 using namespace RETRO;
 
+struct CRPRenderInfo;
+
 CRetroPlayer::CRetroPlayer(IPlayerCallback& callback) :
   IPlayer(callback),
   m_renderManager(m_clock, this),
@@ -466,7 +468,7 @@ void CRetroPlayer::UpdateClockSync(bool enabled)
   m_processInfo->SetRenderClockSync(enabled);
 }
 
-void CRetroPlayer::UpdateRenderInfo(CRenderInfo &info)
+void CRetroPlayer::UpdateRenderInfo(CRPRenderInfo& info)
 {
   m_processInfo->UpdateRenderInfo(info);
 }
