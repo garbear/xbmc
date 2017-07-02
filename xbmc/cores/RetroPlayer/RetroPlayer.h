@@ -25,6 +25,7 @@
 #include "games/GameTypes.h"
 #include "guilib/DispResource.h"
 #include "threads/CriticalSection.h"
+#include "VideoRenderers/RPRenderFormats.h"
 
 #include <memory>
 
@@ -144,7 +145,7 @@ namespace RETRO
     void VideoParamsChange() override { }
     void GetDebugInfo(std::string &audio, std::string &video, std::string &general) override { }
     void UpdateClockSync(bool enabled) override;
-    void UpdateRenderInfo(CRenderInfo &info) override;
+    void UpdateRenderInfo(CRPRenderInfo &info) override;
     void UpdateRenderBuffers(int queued, int discard, int free) override {}
 
   private:

@@ -23,7 +23,7 @@
 
 #include <stdint.h>
 
-struct VideoPicture;
+struct RPVideoPicture;
 
 class IPixelConverter
 {
@@ -55,7 +55,7 @@ public:
 
   /*!
    * \brief Get the results of processing the pixels
-   * \param dvdVideoPicture a container for the resulting pixel data
+   * \param dvdRPVideoPicture a container for the resulting pixel data
    */
-  virtual void GetPicture(VideoPicture& dvdVideoPicture) = 0;
+  virtual void GetPicture(RPVideoPicture& dvdRPVideoPicture) = 0;
 };

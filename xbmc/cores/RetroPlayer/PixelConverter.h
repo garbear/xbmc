@@ -20,11 +20,11 @@
 #pragma once
 
 #include "IPixelConverter.h"
-#include "cores/VideoPlayer/VideoRenderers/RenderFormats.h"
+#include "cores/RetroPlayer/VideoRenderers/RPRenderFormats.h"
 
 #include <stdint.h>
 
-struct VideoPicture;
+struct RPVideoPicture;
 struct SwsContext;
 
 class CPixelConverter : public IPixelConverter
@@ -37,12 +37,12 @@ public:
   bool Open(AVPixelFormat pixfmt, AVPixelFormat target, unsigned int width, unsigned int height) override;
   void Dispose() override;
   bool Decode(const uint8_t* pData, unsigned int size) override;
-  void GetPicture(VideoPicture& dvdVideoPicture) override;
+  void GetPicture(RPVideoPicture& dvdRPVideoPicture) override;
 
 protected:
-  ERenderFormat m_renderFormat;
+  ERPRenderFormat m_renderFormat;
   unsigned int m_width;
   unsigned int m_height;
   SwsContext* m_swsContext;
-  VideoPicture* m_buf;
+  RPVideoPicture* m_buf;
 };

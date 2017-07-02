@@ -25,6 +25,7 @@
 #include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
 #include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
 #include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
+#include "VideoRenderers/RPVideoPicture.h"
 #include "utils/log.h"
 
 #include <atomic> //! @todo
@@ -115,7 +116,7 @@ bool CRetroPlayerVideo::OpenEncodedStream(AVCodecID codec)
 
 void CRetroPlayerVideo::AddData(const uint8_t* data, unsigned int size)
 {
-  VideoPicture picture = { };
+  RPVideoPicture picture = { };
 
   if (GetPicture(data, size, picture))
   {
@@ -138,7 +139,7 @@ void CRetroPlayerVideo::CloseStream()
   // m_pVideoCodec.reset();
 }
 
-bool CRetroPlayerVideo::Configure(VideoPicture& picture)
+bool CRetroPlayerVideo::Configure(RPVideoPicture& picture)
 {
   if (!m_bConfigured)
   {
@@ -167,7 +168,7 @@ bool CRetroPlayerVideo::Configure(VideoPicture& picture)
   return m_bConfigured;
 }
 
-bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, VideoPicture& picture)
+bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, RPVideoPicture& picture)
 {
   bool bHasPicture = false;
 
@@ -212,11 +213,11 @@ bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, Video
   return bHasPicture;
 }
 
-void CRetroPlayerVideo::SendPicture(VideoPicture& picture)
+void CRetroPlayerVideo::SendPicture(RPVideoPicture& picture)
 {
   std::atomic_bool bAbortOutput(false); //! @todo
 
-  int index = m_renderManager.AddVideoPicture(picture);
+  int index = m_renderManager.AddRPVideoPicture(picture);
   if (index < 0)
   {
     // Video device might not be done yet, drop the frame

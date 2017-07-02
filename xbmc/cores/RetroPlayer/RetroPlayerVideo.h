@@ -29,7 +29,8 @@ class CDVDVideoCodec;
 class CPixelConverter;
 class CProcessInfo;
 class CRenderManager;
-struct VideoPicture;
+class CRPProcessInfo;
+struct RPVideoPicture;
 
 namespace KODI
 {
@@ -56,9 +57,9 @@ namespace RETRO
     */
 
   private:
-    bool Configure(VideoPicture& picture);
-    bool GetPicture(const uint8_t* data, unsigned int size, VideoPicture& picture);
-    void SendPicture(VideoPicture& picture);
+    bool Configure(RPVideoPicture& picture);
+    bool GetPicture(const uint8_t* data, unsigned int size, RPVideoPicture& picture);
+    void SendPicture(RPVideoPicture& picture);
 
     // Construction parameters
     CRenderManager& m_renderManager;
