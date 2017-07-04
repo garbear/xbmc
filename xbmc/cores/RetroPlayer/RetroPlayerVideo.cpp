@@ -22,9 +22,9 @@
 #include "RetroPlayerDefines.h"
 #include "PixelConverter.h"
 #include "PixelConverterRBP.h"
-#include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
-#include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
 #include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
+#include "VideoRenderers/RPRenderFlags.h"
+#include "VideoRenderers/RPRenderUtils.h"
 #include "VideoRenderers/RPVideoPicture.h"
 #include "utils/log.h"
 
@@ -154,7 +154,7 @@ bool CRetroPlayerVideo::Configure(RPVideoPicture& picture)
     if (m_bConfigured)
     {
       // Update process info
-      AVPixelFormat pixfmt = static_cast<AVPixelFormat>(CDVDCodecUtils::PixfmtFromEFormat(picture.format));
+      AVPixelFormat pixfmt = static_cast<AVPixelFormat>(RPRenderUtils::PixfmtFromEFormat(picture.format));
       if (pixfmt != AV_PIX_FMT_NONE)
       {
         //! @todo
@@ -225,6 +225,6 @@ void CRetroPlayerVideo::SendPicture(RPVideoPicture& picture)
   }
   else
   {
-    m_renderManager.FlipPage(bAbortOutput, 0.0, VS_INTERLACEMETHOD_NONE, FS_NONE, false);
+    m_renderManager.FlipPage(bAbortOutput, 0.0, VS_INTERLACEMETHOD_NONE, RP_FS_NONE, false);
   }
 }

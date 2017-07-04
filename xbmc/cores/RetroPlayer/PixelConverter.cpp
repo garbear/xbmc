@@ -19,10 +19,11 @@
  */
 
 #include "PixelConverter.h"
-#include "cores/VideoPlayer/DVDClock.h"
 #include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
+#include "TimingConstants.h"
 #include "VideoRenderers/RPVideoPicture.h"
 #include "VideoRenderers/RPRenderFormats.h"
+#include "VideoRenderers/RPRenderUtils.h"
 #include "utils/log.h"
 
 extern "C"
@@ -44,7 +45,7 @@ bool CPixelConverter::Open(AVPixelFormat pixfmt, AVPixelFormat targetfmt, unsign
   if (pixfmt == targetfmt || width == 0 || height == 0)
     return false;
 
-  m_renderFormat = CDVDCodecUtils::EFormatFromPixfmt(targetfmt);
+  m_renderFormat = RPRenderUtils::EFormatFromPixfmt(targetfmt);
   if (m_renderFormat == RP_RENDER_FMT_NONE)
   {
     CLog::Log(LOGERROR, "%s: Invalid target pixel format: %d", __FUNCTION__, targetfmt);
@@ -63,7 +64,7 @@ bool CPixelConverter::Open(AVPixelFormat pixfmt, AVPixelFormat targetfmt, unsign
     return false;
   }
 
-  m_buf = CDVDCodecUtils::AllocatePicture(width, height);
+  m_buf = RPRenderUtils::AllocatePicture(width, height);
   if (!m_buf)
   {
     CLog::Log(LOGERROR, "%s: Failed to allocate picture of dimensions %dx%d", __FUNCTION__, width, height);
@@ -83,7 +84,7 @@ void CPixelConverter::Dispose()
 
   if (m_buf)
   {
-    CDVDCodecUtils::FreePicture(m_buf);
+    RPRenderUtils::FreePicture(m_buf);
     m_buf = nullptr;
   }
 }
