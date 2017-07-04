@@ -1,2 +1,3 @@
 xbmc/cores/RetroPlayer                             cores/RetroPlayer
 xbmc/cores/RetroPlayer/VideoRenderers              cores/RetroPlayer/videorenderers
+xbmc/cores/RetroPlayer/VideoRenderers/HwDecRender  cores/RetroPlayer/videorenderers/hwdec
