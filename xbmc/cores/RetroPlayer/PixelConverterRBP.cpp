@@ -20,7 +20,7 @@
 
 #include "PixelConverterRBP.h"
 #include "cores/VideoPlayer/DVDClock.h"
-#include "cores/VideoPlayer/VideoRenderers/HwDecRender/MMALRenderer.h"
+#include "cores/RetroPlayer/VideoRenderers/HwDecRender/RPMMALRenderer.h"
 #include "linux/RBP.h"
 #include "utils/log.h"
 
@@ -137,7 +137,7 @@ bool CPixelConverterRBP::Decode(const uint8_t* pData, unsigned int size)
     return false;
   }
 
-  MMAL::CMMALYUVBuffer *omvb = static_cast<MMAL::CMMALYUVBuffer*>(m_buf->hwPic);
+  MMAL::CMMALYUVBufferRP *omvb = static_cast<MMAL::CMMALYUVBufferRP*>(m_buf->hwPic);
 
   const int stride = size / m_height;
 
@@ -157,7 +157,7 @@ void CPixelConverterRBP::GetPicture(RPVideoPicture& dvdRPVideoPicture)
 
   dvdRPVideoPicture.hwPic = m_buf->hwPic;
 
-  MMAL::CMMALYUVBuffer *omvb = static_cast<MMAL::CMMALYUVBuffer*>(m_buf->hwPic);
+  MMAL::CMMALYUVBufferRP *omvb = static_cast<MMAL::CMMALYUVBufferRP*>(m_buf->hwPic);
 
   // need to flush ARM cache so GPU can see it
   omvb->gmem->Flush();
@@ -165,7 +165,7 @@ void CPixelConverterRBP::GetPicture(RPVideoPicture& dvdRPVideoPicture)
 
 RPVideoPicture* CPixelConverterRBP::AllocatePicture(int iWidth, int iHeight)
 {
-  MMAL::CMMALYUVBuffer *omvb = nullptr;
+  MMAL::CMMALYUVBufferRP *omvb = nullptr;
   RPVideoPicture* pPicture = new RPVideoPicture;
 
   // gpu requirements
@@ -175,7 +175,7 @@ RPVideoPicture* CPixelConverterRBP::AllocatePicture(int iWidth, int iHeight)
   {
     m_pool->SetFormat(m_mmal_format, iWidth, iHeight, w, h, 0, nullptr);
 
-    omvb = dynamic_cast<MMAL::CMMALYUVBuffer *>(m_pool->GetBuffer(500));
+    omvb = dynamic_cast<MMAL::CMMALYUVBufferRP *>(m_pool->GetBuffer(500));
     if (!omvb ||
         !omvb->mmal_buffer ||
         !omvb->gmem ||
@@ -209,7 +209,7 @@ void CPixelConverterRBP::FreePicture(RPVideoPicture* pPicture)
   {
     if (pPicture->hwPic)
     {
-      MMAL::CMMALYUVBuffer *omvb = static_cast<MMAL::CMMALYUVBuffer*>(m_buf->hwPic);
+      MMAL::CMMALYUVBufferRP *omvb = static_cast<MMAL::CMMALYUVBufferRP*>(m_buf->hwPic);
       omvb->Release();
     }
     delete pPicture;
