@@ -22,7 +22,7 @@
 #include "RetroPlayerDefines.h"
 #include "PixelConverter.h"
 #include "PixelConverterRBP.h"
-#include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
+#include "cores/VideoPlayer/Process/ProcessInfo.h"
 #include "VideoRenderers/RPRenderFlags.h"
 #include "VideoRenderers/RPRenderUtils.h"
 #include "VideoRenderers/RPVideoPicture.h"
@@ -33,7 +33,7 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRetroPlayerVideo::CRetroPlayerVideo(CRenderManager& renderManager, CProcessInfo& processInfo) :
+CRetroPlayerVideo::CRetroPlayerVideo(CRPRenderManager& renderManager, CProcessInfo& processInfo) :
   //CThread("RetroPlayerVideo"),
   m_renderManager(renderManager),
   m_processInfo(processInfo),
