@@ -29,7 +29,7 @@
 
 #include <memory>
 
-class CProcessInfo;
+class CRPProcessInfo;
 
 namespace KODI
 {
@@ -47,10 +47,10 @@ namespace RETRO
     ~CRetroPlayer() override;
 
     // implementation of IPlayer
-    //virtual bool Initialize(TiXmlElement* pConfig) override { return true; }
+    //bool Initialize(TiXmlElement* pConfig) override { return true; }
     bool OpenFile(const CFileItem& file, const CPlayerOptions& options) override;
-    //virtual bool QueueNextFile(const CFileItem &file) override { return false; }
-    //virtual void OnNothingToQueueNotify() override { }
+    //bool QueueNextFile(const CFileItem &file) override { return false; }
+    //void OnNothingToQueueNotify() override { }
     bool CloseFile(bool reopen = false) override;
     bool IsPlaying() const override;
     bool CanPause() override;
@@ -169,7 +169,7 @@ namespace RETRO
     State                              m_state = State::STARTING;
     double                             m_priorSpeed = 0.0f; // Speed of gameplay before entering OSD
     CDVDClock                          m_clock;
-    std::unique_ptr<CProcessInfo>      m_processInfo;
+    std::unique_ptr<CRPProcessInfo>    m_processInfo;
     CRPRenderManager                   m_renderManager;
     std::unique_ptr<CRetroPlayerAudio> m_audio;
     std::unique_ptr<CRetroPlayerVideo> m_video;

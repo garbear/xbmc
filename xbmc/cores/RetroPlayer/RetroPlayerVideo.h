@@ -28,7 +28,7 @@
 class CDVDClock;
 class CDVDVideoCodec;
 class CPixelConverter;
-class CProcessInfo;
+class CRPProcessInfo;
 class CRPProcessInfo;
 class CRPRenderManager;
 struct RPVideoPicture;
@@ -41,7 +41,7 @@ namespace RETRO
                             //protected CThread
   {
   public:
-    CRetroPlayerVideo(CRPRenderManager& m_renderManager, CProcessInfo& m_processInfo);
+    CRetroPlayerVideo(CRPRenderManager& m_renderManager, CRPProcessInfo& m_processInfo);
 
     ~CRetroPlayerVideo() override;
 
@@ -63,7 +63,7 @@ namespace RETRO
     void SendPicture(RPVideoPicture& picture);
 
     // Construction parameters
-    CProcessInfo&   m_processInfo;
+    CRPProcessInfo&   m_processInfo;
     CRPRenderManager& m_renderManager;
 
     // Stream properties

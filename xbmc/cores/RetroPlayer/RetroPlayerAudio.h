@@ -24,7 +24,7 @@
 #include <memory>
 
 class CDVDAudioCodec;
-class CProcessInfo;
+class CRPProcessInfo;
 class IAEStream;
 
 namespace KODI
@@ -34,8 +34,8 @@ namespace RETRO
   class CRetroPlayerAudio : public GAME::IGameAudioCallback
   {
   public:
-    CRetroPlayerAudio(CProcessInfo& processInfo);
-    ~CRetroPlayerAudio() override;
+    CRetroPlayerAudio(CRPProcessInfo& processInfo);
+    ~CRetroPlayerAudio();
 
     // implementation of IGameAudioCallback
     unsigned int NormalizeSamplerate(unsigned int samplerate) const override;
@@ -47,7 +47,7 @@ namespace RETRO
     void Enable(bool bEnabled) { m_bAudioEnabled = bEnabled; }
 
   private:
-    CProcessInfo& m_processInfo;
+    CRPProcessInfo& m_processInfo;
     IAEStream* m_pAudioStream;
     // std::unique_ptr<CDVDAudioCodec> m_pAudioCodec;
     bool       m_bAudioEnabled;

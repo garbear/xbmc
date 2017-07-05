@@ -26,14 +26,14 @@
 #include "cores/AudioEngine/Utils/AEChannelInfo.h"
 #include "cores/AudioEngine/Utils/AEUtil.h"
 #include "cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodec.h"
-#include "cores/VideoPlayer/Process/ProcessInfo.h"
+#include "VideoRenderers/RPProcessInfo.h"
 #include "threads/Thread.h"
 #include "utils/log.h"
 
 using namespace KODI;
 using namespace RETRO;
 
-CRetroPlayerAudio::CRetroPlayerAudio(CProcessInfo& processInfo) :
+CRetroPlayerAudio::CRetroPlayerAudio(CRPProcessInfo& processInfo) :
   m_processInfo(processInfo),
   m_pAudioStream(nullptr),
   m_bAudioEnabled(true)
