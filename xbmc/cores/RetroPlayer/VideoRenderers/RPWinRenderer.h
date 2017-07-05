@@ -27,7 +27,6 @@
 #include "RPBaseRenderer.h"
 #include "guilib/D3DResource.h"
 #include "RPRenderFormats.h"
-#include "cores/RenderCapture.h"
 #include "settings/VideoSettings.h"
 
 #define ALIGN(value, alignment) (((value)+((alignment)-1))&~((alignment)-1))
@@ -126,7 +125,7 @@ private:
 
   unsigned int     m_width;
   unsigned int     m_height;
-  ERPRenderFormat    m_format;
+  ERPRenderFormat  m_format;
   unsigned int     m_activeplanes;
   bool             m_locked;
   D3D11_MAP        m_mapType;
@@ -154,8 +153,6 @@ public:
   ~CRPWinRenderer();
 
   virtual void Update();
-
-  bool RenderCapture(CRenderCapture* capture);
 
   // Player functions
   virtual bool Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height, float fps, unsigned flags, ERPRenderFormat format, void *hwPic, unsigned int orientation);
@@ -235,7 +232,6 @@ protected:
 
   int                  m_neededBuffers;
   unsigned int         m_frameIdx = 0;
-  CRenderCapture*      m_capture = nullptr;
 };
 
 #else

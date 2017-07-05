@@ -167,7 +167,7 @@ void CRPWinRenderer::SelectRenderMethod()
   // Set rendering to dxva before trying it, in order to open the correct processor immediately, when deinterlacing method is auto.
 
   // Force dxva renderer after dxva decoding: PS and SW renderers have performance issues after dxva decode.
-  
+
   // Disable DXVA rendererer
   /*
   if (g_advancedSettings.m_DXVAForceProcessorRenderer && m_format == RP_RENDER_FMT_DXVA)
@@ -331,7 +331,7 @@ int CRPWinRenderer::GetImage(YV12ImageRP *image, int source, bool readonly)
   if (m_renderMethod == RENDER_DXVA)
     return source;
   */
-  
+
   YUVBufferRP *buf = reinterpret_cast<YUVBufferRP*>(m_VideoBuffers[source]);
   if (!buf)
     return -1;
@@ -412,7 +412,7 @@ void CRPWinRenderer::PreInit()
   m_formats.push_back(RP_RENDER_FMT_YUV420P);
 
   m_iRequestedMethod = CServiceBroker::GetSettings().GetInt(CSettings::SETTING_VIDEOPLAYER_RENDERMETHOD);
-  
+
   // Disable DXVA rendererer
   /*
   if (g_advancedSettings.m_DXVAForceProcessorRenderer
@@ -427,7 +427,7 @@ void CRPWinRenderer::PreInit()
     else
       m_processor->ApplySupportedFormats(&m_formats);
   }
-  
+
   // allow other color spaces besides YV12 in case DXVA rendering is not used or not available
   if (!m_processor || (m_iRequestedMethod != RP_RENDER_METHOD_DXVA))
   */
@@ -950,31 +950,14 @@ void CRPWinRenderer::RenderHW(DWORD flags)
   CRect target = CRect(0.0f, 0.0f,
     static_cast<float>(m_IntermediateTarget.GetWidth()),
     static_cast<float>(m_IntermediateTarget.GetHeight()));
-  if (m_capture)
-  {
-    target.x2 = static_cast<float>(m_capture->GetWidth());
-    target.y2 = static_cast<float>(m_capture->GetHeight());
-  }
   CWIN32Util::CropSource(src, dst, target, m_renderOrientation);
 
   ID3D11RenderTargetView* pView = nullptr;
   ID3D11Resource* pResource = m_IntermediateTarget.Get();
-  if (m_capture)
-  {
-    g_Windowing.Get3D11Context()->OMGetRenderTargets(1, &pView, nullptr);
-    if (pView)
-      pView->GetResource(&pResource);
-  }
 
   m_processor->Render(src, dst, pResource, views, flags, image->frameIdx, m_renderOrientation);
 
-  if (m_capture)
-  {
-    SAFE_RELEASE(pResource);
-    SAFE_RELEASE(pView);
-  }
-
-  if (!m_bUseHQScaler && !m_capture)
+  if (!m_bUseHQScaler)
   {
     CRect oldViewPort;
     bool stereoHack = g_graphicsContext.GetStereoMode() == RENDER_STEREO_MODE_SPLIT_HORIZONTAL
@@ -1008,45 +991,6 @@ void CRPWinRenderer::RenderHW(DWORD flags)
 }
 
 */
-
-bool CRPWinRenderer::RenderCapture(CRenderCapture* capture)
-{
-  if (!m_bConfigured || m_NumYV12Buffers == 0)
-    return false;
-
-  bool succeeded = false;
-
-  ID3D11DeviceContext* pContext = g_Windowing.Get3D11Context();
-
-  CRect saveSize = m_destRect;
-  saveRotatedCoords();//backup current m_rotatedDestCoords
-
-  m_destRect.SetRect(0, 0, (float)capture->GetWidth(), (float)capture->GetHeight());
-  syncDestRectToRotatedPoints();//syncs the changed destRect to m_rotatedDestCoords
-
-  ID3D11DepthStencilView* oldDepthView;
-  ID3D11RenderTargetView* oldSurface;
-  pContext->OMGetRenderTargets(1, &oldSurface, &oldDepthView);
-
-  capture->BeginRender();
-  if (capture->GetState() != CAPTURESTATE_FAILED)
-  {
-    m_capture = capture;
-    Render(0);
-    m_capture = nullptr;
-    capture->EndRender();
-    succeeded = true;
-  }
-
-  pContext->OMSetRenderTargets(1, &oldSurface, oldDepthView);
-  oldSurface->Release();
-  SAFE_RELEASE(oldDepthView); // it can be nullptr
-
-  m_destRect = saveSize;
-  restoreRotatedCoords();//restores the previous state of the rotated dest coords
-
-  return succeeded;
-}
 
 //********************************************************************************************************
 // YV12 Texture creation, deletion, copying + clearing
@@ -1120,7 +1064,7 @@ bool CRPWinRenderer::Supports(ESCALINGMETHOD method)
         return true;
       else if (!g_advancedSettings.m_DXVAAllowHqScaling || m_renderOrientation)
         return false;
-    } 
+    }
     else */ // RENDER_PS
     {
       if (method == VS_SCALINGMETHOD_NEAREST)
@@ -1182,9 +1126,9 @@ CRPRenderInfo CRPWinRenderer::GetRenderInfo()
     info.optimal_buffer_size = m_processor->Size();
     if (m_format != RP_RENDER_FMT_DXVA)
       info.m_deintMethods.push_back(VS_INTERLACEMETHOD_DXVA_AUTO);
-  } 
+  }
   else */
-    info.optimal_buffer_size = 4;
+  info.optimal_buffer_size = 4;
   return info;
 }
 

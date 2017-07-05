@@ -132,14 +132,8 @@ namespace RETRO
     bool IsRenderingVideo() override { return m_renderManager.IsConfigured(); }
     bool IsRenderingGuiLayer() override { return m_renderManager.IsGuiLayer(); }
     bool IsRenderingVideoLayer() override { return m_renderManager.IsVideoLayer(); }
-    bool Supports(EINTERLACEMETHOD method) override;
-    EINTERLACEMETHOD GetDeinterlacingMethodDefault() override;
     bool Supports(ESCALINGMETHOD method) override { return m_renderManager.Supports(method); }
     bool Supports(ERENDERFEATURE feature) override { return m_renderManager.Supports(feature); }
-    unsigned int RenderCaptureAlloc() override { return m_renderManager.AllocRenderCapture(); }
-    void RenderCaptureRelease(unsigned int captureId) override { m_renderManager.ReleaseRenderCapture(captureId); }
-    void RenderCapture(unsigned int captureId, unsigned int width, unsigned int height, int flags) override { m_renderManager.StartRenderCapture(captureId, width, height, flags); }
-    bool RenderCaptureGetPixels(unsigned int captureId, unsigned int millis, uint8_t *buffer, unsigned int size) override { return m_renderManager.RenderCaptureGetPixels(captureId, millis, buffer, size); }
 
     // implementation of IRenderMsg
     void VideoParamsChange() override { }
