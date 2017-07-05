@@ -24,9 +24,9 @@
 #include "RetroPlayerVideo.h"
 #include "addons/AddonManager.h"
 #include "settings/MediaSettings.h"
-#include "cores/VideoPlayer/Process/ProcessInfo.h"
 #include "dialogs/GUIDialogYesNo.h"
 #include "filesystem/File.h"
+#include "VideoRenderers/RPProcessInfo.h"
 #include "games/addons/playback/IGameClientPlayback.h"
 #include "games/addons/savestates/Savestate.h"
 #include "games/addons/savestates/SavestateUtils.h"
@@ -59,7 +59,7 @@ struct CRPRenderInfo;
 CRetroPlayer::CRetroPlayer(IPlayerCallback& callback) :
   IPlayer(callback),
   m_renderManager(m_clock, this),
-  m_processInfo(CProcessInfo::CreateInstance())
+  m_processInfo(CRPProcessInfo::CreateInstance())
 {
 }
 
@@ -451,21 +451,6 @@ void CRetroPlayer::FrameMove()
     }
     }
   }
-}
-
-bool CRetroPlayer::Supports(EINTERLACEMETHOD method)
-{
-  return m_processInfo->Supports(method);
-}
-
-EINTERLACEMETHOD CRetroPlayer::GetDeinterlacingMethodDefault()
-{
-  return m_processInfo->GetDeinterlacingMethodDefault();
-}
-
-void CRetroPlayer::UpdateClockSync(bool enabled)
-{
-  m_processInfo->SetRenderClockSync(enabled);
 }
 
 void CRetroPlayer::UpdateRenderInfo(CRPRenderInfo& info)
