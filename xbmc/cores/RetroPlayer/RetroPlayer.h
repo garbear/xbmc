@@ -20,8 +20,8 @@
 #pragma once
 
 #include "cores/IPlayer.h"
-#include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
 #include "cores/VideoPlayer/DVDClock.h"
+#include "VideoRenderers/RPRenderManager.h"
 #include "games/GameTypes.h"
 #include "guilib/DispResource.h"
 #include "threads/CriticalSection.h"
@@ -40,7 +40,7 @@ namespace RETRO
   class CRetroPlayerVideo;
 
   class CRetroPlayer : public IPlayer,
-                       public IRenderMsg
+                       public IRetroPlayerRenderMsg
   {
   public:
     CRetroPlayer(IPlayerCallback& callback);
@@ -144,9 +144,9 @@ namespace RETRO
     // implementation of IRenderMsg
     void VideoParamsChange() override { }
     void GetDebugInfo(std::string &audio, std::string &video, std::string &general) override { }
-    void UpdateClockSync(bool enabled) override;
+    void UpdateClockSync(bool enabled) override { }
     void UpdateRenderInfo(CRPRenderInfo &info) override;
-    void UpdateRenderBuffers(int queued, int discard, int free) override {}
+    void UpdateRenderBuffers(int queued, int discard, int free) override { }
 
   private:
     /*!
@@ -169,8 +169,8 @@ namespace RETRO
     State                              m_state = State::STARTING;
     double                             m_priorSpeed = 0.0f; // Speed of gameplay before entering OSD
     CDVDClock                          m_clock;
-    CRenderManager                     m_renderManager;
     std::unique_ptr<CProcessInfo>      m_processInfo;
+    CRPRenderManager                   m_renderManager;
     std::unique_ptr<CRetroPlayerAudio> m_audio;
     std::unique_ptr<CRetroPlayerVideo> m_video;
     std::unique_ptr<CRetroPlayerAutoSave> m_autoSave;

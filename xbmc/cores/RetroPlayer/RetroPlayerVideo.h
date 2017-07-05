@@ -23,13 +23,14 @@
 //#include "threads/Thread.h"
 
 #include <memory>
+#include "VideoRenderers/RPRenderManager.h"
 
 class CDVDClock;
 class CDVDVideoCodec;
 class CPixelConverter;
 class CProcessInfo;
-class CRenderManager;
 class CRPProcessInfo;
+class CRPRenderManager;
 struct RPVideoPicture;
 
 namespace KODI
@@ -40,7 +41,7 @@ namespace RETRO
                             //protected CThread
   {
   public:
-    CRetroPlayerVideo(CRenderManager& m_renderManager, CProcessInfo& m_processInfo);
+    CRetroPlayerVideo(CRPRenderManager& m_renderManager, CProcessInfo& m_processInfo);
 
     ~CRetroPlayerVideo() override;
 
@@ -62,8 +63,8 @@ namespace RETRO
     void SendPicture(RPVideoPicture& picture);
 
     // Construction parameters
-    CRenderManager& m_renderManager;
     CProcessInfo&   m_processInfo;
+    CRPRenderManager& m_renderManager;
 
     // Stream properties
     double       m_framerate;
