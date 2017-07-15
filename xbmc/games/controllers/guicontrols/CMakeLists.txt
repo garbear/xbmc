@@ -5,6 +5,8 @@ set(SOURCES GUICardinalFeatureButton.cpp
             GUIFeatureFactory.cpp
             GUIFeatureTranslator.cpp
             GUIGameController.cpp
+            GUIGameControllerList.cpp
+            GUIGameControllerProvider.cpp
             GUIScalarFeatureButton.cpp
             GUISelectKeyButton.cpp
             GUIThrottleButton.cpp
@@ -19,6 +21,8 @@ set(HEADERS GUICardinalFeatureButton.h
             GUIFeatureFactory.h
             GUIFeatureTranslator.h
             GUIGameController.h
+            GUIGameControllerList.h
+            GUIGameControllerProvider.h
             GUIScalarFeatureButton.h
             GUISelectKeyButton.h
             GUIThrottleButton.h
