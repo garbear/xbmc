@@ -107,8 +107,13 @@ void CGameAgentManager::Notify(const Observable& obs, const ObservableMessage ms
   switch (msg)
   {
     case ObservableMessageGamePortsChanged:
+    {
+      Refresh();
+      break;
+    }
     case ObservableMessagePeripheralsChanged:
     {
+      SetChanged(true);
       Refresh();
       break;
     }
