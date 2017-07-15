@@ -98,19 +98,46 @@
 		<param name="font">font25_title</param>
 		<param name="onclick"></param>
 		<param name="visible">true</param>
+		<param name="align">center</param>
+		<param name="textoffsetx">20</param>
 		<definition>
 			<control type="button" id="$PARAM[id]">
 				<width>$PARAM[width]</width>
 				<height>$PARAM[height]</height>
 				<label>$PARAM[label]</label>
 				<font>$PARAM[font]</font>
-				<textoffsetx>20</textoffsetx>
+				<textoffsetx>$PARAM[textoffsetx]</textoffsetx>
 				<onclick>$PARAM[onclick]</onclick>
 				<wrapmultiline>$PARAM[wrapmultiline]</wrapmultiline>
-				<align>center</align>
+				<align>$PARAM[align]</align>
 				<texturefocus border="40" colordiffuse="button_focus">buttons/dialogbutton-fo.png</texturefocus>
 				<texturenofocus border="40">buttons/dialogbutton-nofo.png</texturenofocus>
 				<visible>$PARAM[visible]</visible>
+			</control>
+		</definition>
+	</include>
+	<include name="DefaultDialogRadioButton">
+		<param name="width">300</param>
+		<param name="height">100</param>
+		<param name="wrapmultiline">false</param>
+		<param name="font">font25_title</param>
+		<param name="onclick"></param>
+		<param name="visible">true</param>
+		<param name="align">center</param>
+		<param name="textoffsetx">20</param>
+		<definition>
+			<control type="radiobutton" id="$PARAM[id]">
+				<width>$PARAM[width]</width>
+				<height>$PARAM[height]</height>
+				<label>$PARAM[label]</label>
+				<font>$PARAM[font]</font>
+				<textoffsetx>$PARAM[textoffsetx]</textoffsetx>
+				<wrapmultiline>$PARAM[wrapmultiline]</wrapmultiline>
+				<align>$PARAM[align]</align>
+				<texturefocus border="40" colordiffuse="button_focus">buttons/dialogbutton-fo.png</texturefocus>
+				<texturenofocus border="40">buttons/dialogbutton-nofo.png</texturenofocus>
+				<visible>$PARAM[visible]</visible>
+				<selected>$PARAM[selected]</selected>
 			</control>
 		</definition>
 	</include>

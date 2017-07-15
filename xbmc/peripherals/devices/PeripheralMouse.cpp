@@ -7,6 +7,9 @@
  */
 
 #include "PeripheralMouse.h"
+#include "ServiceBroker.h"
+#include "games/GameServices.h"
+#include "games/controllers/Controller.h"
 #include "input/InputManager.h"
 #include "peripherals/Peripherals.h"
 #include "threads/SingleLock.h"
@@ -68,6 +71,12 @@ void CPeripheralMouse::UnregisterMouseDriverHandler(MOUSE::IMouseDriverHandler* 
 
   if (it != m_mouseHandlers.end())
     m_mouseHandlers.erase(it);
+}
+
+GAME::ControllerPtr CPeripheralMouse::ControllerProfile()
+{
+  GAME::CGameServices& gameServices = CServiceBroker::GetGameServices();
+  return gameServices.GetDefaultMouse();
 }
 
 bool CPeripheralMouse::OnPosition(int x, int y)

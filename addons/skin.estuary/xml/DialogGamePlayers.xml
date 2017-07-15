@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol>4</defaultcontrol>
+	<include>Animation_DialogPopupOpenClose</include>
+	<controls>
+		<control type="group">
+			<centertop>50%</centertop>
+			<centerleft>50%</centerleft>
+			<width>1820</width>
+			<height>980</height>
+			<include content="DialogBackgroundCommons">
+				<param name="width" value="1820" />
+				<param name="height" value="980" />
+				<param name="header_label" value="$LOCALIZE[35151]" />
+				<param name="header_id" value="1" />
+			</include>
+			<control type="group">
+				<description>Dialog content</description>
+				<top>70</top>
+				<control type="label" id="2">
+					<description>Max players label</description>
+					<top>14</top>
+					<height>50</height>
+					<font>font37</font>
+					<align>center</align>
+					<aligny>center</aligny>
+					<textcolor>white</textcolor>
+				</control>
+				<control type="label" id="3">
+					<description>Emulator name</description>
+					<bottom>14</bottom>
+					<height>50</height>
+					<font>font37</font>
+					<align>center</align>
+					<aligny>center</aligny>
+					<textcolor>white</textcolor>
+				</control>
+				<control type="group">
+					<description>Content area</description>
+					<top>100</top>
+					<bottom>100</bottom>
+					<left>100</left>
+					<right>100</right>
+					<control type="group">
+						<description>Player area</description>
+						<!--
+						<control type="image">
+							<description>Player panel background</description>
+							<top>-20</top>
+							<bottom>-20</bottom>
+							<left>-20</left>
+							<right>-20</right>
+							<texture border="40">buttons/dialogbutton-nofo.png</texture>
+						</control>
+						<!-- -->
+						<control type="playerlist" id="4">
+							<description>Player list</description>
+							<onup></onup>
+							<ondown>10</ondown>
+							<font>font27_title</font>
+							<textcolor>white</textcolor>
+							<orientation>horizontal</orientation>
+							<pagecontrol>10</pagecontrol>
+							<itemlayout width="540" height="540">
+								<control type="image">
+									<top>14</top>
+									<bottom>14</bottom>
+									<left>14</left>
+									<right>14</right>
+									<texture>$INFO[ListItem.Icon]</texture>
+								</control>
+							</itemlayout>
+							<focusedlayout width="540" height="540">
+								<control type="image">
+									<visible>Control.HasFocus(4)</visible>
+									<texture colordiffuse="button_focus">lists/focus.png</texture>
+								</control>
+								<control type="image">
+									<top>14</top>
+									<bottom>14</bottom>
+									<left>14</left>
+									<right>14</right>
+									<texture>$INFO[ListItem.Icon]</texture>
+								</control>
+							</focusedlayout>
+						</control>
+					</control>
+					<control type="scrollbar" id="10">
+						<bottom>0</bottom>
+						<height>20</height>
+						<onup>4</onup>
+						<orientation>horizontal</orientation>
+					</control>
+				</control>
+			</control>
+		</control>
+	</controls>
+</window>

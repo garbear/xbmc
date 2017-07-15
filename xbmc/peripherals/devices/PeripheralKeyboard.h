@@ -34,6 +34,7 @@ public:
   {
     return m_lastActive;
   }
+  KODI::GAME::ControllerPtr ControllerProfile() override;
 
   // implementation of IKeyboardDriverHandler
   bool OnKeyPress(const CKey& key) override;

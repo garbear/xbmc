@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "XBDateTime.h"
+#include "games/controllers/ControllerTypes.h"
 #include "input/joysticks/interfaces/IInputProvider.h"
 #include "input/keyboard/interfaces/IKeyboardInputProvider.h"
 #include "input/mouse/interfaces/IMouseInputProvider.h"
@@ -313,6 +314,15 @@ public:
   virtual CDateTime LastActive()
   {
     return CDateTime();
+  }
+
+  /*!
+   * \brief Get the controller profile that best represents this peripheral
+   * \return The controller profile, or empty if unknown
+   */
+  virtual KODI::GAME::ControllerPtr ControllerProfile()
+  {
+    return KODI::GAME::ControllerPtr();
   }
 
 protected:

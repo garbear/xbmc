@@ -34,6 +34,7 @@ public:
   {
     return m_lastActive;
   }
+  KODI::GAME::ControllerPtr ControllerProfile() override;
 
   // implementation of IMouseDriverHandler
   bool OnPosition(int x, int y) override;

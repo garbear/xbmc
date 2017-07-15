@@ -62,6 +62,7 @@ public:
   {
     return m_lastActive;
   }
+  KODI::GAME::ControllerPtr ControllerProfile() override;
 
   bool OnButtonMotion(unsigned int buttonIndex, bool bPressed);
   bool OnHatMotion(unsigned int hatIndex, KODI::JOYSTICK::HAT_STATE state);
