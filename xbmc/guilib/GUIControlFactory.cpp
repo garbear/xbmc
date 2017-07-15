@@ -51,6 +51,8 @@
 #include "GUIAction.h"
 #include "cores/RetroPlayer/guicontrols/GUIGameControl.h"
 #include "games/controllers/guicontrols/GUIGameController.h"
+#include "games/players/guicontrols/GUIControllerPanel.h"
+#include "games/players/guicontrols/GUIPlayerPanel.h"
 #include "Util.h"
 
 using namespace KODI;
@@ -96,7 +98,9 @@ static const ControlMapping controls[] =
     {"wraplist",          CGUIControl::GUICONTAINER_WRAPLIST},
     {"fixedlist",         CGUIControl::GUICONTAINER_FIXEDLIST},
     {"epggrid",           CGUIControl::GUICONTAINER_EPGGRID},
-    {"panel",             CGUIControl::GUICONTAINER_PANEL}};
+    {"panel",             CGUIControl::GUICONTAINER_PANEL},
+    {"playerpanel",       CGUIControl::GUICONTAINER_PLAYER_PANEL},
+    {"controllerpanel",   CGUIControl::GUICONTAINER_CONTROLLER_PANEL}};
 
 CGUIControl::GUICONTROLTYPES CGUIControlFactory::TranslateControlType(const std::string &type)
 {
@@ -1397,6 +1401,28 @@ CGUIControl* CGUIControlFactory::Create(int parentID, const CRect &rect, TiXmlEl
       pcontrol->SetClickActions(clickActions);
       pcontrol->SetFocusActions(focusActions);
       pcontrol->SetUnFocusActions(unfocusActions);
+    }
+    break;
+  case CGUIControl::GUICONTAINER_PLAYER_PANEL:
+    {
+      control = new GAME::CGUIPlayerPanel(parentID, id, posX, posY, width, height, labelInfo, textureFocus, textureBackground);
+      GAME::CGUIPlayerPanel* pcontrol = static_cast<GAME::CGUIPlayerPanel*>(control);
+      pcontrol->LoadLayout(pControlNode);
+      pcontrol->SetPageControl(pageControl);
+      pcontrol->SetRenderOffset(offset);
+      pcontrol->SetFocusActions(focusActions);
+      pcontrol->SetUnFocusActions(unfocusActions);
+    }
+    break;
+  case CGUIControl::GUICONTAINER_CONTROLLER_PANEL:
+    {
+      control = new GAME::CGUIControllerPanel(parentID, id, posX, posY, width, height, textureFocus, textureBackground);
+      GAME::CGUIControllerPanel* ccontrol = static_cast<GAME::CGUIControllerPanel*>(control);
+      ccontrol->LoadLayout(pControlNode);
+      ccontrol->SetPageControl(pageControl);
+      ccontrol->SetRenderOffset(offset);
+      ccontrol->SetFocusActions(focusActions);
+      ccontrol->SetUnFocusActions(unfocusActions);
     }
     break;
   case CGUIControl::GUICONTROL_TEXTBOX:

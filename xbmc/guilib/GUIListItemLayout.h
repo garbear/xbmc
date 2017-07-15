@@ -22,6 +22,7 @@ public:
   CGUIListItemLayout();
   CGUIListItemLayout(const CGUIListItemLayout &from, CGUIControl *control);
   void LoadLayout(TiXmlElement *layout, int context, bool focused, float maxWidth, float maxHeight);
+  void AddControl(CGUIControl* control);
   void Process(CGUIListItem *item, int parentID, unsigned int currentTime, CDirtyRegionList &dirtyregions);
   void Render(CGUIListItem *item, int parentID);
   float Size(ORIENTATION orientation) const;

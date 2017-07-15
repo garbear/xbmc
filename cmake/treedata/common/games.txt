@@ -9,6 +9,11 @@ xbmc/games/controllers/types       games/controllers/types
 xbmc/games/controllers/windows     games/controllers/windows
 xbmc/games/dialogs                 games/dialogs
 xbmc/games/dialogs/osd             games/dialogs/osd
+xbmc/games/players                 games/players
+xbmc/games/players/avatars         games/players/avatars
+xbmc/games/players/guicontrols     games/players/guicontrols
+xbmc/games/players/listproviders   games/players/listproviders
+xbmc/games/players/windows         games/players/windows
 xbmc/games/ports                   games/ports
 xbmc/games/tags                    games/tags
 xbmc/games/windows                 games/windows

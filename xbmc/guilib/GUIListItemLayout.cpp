@@ -180,6 +180,11 @@ void CGUIListItemLayout::LoadLayout(TiXmlElement *layout, int context, bool focu
   }
 }
 
+void CGUIListItemLayout::AddControl(CGUIControl* control)
+{
+  m_group.AddControl(control);
+}
+
 //#ifdef GUILIB_PYTHON_COMPATIBILITY
 void CGUIListItemLayout::CreateListControlLayouts(float width, float height, bool focused, const CLabelInfo &labelInfo, const CLabelInfo &labelInfo2, const CTextureInfo &texture, const CTextureInfo &textureFocus, float texHeight, float iconWidth, float iconHeight, const std::string &nofocusCondition, const std::string &focusCondition)
 {

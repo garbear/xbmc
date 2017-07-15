@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol>5</defaultcontrol>
+	<include>Animation_DialogPopupOpenClose</include>
+	<controls>
+		<control type="group">
+			<centertop>50%</centertop>
+			<centerleft>50%</centerleft>
+			<width>1820</width>
+			<height>980</height>
+			<include content="DialogBackgroundCommons">
+				<param name="width" value="1820" />
+				<param name="height" value="980" />
+				<param name="header_label" value="$LOCALIZE[35151]" />
+				<param name="header_id" value="1" />
+			</include>
+			<control type="group">
+				<description>Dialog content</description>
+				<top>70</top>
+				<control type="label" id="2">
+					<description>Max players label</description>
+					<top>10</top>
+					<height>50</height>
+					<font>font37</font>
+					<align>center</align>
+					<aligny>center</aligny>
+					<textcolor>white</textcolor>
+				</control>
+				<control type="label" id="3">
+					<description>Emulator name</description>
+					<bottom>10</bottom>
+					<height>50</height>
+					<font>font37</font>
+					<align>center</align>
+					<aligny>center</aligny>
+					<textcolor>white</textcolor>
+				</control>
+				<control type="group">
+					<description>Content area</description>
+					<top>50</top>
+					<bottom>50</bottom>
+					<left>50</left>
+					<right>50</right>
+					<control type="group">
+						<description>Player area</description>
+						<height>372</height>
+						<!---->
+						<control type="image">
+							<description>Player panel background</description>
+							<top>-20</top>
+							<bottom>-20</bottom>
+							<left>-20</left>
+							<right>-20</right>
+							<texture border="40">buttons/dialogbutton-nofo.png</texture>
+						</control>
+						<!---->
+						<control type="playerpanel" id="4">
+							<description>Player panel</description>
+							<top>116</top>
+							<onup></onup>
+							<ondown>6</ondown>
+							<texturefocus colordiffuse="button_focus">lists/focus.png</texturefocus>
+							<texturebg colordiffuse="button_focus">lists/focus.png</texturebg>
+							<font>font27_title</font>
+							<textcolor>white</textcolor>
+							<orientation>horizontal</orientation>
+						</control>
+					</control>
+					<control type="group">
+						<description>Controller area</description>
+						<top>438</top>
+						<!---->
+						<control type="image">
+							<description>Controller panel background</description>
+							<top>-20</top>
+							<bottom>-20</bottom>
+							<left>-20</left>
+							<right>-20</right>
+							<texture border="40">buttons/dialogbutton-nofo.png</texture>
+						</control>
+						<!---->
+						<control type="controllerpanel" id="5">
+							<description>Controller panel</description>
+							<aligny>top</aligny>
+							<onup>4</onup>
+							<ondown></ondown>
+							<orientation>horizontal</orientation>
+							<texturefocus colordiffuse="button_focus">lists/focus.png</texturefocus>
+							<texturebg colordiffuse="button_focus">lists/focus.png</texturebg>
+							<itemlayout>
+								<control type="gamecontroller">
+									<description>Game controller icon</description>
+								</control>
+							</itemlayout>
+							<focusedlayout>
+								<control type="gamecontroller">
+									<description>Game controller icon</description>
+								</control>
+							</focusedlayout>
+						</control>
+					</control>
+				</control>
+			</control>
+		</control>
+	</controls>
+</window>
