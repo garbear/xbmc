@@ -18290,7 +18290,21 @@ msgctxt "#35171"
 msgid "Mouse"
 msgstr ""
 
-#empty strings from id 35172 to 35199
+#. Name of window for configuring players while playing a game
+#: addons/skin.estuary/xml/GameOSD.xml
+#: addons/skin.estuary/xml/Includes_Games.xml
+msgctxt "#35172"
+msgid "Players"
+msgstr ""
+
+#. Name of window for viewing players while playing a game
+#: addons/skin.estuary/xml/GameOSD.xml
+#: addons/skin.estuary/xml/Includes_Games.xml
+msgctxt "#35173"
+msgid "View Players"
+msgstr ""
+
+#empty strings from id 35174 to 35199
 
 #. This string is an early meme from the late 1990's that made fun of the poor translation in the 16-bit game Zero Wing from the late 1980's. DO NOT TRANSLATE!
 #: system/settings/settings.xml
