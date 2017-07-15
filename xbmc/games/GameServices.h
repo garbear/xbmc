@@ -13,6 +13,7 @@
 #include <memory>
 #include <string>
 
+class CInputManager;
 class CProfileManager;
 
 namespace PERIPHERALS
@@ -29,6 +30,7 @@ class CGUIGameRenderManager;
 
 namespace GAME
 {
+class CGameAgentManager;
 class CControllerManager;
 class CGameSettings;
 
@@ -38,7 +40,8 @@ public:
   CGameServices(CControllerManager& controllerManager,
                 RETRO::CGUIGameRenderManager& renderManager,
                 PERIPHERALS::CPeripherals& peripheralManager,
-                const CProfileManager& profileManager);
+                const CProfileManager& profileManager,
+                CInputManager& inputManager);
   ~CGameServices();
 
   ControllerPtr GetController(const std::string& controllerId);
@@ -53,14 +56,20 @@ public:
 
   RETRO::CGUIGameRenderManager& GameRenderManager() { return m_gameRenderManager; }
 
+  PERIPHERALS::CPeripherals& PeripheralManager() { return m_peripheralManager; }
+
+  CGameAgentManager& GameAgentManager() { return *m_gameAgentManager; }
+
 private:
   // Construction parameters
   CControllerManager& m_controllerManager;
   RETRO::CGUIGameRenderManager& m_gameRenderManager;
+  PERIPHERALS::CPeripherals& m_peripheralManager;
   const CProfileManager& m_profileManager;
 
   // Game services
   std::unique_ptr<CGameSettings> m_gameSettings;
+  std::unique_ptr<CGameAgentManager> m_gameAgentManager;
 };
 } // namespace GAME
 } // namespace KODI

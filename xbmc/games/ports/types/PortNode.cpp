@@ -143,6 +143,20 @@ bool CPortNode::IsControllerAccepted(const std::string& portAddress,
   return bAccepted;
 }
 
+unsigned int CPortNode::GetAgentCount() const
+{
+  return GetActiveController().GetAgentCount();
+}
+
+void CPortNode::GetInputPorts(std::vector<std::string>& inputPorts) const
+{
+  if (IsConnected())
+  {
+    const CControllerNode& controller = GetActiveController();
+    controller.GetInputPorts(inputPorts);
+  }
+}
+
 void CPortNode::GetPort(CPhysicalPort& port) const
 {
   std::vector<std::string> accepts;

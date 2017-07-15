@@ -11,6 +11,7 @@
 #include "controllers/Controller.h"
 #include "controllers/ControllerManager.h"
 #include "games/GameSettings.h"
+#include "games/agents/GameAgentManager.h"
 #include "profiles/ProfileManager.h"
 
 #ifdef HAS_LIBP2P
@@ -851,11 +852,14 @@ void RunGossip()
 CGameServices::CGameServices(CControllerManager& controllerManager,
                              RETRO::CGUIGameRenderManager& renderManager,
                              PERIPHERALS::CPeripherals& peripheralManager,
-                             const CProfileManager& profileManager)
+                             const CProfileManager& profileManager,
+                             CInputManager& inputManager)
   : m_controllerManager(controllerManager),
     m_gameRenderManager(renderManager),
+    m_peripheralManager(peripheralManager),
     m_profileManager(profileManager),
-    m_gameSettings(new CGameSettings())
+    m_gameSettings(new CGameSettings()),
+    m_gameAgentManager(new CGameAgentManager(peripheralManager, inputManager))
 {
 #ifdef HAS_LIBP2P
   // libp2p echo server

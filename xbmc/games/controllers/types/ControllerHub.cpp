@@ -86,6 +86,16 @@ const CPortNode& CControllerHub::GetPort(const std::string& address) const
   return GetPortInternal(m_ports, address);
 }
 
+unsigned int CControllerHub::GetAgentCount() const
+{
+  unsigned int agentCount = 0;
+
+  for (const CPortNode& port : m_ports)
+    agentCount += port.GetAgentCount();
+
+  return agentCount;
+}
+
 const CPortNode& CControllerHub::GetPortInternal(const PortVec& ports, const std::string& address)
 {
   for (const CPortNode& port : ports)
@@ -106,4 +116,10 @@ const CPortNode& CControllerHub::GetPortInternal(const PortVec& ports, const std
   // Not found
   static const CPortNode empty{};
   return empty;
+}
+
+void CControllerHub::GetInputPorts(std::vector<std::string>& inputPorts) const
+{
+  for (const CPortNode& port : m_ports)
+    port.GetInputPorts(inputPorts);
 }

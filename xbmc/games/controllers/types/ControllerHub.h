@@ -44,6 +44,22 @@ public:
 
   const CPortNode& GetPort(const std::string& address) const;
 
+  /*!
+   * \brief Get the total count of game-playing agents that can communicate
+   * through this port
+   *
+   * The count is increased by one, recursively, for every attached controller
+   * that provides input.
+   *
+   * \return The number of game-playing agents attached through the port
+   */
+  unsigned int GetAgentCount() const;
+
+  /*!
+   * \brief
+   */
+  void GetInputPorts(std::vector<std::string>& inputPorts) const;
+
 private:
   static const CPortNode& GetPortInternal(const PortVec& ports, const std::string& address);
 

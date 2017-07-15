@@ -12755,6 +12755,7 @@ msgctxt "#20176"
 msgid "Show video information"
 msgstr ""
 
+#: addons/skin.estuary/xml/DialogGameAgents.xml
 #: addons/skin.estuary/xml/DialogNumeric.xml
 #: addons/skin.estuary/xml/DialogKeyboard.xml
 msgctxt "#20177"
@@ -17984,10 +17985,10 @@ msgctxt "#35150"
 msgid "Keyboard"
 msgstr ""
 
-#. Name of group in "Games -> Keyboard" for configuring keyboard players
+#. Name of window for configuring players during gameplay
 #: system/settings/settings.xml
 msgctxt "#35151"
-msgid "Player configuration"
+msgid "Players"
 msgstr ""
 
 #. Name of setting for enabling the keyboard during gameplay
@@ -18118,7 +18119,11 @@ msgctxt "#35201"
 msgid "Gameplay"
 msgstr ""
 
-#empty string with id 35202
+#. Short error message when a game is not being played
+#: xbmc/games/agents/windows/GUIAgentWindow.cpp
+msgctxt "#35202"
+msgid "Error: Not playing a game"
+msgstr ""
 
 #: system/settings/settings.xml
 msgctxt "#35203"
@@ -18325,7 +18330,13 @@ msgctxt "#35236"
 msgid "In this release, only controllers can be used to play games."
 msgstr ""
 
-#empty strings from id 35237 to 35248
+#. Label in the Player Dialog that lists the maximum number of players. {0:d} - Max player count
+#: addons/skin.estuary/xml/DialogGameAgents.xml
+msgctxt "#35237"
+msgid "Max players: {0:d}"
+msgstr ""
+
+#empty strings from id 35238 to 35248
 
 #. Button to open the saved game manager from the game OSD
 #: addons/skin.estuary/xml/GameOSD.xml

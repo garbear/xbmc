@@ -40,9 +40,13 @@ class CGameClientTopology;
 class CPortManager;
 class IGameInputCallback;
 
-class CGameClientInput : protected CGameClientSubsystem, public Observer
+class CGameClientInput : protected CGameClientSubsystem, public Observable
 {
 public:
+  //! @todo de-duplicate
+  using PortAddress = std::string;
+  using JoystickMap = std::map<PortAddress, std::shared_ptr<CGameClientJoystick>>;
+
   CGameClientInput(CGameClient& gameClient,
                    AddonInstance_Game& addonStruct,
                    CCriticalSection& clientAccess);
@@ -64,10 +68,26 @@ public:
   const CControllerTree& GetActiveControllerTree() const;
   bool SupportsKeyboard() const;
   bool SupportsMouse() const;
-  bool ConnectController(const std::string& portAddress, const ControllerPtr& controller);
+  int GetPlayerLimit() const;
+  bool ConnectController(const std::string& portAddress, ControllerPtr controller);
   bool DisconnectController(const std::string& portAddress);
+  std::vector<std::string> GetPortAddresses();
   void SavePorts();
   void ResetPorts();
+
+  // Joystick functions
+  const JoystickMap& GetJoystickMap() const { return m_joysticks; }
+  void CloseJoysticks(PERIPHERALS::EventLockHandlePtr& inputHandlingLock);
+
+  // Keyboard functions
+  bool OpenKeyboard(const ControllerPtr& controller, PERIPHERALS::PeripheralPtr keyboard);
+  bool IsKeyboardOpen() const;
+  void CloseKeyboard();
+
+  // Mouse functions
+  bool OpenMouse(const ControllerPtr& controller, PERIPHERALS::PeripheralPtr mouse);
+  bool IsMouseOpen() const;
+  void CloseMouse();
 
   // Agent functions
   bool HasAgent() const;
@@ -78,33 +98,14 @@ public:
   // Input callbacks
   bool ReceiveInputEvent(const game_input_event& eventStruct);
 
-  // Implementation of Observer
-  void Notify(const Observable& obs, const ObservableMessage msg) override;
-
 private:
-  using PortAddress = std::string;
-  using JoystickMap = std::map<PortAddress, std::unique_ptr<CGameClientJoystick>>;
-  using PortMap = std::map<JOYSTICK::IInputProvider*, CGameClientJoystick*>;
-
-  // Keyboard functions
-  bool OpenKeyboard(const ControllerPtr& controller);
-  void CloseKeyboard();
-
-  // Mouse functions
-  bool OpenMouse(const ControllerPtr& controller);
-  void CloseMouse();
-
-  // Joystick functions
-  bool OpenJoystick(const std::string& portAddress, const ControllerPtr& controller);
-  void CloseJoystick(const std::string& portAddress);
-
   // Private input helpers
   void LoadTopology();
   void SetControllerLayouts(const ControllerVector& controllers);
-  void ProcessJoysticks();
-  PortMap MapJoysticks(const PERIPHERALS::PeripheralVector& peripheralJoysticks,
-                       const JoystickMap& gameClientjoysticks) const;
-  void CloseJoysticks(const CPortNode& port);
+  bool OpenJoystick(const std::string& portAddress, const ControllerPtr& controller);
+  void CloseJoysticks(const CPortNode& port, PERIPHERALS::EventLockHandlePtr& inputHandlingLock);
+  void CloseJoystick(const std::string& portAddress,
+                     PERIPHERALS::EventLockHandlePtr& inputHandlingLock);
 
   // Private callback helpers
   bool SetRumble(const std::string& portAddress, const std::string& feature, float magnitude);
@@ -118,11 +119,42 @@ private:
   std::unique_ptr<CGameClientTopology> m_topology;
   using ControllerLayoutMap = std::map<std::string, std::unique_ptr<CGameClientController>>;
   ControllerLayoutMap m_controllerLayouts;
+
+  /*!
+   * \brief Map of port address to joystick handler
+   *
+   * The port address is a string that identifies the adress of the port.
+   *
+   * The joystick handler connects to joystick input of the game client.
+   *
+   * This property is always populated with the default joystick configuration
+   * (i.e. all ports are connected to the first controller they accept).
+   */
   JoystickMap m_joysticks;
-  PortMap m_portMap;
+
+  // TODO: Guard with a mutex
   std::unique_ptr<CPortManager> m_portManager;
+
+  /*!
+   * \brief Keyboard handler
+   *
+   * This connects to the keyboard input of the game client.
+   */
   std::unique_ptr<CGameClientKeyboard> m_keyboard;
+
+  /*!
+   * \brief Mouse handler
+   *
+   * This connects to the mouse input of the game client.
+   */
   std::unique_ptr<CGameClientMouse> m_mouse;
+
+  /*!
+   * \brief Hardware input handler
+   *
+   * This connects to input from game console hardware belonging to the game
+   * client.
+   */
   std::unique_ptr<CGameClientHardware> m_hardware;
 };
 } // namespace GAME
