@@ -19,8 +19,13 @@ namespace GAME
 class CGUIGameController : public CGUIImage
 {
 public:
-  CGUIGameController(
-      int parentID, int controlID, float posX, float posY, float width, float height);
+  CGUIGameController(int parentID,
+                     int controlID,
+                     float posX,
+                     float posY,
+                     float width,
+                     float height,
+                     const CTextureInfo& texture);
   CGUIGameController(const CGUIGameController& from);
 
   ~CGUIGameController() override = default;
@@ -28,7 +33,10 @@ public:
   // implementation of CGUIControl via CGUIImage
   CGUIGameController* Clone() const override;
   void Render() override;
+  void UpdateInfo(const CGUIListItem* item = nullptr) override;
 
+  // Game functions
+  void ActivateController(const std::string& controllerId);
   void ActivateController(const ControllerPtr& controller);
 
 private:
