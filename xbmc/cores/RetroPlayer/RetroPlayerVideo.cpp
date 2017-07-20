@@ -22,14 +22,10 @@
 #include "RetroPlayerDefines.h"
 #include "PixelConverter.h"
 #include "PixelConverterRBP.h"
-#include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h"
-#include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
-#include "cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.h"
-#include "cores/VideoPlayer/DVDDemuxers/DVDDemux.h"
-#include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
-#include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
-#include "cores/VideoPlayer/DVDStreamInfo.h"
-#include "cores/VideoPlayer/TimingConstants.h"
+#include "VideoRenderers/RPProcessInfo.h"
+#include "VideoRenderers/RPRenderFlags.h"
+#include "VideoRenderers/RPRenderUtils.h"
+#include "VideoRenderers/RPVideoPicture.h"
 #include "utils/log.h"
 
 #include <atomic> //! @todo
@@ -37,7 +33,7 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRetroPlayerVideo::CRetroPlayerVideo(CRenderManager& renderManager, CProcessInfo& processInfo) :
+CRetroPlayerVideo::CRetroPlayerVideo(CRPRenderManager& renderManager, CRPProcessInfo& processInfo) :
   //CThread("RetroPlayerVideo"),
   m_renderManager(renderManager),
   m_processInfo(processInfo),
@@ -86,6 +82,8 @@ bool CRetroPlayerVideo::OpenPixelStream(AVPixelFormat pixfmt, unsigned int width
 
 bool CRetroPlayerVideo::OpenEncodedStream(AVCodecID codec)
 {
+  // TODO: Fix video codec (for GameStream)
+  /*
   CDemuxStreamVideo videoStream;
 
   // Stream
@@ -94,6 +92,7 @@ bool CRetroPlayerVideo::OpenEncodedStream(AVCodecID codec)
   videoStream.type = STREAM_VIDEO;
   videoStream.source = STREAM_SOURCE_DEMUX;
   videoStream.realtime = true;
+  */
 
   // Video
   //! @todo Needed?
@@ -106,15 +105,18 @@ bool CRetroPlayerVideo::OpenEncodedStream(AVCodecID codec)
   videoStream.iOrientation = orientationDeg;
   */
 
+  /*
   CDVDStreamInfo hint(videoStream);
   m_pVideoCodec.reset(CDVDFactoryCodec::CreateVideoCodec(hint, m_processInfo, m_renderManager.GetRenderInfo()));
 
   return m_pVideoCodec.get() != nullptr;
+  */
+  return false;
 }
 
 void CRetroPlayerVideo::AddData(const uint8_t* data, unsigned int size)
 {
-  VideoPicture picture = { };
+  RPVideoPicture picture = { };
 
   if (GetPicture(data, size, picture))
   {
@@ -134,10 +136,10 @@ void CRetroPlayerVideo::CloseStream()
 {
   m_renderManager.Flush();
   m_pixelConverter.reset();
-  m_pVideoCodec.reset();
+  // m_pVideoCodec.reset();
 }
 
-bool CRetroPlayerVideo::Configure(VideoPicture& picture)
+bool CRetroPlayerVideo::Configure(RPVideoPicture& picture)
 {
   if (!m_bConfigured)
   {
@@ -152,7 +154,7 @@ bool CRetroPlayerVideo::Configure(VideoPicture& picture)
     if (m_bConfigured)
     {
       // Update process info
-      AVPixelFormat pixfmt = static_cast<AVPixelFormat>(CDVDCodecUtils::PixfmtFromEFormat(picture.format));
+      AVPixelFormat pixfmt = static_cast<AVPixelFormat>(RPRenderUtils::PixfmtFromEFormat(picture.format));
       if (pixfmt != AV_PIX_FMT_NONE)
       {
         //! @todo
@@ -166,7 +168,7 @@ bool CRetroPlayerVideo::Configure(VideoPicture& picture)
   return m_bConfigured;
 }
 
-bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, VideoPicture& picture)
+bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, RPVideoPicture& picture)
 {
   bool bHasPicture = false;
 
@@ -189,6 +191,7 @@ bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, Video
       }
     }
   }
+  /*
   else if (m_pVideoCodec)
   {
     DemuxPacket packet(const_cast<uint8_t*>(data), size, DVD_NOPTS_VALUE, DVD_NOPTS_VALUE);
@@ -205,15 +208,16 @@ bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, Video
       }
     }
   }
+  */
 
   return bHasPicture;
 }
 
-void CRetroPlayerVideo::SendPicture(VideoPicture& picture)
+void CRetroPlayerVideo::SendPicture(RPVideoPicture& picture)
 {
   std::atomic_bool bAbortOutput(false); //! @todo
 
-  int index = m_renderManager.AddVideoPicture(picture);
+  int index = m_renderManager.AddRPVideoPicture(picture);
   if (index < 0)
   {
     // Video device might not be done yet, drop the frame
@@ -221,6 +225,6 @@ void CRetroPlayerVideo::SendPicture(VideoPicture& picture)
   }
   else
   {
-    m_renderManager.FlipPage(bAbortOutput, 0.0, VS_INTERLACEMETHOD_NONE, FS_NONE, false);
+    m_renderManager.FlipPage(bAbortOutput, 0.0, VS_INTERLACEMETHOD_NONE, RP_FS_NONE, false);
   }
 }

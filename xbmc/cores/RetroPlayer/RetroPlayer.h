@@ -20,15 +20,16 @@
 #pragma once
 
 #include "cores/IPlayer.h"
-#include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
 #include "cores/VideoPlayer/DVDClock.h"
+#include "VideoRenderers/RPRenderManager.h"
 #include "games/GameTypes.h"
 #include "guilib/DispResource.h"
 #include "threads/CriticalSection.h"
+#include "VideoRenderers/RPRenderFormats.h"
 
 #include <memory>
 
-class CProcessInfo;
+class CRPProcessInfo;
 
 namespace KODI
 {
@@ -39,17 +40,17 @@ namespace RETRO
   class CRetroPlayerVideo;
 
   class CRetroPlayer : public IPlayer,
-                       public IRenderMsg
+                       public IRetroPlayerRenderMsg
   {
   public:
     CRetroPlayer(IPlayerCallback& callback);
     ~CRetroPlayer() override;
 
     // implementation of IPlayer
-    //virtual bool Initialize(TiXmlElement* pConfig) override { return true; }
+    //bool Initialize(TiXmlElement* pConfig) override { return true; }
     bool OpenFile(const CFileItem& file, const CPlayerOptions& options) override;
-    //virtual bool QueueNextFile(const CFileItem &file) override { return false; }
-    //virtual void OnNothingToQueueNotify() override { }
+    //bool QueueNextFile(const CFileItem &file) override { return false; }
+    //void OnNothingToQueueNotify() override { }
     bool CloseFile(bool reopen = false) override;
     bool IsPlaying() const override;
     bool CanPause() override;
@@ -131,21 +132,15 @@ namespace RETRO
     bool IsRenderingVideo() override { return m_renderManager.IsConfigured(); }
     bool IsRenderingGuiLayer() override { return m_renderManager.IsGuiLayer(); }
     bool IsRenderingVideoLayer() override { return m_renderManager.IsVideoLayer(); }
-    bool Supports(EINTERLACEMETHOD method) override;
-    EINTERLACEMETHOD GetDeinterlacingMethodDefault() override;
     bool Supports(ESCALINGMETHOD method) override { return m_renderManager.Supports(method); }
     bool Supports(ERENDERFEATURE feature) override { return m_renderManager.Supports(feature); }
-    unsigned int RenderCaptureAlloc() override { return m_renderManager.AllocRenderCapture(); }
-    void RenderCaptureRelease(unsigned int captureId) override { m_renderManager.ReleaseRenderCapture(captureId); }
-    void RenderCapture(unsigned int captureId, unsigned int width, unsigned int height, int flags) override { m_renderManager.StartRenderCapture(captureId, width, height, flags); }
-    bool RenderCaptureGetPixels(unsigned int captureId, unsigned int millis, uint8_t *buffer, unsigned int size) override { return m_renderManager.RenderCaptureGetPixels(captureId, millis, buffer, size); }
 
     // implementation of IRenderMsg
     void VideoParamsChange() override { }
     void GetDebugInfo(std::string &audio, std::string &video, std::string &general) override { }
-    void UpdateClockSync(bool enabled) override;
-    void UpdateRenderInfo(CRenderInfo &info) override;
-    void UpdateRenderBuffers(int queued, int discard, int free) override {}
+    void UpdateClockSync(bool enabled) override { }
+    void UpdateRenderInfo(CRPRenderInfo &info) override;
+    void UpdateRenderBuffers(int queued, int discard, int free) override { }
 
   private:
     /*!
@@ -168,8 +163,8 @@ namespace RETRO
     State                              m_state = State::STARTING;
     double                             m_priorSpeed = 0.0f; // Speed of gameplay before entering OSD
     CDVDClock                          m_clock;
-    CRenderManager                     m_renderManager;
-    std::unique_ptr<CProcessInfo>      m_processInfo;
+    std::unique_ptr<CRPProcessInfo>    m_processInfo;
+    CRPRenderManager                   m_renderManager;
     std::unique_ptr<CRetroPlayerAudio> m_audio;
     std::unique_ptr<CRetroPlayerVideo> m_video;
     std::unique_ptr<CRetroPlayerAutoSave> m_autoSave;

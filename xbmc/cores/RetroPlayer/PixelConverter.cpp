@@ -19,9 +19,11 @@
  */
 
 #include "PixelConverter.h"
-#include "cores/VideoPlayer/DVDClock.h"
 #include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
-#include "cores/VideoPlayer/TimingConstants.h"
+#include "TimingConstants.h"
+#include "VideoRenderers/RPVideoPicture.h"
+#include "VideoRenderers/RPRenderFormats.h"
+#include "VideoRenderers/RPRenderUtils.h"
 #include "utils/log.h"
 
 extern "C"
@@ -30,7 +32,7 @@ extern "C"
 }
 
 CPixelConverter::CPixelConverter() :
-  m_renderFormat(RENDER_FMT_NONE),
+  m_renderFormat(RP_RENDER_FMT_NONE),
   m_width(0),
   m_height(0),
   m_swsContext(nullptr),
@@ -43,8 +45,8 @@ bool CPixelConverter::Open(AVPixelFormat pixfmt, AVPixelFormat targetfmt, unsign
   if (pixfmt == targetfmt || width == 0 || height == 0)
     return false;
 
-  m_renderFormat = CDVDCodecUtils::EFormatFromPixfmt(targetfmt);
-  if (m_renderFormat == RENDER_FMT_NONE)
+  m_renderFormat = RPRenderUtils::EFormatFromPixfmt(targetfmt);
+  if (m_renderFormat == RP_RENDER_FMT_NONE)
   {
     CLog::Log(LOGERROR, "%s: Invalid target pixel format: %d", __FUNCTION__, targetfmt);
     return false;
@@ -62,7 +64,7 @@ bool CPixelConverter::Open(AVPixelFormat pixfmt, AVPixelFormat targetfmt, unsign
     return false;
   }
 
-  m_buf = CDVDCodecUtils::AllocatePicture(width, height);
+  m_buf = RPRenderUtils::AllocatePicture(width, height);
   if (!m_buf)
   {
     CLog::Log(LOGERROR, "%s: Failed to allocate picture of dimensions %dx%d", __FUNCTION__, width, height);
@@ -82,7 +84,7 @@ void CPixelConverter::Dispose()
 
   if (m_buf)
   {
-    CDVDCodecUtils::FreePicture(m_buf);
+    RPRenderUtils::FreePicture(m_buf);
     m_buf = nullptr;
   }
 }
@@ -106,23 +108,22 @@ bool CPixelConverter::Decode(const uint8_t* pData, unsigned int size)
   return true;
 }
 
-void CPixelConverter::GetPicture(VideoPicture& dvdVideoPicture)
+void CPixelConverter::GetPicture(RPVideoPicture& dvdRPVideoPicture)
 {
-  dvdVideoPicture.dts            = DVD_NOPTS_VALUE;
-  dvdVideoPicture.pts            = DVD_NOPTS_VALUE;
+  dvdRPVideoPicture.dts            = DVD_NOPTS_VALUE;
+  dvdRPVideoPicture.pts            = DVD_NOPTS_VALUE;
 
   for (int i = 0; i < 4; i++)
   {
-    dvdVideoPicture.data[i]      = m_buf->data[i];
-    dvdVideoPicture.iLineSize[i] = m_buf->iLineSize[i];
+    dvdRPVideoPicture.data[i]      = m_buf->data[i];
+    dvdRPVideoPicture.iLineSize[i] = m_buf->iLineSize[i];
   }
 
-  dvdVideoPicture.iFlags         = 0; // *not* DVP_FLAG_ALLOCATED
-  dvdVideoPicture.color_matrix   = 4; // CONF_FLAGS_YUVCOEF_BT601
-  dvdVideoPicture.color_range    = 0; // *not* CONF_FLAGS_YUV_FULLRANGE
-  dvdVideoPicture.iWidth         = m_width;
-  dvdVideoPicture.iHeight        = m_height;
-  dvdVideoPicture.iDisplayWidth  = m_width; //! @todo: Update if aspect ratio changes
-  dvdVideoPicture.iDisplayHeight = m_height;
-  dvdVideoPicture.format         = m_renderFormat;
+  dvdRPVideoPicture.iFlags         = 0; // *not* DVP_FLAG_ALLOCATED
+  dvdRPVideoPicture.color_range    = 0; // *not* CONF_FLAGS_YUV_FULLRANGE
+  dvdRPVideoPicture.iWidth         = m_width;
+  dvdRPVideoPicture.iHeight        = m_height;
+  dvdRPVideoPicture.iDisplayWidth  = m_width; //! @todo: Update if aspect ratio changes
+  dvdRPVideoPicture.iDisplayHeight = m_height;
+  dvdRPVideoPicture.format         = m_renderFormat;
 }

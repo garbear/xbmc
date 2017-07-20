@@ -26,18 +26,14 @@
 #include "cores/AudioEngine/Utils/AEChannelInfo.h"
 #include "cores/AudioEngine/Utils/AEUtil.h"
 #include "cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodec.h"
-#include "cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.h"
-#include "cores/VideoPlayer/DVDDemuxers/DVDDemux.h"
-#include "cores/VideoPlayer/DVDClock.h"
-#include "cores/VideoPlayer/DVDStreamInfo.h"
-#include "cores/VideoPlayer/Process/ProcessInfo.h"
+#include "VideoRenderers/RPProcessInfo.h"
 #include "threads/Thread.h"
 #include "utils/log.h"
 
 using namespace KODI;
 using namespace RETRO;
 
-CRetroPlayerAudio::CRetroPlayerAudio(CProcessInfo& processInfo) :
+CRetroPlayerAudio::CRetroPlayerAudio(CRPProcessInfo& processInfo) :
   m_processInfo(processInfo),
   m_pAudioStream(nullptr),
   m_bAudioEnabled(true)
@@ -106,6 +102,8 @@ bool CRetroPlayerAudio::OpenPCMStream(AEDataFormat format, unsigned int samplera
 
 bool CRetroPlayerAudio::OpenEncodedStream(AVCodecID codec, unsigned int samplerate, const CAEChannelInfo& channelLayout)
 {
+  // TODO: Fix audio codec (for GameStream)
+  /*
   CDemuxStreamAudio audioStream;
 
   // Stream
@@ -128,7 +126,7 @@ bool CRetroPlayerAudio::OpenEncodedStream(AVCodecID codec, unsigned int samplera
     CLog::Log(LOGERROR, "RetroPlayerAudio: Failed to create audio codec (codec=%d, samplerate=%u)", codec, samplerate);
     return false;
   }
-
+  */
   return true;
 }
 
@@ -136,6 +134,8 @@ void CRetroPlayerAudio::AddData(const uint8_t* data, unsigned int size)
 {
   if (m_bAudioEnabled)
   {
+    // TODO: Fix audio codec (for GameStream)
+    /*
     if (m_pAudioCodec)
     {
       DemuxPacket packet(const_cast<uint8_t*>(data), size, DVD_NOPTS_VALUE, DVD_NOPTS_VALUE);
@@ -164,7 +164,7 @@ void CRetroPlayerAudio::AddData(const uint8_t* data, unsigned int size)
           m_pAudioStream->AddData(audioframe.data, 0, audioframe.nb_frames);
       }
     }
-    else if (m_pAudioStream)
+    else */ if (m_pAudioStream)
     {
       const unsigned int frameSize = m_pAudioStream->GetChannelCount() * (CAEUtil::DataFormatToBits(m_pAudioStream->GetDataFormat()) >> 3);
       m_pAudioStream->AddData(&data, 0, size / frameSize);
@@ -174,11 +174,14 @@ void CRetroPlayerAudio::AddData(const uint8_t* data, unsigned int size)
 
 void CRetroPlayerAudio::CloseStream()
 {
+  // TODO: Fix audio codec (for GameStream)
+  /*
   if (m_pAudioCodec)
   {
     m_pAudioCodec->Dispose();
     m_pAudioCodec.reset();
   }
+  */
   if (m_pAudioStream)
   {
     CServiceBroker::GetActiveAE().FreeStream(m_pAudioStream);

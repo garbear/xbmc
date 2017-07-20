@@ -23,13 +23,15 @@
 //#include "threads/Thread.h"
 
 #include <memory>
+#include "VideoRenderers/RPRenderManager.h"
 
 class CDVDClock;
 class CDVDVideoCodec;
 class CPixelConverter;
-class CProcessInfo;
-class CRenderManager;
-struct VideoPicture;
+class CRPProcessInfo;
+class CRPProcessInfo;
+class CRPRenderManager;
+struct RPVideoPicture;
 
 namespace KODI
 {
@@ -39,7 +41,7 @@ namespace RETRO
                             //protected CThread
   {
   public:
-    CRetroPlayerVideo(CRenderManager& m_renderManager, CProcessInfo& m_processInfo);
+    CRetroPlayerVideo(CRPRenderManager& m_renderManager, CRPProcessInfo& m_processInfo);
 
     ~CRetroPlayerVideo() override;
 
@@ -56,13 +58,13 @@ namespace RETRO
     */
 
   private:
-    bool Configure(VideoPicture& picture);
-    bool GetPicture(const uint8_t* data, unsigned int size, VideoPicture& picture);
-    void SendPicture(VideoPicture& picture);
+    bool Configure(RPVideoPicture& picture);
+    bool GetPicture(const uint8_t* data, unsigned int size, RPVideoPicture& picture);
+    void SendPicture(RPVideoPicture& picture);
 
     // Construction parameters
-    CRenderManager& m_renderManager;
-    CProcessInfo&   m_processInfo;
+    CRPProcessInfo&   m_processInfo;
+    CRPRenderManager& m_renderManager;
 
     // Stream properties
     double       m_framerate;
@@ -70,7 +72,7 @@ namespace RETRO
     bool         m_bConfigured; // Need first picture to configure the render manager
     unsigned int m_droppedFrames;
     std::unique_ptr<CPixelConverter> m_pixelConverter;
-    std::unique_ptr<CDVDVideoCodec>  m_pVideoCodec;
+    // std::unique_ptr<CDVDVideoCodec>  m_pVideoCodec;
   };
 }
 }
