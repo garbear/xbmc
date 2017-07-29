@@ -49,7 +49,7 @@ namespace RETRO
   private:
     CProcessInfo& m_processInfo;
     IAEStream* m_pAudioStream;
-    std::unique_ptr<CDVDAudioCodec> m_pAudioCodec;
+    // std::unique_ptr<CDVDAudioCodec> m_pAudioCodec;
     bool       m_bAudioEnabled;
   };
 }

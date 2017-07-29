@@ -23,6 +23,7 @@
 #include "RetroPlayerAutoSave.h"
 #include "RetroPlayerVideo.h"
 #include "addons/AddonManager.h"
+#include "settings/MediaSettings.h"
 #include "cores/VideoPlayer/Process/ProcessInfo.h"
 #include "dialogs/GUIDialogYesNo.h"
 #include "filesystem/File.h"
