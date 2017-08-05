@@ -160,11 +160,11 @@ public:
   virtual void Render(CD3DTexture &sourceTexture,
                       unsigned int sourceWidth, unsigned int sourceHeight,
                       unsigned int destWidth, unsigned int destHeight,
-                      CRect sourceRect, CRect destRect, bool useLimitRange, 
+                      CRect sourceRect, CRect destRect, bool useLimitRange,
                       CD3DTexture *target) = 0;
   CConvolutionShader();
   virtual ~CConvolutionShader();
-  
+
 protected:
   virtual bool ChooseKernelD3DFormat();
   virtual bool CreateHQKernel(ESCALINGMETHOD method);
