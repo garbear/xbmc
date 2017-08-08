@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.konami.justifier"
+        name="Konami Justifier"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Konami Justifier</summary>
+        <description lang="en_GB">The Justifer is a light gun released by Konami in 1992 for the Sega Mega Drive/Genesis, SNES and PlayStation. It resembles the Colt Python, a .357 Magnum revolver.</description>
+        <disclaimer></disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon_snes.png</icon>
+        </assets>
+    </extension>
+</addon>

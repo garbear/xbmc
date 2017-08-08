@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ps.multitap"
+        name="PlayStation Multitap"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">PlayStation Multitap</summary>
+        <description lang="en_GB">A multitap increases the number of controller and memory card ports, similar to a USB hub. With a second PlayStation Multitap, up to eight controllers and memory cards can be plugged in at once.</description>
+        <disclaimer></disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

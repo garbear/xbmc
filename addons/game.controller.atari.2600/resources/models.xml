@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<models>
+  <model name="cx40">
+    <layout label="30011"/>
+  </model>
+</models>

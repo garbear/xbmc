@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ps.guncon"
+        name="PlayStation Guncon"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">PlayStation Guncon</summary>
+        <description lang="en_GB">The Guncon, known as G-Con in Europe, is a family of light guns designed by Namco for the PlayStation. The original model was released alongside the PlayStation in 1994.</description>
+        <disclaimer></disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon_western.png</icon>
+        </assets>
+    </extension>
+</addon>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png" mask="mask.png">
+  <category name="face" label="35074">
+    <button name="a" type="digital" label="30001"/>
+    <button name="b" type="digital" label="30002"/>
+    <button name="c" type="digital" label="30003"/>
+    <button name="up" type="digital" label="30004"/>
+    <button name="right" type="digital" label="30005"/>
+    <button name="down" type="digital" label="30006"/>
+    <button name="left" type="digital" label="30007"/>
+    <button name="play" type="digital" label="30008"/>
+    <button name="stop" type="digital" label="30009"/>
+  </category>
+  <category name="shoulder" label="35075">
+    <button name="leftbumper" type="digital" label="30010"/>
+    <button name="rightbumper" type="digital" label="30011"/>
+  </category>
+  <physicaltopology hasplayer="true">
+    <port id="1">
+      <accepts controller="game.controller.3do"/>
+      <accepts controller="game.controller.3do.gamegun"/>
+    </port>
+  </physicaltopology>
+</layout>

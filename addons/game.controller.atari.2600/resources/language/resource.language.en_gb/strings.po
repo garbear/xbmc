@@ -1,0 +1,65 @@
+# Kodi Media Center language file
+# Addon Name: Atari 2600 Joystick
+# Addon id: game.controller.atari.2600
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.2600\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "Atari 2600"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Fire"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Joystick"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Select"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Reset"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Color"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Black/White"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Left Difficulty A"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Left Difficulty B"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Right Difficulty A"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Right Difficulty B"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Atari CX40 Joystick"
+msgstr ""

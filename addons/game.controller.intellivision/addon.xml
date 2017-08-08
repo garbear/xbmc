@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.intellivision"
+        name="Intellivision Controller"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Intellivision controller</summary>
+        <description lang="en_GB">The Intellivision, a portmanteau of "intelligent television", was released by Mattel Electronics in 1979. In 2009, IGN named the Intellivision the 14th greatest console of all time.</description>
+        <disclaimer>Image credit: OpenEmu (openemu.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

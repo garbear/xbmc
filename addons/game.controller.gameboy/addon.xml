@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.gameboy"
+        name="Game Boy"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Game Boy</summary>
+        <description lang="en_GB">The Nintendo Game Boy is an 8-bit handheld video game console released in 1989. It became a tremendous success, and in 2009 was inducted into the National Toy Hall of Fame.</description>
+        <disclaimer>Image credit: OpenEmu (openemu.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

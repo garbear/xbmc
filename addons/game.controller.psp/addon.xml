@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.psp"
+        name="PSP"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">PSP</summary>
+        <description lang="en_GB">The PlayStation Portable (PSP) released by Sony in 2004. It was praised for its high-end GPU and bright 4.3 inch screen. The PSP was succeeded by the PSP Go in 2009, and then the PlayStation Vita in 2011.</description>
+        <disclaimer>Image credit: OpenEmu (openemu.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

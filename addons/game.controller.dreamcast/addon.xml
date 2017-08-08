@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.dreamcast"
+        name="Dreamcast Controller"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Sega Dreamcast controller</summary>
+        <description lang="en_GB">The Sega Dreamcast was released in 1998. The inclusion of an analog stick reflected the transition from 2D arcade games to 3D game environments. The Dreamcast had a short lifespan and marked the end of Sega's 18 years in the console market.</description>
+        <disclaimer></disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

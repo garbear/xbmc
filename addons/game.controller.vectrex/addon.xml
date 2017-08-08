@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.vectrex"
+        name="Vectrex Controller"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Vectrex controller</summary>
+        <description lang="en_GB">The Vectrex was released in 1982 by General Consumer Electronics (later purchased by Milton Bradley). The console featured a built-in monochrome monitor capable of displaying vector graphics.</description>
+        <disclaimer>Image credit: OpenEmu (openemu.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

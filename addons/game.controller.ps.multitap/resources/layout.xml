@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+	<physicaltopology hasplayer="false">
+		<port id="1">
+			<accepts controller="game.controller.ps"/>
+			<accepts controller="game.controller.ps.mouse"/>
+			<accepts controller="game.controller.ps.multitap"/>
+			<accepts controller="game.controller.ps.guncon"/>
+			<accepts controller="game.controller.konami.justifier" model="green"/>
+		</port>
+		<port id="2">
+			<accepts controller="game.controller.ps"/>
+			<accepts controller="game.controller.ps.mouse"/>
+			<accepts controller="game.controller.ps.multitap"/>
+			<accepts controller="game.controller.ps.guncon"/>
+			<accepts controller="game.controller.konami.justifier" model="green"/>
+		</port>
+		<port id="3">
+			<accepts controller="game.controller.ps"/>
+			<accepts controller="game.controller.ps.mouse"/>
+			<accepts controller="game.controller.ps.multitap"/>
+			<accepts controller="game.controller.ps.guncon"/>
+			<accepts controller="game.controller.konami.justifier" model="green"/>
+		</port>
+		<port id="4">
+			<accepts controller="game.controller.ps"/>
+			<accepts controller="game.controller.ps.mouse"/>
+			<accepts controller="game.controller.ps.multitap"/>
+			<accepts controller="game.controller.ps.guncon"/>
+			<accepts controller="game.controller.konami.justifier" model="green"/>
+		</port>
+	</physicaltopology>
+</layout>

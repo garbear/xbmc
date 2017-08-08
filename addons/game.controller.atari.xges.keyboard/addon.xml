@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.atari.xges.keyboard"
+        name="Atari XGES Keyboard"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Atari XGES keyboard</summary>
+        <description lang="en_GB">The Atari XGES keyboard was included in the Atari XGES deluxe set, which was released in 1987 by Atari Corporation. Because a keyboard was included, the XGES had home computer functionality.</description>
+        <disclaimer>Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

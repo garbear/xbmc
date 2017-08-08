@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.gravis.gamepad"
+        name="Gravis PC GamePad"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Gravis PC GamePad</summary>
+        <description lang="en_GB">The Gravis PC GamePad is a controller produced by Advanced Gravis Computer Technology in 1991. It was the first gamepad for the IBM PC in a market dominated by joysticks.</description>
+        <disclaimer></disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

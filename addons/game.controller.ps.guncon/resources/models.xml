@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<models>
+  <model name="western">
+    <layout label="30006"/>
+  </model>
+  <model name="japan">
+    <layout label="30007" icon="icon_japan.png" image="layout_japan.png"/>
+  </model>
+</models>

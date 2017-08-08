@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.atari.5200"
+        name="Atari 5200 Controller"
+        version="1.0.5"
+        provider-name="Team Kodi">
+    <requires>
+    </requires>
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Atari 5200 controller</summary>
+        <description lang="en_GB">The Atari 5200 was released in 1982. The design of the joystick, which used a weak rubber boot instead of springs, proved to be ungainly and unreliable. It was rated the 10th worst video game controller by IGN.</description>
+        <disclaimer>Image credit: OpenEmu (openemu.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

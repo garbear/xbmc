@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png" mask="mask.png" models="models.xml">
+  <category name="face" label="35074">
+    <button name="fire" type="digital" label="30001"/>
+    <analogstick name="joystick" label="30002"/>
+  </category>
+  <category name="hardware" label="35107">
+    <button name="select" type="digital" label="30003"/>
+    <button name="reset" type="digital" label="30004"/>
+    <button name="color" type="digital" label="30005"/>
+    <button name="bw" type="digital" label="30006"/>
+    <button name="leftdifficultya" type="digital" label="30007"/>
+    <button name="leftdifficultyb" type="digital" label="30008"/>
+    <button name="rightdifficultya" type="digital" label="30009"/>
+    <button name="rightdifficultyb" type="digital" label="30010"/>
+  </category>
+</layout>

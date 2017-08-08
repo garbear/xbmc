@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout_proline.png" mask="mask_proline.png" models="models.xml">
+  <category name="face" label="35074">
+    <button name="button1" type="digital" label="30001"/>
+    <button name="button2" type="digital" label="30002"/>
+    <analogstick name="joystick" label="30003"/>
+  </category>
+  <category name="hardware" label="35107">
+    <button name="reset" type="digital" label="30004"/>
+    <button name="select" type="digital" label="30005"/>
+    <button name="pause" type="digital" label="30006"/>
+    <button name="leftdifficulty" type="digital" label="30007"/>
+    <button name="rightdifficulty" type="digital" label="30008"/>
+  </category>
+</layout>

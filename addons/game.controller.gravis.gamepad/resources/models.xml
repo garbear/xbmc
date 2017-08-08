@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<models>
+  <model name="gamepad">
+    <layout label="30009"/>
+  </model>
+</models>
