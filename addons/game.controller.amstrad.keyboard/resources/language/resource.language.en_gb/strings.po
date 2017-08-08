@@ -1,0 +1,317 @@
+# Kodi Media Center language file
+# Addon Name: Amstrad Keyboard
+# Addon id: game.controller.amstrad.keyboard
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.amstrad.keyboard\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "Amstrad CPC"
+msgstr ""
+
+msgctxt "#30001"
+msgid "1"
+msgstr ""
+
+msgctxt "#30002"
+msgid "2"
+msgstr ""
+
+msgctxt "#30003"
+msgid "3"
+msgstr ""
+
+msgctxt "#30004"
+msgid "4"
+msgstr ""
+
+msgctxt "#30005"
+msgid "5"
+msgstr ""
+
+msgctxt "#30006"
+msgid "6"
+msgstr ""
+
+msgctxt "#30007"
+msgid "7"
+msgstr ""
+
+msgctxt "#30008"
+msgid "8"
+msgstr ""
+
+msgctxt "#30009"
+msgid "9"
+msgstr ""
+
+msgctxt "#30010"
+msgid "0"
+msgstr ""
+
+msgctxt "#30011"
+msgid "A"
+msgstr ""
+
+msgctxt "#30012"
+msgid "B"
+msgstr ""
+
+msgctxt "#30013"
+msgid "C"
+msgstr ""
+
+msgctxt "#30014"
+msgid "D"
+msgstr ""
+
+msgctxt "#30015"
+msgid "E"
+msgstr ""
+
+msgctxt "#30016"
+msgid "F"
+msgstr ""
+
+msgctxt "#30017"
+msgid "G"
+msgstr ""
+
+msgctxt "#30018"
+msgid "H"
+msgstr ""
+
+msgctxt "#30019"
+msgid "I"
+msgstr ""
+
+msgctxt "#30020"
+msgid "J"
+msgstr ""
+
+msgctxt "#30021"
+msgid "K"
+msgstr ""
+
+msgctxt "#30022"
+msgid "L"
+msgstr ""
+
+msgctxt "#30023"
+msgid "M"
+msgstr ""
+
+msgctxt "#30024"
+msgid "N"
+msgstr ""
+
+msgctxt "#30025"
+msgid "O"
+msgstr ""
+
+msgctxt "#30026"
+msgid "P"
+msgstr ""
+
+msgctxt "#30027"
+msgid "Q"
+msgstr ""
+
+msgctxt "#30028"
+msgid "R"
+msgstr ""
+
+msgctxt "#30029"
+msgid "S"
+msgstr ""
+
+msgctxt "#30030"
+msgid "T"
+msgstr ""
+
+msgctxt "#30031"
+msgid "U"
+msgstr ""
+
+msgctxt "#30032"
+msgid "V"
+msgstr ""
+
+msgctxt "#30033"
+msgid "W"
+msgstr ""
+
+msgctxt "#30034"
+msgid "X"
+msgstr ""
+
+msgctxt "#30035"
+msgid "Y"
+msgstr ""
+
+msgctxt "#30036"
+msgid "Z"
+msgstr ""
+
+msgctxt "#30037"
+msgid "Space"
+msgstr ""
+
+msgctxt "#30038"
+msgid ","
+msgstr ""
+
+msgctxt "#30039"
+msgid "."
+msgstr ""
+
+msgctxt "#30040"
+msgid ";"
+msgstr ""
+
+msgctxt "#30041"
+msgid "-"
+msgstr ""
+
+msgctxt "#30042"
+msgid "="
+msgstr ""
+
+msgctxt "#30043"
+msgid "@"
+msgstr ""
+
+msgctxt "#30044"
+msgid "["
+msgstr ""
+
+msgctxt "#30045"
+msgid "Tab"
+msgstr ""
+
+msgctxt "#30046"
+msgid "Return"
+msgstr ""
+
+msgctxt "#30047"
+msgid "Backspace"
+msgstr ""
+
+msgctxt "#30048"
+msgid "Escape"
+msgstr ""
+
+msgctxt "#30049"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30050"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30051"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30052"
+msgid "Left"
+msgstr ""
+
+msgctxt "#30053"
+msgid "Num 0"
+msgstr ""
+
+msgctxt "#30054"
+msgid "Num 1"
+msgstr ""
+
+msgctxt "#30055"
+msgid "Num 2"
+msgstr ""
+
+msgctxt "#30056"
+msgid "Num 3"
+msgstr ""
+
+msgctxt "#30057"
+msgid "Num 4"
+msgstr ""
+
+msgctxt "#30058"
+msgid "Num 5"
+msgstr ""
+
+msgctxt "#30059"
+msgid "Num 6"
+msgstr ""
+
+msgctxt "#30060"
+msgid "Num 7"
+msgstr ""
+
+msgctxt "#30061"
+msgid "Num 8"
+msgstr ""
+
+msgctxt "#30062"
+msgid "Num 9"
+msgstr ""
+
+msgctxt "#30063"
+msgid "Num ."
+msgstr ""
+
+msgctxt "#30064"
+msgid "Shift"
+msgstr ""
+
+msgctxt "#30065"
+msgid "Ctrl"
+msgstr ""
+
+msgctxt "#30066"
+msgid "Caps Lock"
+msgstr ""
+
+msgctxt "#30067"
+msgid "Num Enter"
+msgstr ""
+
+msgctxt "#30068"
+msgid "Delete"
+msgstr ""
+
+msgctxt "#30069"
+msgid "End"
+msgstr ""
+
+msgctxt "#30070"
+msgid "Page Up"
+msgstr ""
+
+msgctxt "#30071"
+msgid "Page Down"
+msgstr ""
+
+msgctxt "#30072"
+msgid "Insert"
+msgstr ""
+
+msgctxt "#30073"
+msgid "Home"
+msgstr ""
+
+msgctxt "#30074"
+msgid "Copy"
+msgstr ""
