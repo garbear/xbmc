@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ouya"
+        name="OUYA Controller"
+        version="1.0.1"
+        provider-name="Quihico">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">OUYA controller</summary>
+        <description lang="en_GB">The OUYA is a crowd-funded Android-based microconsole released in 2013. The OUYA controller includes a single-touch touchpad in the center of the controller.</description>
+        <disclaimer lang="en_GB"></disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
