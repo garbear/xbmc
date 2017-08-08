@@ -1,0 +1,45 @@
+# Kodi Media Center language file
+# Addon Name: PC Joystick (4-button)
+# Addon id: game.controller.joystick.4button
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.joystick.4button\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "PC Joystick (4-button)"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Button 3"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Button 4"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Left Stick"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Right Stick"
+msgstr ""
