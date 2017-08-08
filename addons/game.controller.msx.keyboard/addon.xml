@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.msx.keyboard"
+        name="MSX Keyboard"
+        version="1.0.4"
+        provider-name="Team Lima-Dev">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">MSX Keyboard</summary>
+        <description lang="en_GB">The MSX keyboard came in internal and external units. One troubleshooting hint when an MSX machine does not display an image is to press the CAPS key repeatedly to see if the LED toggles.</description>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

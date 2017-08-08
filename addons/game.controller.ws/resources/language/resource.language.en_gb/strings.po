@@ -1,0 +1,65 @@
+# Kodi Media Center language file
+# Addon Name: WonderSwan
+# Addon id: game.controller.ws
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.ws\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "WonderSwan"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr ""
+
+msgctxt "#30002"
+msgid "B"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Start"
+msgstr ""
+
+msgctxt "#30004"
+msgid "X-Cursor Up"
+msgstr ""
+
+msgctxt "#30005"
+msgid "X-Cursor Right"
+msgstr ""
+
+msgctxt "#30006"
+msgid "X-Cursor Down"
+msgstr ""
+
+msgctxt "#30007"
+msgid "X-Cursor Left"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Y-Cursor Up"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Y-Cursor Right"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Y-Cursor Down"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Y-Cursor Left"
+msgstr ""

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.twin.stick"
+        name="Sega Twin Stick"
+        version="1.0.8"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Sega Twin Stick</summary>
+        <description lang="en_GB">The Sega Twin Stick, released in 1996, features two joysticks at the expense of fewer buttons. It was designed for the game Cyber Troopers Virtual-On.</description>
+        <disclaimer lang="en_GB">Image credit: Sega Retro (segaretro.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>
