@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.3d.western"
+        name="Sega Saturn 3D (Western)"
+        version="1.0.8"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Sega Saturn 3D (Western)</summary>
+        <description lang="en_GB">The Sega Saturn 3D Control Pad was released in 1996. It was Sega's answer to the revolutionary Nintendo 64 controller, which featured an analogue stick for greater precision in a 3D environment.</description>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>
