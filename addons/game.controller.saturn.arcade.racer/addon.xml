@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.arcade.racer"
+        name="Sega Arcade Racer"
+        version="1.0.8"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Sega Saturn Arcade Racer</summary>
+        <description lang="en_GB">The Arcade Racer, released in 1995, is a racing wheel style controller for the Sega Saturn.</description>
+        <disclaimer lang="en_GB">Image credit: Sega Retro (segaretro.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

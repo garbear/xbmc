@@ -1,0 +1,46 @@
+# Kodi Media Center language file
+# Addon Name: Sega SG-1000
+# Addon id: game.controller.sg1000
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.sg1000\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-03-22 08:58+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-sg1000/da_dk/>\n"
+"Language: da_dk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.5.1\n"
+
+msgctxt "#30000"
+msgid "Sega SG-1000"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Knap 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Knap 2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Op"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Højre"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Ned"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Venstre"

@@ -1,0 +1,45 @@
+# Kodi Media Center language file
+# Addon Name: MSX Joystick
+# Addon id: game.controller.msx.joystick
+# Addon Provider: Team-Lima-Dev
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.msx.joystick\n"
+"Report-Msgid-Bugs-To: dylan@vossystems.nl\n"
+"POT-Creation-Date: 2017-06-18 20:00+1\n"
+"PO-Revision-Date:  2017-06-18 20:00+1\n"
+"Last-Translator: ThaDaVos\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "MSX Joystick"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Left"
+msgstr ""

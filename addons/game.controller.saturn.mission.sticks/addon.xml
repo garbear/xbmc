@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.mission.sticks"
+        name="Sega Mission Sticks"
+        version="1.0.8"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Sega Dual Mission Sticks</summary>
+        <description lang="en_GB">The Sega Mission Stick is a fight stick for the Sega Saturn released in 1995. A second stick could be connected to allow twin sticks in Panzer Dragoon Zwei.</description>
+        <disclaimer lang="en_GB">Image credit: Sega Retro (segaretro.org)</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+    </extension>
+</addon>
