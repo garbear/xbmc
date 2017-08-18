@@ -1,7 +1,8 @@
 set(SOURCES GUIDialogSelectGameClient.cpp
 )
 
-set(HEADERS GUIDialogSelectGameClient.h
+set(HEADERS DialogGameDefines.h
+            GUIDialogSelectGameClient.h
 )
 
 core_add_library(gamedialogs)
