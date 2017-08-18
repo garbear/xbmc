@@ -11,6 +11,7 @@
 #include "cores/RetroPlayer/buffers/IRenderBufferPool.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderUtils.h"
+#include "cores/RetroPlayer/shaders/IShaderPreset.h"
 #include "utils/log.h"
 
 using namespace KODI;
@@ -22,7 +23,9 @@ using namespace RETRO;
 CRPBaseRenderer::CRPBaseRenderer(const CRenderSettings &renderSettings, CRenderContext &context, std::shared_ptr<IRenderBufferPool> bufferPool) :
   m_context(context),
   m_bufferPool(std::move(bufferPool)),
-  m_renderSettings(renderSettings)
+  m_renderSettings(renderSettings),
+  m_shadersNeedUpdate(true),
+  m_bUseShaderPreset(false)
 {
   m_bufferPool->RegisterRenderer(this);
 }
@@ -37,6 +40,14 @@ CRPBaseRenderer::~CRPBaseRenderer()
 bool CRPBaseRenderer::IsCompatible(const CRenderVideoSettings &settings) const
 {
   if (!m_bufferPool->IsCompatible(settings))
+    return false;
+
+  // Shader preset must match
+  std::string shaderPreset;
+  if (m_shaderPreset)
+    shaderPreset = m_shaderPreset->GetShaderPreset();
+
+  if (settings.GetShaderPreset() != shaderPreset)
     return false;
 
   return true;
@@ -126,6 +137,15 @@ void CRPBaseRenderer::SetRenderRotation(unsigned int rotationDegCCW)
   m_renderSettings.VideoSettings().SetRenderRotation(rotationDegCCW);
 }
 
+void CRPBaseRenderer::SetShaderPreset(const std::string &presetPath)
+{
+  if (presetPath != m_renderSettings.VideoSettings().GetShaderPreset())
+  {
+    m_renderSettings.VideoSettings().SetShaderPreset(presetPath);
+    m_shadersNeedUpdate = true;
+  }
+}
+
 void CRPBaseRenderer::ManageRenderArea(const IRenderBuffer &renderBuffer)
 {
   // Get texture parameters
@@ -183,6 +203,31 @@ void CRPBaseRenderer::MarkDirty()
   //CServiceBroker::GetGUI()->GetWindowManager().MarkDirty(m_dimensions); //! @todo
 }
 
+/**
+ * \brief Updates everything needed for video shaders (shader presets)
+ * Needs to be called after m_renderBuffer has been set
+ */
+void CRPBaseRenderer::Updateshaders()
+{
+  if (m_shadersNeedUpdate)
+  {
+    if (m_shaderPreset)
+    {
+      if (!m_renderBuffer) {
+        CLog::Log(LOGWARNING, "%s - Render buffer not set, can't update video shader source size!", __FUNCTION__);
+        return;
+      }
+      auto sourceWidth = m_renderBuffer->GetWidth();
+      auto sourceHeight = m_renderBuffer->GetHeight();
+
+      // We need to set this here because m_sourceRect isn't valid on init/pre-init
+      m_shaderPreset->SetVideoSize(sourceWidth, sourceHeight);
+      m_bUseShaderPreset = m_shaderPreset->SetShaderPreset(m_renderSettings.VideoSettings().GetShaderPreset());
+    }
+    m_shadersNeedUpdate = false;
+  }
+}
+
 void CRPBaseRenderer::PreRender(bool clear)
 {
   if (!m_bConfigured)
@@ -191,6 +236,8 @@ void CRPBaseRenderer::PreRender(bool clear)
   // Clear screen
   if (clear)
     m_context.Clear(m_context.UseLimitedColor() ? 0x101010 : 0);
+
+  //ManageRenderArea(*m_renderBuffer);
 }
 
 void CRPBaseRenderer::PostRender()

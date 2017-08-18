@@ -9,15 +9,27 @@
 #include "DialogGameVideoFilter.h"
 #include "cores/RetroPlayer/guibridge/GUIGameVideoHandle.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
+#include "cores/RetroPlayer/shaders/ShaderPresetFactory.h"
+#include "games/dialogs/DialogGameDefines.h"
 #include "guilib/LocalizeStrings.h"
 #include "guilib/WindowIDs.h"
 #include "settings/GameSettings.h"
 #include "settings/MediaSettings.h"
+#include "utils/log.h"
 #include "utils/StringUtils.h"
+#include "utils/URIUtils.h"
 #include "utils/Variant.h"
+#include "utils/XBMCTinyXML.h"
+#include "URL.h"
+
+#include <stdlib.h>
+#include "ServiceBroker.h"
+#include "games/GameServices.h"
 
 using namespace KODI;
 using namespace GAME;
+
+#define PRESETS_ADDON_NAME "game.shader.presets"
 
 namespace
 {
@@ -50,6 +62,7 @@ void CDialogGameVideoFilter::PreInit()
 {
   m_items.Clear();
 
+  InitScalingMethods();
   InitVideoFilters();
 
   if (m_items.Size() == 0)
@@ -61,7 +74,7 @@ void CDialogGameVideoFilter::PreInit()
   m_bHasDescription = false;
 }
 
-void CDialogGameVideoFilter::InitVideoFilters()
+void CDialogGameVideoFilter::InitScalingMethods()
 {
   if (m_gameVideoHandle)
   {
@@ -82,6 +95,75 @@ void CDialogGameVideoFilter::InitVideoFilters()
   }
 }
 
+void CDialogGameVideoFilter::InitVideoFilters()
+{
+  std::vector<VideoFilterProperties> videoFilters;
+
+  // TODO: Have the add-on give us the xml as a string (or parse it)
+  static const std::string addonPath = std::string("special://xbmcbinaddons/") + PRESETS_ADDON_NAME;
+  static const std::string xmlPath = addonPath + "/resources/ShaderPresetsDefault.xml";
+  std::string basePath = URIUtils::GetBasePath(xmlPath);
+
+  CXBMCTinyXML xml = CXBMCTinyXML(xmlPath);
+
+  if (!xml.LoadFile())
+  {
+    CLog::Log(LOGERROR, "%s - Couldn't load shader presets from default .xml, %s", __FUNCTION__, CURL::GetRedacted(xmlPath).c_str());
+    return;
+  }
+
+  auto root = xml.RootElement();
+  TiXmlNode* child = nullptr;
+
+  while ((child = root->IterateChildren(child)))
+  {
+    VideoFilterProperties videoFilter;
+
+    if (child->FirstChild() == nullptr)
+      continue;
+
+    TiXmlNode* pathNode;
+    if ((pathNode = child->FirstChild("path")))
+      if ((pathNode = pathNode->FirstChild()))
+        videoFilter.path = URIUtils::AddFileToFolder(basePath, pathNode->Value());
+    TiXmlNode* nameIndexNode;
+    if ((nameIndexNode = child->FirstChild("name")))
+      if ((nameIndexNode = nameIndexNode->FirstChild()))
+        videoFilter.nameIndex = atoi(nameIndexNode->Value());
+    TiXmlNode* categoryIndexNode;
+    if ((categoryIndexNode = child->FirstChild("category")))
+      if ((categoryIndexNode = categoryIndexNode->FirstChild()))
+        videoFilter.categoryIndex = atoi(categoryIndexNode->Value());
+    TiXmlNode* descriptionNode;
+    if ((descriptionNode = child->FirstChild("description")))
+      if ((descriptionNode = descriptionNode->FirstChild()))
+        videoFilter.descriptionIndex = atoi(descriptionNode->Value());
+
+    videoFilters.emplace_back(videoFilter);
+  }
+
+  CLog::Log(LOGDEBUG, "Loaded %d shader presets from default .xml, %s", videoFilters.size(), CURL::GetRedacted(xmlPath).c_str());
+
+  for (const auto &videoFilter : videoFilters)
+  {
+    bool canLoadPreset = CServiceBroker::GetGameServices().VideoShaders().CanLoadPreset(videoFilter.path);
+
+    if (!canLoadPreset)
+      continue;
+
+    auto localizedName = GetLocalizedString(videoFilter.nameIndex);
+    auto localizedCategory = GetLocalizedString(videoFilter.categoryIndex);
+    auto localizedDescription = GetLocalizedString(videoFilter.descriptionIndex);
+
+    CFileItemPtr item = std::make_shared<CFileItem>(localizedName);
+    item->SetLabel2(localizedCategory);
+    item->SetProperty("game.videofilter", CVariant{ videoFilter.path });
+    item->SetProperty("game.videofilterdescription", CVariant{ localizedDescription });
+
+    m_items.Add(std::move(item));
+  }
+}
+
 void CDialogGameVideoFilter::GetItems(CFileItemList &items)
 {
   for (const auto &item : m_items)
@@ -98,7 +180,7 @@ void CDialogGameVideoFilter::OnItemFocus(unsigned int index)
     std::string description;
     GetProperties(*item, videoFilter, description);
 
-    CGameSettings &gameSettings = CMediaSettings::GetInstance().GetCurrentGameSettings();
+    ::CGameSettings &gameSettings = CMediaSettings::GetInstance().GetCurrentGameSettings();
 
     if (gameSettings.VideoFilter() != videoFilter)
     {
@@ -118,7 +200,7 @@ void CDialogGameVideoFilter::OnItemFocus(unsigned int index)
 
 unsigned int CDialogGameVideoFilter::GetFocusedItem() const
 {
-  CGameSettings &gameSettings = CMediaSettings::GetInstance().GetCurrentGameSettings();
+  ::CGameSettings &gameSettings = CMediaSettings::GetInstance().GetCurrentGameSettings();
 
   for (int i = 0; i < m_items.Size(); i++)
   {
@@ -138,6 +220,11 @@ unsigned int CDialogGameVideoFilter::GetFocusedItem() const
 void CDialogGameVideoFilter::PostExit()
 {
   m_items.Clear();
+}
+
+std::string CDialogGameVideoFilter::GetLocalizedString(uint32_t code)
+{
+  return g_localizeStrings.GetAddonString(PRESETS_ADDON_NAME, code);
 }
 
 void CDialogGameVideoFilter::GetProperties(const CFileItem &item, std::string &videoFilter, std::string &description)
