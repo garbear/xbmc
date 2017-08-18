@@ -15,6 +15,12 @@
 
 class CProfileManager;
 
+namespace ADDON
+{
+class CAddonMgr;
+class CBinaryAddonManager;
+} // namespace ADDON
+
 namespace PERIPHERALS
 {
 class CPeripherals;
@@ -25,6 +31,11 @@ namespace KODI
 namespace RETRO
 {
 class CGUIGameRenderManager;
+}
+
+namespace SHADER
+{
+class CShaderPresetFactory;
 }
 
 namespace GAME
@@ -38,7 +49,9 @@ public:
   CGameServices(CControllerManager& controllerManager,
                 RETRO::CGUIGameRenderManager& renderManager,
                 PERIPHERALS::CPeripherals& peripheralManager,
-                const CProfileManager& profileManager);
+                const CProfileManager& profileManager,
+                ADDON::CAddonMgr& addons,
+                ADDON::CBinaryAddonManager& binaryAddons);
   ~CGameServices();
 
   ControllerPtr GetController(const std::string& controllerId);
@@ -59,6 +72,11 @@ public:
     return m_gameRenderManager;
   }
 
+  SHADER::CShaderPresetFactory& VideoShaders()
+  {
+    return *m_videoShaders;
+  }
+
 private:
   // Construction parameters
   CControllerManager& m_controllerManager;
@@ -67,6 +85,7 @@ private:
 
   // Game services
   std::unique_ptr<CGameSettings> m_gameSettings;
+  std::unique_ptr<SHADER::CShaderPresetFactory> m_videoShaders;
 };
 } // namespace GAME
 } // namespace KODI
