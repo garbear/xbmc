@@ -10,6 +10,8 @@
 
 #include "cores/GameSettings.h"
 
+#include <string>
+
 namespace KODI
 {
 namespace RETRO
