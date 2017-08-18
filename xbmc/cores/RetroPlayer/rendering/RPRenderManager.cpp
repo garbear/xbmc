@@ -499,10 +499,15 @@ std::shared_ptr<CRPBaseRenderer> CRPRenderManager::GetRenderer(
   // If buffer pool has no compatible renderers, create one now
   if (!renderer)
   {
+    const std::string& shaderPreset = renderSettings.VideoSettings().GetShaderPreset();
+
     CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Creating renderer for %s",
               m_processInfo.GetRenderSystemName(bufferPool).c_str());
 
-    renderer.reset(m_processInfo.CreateRenderer(bufferPool, renderSettings));
+    // Try to create a renderer now, unless the shader preset has failed already
+    if (shaderPreset.empty() ||
+        m_failedShaderPresets.find(shaderPreset) == m_failedShaderPresets.end())
+      renderer.reset(m_processInfo.CreateRenderer(bufferPool, renderSettings));
     if (renderer && renderer->Configure(m_format))
     {
       // Ensure we have a render buffer for this renderer
@@ -512,6 +517,10 @@ std::shared_ptr<CRPBaseRenderer> CRPRenderManager::GetRenderer(
     }
     else
       renderer.reset();
+
+    // If we failed to create a renderer, blacklist the shader preset
+    if (!renderer && !shaderPreset.empty())
+      m_failedShaderPresets.insert(shaderPreset);
   }
 
   return renderer;
