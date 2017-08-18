@@ -1,33 +1,35 @@
 /*
- *  Copyright (C) 2017-2018 Team Kodi
+ *  Copyright (C) 2017-2025 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
  *  See LICENSES/README.md for more information.
  */
+
 #include "RPWinOutputShader.h"
 
+#include "ShaderTypesDX.h"
 #include "utils/log.h"
 
 using namespace KODI;
-using namespace RETRO;
+using namespace SHADER;
 
-bool CRPWinOutputShader::Create(SCALINGMETHOD scalingMethod)
+bool CRPWinOutputShader::Create(RETRO::SCALINGMETHOD scalingMethod)
 {
   CWinShader::CreateVertexBuffer(4, sizeof(CUSTOMVERTEX));
 
   DefinesMap defines;
   switch (scalingMethod)
   {
-    case SCALINGMETHOD::NEAREST:
+    case RETRO::SCALINGMETHOD::NEAREST:
       defines["SAMP_NEAREST"] = "";
       break;
-    case SCALINGMETHOD::LINEAR:
+    case RETRO::SCALINGMETHOD::LINEAR:
     default:
       break;
   }
 
-  std::string effectPath("special://xbmc/system/shaders/rp_output_d3d.fx");
+  const std::string effectPath("special://xbmc/system/shaders/rp_output_d3d.fx");
 
   if (!LoadEffect(effectPath, &defines))
   {
@@ -55,13 +57,13 @@ void CRPWinOutputShader::Render(CD3DTexture& sourceTexture,
   Execute({target}, 4);
 }
 
-void CRPWinOutputShader::PrepareParameters(unsigned sourceWidth,
-                                           unsigned sourceHeight,
+void CRPWinOutputShader::PrepareParameters(unsigned int sourceWidth,
+                                           unsigned int sourceHeight,
                                            CRect sourceRect,
                                            const CPoint points[4])
 {
   bool changed = false;
-  for (int i = 0; i < 4 && !changed; ++i)
+  for (unsigned int i = 0; i < 4 && !changed; ++i)
     changed = points[i] != m_destPoints[i];
 
   if (m_sourceWidth != sourceWidth || m_sourceHeight != sourceHeight ||
@@ -71,7 +73,7 @@ void CRPWinOutputShader::PrepareParameters(unsigned sourceWidth,
     m_sourceHeight = sourceHeight;
     m_sourceRect = sourceRect;
 
-    for (int i = 0; i < 4; ++i)
+    for (unsigned int i = 0; i < 4; ++i)
       m_destPoints[i] = points[i];
 
     CUSTOMVERTEX* v = nullptr;
@@ -106,15 +108,15 @@ void CRPWinOutputShader::PrepareParameters(unsigned sourceWidth,
 }
 
 void CRPWinOutputShader::SetShaderParameters(CD3DTexture& sourceTexture,
-                                             unsigned range,
+                                             unsigned int range,
                                              CRect& viewPort)
 {
   m_effect.SetTechnique("OUTPUT_T");
   m_effect.SetResources("g_Texture", sourceTexture.GetAddressOfSRV(), 1);
 
-  float viewPortArray[2] = {viewPort.Width(), viewPort.Height()};
+  const float viewPortArray[2] = {viewPort.Width(), viewPort.Height()};
   m_effect.SetFloatArray("g_viewPort", viewPortArray, 2);
 
-  float params[3] = {static_cast<float>(range)};
+  const float params[3] = {static_cast<float>(range)};
   m_effect.SetFloatArray("m_params", params, 1);
 }
