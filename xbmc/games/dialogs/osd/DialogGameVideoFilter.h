@@ -35,6 +35,7 @@ protected:
   bool OnClickAction() override;
 
 private:
+  void InitScalingMethods();
   void InitVideoFilters();
 
   static void GetProperties(const CFileItem& item,
@@ -42,6 +43,15 @@ private:
                             std::string& description);
 
   CFileItemList m_items;
+
+  static std::string GetLocalizedString(uint32_t code);
+
+  struct VideoFilterProperties
+  {
+    std::string path;
+    std::string name;
+    std::string folder;
+  };
 
   //! \brief Set to true when a description has first been set
   bool m_bHasDescription = false;
