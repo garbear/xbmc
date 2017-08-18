@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2018 Team Kodi
+ *  Copyright (C) 2017-2019 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -13,7 +13,7 @@
 
 namespace KODI
 {
-namespace RETRO
+namespace SHADER
 {
 
 class CRPWinOutputShader : public CWinShader
@@ -21,7 +21,7 @@ class CRPWinOutputShader : public CWinShader
 public:
   ~CRPWinOutputShader() = default;
 
-  bool Create(SCALINGMETHOD scalingMethod);
+  bool Create(RETRO::SCALINGMETHOD scalingMethod);
   void Render(CD3DTexture &sourceTexture, CRect sourceRect, const CPoint points[4]
     , CRect &viewPort, CD3DTexture *target, unsigned range = 0);
 
@@ -39,16 +39,7 @@ private:
     { 0.f, 0.f },
     { 0.f, 0.f },
   };
-
-  struct CUSTOMVERTEX {
-    FLOAT x;
-    FLOAT y;
-    FLOAT z;
-
-    FLOAT tu;
-    FLOAT tv;
-  };
 };
 
-} // namespace RETRO
+} // namespace SHADER
 } // namespace KODI
