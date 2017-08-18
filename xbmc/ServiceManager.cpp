@@ -192,7 +192,7 @@ bool CServiceManager::InitStageThree(const std::shared_ptr<CProfileManager>& pro
   m_peripherals->Initialise();
 
   m_gameServices.reset(new GAME::CGameServices(*m_gameControllerManager, *m_gameRenderManager,
-                                               *m_peripherals, *profileManager));
+                                               *m_peripherals, *profileManager, *m_addonMgr));
 
   m_contextMenuManager->Init();
 
