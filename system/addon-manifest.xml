@@ -5,6 +5,7 @@
   <addon>game.controller.keyboard</addon>
   <addon>game.controller.mouse</addon>
   <addon>game.controller.snes</addon>
+  <addon optional="true">game.shader.presets</addon>
   <addon>kodi.binary.global.audioengine</addon>
   <addon>kodi.binary.global.filesystem</addon>
   <addon>kodi.binary.global.general</addon>
@@ -20,6 +21,7 @@
   <addon>kodi.binary.instance.peripheral</addon>
   <addon>kodi.binary.instance.pvr</addon>
   <addon>kodi.binary.instance.screensaver</addon>
+  <addon>kodi.binary.instance.shaderpreset</addon>
   <addon>kodi.binary.instance.vfs</addon>
   <addon>kodi.binary.instance.videocodec</addon>
   <addon>kodi.binary.instance.visualization</addon>
