@@ -62,6 +62,10 @@ bool CRenderBufferPoolGuiTexture::IsCompatible(const CRenderVideoSettings& rende
   if (renderSettings.GetScalingMethod() != m_scalingMethod)
     return false;
 
+  // Shaders not supported
+  if (!renderSettings.GetShaderPreset().empty())
+    return false;
+
   return true;
 }
 
