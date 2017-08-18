@@ -10,3 +10,6 @@
 
 // Name of list item property for savestate captions
 constexpr auto SAVESTATE_CAPTION = "savestate.caption";
+
+// String of list item property "game.videofilter" when no filter is set
+constexpr auto PROPERTY_NO_VIDEO_FILTER = "";
