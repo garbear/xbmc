@@ -128,6 +128,11 @@
                                                       "StreamCodec.h" \
                                                       "StreamCrypto.h"
 
+#define ADDON_INSTANCE_VERSION_SHADERPRESET           "0.0.4"
+#define ADDON_INSTANCE_VERSION_SHADERPRESET_MIN       "0.0.4"
+#define ADDON_INSTANCE_VERSION_SHADERPRESET_XML_ID    "kodi.binary.instance.shaderpreset"
+#define ADDON_INSTANCE_VERSION_SHADERPRESET_DEPENDS   "addon-instance/ShaderPreset.h"
+
 ///
 /// The currently available instance types for Kodi add-ons
 ///
@@ -159,6 +164,7 @@ typedef enum ADDON_TYPE
   ADDON_INSTANCE_VFS = 110,
   ADDON_INSTANCE_IMAGEDECODER = 111,
   ADDON_INSTANCE_VIDEOCODEC = 112,
+  ADDON_INSTANCE_SHADERPRESET = 113,
 } ADDON_TYPE;
 
 #ifdef __cplusplus
@@ -239,6 +245,10 @@ inline const char* GetTypeVersion(int type)
     case ADDON_INSTANCE_SCREENSAVER:
       return ADDON_INSTANCE_VERSION_SCREENSAVER;
 #endif
+#if !defined(BUILD_KODI_ADDON) || defined(ADDON_INSTANCE_VERSION_SHADERPRESET_USED)
+    case ADDON_INSTANCE_SHADERPRESET:
+      return ADDON_INSTANCE_VERSION_SHADERPRESET;
+#endif
 #if !defined(BUILD_KODI_ADDON) || defined(ADDON_INSTANCE_VERSION_VFS_USED)
     case ADDON_INSTANCE_VFS:
       return ADDON_INSTANCE_VERSION_VFS;
@@ -298,6 +308,8 @@ inline const char* GetTypeMinVersion(int type)
       return ADDON_INSTANCE_VERSION_PVR_MIN;
     case ADDON_INSTANCE_SCREENSAVER:
       return ADDON_INSTANCE_VERSION_SCREENSAVER_MIN;
+    case ADDON_INSTANCE_SHADERPRESET:
+      return ADDON_INSTANCE_VERSION_SHADERPRESET_MIN;
     case ADDON_INSTANCE_VFS:
       return ADDON_INSTANCE_VERSION_VFS_MIN;
     case ADDON_INSTANCE_VISUALIZATION:
@@ -350,6 +362,8 @@ inline const char* GetTypeName(int type)
       return "PVR";
     case ADDON_INSTANCE_SCREENSAVER:
       return "ScreenSaver";
+    case ADDON_INSTANCE_SHADERPRESET:
+      return "ShaderPreset";
     case ADDON_INSTANCE_VISUALIZATION:
       return "Visualization";
     case ADDON_INSTANCE_VIDEOCODEC:
@@ -399,6 +413,8 @@ inline int GetTypeId(const char* name)
       return ADDON_INSTANCE_PVR;
     else if (strcmp(name, "screensaver") == 0)
       return ADDON_INSTANCE_SCREENSAVER;
+    else if (strcmp(name, "shaderpreset") == 0)
+      return ADDON_INSTANCE_SHADERPRESET;
     else if (strcmp(name, "vfs") == 0)
       return ADDON_INSTANCE_VFS;
     else if (strcmp(name, "visualization") == 0)

@@ -64,6 +64,16 @@ public:
     m_stretchMode = mode;
   }
 
+  const std::string& GetShaderPreset() const
+  {
+    return m_shaderPreset;
+  }
+  void SetShaderPreset(const std::string& shaderPreset)
+  {
+    m_shaderPreset = shaderPreset;
+  }
+  void ResetShaderPreset();
+
   unsigned int GetRenderRotation() const
   {
     return m_rotationDegCCW;
@@ -74,9 +84,12 @@ public:
   }
 
 private:
+  bool UsesShaderPreset() const;
+
   SCALINGMETHOD m_scalingMethod;
   STRETCHMODE m_stretchMode;
   unsigned int m_rotationDegCCW;
+  std::string m_shaderPreset;
 };
 } // namespace RETRO
 } // namespace KODI

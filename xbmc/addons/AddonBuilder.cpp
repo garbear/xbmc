@@ -75,7 +75,8 @@ std::shared_ptr<IAddon> CAddonBuilder::Build()
       type == ADDON_IMAGEDECODER ||
       type == ADDON_INPUTSTREAM ||
       type == ADDON_PERIPHERALDLL ||
-      type == ADDON_GAMEDLL)
+      type == ADDON_GAMEDLL ||
+      type == ADDON_SHADERDLL)
   {
     std::string value = CServiceBroker::GetAddonMgr().GetPlatformLibraryName(m_extPoint->plugin->extensions->configuration);
     if (value.empty())
@@ -112,6 +113,7 @@ std::shared_ptr<IAddon> CAddonBuilder::Build()
     case ADDON_VFS:
     case ADDON_VIZ:
     case ADDON_SCREENSAVER:
+    case ADDON_SHADERDLL:
       return std::make_shared<CAddonDll>(std::move(m_addonInfo));
     case ADDON_PVRDLL:
       return std::make_shared<PVR::CPVRClient>(std::move(m_addonInfo));
@@ -176,6 +178,7 @@ AddonPtr CAddonBuilder::FromProps(CAddonInfo addonInfo)
     case ADDON_IMAGEDECODER:
     case ADDON_INPUTSTREAM:
     case ADDON_PERIPHERALDLL:
+    case ADDON_SHADERDLL:
     case ADDON_VFS:
     case ADDON_VIZ:
     case ADDON_SCREENSAVER:
