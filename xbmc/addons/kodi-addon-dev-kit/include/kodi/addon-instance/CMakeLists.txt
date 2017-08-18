@@ -7,6 +7,7 @@ set(HEADERS AudioDecoder.h
             PeripheralUtils.h
             PVR.h
             Screensaver.h
+            ShaderPreset.h
             VFS.h
             VideoCodec.h
             Visualization.h)
