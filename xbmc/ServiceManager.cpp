@@ -160,7 +160,8 @@ bool CServiceManager::InitStageThree(const std::shared_ptr<CProfileManager>& pro
   m_gameServices.reset(new GAME::CGameServices(*m_gameControllerManager,
     *m_gameRenderManager,
     *m_peripherals,
-    *profileManager));
+    *profileManager,
+    *m_addonMgr));
 
   m_contextMenuManager->Init();
 
