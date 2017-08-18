@@ -43,13 +43,19 @@ namespace RETRO
     STRETCHMODE GetRenderStretchMode() const { return m_stretchMode; }
     void SetRenderStretchMode(STRETCHMODE mode) { m_stretchMode = mode; }
 
+    const std::string &GetShaderPreset() const { return m_shaderPreset; }
+    void SetShaderPreset(const std::string &shaderPreset) { m_shaderPreset = shaderPreset; }
+
     unsigned int GetRenderRotation() const { return m_rotationDegCCW; }
     void SetRenderRotation(unsigned int rotationDegCCW) { m_rotationDegCCW = rotationDegCCW; }
 
   private:
+    bool UsesShaderPreset() const;
+
     SCALINGMETHOD m_scalingMethod;
     STRETCHMODE m_stretchMode;
     unsigned int m_rotationDegCCW;
+    std::string m_shaderPreset;
   };
 }
 }

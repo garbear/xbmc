@@ -13,6 +13,7 @@
 #include "GUIColorManager.h"
 
 #include <map>
+#include <set>
 #include <d3dx11effect.h>
 #include <DirectXMath.h>
 #include <wrl/client.h>
@@ -167,9 +168,11 @@ public:
   bool SetMatrix(LPCSTR handle, const float* mat);
   bool SetTechnique(LPCSTR handle);
   bool SetTexture(LPCSTR handle, CD3DTexture &texture);
+  bool SetTexture(LPCSTR handle, ID3D11ShaderResourceView* resourceView);
   bool SetResources(LPCSTR handle, ID3D11ShaderResourceView** ppSRViews, size_t count);
   bool SetConstantBuffer(LPCSTR handle, ID3D11Buffer *buffer);
   bool SetScalar(LPCSTR handle, float value);
+  void AddIncludePath(const std::string& includePath);
   bool Begin(UINT *passes, DWORD flags);
   bool BeginPass(UINT pass);
   bool EndPass();
@@ -192,6 +195,7 @@ private:
   Microsoft::WRL::ComPtr<ID3DX11Effect> m_effect;
   Microsoft::WRL::ComPtr<ID3DX11EffectTechnique> m_techniquie;
   Microsoft::WRL::ComPtr<ID3DX11EffectPass> m_currentPass;
+  std::set<std::string> m_includePaths;
 };
 
 class CD3DBuffer : public ID3DResource
