@@ -23,6 +23,11 @@ extern "C"
 
 namespace KODI
 {
+namespace SHADER
+{
+class IShaderPreset;
+}
+
 namespace RETRO
 {
 class CRenderContext;
@@ -67,6 +72,7 @@ public:
   void SetScalingMethod(SCALINGMETHOD method);
   void SetStretchMode(STRETCHMODE stretchMode);
   void SetRenderRotation(unsigned int rotationDegCCW);
+  void SetShaderPreset(const std::string& presetPath);
 
   bool IsVisible() const;
 
@@ -91,6 +97,13 @@ protected:
   // Geometry properties
   CRect m_sourceRect;
   std::array<CPoint, 4> m_rotatedDestCoords{};
+
+  // Video shaders
+  void Updateshaders();
+  std::unique_ptr<SHADER::IShaderPreset> m_shaderPreset;
+
+  bool m_shadersNeedUpdate;
+  bool m_bUseShaderPreset;
 
 private:
   /*!
