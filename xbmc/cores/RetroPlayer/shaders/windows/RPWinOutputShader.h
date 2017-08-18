@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2018 Team Kodi
+ *  Copyright (C) 2017-2025 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -13,7 +13,7 @@
 
 namespace KODI
 {
-namespace RETRO
+namespace SHADER
 {
 
 class CRPWinOutputShader : public CWinShader
@@ -21,23 +21,23 @@ class CRPWinOutputShader : public CWinShader
 public:
   ~CRPWinOutputShader() = default;
 
-  bool Create(SCALINGMETHOD scalingMethod);
+  bool Create(RETRO::SCALINGMETHOD scalingMethod);
   void Render(CD3DTexture& sourceTexture,
               CRect sourceRect,
               const CPoint points[4],
               CRect& viewPort,
               CD3DTexture* target,
-              unsigned range = 0);
+              unsigned int range = 0);
 
 private:
-  void PrepareParameters(unsigned sourceWidth,
-                         unsigned sourceHeight,
+  void PrepareParameters(unsigned int sourceWidth,
+                         unsigned int sourceHeight,
                          CRect sourceRect,
                          const CPoint points[4]);
-  void SetShaderParameters(CD3DTexture& sourceTexture, unsigned range, CRect& viewPort);
+  void SetShaderParameters(CD3DTexture& sourceTexture, unsigned int range, CRect& viewPort);
 
-  unsigned m_sourceWidth{0};
-  unsigned m_sourceHeight{0};
+  unsigned int m_sourceWidth{0};
+  unsigned int m_sourceHeight{0};
   CRect m_sourceRect{0.f, 0.f, 0.f, 0.f};
   CPoint m_destPoints[4] = {
       {0.f, 0.f},
@@ -45,17 +45,7 @@ private:
       {0.f, 0.f},
       {0.f, 0.f},
   };
-
-  struct CUSTOMVERTEX
-  {
-    FLOAT x;
-    FLOAT y;
-    FLOAT z;
-
-    FLOAT tu;
-    FLOAT tv;
-  };
 };
 
-} // namespace RETRO
+} // namespace SHADER
 } // namespace KODI
