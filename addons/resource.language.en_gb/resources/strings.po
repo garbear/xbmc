@@ -17528,7 +17528,13 @@ msgctxt "#35236"
 msgid "In this release, only controllers can be used to play games."
 msgstr ""
 
-#empty strings from id 35237 to 35249
+#empty strings from id 35237 to 35248
+
+#. Button to open the saved game manager from the game OSD
+#: addons/skin.estuary/xml/GameOSD.xml
+msgctxt "#35249"
+msgid "Saved games"
+msgstr ""
 
 #: xbmc/windows/GUIMediaWindow.cpp
 msgctxt "#35250"
