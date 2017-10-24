@@ -1,0 +1,156 @@
+<?xml version="1.0" ?>
+<presets>
+    <preset type="hlsl">
+        <path>HLSL/ntsc/ntsc.cgp</path>
+        <!-- TV-out -->
+        <category>35413</category>
+        <!-- NTSC RF -->
+        <name>35411</name>
+        <!-- Replicates an analog signal through a coaxial RF connector. Features color distortion, blurring, NTSC color artifacts and dot crawl. -->
+        <description>35412</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/cgp/tvout/tvout+ntsc-256px-composite.cgp</path>
+        <!-- TV-out -->
+        <category>35413</category>
+        <!-- NTSC Composite -->
+        <name>35414</name>
+        <!-- Replicates an analog signal through a composite connector. Features color distortion, blurring, NTSC color artifacts. -->
+        <description>35416</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/cgp/tvout/tvout+ntsc-320px-svideo.cgp</path>
+        <!-- TV-out -->
+        <category>35413</category>
+        <!-- NTSC S-video -->
+        <name>35435</name>
+        <!-- Replicates an analog signal through an S-Video connector. Features color distortion, blurring, NTSC color artifacts. -->
+        <description>35415</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/crt/4xbr-hybrid-crt-b.cgp</path>
+        <!-- CRT Display -->
+        <category>35404</category>
+        <!-- 4xBR Hybrid -->
+        <name>35403</name>
+        <!-- Emulates a CRT display. Features scan-lines, color correction, gamma correction and sharpening. -->
+        <description>35405</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/crt/crt-geom.cgp</path>
+        <!-- CRT Display -->
+        <category>35404</category>
+        <!-- CRT Geom -->
+        <name>35410</name>
+        <!-- Emulates a CRT display. Features scan-lines, color correction, gamma correction, sharpening, curvature, interlacing, phosphor and halation. -->
+        <description>35436</description>
+    </preset>
+<!--    <preset type="hlsl"> -->
+<!--        <path>HLSL/crt/crt-hyllian-multipass.cgp</path> -->
+        <!-- CRT Display -->
+<!--        <category>35404</category> -->
+        <!-- Hylian -->
+<!--        <name>35406</name> -->
+        <!-- Emulates a CRT display. Features scan-lines, color correction, gamma correction, sharpening, CRT phosphor and CRT beam effects. -->
+<!--        <description>35407</description> -->
+<!--    </preset> -->
+<!--    <preset type="hlsl"> -->
+<!--        <path>HLSL/cgp/crt-royale-kurozumi.cgp</path> -->
+        <!-- CRT Display -->
+<!--        <category>35404</category> -->
+        <!-- Royale -->
+<!--        <name>35408</name> -->
+        <!-- Emulates a CRT display. Resource intensive. Features scan-lines, color correction, gamma correction, sharpening, CRT phosphor emulation, halation, refractive diffusion, curvature and anti-aliasing. -->
+<!--        <description>35409</description> -->
+<!--    </preset> -->
+<!--    <preset type="hlsl"> -->
+<!--        <path>HLSL/handheld/lcd3x.cgp</path> -->
+        <!-- LCD Screen -->
+<!--        <category>35432</category> -->
+        <!-- LCD3x -->
+<!--        <name>35433</name> -->
+        <!-- Simulates an LCD screen. Written by Gigaherz. -->
+<!--        <description>35434</description> -->
+<!--    </preset> -->
+<!--    <preset type="hlsl"> -->
+<!--        <path>HLSL/cgp/gameboy-screen-grid.cgp</path> -->
+        <!-- LCD Screen -->
+<!--        <category>35432</category> -->
+        <!-- Game Boy -->
+<!--        <name>35401</name> -->
+        <!-- Replicates the 2.6-inch dot matrix screen of the Game Boy. Features the ghosting problems of the original handheld. -->
+<!--        <description>35402</description> -->
+<!--    </preset> -->
+    <preset type="hlsl">
+        <path>HLSL/handheld/lcd-grid-v2-gba-color.cgp</path>
+        <!-- LCD Screen -->
+        <category>35432</category>
+        <!-- Game Boy Advance -->
+        <name>35426</name>
+        <!-- Replicates the 2.9-inch color LCD screen of the Game Boy Advance. -->
+        <description>35431</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/handheld/lcd-grid-v2-nds-color.cgp</path>
+        <!-- LCD Screen -->
+        <category>35432</category>
+        <!-- Nintendo DS -->
+        <name>35427</name>
+        <!-- Replicates the 3-inch LCD screen of the Nintendo DS. -->
+        <description>35430</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/handheld/lcd-grid-v2-psp-color.cgp</path>
+        <!-- LCD Screen -->
+        <category>35432</category>
+        <!-- PlayStation Portable -->
+        <name>35428</name>
+        <!-- Replicates the 4.3-inch LCD screen of the PlayStation Portable. -->
+        <description>35429</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/eagle/super-eagle.cgp</path>
+        <!-- Scaling Shader -->
+        <category>35418</category>
+        <!-- Super Eagle -->
+        <name>35424</name>
+        <!-- Smooths and rounds edges to reduce pixelation. Written by Derek Liauw Kie Fa. -->
+        <description>35425</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/xbr/xbr-lv2-fast.cgp</path>
+        <!-- Scaling Shader -->
+        <category>35418</category>
+        <!-- xBR-lv2 -->
+        <name>35419</name>
+        <!-- Smooths and rounds edges to reduce pixelation. Written by Hyllian. -->
+        <description>35420</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/xbr/xbr-lv3.cgp</path>
+        <!-- Scaling Shader -->
+        <category>35418</category>
+        <!-- xBR-lv3 -->
+        <name>35437</name>
+        <!-- Smooths and rounds edges to reduce pixelation. Smoother than the no-blend version. Written by Hyllian. -->
+        <description>35439</description>
+    </preset>
+    <preset type="hlsl">
+        <path>HLSL/xbr/xbr-lv3-noblend.cgp</path>
+        <!-- Scaling Shader -->
+        <category>35418</category>
+        <!-- xBR-lv3 (no blend) -->
+        <name>35438</name>
+        <!-- Smooths and rounds edges to reduce pixelation. Pixel colors are not blended together. Written by Hyllian. -->
+        <description>35440</description>
+    </preset>
+<!--    <preset type="hlsl"> -->
+<!--        <path>HLSL/xbr/xbr-mlv4-multipass.cgp</path> -->
+        <!-- Scaling Shader -->
+<!--        <category>35418</category> -->
+        <!-- xBR-mlv4 -->
+<!--        <name>35421</name> -->
+        <!-- Smooths and rounds edges to reduce pixelation. Image is smoother than other versions. Written by Hyllian. -->
+<!--        <description>35422</description> -->
+<!--    </preset> -->
+</presets>
