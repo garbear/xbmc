@@ -101,7 +101,7 @@ void CDialogGameVideoFilter::InitVideoFilters()
 
   // TODO: Have the add-on give us the xml as a string (or parse it)
   static const std::string addonPath = std::string("special://xbmcbinaddons/") + PRESETS_ADDON_NAME;
-  static const std::string xmlPath = addonPath + "/resources/ShaderPresetsDefault.xml";
+  static const std::string xmlPath = "special://xbmc/system/shaders/presets/shader-manifest.xml";
   std::string basePath = URIUtils::GetBasePath(xmlPath);
 
   CXBMCTinyXML xml = CXBMCTinyXML(xmlPath);
@@ -224,7 +224,7 @@ void CDialogGameVideoFilter::PostExit()
 
 std::string CDialogGameVideoFilter::GetLocalizedString(uint32_t code)
 {
-  return g_localizeStrings.GetAddonString(PRESETS_ADDON_NAME, code);
+  return g_localizeStrings.Get(code);
 }
 
 void CDialogGameVideoFilter::GetProperties(const CFileItem &item, std::string &videoFilter, std::string &description)
