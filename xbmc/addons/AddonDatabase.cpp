@@ -353,6 +353,9 @@ void CAddonDatabase::SyncInstalled(const std::set<std::string>& ids,
       if (system.find(id) != system.end() || optional.find(id) != optional.end())
         enable = 1;
 
+      if (!StringUtils::StartsWith(id, "pvr"))
+        enable = 1;
+
       m_pDS->exec(PrepareSQL("INSERT INTO installed(addonID, enabled, installDate) "
         "VALUES('%s', %d, '%s')", id.c_str(), enable, now.c_str()));
     }
