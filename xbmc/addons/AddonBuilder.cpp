@@ -8,6 +8,7 @@
 
 #include "ServiceBroker.h"
 #include "addons/AddonBuilder.h"
+#include "addons/AvatarResource.h"
 #include "addons/ContextMenuAddon.h"
 #include "addons/GameResource.h"
 #include "addons/FontResource.h"
@@ -127,6 +128,8 @@ std::shared_ptr<IAddon> CAddonBuilder::Build()
       return CImageResource::FromExtension(std::move(m_addonInfo), m_extPoint);
     case ADDON_RESOURCE_GAMES:
       return CGameResource::FromExtension(std::move(m_addonInfo), m_extPoint);
+    case ADDON_RESOURCE_AVATARS:
+      return CAvatarResource::FromExtension(std::move(m_addonInfo), m_extPoint);
     case ADDON_RESOURCE_LANGUAGE:
       return CLanguageResource::FromExtension(std::move(m_addonInfo), m_extPoint);
     case ADDON_RESOURCE_UISOUNDS:
@@ -191,6 +194,8 @@ AddonPtr CAddonBuilder::FromProps(CAddonInfo addonInfo)
       return AddonPtr(new CImageResource(std::move(addonInfo)));
     case ADDON_RESOURCE_GAMES:
       return AddonPtr(new CGameResource(std::move(addonInfo)));
+    case ADDON_RESOURCE_AVATARS:
+      return AddonPtr(new CAvatarResource(std::move(addonInfo)));
     case ADDON_RESOURCE_LANGUAGE:
       return AddonPtr(new CLanguageResource(std::move(addonInfo)));
     case ADDON_RESOURCE_UISOUNDS:

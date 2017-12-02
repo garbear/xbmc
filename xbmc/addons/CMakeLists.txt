@@ -1,5 +1,6 @@
 set(SOURCES Addon.cpp
             AddonBuilder.cpp
+            AvatarResource.cpp
             BinaryAddonCache.cpp
             AddonDatabase.cpp
             AddonInfo.cpp
@@ -39,6 +40,7 @@ set(SOURCES Addon.cpp
 set(HEADERS Addon.h
             AddonBuilder.h
             AddonEvents.h
+            AvatarResource.h
             BinaryAddonCache.h
             AddonDatabase.h
             AddonInfo.h
