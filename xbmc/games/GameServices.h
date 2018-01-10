@@ -66,12 +66,15 @@ namespace GAME
 
     RETRO::CGUIGameRenderManager &GameRenderManager() { return m_gameRenderManager; }
 
+    PERIPHERALS::CPeripherals &PeripheralManager() { return m_peripheralManager; }
+
     SHADER::CShaderPresetFactory &VideoShaders() { return *m_videoShaders; }
 
   private:
     // Construction parameters
     CControllerManager &m_controllerManager;
     RETRO::CGUIGameRenderManager &m_gameRenderManager;
+    PERIPHERALS::CPeripherals &m_peripheralManager;
     const CProfileManager &m_profileManager;
 
     // Game services
