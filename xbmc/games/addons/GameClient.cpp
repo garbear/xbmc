@@ -547,6 +547,11 @@ void CGameClient::LogException(const char* strFunctionName) const
   CLog::Log(LOGERROR, "Please contact the developer of this add-on: %s", Author().c_str());
 }
 
+void CGameClient::HardwareContextReset()
+{
+  try { LogError(m_struct.toAddon.HwContextReset(), "HwContextReset()"); }
+  catch (...) { LogException("HwContextReset()"); }
+}
 
 void CGameClient::cb_close_game(void* kodiInstance)
 {
@@ -622,8 +627,7 @@ game_proc_address_t CGameClient::cb_hw_get_proc_address(void* kodiInstance, cons
   if (!gameClient)
     return nullptr;
 
-  //! @todo
-  return nullptr;
+  return gameClient->Streams().GetHwProcedureAddress(sym);
 }
 
 bool CGameClient::cb_input_event(void* kodiInstance, const game_input_event* event)

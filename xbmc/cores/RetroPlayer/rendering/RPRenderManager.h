@@ -78,6 +78,9 @@ namespace RETRO
     bool Configure(AVPixelFormat format, unsigned int nominalWidth, unsigned int nominalHeight, unsigned int maxWidth, unsigned int maxHeight);
     bool GetVideoBuffer(unsigned int width, unsigned int height, AVPixelFormat &format, uint8_t *&data, size_t &size);
     void AddFrame(const uint8_t* data, size_t size, unsigned int width, unsigned int height, unsigned int orientationDegCW);
+    void RenderFrame();
+    uintptr_t GetCurrentFramebuffer();
+    bool Create();
     void Flush();
 
     // Functions called from the player

@@ -29,6 +29,8 @@ namespace RETRO
     void Release() override;
     IRenderBufferPool *GetPool() override { return m_pool.get(); }
 
+    uintptr_t GetCurrentFramebuffer() override { return 0; }
+
   protected:
     // Reference counting
     std::atomic_int m_refCount;

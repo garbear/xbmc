@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "cores/RetroPlayer/process/RPProcessInfo.h"
+#include "cores/RetroPlayer/process/egl/RPProcessInfoEGL.h"
 
 namespace KODI
 {
 namespace RETRO
 {
-  class CRPProcessInfoGbm : public CRPProcessInfo
+  class CRPProcessInfoGbm : public CRPProcessInfoEGL
   {
   public:
     CRPProcessInfoGbm();

@@ -11,6 +11,7 @@
 #include "GameClientSubsystem.h"
 #include "addons/binary-addons/AddonDll.h"
 #include "addons/kodi-addon-dev-kit/include/kodi/kodi_game_types.h"
+#include "games/addons/streams/GameClientStreamHwFramebuffer.h"
 #include "threads/CriticalSection.h"
 
 #include <atomic>
@@ -40,7 +41,8 @@ class IGameInputCallback;
  * \ingroup games
  * \brief Interface between Kodi and Game add-ons.
  */
-class CGameClient : public ADDON::CAddonDll
+class CGameClient : public ADDON::CAddonDll,
+                    public IHwFramebufferCallback
 {
 public:
   static std::unique_ptr<CGameClient> FromExtension(ADDON::CAddonInfo addonInfo, const cp_extension_t* ext);
@@ -92,6 +94,9 @@ public:
   size_t SerializeSize() const { return m_serializeSize; }
   bool Serialize(uint8_t* data, size_t size);
   bool Deserialize(const uint8_t* data, size_t size);
+
+  // Implementation of IHwFramebufferCallback
+  void HardwareContextReset() override;
 
   /*!
     * @brief To get the interface table used between addon and kodi

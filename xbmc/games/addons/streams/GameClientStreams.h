@@ -37,6 +37,8 @@ public:
   IGameClientStream* OpenStream(const game_stream_properties &properties);
   void CloseStream(IGameClientStream* stream);
 
+  game_proc_address_t GetHwProcedureAddress(const char *sym);
+
 private:
   // Utility functions
   std::unique_ptr<IGameClientStream> CreateStream(GAME_STREAM_TYPE streamType) const;
