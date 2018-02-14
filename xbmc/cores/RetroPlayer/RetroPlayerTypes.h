@@ -19,6 +19,8 @@ class IRenderBufferPool;
 using RenderBufferPoolPtr = std::shared_ptr<IRenderBufferPool>;
 using RenderBufferPoolVector = std::vector<RenderBufferPoolPtr>;
 
+using HwProcedureAddress = void (*)();
+
 enum class DataAccess
 {
   READ_ONLY,

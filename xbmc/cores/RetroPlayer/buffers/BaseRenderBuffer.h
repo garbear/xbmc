@@ -31,6 +31,8 @@ public:
   DataAccess GetMemoryAccess() const override;
   DataAlignment GetMemoryAlignment() const override;
 
+  uintptr_t GetCurrentFramebuffer() override { return 0; }
+
 protected:
   // Reference counting
   std::atomic_int m_refCount;

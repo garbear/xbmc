@@ -11,7 +11,7 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRPProcessInfoX11::CRPProcessInfoX11() : CRPProcessInfo("X11")
+CRPProcessInfoX11::CRPProcessInfoX11() : CRPProcessInfoEGL("X11")
 {
 }
 

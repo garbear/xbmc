@@ -147,13 +147,21 @@ public:
   SCALINGMETHOD GetDefaultScalingMethod() const { return m_defaultScalingMethod; }
 
   /*!
-    * \brief Get a symbol from the hardware context
-    *
-    * \param symbol The symbol's name
-    *
-    * \return A function pointer for the specified symbol, or nullptr if
-    *         unavailable
-    */
+   * \brief Configure the render system
+   *
+   * \param format The pixel format of the video stream, or AV_PIX_FMT_NONE
+   *        if the stream has ended
+   */
+  virtual void ConfigureRenderSystem(AVPixelFormat format) {}
+
+  /*!
+   * \brief Get a symbol from the hardware context
+   *
+   * \param symbol The symbol's name
+   *
+   * \return A function pointer for the specified symbol, or nullptr if
+   *         unavailable
+   */
   virtual HwProcedureAddress GetHwProcedureAddress(const char* symbol) { return nullptr; }
   ///}
 
