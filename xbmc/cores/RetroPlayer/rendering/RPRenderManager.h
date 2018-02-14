@@ -100,6 +100,9 @@ public:
                 unsigned int height,
                 unsigned int orientationDegCW);
   void Flush();
+  void RenderFrame();
+  uintptr_t GetCurrentFramebuffer();
+  bool Create();
 
   // Functions called from the player
   void SetSpeed(double speed);

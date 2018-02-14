@@ -11,6 +11,8 @@
 #include "GameClientSubsystem.h"
 #include "addons/binary-addons/AddonDll.h"
 #include "addons/kodi-dev-kit/include/kodi/addon-instance/Game.h"
+#include "games/GameTypes.h"
+#include "games/addons/streams/GameClientStreamHwFramebuffer.h"
 #include "threads/CriticalSection.h"
 
 #include <atomic>
@@ -113,7 +115,9 @@ public:
  * from 1,200 lines to just over 600. Reducing this further is the challenge.
  * You must now choose whether to accept.
  */
-class CGameClient : public ADDON::CAddonDll, private CGameClientStruct
+class CGameClient : public ADDON::CAddonDll,
+                    public IHwFramebufferCallback,
+                    private CGameClientStruct
 {
 public:
   explicit CGameClient(const ADDON::AddonInfoPtr& addonInfo);
@@ -169,6 +173,9 @@ public:
   size_t SerializeSize() const { return m_serializeSize; }
   bool Serialize(uint8_t* data, size_t size);
   bool Deserialize(const uint8_t* data, size_t size);
+
+  // Implementation of IHwFramebufferCallback
+  void HardwareContextReset() override;
 
   /*!
    * @brief To get the interface table used between addon and kodi
