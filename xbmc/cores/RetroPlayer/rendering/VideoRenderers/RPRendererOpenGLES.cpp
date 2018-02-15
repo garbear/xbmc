@@ -8,7 +8,9 @@
 
 #include "RPRendererOpenGLES.h"
 
+#include "cores/RetroPlayer/buffers/RenderBufferFBO.h"
 #include "cores/RetroPlayer/buffers/RenderBufferOpenGLES.h"
+#include "cores/RetroPlayer/buffers/RenderBufferPoolFBO.h"
 #include "cores/RetroPlayer/buffers/RenderBufferPoolOpenGLES.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
@@ -42,7 +44,7 @@ CRPBaseRenderer* CRendererFactoryOpenGLES::CreateRenderer(
 
 RenderBufferPoolVector CRendererFactoryOpenGLES::CreateBufferPools(CRenderContext& context)
 {
-  return {std::make_shared<CRenderBufferPoolOpenGLES>(context)};
+  return {std::make_shared<CRenderBufferPoolFBO>(context)};
 }
 
 // --- CRPRendererOpenGLES -----------------------------------------------------
@@ -248,7 +250,7 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
 {
   const ViewportCoordinates dest{m_rotatedDestCoords};
 
-  auto renderBuffer = static_cast<CRenderBufferOpenGLES*>(m_renderBuffer);
+  auto renderBuffer = static_cast<CRenderBufferFBO*>(m_renderBuffer);
   if (renderBuffer == nullptr)
     return;
 
