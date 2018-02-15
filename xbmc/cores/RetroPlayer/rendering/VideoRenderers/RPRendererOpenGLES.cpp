@@ -8,7 +8,9 @@
 
 #include "RPRendererOpenGLES.h"
 
+#include "cores/RetroPlayer/buffers/RenderBufferFBO.h"
 #include "cores/RetroPlayer/buffers/RenderBufferOpenGLES.h"
+#include "cores/RetroPlayer/buffers/RenderBufferPoolFBO.h"
 #include "cores/RetroPlayer/buffers/RenderBufferPoolOpenGLES.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
@@ -39,7 +41,7 @@ CRPBaseRenderer* CRendererFactoryOpenGLES::CreateRenderer(
 
 RenderBufferPoolVector CRendererFactoryOpenGLES::CreateBufferPools(CRenderContext& context)
 {
-  return {std::make_shared<CRenderBufferPoolOpenGLES>(context)};
+  return {std::make_shared<CRenderBufferPoolFBO>(context)};
 }
 
 // --- CRPRendererOpenGLES -----------------------------------------------------
@@ -235,7 +237,7 @@ void CRPRendererOpenGLES::DrawBlackBars()
 
 void CRPRendererOpenGLES::Render(uint8_t alpha)
 {
-  CRenderBufferOpenGLES* renderBuffer = static_cast<CRenderBufferOpenGLES*>(m_renderBuffer);
+  CRenderBufferFBO* renderBuffer = static_cast<CRenderBufferFBO*>(m_renderBuffer);
 
   if (renderBuffer == nullptr)
     return;
@@ -250,7 +252,7 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
   const uint32_t color = (alpha << 24) | 0xFFFFFF;
 
   RenderBufferTextures* rbTextures;
-  const auto it = m_RBTexturesMap.find(renderBuffer);
+  const auto it = m_RBTexturesMap.find(dynamic_cast<CRenderBufferOpenGLES*>(renderBuffer));
   if (it != m_RBTexturesMap.end())
   {
     rbTextures = it->second.get();
@@ -272,7 +274,7 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
             static_cast<unsigned int>(m_context.GetScreenHeight()),
         },
     };
-    m_RBTexturesMap.emplace(renderBuffer, rbTextures);
+    m_RBTexturesMap.emplace(dynamic_cast<CRenderBufferOpenGLES*>(renderBuffer), rbTextures);
   }
 
   const auto sourceTexture = &rbTextures->source;
