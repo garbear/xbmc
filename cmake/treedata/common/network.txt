@@ -1,2 +1,3 @@
 xbmc/network                           network
+xbmc/network/webrtc                    network/webrtc
 xbmc/network/websocket                 network/websocket
