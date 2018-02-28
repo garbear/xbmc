@@ -1,3 +1,4 @@
 xbmc/network                           network
 xbmc/network/torrent                   network/torrent
+xbmc/network/webrtc                    network/webrtc
 xbmc/network/websocket                 network/websocket
