@@ -1,8 +1,6 @@
 set(SOURCES BaseRenderBuffer.cpp
             BaseRenderBufferPool.cpp
             RenderBufferManager.cpp
-            RenderBufferFBO.cpp
-            RenderBufferPoolFBO.cpp
 )
 
 set(HEADERS BaseRenderBuffer.h
@@ -10,8 +8,6 @@ set(HEADERS BaseRenderBuffer.h
             IRenderBuffer.h
             IRenderBufferPool.h
             RenderBufferManager.h
-            RenderBufferFBO.h
-            RenderBufferPoolFBO.h
 )
 
 if(OPENGL_FOUND OR OPENGLES_FOUND)
