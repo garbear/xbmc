@@ -49,7 +49,6 @@ using namespace RETRO;
 CRPRenderManager::CRPRenderManager(CRPProcessInfo &processInfo) :
   m_processInfo(processInfo),
   m_renderContext(processInfo.GetRenderContext()),
-  m_speed(1.0),
   m_renderSettings(new CGUIGameSettings(processInfo)),
   m_renderControlFactory(new CGUIRenderTargetFactory(this))
 {
@@ -157,8 +156,16 @@ void CRPRenderManager::AddFrame(const uint8_t* data, size_t size, unsigned int w
     {
       std::vector<uint8_t> cachedFrame = std::move(m_cachedFrame);
 
-      if (!m_bHasCachedFrame)
+      if (m_bHasCachedFrame)
       {
+        // In this case, cachedFrame may be empty if the frame is being
+        // copied in the rendering thread. We want to leave cached frame
+        // empty to avoid caching another frame.
+      }
+      else
+      {
+        // In this case, cachedFrame is definitely empty (see invariant for
+        // m_bHasCachedFrame)
         cachedFrame.resize(size);
         m_bHasCachedFrame = true;
       }
@@ -520,27 +527,39 @@ void CRPRenderManager::CreateRenderBuffer(IRenderBufferPool *bufferPool)
 
   if (!HasRenderBuffer(bufferPool) && m_bHasCachedFrame)
   {
-    std::vector<uint8_t> cachedFrame = std::move(m_cachedFrame);
-    if (!cachedFrame.empty())
-    {
-      CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Creating render buffer for renderer");
-
-      IRenderBuffer *renderBuffer = bufferPool->GetBuffer(cachedFrame.size());
-      if (renderBuffer != nullptr)
-      {
-        {
-          CSingleExit exit(m_bufferMutex);
-          CopyFrame(renderBuffer, m_format, cachedFrame.data(), cachedFrame.size(), m_width, m_height);
-        }
-        m_renderBuffers.emplace_back(renderBuffer);
-      }
-      m_cachedFrame = std::move(cachedFrame);
-    }
-    else
-    {
-      CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Failed to create render buffer, no cached frame");
-    }
+    IRenderBuffer *renderBuffer = CreateFromCache(m_cachedFrame, bufferPool, m_bufferMutex);
+    if (renderBuffer != nullptr)
+      m_renderBuffers.emplace_back(renderBuffer);
   }
+}
+
+IRenderBuffer *CRPRenderManager::CreateFromCache(std::vector<uint8_t> &cachedFrame, IRenderBufferPool *bufferPool, CCriticalSection &mutex)
+{
+  // Take ownership of cached frame
+  std::vector<uint8_t> ownedFrame = std::move(cachedFrame);
+
+  if (!ownedFrame.empty())
+  {
+    CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Creating render buffer for renderer");
+
+    IRenderBuffer *renderBuffer = bufferPool->GetBuffer(ownedFrame.size());
+    if (renderBuffer != nullptr)
+    {
+      CSingleExit exit(mutex);
+      CopyFrame(renderBuffer, m_format, ownedFrame.data(), ownedFrame.size(), m_width, m_height);
+    }
+
+    // Return ownership of cached frame
+    cachedFrame = std::move(ownedFrame);
+
+    return renderBuffer;
+  }
+  else
+  {
+    CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Failed to create render buffer, no cached frame");
+  }
+
+  return nullptr;
 }
 
 void CRPRenderManager::UpdateResolution()
