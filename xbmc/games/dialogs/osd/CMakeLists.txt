@@ -3,6 +3,7 @@ set(SOURCES DialogGameAchievements.cpp
             DialogGameLeaderboardEntries.cpp
             DialogGameAdvancedSettings.cpp
             DialogGameOSD.cpp
+            DialogGameRewind.cpp
             DialogGameSaves.cpp
             DialogGameStretchMode.cpp
             DialogGameVideoFilter.cpp
@@ -17,6 +18,7 @@ set(HEADERS DialogGameAchievements.h
             DialogGameLeaderboardEntries.h
             DialogGameAdvancedSettings.h
             DialogGameOSD.h
+            DialogGameRewind.h
             DialogGameSaves.h
             DialogGameStretchMode.h
             DialogGameVideoFilter.h

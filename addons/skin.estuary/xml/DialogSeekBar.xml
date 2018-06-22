@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window>
-	<visible>Window.IsActive(fullscreenvideo) | Window.IsActive(visualisation)</visible>
+	<visible>Window.IsActive(fullscreenvideo) | Window.IsActive(visualisation) | Window.IsActive(gamerewind)</visible>
+
 	<visible>![Window.IsActive(sliderdialog) | Window.IsActive(pvrosdchannels) | Window.IsActive(pvrchannelguide) | Window.IsActive(pvrguideinfo) | Window.IsActive(1110)]</visible>
 	<visible>Player.Seeking | Player.HasPerformedSeek(3) | [Player.Paused + !Player.Caching] | Player.Forwarding | Player.Rewinding | Player.ShowInfo | Window.IsActive(fullscreeninfo) | Player.ShowTime | Window.IsActive(videoosd) | Window.IsActive(musicosd) | Window.IsActive(playerprocessinfo) | !String.IsEmpty(Player.SeekNumeric) | !String.IsEmpty(PVR.ChannelNumberInput)</visible>
 	<include>Animation_BottomSlide</include>
 	<depth>DepthOSD</depth>
 	<zorder>0</zorder>
 	<controls>
-		<include>DefaultDialogSeekBarLayout</include>
+		<include condition="!Window.IsActive(gamerewind)">DefaultDialogSeekBarLayout</include>
+		<include condition="Window.IsActive(gamerewind)">DialogGameRewindLayout</include>
 	</controls>
 </window>
