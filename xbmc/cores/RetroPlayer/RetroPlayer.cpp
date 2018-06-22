@@ -454,6 +454,20 @@ bool CRetroPlayer::OnAction(const CAction& action)
       }
       break;
     }
+    /*
+    case ACTION_PLAYER_FORWARD:
+    case ACTION_PLAYER_REWIND:
+    {
+      //! @todo
+      return true;
+    }
+    case ACTION_ANALOG_REWIND:
+    case ACTION_ANALOG_FORWARD:
+    {
+      //! @todo
+      return true;
+    }
+    */
     default:
       break;
   }
