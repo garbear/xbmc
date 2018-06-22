@@ -67,6 +67,12 @@ void CGameClientStreamAudio::AddData(const game_stream_packet &packet)
 
 RETRO::AudioStreamProperties* CGameClientStreamAudio::TranslateProperties(const game_stream_audio_properties &properties, double sampleRate)
 {
+  if (sampleRate == 0.0)
+  {
+    CLog::Log(LOGERROR, "GAME: Samplerate is 0");
+    return nullptr;
+  }
+
   const RETRO::PCMFormat pcmFormat = CGameClientTranslator::TranslatePCMFormat(properties.format);
   if (pcmFormat == RETRO::PCMFormat::FMT_UNKNOWN)
   {
