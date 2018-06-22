@@ -183,6 +183,18 @@
       -->
     </joystick>
   </FullscreenGame>
+  <GameRewind>
+    <joystick profile="game.controller.default">
+      <lefttrigger>AnalogRewind</lefttrigger>
+      <righttrigger>AnalogFastForward</righttrigger>
+      <leftbumper>AnalogRewind</leftbumper>
+      <rightbumper>AnalogFastForward</rightbumper>
+      <leftstick direction="left">AnalogSeekBack</leftstick>
+      <leftstick direction="right">AnalogSeekForward</leftstick>
+      <leftstick direction="up">noop</leftstick>
+      <leftstick direction="down">noop</leftstick>
+    </joystick>
+  </GameRewind>
   <FullscreenLiveTV>
     <joystick profile="game.controller.default">
       <a>Pause</a>
