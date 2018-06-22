@@ -19129,7 +19129,13 @@ msgctxt "#35239"
 msgid "Integer (1:1 PAR)"
 msgstr ""
 
-#empty strings from id 35240 to 35248
+#. Label of the button in the in-game menu for rewinding the game
+#: addons/skin.estuary/xml/GameOSD.xml
+msgctxt "#35240"
+msgid "Rewind"
+msgstr ""
+
+#empty strings from id 35241 to 35248
 
 #. Button to open the savestate manager from the game OSD
 #: addons/skin.estuary/xml/GameOSD.xml

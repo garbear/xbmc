@@ -28,7 +28,7 @@ constexpr const char* ICON_VIDEO = "";
 const std::vector<CDialogGameStretchMode::StretchModeProperties>
     CDialogGameStretchMode::m_allStretchModes = {
         {630, RETRO::STRETCHMODE::Normal},
-        {35237, RETRO::STRETCHMODE::Normal1x1},
+        {35240, RETRO::STRETCHMODE::Normal1x1},
         //  { 631,   RETRO::STRETCHMODE::Zoom }, //! @todo RetroArch allows trimming some outer
         //  pixels
         {632, RETRO::STRETCHMODE::Stretch4x3},
