@@ -178,6 +178,7 @@ const CWindowTranslator::WindowMapByName CWindowTranslator::WindowMappingByName 
     {"selectavatar", WINDOW_DIALOG_SELECT_AVATAR},
     {"gameavatars", WINDOW_DIALOG_GAME_AVATARS},
     {"agentcontroller", WINDOW_DIALOG_AGENT_CONTROLLER},
+    {"gamerewind", WINDOW_DIALOG_GAME_REWIND},
 };
 
 namespace

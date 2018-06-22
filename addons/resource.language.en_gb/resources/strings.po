@@ -18719,7 +18719,13 @@ msgctxt "#35236"
 msgid "In this release, only controllers can be used to play games."
 msgstr ""
 
-#empty strings from id 35237 to 35248
+#. Label of the button in the in-game menu for rewinding the game
+#: addons/skin.estuary/xml/GameOSD.xml
+msgctxt "#35237"
+msgid "Rewind"
+msgstr ""
+
+#empty strings from id 35238 to 35248
 
 #. Button to open the savestate manager from the game OSD
 #: addons/skin.estuary/xml/GameOSD.xml
