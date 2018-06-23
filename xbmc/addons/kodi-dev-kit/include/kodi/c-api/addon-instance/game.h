@@ -445,7 +445,52 @@ extern "C"
   ///@}
 
   //--==----==----==----==----==----==----==----==----==----==----==----==----==--
-  /// @defgroup cpp_kodi_addon_game_Defs_StreamTypes 5. Stream types
+  /// @defgroup cpp_kodi_addon_game_Defs_MemoryStream 5. Memory stream
+  /// @ingroup cpp_kodi_addon_game_Defs
+  /// @brief **Memory stream data**
+  ///
+  ///@{
+
+  //============================================================================
+  /// @brief **Memory stream properties**
+  ///
+  /// This packet contains memory stream data passed to Kodi.
+  ///
+  typedef struct game_stream_memory_properties
+  {
+    /// @brief Size of memory data
+    size_t size;
+  } ATTR_PACKED game_stream_memory_properties;
+  //----------------------------------------------------------------------------
+
+  //============================================================================
+  /// @brief **Memory stream buffer**
+  ///
+  /// This buffer is passed to the add-on to write memory stream data.
+  ///
+  typedef struct game_stream_memory_buffer
+  {
+    uint8_t* data;
+    size_t size;
+  } ATTR_PACKED game_stream_memory_buffer;
+  //----------------------------------------------------------------------------
+
+  //============================================================================
+  /// @brief **Memory stream packet**
+  ///
+  /// This packet contains memory stream data passed to Kodi.
+  ///
+  typedef struct game_stream_memory_packet
+  {
+    const uint8_t* data;
+    size_t size;
+  } ATTR_PACKED game_stream_memory_packet;
+  //----------------------------------------------------------------------------
+
+  ///@}
+
+  //--==----==----==----==----==----==----==----==----==----==----==----==----==--
+  /// @defgroup cpp_kodi_addon_game_Defs_StreamTypes 6. Stream types
   /// @ingroup cpp_kodi_addon_game_Defs
   /// @brief **Stream types data**
   ///
@@ -470,6 +515,9 @@ extern "C"
 
     /// @brief Software framebuffer
     GAME_STREAM_SW_FRAMEBUFFER,
+
+    /// @brief Game memory
+    GAME_STREAM_MEMORY,
   } GAME_STREAM_TYPE;
   //----------------------------------------------------------------------------
 
@@ -496,6 +544,9 @@ extern "C"
 
       /// @brief
       game_stream_sw_framebuffer_properties sw_framebuffer;
+
+      /// @brief
+      game_stream_memory_properties memory;
     };
   } ATTR_PACKED game_stream_properties;
   //----------------------------------------------------------------------------
@@ -514,6 +565,9 @@ extern "C"
 
       /// @brief
       game_stream_sw_framebuffer_buffer sw_framebuffer;
+
+      /// @brief
+      game_stream_memory_buffer memory;
     };
   } ATTR_PACKED game_stream_buffer;
   //----------------------------------------------------------------------------
@@ -542,6 +596,9 @@ extern "C"
 
       /// @brief
       game_stream_sw_framebuffer_packet sw_framebuffer;
+
+      /// @brief
+      game_stream_memory_packet memory;
     };
   } ATTR_PACKED game_stream_packet;
   //----------------------------------------------------------------------------
@@ -549,7 +606,7 @@ extern "C"
   ///@}
 
   //--==----==----==----==----==----==----==----==----==----==----==----==----==--
-  /// @defgroup cpp_kodi_addon_game_Defs_GameTypes 6. Game types
+  /// @defgroup cpp_kodi_addon_game_Defs_GameTypes 7. Game types
   /// @ingroup cpp_kodi_addon_game_Defs
   /// @brief **Game types data**
   ///
@@ -691,7 +748,7 @@ extern "C"
   ///@}
 
   //--==----==----==----==----==----==----==----==----==----==----==----==----==--
-  /// @defgroup cpp_kodi_addon_game_Defs_InputTypes 7. Input types
+  /// @defgroup cpp_kodi_addon_game_Defs_InputTypes 8. Input types
   /// @ingroup cpp_kodi_addon_game_Defs
   /// @brief **Input types**
   ///
@@ -1044,7 +1101,7 @@ extern "C"
   ///@}
 
   //--==----==----==----==----==----==----==----==----==----==----==----==----==--
-  /// @defgroup cpp_kodi_addon_game_Defs_EnvironmentTypes 8. Environment types
+  /// @defgroup cpp_kodi_addon_game_Defs_EnvironmentTypes 9. Environment types
   /// @ingroup cpp_kodi_addon_game_Defs
   /// @brief **Environment types**
   ///
