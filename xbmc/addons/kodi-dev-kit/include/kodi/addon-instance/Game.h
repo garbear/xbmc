@@ -819,6 +819,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the game was serialized into the buffer
   ///
+  /// @todo virtual GAME_ERROR Serialize(const game_stream_memory_buffer& buffer) { return GAME_ERROR_NOT_IMPLEMENTED; }
   virtual GAME_ERROR Serialize(uint8_t* data, size_t size) { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
@@ -830,6 +831,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the game deserialized
   ///
+  /// @todo virtual GAME_ERROR Deserialize(const game_stream_memory_packet& packet)
   virtual GAME_ERROR Deserialize(const uint8_t* data, size_t size)
   {
     return GAME_ERROR_NOT_IMPLEMENTED;
