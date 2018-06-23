@@ -9,6 +9,7 @@
 #include "GameClientStreams.h"
 
 #include "GameClientStreamAudio.h"
+#include "GameClientStreamMemory.h"
 #include "GameClientStreamSwFramebuffer.h"
 #include "GameClientStreamVideo.h"
 #include "cores/RetroPlayer/streams/IRetroPlayerStream.h"
@@ -108,6 +109,11 @@ std::unique_ptr<IGameClientStream> CGameClientStreams::CreateStream(
     case GAME_STREAM_SW_FRAMEBUFFER:
     {
       gameStream.reset(new CGameClientStreamSwFramebuffer);
+      break;
+    }
+    case GAME_STREAM_MEMORY:
+    {
+      gameStream.reset(new CGameClientStreamMemory);
       break;
     }
     default:

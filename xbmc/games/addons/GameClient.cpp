@@ -527,9 +527,12 @@ bool CGameClient::Serialize(uint8_t* data, size_t size)
   bool bSuccess = false;
   if (m_bIsPlaying)
   {
+    game_stream_memory_buffer buffer = {data, size};
+
     try
     {
-      bSuccess = LogError(m_ifc.game->toAddon->Serialize(m_ifc.game, data, size), "Serialize()");
+      bSuccess = LogError(m_ifc.game->toAddon->Serialize(m_ifc.game, buffer.data, buffer.size),
+                          "Serialize()");
     }
     catch (...)
     {
@@ -550,10 +553,12 @@ bool CGameClient::Deserialize(const uint8_t* data, size_t size)
   bool bSuccess = false;
   if (m_bIsPlaying)
   {
+    game_stream_memory_packet packet = {data, size};
+
     try
     {
-      bSuccess =
-          LogError(m_ifc.game->toAddon->Deserialize(m_ifc.game, data, size), "Deserialize()");
+      bSuccess = LogError(m_ifc.game->toAddon->Deserialize(m_ifc.game, packet.data, packet.size),
+                          "Deserialize()");
     }
     catch (...)
     {
