@@ -10,6 +10,7 @@
 
 #include "IRetroPlayerStream.h"
 #include "RetroPlayerAudio.h"
+#include "RetroPlayerMemory.h"
 #include "RetroPlayerVideo.h"
 
 using namespace KODI;
@@ -45,6 +46,10 @@ StreamPtr CRPStreamManager::CreateStream(StreamType streamType)
     case StreamType::HW_BUFFER:
     {
       // return StreamPtr(new CRetroPlayerHardware(m_renderManager, m_processInfo)); //! @todo
+    }
+    case StreamType::MEMORY:
+    {
+      return StreamPtr(new CRetroPlayerMemory);
     }
     default:
       break;

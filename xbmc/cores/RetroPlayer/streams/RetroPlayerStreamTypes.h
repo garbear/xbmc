@@ -30,6 +30,7 @@ enum class StreamType
   VIDEO,
   SW_BUFFER,
   HW_BUFFER,
+  MEMORY,
 };
 
 enum class PCMFormat
