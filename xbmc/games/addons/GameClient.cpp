@@ -513,9 +513,12 @@ bool CGameClient::Serialize(uint8_t* data, size_t size)
   bool bSuccess = false;
   if (m_bIsPlaying)
   {
+    game_stream_memory_buffer buffer = {data, size};
+
     try
     {
-      bSuccess = LogError(m_struct.toAddon.Serialize(&m_struct, data, size), "Serialize()");
+      bSuccess =
+          LogError(m_struct.toAddon.Serialize(&m_struct, buffer.data, buffer.size), "Serialize()");
     }
     catch (...)
     {
@@ -536,9 +539,12 @@ bool CGameClient::Deserialize(const uint8_t* data, size_t size)
   bool bSuccess = false;
   if (m_bIsPlaying)
   {
+    game_stream_memory_packet packet = {data, size};
+
     try
     {
-      bSuccess = LogError(m_struct.toAddon.Deserialize(&m_struct, data, size), "Deserialize()");
+      bSuccess = LogError(m_struct.toAddon.Deserialize(&m_struct, packet.data, packet.size),
+                          "Deserialize()");
     }
     catch (...)
     {

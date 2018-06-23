@@ -8,6 +8,7 @@
 
 #include "GameClientStreamAudio.h"
 
+#include "addons/kodi-addon-dev-kit/include/kodi/addon-instance/Game.h"
 #include "cores/RetroPlayer/streams/RetroPlayerAudio.h"
 #include "games/addons/GameClientTranslator.h"
 #include "utils/log.h"

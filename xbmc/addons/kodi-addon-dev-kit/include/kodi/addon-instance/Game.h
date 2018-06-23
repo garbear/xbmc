@@ -441,15 +441,16 @@ typedef void (*game_proc_address_t)(void);
 //@{
 
 //==============================================================================
-/// @brief **Game video stream properties**
+/// @brief **Software framebuffer properties**
 ///
-/// Used by Kodi to pass the currently required video stream settings to the addon
+/// Used by Kodi to pass the currently required software framebuffer stream
+/// settings to the addon
 ///
 typedef game_stream_video_properties game_stream_sw_framebuffer_properties;
 //------------------------------------------------------------------------------
 
 //==============================================================================
-/// @brief **Hardware framebuffer type**
+/// @brief **Software framebuffer buffer**
 ///
 typedef struct game_stream_sw_framebuffer_buffer
 {
@@ -460,9 +461,9 @@ typedef struct game_stream_sw_framebuffer_buffer
 //------------------------------------------------------------------------------
 
 //==============================================================================
-/// @brief **Video stream packet**
+/// @brief **Software framebuffer packet**
 ///
-/// This packet contains video stream data passed to Kodi.
+/// This packet contains software framebuffers passed to Kodi.
 ///
 typedef game_stream_video_packet game_stream_sw_framebuffer_packet;
 //------------------------------------------------------------------------------
@@ -470,7 +471,50 @@ typedef game_stream_video_packet game_stream_sw_framebuffer_packet;
 //@}
 
 //--==----==----==----==----==----==----==----==----==----==----==----==----==--
-/// \defgroup cpp_kodi_addon_game_Defs_StreamTypes 5. Stream types
+/// \defgroup cpp_kodi_addon_game_Defs_MemoryStream 5. Memory stream
+/// \ingroup cpp_kodi_addon_game_Defs
+/// @brief **Memory stream data**
+///
+//@{
+
+//==============================================================================
+/// @brief **Memory stream properties**
+///
+/// Used by Kodi to pass the currently required memory stream settings to the
+/// addon
+///
+typedef struct game_stream_memory_properties
+{
+  size_t size;
+} ATTRIBUTE_PACKED game_stream_memory_properties;
+//------------------------------------------------------------------------------
+
+//==============================================================================
+/// @brief **Memory stream buffer*
+///
+typedef struct game_stream_memory_buffer
+{
+  uint8_t* data;
+  size_t size;
+} ATTRIBUTE_PACKED game_stream_memory_buffer;
+//------------------------------------------------------------------------------
+
+//==============================================================================
+/// @brief **Memory stream packet**
+///
+/// This packet contains memory stream data passed to Kodi.
+///
+typedef struct game_stream_memory_packet
+{
+  const uint8_t* data;
+  size_t size;
+} ATTRIBUTE_PACKED game_stream_memory_packet;
+//------------------------------------------------------------------------------
+
+//@}
+
+//--==----==----==----==----==----==----==----==----==----==----==----==----==--
+/// \defgroup cpp_kodi_addon_game_Defs_StreamTypes 6. Stream types
 /// \ingroup cpp_kodi_addon_game_Defs
 /// @brief **Stream types data**
 ///
@@ -495,6 +539,9 @@ typedef enum GAME_STREAM_TYPE
 
   /// @brief Software framebuffer
   GAME_STREAM_SW_FRAMEBUFFER,
+
+  /// @brief Game memory
+  GAME_STREAM_MEMORY,
 } GAME_STREAM_TYPE;
 //------------------------------------------------------------------------------
 
@@ -521,6 +568,9 @@ typedef struct game_stream_properties
 
     /// @brief
     game_stream_sw_framebuffer_properties sw_framebuffer;
+
+    /// @brief
+    game_stream_memory_properties memory;
   };
 } ATTRIBUTE_PACKED game_stream_properties;
 //------------------------------------------------------------------------------
@@ -539,6 +589,9 @@ typedef struct game_stream_buffer
 
     /// @brief
     game_stream_sw_framebuffer_buffer sw_framebuffer;
+
+    /// @brief
+    game_stream_memory_buffer memory;
   };
 } ATTRIBUTE_PACKED game_stream_buffer;
 //------------------------------------------------------------------------------
@@ -567,6 +620,9 @@ typedef struct game_stream_packet
 
     /// @brief
     game_stream_sw_framebuffer_packet sw_framebuffer;
+
+    /// @brief
+    game_stream_memory_packet memory;
   };
 } ATTRIBUTE_PACKED game_stream_packet;
 //------------------------------------------------------------------------------
@@ -574,7 +630,7 @@ typedef struct game_stream_packet
 //@}
 
 //--==----==----==----==----==----==----==----==----==----==----==----==----==--
-/// \defgroup cpp_kodi_addon_game_Defs_GameTypes 6. Game types
+/// \defgroup cpp_kodi_addon_game_Defs_GameTypes 7. Game types
 /// \ingroup cpp_kodi_addon_game_Defs
 /// @brief **Game types data**
 ///
@@ -716,7 +772,7 @@ typedef enum GAME_SIMD
 //@}
 
 //--==----==----==----==----==----==----==----==----==----==----==----==----==--
-/// \defgroup cpp_kodi_addon_game_Defs_InputTypes 7. Input types
+/// \defgroup cpp_kodi_addon_game_Defs_InputTypes 8. Input types
 /// \ingroup cpp_kodi_addon_game_Defs
 /// @brief **Input types**
 ///
@@ -1122,7 +1178,7 @@ typedef struct game_input_event
 //@}
 
 //--==----==----==----==----==----==----==----==----==----==----==----==----==--
-/// \defgroup cpp_kodi_addon_game_Defs_EnvironmentTypes 8. Environment types
+/// \defgroup cpp_kodi_addon_game_Defs_EnvironmentTypes 9. Environment types
 /// \ingroup cpp_kodi_addon_game_Defs
 /// @brief **Environment types**
 ///
@@ -2053,6 +2109,8 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the game was serialized into the buffer
   ///
+  /// @todo virtual GAME_ERROR Serialize(const game_stream_memory_buffer& buffer);
+  ///
   virtual GAME_ERROR Serialize(uint8_t* data, size_t size)
   {
     return GAME_ERROR_NOT_IMPLEMENTED;
@@ -2067,6 +2125,8 @@ public:
   /// @param[in] size The size of the buffer
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the game deserialized
+  ///
+  /// @todo virtual GAME_ERROR Deserialize(const game_stream_memory_packet& packet);
   ///
   virtual GAME_ERROR Deserialize(const uint8_t* data, size_t size)
   {
