@@ -19,6 +19,7 @@
 #include "cores/RetroPlayer/guibridge/IGUIRenderSettings.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPBaseRenderer.h"
+#include "cores/RetroPlayer/streams/RetroPlayerVideo.h"
 #include "pictures/Picture.h"
 #include "threads/SingleLock.h"
 #include "utils/ColorUtils.h"
@@ -97,15 +98,13 @@ bool CRPRenderManager::Configure(AVPixelFormat format,
   return true;
 }
 
-bool CRPRenderManager::GetVideoBuffer(
-    unsigned int width, unsigned int height, AVPixelFormat& format, uint8_t*& data, size_t& size)
+std::vector<VideoStreamBuffer> CRPRenderManager::GetVideoBuffers(unsigned int width,
+                                                                 unsigned int height)
 {
-  for (IRenderBuffer* buffer : m_pendingBuffers)
-    buffer->Release();
-  m_pendingBuffers.clear();
+  std::vector<VideoStreamBuffer> buffers;
 
   if (m_bFlush || m_state != RENDER_STATE::CONFIGURED)
-    return false;
+    return buffers;
 
   // Get buffers from visible renderers
   for (IRenderBufferPool* bufferPool : m_processInfo.GetBufferManager().GetBufferPools())
@@ -120,17 +119,14 @@ bool CRPRenderManager::GetVideoBuffer(
       CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: Unable to get video buffer for frame");
   }
 
-  if (m_pendingBuffers.empty())
-    return false;
+  for (IRenderBuffer* renderBuffer : m_pendingBuffers)
+  {
+    buffers.emplace_back(VideoStreamBuffer{
+        renderBuffer->GetFormat(), renderBuffer->GetMemory(), renderBuffer->GetFrameSize(),
+        renderBuffer->GetMemoryAccess(), renderBuffer->GetMemoryAlignment()});
+  }
 
-  //! @todo Handle multiple buffers
-  IRenderBuffer* renderBuffer = m_pendingBuffers.at(0);
-
-  format = renderBuffer->GetFormat();
-  data = renderBuffer->GetMemory();
-  size = renderBuffer->GetFrameSize();
-
-  return true;
+  return buffers;
 }
 
 void CRPRenderManager::AddFrame(const uint8_t* data,
@@ -695,23 +691,35 @@ CRenderVideoSettings CRPRenderManager::GetEffectiveSettings(
 
 void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
 {
-  m_bufferMutex.lock();
+  // Get a suitable render buffer for capturing the video data
+  IRenderBuffer* renderBuffer;
 
-  if (m_renderBuffers.size() <= 0)
   {
-    m_bufferMutex.unlock();
-    return;
+    std::unique_lock<CCriticalSection> lock(m_bufferMutex);
+
+    auto it = std::find_if(m_renderBuffers.begin(), m_renderBuffers.end(),
+                           [](const IRenderBuffer* renderBuffer) {
+                             return renderBuffer->GetMemoryAccess() != DataAccess::WRITE_ONLY;
+                           });
+
+    if (it == m_renderBuffers.end())
+    {
+      CLog::Log(LOGERROR, "Failed to save thumbnail, no readable buffer (checked {} buffers)",
+                m_renderBuffers.size());
+      return;
+    }
+
+    renderBuffer = *it;
+    renderBuffer->Acquire();
   }
 
-  const uint8_t* const data = m_renderBuffers[0]->GetMemory();
-  const size_t size = m_renderBuffers[0]->GetFrameSize();
-  const unsigned int width = m_renderBuffers[0]->GetWidth();
-  const unsigned int height = m_renderBuffers[0]->GetHeight();
-  const AVPixelFormat format = m_renderBuffers[0]->GetFormat();
+  const uint8_t* const data = renderBuffer->GetMemory();
+  const size_t size = renderBuffer->GetFrameSize();
+  const unsigned int width = renderBuffer->GetWidth();
+  const unsigned int height = renderBuffer->GetHeight();
+  const AVPixelFormat format = renderBuffer->GetFormat();
 
   std::vector<uint8_t> copiedData(data, data + size);
-
-  m_bufferMutex.unlock();
 
   const int stride = CRenderTranslator::TranslateWidthToBytes(width, format);
 
@@ -736,4 +744,6 @@ void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
     CPicture::CreateThumbnailFromSurface(scaledImage.data(), scaleWidth, scaleHeight, scaleStride,
                                          thumbnailPath);
   }
+
+  renderBuffer->Release();
 }
