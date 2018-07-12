@@ -1,0 +1,205 @@
+From 5f17737c622db5ed09ea43bac57dba411ca2e25f Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Thu, 11 Jun 2026 20:57:47 -0700
+Subject: [PATCH] upw port
+
+---
+ libraries/liblmdb/mdb.c | 88 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 85 insertions(+), 3 deletions(-)
+
+diff --git a/libraries/liblmdb/mdb.c b/libraries/liblmdb/mdb.c
+index 7c099a2..3d5d1ad 100644
+--- a/libraries/liblmdb/mdb.c
++++ b/libraries/liblmdb/mdb.c
+@@ -41,8 +41,12 @@
+ #ifdef _WIN32
+ #include <malloc.h>
+ #include <windows.h>
++#if defined(WINAPI_FAMILY) && WINAPI_FAMILY == WINAPI_FAMILY_APP
++#define MDB_WINUWP 1
++#endif
+ #include <wchar.h>				/* get wcscpy() */
+ 
++#ifndef MDB_WINUWP
+ /* We use native NT APIs to setup the memory map, so that we can
+  * let the DB file grow incrementally instead of always preallocating
+  * the full size. These APIs are defined in <wdm.h> and <ntifs.h>
+@@ -78,6 +82,7 @@ typedef NTSTATUS (WINAPI NtCloseFunc)(HANDLE h);
+ 
+ static NtCloseFunc *NtClose;
+ 
++#endif /* !MDB_WINUWP */
+ /** getpid() returns int; MinGW defines pid_t but MinGW64 typedefs it
+  *  as int64 which is wrong. MSVC doesn't define it at all, so just
+  *  don't use it.
+@@ -761,7 +766,11 @@ static txnid_t mdb_debug_start;
+ #define EVEN(n)		(((n) + 1U) & -2) /* sign-extending -2 to match n+1U */
+ 
+ 	/** Least significant 1-bit of \b n.  n must be of an unsigned type. */
++#if defined(_MSC_VER)
++#define LOW_BIT(n)		((n) & (0 - (n)))
++#else
+ #define LOW_BIT(n)		((n) & (-(n)))
++#endif
+ 
+ 	/** (log2(\b p2) % \b n), for p2 = power of 2 and 0 < n < 8. */
+ #define LOG2_MOD(p2, n)	(7 - 86 / ((p2) % ((1U<<(n))-1) + 11))
+@@ -4114,7 +4123,7 @@ mdb_page_flush(MDB_txn *txn, int keep)
+ 	MDB_page	*dp = NULL;
+ #ifdef _WIN32
+ 	OVERLAPPED	*ov, *this_ov;
+-	MDB_page	*wdp;
++	MDB_page	*wdp = NULL;
+ 	int async_i = 0;
+ 	HANDLE fd = (env->me_flags & MDB_NOSYNC) ? env->me_fd : env->me_ovfd;
+ #else
+@@ -5042,9 +5051,35 @@ mdb_env_map(MDB_env *env, void *addr)
+ 	MDB_page *p;
+ 	unsigned int flags = env->me_flags;
+ #ifdef _WIN32
++	HANDLE mh;
++#ifdef MDB_WINUWP
++	DWORD pageprot = PAGE_READONLY, filemap_access = FILE_MAP_READ;
++	SIZE_T msize;
++
++	if (addr)
++		return MDB_ADDR_BUSY;
++	if (flags & MDB_WRITEMAP) {
++		pageprot = PAGE_READWRITE;
++		filemap_access |= FILE_MAP_WRITE;
++	}
++	if (MDB_REMAPPING(env->me_flags))
++		msize = NUM_METAS * env->me_psize;
++	else if (flags & MDB_RDONLY)
++		msize = 0;
++	else
++		msize = env->me_mapsize;
++
++	mh = CreateFileMappingFromApp(env->me_fd, NULL, pageprot,
++		(flags & MDB_RDONLY) ? 0 : env->me_mapsize, NULL);
++	if (!mh)
++		return ErrCode();
++	env->me_map = MapViewOfFileFromApp(mh, filemap_access, 0, msize);
++	CloseHandle(mh);
++	if (!env->me_map)
++		return ErrCode();
++#else
+ 	int rc;
+ 	int access = SECTION_MAP_READ;
+-	HANDLE mh;
+ 	void *map;
+ 	SIZE_T msize;
+ 	ULONG pageprot = PAGE_READONLY, secprot, alloctype;
+@@ -5091,6 +5126,7 @@ mdb_env_map(MDB_env *env, void *addr)
+ 	if (rc)
+ 		return mdb_nt2win32(rc);
+ 	env->me_map = map;
++#endif /* MDB_WINUWP */
+ #else	/* !_WIN32 */
+ 	int mmap_flags = MAP_SHARED;
+ 	int prot = PROT_READ;
+@@ -5390,7 +5426,20 @@ mdb_fopen(const MDB_env *env, MDB_name *fname,
+ 		break;
+ 	default: break;	/* silence gcc -Wswitch (not all enum values handled) */
+ 	}
++#ifdef MDB_WINUWP
++	{
++		CREATEFILE2_EXTENDED_PARAMETERS params;
++
++		memset(&params, 0, sizeof(params));
++		params.dwSize = sizeof(params);
++		params.dwFileAttributes = attrs & 0xffff;
++		params.dwFileFlags = attrs & ~0xffff;
++		params.dwSecurityQosFlags = SECURITY_ANONYMOUS;
++		fd = CreateFile2(fname->mn_val, acc, share, disp, &params);
++	}
++#else
+ 	fd = CreateFileW(fname->mn_val, acc, share, NULL, disp, attrs, NULL);
++#endif
+ #else
+ 	fd = open(fname->mn_val, (which & MDB_O_MASK)|MDB_CLOEXEC, mode);
+ #endif
+@@ -5440,6 +5489,9 @@ mdb_env_open2(MDB_env *env, int prev)
+ 	MDB_meta meta;
+ 
+ #ifdef _WIN32
++#ifdef MDB_WINUWP
++	env->me_pidquery = MDB_PROCESS_QUERY_LIMITED_INFORMATION;
++#else
+ 	/* See if we should use QueryLimited */
+ 	rc = GetVersion();
+ 	if ((rc & 0xff) > 5)
+@@ -5462,6 +5514,7 @@ mdb_env_open2(MDB_env *env, int prev)
+ 			return MDB_PROBLEM;
+ 	}
+ 	env->me_ovs = 0;
++#endif /* MDB_WINUWP */
+ #endif /* _WIN32 */
+ 
+ #ifdef BROKEN_FDATASYNC
+@@ -5962,7 +6015,11 @@ mdb_env_setup_locks(MDB_env *env, MDB_name *fname, int mode, int *excl)
+ 	if ((rc = mdb_env_excl_lock(env, excl))) goto fail;
+ 
+ #ifdef _WIN32
+-	size = GetFileSize(env->me_lfd, NULL);
++	{
++		LARGE_INTEGER fsize;
++		if (!GetFileSizeEx(env->me_lfd, &fsize)) goto fail_errno;
++		size = fsize.QuadPart;
++	}
+ #else
+ 	size = lseek(env->me_lfd, 0, SEEK_END);
+ 	if (size == -1) goto fail_errno;
+@@ -5984,10 +6041,19 @@ mdb_env_setup_locks(MDB_env *env, MDB_name *fname, int mode, int *excl)
+ 	{
+ #ifdef _WIN32
+ 		HANDLE mh;
++#ifdef MDB_WINUWP
++		mh = CreateFileMappingFromApp(env->me_lfd, NULL, PAGE_READWRITE,
++			0, NULL);
++#else
+ 		mh = CreateFileMapping(env->me_lfd, NULL, PAGE_READWRITE,
+ 			0, 0, NULL);
++#endif
+ 		if (!mh) goto fail_errno;
++#ifdef MDB_WINUWP
++		env->me_txns = MapViewOfFileFromApp(mh, FILE_MAP_WRITE, 0, rsize);
++#else
+ 		env->me_txns = MapViewOfFileEx(mh, FILE_MAP_WRITE, 0, 0, rsize, NULL);
++#endif
+ 		CloseHandle(mh);
+ 		if (!env->me_txns) goto fail_errno;
+ #else
+@@ -6920,6 +6986,21 @@ mdb_rpage_get(MDB_txn *txn, pgno_t pg0, int numpgs, MDB_page **ret)
+ 	pgno_t pgno;
+ 	int rc, retries = 1;
+ #ifdef _WIN32
++#ifdef MDB_WINUWP
++	ULONG64 off;
++	SIZE_T len;
++	HANDLE mh;
++#define SET_OFF(off,val)	off = val
++#define MAP(rc,env,addr,len,off)	\
++	addr = NULL; \
++	mh = CreateFileMappingFromApp((env)->me_fd, NULL, PAGE_READONLY, 0, NULL); \
++	if (!mh) rc = ErrCode(); \
++	else { \
++		addr = MapViewOfFileFromApp(mh, FILE_MAP_READ, off, len); \
++		rc = addr ? 0 : ErrCode(); \
++		CloseHandle(mh); \
++	}
++#else
+ 	LARGE_INTEGER off;
+ 	SIZE_T len;
+ #define SET_OFF(off,val)	off.QuadPart = val
+@@ -6928,6 +7009,7 @@ mdb_rpage_get(MDB_txn *txn, pgno_t pg0, int numpgs, MDB_page **ret)
+ 	rc = NtMapViewOfSection(env->me_fmh, GetCurrentProcess(), &addr, 0, \
+ 		len, &off, &len, ViewUnmap, (env->me_flags & MDB_RDONLY) ? 0 : MEM_RESERVE, PAGE_READONLY); \
+ 	if (rc) rc = mdb_nt2win32(rc)
++#endif
+ #else
+ 	off_t off;
+ 	size_t len;
+-- 
+2.50.1 (Apple Git-155)
+
