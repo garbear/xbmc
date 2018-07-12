@@ -17,6 +17,7 @@ xbmc/crypto/cryptold                            crypto/cryptold
 xbmc/crypto/did                                 crypto/did
 xbmc/crypto/ed25519                             crypto/ed25519
 xbmc/crypto/random                              crypto/random
+xbmc/datastore                                  datastore
 xbmc/dbwrappers                                 dbwrappers
 xbmc/dialogs                                    dialogs
 xbmc/favourites                                 favourites
