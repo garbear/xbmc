@@ -11,6 +11,7 @@ DEPENDS = \
 	libjpeg-turbo libpng fribidi libass \
 	libxml2 rapidjson libmicrohttpd mariadb libffi \
 	python27 libshairplay libfmt \
+	liblmdb \
 	libplist libcec libbluray tinyxml \
 	taglib libusb libnfs \
 	pythonmodule-pil pythonmodule-pycryptodome pythonmodule-setuptools \
