@@ -14,6 +14,7 @@ xbmc/addons/kodi-addon-dev-kit/include/kodi/gui/dialogs addons_kodi-addon-dev-ki
 xbmc/addons/kodi-addon-dev-kit/include/kodi/tools addons_kodi-addon-dev-kit_include_kodi_tools
 xbmc/addons/settings                            addons_settings
 xbmc/commons                                    commons
+xbmc/datastore                                  datastore
 xbmc/dbwrappers                                 dbwrappers
 xbmc/dialogs                                    dialogs
 xbmc/favourites                                 favourites
