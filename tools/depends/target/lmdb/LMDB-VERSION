@@ -1,0 +1,9 @@
+LIBNAME=lmdb
+VERSION=1.0.1
+ARCHIVE=LMDB_$(VERSION).tar.gz
+SHA512=902908ca5fa66f8e2064ab44505f8172cd193c88c608a8369cc76e1285e9b36ef4c275f5b8ed21fd1ee31f0d7148a0050945dd0d5ea7cf74c24ada2f7c8d222d
+BYPRODUCT=liblmdb.a
+BYPRODUCT_WIN=lmdb.lib
+
+# TODO
+BASE_URL=https://github.com/LMDB/lmdb/archive/refs/tags
