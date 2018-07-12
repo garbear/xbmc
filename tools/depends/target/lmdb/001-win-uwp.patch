@@ -1,0 +1,196 @@
+diff --git a/libraries/liblmdb/mdb.c b/libraries/liblmdb/mdb.c
+index c20786da21..99e0f64717 100644
+--- a/libraries/liblmdb/mdb.c
++++ b/libraries/liblmdb/mdb.c
+@@ -43,6 +43,11 @@
+ #include <windows.h>
+ #include <wchar.h>				/* get wcscpy() */
+ 
++#ifdef _MSC_VER
++#pragma warning(disable: 4146) /* Unsigned negation in LOW_BIT is intentional. */
++#endif
++
++#ifndef MDB_USE_UWP
+ /* We use native NT APIs to setup the memory map, so that we can
+  * let the DB file grow incrementally instead of always preallocating
+  * the full size. These APIs are defined in <wdm.h> and <ntifs.h>
+@@ -77,6 +82,7 @@ static NtMapViewOfSectionFunc *NtMapViewOfSection;
+ typedef NTSTATUS (WINAPI NtCloseFunc)(HANDLE h);
+ 
+ static NtCloseFunc *NtClose;
++#endif
+ 
+ /** getpid() returns int; MinGW defines pid_t but MinGW64 typedefs it
+  *  as int64 which is wrong. MSVC doesn't define it at all, so just
+@@ -2863,7 +2869,7 @@ mdb_page_alloc(MDB_cursor *mc, int num, MDB_page **mp)
+ 			rc = MDB_MAP_FULL;
+ 			goto fail;
+ 	}
+-#if defined(_WIN32)
++#if defined(_WIN32) && !defined(MDB_USE_UWP)
+ 	if (!MDB_REMAPPING(env->me_flags) && !(env->me_flags & MDB_RDONLY)) {
+ 		void *p;
+ 		SIZE_T sz = env->me_psize;
+@@ -4118,7 +4124,7 @@ mdb_page_flush(MDB_txn *txn, int keep)
+ 	MDB_page	*dp = NULL;
+ #ifdef _WIN32
+ 	OVERLAPPED	*ov, *this_ov;
+-	char 	*wdp;
++	char 	*wdp = NULL;
+ 	size_t w2;
+ 	int async_i = 0, opages = 0;
+ 	HANDLE fd = (env->me_flags & MDB_NOSYNC) ? env->me_fd : env->me_ovfd;
+@@ -5045,7 +5051,7 @@ mdb_env_create(MDB_env **env)
+ 	return MDB_SUCCESS;
+ }
+ 
+-#ifdef _WIN32
++#if defined(_WIN32) && !defined(MDB_USE_UWP)
+ /** @brief Map a result from an NTAPI call to WIN32. */
+ static DWORD
+ mdb_nt2win32(NTSTATUS st)
+@@ -5063,7 +5069,31 @@ mdb_env_map(MDB_env *env, void *addr)
+ {
+ 	MDB_page *p;
+ 	unsigned int flags = env->me_flags;
+-#ifdef _WIN32
++#ifdef MDB_USE_UWP
++	HANDLE mh;
++	DWORD rc;
++	ULONG secprot = (flags & MDB_RDONLY) ? PAGE_READONLY : PAGE_READWRITE;
++	ULONG pageprot = (flags & MDB_WRITEMAP) ? PAGE_READWRITE : PAGE_READONLY;
++	SIZE_T msize = (flags & MDB_RDONLY) ? 0 : env->me_mapsize;
++
++	/* UWP cannot reserve an NT section beyond EOF; preallocate the map. */
++	mh = CreateFileMappingFromApp(env->me_fd, NULL, secprot, msize, NULL);
++	if (!mh)
++		return ErrCode();
++	if (MDB_REMAPPING(flags))
++		msize = NUM_METAS * env->me_psize;
++	env->me_map = MapViewOfFile3FromApp(mh, NULL, addr, 0, msize, 0,
++		pageprot, NULL, 0);
++	rc = env->me_map ? MDB_SUCCESS : ErrCode();
++#if MDB_RPAGE_CACHE
++	if (MDB_REMAPPING(flags))
++		env->me_fmh = mh;
++	else
++#endif
++		CloseHandle(mh);
++	if (rc)
++		return rc;
++#elif defined(_WIN32)
+ 	int rc;
+ 	int access = SECTION_MAP_READ;
+ 	HANDLE mh;
+@@ -5412,7 +5442,17 @@ mdb_fopen(const MDB_env *env, MDB_name *fname,
+ 		break;
+ 	default: break;	/* silence gcc -Wswitch (not all enum values handled) */
+ 	}
++#ifdef MDB_USE_UWP
++	{
++		CREATEFILE2_EXTENDED_PARAMETERS params = {0};
++		params.dwSize = sizeof(params);
++		params.dwFileAttributes = attrs & 0xffff;
++		params.dwFileFlags = attrs & 0xffff0000;
++		fd = CreateFile2(fname->mn_val, acc, share, disp, &params);
++	}
++#else
+ 	fd = CreateFileW(fname->mn_val, acc, share, NULL, disp, attrs, NULL);
++#endif
+ #else
+ 	fd = open(fname->mn_val, (which & MDB_O_MASK)|MDB_CLOEXEC, mode);
+ #endif
+@@ -5462,12 +5502,15 @@ mdb_env_open2(MDB_env *env, int prev)
+ 	MDB_meta meta;
+ 
+ #ifdef _WIN32
+-	/* See if we should use QueryLimited */
+-	rc = GetVersion();
+-	if ((rc & 0xff) > 5)
+-		env->me_pidquery = MDB_PROCESS_QUERY_LIMITED_INFORMATION;
+-	else
+-		env->me_pidquery = PROCESS_QUERY_INFORMATION;
++#ifdef MDB_USE_UWP
++	env->me_pidquery = MDB_PROCESS_QUERY_LIMITED_INFORMATION;
++#else
++	/* See if we should use QueryLimited */
++	rc = GetVersion();
++	if ((rc & 0xff) > 5)
++		env->me_pidquery = MDB_PROCESS_QUERY_LIMITED_INFORMATION;
++	else
++		env->me_pidquery = PROCESS_QUERY_INFORMATION;
+ 	/* Grab functions we need from NTDLL */
+ 	if (!NtCreateSection) {
+ 		HMODULE h = GetModuleHandleW(L"NTDLL.DLL");
+@@ -5483,6 +5526,7 @@ mdb_env_open2(MDB_env *env, int prev)
+ 		if (!NtCreateSection)
+ 			return MDB_PROBLEM;
+ 	}
++#endif
+ 	env->me_ovs = 0;
+ #endif /* _WIN32 */
+ 
+@@ -5983,7 +6027,13 @@ mdb_env_setup_locks(MDB_env *env, MDB_name *fname, int mode, int *excl)
+ 	 */
+ 	if ((rc = mdb_env_excl_lock(env, excl))) goto fail;
+ 
+-#ifdef _WIN32
++#ifdef MDB_USE_UWP
++	{
++		LARGE_INTEGER fsize;
++		if (!GetFileSizeEx(env->me_lfd, &fsize)) goto fail_errno;
++		size = fsize.QuadPart;
++	}
++#elif defined(_WIN32)
+ 	size = GetFileSize(env->me_lfd, NULL);
+ #else
+ 	size = lseek(env->me_lfd, 0, SEEK_END);
+@@ -6006,12 +6056,21 @@ mdb_env_setup_locks(MDB_env *env, MDB_name *fname, int mode, int *excl)
+ 	{
+ #ifdef _WIN32
+ 		HANDLE mh;
++#ifdef MDB_USE_UWP
++		mh = CreateFileMappingFromApp(env->me_lfd, NULL, PAGE_READWRITE, 0, NULL);
++		if (!mh) goto fail_errno;
++		env->me_txns = MapViewOfFileFromApp(mh, FILE_MAP_WRITE, 0, rsize);
++		rc = env->me_txns ? MDB_SUCCESS : ErrCode();
++		CloseHandle(mh);
++		if (rc) goto fail;
++#else
+ 		mh = CreateFileMapping(env->me_lfd, NULL, PAGE_READWRITE,
+ 			0, 0, NULL);
+ 		if (!mh) goto fail_errno;
+ 		env->me_txns = MapViewOfFileEx(mh, FILE_MAP_WRITE, 0, 0, rsize, NULL);
+ 		CloseHandle(mh);
+ 		if (!env->me_txns) goto fail_errno;
++#endif
+ #else
+ 		void *m = mmap(NULL, rsize, PROT_READ|PROT_WRITE, MAP_SHARED,
+ 			env->me_lfd, 0);
+@@ -6955,11 +7014,17 @@ mdb_rpage_get(MDB_txn *txn, pgno_t pg0, int numpgs, MDB_page **ret, MDB_page **e
+ #define SET_OFF(off,val)	off.QuadPart = val
+ #define ADD_OFF(off,val)	off.QuadPart += val
+ #define CHK_OFF(off)		off.QuadPart
++#ifdef MDB_USE_UWP
++#define MAP(rc,env,addr,len,off)	\
++	addr = MapViewOfFileFromApp(env->me_fmh, FILE_MAP_READ, off.QuadPart, len); \
++	rc = addr ? MDB_SUCCESS : ErrCode()
++#else
+ #define MAP(rc,env,addr,len,off)	\
+ 	addr = NULL; \
+ 	rc = NtMapViewOfSection(env->me_fmh, GetCurrentProcess(), (void **)&addr, 0, \
+ 		len, &off, &len, ViewUnmap, (env->me_flags & MDB_RDONLY) ? 0 : MEM_RESERVE, PAGE_READONLY); \
+ 	if (rc) rc = mdb_nt2win32(rc)
++#endif
+ #else
+ 	off_t off;
+ 	size_t len;
+@@ -11807,7 +11872,7 @@ mdb_env_incr_dumpfd(MDB_env *env, HANDLE fd, size_t txnid)
+ 	int rc, npgs;
+ 	MDB_page *mp;
+ #if MDB_RPAGE_CACHE
+-	MDB_page *m2;
++	MDB_page *m2 = NULL;
+ #endif
+ 	MDB_txn *txn;
+ 	mdb_size_t wsize;
