@@ -92,6 +92,19 @@ public:
    *         -1 in case of any explicit error
    */
   virtual ssize_t Write(const void* bufPtr, size_t bufSize) { return -1;}
+  /*!
+   * Attempt to add bufSize bytes from buffer bufPtr to currently opened file.
+   * @param bufPtr  pointer to buffer
+   * @param bufSize size of the buffer
+   * @param[out] contentId Set to the content ID of the accumulated data
+   * @return number of successfully added bytes if any bytes were added,
+   *         zero if no bytes were added and no detectable error occurred,
+   *         -1 in case of any explicit error
+   */
+  virtual ssize_t AddContent(const void* bufPtr, size_t bufSize, std::string& contentId)
+  {
+    return -1;
+  }
   virtual bool ReadString(char *szLine, int iLineLength);
   virtual int64_t Seek(int64_t iFilePosition, int iWhence = SEEK_SET) = 0;
   virtual void Close() = 0;
