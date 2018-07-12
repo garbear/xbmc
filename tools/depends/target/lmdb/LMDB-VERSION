@@ -1,0 +1,9 @@
+LIBNAME=lmdb
+VERSION=1.0.2
+ARCHIVE=LMDB_$(VERSION).tar.gz
+SHA512=8a4da3c71ba5055d0edadc00de872f59e4c155dc337dbf1b3af2d2c4cf2da0d6fdeca6833d40bb31e3c63a2b5f98a2b3c83443e38806837d7c0b9909463f4a3f
+BYPRODUCT=liblmdb.a
+BYPRODUCT_WIN=lmdb.lib
+
+# TODO: Upload to mirrors
+BASE_URL=https://github.com/LMDB/lmdb/archive/refs/tags
