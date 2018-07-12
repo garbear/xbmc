@@ -28,6 +28,7 @@ xbmc/addons/kodi-dev-kit/include/kodi/gui/input addons_kodi-dev-kit_include_kodi
 xbmc/addons/kodi-dev-kit/include/kodi/tools addons_kodi-dev-kit_include_kodi_tools
 xbmc/addons/settings                            addons_settings
 xbmc/commons                                    commons
+xbmc/datastore                                  datastore
 xbmc/dbwrappers                                 dbwrappers
 xbmc/dialogs                                    dialogs
 xbmc/favourites                                 favourites
