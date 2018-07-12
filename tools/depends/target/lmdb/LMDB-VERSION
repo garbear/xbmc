@@ -1,0 +1,9 @@
+LIBNAME=lmdb
+VERSION=0.9.35
+ARCHIVE=openldap-LMDB_$(VERSION).tar.gz
+SHA512=4cbe75879c1f4cd7edb73bf3702cf30e883781032173ccfd0b60b4ba8e34b1c5df96305ec0b47351a9c98bd2a26159f59f5aa771fd04e009594cf383dcfed30c
+BYPRODUCT=liblmdb.a
+BYPRODUCT_WIN=lmdb.lib
+
+# TODO
+BASE_URL=https://git.openldap.org/openldap/openldap/-/archive/LMDB_0.9.35
