@@ -135,7 +135,7 @@ sudo apt install autoconf automake autopoint autotools-dev cmake \
   libfmt-dev libfontconfig-dev libfreetype6-dev libfribidi-dev \
   libfstrcmp-dev libgcrypt-dev libgif-dev libgl1-mesa-dev \
   libgles2-mesa-dev libglu1-mesa-dev libgnutls28-dev libgpg-error-dev \
-  libgtest-dev libiso9660-dev libjpeg-dev liblcms2-dev libltdl-dev \
+  libgtest-dev libiso9660-dev libjpeg-dev liblcms2-dev liblmdb-dev libltdl-dev \
   liblzo2-dev libmicrohttpd-dev libmysqlclient-dev libnfs-dev \
   libogg-dev libp8-platform-dev libpcre2-dev libplist-dev libpng-dev \
   libpulse-dev libshairplay-dev libsmbclient-dev libspdlog-dev \

@@ -111,6 +111,7 @@ option(ENABLE_INTERNAL_LIBDATACHANNEL "Enable internal libdatachannel?" ON) # TO
 option(ENABLE_INTERNAL_LIBJUICE "Enable internal libjuice?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBSRTP "Enable internal libsrtp?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBTORRENT "Enable internal libtorrent?" ON) # TODO: Change to OFF
+option(ENABLE_INTERNAL_LMDB "Enable internal LMDB?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_PLOG "Enable internal plog?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_TRY_SIGNAL "Enable internal try_signal?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_USRSCTP "Enable internal usrsctp?" ON) # TODO: Change to OFF
@@ -253,6 +254,7 @@ set(required_deps ASS>=0.15.0
                   HarfBuzz
                   Iconv
                   LibDvd
+                  LMDB
                   Lzo2
                   OpenSSL>=1.1.0
                   PCRE2
