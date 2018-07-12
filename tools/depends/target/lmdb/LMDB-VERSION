@@ -1,0 +1,9 @@
+LIBNAME=lmdb
+VERSION=1.0.0
+ARCHIVE=lmdb-mdb.RE-1.0.zip
+SHA512=7a0dcf79974300b10a76d2b3631c8692a49be621b1a601779d666e795515e14d36fadd46d0e7ce02e92ce9f0df7d098003085f58961dabc37c9638bf21e93c51
+BYPRODUCT=liblmdb.a
+BYPRODUCT_WIN=lmdb.lib
+
+# TODO
+FULL_URL=https://codeload.github.com/LMDB/lmdb/zip/refs/heads/mdb.RE/1.0
