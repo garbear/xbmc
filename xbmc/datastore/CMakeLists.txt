@@ -1,8 +1,14 @@
-set(SOURCES DataStore.cpp
+set(SOURCES Block.cpp
+            BlockStore.cpp
+            CID.cpp
+            DataStore.cpp
             DataStoreLMDB.cpp
 )
 
-set(HEADERS DataStore.h
+set(HEADERS Block.h
+            BlockStore.h
+            CID.h
+            DataStore.h
             DataStoreLMDB.h
             IDataStore.h
 )
