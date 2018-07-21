@@ -1,0 +1,67 @@
+//
+//    Copyright (C) 2018 Team Kodi
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+//    The above copyright notice and this permission notice shall be included
+//    in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+
+namespace KODI.RETRO;
+
+/// @brief Types of input accepted by a port
+enum InputType:uint8 {
+  /// @brief No port information is known, or the device is a handheld
+  Unknown,
+  /// @brief Port for a single keyboard
+  Keyboard,
+  /// @brief Port for a single mouse
+  Mouse,
+  /// @brief Port for controller input of any kind
+  Controller
+}
+
+/// @brief The physical layout of a device used to control gameplay
+table ControllerLayout {
+  /// @brief The Kodi controller add-on ID of the device
+  /// The add-on defines the button layout and topology of the controller.
+  controller_addon_id:string;
+}
+
+/// @brief A port for input
+/// Ports can be found on game hardware and controllers (i.e. hubs and
+/// daisy-chaining).
+table Port {
+  /// @brief The type of input accepted by the port
+  input_type:InputType;
+  /// @brief The alpha-numeric identifier of this port
+  /// If the port is found on game hardware, the port ID is defined by the
+  /// emulator.
+  /// If the port is found on another controller (e.g. for hubs and
+  /// daisy-chaining), the port ID is defined by the host controller's layout.
+  /// May be empty if no other ports are defined by the emulator's input
+  /// topology.
+  port_id:string;
+  /// @brief The physical layout of the device connected to this port
+  layout:ControllerLayout;
+  /// @brief Ports on a controller for hubs and daisy-chaining
+  ports:[Port];
+}
+
+/// @brief A tree of ports representing the input topology
+table InputTopology {
+  ports:[Port];
+}

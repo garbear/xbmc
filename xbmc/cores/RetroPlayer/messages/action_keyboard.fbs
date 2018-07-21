@@ -1,0 +1,207 @@
+//
+//    Copyright (C) 2018 Team Kodi
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+//    The above copyright notice and this permission notice shall be included
+//    in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+
+namespace KODI.RETRO;
+
+/// @brief Modifier keys on a keyboard that can be held when sending a key press
+enum KeyboardModifier:uint8 {
+  None = 0x00,
+  Shift = 0x01,
+  Ctrl = 0x02,
+  Alt = 0x04,
+  Meta = 0x08,
+  Super = 0x10,
+  NumLock = 0x20,
+  CapsLock = 0x40,
+  ScrollLock = 0x80
+}
+
+/// @brief A hardware-independent virtual key representation
+/// The keyboard symbol is analogous to a scan code, but is independent of
+/// the underlying hardware.
+enum KeyboardSymbol:uint16 {
+  Unknown = 0,
+
+  // ASCII keys
+  Backspace = 8,
+  Tab = 9,
+  Clear = 12,
+  Return = 13,
+  Pause = 19,
+  Escape = 27,
+  Space = 32,
+  Exclaim = 33, // !
+  Doublequote = 34, // "
+  Hash = 35, // #
+  Dollar = 36, // $
+  Ampersand = 38, // &
+  Quote = 39, // '
+  Leftparen = 40, // (
+  Rightparen = 41, // )
+  Asterisk = 42, // *
+  Plus = 43, // +
+  Comma = 44, // ,
+  Minus = 45, // -
+  Period = 46, // .
+  Slash = 47, // /
+  Number0 = 48, // 0
+  Number1 = 49, // 1
+  Number2 = 50, // 2
+  Number3 = 51, // 3
+  Number4 = 52, // 4
+  Number5 = 53, // 5
+  Number6 = 54, // 6
+  Number7 = 55, // 7
+  Number8 = 56, // 8
+  Number9 = 57, // 9
+  Colon = 58, // :
+  Semicolon = 59, // ;
+  Less = 60, // <
+  Equals = 61, // =
+  Greater = 62, // >
+  Question = 63, // ?
+  At = 64, // @
+  LeftBracket = 91, // [
+  Backslash = 92, // \
+  RightBracket = 93, // ]
+  Caret = 94, // ^
+  Underscore = 95, // _
+  Grave = 96, // `
+  A = 97, // a
+  B = 98, // b
+  C = 99, // c
+  D = 100, // d
+  E = 101, // e
+  F = 102, // f
+  G = 103, // g
+  H = 104, // h
+  I = 105, // i
+  J = 106, // j
+  K = 107, // k
+  L = 108, // l
+  M = 109, // m
+  N = 110, // n
+  O = 111, // o
+  P = 112, // p
+  Q = 113, // q
+  R = 114, // r
+  S = 115, // s
+  T = 116, // t
+  U = 117, // u
+  V = 118, // v
+  W = 119, // w
+  X = 120, // x
+  Y = 121, // y
+  Z = 122, // z
+  LeftBrace = 123, // [
+  Bar = 124, // |
+  RightBrace = 125, // ]
+  Tilde = 126, // ~
+  Delete = 127,
+
+  // Numpad
+  Keypad0 = 256, // Numpad 0
+  Keypad1 = 257, // Numpad 1
+  Keypad2 = 258, // Numpad 2
+  Keypad3 = 259, // Numpad 3
+  Keypad4 = 260, // Numpad 4
+  Keypad5 = 261, // Numpad 5
+  Keypad6 = 262, // Numpad 6
+  Keypad7 = 263, // Numpad 7
+  Keypad8 = 264, // Numpad 8
+  Keypad9 = 265, // Numpad 9
+  KeypadPeriod = 266, // Numpad .
+  KeypadDivide = 267, // Numpad /
+  KeypadMultiply = 268, // Numpad *
+  KeypadMinus = 269, // Numpad -
+  KeypadPlus = 270, // Numpad +
+  KeypadEnter = 271, // Numpad Enter
+  KeypadEquals = 272, // Numpad =
+
+  // Navigation
+  Up = 273,
+  Down = 274,
+  Right = 275,
+  Left = 276,
+  Insert = 277,
+  Home = 278,
+  End = 279,
+  Pageup = 280,
+  Pagedown = 281,
+
+  // Function keys
+  F1 = 282,
+  F2 = 283,
+  F3 = 284,
+  F4 = 285,
+  F5 = 286,
+  F6 = 287,
+  F7 = 288,
+  F8 = 289,
+  F9 = 290,
+  F10 = 291,
+  F11 = 292,
+  F12 = 293,
+  F13 = 294,
+  F14 = 295,
+  F15 = 296,
+
+  // Modifiers
+  NumLock = 300,
+  CapsLock = 301,
+  ScrollLock = 302,
+  RightShift = 303,
+  LeftShift = 304,
+  RightCtrl = 305,
+  LeftCtrl = 306,
+  RightAlt = 307,
+  LeftAlt = 308,
+  RightMeta = 309,
+  LeftMeta = 310,
+  LeftSuper = 311, // Left "Windows" key
+  RightSuper = 312, // Right "Windows" key
+  Mode = 313, // "Alt Gr" key
+  Compose = 314, // Multi-key compose key
+
+  // Miscellaneous
+  Help = 315,
+  PrintScreen = 316,
+  SysReq = 317,
+  Break = 318,
+  Menu = 319,
+  Power = 320, // Power Macintosh power key
+  Euro = 321, // Some European keyboards
+  Undo = 322 // Atari keyboard has Undo
+}
+
+/// @brief The properties of a pressed key
+struct KeyboardPress {
+  /// @brief The hardware-independent symbol identifying the pressed key
+  symbol:KeyboardSymbol;
+  /// @brief Unicode value
+  /// If the keypress generates a printing character, the unicode value
+  /// contains the character generated. If the key is a non-printing
+  /// character, e.g. a function or arrow key, the unicode value is zero.
+  unicode:uint32;
+  /// @brief The modifiers held for this key press
+  modifiers:KeyboardModifier;
+}

@@ -1,0 +1,144 @@
+//
+//    Copyright (C) 2018 Team Kodi
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+//    The above copyright notice and this permission notice shall be included
+//    in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+
+include "action_keyboard.fbs";
+
+namespace KODI.RETRO;
+
+/// @brief The state of all digital buttons represented as a bitmask for
+/// packing efficiency. Set bits represent pressed buttons. LSB is the first
+/// button. Bits exceeding the button count must be zero.
+table DigitalButtonState {
+  /// @brief The number of bits used in this mask
+  button_count:uint8;
+  /// @brief The bit mask of pressed buttons
+  bitmask:[uint8];
+}
+
+/// @brief The state of an analog button
+struct AnalogButtonState {
+  /// @brief The state of the analog button
+  /// 0x0000 maps to fully unpressed
+  /// 0xffff maps to fully pressed
+  magnitude:uint16;
+}
+
+/// @brief The state of an analog stick in a right-handed coordinate system;
+/// maximum X maps to right, maximum Y maps to up.
+struct AnalogStickState {
+  /// @brief The horizontal axis
+  /// 0x0000 maps to fully left
+  /// 0x7fff maps to centered
+  /// 0xfffe maps to fully right
+  /// 0xffff is disallowed
+  x:uint16;
+  /// @brief The vertical axis
+  /// 0x0000 maps to fully down
+  /// 0x7fff maps to centered
+  /// 0xfffe maps to fully up
+  /// 0xffff is disallowed
+  y:uint16;
+}
+
+/// @brief The state of an accelerometer in a right-handed coordinate system
+/// 0x0000 means the axis is fully negative
+/// 0x7fff means the axis is centered
+/// 0xfffe means the axis is fully positive
+/// 0xffff is disallowed
+/// @TODO: Units
+struct Accelerometer {
+  /// @brief The X axis
+  x:uint16;
+  /// @brief The Y axis
+  y:uint16;
+  /// @brief The Z axis
+  z:uint16;
+}
+
+/// @brief The state of a relative pointer in a right-handed coordinate
+/// system; positive X maps to rightward motion, positive Y maps to upward
+/// motion
+struct RelativePointerState {
+  /// @brief The horizontal axis
+  /// 0x0000 maps to maximum leftward motion
+  /// 0x7fff maps to stationary in the horizontal direction
+  /// 0xfffe maps to maximum rightware motion
+  /// 0xffff is disallowed
+  x:uint16;
+  /// @brief The vertical axis
+  /// 0x0000 maps to maximum downward motion
+  /// 0x7fff maps to stationary in the vertical direction
+  /// 0xfffe maps to maximum upware motion
+  /// 0xffff is disallowed
+  y:uint16;
+}
+
+/// @brief The state of an absolute pointer in a right-handed coordinate
+/// system; maximum X maps to fully right, maximum Y maps to fully up
+struct AbsolutePointerState {
+  /// @brief The pressed state
+  pressed:bool;
+  /// @brief The horizontal axis
+  /// 0x0000 maps to fully left
+  /// 0x7fff maps to centered
+  /// 0xfffe maps to fully right
+  /// 0xffff is disallowed
+  x:uint16;
+  /// @brief The vertical axis
+  /// 0x0000 maps to fully down
+  /// 0x7fff maps to centered
+  /// 0xfffe maps to fully up
+  /// 0xffff is disallowed
+  y:uint16;
+}
+
+/// @brief The state of a wheel
+struct WheelState {
+  /// @brief The position of the axis
+  /// 0x0000 means the wheel is fully counter-clockwise
+  /// 0x7fff means the wheel is centered
+  /// 0xfffe means the wheen is fully clockwise
+  /// 0xffff is disallowed
+  position:uint16;
+}
+
+/// @brief The state of a throttle
+struct ThrottleState {
+  /// @brief The position of the axis
+  /// 0x0000 means the throttle is fully pulled
+  /// 0x7fff means the throttle is centered
+  /// 0xfffe means the throttle is fully pressed
+  /// 0xffff is disallowed
+  position:uint16;
+}
+
+/// @brief The state of a player's input device
+table ControllerState {
+  digital_buttons:DigitalButtonState;
+  analog_buttons:[AnalogButtonState];
+  analog_sticks:[AnalogStickState];
+  relative_pointers:[RelativePointerState];
+  absolute_pointers:[AbsolutePointerState];
+  wheels:[WheelState];
+  throttles:[ThrottleState];
+  pressed_keys:[KeyboardPress];
+}

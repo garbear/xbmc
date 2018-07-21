@@ -6,12 +6,26 @@
 //  See LICENSES/README.md for more information.
 //
 
+include "action.fbs";
+include "multicodec.fbs";
+
 namespace KODI.RETRO;
 
 // Savestate schema
 // Version 1
 
 file_identifier "SAV_";
+
+table State {
+  /// @brief The timestamp, in frames.Monotonically increases each frame.
+  timestamp:uint64;
+
+  /// @brief The multihash of the action taken
+  action_digest:[uint8];
+
+  /// @brief The action
+  action:[Action];
+}
 
 enum SaveType : uint8 {
   Unknown,
@@ -27,10 +41,12 @@ table Savestate {
   type:SaveType;
   slot:uint8;
   label:string;
+  //creator:string;
   created:string; // RFC 1123 date time
 
   // Game properties
   game_file_name:string;
+  //std::map<std::string, std::string> m_gameHashes; // TODO
 
   // Environment properties
   timestamp_frames:uint64;
@@ -39,9 +55,34 @@ table Savestate {
   // Emulator properties
   emulator_addon_id:string;
   emulator_version:string; // Semantic version
+  //game_client_hash:string; // TODO
+
+  // Video stream properties
+  //pixel_format:PixelFormat;
+  //max_width:uint16;
+  //max_height:uint16;
+  //pixel_aspect_ratio:float = 1.0;
+
+  // Video frame properties
+  //video_data:[uint8];
+  //video_width:uint16;
+  //video_height:uint16;
+  //rotation:VideoRotation;
+
+  // Audio stream properties
+  //audio_format:PCMFormat;
+  //sample_rate:double;
+  //channel_map:AudioChannelMap;
+
+  // Audio frame properties
+  //audio_data:[uint8];
 
   // Memory properties
   memory_data:[uint8];
+
+  // Input properties
+  //controller_tree:ControllerTree;
+  //player_actions:PlayerActions;
 }
 
 root_type Savestate;

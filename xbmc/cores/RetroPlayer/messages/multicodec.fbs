@@ -1,0 +1,469 @@
+//
+//    Copyright (C) 2018 Team Kodi
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+//    The above copyright notice and this permission notice shall be included
+//    in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+
+namespace KODI.RETRO;
+
+/// Multicodecs are compact, self-describing codecs designed for
+/// future-proofing data. The protocol table here is from table.csv of
+/// the Multiformats project: https://github.com/multiformats/multicodec
+enum Multicodec:uint16 {
+  identity, // 0x00
+  raw, // 0x55
+
+  // Bases encodings
+  base1, // 0x31 "1"
+  base2, // 0x30 "0"
+  base8, // 0x37 "7"
+  base10, // 0x39 "9"
+  base16, // 0x66 "f"
+  base16_upper, // 0x46 "F"
+  base32, // 0x62 "b"
+  base32_upper, // 0x42 "B"
+  base32pad, // 0x63 "c"
+  base32pad_upper, // 0x43 "C"
+  base32hex, // 0x76 "v"
+  base32hex_upper, // 0x56 "V"
+  base32hexpad, // 0x74 "t"
+  base32hexpad_upper, // 0x54 "T"
+  base58flickr, // 0x5a "Z"
+  base58btc, // 0x7a "z"
+  base64, // 0x6d "m"
+  base64pad, // 0x4d "M"
+  base64url, // 0x75 "u"
+  base64urlpad, // 0x55 "U"
+
+  // Serialization formats
+  cbor, // 0x51
+  bson,
+  ubjson,
+  protobuf, // 0x50
+  capnp,
+  flatbuf,
+  rlp, // 0x60
+  msgpack,
+  binc,
+  bencode, // 0x63
+
+  // Multiformats
+  multicodec, // 0x30
+  multihash, // 0x31
+  multiaddr, // 0x32
+  multibase, // 0x33
+
+  // Multihashes
+  md4, // 0xd4
+  md5, // 0xd5
+  sha1, // 0x11
+  sha2_256, // 0x12
+  sha2_512, // 0x13
+  dbl_sha2_256, // 0x56
+  sha3_224, // 0x17
+  sha3_256, // 0x16
+  sha3_384, // 0x15
+  sha3_512, // 0x14
+  shake_128, // 0x18
+  shake_256, // 0x19
+  keccak_224, // 0x1A
+  keccak_256, // 0x1B
+  keccak_384, // 0x1C
+  keccak_512, // 0x1D
+  murmur3, // 0x22
+  blake2b_8, // 0xb201
+  blake2b_16, // 0xb202
+  blake2b_24, // 0xb203
+  blake2b_32, // 0xb204
+  blake2b_40, // 0xb205
+  blake2b_48, // 0xb206
+  blake2b_56, // 0xb207
+  blake2b_64, // 0xb208
+  blake2b_72, // 0xb209
+  blake2b_80, // 0xb20a
+  blake2b_88, // 0xb20b
+  blake2b_96, // 0xb20c
+  blake2b_104, // 0xb20d
+  blake2b_112, // 0xb20e
+  blake2b_120, // 0xb20f
+  blake2b_128, // 0xb210
+  blake2b_136, // 0xb211
+  blake2b_144, // 0xb212
+  blake2b_152, // 0xb213
+  blake2b_160, // 0xb214
+  blake2b_168, // 0xb215
+  blake2b_176, // 0xb216
+  blake2b_184, // 0xb217
+  blake2b_192, // 0xb218
+  blake2b_200, // 0xb219
+  blake2b_208, // 0xb21a
+  blake2b_216, // 0xb21b
+  blake2b_224, // 0xb21c
+  blake2b_232, // 0xb21d
+  blake2b_240, // 0xb21e
+  blake2b_248, // 0xb21f
+  blake2b_256, // 0xb220
+  blake2b_264, // 0xb221
+  blake2b_272, // 0xb222
+  blake2b_280, // 0xb223
+  blake2b_288, // 0xb224
+  blake2b_296, // 0xb225
+  blake2b_304, // 0xb226
+  blake2b_312, // 0xb227
+  blake2b_320, // 0xb228
+  blake2b_328, // 0xb229
+  blake2b_336, // 0xb22a
+  blake2b_344, // 0xb22b
+  blake2b_352, // 0xb22c
+  blake2b_360, // 0xb22d
+  blake2b_368, // 0xb22e
+  blake2b_376, // 0xb22f
+  blake2b_384, // 0xb230
+  blake2b_392, // 0xb231
+  blake2b_400, // 0xb232
+  blake2b_408, // 0xb233
+  blake2b_416, // 0xb234
+  blake2b_424, // 0xb235
+  blake2b_432, // 0xb236
+  blake2b_440, // 0xb237
+  blake2b_448, // 0xb238
+  blake2b_456, // 0xb239
+  blake2b_464, // 0xb23a
+  blake2b_472, // 0xb23b
+  blake2b_480, // 0xb23c
+  blake2b_488, // 0xb23d
+  blake2b_496, // 0xb23e
+  blake2b_504, // 0xb23f
+  blake2b_512, // 0xb240
+  blake2s_8, // 0xb241
+  blake2s_16, // 0xb242
+  blake2s_24, // 0xb243
+  blake2s_32, // 0xb244
+  blake2s_40, // 0xb245
+  blake2s_48, // 0xb246
+  blake2s_56, // 0xb247
+  blake2s_64, // 0xb248
+  blake2s_72, // 0xb249
+  blake2s_80, // 0xb24a
+  blake2s_88, // 0xb24b
+  blake2s_96, // 0xb24c
+  blake2s_104, // 0xb24d
+  blake2s_112, // 0xb24e
+  blake2s_120, // 0xb24f
+  blake2s_128, // 0xb250
+  blake2s_136, // 0xb251
+  blake2s_144, // 0xb252
+  blake2s_152, // 0xb253
+  blake2s_160, // 0xb254
+  blake2s_168, // 0xb255
+  blake2s_176, // 0xb256
+  blake2s_184, // 0xb257
+  blake2s_192, // 0xb258
+  blake2s_200, // 0xb259
+  blake2s_208, // 0xb25a
+  blake2s_216, // 0xb25b
+  blake2s_224, // 0xb25c
+  blake2s_232, // 0xb25d
+  blake2s_240, // 0xb25e
+  blake2s_248, // 0xb25f
+  blake2s_256, // 0xb260
+
+  skein256_8, // 0xb301
+  skein256_16, // 0xb302
+  skein256_24, // 0xb303
+  skein256_32, // 0xb304
+  skein256_40, // 0xb305
+  skein256_48, // 0xb306
+  skein256_56, // 0xb307
+  skein256_64, // 0xb308
+  skein256_72, // 0xb309
+  skein256_80, // 0xb30a
+  skein256_88, // 0xb30b
+  skein256_96, // 0xb30c
+  skein256_104, // 0xb30d
+  skein256_112, // 0xb30e
+  skein256_120, // 0xb30f
+  skein256_128, // 0xb310
+  skein256_136, // 0xb311
+  skein256_144, // 0xb312
+  skein256_152, // 0xb313
+  skein256_160, // 0xb314
+  skein256_168, // 0xb315
+  skein256_176, // 0xb316
+  skein256_184, // 0xb317
+  skein256_192, // 0xb318
+  skein256_200, // 0xb319
+  skein256_208, // 0xb31a
+  skein256_216, // 0xb31b
+  skein256_224, // 0xb31c
+  skein256_232, // 0xb31d
+  skein256_240, // 0xb31e
+  skein256_248, // 0xb31f
+  skein256_256, // 0xb320
+  skein512_8, // 0xb321
+  skein512_16, // 0xb322
+  skein512_24, // 0xb323
+  skein512_32, // 0xb324
+  skein512_40, // 0xb325
+  skein512_48, // 0xb326
+  skein512_56, // 0xb327
+  skein512_64, // 0xb328
+  skein512_72, // 0xb329
+  skein512_80, // 0xb32a
+  skein512_88, // 0xb32b
+  skein512_96, // 0xb32c
+  skein512_104, // 0xb32d
+  skein512_112, // 0xb32e
+  skein512_120, // 0xb32f
+  skein512_128, // 0xb330
+  skein512_136, // 0xb331
+  skein512_144, // 0xb332
+  skein512_152, // 0xb333
+  skein512_160, // 0xb334
+  skein512_168, // 0xb335
+  skein512_176, // 0xb336
+  skein512_184, // 0xb337
+  skein512_192, // 0xb338
+  skein512_200, // 0xb339
+  skein512_208, // 0xb33a
+  skein512_216, // 0xb33b
+  skein512_224, // 0xb33c
+  skein512_232, // 0xb33d
+  skein512_240, // 0xb33e
+  skein512_248, // 0xb33f
+  skein512_256, // 0xb340
+  skein512_264, // 0xb341
+  skein512_272, // 0xb342
+  skein512_280, // 0xb343
+  skein512_288, // 0xb344
+  skein512_296, // 0xb345
+  skein512_304, // 0xb346
+  skein512_312, // 0xb347
+  skein512_320, // 0xb348
+  skein512_328, // 0xb349
+  skein512_336, // 0xb34a
+  skein512_344, // 0xb34b
+  skein512_352, // 0xb34c
+  skein512_360, // 0xb34d
+  skein512_368, // 0xb34e
+  skein512_376, // 0xb34f
+  skein512_384, // 0xb350
+  skein512_392, // 0xb351
+  skein512_400, // 0xb352
+  skein512_408, // 0xb353
+  skein512_416, // 0xb354
+  skein512_424, // 0xb355
+  skein512_432, // 0xb356
+  skein512_440, // 0xb357
+  skein512_448, // 0xb358
+  skein512_456, // 0xb359
+  skein512_464, // 0xb35a
+  skein512_472, // 0xb35b
+  skein512_480, // 0xb35c
+  skein512_488, // 0xb35d
+  skein512_496, // 0xb35e
+  skein512_504, // 0xb35f
+  skein512_512, // 0xb360
+  skein1024_8, // 0xb361
+  skein1024_16, // 0xb362
+  skein1024_24, // 0xb363
+  skein1024_32, // 0xb364
+  skein1024_40, // 0xb365
+  skein1024_48, // 0xb366
+  skein1024_56, // 0xb367
+  skein1024_64, // 0xb368
+  skein1024_72, // 0xb369
+  skein1024_80, // 0xb36a
+  skein1024_88, // 0xb36b
+  skein1024_96, // 0xb36c
+  skein1024_104, // 0xb36d
+  skein1024_112, // 0xb36e
+  skein1024_120, // 0xb36f
+  skein1024_128, // 0xb370
+  skein1024_136, // 0xb371
+  skein1024_144, // 0xb372
+  skein1024_152, // 0xb373
+  skein1024_160, // 0xb374
+  skein1024_168, // 0xb375
+  skein1024_176, // 0xb376
+  skein1024_184, // 0xb377
+  skein1024_192, // 0xb378
+  skein1024_200, // 0xb379
+  skein1024_208, // 0xb37a
+  skein1024_216, // 0xb37b
+  skein1024_224, // 0xb37c
+  skein1024_232, // 0xb37d
+  skein1024_240, // 0xb37e
+  skein1024_248, // 0xb37f
+  skein1024_256, // 0xb380
+  skein1024_264, // 0xb381
+  skein1024_272, // 0xb382
+  skein1024_280, // 0xb383
+  skein1024_288, // 0xb384
+  skein1024_296, // 0xb385
+  skein1024_304, // 0xb386
+  skein1024_312, // 0xb387
+  skein1024_320, // 0xb388
+  skein1024_328, // 0xb389
+  skein1024_336, // 0xb38a
+  skein1024_344, // 0xb38b
+  skein1024_352, // 0xb38c
+  skein1024_360, // 0xb38d
+  skein1024_368, // 0xb38e
+  skein1024_376, // 0xb38f
+  skein1024_384, // 0xb390
+  skein1024_392, // 0xb391
+  skein1024_400, // 0xb392
+  skein1024_408, // 0xb393
+  skein1024_416, // 0xb394
+  skein1024_424, // 0xb395
+  skein1024_432, // 0xb396
+  skein1024_440, // 0xb397
+  skein1024_448, // 0xb398
+  skein1024_456, // 0xb399
+  skein1024_464, // 0xb39a
+  skein1024_472, // 0xb39b
+  skein1024_480, // 0xb39c
+  skein1024_488, // 0xb39d
+  skein1024_496, // 0xb39e
+  skein1024_504, // 0xb39f
+  skein1024_512, // 0xb3a0
+  skein1024_520, // 0xb3a1
+  skein1024_528, // 0xb3a2
+  skein1024_536, // 0xb3a3
+  skein1024_544, // 0xb3a4
+  skein1024_552, // 0xb3a5
+  skein1024_560, // 0xb3a6
+  skein1024_568, // 0xb3a7
+  skein1024_576, // 0xb3a8
+  skein1024_584, // 0xb3a9
+  skein1024_592, // 0xb3aa
+  skein1024_600, // 0xb3ab
+  skein1024_608, // 0xb3ac
+  skein1024_616, // 0xb3ad
+  skein1024_624, // 0xb3ae
+  skein1024_632, // 0xb3af
+  skein1024_640, // 0xb3b0
+  skein1024_648, // 0xb3b1
+  skein1024_656, // 0xb3b2
+  skein1024_664, // 0xb3b3
+  skein1024_672, // 0xb3b4
+  skein1024_680, // 0xb3b5
+  skein1024_688, // 0xb3b6
+  skein1024_696, // 0xb3b7
+  skein1024_704, // 0xb3b8
+  skein1024_712, // 0xb3b9
+  skein1024_720, // 0xb3ba
+  skein1024_728, // 0xb3bb
+  skein1024_736, // 0xb3bc
+  skein1024_744, // 0xb3bd
+  skein1024_752, // 0xb3be
+  skein1024_760, // 0xb3bf
+  skein1024_768, // 0xb3c0
+  skein1024_776, // 0xb3c1
+  skein1024_784, // 0xb3c2
+  skein1024_792, // 0xb3c3
+  skein1024_800, // 0xb3c4
+  skein1024_808, // 0xb3c5
+  skein1024_816, // 0xb3c6
+  skein1024_824, // 0xb3c7
+  skein1024_832, // 0xb3c8
+  skein1024_840, // 0xb3c9
+  skein1024_848, // 0xb3ca
+  skein1024_856, // 0xb3cb
+  skein1024_864, // 0xb3cc
+  skein1024_872, // 0xb3cd
+  skein1024_880, // 0xb3ce
+  skein1024_888, // 0xb3cf
+  skein1024_896, // 0xb3d0
+  skein1024_904, // 0xb3d1
+  skein1024_912, // 0xb3d2
+  skein1024_920, // 0xb3d3
+  skein1024_928, // 0xb3d4
+  skein1024_936, // 0xb3d5
+  skein1024_944, // 0xb3d6
+  skein1024_952, // 0xb3d7
+  skein1024_960, // 0xb3d8
+  skein1024_968, // 0xb3d9
+  skein1024_976, // 0xb3da
+  skein1024_984, // 0xb3db
+  skein1024_992, // 0xb3dc
+  skein1024_1000, // 0xb3dd
+  skein1024_1008, // 0xb3de
+  skein1024_1016, // 0xb3df
+  skein1024_1024, // 0xb3e0
+
+  // Multiaddresses
+  ip4, // 0x04
+  ip6, // 0x29
+  tcp, // 0x06
+  udp, // 0x0111
+  dccp, // 0x21
+  sctp, // 0x84
+  udt, // 0x012D
+  utp, // 0x012E
+  ipfs, // 0x01A5
+  http, // 0x01E0
+  https, // 0x01BB
+  quic, // 0x01CC
+  ws, // 0x01DD
+  onion, // 0x01BC
+  p2p_circuit, // 0x0122
+
+  // archiving formats
+  tar,
+  zip,
+
+  // image formats
+  png,
+  jpg,
+
+  // video formats
+  mp4,
+  mkv,
+
+  // IPLD formats
+  dag_pb, // 0x70
+  dag_cbor, // 0x71
+
+  git_raw, // 0x78
+
+  eth_block, // 0x90
+  eth_block_list, // 0x91
+  eth_tx_trie, // 0x92
+  eth_tx, // 0x93
+  eth_tx_receipt_trie, // 0x94
+  eth_tx_receipt, // 0x95
+  eth_state_trie, // 0x96
+  eth_account_snapshot, // 0x97
+  eth_storage_trie, // 0x98
+
+  bitcoin_block, // 0xb0
+  bitcoin_tx, // 0xb1
+
+  zcash_block, // 0xc0
+  zcash_tx, // 0xc1
+
+  stellar_block, // 0xd0
+  stellar_tx, // 0xd1
+
+  torrent_info, // 0x7b
+  torrent_file, // 0x7c
+  ed25519_pub // 0xed
+}
