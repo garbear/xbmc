@@ -6,14 +6,27 @@
 //  See LICENSES/README.md for more information.
 //
 
+include "action.fbs";
+include "multicodec.fbs";
 include "video.fbs";
 
 namespace KODI.RETRO.SAVESTATE;
 
 // Savestate schema
-// Version 5
+// Version 6
 
 file_identifier "SAV_";
+
+table State {
+  /// @brief The timestamp, in frames.Monotonically increases each frame.
+  timestamp:uint64 (id: 0);
+
+  /// @brief The multihash of the action taken
+  action_digest:[uint8] (id: 1);
+
+  /// @brief The action
+  action:[Action] (id: 2);
+}
 
 enum SaveType : uint8 {
   Unknown,
@@ -39,6 +52,7 @@ table Savestate {
 
   // Game properties
   game_file_name:string (id: 5);
+  //std::map<std::string, std::string> m_gameHashes; // TODO
 
   // Environment properties
   timestamp_frames:uint64 (id: 6);
@@ -47,6 +61,7 @@ table Savestate {
   // Emulator properties
   emulator_addon_id:string (id: 8);
   emulator_version:string (id: 9); // Semantic version
+  //game_client_hash:string; // TODO
 
   // Video stream properties
   pixel_format:PixelFormat (id: 12);
@@ -67,11 +82,23 @@ table Savestate {
   video_data_compression:CompressionType = None (id: 28);
   video_data_uncompressed_size:uint64 = 0 (id: 29);
 
+  // Audio stream properties
+  //audio_format:PCMFormat;
+  //sample_rate:double;
+  //channel_map:AudioChannelMap;
+
+  // Audio frame properties
+  //audio_data:[uint8];
+
   // Memory properties
   memory_data:[uint8] (id: 10);
   memory_data_compressed:[uint8] (id: 24);
   memory_data_compression:CompressionType = None (id: 25);
   memory_data_uncompressed_size:uint64 = 0 (id: 26);
+
+  // Input properties
+  //controller_tree:ControllerTree;
+  action:Action (id: 24);
 }
 
 root_type Savestate;
