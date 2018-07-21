@@ -1,4 +1,9 @@
-set(MESSAGES savestate.fbs
+set(MESSAGES action.fbs
+             action_controller.fbs
+             action_keyboard.fbs
+             action_topology.fbs
+             multicodec.fbs
+             savestate.fbs
              video.fbs
 )
 
