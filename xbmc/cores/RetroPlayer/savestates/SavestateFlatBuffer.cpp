@@ -18,7 +18,7 @@ using namespace RETRO;
 
 namespace
 {
-const uint8_t SCHEMA_VERSION = 3;
+const uint8_t SCHEMA_VERSION = 4;
 const uint8_t SCHEMA_MIN_VERSION = 1;
 
 /*!
