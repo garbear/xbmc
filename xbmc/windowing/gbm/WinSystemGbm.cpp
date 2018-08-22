@@ -293,7 +293,8 @@ void CWinSystemGbm::FlipPage(bool rendered, bool videoLayer, bool async)
     bo = m_GBM->GetDevice().GetSurface().LockFrontBuffer().Get();
   }
 
-  m_DRM->FlipPage(bo, rendered, videoLayer, async);
+  if (bo)
+    m_DRM->FlipPage(bo, rendered, videoLayer, async);
 
   if (m_videoLayerBridge && !videoLayer)
   {
