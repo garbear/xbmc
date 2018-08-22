@@ -36,7 +36,8 @@ bool CGameClientStreamHwFramebuffer::OpenStream(RETRO::IRetroPlayerStream* strea
   if (stream->OpenStream(renderingProperties))
   {
     m_stream = stream;
-    m_callback.HardwareContextReset();
+    //TODO guess this needs to be called later
+    //m_callback.HardwareContextReset();
   }
 
   return m_stream != nullptr;

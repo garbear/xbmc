@@ -38,7 +38,7 @@ void CGameClientStreams::Deinitialize()
   m_streamManager = nullptr;
 }
 
-IGameClientStream* CGameClientStreams::OpenStream(const game_stream_properties& properties)
+IGameClientStream* CGameClientStreams::CreateStream(const game_stream_properties& properties)
 {
   if (m_streamManager == nullptr)
     return nullptr;
@@ -66,15 +66,26 @@ IGameClientStream* CGameClientStreams::OpenStream(const game_stream_properties& 
     return nullptr;
   }
 
-  if (!gameStream->OpenStream(retroStream.get(), properties))
-  {
-    CLog::Log(LOGERROR, "GAME: Failed to open audio stream");
-    return nullptr;
-  }
-
-  m_streams[gameStream.get()] = std::move(retroStream);
+  m_mystream = std::move(retroStream);
+  //m_streams[gameStream.get()] = std::move(retroStream);
 
   return gameStream.release();
+}
+
+bool CGameClientStreams::OpenStream(IGameClientStream* stream,
+                                    const game_stream_properties& properties)
+{
+  if (stream != nullptr)
+  {
+    RETRO::StreamProperties renderingProperties{};
+    m_mystream->OpenStream(renderingProperties);
+    {
+      CLog::Log(LOGERROR, "GAME: Failed to open stream");
+      return false;
+    }
+  }
+
+  return true;
 }
 
 void CGameClientStreams::CloseStream(IGameClientStream* stream)

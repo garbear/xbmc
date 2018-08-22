@@ -30,6 +30,8 @@ class IGameClientStream
 public:
   virtual ~IGameClientStream() = default;
 
+  //virtual bool CreateStream(RETRO::IRetroPlayerStream* stream, const game_stream_properties& properties) = 0;
+
   /*!
    * \brief Open the stream
    *

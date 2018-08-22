@@ -176,6 +176,7 @@ public:
 
   // Implementation of IHwFramebufferCallback
   void HardwareContextReset() override;
+  void CreateHwContext() override;
 
   /*!
    * @brief To get the interface table used between addon and kodi
@@ -268,6 +269,10 @@ private:
   std::unique_ptr<CGameClientInGameSaves> m_inGameSaves;
 
   CCriticalSection m_critSection;
+
+public:
+  bool m_hwrendering = false;
+  void* m_stream = nullptr;
 };
 
 } // namespace GAME

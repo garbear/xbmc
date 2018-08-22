@@ -40,7 +40,7 @@ public:
   uint8_t* GetMemory() override { return nullptr; }
 
   GLuint TextureID() const { return m_texture.tex_id; }
-  uintptr_t GetCurrentFramebuffer() override { return m_texture.fbo_id; }
+  uintptr_t GetCurrentFramebuffer() override;
 
   texture m_texture;
 

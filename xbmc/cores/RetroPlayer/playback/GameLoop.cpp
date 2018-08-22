@@ -8,12 +8,15 @@
 
 #include "GameLoop.h"
 
+#include "utils/XTimeUtils.h"
+
 #include <chrono>
 #include <cmath>
 
 using namespace KODI;
 using namespace RETRO;
 using namespace std::chrono_literals;
+using namespace GAME;
 
 namespace
 {
@@ -21,8 +24,11 @@ namespace
 constexpr double DEFAULT_FPS = 60.0;
 } // namespace
 
-CGameLoop::CGameLoop(IGameLoopCallback* callback, double fps)
-  : CThread("GameLoop"), m_callback(callback), m_fps(fps ? fps : DEFAULT_FPS)
+CGameLoop::CGameLoop(IGameLoopCallback* callback, IHwFramebufferCallback* hwcallback, double fps)
+  : CThread("GameLoop"),
+    m_callback(callback),
+    m_hwcallback(hwcallback),
+    m_fps(fps ? fps : DEFAULT_FPS)
 {
 }
 
@@ -68,6 +74,11 @@ void CGameLoop::PauseAsync()
 void CGameLoop::Process(void)
 {
   // Main game loop that runs until the thread is requested to stop
+
+  m_hwcallback->CreateHwContext();
+  KODI::TIME::Sleep(200ms);
+  m_hwcallback->HardwareContextReset();
+
   while (!m_bStop)
   {
     // If the speed factor has changed, reset the last frame time and update

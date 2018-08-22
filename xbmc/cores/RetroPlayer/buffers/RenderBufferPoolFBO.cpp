@@ -16,6 +16,8 @@
 
 using namespace KODI;
 using namespace RETRO;
+using namespace WINDOWING;
+using namespace GBM;
 
 CRenderBufferPoolFBO::CRenderBufferPoolFBO(CRenderContext& context) : m_context(context)
 {
