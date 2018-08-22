@@ -56,10 +56,10 @@ bool CRenderBufferPoolFBO::CreateContext()
     return false;
   }
 
-  eglBindAPI(EGL_OPENGL_ES_API);
+  eglBindAPI(EGL_OPENGL_API);
 
   EGLint attribs[] = {EGL_RENDERABLE_TYPE,
-                      EGL_OPENGL_ES2_BIT,
+                      EGL_OPENGL_BIT,
                       EGL_SURFACE_TYPE,
                       EGL_WINDOW_BIT,
                       EGL_RED_SIZE,
