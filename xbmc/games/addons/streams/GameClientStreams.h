@@ -25,6 +25,7 @@ namespace GAME
 
 class CGameClient;
 class IGameClientStream;
+class IRetroPlayerStream;
 
 /*!
  * \ingroup games
@@ -37,7 +38,9 @@ public:
   void Initialize(RETRO::IStreamManager& streamManager);
   void Deinitialize();
 
+  IGameClientStream* CreateStream(const game_stream_properties& properties);
   IGameClientStream* OpenStream(const game_stream_properties& properties);
+  bool OpenStream(IGameClientStream* stream, const game_stream_properties& properties);
   void CloseStream(IGameClientStream* stream);
 
   // TODO: Find me a better place
@@ -57,6 +60,8 @@ private:
 
   // Stream parameters
   std::map<IGameClientStream*, RETRO::StreamPtr> m_streams;
+
+  RETRO::StreamPtr m_mystream;
 };
 
 } // namespace GAME

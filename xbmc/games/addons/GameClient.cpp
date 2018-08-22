@@ -608,6 +608,14 @@ void CGameClient::HardwareContextReset()
   }
 }
 
+void CGameClient::CreateHwContext()
+{
+  game_stream_properties properties;
+
+  properties.type = GAME_STREAM_HW_FRAMEBUFFER;
+  Streams().OpenStream((IGameClientStream*)m_stream, properties);
+}
+
 void CGameClient::cb_enable_hardware_rendering(KODI_HANDLE kodiInstance,
                                                const game_hw_rendering_properties* properties)
 {
@@ -637,7 +645,18 @@ KODI_GAME_STREAM_HANDLE CGameClient::cb_open_stream(KODI_HANDLE kodiInstance,
   if (gameClient == nullptr)
     return nullptr;
 
-  return gameClient->Streams().OpenStream(*properties);
+  if (properties->type == GAME_STREAM_HW_FRAMEBUFFER)
+  {
+    gameClient->m_stream = gameClient->Streams().CreateStream(*properties);
+    gameClient->m_hwrendering = true;
+  }
+  else
+  {
+    gameClient->m_stream = gameClient->Streams().CreateStream(*properties);
+    gameClient->Streams().OpenStream((IGameClientStream*)gameClient->m_stream, *properties);
+  }
+
+  return gameClient->m_stream;
 }
 
 bool CGameClient::cb_get_stream_buffer(KODI_HANDLE kodiInstance,

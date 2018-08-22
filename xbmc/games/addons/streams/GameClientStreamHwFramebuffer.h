@@ -26,6 +26,12 @@ public:
   virtual ~IHwFramebufferCallback() = default;
 
   /*!
+   * \brief Creates a HW context
+   *
+   */
+  virtual void CreateHwContext() = 0;
+
+  /*!
    * \brief Invalidates the current HW context and reinitializes GPU resources
    *
    * Any GL state is lost, and must not be deinitialized explicitly.

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "games/addons/streams/GameClientStreamHwFramebuffer.h"
 #include "threads/Event.h"
 #include "threads/Thread.h"
 
@@ -15,7 +16,7 @@
 
 namespace KODI
 {
-namespace RETRO
+namespace GAME
 {
 class IGameLoopCallback
 {
@@ -36,7 +37,7 @@ public:
 class CGameLoop : protected CThread
 {
 public:
-  CGameLoop(IGameLoopCallback* callback, double fps);
+  CGameLoop(IGameLoopCallback* callback, IHwFramebufferCallback* hwcallback, double fps);
 
   ~CGameLoop() override;
 
@@ -59,11 +60,12 @@ private:
   double NowMs() const;
 
   IGameLoopCallback* const m_callback;
+  IHwFramebufferCallback* const m_hwcallback;
   const double m_fps;
   std::atomic<double> m_speedFactor;
   double m_lastFrameMs = 0.0;
   mutable double m_adjustTime = 0.0;
   CEvent m_sleepEvent;
 };
-} // namespace RETRO
+} // namespace GAME
 } // namespace KODI

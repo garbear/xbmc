@@ -107,3 +107,8 @@ bool CRenderBufferFBO::CheckFrameBufferStatus()
 
   return true;
 }
+
+uintptr_t CRenderBufferFBO::GetCurrentFramebuffer()
+{
+  return m_texture.fbo_id;
+}

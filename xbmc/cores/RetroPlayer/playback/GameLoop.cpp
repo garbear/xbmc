@@ -8,18 +8,25 @@
 
 #include "GameLoop.h"
 
+#include "utils/XTimeUtils.h"
+
 #include <chrono>
 #include <cmath>
 
 using namespace KODI;
 using namespace RETRO;
 using namespace std::chrono_literals;
+using namespace GAME;
 
 #define DEFAULT_FPS 60 // In case fps is 0 (shouldn't happen)
 #define FOREVER_MS (7 * 24 * 60 * 60 * 1000) // 1 week is large enough
 
-CGameLoop::CGameLoop(IGameLoopCallback* callback, double fps)
-  : CThread("GameLoop"), m_callback(callback), m_fps(fps ? fps : DEFAULT_FPS), m_speedFactor(0.0)
+CGameLoop::CGameLoop(IGameLoopCallback* callback, IHwFramebufferCallback* hwcallback, double fps)
+  : CThread("GameLoop"),
+    m_callback(callback),
+    m_hwcallback(hwcallback),
+    m_fps(fps ? fps : DEFAULT_FPS),
+    m_speedFactor(0.0)
 {
 }
 
@@ -54,6 +61,9 @@ void CGameLoop::PauseAsync()
 
 void CGameLoop::Process(void)
 {
+  m_hwcallback->CreateHwContext();
+  KODI::TIME::Sleep(200ms);
+  m_hwcallback->HardwareContextReset();
   while (!m_bStop)
   {
     if (m_speedFactor == 0.0)
