@@ -9,6 +9,7 @@
 #include "RPRendererOpenGL.h"
 
 #include "cores/RetroPlayer/buffers/RenderBufferOpenGL.h"
+#include "cores/RetroPlayer/buffers/RenderBufferPoolFBO.h"
 #include "cores/RetroPlayer/buffers/RenderBufferPoolOpenGL.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/gl/ShaderPresetGL.h"
@@ -37,7 +38,7 @@ CRPBaseRenderer* CRendererFactoryOpenGL::CreateRenderer(
 
 RenderBufferPoolVector CRendererFactoryOpenGL::CreateBufferPools(CRenderContext& context)
 {
-  return {std::make_shared<CRenderBufferPoolOpenGL>()};
+  return {std::make_shared<CRenderBufferPoolFBO>(context)};
 }
 
 // --- CRPRendererOpenGL -------------------------------------------------------
