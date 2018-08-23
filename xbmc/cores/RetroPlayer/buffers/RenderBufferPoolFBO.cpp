@@ -110,10 +110,21 @@ bool CRenderBufferPoolFBO::CreateContext()
   //   CLog::Log(LOGERROR, "failed to create egl window surface");
   //   return false;
   // }
-
+  /*
   int client_version = 2;
 
   const EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, client_version, EGL_NONE};
+*/
+  const EGLint glMajor = 3;
+  const EGLint glMinor = 2;
+
+  const EGLint context_attribs[] = {EGL_CONTEXT_MAJOR_VERSION_KHR,
+                                    glMajor,
+                                    EGL_CONTEXT_MINOR_VERSION_KHR,
+                                    glMinor,
+                                    EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR,
+                                    EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+                                    EGL_NONE};
 
   m_eglContext = eglCreateContext(m_eglDisplay, m_eglConfig, EGL_NO_CONTEXT, context_attribs);
   if (m_eglContext == EGL_NO_CONTEXT)
