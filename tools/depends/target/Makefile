@@ -4,7 +4,7 @@ ifneq ($(shell test -f $(PREFIX)/share/config.site && echo 1),1)
   $(error Error: $(PREFIX)/share/config.site  is missing. Please reconfigure depends to generate it)
 endif
 
-DEPENDS = openjdk \
+DEPENDS = openjdk radixdlt \
 	pcre expat gettext sqlite3 libgpg-error \
 	libgcrypt bzip2 libfstrcmp liblzo2 libzip freetype2 fontconfig \
 	openssl gmp nettle gnutls curl nghttp2 \
