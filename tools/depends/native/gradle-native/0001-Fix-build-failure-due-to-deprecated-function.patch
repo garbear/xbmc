@@ -1,0 +1,18 @@
+---
+ .../src/main/kotlin/gradlebuild/strict-compile.gradle.kts       | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/buildSrc/subprojects/plugins/src/main/kotlin/gradlebuild/strict-compile.gradle.kts b/buildSrc/subprojects/plugins/src/main/kotlin/gradlebuild/strict-compile.gradle.kts
+index 61d5d8e1969..31a6536f4de 100644
+--- a/buildSrc/subprojects/plugins/src/main/kotlin/gradlebuild/strict-compile.gradle.kts
++++ b/buildSrc/subprojects/plugins/src/main/kotlin/gradlebuild/strict-compile.gradle.kts
+@@ -21,7 +21,7 @@ val strictCompile = extensions.create<StrictCompileExtension>("strictCompile")
+ 
+ afterEvaluate {
+ 
+-    val strictCompilerArgs = listOf("-Werror", "-Xlint:all", "-Xlint:-options", "-Xlint:-serial")
++    val strictCompilerArgs = listOf("-Xlint:all", "-Xlint:-options", "-Xlint:-serial")
+ 
+     val ignoreDeprecationsArg = "-Xlint:-deprecation"
+ 
+-- 

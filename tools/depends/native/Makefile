@@ -10,7 +10,7 @@ NATIVE= m4-native gettext-native autoconf-native automake-native \
         pcre-native swig-native \
         libpng-native libjpeg-turbo-native liblzo2-native giflib-native \
         distribute-native distutilscross-native JsonSchemaBuilder TexturePacker \
-        flatbuffers-native
+        flatbuffers-native gradle-native
 
 
 ifeq ($(OS),ios)
