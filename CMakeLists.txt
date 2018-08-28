@@ -50,6 +50,7 @@ option(ENABLE_UPNP        "Enable UPnP support?" ON)
 option(ENABLE_AIRTUNES    "Enable AirTunes support?" ON)
 option(ENABLE_OPTICAL     "Enable optical support?" ON)
 option(ENABLE_PYTHON      "Enable python support?" ON)
+option(ENABLE_JNI         "Enable Java support? (Use JNI_PATH)" ON)
 # use ffmpeg from depends or system
 option(ENABLE_INTERNAL_FFMPEG "Enable internal ffmpeg?" OFF)
 if(UNIX)
@@ -146,6 +147,7 @@ set(optional_deps Alsa
                   CCache
                   CEC
                   DBus
+                  JNI
                   LCMS2
                   LircClient
                   MDNS
@@ -166,10 +168,27 @@ set(dyload_optional Plist)
 find_package(TexturePacker REQUIRED)
 find_package(JsonSchemaBuilder REQUIRED)
 
+# JAVA_HOME required to find target JNI, but we want SWIG to find host java
+if (DEFINED JNI_PATH)
+  if (DEFINED JAVA_HOME)
+    set(JAVA_HOME_OLD ${JAVA_HOME})
+  endif()
+  set(JAVA_HOME ${JNI_PATH})
+endif()
+
 # Check optional deps first, since their availability can influence required ones, e.g. ffmpeg
 core_optional_dep(${optional_deps})
 core_optional_dyload_dep(${dyload_optional})
 core_require_dep(${required_deps})
+
+# Restore JAVA_HOME
+if (DEFINED JNI_PATH)
+  if (DEFINED JAVA_HOME_OLD)
+    set(JAVA_HOME ${JAVA_HOME_OLD})
+  else()
+    unset(JAVA_HOME)
+  endif()
+endif()
 
 if(ENABLE_MARIADBCLIENT AND NOT ENABLE_MARIADBCLIENT STREQUAL AUTO AND ENABLE_MYSQLCLIENT AND NOT ENABLE_MYSQLCLIENT STREQUAL AUTO)
   MESSAGE(FATAL_ERROR "You can not use MySql and MariaDB at the same time. Disable one by adding -DENABLE_MYSQLCLIENT=OFF or -DENABLE_MARIADBCLIENT=OFF.")
@@ -199,6 +218,10 @@ if(ENABLE_AIRTUNES)
   if(SHAIRPLAY_FOUND)
     core_require_dyload_dep(Shairplay)
   endif()
+endif()
+
+if(ENABLE_JNI)
+  list(APPEND DEP_DEFINES -DHAS_JAVA)
 endif()
 
 if(CORE_SYSTEM_NAME STREQUAL osx)

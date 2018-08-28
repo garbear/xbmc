@@ -1,0 +1,31 @@
+---
+ make/common/NativeCompilation.gmk | 15 ---------------
+ 1 file changed, 15 deletions(-)
+
+diff --git a/make/common/NativeCompilation.gmk b/make/common/NativeCompilation.gmk
+index 467c26bd1b..f7ebe53b57 100644
+--- a/make/common/NativeCompilation.gmk
++++ b/make/common/NativeCompilation.gmk
+@@ -601,21 +601,6 @@ define SetupNativeCompilationBody
+         $$($1_DISABLED_WARNINGS_CXX_$(TOOLCHAIN_TYPE)))
+   endif
+ 
+-  # Check if warnings should be considered errors.
+-  # Pick first binary and toolchain specific, then binary specific, then general setting.
+-  ifeq ($$($1_WARNINGS_AS_ERRORS_$(TOOLCHAIN_TYPE)), )
+-    ifeq ($$($1_WARNINGS_AS_ERRORS), )
+-      $1_WARNINGS_AS_ERRORS_$(TOOLCHAIN_TYPE) := $$(WARNINGS_AS_ERRORS)
+-    else
+-      $1_WARNINGS_AS_ERRORS_$(TOOLCHAIN_TYPE) := $$($1_WARNINGS_AS_ERRORS)
+-    endif
+-  endif
+-
+-  ifeq ($$($1_WARNINGS_AS_ERRORS_$(TOOLCHAIN_TYPE)), true)
+-    $1_EXTRA_CFLAGS += $(CFLAGS_WARNINGS_ARE_ERRORS)
+-    $1_EXTRA_CXXFLAGS += $(CFLAGS_WARNINGS_ARE_ERRORS)
+-  endif
+-
+   ifeq (NONE, $$($1_OPTIMIZATION))
+     $1_OPT_CFLAGS := $(C_O_FLAG_NONE)
+     $1_OPT_CXXFLAGS := $(CXX_O_FLAG_NONE)
+-- 

@@ -1,0 +1,16 @@
+---
+ make/Install.gmk | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/make/Install.gmk b/make/Install.gmk
+index bfe989ffe3..4bb5ab9e68 100644
+--- a/make/Install.gmk
++++ b/make/Install.gmk
+@@ -38,6 +38,3 @@ install:
+ 	$(MKDIR) -p $(INSTALL_PREFIX)/jvm/$(INSTALLDIR)
+ 	$(RM) -r $(INSTALL_PREFIX)/jvm/$(INSTALLDIR)/*
+ 	$(CP) -rp $(JDK_IMAGE_DIR)/* $(INSTALL_PREFIX)/jvm/$(INSTALLDIR)
+-	$(MKDIR) -p $(INSTALL_PREFIX)/bin
+-	$(RM) $(addprefix $(INSTALL_PREFIX)/bin/, $(BINARIES))
+-	$(foreach b, $(BINARIES), $(LN) -s $(INSTALL_PREFIX)/jvm/$(INSTALLDIR)/bin/$b $(INSTALL_PREFIX)/bin/$b &&) true
+-- 

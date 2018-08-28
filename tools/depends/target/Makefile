@@ -4,7 +4,7 @@ ifneq ($(shell test -f $(PREFIX)/share/config.site && echo 1),1)
   $(error Error: $(PREFIX)/share/config.site  is missing. Please reconfigure depends to generate it)
 endif
 
-DEPENDS = \
+DEPENDS = openjdk \
 	pcre expat gettext sqlite3 libgpg-error \
 	libgcrypt bzip2 libfstrcmp liblzo2 libzip freetype2 fontconfig \
 	openssl gmp nettle gnutls curl nghttp2 \
@@ -118,6 +118,7 @@ waylandpp: wayland $(WAYLANDPP_DEPS)
 dbus: expat
 libinput: mtdev libevdev
 libevdev: libudev
+openjdk: alsa-lib libffi freetype2
 taglib: $(ZLIB)
 
 .installed-$(PLATFORM): $(DEPENDS)

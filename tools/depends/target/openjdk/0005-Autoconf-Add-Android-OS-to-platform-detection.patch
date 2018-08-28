@@ -1,0 +1,40 @@
+From 49702e51aa4d54b9d96d7b37a4652c783b46cea2 Mon Sep 17 00:00:00 2001
+From: juztamau5 <juztamau5@gmail.com>
+Date: Fri, 31 Aug 2018 17:52:45 -0700
+Subject: [PATCH] Autoconf: Add Android OS to platform detection
+
+---
+ make/autoconf/build-aux/autoconf-config.sub | 3 +++
+ make/autoconf/platform.m4                   | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/make/autoconf/build-aux/autoconf-config.sub b/make/autoconf/build-aux/autoconf-config.sub
+index 1aab2b303e..4bdc2eb07d 100644
+--- a/make/autoconf/build-aux/autoconf-config.sub
++++ b/make/autoconf/build-aux/autoconf-config.sub
+@@ -1320,6 +1320,9 @@ case $os in
+ 	-sunos6*)
+ 		os=`echo $os | sed -e 's|sunos6|solaris3|'`
+ 		;;
++	-android*)
++		os=-linux-unknown
++		;;
+ 	-opened*)
+ 		os=-openedition
+ 		;;
+diff --git a/make/autoconf/platform.m4 b/make/autoconf/platform.m4
+index e06c11af00..2a29e84727 100644
+--- a/make/autoconf/platform.m4
++++ b/make/autoconf/platform.m4
+@@ -162,7 +162,7 @@ AC_DEFUN([PLATFORM_EXTRACT_VARS_FROM_CPU],
+ AC_DEFUN([PLATFORM_EXTRACT_VARS_FROM_OS],
+ [
+   case "$1" in
+-    *linux*)
++    *linux*|*android*)
+       VAR_OS=linux
+       VAR_OS_TYPE=unix
+       ;;
+-- 
+2.17.1
+
