@@ -19,8 +19,6 @@
 #include <memory>
 #include <vector>
 
-#define g_pythonParser CServiceBroker::GetXBPython()
-
 class CPythonInvoker;
 class CVariant;
 

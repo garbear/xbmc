@@ -51,7 +51,7 @@ bool CContextMenuItem::Execute(const CFileItemPtr& item) const
     return false;
 
 #ifdef HAS_PYTHON
-  LanguageInvokerPtr invoker(new CContextItemAddonInvoker(&g_pythonParser, item));
+  LanguageInvokerPtr invoker(new CContextItemAddonInvoker(&CServiceBroker::GetXBPython(), item));
   return (CScriptInvocationManager::GetInstance().ExecuteAsync(m_library, invoker, addon) != -1);
 #else
   return false;
