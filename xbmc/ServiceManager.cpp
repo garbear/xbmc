@@ -24,6 +24,7 @@
 #include "utils/log.h"
 #include "input/InputManager.h"
 #include "interfaces/generic/ScriptInvocationManager.h"
+#include "interfaces/java/JavaInterface.h"
 #include "interfaces/python/XBPython.h"
 #include "pvr/PVRManager.h"
 #include "network/Network.h"
@@ -90,6 +91,10 @@ bool CServiceManager::InitStageOne()
 #ifdef HAS_PYTHON
   m_XBPython.reset(new XBPython());
   CScriptInvocationManager::GetInstance().RegisterLanguageInvocationHandler(m_XBPython.get(), ".py");
+#endif
+#ifdef HAS_JAVA
+  m_java.reset(new JAVA::CJavaInterface);
+  CScriptInvocationManager::GetInstance().RegisterLanguageInvocationHandler(m_java.get(), ".jar");
 #endif
 
   m_playlistPlayer.reset(new PLAYLIST::CPlayListPlayer());
@@ -226,6 +231,11 @@ void CServiceManager::DeinitStageOne()
 
   m_network.reset();
   m_playlistPlayer.reset();
+
+#ifdef HAS_JAVA
+  CScriptInvocationManager::GetInstance().UnregisterLanguageInvocationHandler(m_java.get());
+  m_java.reset();
+#endif
 #ifdef HAS_PYTHON
   CScriptInvocationManager::GetInstance().UnregisterLanguageInvocationHandler(m_XBPython.get());
   m_XBPython.reset();
