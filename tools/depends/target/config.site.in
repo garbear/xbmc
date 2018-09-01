@@ -13,6 +13,7 @@ AS="@AS@"
 NM="@NM@"
 STRIP="@STRIP@"
 RANLIB="@RANLIB@"
+OBJCOPY="@OBJCOPY@"
 OBJDUMP="@OBJDUMP@"
 
 if test "@platform_os@" = "ios" ; then

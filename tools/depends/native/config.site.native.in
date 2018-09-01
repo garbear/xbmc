@@ -7,6 +7,7 @@ AS="${AS:-@AS_FOR_BUILD@}"
 NM="${NM:-@NM_FOR_BUILD@}"
 STRIP="${STRIP:-@STRIP_FOR_BUILD@}"
 READELF="${READELF:-@READELF_FOR_BUILD@}"
+OBJCOPY="${OBJCOPY:-@OBJCOPY_FOR_BUILD@}"
 OBJDUMP="${OBJDUMP:-@OBJDUMP_FOR_BUILD@}"
 
 CFLAGS="@native_platform_min_version@ -I@prefix@/@tool_dir@/include $CFLAGS"
