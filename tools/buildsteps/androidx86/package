@@ -12,3 +12,6 @@ cd $WORKSPACE
 #e.x. xbmc-20130314-8c2fb31-Frodo-x86.apk
 UPLOAD_FILENAME="kodi-$(getBuildRevDateStr)-x86"
 mv kodiapp-x86-*.apk $UPLOAD_FILENAME.apk
+
+cd $WORKSPACE; git clean -dffx -- tools/depends/target/binary-addons
+find $WORKSPACE/tools/depends/xbmc-depends/i686-linux-android-*-*/ -name 'game.*' ! -name game.libretro ! -name game.libretro.2048 ! -name game.libretro.mrboom -type d -prune -exec rm -rf {} \;
