@@ -21,6 +21,38 @@ cmake ... -DENABLE_VAAPI=ON -DENABLE_VDPAU=OFF ...
 
 Unfortunately, Kodi's CMake gazillion options are not fully documented yet. For more information and an updated list of options, please check the main **[CMakeLists.txt](../CMakeLists.txt)**.
 
+## Buildsystem variables
+The buildsystem uses the following variables (which can be passed into it when executing cmake with the -D`<variable-name>=<value>` format) to manipulate the build process (see READMEs in sub-directories for additional variables):
+- `CMAKE_BUILD_TYPE` specifies the type of the build. This can be either *Debug* or *Release* (default is *Release*)
+- `CMAKE_INSTALL_PREFIX` points to the directory where the built add-ons and their additional files (addon.xml, resources, ...) will be installed to (defaults to `<ADDON_DEPENDS_PATH>`)
+- `CMAKE_TOOLCHAIN_FILE` can be used to pass a toolchain file into the add-on builds
+- `CORE_SOURCE_DIR` points to the root directory of the project (default is the absolute representation of ../../.. starting from this directory)
+- `BUILD_DIR` points to the directory where the add-ons and their dependencies will be downloaded and built
+- `ARCH_DEFINES` specifies the platform-specific C/C++ preprocessor defines (defaults to empty)
+
+## Deprecated buildsystem variables
+Buildsystem will print a warning if you use any of the below-listed variables. For now they still work but you should adapt your workflow to the new variables.
+- `APP_ROOT` - Use `CORE_SOURCE_DIR` instead
+
+## Building
+The buildsystem makes some assumptions about the environment which must be met by whoever uses it:
+- Any dependencies of the add-ons must already be built and their include and library files must be present in the path pointed to by `<CMAKE_PREFIX_PATH>` (in *include* and *lib* sub-directories)
+
+To trigger the cmake-based buildsystem the following command must be executed with `<path>` set to this directory (absolute or relative) allowing for in-source and out-of-source builds
+
+`cmake <path> -G <generator>`
+
+CMake supports multiple generators. See [here] (https://cmake.org/cmake/help/v3.1/manual/cmake-generators.7.html) for a list.
+
+In case of additional options the call might look like this:
+
+cmake `<path>` [-G `<generator>`] \  
+      -DCMAKE_BUILD_TYPE=Release \  
+      -DCORE_SOURCE_DIR="`<path-to-app-root>`" \  
+      -DARCH_DEFINES="-DTARGET_LINUX" \  
+      -DADDON_DEPENDS_PATH=`<path-to-built-depends>` \  
+      -DCMAKE_INSTALL_PREFIX="`<path-to-install-directory`"
+
 ## Tests
 Kodi uses Google Test as its testing framework. Each test file is scanned for tests and these are added to CTest, which is the native test driver for CMake.
 
