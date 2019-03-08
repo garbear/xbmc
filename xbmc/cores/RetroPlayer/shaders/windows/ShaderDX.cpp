@@ -1,53 +1,43 @@
 /*
- *      Copyright (C) 2017 Team Kodi
- *      http://kodi.tv
+ *  Copyright (C) 2017-2019 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this Program; see the file COPYING.  If not, see
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
 
-#include "VideoShaderDX.h"
-
+#include "ShaderDX.h"
+#include "ShaderTextureDX.h"
 #include "Application.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
-#include "cores/RetroPlayer/rendering/VideoShaders/VideoShaderUtils.h"
-#include "cores/RetroPlayer/rendering/VideoShaders/windows/VideoShaderUtilsDX.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
+#include "cores/RetroPlayer/shaders/windows/ShaderTypesDX.h"
+#include "cores/RetroPlayer/shaders/IShaderLut.h"
+#include "cores/RetroPlayer/shaders/ShaderUtils.h"
 #include "rendering/dx/RenderSystemDX.h"
 #include "utils/log.h"
 #include "utils/URIUtils.h"
+#include "system.h"
 
 using namespace KODI;
 using namespace SHADER;
 
-CVideoShaderDX::CVideoShaderDX(RETRO::CRenderContext &context) :
+CShaderDX::CShaderDX(RETRO::CRenderContext &context) :
   m_context(context)
 {
 }
 
-CVideoShaderDX::~CVideoShaderDX()
+CShaderDX::~CShaderDX()
 {
   SAFE_RELEASE(m_pInputBuffer);
 }
 
-bool CVideoShaderDX::Create(const std::string& shaderSource, const std::string& shaderPath, ShaderParameters shaderParameters,
-  IShaderSampler* sampler, IShaderLuts luts, float2 viewPortSize, unsigned frameCountMod)
+bool CShaderDX::Create(const std::string& shaderSource, const std::string& shaderPath, ShaderParameterMap shaderParameters,
+  IShaderSampler* sampler, ShaderLutVec luts, float2 viewPortSize, unsigned frameCountMod)
 {
   if (shaderPath.empty())
   {
-    CLog::Log(LOGERROR, "VideoShaderDX: Can't load empty shader path");
+    CLog::Log(LOGERROR, "ShaderDX: Can't load empty shader path");
     return false;
   }
 
@@ -82,7 +72,7 @@ bool CVideoShaderDX::Create(const std::string& shaderSource, const std::string& 
   return true;
 }
 
-void CVideoShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
+void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
 {
   auto* sourceDX = static_cast<CShaderTextureCD3D*>(source);
   auto* targetDX = static_cast<CShaderTextureCD3D*>(target);
@@ -97,7 +87,7 @@ void CVideoShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
   Execute({ targetDX->GetPointer() }, 4);
 }
 
-void CVideoShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
+void CShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
 {
   m_effect.SetTechnique("TEQ");
   m_effect.SetResources("decal", { sourceTexture.GetAddressOfSRV() }, 1);
@@ -114,7 +104,7 @@ void CVideoShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
   }
 }
 
-void CVideoShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount)
+void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount)
 {
   UpdateInputBuffer(frameCount);
 
@@ -171,22 +161,22 @@ void CVideoShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t
   UnlockVertexBuffer();
 }
 
-bool CVideoShaderDX::CreateVertexBuffer(unsigned vertCount, unsigned vertSize)
+bool CShaderDX::CreateVertexBuffer(unsigned vertCount, unsigned vertSize)
 {
   return CWinShader::CreateVertexBuffer(vertCount, vertSize);
 }
 
-bool CVideoShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements)
+bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements)
 {
   return CWinShader::CreateInputLayout(layout, numElements);
 }
 
-CD3DEffect& CVideoShaderDX::GetEffect()
+CD3DEffect& CShaderDX::GetEffect()
 {
   return m_effect;
 }
 
-void CVideoShaderDX::UpdateMVP()
+void CShaderDX::UpdateMVP()
 {
   float xScale = 1.0f / m_outputSize.x * 2.0f;
   float yScale = -1.0f / m_outputSize.y * 2.0f;
@@ -200,13 +190,13 @@ void CVideoShaderDX::UpdateMVP()
   );
 }
 
-bool CVideoShaderDX::CreateInputBuffer()
+bool CShaderDX::CreateInputBuffer()
 {
   CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
 
   ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
   cbInput inputInitData = GetInputData();
-  auto inputBufSize = (sizeof(cbInput) + 15) & ~15;
+  UINT inputBufSize = static_cast<UINT>((sizeof(cbInput) + 15) & ~15);
   CD3D11_BUFFER_DESC cbInputDesc(inputBufSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
   D3D11_SUBRESOURCE_DATA initInputSubresource = { &inputInitData, 0, 0 };
   if (FAILED(pDevice->CreateBuffer(&cbInputDesc, &initInputSubresource, &m_pInputBuffer)))
@@ -218,7 +208,7 @@ bool CVideoShaderDX::CreateInputBuffer()
   return true;
 }
 
-void CVideoShaderDX::UpdateInputBuffer(uint64_t frameCount)
+void CShaderDX::UpdateInputBuffer(uint64_t frameCount)
 {
   ID3D11DeviceContext1 *pContext = DX::DeviceResources::Get()->GetD3DContext();
 
@@ -236,7 +226,7 @@ void CVideoShaderDX::UpdateInputBuffer(uint64_t frameCount)
   }
 }
 
-CVideoShaderDX::cbInput CVideoShaderDX::GetInputData(uint64_t frameCount)
+CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
 {
   if (m_frameCountMod != 0)
     frameCount %= m_frameCountMod;
@@ -259,7 +249,7 @@ CVideoShaderDX::cbInput CVideoShaderDX::GetInputData(uint64_t frameCount)
   return input;
 }
 
-void CVideoShaderDX::SetSizes(const float2& prevSize, const float2& nextSize)
+void CShaderDX::SetSizes(const float2& prevSize, const float2& nextSize)
 {
   m_inputSize = prevSize;
   m_outputSize = nextSize;

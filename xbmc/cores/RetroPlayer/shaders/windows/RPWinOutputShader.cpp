@@ -1,27 +1,29 @@
 /*
- *  Copyright (C) 2017-2018 Team Kodi
+ *  Copyright (C) 2017-2019 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
  *  See LICENSES/README.md for more information.
  */
+
 #include "RPWinOutputShader.h"
+#include "ShaderTypesDX.h"
 #include "utils/log.h"
 
 using namespace KODI;
-using namespace RETRO;
+using namespace SHADER;
 
-bool CRPWinOutputShader::Create(SCALINGMETHOD scalingMethod)
+bool CRPWinOutputShader::Create(RETRO::SCALINGMETHOD scalingMethod)
 {
   CWinShader::CreateVertexBuffer(4, sizeof(CUSTOMVERTEX));
 
   DefinesMap defines;
   switch (scalingMethod)
   {
-  case SCALINGMETHOD::NEAREST:
+  case RETRO::SCALINGMETHOD::NEAREST:
     defines["SAMP_NEAREST"] = "";
     break;
-  case SCALINGMETHOD::LINEAR:
+  case RETRO::SCALINGMETHOD::LINEAR:
   default:
     break;
   }

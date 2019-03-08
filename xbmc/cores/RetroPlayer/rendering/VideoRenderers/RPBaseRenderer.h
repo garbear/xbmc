@@ -24,7 +24,7 @@ namespace KODI
 {
 namespace SHADER
 {
-  class IVideoShaderPreset;
+  class IShaderPreset;
 }
 
 namespace RETRO
@@ -95,9 +95,9 @@ namespace RETRO
     CRect m_sourceRect;
     std::array<CPoint, 4> m_rotatedDestCoords{};
 
-    // Videoshaders
-    void UpdateVideoShaders();
-    std::unique_ptr<SHADER::IVideoShaderPreset> m_shaderPreset;
+    // Video shaders
+    void Updateshaders();
+    std::unique_ptr<SHADER::IShaderPreset> m_shaderPreset;
 
     bool m_shadersNeedUpdate;
     bool m_bUseShaderPreset;
