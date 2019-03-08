@@ -1,39 +1,28 @@
-#pragma once
 /*
- *      Copyright (C) 2017 Team Kodi
- *      http://kodi.tv
+ *  Copyright (C) 2017-2019 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this Program; see the file COPYING.  If not, see
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
 
-#include "IVideoShaderTexture.h"
+#pragma once
+
+#include "ShaderTypes.h"
 #include "utils/Geometry.h"
 
-#include <string>
+#include <map>
 #include <stdint.h>
+#include <string>
 
 namespace KODI
 {
 namespace SHADER
 {
-  struct float2;
   class IShaderSampler;
   class IShaderTexture;
 
-  class IVideoShader
+  class IShader
   {
   public:
     /*!
@@ -47,8 +36,8 @@ namespace SHADER
      * \param frameCountMod Modulo that must be applied to the frame count before sendign it to the shader
      * \return False if creating the shader failed, true otherwise.
      */
-    virtual bool Create(const std::string& shaderSource, const std::string& shaderPath, ShaderParameters shaderParameters,
-      IShaderSampler* sampler, IShaderLuts luts, float2 viewPortSize, unsigned frameCountMod = 0) = 0;
+    virtual bool Create(const std::string& shaderSource, const std::string& shaderPath, ShaderParameterMap shaderParameters,
+      IShaderSampler* sampler, ShaderLutVec luts, float2 viewPortSize, unsigned frameCountMod = 0) = 0;
 
     /*!
      * \brief Renders the video shader to the target texture
@@ -103,7 +92,7 @@ namespace SHADER
      */
     virtual void UpdateMVP() = 0;
 
-    virtual ~IVideoShader() = default;
+    virtual ~IShader() = default;
   };
 }
 }

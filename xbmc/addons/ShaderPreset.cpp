@@ -116,7 +116,7 @@ void CShaderPresetAddon::ResetProperties(void)
   m_struct.toKodi.kodiInstance = this;
 }
 
-bool CShaderPresetAddon::LoadPreset(const std::string &presetPath, SHADER::IVideoShaderPreset& shaderPreset)
+bool CShaderPresetAddon::LoadPreset(const std::string &presetPath, SHADER::IShaderPreset& shaderPreset)
 {
   bool bSuccess = false;
 
@@ -145,20 +145,20 @@ bool CShaderPresetAddon::LoadPreset(const std::string &presetPath, SHADER::IVide
 
 // todo: instead of copying every parameter to every pass and resolving them later in
 //       GetShaderParameters, we should resolve which param goes to which shader in the add-on
-void CShaderPresetAddon::TranslateShaderPreset(const video_shader &shader, SHADER::IVideoShaderPreset &shaderPreset)
+void CShaderPresetAddon::TranslateShaderPreset(const video_shader &shader, SHADER::IShaderPreset &shaderPreset)
 {
   if (shader.passes != nullptr)
   {
     for (unsigned int passIdx = 0; passIdx < shader.pass_count; passIdx++)
     {
-      SHADER::VideoShaderPass shaderPass;
+      SHADER::ShaderPass shaderPass;
       TranslateShaderPass(shader.passes[passIdx], shaderPass);
 
       if (shader.luts != nullptr)
       {
         for (unsigned int lutIdx = 0; lutIdx < shader.lut_count; lutIdx++)
         {
-          SHADER::VideoShaderLut shaderLut;
+          SHADER::ShaderLut shaderLut;
           TranslateShaderLut(shader.luts[lutIdx], shaderLut);
           shaderPass.luts.emplace_back(std::move(shaderLut));
         }
@@ -168,7 +168,7 @@ void CShaderPresetAddon::TranslateShaderPreset(const video_shader &shader, SHADE
       {
         for (unsigned int parIdx = 0; parIdx < shader.parameter_count; parIdx++)
         {
-          SHADER::VideoShaderParameter shaderParam;
+          SHADER::ShaderParameter shaderParam;
           TranslateShaderParameter(shader.parameters[parIdx], shaderParam);
           shaderPass.parameters.emplace_back(std::move(shaderParam));
         }
@@ -179,7 +179,7 @@ void CShaderPresetAddon::TranslateShaderPreset(const video_shader &shader, SHADE
   }
 }
 
-void CShaderPresetAddon::TranslateShaderPass(const video_shader_pass &pass, SHADER::VideoShaderPass &shaderPass)
+void CShaderPresetAddon::TranslateShaderPass(const video_shader_pass &pass, SHADER::ShaderPass &shaderPass)
 {
   shaderPass.sourcePath = pass.source_path ? pass.source_path : "";
   shaderPass.vertexSource = pass.vertex_source ? pass.vertex_source : "";
@@ -218,7 +218,7 @@ void CShaderPresetAddon::TranslateShaderPass(const video_shader_pass &pass, SHAD
   shaderPass.mipmap = pass.mipmap;
 }
 
-void CShaderPresetAddon::TranslateShaderLut(const video_shader_lut &lut, SHADER::VideoShaderLut &shaderLut)
+void CShaderPresetAddon::TranslateShaderLut(const video_shader_lut &lut, SHADER::ShaderLut &shaderLut)
 {
   shaderLut.strId = lut.id ? lut.id : "";
   shaderLut.path = lut.path ? lut.path : "";
@@ -227,7 +227,7 @@ void CShaderPresetAddon::TranslateShaderLut(const video_shader_lut &lut, SHADER:
   shaderLut.mipmap = lut.mipmap;
 }
 
-void CShaderPresetAddon::TranslateShaderParameter(const video_shader_parameter &param, SHADER::VideoShaderParameter &shaderParam)
+void CShaderPresetAddon::TranslateShaderParameter(const video_shader_parameter &param, SHADER::ShaderParameter &shaderParam)
 {
   shaderParam.strId = param.id ? param.id : "";
   shaderParam.description = param.desc ? param.desc : "";

@@ -1,24 +1,12 @@
 /*
-*      Copyright (C) 2017 Team Kodi
- *     http://kodi.tv
+ *  Copyright (C) 2017-2019 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- * This Program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This Program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this Program; see the file COPYING.  If not, see
- * <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
 
-#include "VideoShaderPresetFactory.h"
+#include "ShaderPresetFactory.h"
 #include "addons/binary-addons/BinaryAddonBase.h"
 #include "addons/binary-addons/BinaryAddonManager.h"
 #include "addons/AddonManager.h"
@@ -32,21 +20,21 @@
 using namespace KODI;
 using namespace SHADER;
 
-CVideoShaderPresetFactory::CVideoShaderPresetFactory(ADDON::CAddonMgr &addons, ADDON::CBinaryAddonManager &binaryAddons) :
+CShaderPresetFactory::CShaderPresetFactory(ADDON::CAddonMgr &addons, ADDON::CBinaryAddonManager &binaryAddons) :
   m_addons(addons),
   m_binaryAddons(binaryAddons)
 {
   UpdateAddons();
 
-  m_addons.Events().Subscribe(this, &CVideoShaderPresetFactory::OnEvent);
+  m_addons.Events().Subscribe(this, &CShaderPresetFactory::OnEvent);
 }
 
-CVideoShaderPresetFactory::~CVideoShaderPresetFactory()
+CShaderPresetFactory::~CShaderPresetFactory()
 {
   m_addons.Events().Unsubscribe(this);
 }
 
-void CVideoShaderPresetFactory::RegisterLoader(IVideoShaderPresetLoader *loader, const std::string &extension)
+void CShaderPresetFactory::RegisterLoader(IShaderPresetLoader *loader, const std::string &extension)
 {
   if (!extension.empty())
   {
@@ -60,7 +48,7 @@ void CVideoShaderPresetFactory::RegisterLoader(IVideoShaderPresetLoader *loader,
   }
 }
 
-void CVideoShaderPresetFactory::UnregisterLoader(IVideoShaderPresetLoader *loader)
+void CShaderPresetFactory::UnregisterLoader(IShaderPresetLoader *loader)
 {
   for (auto it = m_loaders.begin(); it != m_loaders.end(); )
   {
@@ -71,7 +59,7 @@ void CVideoShaderPresetFactory::UnregisterLoader(IVideoShaderPresetLoader *loade
   }
 }
 
-bool CVideoShaderPresetFactory::LoadPreset(const std::string &presetPath, IVideoShaderPreset &shaderPreset)
+bool CShaderPresetFactory::LoadPreset(const std::string &presetPath, IShaderPreset &shaderPreset)
 {
   bool bSuccess = false;
 
@@ -86,7 +74,7 @@ bool CVideoShaderPresetFactory::LoadPreset(const std::string &presetPath, IVideo
   return bSuccess;
 }
 
-void CVideoShaderPresetFactory::OnEvent(const ADDON::AddonEvent &event)
+void CShaderPresetFactory::OnEvent(const ADDON::AddonEvent &event)
 {
   if (typeid(event) == typeid(ADDON::AddonEvents::Enabled) ||
       typeid(event) == typeid(ADDON::AddonEvents::Disabled) ||
@@ -94,7 +82,7 @@ void CVideoShaderPresetFactory::OnEvent(const ADDON::AddonEvent &event)
     UpdateAddons();
 }
 
-void CVideoShaderPresetFactory::UpdateAddons()
+void CShaderPresetFactory::UpdateAddons()
 {
   using namespace ADDON;
 
@@ -149,7 +137,7 @@ void CVideoShaderPresetFactory::UpdateAddons()
   }
 }
 
-bool CVideoShaderPresetFactory::CanLoadPreset(const std::string &presetPath)
+bool CShaderPresetFactory::CanLoadPreset(const std::string &presetPath)
 {
   bool bSuccess = false;
 

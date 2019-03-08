@@ -1,26 +1,15 @@
-#pragma once
 /*
- *      Copyright (C) 2017 Team Kodi
- *      http://kodi.tv
+ *  Copyright (C) 2017-2019 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this Program; see the file COPYING.  If not, see
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
 
-#include "VideoShaderTextureDX.h"
-#include "cores/RetroPlayer/rendering/VideoShaders/IVideoShader.h"
+#pragma once
+
+#include "ShaderTextureDX.h"
+#include "cores/RetroPlayer/shaders/IShader.h"
 #include "cores/VideoPlayer/VideoRenderers/VideoShaders/WinVideoFilter.h"
 #include "guilib/D3DResource.h"
 
@@ -39,15 +28,15 @@ namespace SHADER
 // TODO: make renderer independent
 // libretro's "Common shaders"
 // Spec here: https://github.com/libretro/common-shaders/blob/master/docs/README
-class CVideoShaderDX : public CWinShader, public IVideoShader
+class CShaderDX : public CWinShader, public IShader
 {
 public:
-  CVideoShaderDX(RETRO::CRenderContext &context);
-  ~CVideoShaderDX() override;
+  CShaderDX(RETRO::CRenderContext &context);
+  ~CShaderDX() override;
 
-  // implementation of IVideoShader
-  bool Create(const std::string& shaderSource, const std::string& shaderPath, ShaderParameters shaderParameters,
-    IShaderSampler* sampler, IShaderLuts luts, float2 viewPortSize, unsigned frameCountMod = 0) override;
+  // implementation of IShader
+  bool Create(const std::string& shaderSource, const std::string& shaderPath, ShaderParameterMap shaderParameters,
+    IShaderSampler* sampler, ShaderLutVec luts, float2 viewPortSize, unsigned frameCountMod = 0) override;
   void Render(IShaderTexture* source, IShaderTexture* target) override;
   void SetSizes(const float2& prevSize, const float2& nextSize) override;
   void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) override;
@@ -80,13 +69,13 @@ private:
   std::string m_shaderPath;
 
   // Array of shader parameters
-  ShaderParameters m_shaderParameters;
+  ShaderParameterMap m_shaderParameters;
 
   // Sampler state
   ID3D11SamplerState* m_pSampler = nullptr;
 
   // Look-up textures that the shader uses
-  IShaderLuts m_luts; // todo: back to DX maybe
+  ShaderLutVec m_luts; // todo: back to DX maybe
 
   // Resolution of the input of the shader
   float2 m_inputSize;

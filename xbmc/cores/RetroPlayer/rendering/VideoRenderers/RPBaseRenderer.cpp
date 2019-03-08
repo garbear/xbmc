@@ -9,9 +9,9 @@
 #include "RPBaseRenderer.h"
 #include "cores/RetroPlayer/buffers/IRenderBuffer.h"
 #include "cores/RetroPlayer/buffers/IRenderBufferPool.h"
-#include "cores/RetroPlayer/rendering/VideoShaders/IVideoShaderPreset.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderUtils.h"
+#include "cores/RetroPlayer/shaders/IShaderPreset.h"
 #include "utils/log.h"
 
 using namespace KODI;
@@ -207,7 +207,7 @@ void CRPBaseRenderer::MarkDirty()
  * \brief Updates everything needed for video shaders (shader presets)
  * Needs to be called after m_renderBuffer has been set
  */
-void CRPBaseRenderer::UpdateVideoShaders()
+void CRPBaseRenderer::Updateshaders()
 {
   if (m_shadersNeedUpdate)
   {

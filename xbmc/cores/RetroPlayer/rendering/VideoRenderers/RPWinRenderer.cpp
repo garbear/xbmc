@@ -9,11 +9,10 @@
 #include "RPWinRenderer.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderTranslator.h"
-
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
-#include "cores/RetroPlayer/rendering/VideoShaders/windows/RPWinOutputShader.h"
-#include "cores/RetroPlayer/rendering/VideoShaders/windows/VideoShaderPresetDX.h"
-#include "cores/RetroPlayer/rendering/VideoShaders/windows/VideoShaderTextureDX.h"
+#include "cores/RetroPlayer/shaders/windows/RPWinOutputShader.h"
+#include "cores/RetroPlayer/shaders/windows/ShaderPresetDX.h"
+#include "cores/RetroPlayer/shaders/windows/ShaderTextureDX.h"
 #include "guilib/D3DResource.h"
 #include "rendering/dx/RenderSystemDX.h"
 #include "utils/log.h"
@@ -194,7 +193,7 @@ bool CWinRenderBufferPool::ConfigureDX(DXGI_FORMAT dxFormat)
   return true;
 }
 
-CRPWinOutputShader *CWinRenderBufferPool::GetShader(SCALINGMETHOD scalingMethod) const
+SHADER::CRPWinOutputShader *CWinRenderBufferPool::GetShader(SCALINGMETHOD scalingMethod) const
 {
   auto it = m_outputShaders.find(scalingMethod);
 
@@ -218,7 +217,7 @@ void CWinRenderBufferPool::CompileOutputShaders()
 {
   for (auto scalingMethod : GetScalingMethods())
   {
-    std::unique_ptr<CRPWinOutputShader> outputShader(new CRPWinOutputShader);
+    std::unique_ptr<SHADER::CRPWinOutputShader> outputShader(new SHADER::CRPWinOutputShader);
     if (outputShader->Create(scalingMethod))
       m_outputShaders[scalingMethod] = std::move(outputShader);
     else
@@ -233,7 +232,7 @@ CRPWinRenderer::CRPWinRenderer(const CRenderSettings &renderSettings, CRenderCon
   CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
   // Initialize CRPBaseRenderer fields
-  m_shaderPreset.reset(new SHADER::CVideoShaderPresetDX(m_context));
+  m_shaderPreset.reset(new SHADER::CShaderPresetDX(m_context));
 }
 
 bool CRPWinRenderer::ConfigureInternal()
@@ -294,7 +293,7 @@ void CRPWinRenderer::Render(CD3DTexture *target)
   if (renderBufferTarget == nullptr)
     return;
 
-  UpdateVideoShaders();
+  Updateshaders();
 
   // Are we using video shaders?
   if (m_bUseShaderPreset)
@@ -339,7 +338,7 @@ void CRPWinRenderer::Render(CD3DTexture *target)
       SCALINGMETHOD scalingMethod = m_renderSettings.VideoSettings().GetScalingMethod();
 
       CWinRenderBufferPool *bufferPool = static_cast<CWinRenderBufferPool*>(m_bufferPool.get());
-      CRPWinOutputShader *outputShader = bufferPool->GetShader(scalingMethod);
+      SHADER::CRPWinOutputShader *outputShader = bufferPool->GetShader(scalingMethod);
 
       // Use the picked output shader to render to the target
       if (outputShader != nullptr)

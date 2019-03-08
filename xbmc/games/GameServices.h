@@ -35,7 +35,7 @@ namespace RETRO
 
 namespace SHADER
 {
-  class CVideoShaderPresetFactory;
+  class CShaderPresetFactory;
 }
 
 namespace GAME
@@ -66,7 +66,7 @@ namespace GAME
 
     RETRO::CGUIGameRenderManager &GameRenderManager() { return m_gameRenderManager; }
 
-    SHADER::CVideoShaderPresetFactory &VideoShaders() { return *m_videoShaders; }
+    SHADER::CShaderPresetFactory &VideoShaders() { return *m_videoShaders; }
 
   private:
     // Construction parameters
@@ -76,7 +76,7 @@ namespace GAME
 
     // Game services
     std::unique_ptr<CGameSettings> m_gameSettings;
-    std::unique_ptr<SHADER::CVideoShaderPresetFactory> m_videoShaders;
+    std::unique_ptr<SHADER::CShaderPresetFactory> m_videoShaders;
   };
 }
 }

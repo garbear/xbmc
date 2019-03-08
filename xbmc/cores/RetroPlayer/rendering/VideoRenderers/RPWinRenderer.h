@@ -12,9 +12,11 @@
 #include "cores/RetroPlayer/buffers/BaseRenderBufferPool.h"
 #include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
-#include "cores/RetroPlayer/rendering/VideoShaders/windows/VideoShaderTextureDX.h"
+#include "cores/RetroPlayer/shaders/windows/RPWinOutputShader.h"
+#include "cores/RetroPlayer/shaders/windows/ShaderTextureDX.h"
 
 #include <dxgi.h>
+#include <map>
 #include <memory>
 #include <stdint.h>
 #include <vector>
@@ -85,7 +87,7 @@ namespace RETRO
 
     // DirectX interface
     bool ConfigureDX(DXGI_FORMAT dxFormat);
-    CRPWinOutputShader *GetShader(SCALINGMETHOD scalingMethod) const;
+    SHADER::CRPWinOutputShader *GetShader(SCALINGMETHOD scalingMethod) const;
 
   private:
     static const std::vector<SCALINGMETHOD> &GetScalingMethods();
@@ -93,7 +95,7 @@ namespace RETRO
     void CompileOutputShaders();
 
     DXGI_FORMAT m_targetDxFormat = DXGI_FORMAT_UNKNOWN;
-    std::map<SCALINGMETHOD, std::unique_ptr<CRPWinOutputShader>> m_outputShaders;
+    std::map<SCALINGMETHOD, std::unique_ptr<SHADER::CRPWinOutputShader>> m_outputShaders;
   };
 
   class CRPWinRenderer : public CRPBaseRenderer
