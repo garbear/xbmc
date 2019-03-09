@@ -1,0 +1,9 @@
+{
+    "@context": {
+        "Molecule": "ra:Molecule",
+        "expression": "ra:expression",
+        "index": "ra:index",
+        "ra": "http://retroachievements.org#",
+        "symbol": "ra:symbol"
+    }
+}

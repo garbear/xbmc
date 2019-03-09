@@ -1,0 +1,8 @@
+{
+    "@context": {
+        "Term": "ra:Term",
+        "invertBit": "ra:invertBit",
+        "ra": "http://retroachievements.org#",
+        "variable": "ra:variable"
+    }
+}
