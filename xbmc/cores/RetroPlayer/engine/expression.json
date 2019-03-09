@@ -1,0 +1,11 @@
+{
+    "@context": {
+        "PolyadicExpression": "ra:PolyadicExpression",
+        "operand": {
+            "@container": "@set",
+            "@id": "ra:operand"
+        },
+        "operator": "ra:operator",
+        "ra": "http://retroachievements.org#"
+    }
+}
