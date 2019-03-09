@@ -78,10 +78,12 @@ void CRenderVideoSettings::SetVideoFilter(const std::string &videoFilter)
   if (videoFilter == VIDEO_FILTER_NEAREST)
   {
     m_scalingMethod = SCALINGMETHOD::NEAREST;
+    ResetShaderPreset();
   }
   else if (videoFilter == VIDEO_FILTER_LINEAR)
   {
     m_scalingMethod = SCALINGMETHOD::LINEAR;
+    ResetShaderPreset();
   }
   else
   {
@@ -90,6 +92,11 @@ void CRenderVideoSettings::SetVideoFilter(const std::string &videoFilter)
     // Not a known video filter, assume it's a shader preset path
     SetShaderPreset(videoFilter);
   }
+}
+
+void CRenderVideoSettings::ResetShaderPreset()
+{
+  m_shaderPreset.clear();
 }
 
 bool CRenderVideoSettings::UsesShaderPreset() const

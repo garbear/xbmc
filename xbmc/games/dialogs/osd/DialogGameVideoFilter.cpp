@@ -82,10 +82,12 @@ void CDialogGameVideoFilter::InitScalingMethods()
     {
       if (m_gameVideoHandle->SupportsScalingMethod(scalingMethodProps.scalingMethod))
       {
+        RETRO::CRenderVideoSettings videoSettings;
+        videoSettings.SetScalingMethod(scalingMethodProps.scalingMethod);
+
         CFileItemPtr item = std::make_shared<CFileItem>(g_localizeStrings.Get(scalingMethodProps.nameIndex));
         item->SetLabel2(g_localizeStrings.Get(scalingMethodProps.categoryIndex));
-        item->SetProperty("game.videofilter", CVariant{ PROPERTY_NO_VIDEO_FILTER });
-        item->SetProperty("game.scalingmethod", CVariant((int)scalingMethodProps.scalingMethod));
+        item->SetProperty("game.videofilter", CVariant{ videoSettings.GetVideoFilter() });
         item->SetProperty("game.videofilterdescription", CVariant{ g_localizeStrings.Get(scalingMethodProps.descriptionIndex) });
         m_items.Add(std::move(item));
       }
