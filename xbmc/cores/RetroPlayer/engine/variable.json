@@ -1,0 +1,11 @@
+{
+    "@context": {
+        "Variable": "ra:Variable",
+        "address": "ra:address",
+        "bcd": "ra:bcd",
+        "endBit": "ra:endBit",
+        "frameDelay": "ra:frameDelay",
+        "ra": "http://retroachievements.org#",
+        "startBit": "ra:startBit"
+    }
+}
