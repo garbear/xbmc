@@ -257,5 +257,26 @@ namespace GAME
      */
     virtual void UnregisterKeys() = 0;
   };
+
+  /*!
+   * \brief A wizard to instruct the user on how to map
+   */
+  class IHelpWizard
+  {
+  public:
+    virtual ~IHelpWizard() = default;
+
+    /*!
+     * \brief Show the wizard dialog
+     */
+    virtual void Run() = 0;
+
+    /*!
+     * \brief Abort a running wizard
+     * \param bWait True if the call should block until the wizard is fully aborted
+     * \return true if aborted, or false if the wizard wasn't running
+     */
+     virtual bool Abort(bool bWant = true) = 0;
+   };
 }
 }
