@@ -17,13 +17,6 @@
 
 using namespace Shaders;
 
-CGLShader::CGLShader()
-{
-  m_proj = nullptr;
-  m_model  = nullptr;
-  m_clipPossible = false;
-}
-
 CGLShader::CGLShader(const char *shader, std::string prefix)
 {
   m_proj = nullptr;
@@ -160,11 +153,6 @@ bool CGLShader::OnEnabled()
   }
 
   return true;
-}
-
-bool CGLShader::LoadShaderSources(const char *fshader, std::string prefix, const char *vshader)
-{
-  return VertexShader()->LoadSource(vshader, prefix) && PixelShader()->LoadSource(fshader, prefix);
 }
 
 void CGLShader::Free()

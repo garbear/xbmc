@@ -122,7 +122,11 @@ void CDialogGameVideoFilter::InitVideoFilters()
       continue;
 
     TiXmlNode* pathNode;
-    if ((pathNode = child->FirstChild("path")))
+#ifdef TARGET_WINDOWS
+    if ((pathNode = child->FirstChild("hlslp-path")))
+#else
+    if ((pathNode = child->FirstChild("glslp-path")))
+#endif
       if ((pathNode = pathNode->FirstChild()))
         videoFilter.path = URIUtils::AddFileToFolder(basePath, pathNode->Value());
     TiXmlNode* nameIndexNode;
