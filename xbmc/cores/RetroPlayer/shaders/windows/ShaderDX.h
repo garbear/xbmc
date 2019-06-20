@@ -52,7 +52,14 @@ public:
 
   // expose these from CWinShader
   bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) override;
-  bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements) override;
+
+  /*!
+   * \brief Creates the data layout of the input-assembler stage
+   * \param layout Description of the inputs to the vertex shader
+   * \param numElements Number of inputs to the vertex shader
+   * \return False if creating the input layout failed, true otherwise.
+   */
+  bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements);
 
 protected:
   void SetShaderParameters(CD3DTexture& sourceTexture);
