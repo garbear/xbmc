@@ -82,7 +82,7 @@ private:
   std::string m_presetPath;
 
   // Video shaders for the shader passes
-  std::vector<std::unique_ptr<IShader>> m_pShaders;
+  std::vector<std::unique_ptr<CShaderDX>> m_pShaders;
 
   // Intermediate textures used for pixel shader passes
   std::vector<std::unique_ptr<CShaderTextureCD3D>> m_pShaderTextures;
