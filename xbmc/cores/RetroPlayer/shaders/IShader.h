@@ -62,15 +62,6 @@ namespace SHADER
     virtual bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) = 0;
 
     /*!
-     * \brief Creates the data layout of the input-assembler stage
-     * \param layout Description of the inputs to the vertex shader
-     * \param numElements Number of inputs to the vertex shader
-     * \return False if creating the input layout failed, true otherwise.
-     */
-    // TODO: the first argument is DX-specific (maybe the entire function is)
-    virtual bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements) = 0;
-
-    /*!
      * \brief Creates the buffer that will be used to send "input" (as per the spec) data to the shader
      * \return False if creating the input buffer failed, true otherwise.
      */
