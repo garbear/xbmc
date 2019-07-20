@@ -71,6 +71,11 @@ class CDatabaseManager;
 class CProfileManager;
 class CEventLog;
 
+namespace WEB
+{
+class CWebManager;
+}
+
 class CServiceManager
 {
 public:
@@ -106,6 +111,7 @@ public:
   KODI::GAME::CGameServices& GetGameServices();
   KODI::RETRO::CGUIGameRenderManager& GetGameRenderManager();
   PERIPHERALS::CPeripherals& GetPeripherals();
+  WEB::CWebManager& GetWEBManager();
 
   PLAYLIST::CPlayListPlayer& GetPlaylistPlayer();
   int init_level = 0;
@@ -164,4 +170,5 @@ protected:
   std::unique_ptr<CWeatherManager> m_weatherManager;
   std::unique_ptr<CPlayerCoreFactory> m_playerCoreFactory;
   std::unique_ptr<CDatabaseManager> m_databaseManager;
+  std::unique_ptr<WEB::CWebManager> m_WEBManager;
 };

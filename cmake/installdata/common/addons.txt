@@ -8,6 +8,7 @@ addons/kodi.imagedecoder/*
 addons/kodi.inputstream/*
 addons/kodi.peripheral/*
 addons/kodi.resource/*
+addons/kodi.web/*
 addons/xbmc.addon/metadata.xsd
 addons/xbmc.addon/repository.xsd
 addons/xbmc.audioencoder/*

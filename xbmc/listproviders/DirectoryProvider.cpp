@@ -36,6 +36,7 @@
 #include "video/VideoThumbLoader.h"
 #include "video/dialogs/GUIDialogVideoInfo.h"
 #include "video/windows/GUIWindowVideoBase.h"
+#include "web/WebManager.h"
 
 #include <memory>
 #include <utility>
@@ -310,6 +311,20 @@ void CDirectoryProvider::OnPVRManagerEvent(const PVR::PVREvent& event)
   }
 }
 
+void CDirectoryProvider::OnWebManagerEvent(const WEB::WebEvent& event)
+{
+  CSingleLock lock(m_section);
+  if (URIUtils::IsProtocol(m_currentUrl, "web"))
+  {
+    if (event == WEB::ManagerStarted ||
+        event == WEB::ManagerStopped ||
+        event == WEB::ManagerError ||
+        event == WEB::ManagerInterrupted ||
+        event == WEB::ManagerChanged)
+      m_updateState = INVALIDATED;
+  }
+}
+
 void CDirectoryProvider::OnFavouritesEvent(const CFavouritesService::FavouritesUpdated& event)
 {
   CSingleLock lock(m_section);
@@ -452,6 +467,7 @@ bool CDirectoryProvider::UpdateURL()
     CServiceBroker::GetAddonMgr().Events().Subscribe(this, &CDirectoryProvider::OnAddonEvent);
     CServiceBroker::GetPVRManager().Events().Subscribe(this, &CDirectoryProvider::OnPVRManagerEvent);
     CServiceBroker::GetFavouritesService().Events().Subscribe(this, &CDirectoryProvider::OnFavouritesEvent);
+    CServiceBroker::GetWEBManager().Events().Subscribe(this, &CDirectoryProvider::OnWebManagerEvent);
   }
   return true;
 }

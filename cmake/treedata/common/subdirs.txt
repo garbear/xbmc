@@ -45,5 +45,8 @@ xbmc/threads                                    threads
 xbmc/utils                                      utils
 xbmc/view                                       view
 xbmc/weather                                    weather
+xbmc/web                                        webaddons
+xbmc/web/dialogs                                webaddons_dialogs
+xbmc/web/windows                                webaddons_windows
 xbmc/windowing                                  windowing
 xbmc/windows                                    windows

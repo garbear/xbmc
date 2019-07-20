@@ -149,6 +149,11 @@
 #define WINDOW_DIALOG_GAME_ADVANCED_SETTINGS 10826
 #define WINDOW_DIALOG_GAME_VIDEO_ROTATION 10827
 
+// Web Browser related Window and Dialog ID's
+#define WINDOW_WEB_BROWSER                10900
+#define WINDOW_WEB_BROWSER_FULLSCREEN     10901
+#define WINDOW_DIALOG_WEB_FAVOURITES      10902
+
 //#define WINDOW_VIRTUAL_KEYBOARD           11000
 // WINDOW_ID's from 11100 to 11199 reserved for Skins
 

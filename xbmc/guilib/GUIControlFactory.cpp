@@ -42,6 +42,7 @@
 #include "GUIToggleButtonControl.h"
 #include "GUIVideoControl.h"
 #include "GUIVisualisationControl.h"
+#include "GUIWebAddonControl.h"
 #include "GUIWrappingListContainer.h"
 #include "LocalizeStrings.h"
 #include "Util.h"
@@ -94,6 +95,7 @@ static const ControlMapping controls[] =
     {"grouplist",         CGUIControl::GUICONTROL_GROUPLIST},
     {"scrollbar",         CGUIControl::GUICONTROL_SCROLLBAR},
     {"gamecontroller",    CGUIControl::GUICONTROL_GAMECONTROLLER},
+    {"webaddon",          CGUIControl::GUICONTROL_WEB_ADDON},
     {"list",              CGUIControl::GUICONTAINER_LIST},
     {"wraplist",          CGUIControl::GUICONTAINER_WRAPLIST},
     {"fixedlist",         CGUIControl::GUICONTAINER_FIXEDLIST},
@@ -767,6 +769,12 @@ CGUIControl* CGUIControlFactory::Create(int parentID, const CRect &rect, TiXmlEl
   bool bPassword = false;
   std::string visibleCondition;
 
+  // Web add-on control related
+  bool transparent = false;
+  bool singleReload = false; // If true can button also do other commands (load and reload)
+  std::string addonBrowserOwnId; // Identifier for addon related part to get a running site
+  std::string url;
+
   /////////////////////////////////////////////////////////////////////////////
   // Read control properties from XML
   //
@@ -1001,6 +1009,11 @@ CGUIControl* CGUIControlFactory::Create(int parentID, const CRect &rect, TiXmlEl
   XMLUtils::GetBoolean(pControlNode, "resetonlabelchange", resetOnLabelChange);
 
   XMLUtils::GetBoolean(pControlNode, "password", bPassword);
+
+  XMLUtils::GetBoolean(pControlNode, "transparent", transparent);
+  XMLUtils::GetBoolean(pControlNode, "singlereload", singleReload);
+  GetString(pControlNode, "url", url);
+  GetString(pControlNode, "browserownid", addonBrowserOwnId);
 
   // view type
   VIEW_TYPE viewType = VIEW_TYPE_NONE;
@@ -1465,6 +1478,13 @@ CGUIControl* CGUIControlFactory::Create(int parentID, const CRect &rect, TiXmlEl
     break;
   case CGUIControl::GUICONTROL_GAMECONTROLLER:
     control = new GAME::CGUIGameController(parentID, id, posX, posY, width, height);
+    break;
+  case CGUIControl::GUICONTROL_WEB_ADDON:
+    control = new WEB::CGUIWebAddonControl(parentID, id, posX, posY, width, height, url);
+    dynamic_cast<WEB::CGUIWebAddonControl*>(control)->SetTransparent(transparent);
+    dynamic_cast<WEB::CGUIWebAddonControl*>(control)->SetReloadButton(!singleReload);
+    if (!addonBrowserOwnId.empty())
+      dynamic_cast<WEB::CGUIWebAddonControl*>(control)->SetWebControlIdString(addonBrowserOwnId);
     break;
   default:
     break;

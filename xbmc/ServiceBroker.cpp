@@ -144,6 +144,11 @@ CNetworkBase& CServiceBroker::GetNetwork()
   return g_application.m_ServiceManager->GetNetwork();
 }
 
+WEB::CWebManager &CServiceBroker::GetWEBManager()
+{
+  return g_application.m_ServiceManager->GetWEBManager();
+}
+
 bool CServiceBroker::IsBinaryAddonCacheUp()
 {
   return g_application.m_ServiceManager &&

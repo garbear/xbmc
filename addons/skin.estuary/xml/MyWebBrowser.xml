@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol always="true">110</defaultcontrol>
+	<backgroundcolor>background</backgroundcolor>
+	<controls>
+		<include>DefaultBackground</include>
+		<control type="group">
+			<animation effect="fade" start="0" end="100" time="300">WindowOpen</animation>
+			<animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
+			<control type="group">
+				<top>0</top>
+				<bottom>150</bottom>
+				<control type="group" id="50">
+					<control type="image">
+						<texture colordiffuse="C2FFFFFF">colors/black.png</texture>
+					</control>
+					<control type="webaddon" id="2">
+						<description>web browser</description>
+						<onleft>9001</onleft>
+						<onright>121</onright>
+						<onup>51</onup>
+						<ondown>51</ondown>
+						<transparent>false</transparent>
+						<singlereload>true</singlereload>
+						<process>browser</process>
+						<colordiffuse>FFFFFFFF</colordiffuse>
+					</control>
+					<control type="image">
+						<left>645</left>
+						<right>645</right>
+						<bottom>0</bottom>
+						<height>16</height>
+						<texture>web/control_selected.png</texture>
+						<visible>Control.HasFocus(2)</visible>
+					</control>
+				</control>
+			</control>
+			<control type="group">
+				<right>0</right>
+				<top>0</top>
+				<width>420</width>
+				<height>33</height>
+				<visible>!String.IsEmpty(WebControl.ToolTip)</visible>
+				<control type="image">
+					<description>Tooltip</description>
+					<font>font12</font>
+					<align>right</align>
+					<enable>false</enable>
+					<texture flipx="true" border="96,0,0,0">web/note_background.png</texture>
+				</control>
+				<control type="label">
+					<description>Tooltip string</description>
+					<textwidth>360</textwidth>
+					<font>font12</font>
+					<align>right</align>
+					<scroll>true</scroll>
+					<color>white</color>
+					<shadowcolor>black</shadowcolor>
+					<label>$INFO[WebControl.ToolTip]</label>
+				</control>
+			</control>
+			<control type="group">
+				<left>0</left>
+				<bottom>150</bottom>
+				<width>420</width>
+				<height>33</height>
+				<visible>!String.IsEmpty(WebControl.StatusMessage)</visible>
+				<control type="image">
+					<description>Status</description>
+					<font>font12</font>
+					<enable>false</enable>
+					<texture flipy="true" border="0,0,96,0">web/note_background.png</texture>
+				</control>
+				<control type="label">
+					<description>Status string</description>
+					<textwidth>360</textwidth>
+					<font>font12</font>
+					<scroll>true</scroll>
+					<color>white</color>
+					<shadowcolor>black</shadowcolor>
+					<label>$INFO[WebControl.StatusMessage]</label>
+				</control>
+			</control>
+			<control type="group" id="51">
+				<onup>50</onup>
+				<ondown>9000</ondown>
+				<control type="togglebutton" id="9001">
+					<description>Back</description>
+					<bottom>80</bottom>
+					<left>20</left>
+					<width>60</width>
+					<height>60</height>
+					<onleft>52</onleft>
+					<onright>9002</onright>
+					<onclick>WebControlCmd.Message(2,Back)</onclick>
+					<enable>WebControl.CanGoBack</enable>
+					<texturefocus colordiffuse="button_focus">web/back.png</texturefocus>
+					<texturenofocus colordiffuse="white">web/back.png</texturenofocus>
+					<usealttexture>!WebControl.CanGoBack</usealttexture>
+					<alttexturefocus colordiffuse="disabled">web/back.png</alttexturefocus>
+					<alttexturenofocus colordiffuse="disabled">web/back.png</alttexturenofocus>
+					<aligny>center</aligny>
+				</control>
+				<control type="togglebutton" id="9002">
+					<description>Forward</description>
+					<bottom>80</bottom>
+					<left>100</left>
+					<width>60</width>
+					<height>60</height>
+					<onleft>9001</onleft>
+					<onright>110</onright>
+					<onclick>WebControlCmd.Message(2,Fwd)</onclick>
+					<enable>WebControl.CanGoForward</enable>
+					<texturefocus colordiffuse="button_focus">web/forward.png</texturefocus>
+					<texturenofocus colordiffuse="white">web/forward.png</texturenofocus>
+					<usealttexture>!WebControl.CanGoForward</usealttexture>
+					<alttexturefocus colordiffuse="disabled">web/forward.png</alttexturefocus>
+					<alttexturenofocus colordiffuse="disabled">web/forward.png</alttexturenofocus>
+				</control>
+				<control type="edit" id="110">
+					<description>URL string</description>
+					<include>SettingsItemCommon</include>
+					<bottom>60</bottom>
+					<left>170</left>
+					<right>800</right>
+					<onleft>9002</onleft>
+					<onright>104</onright>
+					<onup>50</onup>
+					<ondown>9000</ondown>
+				</control>
+				<control type="togglebutton" id="104">
+					<description>Reload</description>
+					<width>60</width>
+					<height>60</height>
+					<bottom>80</bottom>
+					<right>740</right>
+					<onleft>110</onleft>
+					<onright>105</onright>
+					<onclick>WebControlCmd.Message(2,Reload)</onclick>
+					<texturefocus colordiffuse="button_focus">web/update.png</texturefocus>
+					<texturenofocus colordiffuse="white">web/update.png</texturenofocus>
+					<usealttexture>!Control.IsEnabled(104)</usealttexture>
+					<alttexturefocus colordiffuse="disabled">web/update.png</alttexturefocus>
+				</control>
+				<control type="button" id="105">
+					<description>Favourites</description>
+					<width>60</width>
+					<height>60</height>
+					<bottom>80</bottom>
+					<right>670</right>
+					<onleft>104</onleft>
+					<onright>106</onright>
+					<onclick>WebControlCmd.Message(2,Favourites)</onclick>
+					<texturefocus colordiffuse="button_focus">web/favourites.png</texturefocus>
+					<texturenofocus colordiffuse="white">web/favourites.png</texturenofocus>
+				</control>
+				<control type="button" id="106">
+					<description>Home</description>
+					<width>60</width>
+					<height>60</height>
+					<bottom>80</bottom>
+					<right>600</right>
+					<onleft>105</onleft>
+					<onright>52</onright>
+					<onclick>WebControlCmd.Message(2,Home)</onclick>
+					<texturefocus colordiffuse="button_focus">web/home.png</texturefocus>
+					<texturenofocus colordiffuse="white">web/home.png</texturenofocus>
+				</control>
+			</control>
+			<control type="grouplist" id="52">
+				<right>20</right>
+				<bottom>80</bottom>
+				<width>565</width>
+				<height>70</height>
+				<itemgap>5</itemgap>
+				<onleft>51</onleft>
+				<onright>51</onright>
+				<onup>50</onup>
+				<ondown>9000</ondown>
+				<orientation>horizontal</orientation>
+				<aligny>center</aligny>
+				<control type="button" id="9020">
+					<width>40</width>
+					<height>60</height>
+					<texturefocus colordiffuse="button_focus">web/search.png</texturefocus>
+					<texturenofocus colordiffuse="white">web/search.png</texturenofocus>
+				</control>
+				<control type="edit" id="9021">
+					<description>Search string</description>
+					<width>430</width>
+					<height>70</height>
+					<font>font12</font>
+					<textoffsetx>40</textoffsetx>
+					<hinttext>$LOCALIZE[31103]</hinttext>
+				</control>
+				<control type="button" id="120">
+					<description>Menu</description>
+					<width>30</width>
+					<height>70</height>
+					<onclick>WebControlCmd.Message(2,Settings)</onclick>
+					<texturefocus colordiffuse="button_focus">web/menu.png</texturefocus>
+					<texturenofocus colordiffuse="white">web/menu.png</texturenofocus>
+				</control>
+				<control type="button" id="121">
+					<width>40</width>
+					<height>70</height>
+					<onclick>ActivateWindow(WebBrowserFullScreen)</onclick>
+					<texturefocus colordiffuse="button_focus">web/fullscreen.png</texturefocus>
+					<texturenofocus colordiffuse="white">web/fullscreen.png</texturenofocus>
+				</control>
+			</control>
+			<control type="panel" id="9000">
+				<left>20</left>
+				<bottom>10</bottom>
+				<width>1320</width>
+				<height>70</height>
+				<itemgap>0</itemgap>
+				<onup>51</onup>
+				<ondown>50</ondown>
+				<onleft>51</onleft>
+				<onright>52</onright>
+				<orientation>horizontal</orientation>
+				<itemlayout width="440" height="60">
+					<control type="group">
+						<visible>String.IsEqual(ListItem.Property(type),website)</visible>
+						<top>10</top>
+						<control type="image">
+							<left>-50</left>
+							<width>480</width>
+							<height>60</height>
+							<texture border="50,0,50,0">web/buttonside-nofo.png</texture>
+						</control>
+						<control type="image">
+							<top>5</top>
+							<left>5</left>
+							<width>48</width>
+							<height>48</height>
+							<texture>$INFO[listitem.icon]</texture>
+						</control>
+						<control type="label">
+							<left>60</left>
+							<top>9</top>
+							<width>330</width>
+							<font>font13</font>
+							<aligny>center</aligny>
+							<selectedcolor>green</selectedcolor>
+							<align>left</align>
+							<info>ListItem.Label</info>
+						</control>
+					</control>
+					<control type="group">
+						<visible>String.IsEqual(ListItem.Property(type),add)</visible>
+						<top>10</top>
+						<control type="image">
+							<left>-50</left>
+							<width>100</width>
+							<height>60</height>
+							<texture border="50,0,50,0">web/buttonside-nofo.png</texture>
+						</control>
+					</control>
+				</itemlayout>
+				<focusedlayout width="440" height="60">
+					<control type="group">
+						<visible>String.IsEqual(ListItem.Property(type),website)</visible>
+						<top>10</top>
+						<control type="image">
+							<left>-50</left>
+							<width>480</width>
+							<height>60</height>
+							<texture border="50,0,50,0" colordiffuse="button_focus">web/buttonside-fo.png</texture>
+						</control>
+						<control type="image">
+							<top>5</top>
+							<left>5</left>
+							<width>48</width>
+							<height>48</height>
+							<texture>$INFO[listitem.icon]</texture>
+						</control>
+						<control type="label">
+							<left>60</left>
+							<top>9</top>
+							<width>330</width>
+							<font>font13</font>
+							<aligny>center</aligny>
+							<selectedcolor>green</selectedcolor>
+							<align>left</align>
+							<info>ListItem.Label</info>
+						</control>
+					</control>
+					<control type="group">
+						<visible>String.IsEqual(ListItem.Property(type),add)</visible>
+						<top>10</top>
+						<control type="image">
+							<left>-50</left>
+							<width>100</width>
+							<height>60</height>
+							<texture border="50,0,50,0" colordiffuse="button_focus">web/buttonside-fo.png</texture>
+						</control>
+					</control>
+				</focusedlayout>
+			</control>
+			<control type="textbox">
+				<bottom>20</bottom>
+				<width>500</width>
+				<right>80</right>
+				<height>40</height>
+				<align>right</align>
+				<animation effect="slide" end="-140, 0" time="0" condition="Integer.IsGreater(Container(9000).NumItems,3)">conditional</animation>
+				<label>$INFO[WebControl.OpenedTitle]</label>
+				<include>OpenClose_Right</include>
+			</control>
+			<control type="image" id="301">
+				<right>15</right>
+				<bottom>15</bottom>
+				<width>50</width>
+				<height>50</height>
+				<texture>$INFO[WebControl.IconURL]</texture>
+			</control>
+		</control>
+	</controls>
+</window>

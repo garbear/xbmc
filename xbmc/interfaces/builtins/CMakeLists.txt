@@ -13,7 +13,8 @@ set(SOURCES AddonBuiltins.cpp
             PVRBuiltins.cpp
             SkinBuiltins.cpp
             SystemBuiltins.cpp
-            WeatherBuiltins.cpp)
+            WeatherBuiltins.cpp
+            WebBuiltins.cpp)
 
 set(HEADERS AddonBuiltins.h
             AndroidBuiltins.h
@@ -31,7 +32,8 @@ set(HEADERS AddonBuiltins.h
             PVRBuiltins.h
             SkinBuiltins.h
             SystemBuiltins.h
-            WeatherBuiltins.h)
+            WeatherBuiltins.h
+            WebBuiltins.h)
 
 if(CORE_SYSTEM_NAME STREQUAL android)
   list(APPEND SOURCES AndroidBuiltins.cpp)

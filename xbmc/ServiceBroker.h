@@ -35,6 +35,12 @@ namespace PLAYLIST
 }
 
 class CContextMenuManager;
+
+namespace WEB
+{
+class CWebManager;
+}
+
 class XBPython;
 class CDataCacheCore;
 class IAE;
@@ -98,6 +104,7 @@ public:
   static ADDON::CRepositoryUpdater& GetRepositoryUpdater();
   static CInputManager& GetInputManager();
   static CFileExtensionProvider &GetFileExtensionProvider();
+  static WEB::CWebManager& GetWEBManager();
   static bool IsBinaryAddonCacheUp();
   static bool IsServiceManagerUp();
   static CNetworkBase& GetNetwork();

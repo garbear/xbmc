@@ -40,6 +40,26 @@ void Interface_GUIDialogKeyboard::DeInit(AddonGlobalInterface* addonInterface)
   free(addonInterface->toKodi->kodi_gui->dialogKeyboard);
 }
 
+// bool Interface_GUIDialogKeyboard::show_and_get_input_with_cb(void* kodiBase, char_callback_t pCallback, const char* initialString, char** typedString, const char* heading, bool bHiddenInput)
+// {
+//   CAddonDll* addon = static_cast<CAddonDll*>(kodiBase);
+//   if (!addon)
+//   {
+//     CLog::Log(LOGERROR, "Interface_GUIDialogKeyboard::%s - invalid data", __FUNCTION__);
+//     return false;
+//   }
+//
+// //   if (!text_in || !text_out || !heading)
+// //   {
+// //     CLog::Log(LOGERROR,
+// //               "Interface_GUIDialogKeyboard::%s - invalid handler data (text_in='%p', "
+// //               "text_out='%p', heading='%p') on addon '%s'",
+// //               __FUNCTION__, text_in, static_cast<void*>(text_out), heading, addon->ID().c_str());
+// //     return false;
+// //   }
+//
+// }
+
 bool Interface_GUIDialogKeyboard::show_and_get_input_with_head(void* kodiBase, const char* text_in, char** text_out,
                                                                const char* heading, bool allow_empty_result,
                                                                bool hidden_input, unsigned int auto_close_ms)

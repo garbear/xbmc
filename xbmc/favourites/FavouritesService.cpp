@@ -185,6 +185,10 @@ std::string CFavouritesService::GetExecutePath(const CFileItem &item, const std:
     const CURL url(item.GetPath());
     execute = CURL::Decode(url.GetHostName());
   }
+  else if (URIUtils::IsProtocol(item.GetPath(), "web"))
+  {
+    execute = item.GetPath();
+  }
   else if (item.m_bIsFolder && (CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_playlistAsFolders ||
                                 !(item.IsSmartPlayList() || item.IsPlayList())))
   {

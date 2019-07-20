@@ -819,4 +819,18 @@
       <t>ToggleFont</t>
     </keyboard>
   </TextViewer>
+  <WebBrowser>
+    <keyboard>
+      <plus>ZoomIn</plus>
+      <minus>ZoomOut</minus>
+      <backspace mod="longpress">ActivateWindow(Home)</backspace>
+    </keyboard>
+  </WebBrowser>
+  <WebBrowserFullScreen>
+    <keyboard>
+      <plus>ZoomIn</plus>
+      <minus>ZoomOut</minus>
+      <backspace mod="longpress">PreviousMenu</backspace>
+    </keyboard>
+  </WebBrowserFullScreen>
 </keymap>

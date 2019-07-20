@@ -1,0 +1,6 @@
+<addon id="kodi.binary.instance.web" version="@ADDON_INSTANCE_VERSION_WEB@" provider-name="Team Kodi">
+  <backwards-compatibility abi="@ADDON_INSTANCE_VERSION_WEB_MIN@"/>
+  <requires>
+    <import addon="xbmc.core" version="0.1.0"/>
+  </requires>
+</addon>

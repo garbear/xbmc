@@ -43,6 +43,51 @@
 			</control>
 		</definition>
 	</include>
+	<include name="InfoWallWebLayout">
+		<param name="fallback_image">DefaultFolder.png</param>
+		<param name="focused">false</param>
+		<definition>
+			<control type="image">
+				<top>0</top>
+				<width>300</width>
+				<height>330</height>
+				<texture>dialogs/dialog-bg-nobo.png</texture>
+				<bordertexture border="21">overlays/shadow.png</bordertexture>
+				<bordersize>20</bordersize>
+			</control>
+			<control type="image">
+				<top>-4</top>
+				<left>-4</left>
+				<width>308</width>
+				<height>338</height>
+				<texture colordiffuse="button_focus">colors/grey.png</texture>
+				<bordertexture border="21">overlays/shadow.png</bordertexture>
+				<bordersize>20</bordersize>
+				<visible>$PARAM[focused]</visible>
+				<include condition="$PARAM[focused]">Animation_FocusTextureFade</include>
+			</control>
+			<control type="image">
+				<left>20</left>
+				<top>20</top>
+				<width>258</width>
+				<height>258</height>
+				<texture fallback="$PARAM[fallback_image]" background="true">$VAR[InfoWallThumbVar]</texture>
+				<aspectratio>keep</aspectratio>
+				<bordersize>20</bordersize>
+			</control>
+			<control type="label">
+				<left>0</left>
+				<top>270</top>
+				<width>298</width>
+				<textoffsetx>20</textoffsetx>
+				<height>20</height>
+				<align>center</align>
+				<aligny>center</aligny>
+				<font>font12</font>
+				<label>$INFO[ListItem.Label]</label>
+			</control>
+		</definition>
+	</include>
 	<include name="InfoWallMusicLayout">
 		<param name="fallback_image">DefaultFolder.png</param>
 		<param name="main_label">$INFO[ListItem.Artist]</param>

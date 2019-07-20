@@ -128,6 +128,11 @@
                                                       "StreamCodec.h" \
                                                       "StreamCrypto.h"
 
+#define ADDON_INSTANCE_VERSION_WEB                    "1.0.2"
+#define ADDON_INSTANCE_VERSION_WEB_MIN                "1.0.2"
+#define ADDON_INSTANCE_VERSION_WEB_XML_ID             "kodi.binary.instance.web"
+#define ADDON_INSTANCE_VERSION_WEB_DEPENDS            "addon-instance/Web.h"
+
 ///
 /// The currently available instance types for Kodi add-ons
 ///
@@ -159,6 +164,7 @@ typedef enum ADDON_TYPE
   ADDON_INSTANCE_VFS = 110,
   ADDON_INSTANCE_IMAGEDECODER = 111,
   ADDON_INSTANCE_VIDEOCODEC = 112,
+  ADDON_INSTANCE_WEB = 113,
 } ADDON_TYPE;
 
 #ifdef __cplusplus
@@ -251,6 +257,10 @@ inline const char* GetTypeVersion(int type)
     case ADDON_INSTANCE_VIDEOCODEC:
       return ADDON_INSTANCE_VERSION_VIDEOCODEC;
 #endif
+#if !defined(BUILD_KODI_ADDON) || defined(ADDON_INSTANCE_VERSION_WEB_USED)
+    case ADDON_INSTANCE_WEB:
+      return ADDON_INSTANCE_VERSION_WEB;
+#endif
   }
   return "0.0.0";
 }
@@ -304,6 +314,8 @@ inline const char* GetTypeMinVersion(int type)
       return ADDON_INSTANCE_VERSION_VISUALIZATION_MIN;
     case ADDON_INSTANCE_VIDEOCODEC:
       return ADDON_INSTANCE_VERSION_VIDEOCODEC_MIN;
+    case ADDON_INSTANCE_WEB:
+      return ADDON_INSTANCE_VERSION_WEB_MIN;
   }
   return "0.0.0";
 }
@@ -354,6 +366,8 @@ inline const char* GetTypeName(int type)
       return "Visualization";
     case ADDON_INSTANCE_VIDEOCODEC:
       return "VideoCodec";
+    case ADDON_INSTANCE_WEB:
+      return "Web";
   }
   return "unknown";
 }
@@ -405,6 +419,8 @@ inline int GetTypeId(const char* name)
       return ADDON_INSTANCE_VISUALIZATION;
     else if (strcmp(name, "videocodec") == 0)
       return ADDON_INSTANCE_VIDEOCODEC;
+    else if (strcmp(name, "web") == 0)
+      return ADDON_INSTANCE_WEB;
   }
   return -1;
 }

@@ -68,6 +68,7 @@ AddonPtr CAddonBuilder::Generate(const AddonInfoPtr& info, TYPE type)
   case ADDON_VFS:
   case ADDON_VIZ:
   case ADDON_SCREENSAVER:
+  case ADDON_WEB_MANAGER:
     return std::make_shared<CAddonDll>(info, type);
   case ADDON_PVRDLL:
     return std::make_shared<PVR::CPVRClient>(info);

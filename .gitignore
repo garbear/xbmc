@@ -109,6 +109,7 @@ cmake_install.cmake
 /addons/skin.estouchy/media/Textures.xbt
 /addons/skin.pm3-hd/media/Textures.xbt
 /addons/audioencoder.*
+/addons/web.*
 /addons/pvr.*
 /addons/peripheral.*
 /addons/game.*
@@ -247,6 +248,7 @@ cmake_install.cmake
 /tools/android/packaging/xbmc/strings.xml
 
 #/tools/depends
+/tools/depends/**/build
 /tools/depends/**/config.cache
 /tools/depends/**/config.log
 /tools/depends/**/config.status

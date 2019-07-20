@@ -1037,7 +1037,11 @@ msgctxt "#222"
 msgid "Cancel"
 msgstr ""
 
-#empty string with id 223
+#. Label for main button in list
+#: addons/skin.estuary/xml/Home.xml
+msgctxt "#223"
+msgid "Internet"
+msgstr ""
 
 msgctxt "#224"
 msgid "Speed"
@@ -3826,7 +3830,95 @@ msgctxt "#852"
 msgid "Valid port range is 1024-65535"
 msgstr ""
 
-#empty strings from id 853 to 996
+#empty strings from id 853 to 910
+
+#. Main Window Entry to select web browser
+#: xbmc/addons/Skin.cpp
+msgctxt "#911"
+msgid "Internet"
+msgstr ""
+
+#. Keyboard Header text to write requested URL on fullscreen view
+#: xbmc/windows/GUIWindowWebBrowserFullScreen.cpp
+msgctxt "#912"
+msgid "Enter URL to open"
+msgstr ""
+
+#. Fullscreen browser view context menu entry to select Home URL
+#: xbmc/windows/GUIWindowWebBrowserFullScreen.cpp
+msgctxt "#913"
+msgid "Home"
+msgstr ""
+
+#. Fullscreen browser view context menu entry to reload website
+#: xbmc/windows/GUIWindowWebBrowserFullScreen.cpp
+msgctxt "#914"
+msgid "Reload"
+msgstr ""
+
+#. Fullscreen browser view context menu entry to go one site back
+#: xbmc/windows/GUIWindowWebBrowserFullScreen.cpp
+msgctxt "#915"
+msgid "Go back"
+msgstr ""
+
+#. Fullscreen browser view context menu entry to go one site forward (if possible)
+#: xbmc/windows/GUIWindowWebBrowserFullScreen.cpp
+msgctxt "#916"
+msgid "Go forward"
+msgstr ""
+
+#. Fullscreen browser view context menu entry to close fullscreen view
+#: xbmc/windows/GUIWindowWebBrowserFullScreen.cpp
+msgctxt "#917"
+msgid "Close fullscreen"
+msgstr ""
+
+#. Help of web side control handle time out
+#: system/settings/settings.xml
+msgctxt "#918"
+msgid "Time after opened websites becomes automatically closed"
+msgstr ""
+
+#. Default title of new opened website
+#: xbmc/web/windows/GUIWindowWebBase.cpp
+msgctxt "#919"
+msgid "New side"
+msgstr ""
+
+#. Context button to delete opened website with tab
+#: xbmc/web/windows/GUIWindowWebBase.cpp
+msgctxt "#920"
+msgid "Close"
+msgstr ""
+
+#. Context button to delete opened website with tab
+#: xbmc/web/windows/GUIWindowWebBase.cpp
+msgctxt "#921"
+msgid "Close all others"
+msgstr ""
+
+#. To add opened website over addon to favourites
+#: xbmc/web/windows/GUIWindowWebBase.cpp
+msgctxt "#922"
+msgid "Add to favourites"
+msgstr ""
+
+#empty strings from id 920 to 949
+
+msgctxt "#950"
+msgid "Invalid port number entered"
+msgstr ""
+
+msgctxt "#951"
+msgid "Valid port range is 1-65535"
+msgstr ""
+
+msgctxt "#952"
+msgid "Valid port range is 1024-65535"
+msgstr ""
+
+#empty strings from id 953 to 996
 
 #: xbmc/windows/GUIMediaWindow.cpp
 msgctxt "#997"
@@ -4073,7 +4165,17 @@ msgctxt "#1051"
 msgid "Enter web address"
 msgstr ""
 
-#empty strings from id 1052 to 1179
+#empty strings from id 1052 to 1099
+
+msgctxt "#1100"
+msgid "Side back"
+msgstr ""
+
+msgctxt "#1101"
+msgid "Side forward"
+msgstr ""
+
+#empty strings from id 1102 to 1179
 
 #: system/settings/settings.xml
 msgctxt "#1180"
@@ -7722,7 +7824,15 @@ msgctxt "#14071"
 msgid "Allow file renaming and deletion"
 msgstr ""
 
-#empty strings from id 14072 to 14073
+#: xbmc/web/dialogs/GUIDialogFavourites.cpp
+msgctxt "#14072"
+msgid "Open favourite"
+msgstr ""
+
+#: xbmc/web/dialogs/GUIDialogFavourites.cpp
+msgctxt "#14073"
+msgid "Remove all favourites"
+msgstr ""
 
 msgctxt "#14074"
 msgid "Set timezone"
@@ -7734,6 +7844,7 @@ msgstr ""
 
 #: xbmc/windows/GUIMediaWindow.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
+#: xbmc/web/dialogs/GUIDialogFavourites.cpp
 msgctxt "#14076"
 msgid "Add to favourites"
 msgstr ""
@@ -14949,7 +15060,11 @@ msgctxt "#24048"
 msgid "VideoPlayer InputStream"
 msgstr ""
 
-#empty string with id 24049
+#. Used to define addon group name in selection folder and to descripe addon
+#: xbmc/addons/addon.cpp
+msgctxt "#24049"
+msgid "Internet add-ons"
+msgstr ""
 
 #: unknown
 msgctxt "#24050"

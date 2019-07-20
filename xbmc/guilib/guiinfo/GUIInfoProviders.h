@@ -20,6 +20,7 @@
 #include "guilib/guiinfo/VideoGUIInfo.h"
 #include "guilib/guiinfo/VisualisationGUIInfo.h"
 #include "guilib/guiinfo/WeatherGUIInfo.h"
+#include "guilib/guiinfo/WebGUIInfo.h"
 
 #include <string>
 #include <vector>
@@ -150,6 +151,7 @@ private:
   CVideoGUIInfo m_videoGUIInfo;
   CVisualisationGUIInfo m_visualisationGUIInfo;
   CWeatherGUIInfo m_weatherGUIInfo;
+  CWebGUIInfo m_webGUIInfo;
 };
 
 } // namespace GUIINFO

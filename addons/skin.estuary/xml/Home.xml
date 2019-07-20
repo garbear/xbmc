@@ -810,6 +810,179 @@
 						<param name="visible_3" value="System.HasMediaAudioCD"/>
 					</include>
 				</control>
+				<control type="group" id="22000">
+					<visible>String.IsEqual(Container(9000).ListItem.Property(id),web)</visible>
+					<include content="Visible_Right_Delayed">
+						<param name="id" value="web"/>
+					</include>
+					<control type="group">
+						<control type="panel" id="22100">
+							<left>0</left>
+							<top>110</top>
+							<right>0</right>
+							<height>363</height>
+							<onleft>9000</onleft>
+							<onright>9000</onright>
+							<onup>22200</onup>
+							<ondown>22200</ondown>
+							<scrolltime tween="cubic" easing="out">500</scrolltime>
+							<orientation>horizontal</orientation>
+							<itemgap>30</itemgap>
+							<align>left</align>
+							<pagecontrol>22010</pagecontrol>
+							<visible>Integer.IsGreater(Container(22100).NumItems,0) | Container(22100).IsUpdating</visible>
+							<itemlayout width="495" height="270">
+								<control type="group">
+									<top>5</top>
+									<left>60</left>
+									<control type="image">
+										<width>475</width>
+										<height>268</height>
+										<texture>dialogs/dialog-bg-nobo.png</texture>
+										<bordertexture border="21">overlays/shadow.png</bordertexture>
+										<bordersize>10</bordersize>
+									</control>
+									<control type="webaddon">
+										<width>475</width>
+										<height>268</height>
+									</control>
+								</control>
+							</itemlayout>
+							<focusedlayout width="505" height="275">
+								<control type="group">
+									<depth>DepthContentPopout</depth>
+									<top>5</top>
+									<left>60</left>
+									<animation type="Focus">
+										<effect type="zoom" start="100" end="115" time="200" tween="sine" easing="inout" center="305,118" />
+									</animation>
+									<animation type="Unfocus">
+										<effect type="zoom" start="115" end="100" time="200" tween="sine" easing="inout" center="305,118" />
+									</animation>
+									<control type="image">
+										<width>475</width>
+										<height>268</height>
+										<texture>dialogs/dialog-bg-nobo.png</texture>
+										<bordertexture border="21">overlays/shadow.png</bordertexture>
+										<bordersize>10</bordersize>
+									</control>
+									<control type="image">
+										<left>-4</left>
+										<top>-4</top>
+										<width>483</width>
+										<height>276</height>
+										<texture colordiffuse="button_focus">colors/grey.png</texture>
+										<include>Animation_FocusTextureFade</include>
+									</control>
+									<control type="webaddon">
+										<width>475</width>
+										<height>268</height>
+									</control>
+								</control>
+							</focusedlayout>
+						<content>web://sites/running/</content>
+					</control>
+				</control>
+				<control type="group">
+					<visible>Integer.IsEqual(Container(22100).NumItems,0)</visible>
+					<left>35</left>
+					<top>80</top>
+					<control type="label">
+						<textoffsetx>20</textoffsetx>
+						<height>40</height>
+						<aligny>center</aligny>
+						<font>font35</font>
+						<shadowcolor>text_shadow</shadowcolor>
+						<label>Favourites</label>
+						<label>$LOCALIZE[1036]</label>
+					</control>
+					<control type="panel" id="22200">
+						<left>40</left>
+						<top>40</top>
+						<right>40</right>
+						<bottom>50</bottom>
+						<onleft>9000</onleft>
+						<onright>9000</onright>
+						<onup>22100</onup>
+						<ondown>22100</ondown>
+						<preloaditems>2</preloaditems>
+						<scrolltime tween="cubic" easing="out">500</scrolltime>
+						<pagecontrol>22010</pagecontrol>
+						<visible>Integer.IsGreater(Container(22200).NumItems,0) | Container(22200).IsUpdating</visible>
+						<itemlayout width="330" height="350">
+							<control type="group">
+								<include content="InfoWallWebLayout">
+									<param name="fallback_image" value="DefaultFavourites.png" />
+									<param name="focused" value="false" />
+								</include>
+							</control>
+						</itemlayout>
+						<focusedlayout width="330" height="350">
+							<control type="group">
+								<depth>DepthContentPopout</depth>
+								<animation effect="zoom" start="100" end="110" time="200" tween="sine" easing="inout" center="160,200">Focus</animation>
+								<animation effect="zoom" start="110" end="100" time="200" tween="sine" easing="inout" center="160,200">UnFocus</animation>
+								<include content="InfoWallWebLayout">
+									<param name="fallback_image" value="DefaultFavourites.png" />
+									<param name="focused" value="true" />
+								</include>
+							</control>
+						</focusedlayout>
+						<content>web://sites/favourites/</content>
+						</control>
+					</control>
+					<control type="group">
+						<visible>Integer.IsGreater(Container(22100).NumItems,0)</visible>
+						<left>35</left>
+						<top>410</top>
+						<control type="label">
+							<textoffsetx>20</textoffsetx>
+							<height>40</height>
+							<aligny>center</aligny>
+							<font>font35</font>
+							<shadowcolor>text_shadow</shadowcolor>
+							<label>Favourites</label>
+							<label>$LOCALIZE[1036]</label>
+						</control>
+						<control type="panel" id="22200">
+							<left>40</left>
+							<top>40</top>
+							<right>40</right>
+							<bottom>50</bottom>
+							<onleft>9000</onleft>
+							<onright>9000</onright>
+							<onup>22100</onup>
+							<ondown>22100</ondown>
+							<preloaditems>2</preloaditems>
+							<scrolltime tween="cubic" easing="out">500</scrolltime>
+							<pagecontrol>22010</pagecontrol>
+							<visible>Integer.IsGreater(Container(22200).NumItems,0) | Container(22200).IsUpdating</visible>
+							<itemlayout width="330" height="350">
+								<control type="group">
+									<include content="InfoWallWebLayout">
+										<param name="fallback_image" value="DefaultFavourites.png" />
+										<param name="focused" value="false" />
+									</include>
+								</control>
+							</itemlayout>
+							<focusedlayout width="330" height="350">
+								<control type="group">
+									<depth>DepthContentPopout</depth>
+									<animation effect="zoom" start="100" end="110" time="200" tween="sine" easing="inout" center="160,200">Focus</animation>
+									<animation effect="zoom" start="110" end="100" time="200" tween="sine" easing="inout" center="160,200">UnFocus</animation>
+									<include content="InfoWallWebLayout">
+										<param name="fallback_image" value="DefaultFavourites.png" />
+										<param name="focused" value="true" />
+									</include>
+								</control>
+							</focusedlayout>
+							<content>web://sites/favourites/</content>
+						</control>
+					</control>
+					<include content="WidgetScrollbar" condition="Skin.HasSetting(touchmode)">
+						<param name="scrollbar_id" value="22010"/>
+					</include>
+				</control>
 			</control>
 			<control type="group">
 				<depth>DepthContentPanel</depth>
@@ -986,6 +1159,14 @@
 							<thumb>icons/sidemenu/videos.png</thumb>
 							<property name="id">video</property>
 							<visible>!Skin.HasSetting(HomeMenuNoVideosButton)</visible>
+						</item>
+						<item>
+							<label>$LOCALIZE[223]</label>
+							<onclick>ActivateWindow(WebBrowser)</onclick>
+							<property name="menu_id">$NUMBER[22000]</property>
+							<thumb>icons/sidemenu/internet.png</thumb>
+							<property name="id">web</property>
+							<visible>Web.HasAddons</visible>
 						</item>
 						<item>
 							<label>$LOCALIZE[10134]</label>

@@ -121,6 +121,12 @@
 #include "pvr/dialogs/GUIDialogPVRRecordingSettings.h"
 #include "pvr/dialogs/GUIDialogPVRTimerSettings.h"
 
+/* Web related include Files */
+#include "web/WebManager.h"
+#include "web/dialogs/GUIDialogFavourites.h"
+#include "web/windows/GUIWindowWebBrowser.h"
+#include "web/windows/GUIWindowWebBrowserFullScreen.h"
+
 #include "video/dialogs/GUIDialogTeletext.h"
 #include "dialogs/GUIDialogSlider.h"
 #include "dialogs/GUIDialogPlayEject.h"
@@ -271,6 +277,11 @@ void CGUIWindowManager::CreateWindows()
   Add(new CGUIDialogPVRRecordingSettings);
   Add(new CGUIDialogPVRClientPriorities);
 
+  /* Load web related Windows and Dialogs */
+  Add(new WEB::CGUIWindowWebBrowser);
+  Add(new WEB::CGUIWindowWebBrowserFullScreen);
+  Add(new WEB::CGUIDialogWebFavourites);
+
   Add(new CGUIDialogSelect);
   Add(new CGUIDialogMusicInfo);
   Add(new CGUIDialogOK);
@@ -380,6 +391,11 @@ bool CGUIWindowManager::DestroyWindows()
     DestroyWindow(WINDOW_DIALOG_OSD_TELETEXT);
     DestroyWindow(WINDOW_DIALOG_PVR_RECORDING_SETTING);
     DestroyWindow(WINDOW_DIALOG_PVR_CLIENT_PRIORITIES);
+
+    /* Delete web relatated windows and dialogs */
+    DestroyWindow(WINDOW_WEB_BROWSER);
+    DestroyWindow(WINDOW_WEB_BROWSER_FULLSCREEN);
+    DestroyWindow(WINDOW_DIALOG_WEB_FAVOURITES);
 
     DestroyWindow(WINDOW_DIALOG_TEXT_VIEWER);
     DestroyWindow(WINDOW_DIALOG_PLAY_EJECT);

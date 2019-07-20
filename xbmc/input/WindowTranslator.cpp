@@ -54,6 +54,8 @@ const CWindowTranslator::WindowMapByName CWindowTranslator::WindowMappingByName 
     { "pvrchannelguide"          , WINDOW_DIALOG_PVR_CHANNEL_GUIDE },
     { "pvrosdguide"              , WINDOW_DIALOG_PVR_CHANNEL_GUIDE }, // backward compatibility to v17
     { "pvrosdteletext"           , WINDOW_DIALOG_OSD_TELETEXT },
+    { "webbrowser"               , WINDOW_WEB_BROWSER },
+    { "webbrowserfullscreen"     , WINDOW_WEB_BROWSER_FULLSCREEN },
     { "systeminfo"               , WINDOW_SYSTEM_INFORMATION },
     { "screencalibration"        , WINDOW_SCREEN_CALIBRATION },
     { "systemsettings"           , WINDOW_SETTINGS_SYSTEM },

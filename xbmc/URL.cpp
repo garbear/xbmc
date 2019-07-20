@@ -170,7 +170,8 @@ void CURL::Parse(const std::string& strURL1)
      IsProtocol("videodb") ||
      IsProtocol("musicdb") ||
      IsProtocol("androidapp") ||
-     IsProtocol("pvr"))
+     IsProtocol("pvr") ||
+     IsProtocol("web"))
     sep = "?";
   else
   if(  IsProtocolEqual(strProtocol2, "http")
@@ -283,7 +284,8 @@ void CURL::Parse(const std::string& strURL1)
    || IsProtocol("musicdb")
    || IsProtocol("videodb")
    || IsProtocol("sources")
-   || IsProtocol("pvr"))
+   || IsProtocol("pvr")
+   || IsProtocol("web"))
   {
     if (m_strHostName != "" && m_strFileName != "")
     {

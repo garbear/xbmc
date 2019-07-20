@@ -15,6 +15,7 @@
 #include "interfaces/IAnnouncer.h"
 #include "threads/CriticalSection.h"
 #include "utils/Job.h"
+#include "web/WebEvent.h"
 
 #include <string>
 #include <vector>
@@ -85,5 +86,6 @@ private:
   bool UpdateSort();
   void OnAddonEvent(const ADDON::AddonEvent& event);
   void OnPVRManagerEvent(const PVR::PVREvent& event);
+  void OnWebManagerEvent(const WEB::WebEvent& event);
   void OnFavouritesEvent(const CFavouritesService::FavouritesUpdated& event);
 };

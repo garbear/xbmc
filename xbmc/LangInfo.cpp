@@ -30,6 +30,7 @@
 #include "utils/XMLUtils.h"
 #include "utils/log.h"
 #include "weather/WeatherManager.h"
+#include "web/WebManager.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -675,6 +676,7 @@ bool CLangInfo::SetLanguage(std::string language /* = "" */, bool reloadServices
     // also tell our weather and skin to reload as these are localized
     CServiceBroker::GetWeatherManager().Refresh();
     CServiceBroker::GetPVRManager().LocalizationChanged();
+    CServiceBroker::GetWEBManager().LocalizationChanged(language);
     CApplicationMessenger::GetInstance().PostMsg(TMSG_EXECUTE_BUILT_IN, -1, -1, nullptr, "ReloadSkin");
   }
 

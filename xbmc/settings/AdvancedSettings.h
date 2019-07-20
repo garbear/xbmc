@@ -338,6 +338,7 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
     DatabaseSettings m_databaseTV;    // advanced tv database setup
     DatabaseSettings m_databaseEpg;   /*!< advanced EPG database setup */
     DatabaseSettings m_databaseSavestates; /*!< advanced savestate database setup */
+    DatabaseSettings m_databaseWeb;   /*!< advanced web database setup */
 
     bool m_guiVisualizeDirtyRegions;
     int  m_guiAlgorithmDirtyRegions;

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<keymap>
+    <global>
+        <keyboard>
+            <F3>ActivateWindow(WebBrowserFullScreen)</F3>
+            <F4>ActivateWindow(WebBrowser)</F4>
+            <F5>XBMC.ReloadSkin()</F5>
+            <F7>Skin.ToggleSetting(DebugGrid)</F7>
+            <F6>Notification(Testing 123,Hello world)</F6>
+        </keyboard>
+    </global>
+</keymap>

@@ -1440,3 +1440,8 @@ bool URIUtils::IsUsingFastSwitch(const std::string& strFile)
 {
   return IsUDP(strFile) || IsTCP(strFile) || IsPVRChannel(strFile);
 }
+
+bool URIUtils::IsWeb(const std::string& strFile)
+{
+  return IsProtocol(strFile, "web");
+}

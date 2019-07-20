@@ -241,6 +241,7 @@ public:
   bool IsLiveTV() const;
   bool IsRSS() const;
   bool IsAndroidApp() const;
+  bool IsWeb() const;
 
   void RemoveExtension();
   void CleanString();

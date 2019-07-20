@@ -289,6 +289,7 @@ bool CGUIDialogKeyboardGeneric::OnMessage(CGUIMessage& message)
       {
         CGUIMessage msg(GUI_MSG_ITEM_SELECTED, GetID(), CTL_EDIT);
         OnMessage(msg);
+
         // update callback I guess?
         if (m_pCharCallback)
         { // we did _something_, so make sure our search message filter is reset

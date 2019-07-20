@@ -136,3 +136,25 @@ constexpr int GUI_MSG_FLAG_FORCE_UPDATE = 0x00000002;
 #define GUI_MSG_PLAYBACK_ERROR        GUI_MSG_USER + 42
 #define GUI_MSG_PLAYBACK_AVCHANGE     GUI_MSG_USER + 43
 #define GUI_MSG_PLAYBACK_AVSTARTED    GUI_MSG_USER + 44
+
+/*! Web control messages */
+//@{
+#define GUI_MSG_WEB_ADDON_READY       GUI_MSG_USER + 50     // Sent to tell that web addon control is ready and related processes can be done
+#define GUI_MSG_WEB_CONTROL_REOPEN    GUI_MSG_USER + 51     // Sent to tell that control is already open and was only inactive
+#define GUI_MSG_WEB_UPDATE_ADDRESS    GUI_MSG_USER + 52     // Sent to change on URL entry field the active string
+#define GUI_MSG_WEB_UPDATE_NAME       GUI_MSG_USER + 53
+#define GUI_MSG_WEB_UPDATE_ICON       GUI_MSG_USER + 54
+#define GUI_MSG_WEB_NEW_TAB           GUI_MSG_USER + 55
+#define GUI_MSG_WEB_OPEN_TAB          GUI_MSG_USER + 56
+
+/*!
+ * GUI messages send to add-on to handle steps inside control
+ */
+#define GUI_MSG_WEB_CONTROL_GO_BACK           GUI_MSG_USER + 60
+#define GUI_MSG_WEB_CONTROL_GO_FWD            GUI_MSG_USER + 61
+#define GUI_MSG_WEB_CONTROL_LOAD              GUI_MSG_USER + 62
+#define GUI_MSG_WEB_CONTROL_RELOAD            GUI_MSG_USER + 63
+#define GUI_MSG_WEB_CONTROL_HOME              GUI_MSG_USER + 64
+#define GUI_MSG_WEB_CONTROL_SETTINGS          GUI_MSG_USER + 65
+#define GUI_MSG_WEB_CONTROL_ADD_TO_FAVOURITES GUI_MSG_USER + 66
+//@}

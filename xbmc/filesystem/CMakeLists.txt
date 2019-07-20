@@ -57,6 +57,7 @@ set(SOURCES AddonsDirectory.cpp
             VideoDatabaseDirectory.cpp
             VideoDatabaseFile.cpp
             VirtualDirectory.cpp
+            WebDirectory.cpp
             XbtDirectory.cpp
             XbtFile.cpp
             XbtManager.cpp
@@ -125,6 +126,7 @@ set(HEADERS AddonsDirectory.h
             UDFFile.h
             VideoDatabaseDirectory.h
             VirtualDirectory.h
+            WebDirectory.h
             XbtDirectory.h
             XbtFile.h
             XbtManager.h

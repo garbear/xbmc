@@ -133,6 +133,9 @@
 #include "pvr/PVRGUIActions.h"
 #include "pvr/PVRManager.h"
 
+// Web related include files
+#include "web/WebManager.h"
+
 #include "video/dialogs/GUIDialogFullScreenInfo.h"
 #include "dialogs/GUIDialogCache.h"
 #include "dialogs/GUIDialogPlayEject.h"
@@ -2502,6 +2505,9 @@ bool CApplication::Cleanup()
 
 void CApplication::Stop(int exitCode)
 {
+  CLog::Log(LOGNOTICE, "Stopping webbrowser");
+  CServiceBroker::GetWEBManager().Stop();
+
   CLog::Log(LOGNOTICE, "Stopping player");
   m_appPlayer.ClosePlayer();
 
@@ -3954,14 +3960,17 @@ bool CApplication::ExecuteXBMCAction(std::string actionStr, const CGUIListItemPt
       return true;
     }
     CFileItem item(actionStr, false);
+    if (item.IsWeb())
+    {
+      CServiceBroker::GetWEBManager().ExecuteItem(item);
+    }
 #ifdef HAS_PYTHON
-    if (item.IsPythonScript())
+    else if (item.IsPythonScript())
     { // a python script
       CScriptInvocationManager::GetInstance().ExecuteAsync(item.GetPath());
     }
-    else
 #endif
-    if (item.IsAudio() || item.IsVideo() || item.IsGame())
+    else if (item.IsAudio() || item.IsVideo() || item.IsGame())
     { // an audio or video file
       PlayFile(item, "");
     }
@@ -4027,6 +4036,15 @@ void CApplication::Process()
     CScriptInvocationManager::GetInstance().Process();
     m_frameMoveGuard.lock();
   }
+
+  // The Chromium-based web browser addon needs the main thread in all
+  // circumstances, without massive error messages and uncontrollable
+  // crashes. Furthermore, processing the render information between
+  // different threads causes further problems.
+  //
+  // Unfortunately, this is due to the Chromium system, which was not
+  // constructed directly as a library, but as an independent exe.
+  CServiceBroker::GetWEBManager().MainLoop();
 
   // process messages, even if a movie is playing
   CApplicationMessenger::GetInstance().ProcessMessages();
@@ -4342,6 +4360,9 @@ void CApplication::VolumeChanged()
   // if player has volume control, set it.
   m_appPlayer.SetVolume(m_volumeLevel);
   m_appPlayer.SetMute(m_muted);
+
+  // if webbrowser has volume control, set it to prevent stream send if not needed.
+  CServiceBroker::GetWEBManager().SetMute(m_muted || m_volumeLevel <= VOLUME_MINIMUM);
 }
 
 int CApplication::GetSubtitleDelay()

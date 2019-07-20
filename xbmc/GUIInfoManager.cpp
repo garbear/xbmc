@@ -6272,6 +6272,92 @@ const infomap playlist[] =       {{ "length",           PLAYLIST_LENGTH },
                                   { "isrepeatone",      PLAYLIST_ISREPEATONE }};
 
 /// \page modules__infolabels_boolean_conditions
+/// \subsection modules__infolabels_boolean_conditions_Web Web
+/// \table_start
+///   \table_h3{ Labels, Type, Description }
+///   \table_row3{   <b>`Web.HasAddons`</b>,
+///                  \anchor Web_HasAddons
+///                  _integer_,
+///     @return **True** when the system is have a internet related addon present.
+///     <p>
+///   }
+///   \table_row3{   <b>`Web.HasBrowser`</b>,
+///                  \anchor Web_HasBrowser
+///                  _integer_,
+///     @return **True** when the system is have a web browser addon present.
+///     <p>
+///   }
+/// \table_end
+///
+/// -----------------------------------------------------------------------------
+const infomap web[] =            {{ "hasaddons",        WEB_HAS_ADDONS },
+                                  { "hasbrowser",       WEB_HAS_BROWSER }};
+
+/// \page modules__infolabels_boolean_conditions
+/// \subsection modules__infolabels_boolean_conditions_WebControl Web GUI control
+/// \table_start
+///   \table_h3{ Labels, Type, Description }
+///   \table_row3{   <b>`WebControl.OpenedAddress`</b>,
+///                  \anchor WebControl_OpenedAddress
+///                  _integer_,
+///     @return The currently on shown web control opened website address.
+///     <p>
+///   }
+///   \table_row3{   <b>`WebControl.OpenedTitle`</b>,
+///                  \anchor WebControl_OpenedTitle
+///                  _integer_,
+///     @return The currently on shown web control opened website title.
+///     <p>
+///   }
+///   \table_row3{   <b>`WebControl.IconURL`</b>,
+///                  \anchor WebControl_IconURL
+///                  _integer_,
+///     @return The icon URL of currently opened website.
+///     <p>
+///   }
+///   \table_row3{   <b>`WebControl.IsLoading`</b>,
+///                  \anchor WebControl_IsLoading
+///                  _integer_,
+///     @return **True** when the focused web control is loading.
+///     <p>
+///   }
+///   \table_row3{   <b>`WebControl.CanGoBack`</b>,
+///                  \anchor WebControl_CanGoBack
+///                  _integer_,
+///     @return **True** when the focused web site allow to go back.
+///     <p>
+///   }
+///   \table_row3{   <b>`WebControl.CanGoForward`</b>,
+///                  \anchor WebControl_CanGoForward
+///                  _integer_,
+///     @return **True** when the focused web site allow to go forward.
+///     <p>
+///   }
+///   \table_row3{   <b>`WebControl.ToolTip`</b>,
+///                  \anchor WebControl_ToolTip
+///                  _integer_,
+///     @return The website tooltip of currently focused website content.
+///     <p>
+///   }
+///   \table_row3{   <b>`WebControl.StatusMessage`</b>,
+///                  \anchor WebControl_StatusMessage
+///                  _integer_,
+///     @return The website status message of currently opened website.
+///     <p>
+///   }
+/// \table_end
+///
+/// -----------------------------------------------------------------------------
+const infomap webcontrol[] =     {{ "openedaddress",    WEB_CONTROL_OPENED_ADDRESS },
+                                  { "openedtitle",      WEB_CONTROL_OPENED_TITLE },
+                                  { "iconurl",          WEB_CONTROL_ICONURL },
+                                  { "isloading",        WEB_CONTROL_IS_LOADING },
+                                  { "cangoback",        WEB_CONTROL_CAN_GO_BACK },
+                                  { "cangoforward",     WEB_CONTROL_CAN_GO_FORWARD },
+                                  { "tooltip",          WEB_CONTROL_TOOLTIP },
+                                  { "statusmessage",    WEB_CONTROL_STATUS_MESSAGE }};
+
+/// \page modules__infolabels_boolean_conditions
 /// \subsection modules__infolabels_boolean_conditions_Pvr Pvr
 /// \table_start
 ///   \table_h3{ Labels, Type, Description }
@@ -9065,6 +9151,22 @@ int CGUIInfoManager::TranslateSingleString(const std::string &strCondition, bool
       {
         if (prop.name == rd.str)
           return rd.val;
+      }
+    }
+    else if (cat.name == "web")
+    {
+      for (const infomap& i : web)
+      {
+        if (prop.name == i.str)
+          return i.val;
+      }
+    }
+    else if (cat.name == "webcontrol")
+    {
+      for (const infomap& i : webcontrol)
+      {
+        if (prop.name == i.str)
+          return i.val;
       }
     }
   }
