@@ -33,6 +33,7 @@
 /target/*/appletvos*.*_arm64*-target-*/*
 /target/*/appletvsimulator*.*_x86_64*-target-*/
 /target/*/appletvsimulator*.*_x86_64*-target-*/*
+/target/*/raspberry-pi*/*
 
 /pre-depends/
 /pre-build-deps/
