@@ -10,6 +10,7 @@
 
 #include <array>
 
+/*
 #if defined(HAS_GL)
 #include <GL/gl.h>
 #elif defined(HAS_GLES)
@@ -20,6 +21,7 @@
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+*/
 #include <va/va.h>
 
 #include "utils/Geometry.h"

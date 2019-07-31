@@ -23,8 +23,10 @@
 #include <androidjni/Surface.h>
 #include <androidjni/SurfaceTexture.h>
 
+/*
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+*/
 
 #include <media/NdkMediaCrypto.h>
 
