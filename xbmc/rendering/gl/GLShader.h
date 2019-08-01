@@ -14,6 +14,7 @@
 class CGLShader : public Shaders::CGLSLShaderProgram
 {
 public:
+  CGLShader();
   CGLShader(const char *shader, std::string prefix);
   CGLShader(const char *vshader, const char *fshader, std::string prefix);
   void OnCompiledAndLinked();
@@ -31,6 +32,7 @@ public:
   GLfloat GetClipXOffset() {return m_clipXOffset; }
   GLfloat GetClipYFactor() {return m_clipYFactor; }
   GLfloat GetClipYOffset() {return m_clipYOffset; }
+  bool LoadShaderSources(const char *fshader, std::string prefix, const char *vshader = "gl_shader_vert.glsl");
 
 protected:
   GLint m_hTex0 = 0;
