@@ -59,6 +59,7 @@ if(UNIX)
   option(ENABLE_INTERNAL_FMT "Enable internal fmt?" OFF)
   option(ENABLE_INTERNAL_FSTRCMP "Enable internal fstrcmp?" OFF)
   option(ENABLE_INTERNAL_FLATBUFFERS "Enable internal flatbuffers?" OFF)
+  option(ENABLE_INTERNAL_RCHEEVOS "Enable internal RetroAchievements library?" OFF)
 endif()
 # System options
 if(NOT WIN32)
@@ -134,6 +135,7 @@ set(required_deps ASS
                   OpenSSL
                   PCRE
                   RapidJSON
+                  Rcheevos
                   Sqlite3
                   TagLib
                   TinyXML
