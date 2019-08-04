@@ -1,0 +1,25 @@
+From 0eb818871ee7e7fdfb47d1473f9d78288c67883e Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Sun, 4 Aug 2019 21:10:14 -0700
+Subject: [PATCH] Remove readline dependency
+
+---
+ makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/makefile b/makefile
+index 8160d4fb..b41924ad 100644
+--- a/makefile
++++ b/makefile
+@@ -55,7 +55,7 @@ LOCAL = $(TESTS) $(CWARNS) -g
+ # enable Linux goodies
+ MYCFLAGS= $(LOCAL) -std=c99 -DLUA_USE_LINUX -DLUA_COMPAT_5_2
+ MYLDFLAGS= $(LOCAL) -Wl,-E
+-MYLIBS= -ldl -lreadline
++MYLIBS= -ldl
+ 
+ 
+ CC= clang-3.8
+-- 
+2.20.1
+
