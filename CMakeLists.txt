@@ -67,6 +67,7 @@ option(ENABLE_ROS2        "Enable ROS 2 support?" OFF)
 # Internal Depends - supported on all platforms
 option(ENABLE_INTERNAL_LMDB "Enable internal LMDB?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LZ4 "Enable internal LZ4?" ON) # TODO: Change to OFF
+option(ENABLE_INTERNAL_RCHEEVOS "Enable internal RetroAchievements library?" ON) # TODO: Change to OFF
 
 # These are required enabled for all CI platforms, and recommended for all builds
 option(ENABLE_INTERNAL_CROSSGUID "Enable internal crossguid?" ON)
@@ -188,6 +189,7 @@ set(required_deps ASS
                   OpenSSL>=1.1.0
                   PCRE
                   RapidJSON
+                  Rcheevos
                   Spdlog
                   Sqlite3
                   TagLib

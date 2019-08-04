@@ -47,6 +47,7 @@ DEPENDS = \
   pythonmodule-pil \
   pythonmodule-pycryptodome \
   pythonmodule-setuptools \
+  rcheevos \
   sqlite3 \
   tinyxml \
   udfread \
