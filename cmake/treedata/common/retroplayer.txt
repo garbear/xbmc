@@ -15,3 +15,5 @@ xbmc/cores/RetroPlayer/savestates                               cores/RetroPlaye
 xbmc/cores/RetroPlayer/shaders                                  cores/RetroPlayer/shaders
 xbmc/cores/RetroPlayer/streams                                  cores/RetroPlayer/streams
 xbmc/cores/RetroPlayer/streams/memory                           cores/RetroPlayer/streams/memory
+xbmc/cores/RetroPlayer/types                                    cores/RetroPlayer/types
+xbmc/cores/RetroPlayer/types/media                              cores/RetroPlayer/types/media
