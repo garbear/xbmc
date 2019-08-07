@@ -139,7 +139,7 @@ std::unique_ptr<CTexture> CTexture::CreateTexture(unsigned int width,
   return std::make_unique<CGLTexture>(width, height, format);
 }
 
-CGLTexture::CGLTexture(unsigned int width, unsigned int height, XB_FMT format)
+CGLTexture::CGLTexture(unsigned int width, unsigned int height, XB_FMT format, GLuint texture)
   : CTexture(width, height, format)
 {
   unsigned int major, minor;
@@ -148,6 +148,8 @@ CGLTexture::CGLTexture(unsigned int width, unsigned int height, XB_FMT format)
     m_isOglVersion3orNewer = true;
   if (major > 3 || (major == 3 && minor >= 3))
     m_isOglVersion33orNewer = true;
+
+  m_texture = texture;
 }
 
 CGLTexture::~CGLTexture()
