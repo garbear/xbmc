@@ -11,6 +11,7 @@
 #include "cores/RetroPlayer/buffers/RenderBufferOpenGL.h"
 #include "cores/RetroPlayer/buffers/RenderBufferPoolOpenGL.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
+#include "cores/RetroPlayer/shaders/gl/ShaderPresetGL.h"
 #include "utils/log.h"
 
 #include <cstddef>
@@ -45,6 +46,9 @@ CRPRendererOpenGL::CRPRendererOpenGL(const CRenderSettings& renderSettings,
                                      std::shared_ptr<IRenderBufferPool> bufferPool)
   : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
+  // Initialize CRPBaseRenderer
+  m_shaderPreset.reset(new SHADER::CShaderPresetGL(m_context));
+
   // Initialize CRPRendererOpenGL
   m_clearColour = m_context.UseLimitedColor() ? (16.0f / 0xff) : 0.0f;
 
@@ -277,16 +281,57 @@ void CRPRendererOpenGL::Render(uint8_t alpha)
 
   const uint32_t color = (alpha << 24) | 0xFFFFFF;
 
-  glBindTexture(m_textureTarget, renderBuffer->TextureID());
+  RenderBufferTextures* rbTextures;
+  const auto it = m_RBTexturesMap.find(renderBuffer);
+  if (it != m_RBTexturesMap.end())
+  {
+    rbTextures = it->second.get();
+  }
+  else
+  {
+    // We can't copy or move CGLTexture, so construct source/target in-place
+    rbTextures = new RenderBufferTextures{{// source texture
+                                           static_cast<unsigned int>(renderBuffer->GetWidth()),
+                                           static_cast<unsigned int>(renderBuffer->GetHeight()),
+                                           GL_RGB, renderBuffer->TextureID()},
+                                          {// target texture
+                                           static_cast<unsigned int>(m_context.GetScreenWidth()),
+                                           static_cast<unsigned int>(m_context.GetScreenHeight())}};
+    m_RBTexturesMap.emplace(renderBuffer, rbTextures);
+  }
+
+  const auto sourceTexture = &rbTextures->source;
+  const auto targetTexture = &rbTextures->target;
+
+  glBindTexture(m_textureTarget, sourceTexture->getMTexture());
 
   GLint filter = GL_NEAREST;
   if (GetRenderSettings().VideoSettings().GetScalingMethod() == SCALINGMETHOD::LINEAR)
     filter = GL_LINEAR;
+
   glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, filter);
   glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, filter);
   glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+  Updateshaders();
+
+  if (m_bUseShaderPreset)
+  {
+    const CPoint destPoints[4] = {m_rotatedDestCoords[0], m_rotatedDestCoords[1],
+                                  m_rotatedDestCoords[2], m_rotatedDestCoords[3]};
+
+    targetTexture->CreateTextureObject();
+
+    SHADER::CShaderTextureGL source(*sourceTexture);
+    SHADER::CShaderTextureGL target(*targetTexture);
+    if (!m_shaderPreset->RenderUpdate(destPoints, &source, &target))
+    {
+      m_shadersNeedUpdate = false;
+      m_bUseShaderPreset = false;
+    }
+  }
+  else
   {
     m_context.EnableGUIShader(GL_SHADER_METHOD::TEXTURE);
 
