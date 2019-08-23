@@ -247,7 +247,7 @@ void CRPBaseRenderer::Updateshaders()
     {
       if (!m_renderBuffer)
       {
-        CLog::Log(LOGWARNING, "%s - Render buffer not set, can't update video shader source size!",
+        CLog::Log(LOGWARNING, "{} - Render buffer not set, can't update video shader source size!",
                   __FUNCTION__);
         return;
       }
