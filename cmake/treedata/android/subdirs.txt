@@ -1,4 +1,5 @@
 xbmc/cores/RetroPlayer/process/android      cores/RetroPlayer/process/android
+xbmc/cores/RetroPlayer/shaders/gl           cores/RetroPlayer/shaders/gl
 xbmc/cores/VideoPlayer/Process/android      cores/VideoPlayer/Process/android
 xbmc/input/touch                            input/touch
 xbmc/input/touch/generic                    input/touch/generic
