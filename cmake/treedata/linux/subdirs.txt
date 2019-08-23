@@ -10,5 +10,6 @@ xbmc/platform/linux/storage         platform/linux/storage
 xbmc/input/touch                    input/touch
 xbmc/input/touch/generic            input/touch/generic
 xbmc/cores/RetroPlayer/process/rbpi cores/RetroPlayer/process/rbpi
+xbmc/cores/RetroPlayer/shaders/gl   cores/RetroPlayer/shaders/gl
 xbmc/cores/VideoPlayer/Process/rbpi cores/VideoPlayer/Process/rbpi
 xbmc/windowing/linux                windowing/linux

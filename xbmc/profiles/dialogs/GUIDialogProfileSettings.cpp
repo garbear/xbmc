@@ -32,6 +32,10 @@
 #include "utils/URIUtils.h"
 #include "utils/Variant.h"
 #include "ServiceBroker.h"
+#include "utils/log.h"
+
+#include <cassert>
+#include <utility>
 
 #define SETTING_PROFILE_NAME          "profile.name"
 #define SETTING_PROFILE_IMAGE         "profile.image"
