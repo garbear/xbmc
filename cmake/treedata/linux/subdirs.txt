@@ -11,4 +11,5 @@ xbmc/platform/posix                 platform/posix
 xbmc/platform/posix/filesystem      platform/posix/filesystem
 xbmc/platform/posix/network         platform/posix/network
 xbmc/platform/posix/utils           platform/posix/utils
+xbmc/cores/RetroPlayer/shaders/gl   cores/RetroPlayer/shaders/gl
 xbmc/windowing/linux                windowing/linux
