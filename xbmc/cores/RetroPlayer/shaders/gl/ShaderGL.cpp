@@ -45,7 +45,7 @@ bool CShaderGL::Create(const std::string& shaderSource, const std::string& shade
   std::string defineVertex = "#define VERTEX\n";
   std::string defineFragment;
 
-  if (m_shaderParameters.size() == 0)
+  if (m_shaderParameters.empty())
     defineFragment = "#define FRAGMENT\n";
   else
     defineFragment = "#define FRAGMENT\n#define PARAMETER_UNIFORM\n";
