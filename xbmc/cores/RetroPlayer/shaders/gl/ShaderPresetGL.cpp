@@ -151,7 +151,7 @@ bool CShaderPresetGL::Update()
   auto updateFailed = [this](const std::string& msg)
   {
     m_failedPaths.insert(m_presetPath);
-    auto message = "CShaderPresetDX::Update: " + msg + ". Disabling video shaders.";
+    auto message = "CShaderPresetGL::Update: " + msg + ". Disabling video shaders.";
     CLog::Log(LOGWARNING, message.c_str());
     DisposeShaders();
     return false;
