@@ -82,7 +82,7 @@ private:
   // Resolution of the texture that holds the input
   //float2 m_textureSize;
 
-  GLuint m_shaderProgram;
+  GLuint m_shaderProgram = 0;
 
   // Projection matrix
   std::array<std::array<GLfloat, 4>, 4> m_MVP;
@@ -103,7 +103,9 @@ private:
   GLint m_InputSizeLoc = -1;
   GLint m_MVPMatrixLoc = -1;
 
-  GLuint VAO, EBO, VBO[3];
+  GLuint VAO = 0;
+  GLuint EBO = 0;
+  GLuint VBO[3] = {};
 
 private:
   uniformInputs GetInputData(uint64_t frameCount = 0);
