@@ -6,8 +6,8 @@
  *  See LICENSES/README.md for more information.
  */
 
-#include <xbmc/utils/log.h>
 #include "ShaderTextureGL.h"
+#include "utils/log.h"
 
 using namespace KODI;
 using namespace SHADER;

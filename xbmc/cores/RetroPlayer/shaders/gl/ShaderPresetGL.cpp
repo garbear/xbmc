@@ -12,11 +12,11 @@
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/ShaderPresetFactory.h"
 #include "cores/RetroPlayer/shaders/gl/ShaderGL.h"
+#include "rendering/gl/RenderSystemGL.h"
+#include "utils/log.h"
 #include "ServiceBroker.h"
-#include <xbmc/utils/log.h>
 
 #include <regex>
-#include <xbmc/rendering/gl/RenderSystemGL.h>
 
 #define MAX_FLOAT 3.402823466E+38
 

@@ -11,8 +11,8 @@
 #include "ShaderTextureGL.h"
 #include "cores/RetroPlayer/shaders/IShader.h"
 #include "cores/RetroPlayer/shaders/gl/ShaderTypesGL.h"
-#include "rendering/gl/GLShader.h"
 #include "guilib/TextureGL.h"
+#include "rendering/gl/GLShader.h"
 
 #include <stdint.h>
 

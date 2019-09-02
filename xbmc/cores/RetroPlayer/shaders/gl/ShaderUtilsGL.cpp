@@ -6,9 +6,10 @@
  *  See LICENSES/README.md for more information.
  */
 
+#include "ShaderUtilsGL.h"
+
 #include <fstream>
 #include <sstream>
-#include "ShaderUtilsGL.h"
 
 using namespace KODI;
 using namespace SHADER;

@@ -8,13 +8,13 @@
 
 #include "ShaderGL.h"
 #include "ShaderTextureGL.h"
-#include "Application.h"
+#include "ShaderUtilsGL.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/IShaderLut.h"
 #include "rendering/gl/RenderSystemGL.h"
 #include "utils/log.h"
 #include "utils/URIUtils.h"
-#include "ShaderUtilsGL.h"
+#include "Application.h"
 
 using namespace KODI;
 using namespace SHADER;
