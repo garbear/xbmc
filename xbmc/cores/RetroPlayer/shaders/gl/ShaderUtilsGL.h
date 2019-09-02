@@ -23,5 +23,6 @@ public:
   static GLint TranslateWrapType(WRAP_TYPE wrap);
   static void MoveVersionToFirstLine(std::string& source, std::string& defineVertex, std::string& defineFragment);
 };
+
 }
 }

@@ -48,7 +48,7 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
 
   CGLTexture* texture = static_cast<CGLTexture*>(CGLTexture::LoadFromFile(lut.path));
 
-  if(!texture)
+  if (!texture)
   {
     CLog::Log(LOGERROR, "Couldn't open LUT %s", lut.path);
     return std::unique_ptr<IShaderTexture>();
@@ -68,7 +68,7 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
   GLfloat blackBorder[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
   glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
 
-  if(lut.mipmap)
+  if (lut.mipmap)
     texture->SetMipmapping();
 
   return std::unique_ptr<IShaderTexture>(new CShaderTextureGL(texture));

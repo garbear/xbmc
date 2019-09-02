@@ -334,7 +334,8 @@ void CRPRendererOpenGL::Render(uint8_t alpha)
       m_bUseShaderPreset = false;
     }
   }
-  else {
+  else
+  {
     m_context.EnableGUIShader(GL_SHADER_METHOD::TEXTURE);
 
     GLubyte colour[4];

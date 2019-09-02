@@ -20,10 +20,8 @@
 
 #define MAX_FLOAT 3.402823466E+38
 
-
 using namespace KODI;
 using namespace SHADER;
-
 
 CShaderPresetGL::CShaderPresetGL(RETRO::CRenderContext &context, unsigned int videoWidth, unsigned int videoHeight)
   : m_context(context)
@@ -159,7 +157,8 @@ bool CShaderPresetGL::Update()
     return false;
   };
 
-  if (m_bPresetNeedsUpdate && !HasPathFailed(m_presetPath)) {
+  if (m_bPresetNeedsUpdate && !HasPathFailed(m_presetPath))
+  {
     DisposeShaders();
 
     if (m_presetPath.empty())
@@ -195,7 +194,6 @@ void CShaderPresetGL::SetVideoSize(const unsigned videoWidth, const unsigned vid
 {
   m_videoSize = {videoWidth, videoHeight};
   m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
-
 }
 
 bool CShaderPresetGL::SetShaderPreset(const std::string &shaderPresetPath)
@@ -447,11 +445,3 @@ bool CShaderPresetGL::HasPathFailed(const std::string &path) const
 {
   return m_failedPaths.find(path) != m_failedPaths.end();
 }
-
-
-
-
-
-
-
-
