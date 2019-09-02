@@ -326,9 +326,9 @@ void CRPRendererOpenGL::Render(uint8_t alpha)
 
     renderTargetTexture->CreateTextureObject();
 
-    auto source = new SHADER::CShaderTextureGL(*sourceTexture);
-    auto target = new SHADER::CShaderTextureGL(*renderTargetTexture);
-    if (!m_shaderPreset->RenderUpdate(destPoints, source, target))
+    SHADER::CShaderTextureGL source(*sourceTexture);
+    SHADER::CShaderTextureGL target(*renderTargetTexture);
+    if (!m_shaderPreset->RenderUpdate(destPoints, &source, &target))
     {
       m_shadersNeedUpdate = false;
       m_bUseShaderPreset = false;
