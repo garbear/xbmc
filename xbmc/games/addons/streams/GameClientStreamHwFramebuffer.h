@@ -43,7 +43,7 @@ public:
   bool OpenStream(RETRO::IRetroPlayerStream* stream,
                   const game_stream_properties& properties) override;
   void CloseStream() override;
-  bool GetBuffer(unsigned int width, unsigned int height, game_stream_buffer& buffer);
+  bool GetBuffer(unsigned int width, unsigned int height, game_stream_buffer& buffer) override;
   void AddData(const game_stream_packet& packet) override;
 
 private:
@@ -51,7 +51,7 @@ private:
   IHwFramebufferCallback& m_callback;
 
   // Stream parameters
-  RETRO::IRetroPlayerStream* m_stream;
+  RETRO::IRetroPlayerStream* m_stream{nullptr};
 };
 
 } // namespace GAME

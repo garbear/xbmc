@@ -40,6 +40,9 @@ public:
   IGameClientStream* OpenStream(const game_stream_properties& properties);
   void CloseStream(IGameClientStream* stream);
 
+  // TODO: Find me a better place
+  void EnableHardwareRendering(const game_hw_rendering_properties& properties);
+
   game_proc_address_t GetHwProcedureAddress(const char* sym);
 
 private:

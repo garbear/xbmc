@@ -44,8 +44,11 @@ bool CGameClientStreamHwFramebuffer::OpenStream(RETRO::IRetroPlayerStream* strea
 
 void CGameClientStreamHwFramebuffer::CloseStream()
 {
-  m_stream->CloseStream();
-  m_stream = nullptr;
+  if (m_stream != nullptr)
+  {
+    m_stream->CloseStream();
+    m_stream = nullptr;
+  }
 }
 
 bool CGameClientStreamHwFramebuffer::GetBuffer(unsigned int width,
@@ -70,7 +73,7 @@ bool CGameClientStreamHwFramebuffer::GetBuffer(unsigned int width,
 
 void CGameClientStreamHwFramebuffer::AddData(const game_stream_packet& packet)
 {
-  if (packet.type != GAME_STREAM_HW_FRAMEBUFFER)
+  if (packet.type != GAME_STREAM_HW_FRAMEBUFFER && packet.type != GAME_STREAM_HW_FRAMEBUFFER)
     return;
 
   if (m_stream != nullptr)

@@ -89,6 +89,11 @@ void CGameClientStreams::CloseStream(IGameClientStream* stream)
   }
 }
 
+void CGameClientStreams::EnableHardwareRendering(const game_hw_rendering_properties& properties)
+{
+  // TODO
+}
+
 game_proc_address_t CGameClientStreams::GetHwProcedureAddress(const char* symbol)
 {
   if (m_streamManager != nullptr)
