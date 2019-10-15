@@ -9,6 +9,7 @@
 #include "GameClientStreams.h"
 
 #include "GameClientStreamAudio.h"
+#include "GameClientStreamHwFramebuffer.h"
 #include "GameClientStreamSwFramebuffer.h"
 #include "GameClientStreamVideo.h"
 #include "cores/RetroPlayer/streams/IRetroPlayerStream.h"
@@ -88,6 +89,11 @@ void CGameClientStreams::CloseStream(IGameClientStream* stream)
   }
 }
 
+void CGameClientStreams::EnableHardwareRendering(const game_hw_rendering_properties& properties)
+{
+  // TODO
+}
+
 std::unique_ptr<IGameClientStream> CGameClientStreams::CreateStream(
     GAME_STREAM_TYPE streamType) const
 {
@@ -108,6 +114,11 @@ std::unique_ptr<IGameClientStream> CGameClientStreams::CreateStream(
     case GAME_STREAM_SW_FRAMEBUFFER:
     {
       gameStream.reset(new CGameClientStreamSwFramebuffer);
+      break;
+    }
+    case GAME_STREAM_HW_FRAMEBUFFER:
+    {
+      gameStream.reset(new CGameClientStreamHwFramebuffer);
       break;
     }
     default:
