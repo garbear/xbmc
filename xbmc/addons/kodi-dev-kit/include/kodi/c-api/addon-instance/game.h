@@ -324,10 +324,14 @@ extern "C"
   } GAME_HW_CONTEXT_TYPE;
   //----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @brief **Hardware framebuffer properties**
+  //==============================================================================
+  /// @brief **Hardware rendering properties**
   ///
-  typedef struct game_stream_hw_framebuffer_properties
+  /// These properties are needed early on, so instead of passing them when the
+  /// stream is opened, they are passed in EnableHardwareRendering(). As a
+  /// result, the struct passed to OpenStream() is empty.
+  ///
+  typedef struct game_hw_rendering_properties
   {
     /// @brief The API to use.
     ///
@@ -377,6 +381,18 @@ extern "C"
 
     /// @brief Creates a debug context.
     bool debug_context;
+
+  } ATTRIBUTE_PACKED game_hw_rendering_properties;
+  //------------------------------------------------------------------------------
+
+  //==============================================================================
+  /// @brief **Hardware framebuffer properties**
+  ///
+  /// This struct is empty because hardware rendering properties are passed via
+  /// EnableHardwareRendering().
+  ///
+  typedef struct game_stream_hw_framebuffer_properties
+  {
   } ATTRIBUTE_PACKED game_stream_hw_framebuffer_properties;
   //----------------------------------------------------------------------------
 
@@ -1139,6 +1155,7 @@ extern "C"
   {
     KODI_HANDLE kodiInstance;
 
+    void (*EnableHardwareRendering)(void*, const game_hw_rendering_properties*);
     void (*CloseGame)(KODI_HANDLE kodiInstance);
     KODI_GAME_STREAM_HANDLE (*OpenStream)(KODI_HANDLE, const struct game_stream_properties*);
     bool (*GetStreamBuffer)(KODI_HANDLE,

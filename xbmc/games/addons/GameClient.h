@@ -173,6 +173,8 @@ private:
    * @brief Callback functions from addon to kodi
    */
   //@{
+  static void cb_enable_hardware_rendering(void* kodiInstance,
+                                           const game_hw_rendering_properties* properties);
   static void cb_close_game(KODI_HANDLE kodiInstance);
   static KODI_GAME_STREAM_HANDLE cb_open_stream(KODI_HANDLE kodiInstance,
                                                 const game_stream_properties* properties);
