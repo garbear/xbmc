@@ -393,6 +393,19 @@ public:
   virtual GAME_ERROR Reset() { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
+  //============================================================================
+  ///
+  /// @brief **Callback to Kodi Function**<br>Requests the frontend to set up hardware rendering
+  ///
+  /// @remarks Only called from addon itself
+  ///
+  void EnableHardwareRendering(const game_hw_rendering_properties& properties)
+  {
+    m_instanceData->toKodi->EnableHardwareRendering(m_instanceData->toKodi->kodiInstance,
+                                                    &properties);
+  }
+  //----------------------------------------------------------------------------
+
   //==========================================================================
   /// @brief **Callback to Kodi Function**\n
   /// Requests the frontend to stop the current game
