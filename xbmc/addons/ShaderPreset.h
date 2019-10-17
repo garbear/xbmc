@@ -103,19 +103,8 @@ namespace ADDON
     static KODI::SHADER::WRAP_TYPE TranslateWrapType(SHADER_WRAP_TYPE type);
     static KODI::SHADER::SCALE_TYPE TranslateScaleType(SHADER_SCALE_TYPE type);
 
-    /* \brief Cache for const char* members in PERIPHERAL_PROPERTIES */
-
-    std::string         m_strLibraryPath;
-    std::string         m_strConfigPath;
-    std::string         m_strConfigBasePath;
-    std::string         m_strUserPath;    /*!< @brief translated path to the user profile */
-    std::string         m_strClientPath;  /*!< @brief translated path to this add-on */
-
     /* \brief Add-on properties */
     std::vector<std::string> m_extensions;
-
-    /* \brief Thread synchronization */
-    CCriticalSection    m_critSection;
 
     AddonInstance_ShaderPreset m_struct;
 
