@@ -332,8 +332,8 @@ namespace kodi
        *
        * \param shader            Shader pass handle
        * \param ref_path          Relative shader path
-       *
-      virtual void ShaderPresetResolveRelative(video_shader &shader, const char *ref_path) { }
+       */
+      //virtual void ShaderPresetResolveRelative(video_shader &shader, const char *ref_path) { }
 
       /*!
        * \brief Read the current value for all parameters from preset file
@@ -342,8 +342,8 @@ namespace kodi
        * \param shader            Shader passes handle
        *
        * \return True if successful, otherwise false
-       *
-      virtual bool ShaderPresetResolveCurrentParameters(preset_file file, video_shader &shader) { return false; }
+       */
+      //virtual bool ShaderPresetResolveCurrentParameters(preset_file file, video_shader &shader) { return false; }
 
       /*!
        * \brief Resolve all shader parameters belonging to the shader preset
