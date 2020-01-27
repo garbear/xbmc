@@ -424,16 +424,6 @@ bool CVideoShaderPresetDX::CreateBuffers()
 
 void CVideoShaderPresetDX::PrepareParameters(const IShaderTexture* texture, const CPoint dest[])
 {
-  // prepare params for all shaders except the last (needs special flag)
-  for (unsigned shaderIdx = 0; shaderIdx < m_pVideoShaders.size() - 1; ++shaderIdx)
-  {
-    auto& videoShader = m_pVideoShaders[shaderIdx];
-    videoShader->PrepareParameters(m_dest, false, m_frameCount);
-  }
-
-  // prepare params for last shader
-  m_pVideoShaders.back()->PrepareParameters(m_dest, true, m_frameCount);
-
   if (m_dest[0] != dest[0] || m_dest[1] != dest[1]
     || m_dest[2] != dest[2] || m_dest[3] != dest[3]
     || texture->GetWidth() != m_outputSize.x
@@ -448,6 +438,16 @@ void CVideoShaderPresetDX::PrepareParameters(const IShaderTexture* texture, cons
     UpdateMVPs();
     UpdateViewPort();
   }
+
+  // prepare params for all shaders except the last (needs special flag)
+  for (unsigned shaderIdx = 0; shaderIdx < m_pVideoShaders.size() - 1; ++shaderIdx)
+  {
+    auto& videoShader = m_pVideoShaders[shaderIdx];
+    videoShader->PrepareParameters(m_dest, false, m_frameCount);
+  }
+
+  // prepare params for last shader
+  m_pVideoShaders.back()->PrepareParameters(m_dest, true, m_frameCount);
 }
 
 bool CVideoShaderPresetDX::HasPathFailed(const std::string& path) const
