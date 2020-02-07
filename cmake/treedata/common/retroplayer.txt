@@ -3,6 +3,7 @@ xbmc/cores/RetroPlayer/audio                                    cores/RetroPlaye
 xbmc/cores/RetroPlayer/buffers                                  cores/RetroPlayer/buffers
 xbmc/cores/RetroPlayer/buffers/video                            cores/RetroPlayer/buffers/video
 xbmc/cores/RetroPlayer/cheevos                                  cores/RetroPlayer/cheevos
+xbmc/cores/RetroPlayer/engine                                   cores/RetroPlayer/engine
 xbmc/cores/RetroPlayer/guibridge                                cores/RetroPlayer/guibridge
 xbmc/cores/RetroPlayer/guicontrols                              cores/RetroPlayer/guicontrols
 xbmc/cores/RetroPlayer/guiplayback                              cores/RetroPlayer/guiplayback
