@@ -22,6 +22,7 @@ set(HEADERS Concept.h
             Molecule.h
             Phrase.h
             Summary.h
+            SummaryTypes.h
             Term.h
             Variable.h
 )

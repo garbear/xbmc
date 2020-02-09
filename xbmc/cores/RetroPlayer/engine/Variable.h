@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "utils/Variant.h"
+#include <stdint.h>
 
 namespace KODI
 {
@@ -16,35 +16,40 @@ namespace KODI
   {
     enum class VariableType
     {
-      ADDRESS = 0, // Compare to the value of a live address in RAM
-      INTEGER = 1, // A constant integer
-      DELTA_MEM = 2, // The value last known at this address
+      ADDRESS, // Compare to the value of a live address in RAM
+      INTEGER, // A constant integer
+      DELTA_MEM, // The value last known at this address
     };
 
     enum class VariableSize
     {
-      BIT_0 = 'M',
-      BIT_1 = 'N',
-      BIT_2 = 'O',
-      BIT_3 = 'P',
-      BIT_4 = 'Q',
-      BIT_5 = 'R',
-      BIT_6 = 'S',
-      BIT_7 = 'T',
-      NIBBLE_LOWER = 'L',
-      NIBBLE_UPPER = 'U',
-      EIGHT_BITS = 'H',
-      SIXTEEN_BITS = ' ',
-      THIRTYTWO_BITS = 'X',
+      BIT_0,
+      BIT_1,
+      BIT_2,
+      BIT_3,
+      BIT_4,
+      BIT_5,
+      BIT_6,
+      BIT_7,
+      NIBBLE_LOWER,
+      NIBBLE_UPPER,
+      EIGHT_BITS,
+      SIXTEEN_BITS,
+      THIRTYTWO_BITS,
     };
 
     struct Variable
     {
-      CVariant address;
-      CVariant startBit;
-      CVariant endBit;
-      bool isBcd = false;
-      CVariant frameDelay;
+      uint64_t address;
+      unsigned int startBit;
+      unsigned int endBit;
+      bool bitwiseInvert;
+      bool isBcd;
+      unsigned int frameDelay;
+
+      unsigned int Instantiate(const uint8_t* data, size_t size);
     };
+
+    class CVariable
   }
   }
