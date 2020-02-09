@@ -8,14 +8,40 @@
 
 #pragma once
 
+#include "SummaryTypes.h"
+
+#include <map>
+#include <string>
+
 namespace KODI
 {
 namespace RETRO
 {
-  class CConcept
+  struct Concept
   {
-  public:
-    CConcept() = default;
+    virtual ~Concept() = default;
   };
+
+  struct DictionaryConcept : public Concept
+  {
+    using Value = unsigned int;
+    using Label = std::string;
+
+    std::map<Value, Label> instances;
+  };
+
+  enum class UnitType
+  {
+    NONE,
+  };
+
+  struct ValueConcept : public Concept
+  {
+    UnitType units;
+  };
+
+  using ConceptSymbol = std::string;
+
+  using ConceptMap = std::map<ConceptSymbol, ConceptPtr>;
 }
 }

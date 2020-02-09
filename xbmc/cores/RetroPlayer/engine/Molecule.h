@@ -8,14 +8,19 @@
 
 #pragma once
 
+#include "SummaryTypes.h"
+
+#include <string>
+
 namespace KODI
 {
   namespace RETRO
   {
-    class CMolecule
+    struct Molecule
     {
-    public:
-      CMolecule() = default;
+      string characters;
+      std::string symbol;
+      ExpressionPtr expression;
     };
   }
 }

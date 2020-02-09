@@ -8,11 +8,16 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <memory>
 
 namespace KODI
 {
   namespace RETRO
   {
+    struct Concept;
+    using ConceptPtr = std::unique_ptr<Concept>;
+
+    struct Expression;
+    using ExpressionPtr = std::unique_ptr<Expression>;
   }
 }

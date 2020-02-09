@@ -8,14 +8,16 @@
 
 #pragma once
 
+#include <string>
+
 namespace KODI
 {
   namespace RETRO
   {
-    class CInstance
+    struct Instance
     {
-    public:
-      CInstance() = default;
+      unsigned int value;
+      std::string label;
     };
   }
 }

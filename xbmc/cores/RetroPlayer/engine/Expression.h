@@ -8,15 +8,48 @@
 
 #pragma once
 
+#include "SummaryTypes.h"
+#include "Variable.h"
+
+#include <vector>
+
 namespace KODI
 {
   namespace RETRO
   {
-    class CExpression
+    struct Expression
     {
-    public:
-      CExpression() = default;
+      virtual ~Expression() = default;
+    };
+
+    struct VariableExpression : public Expression
+    {
+      Variable Variable;
+    };
+
+    enum class PolyadicOperator
+    {
+      ADDITION,
+      MULTIPLICATION,
+      MAXIMUM,
+    };
+
+    /*
+    enum class TermType
+    {
+
+    }
+    struct Term
+    {
+      Variable variable;
+      bool invertbit; // Valid for single bits
+    };
+    */
+
+    struct PolyadicExpression : Expression
+    {
+      PolyadicOperator op;
+      std::vector<ExpressionPtr> operands;
     };
   }
 }
-
