@@ -10,6 +10,7 @@
 #include "controllers/Controller.h"
 #include "controllers/ControllerManager.h"
 #include "cores/RetroPlayer/shaders/ShaderPresetFactory.h"
+#include "datastore/DataStore.h"
 #include "games/GameSettings.h"
 #include "profiles/ProfileManager.h"
 
