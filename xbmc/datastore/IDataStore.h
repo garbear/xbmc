@@ -16,6 +16,18 @@ namespace KODI
 {
 namespace DATASTORE
 {
+  /*!
+   * \brief Generic structure used for passing data in and out of the database
+   *
+   * Data returned from the database are valid until the corresponding
+   * Release() function is called.
+   */
+  struct Buffer
+  {
+    size_t size = 0; /**< size of the data item */
+    void* data = nullptr; /**< address of the data item */
+  };
+
   class IDataStore
   {
   public:
@@ -49,7 +61,7 @@ namespace DATASTORE
      *
      * \return True if data with the given key was found, false otherwise
      */
-    virtual bool Has(const uint8_t* key, size_t keySize) = 0;
+    virtual bool Has(Buffer& key) = 0;
 
     /*!
      * \brief Get data from the data store
