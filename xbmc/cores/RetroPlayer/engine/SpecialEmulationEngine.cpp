@@ -8,6 +8,8 @@
 
 #include "SpecialEmulationEngine.h"
 
+#include <rcheevos.h>
+
 using namespace KODI;
 using namespace RETRO;
 

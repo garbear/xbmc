@@ -19,6 +19,8 @@
  */
 #pragma once
 
+#include "action_topology_generated.h"
+
 namespace KODI
 {
 namespace RETRO
