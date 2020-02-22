@@ -30,6 +30,7 @@ DEPENDS = \
   libgpg-error \
   libjpeg-turbo \
   libjuice \
+  liblz4 \
   liblzo2 \
   libmicrohttpd \
   libplist \
