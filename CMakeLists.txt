@@ -131,6 +131,7 @@ set(required_deps ASS
                   LibDvd
                   Libp2p
                   LMDB
+                  LZ4
                   Lzo2
                   OpenSSL
                   PCRE
