@@ -68,6 +68,7 @@ cmake_dependent_option(ENABLE_INTERNAL_PCRE "Enable internal pcre?" OFF "DEFINED
 cmake_dependent_option(ENABLE_INTERNAL_TAGLIB "Enable internal taglib?" OFF "DEFINED USE_INTERNAL_LIBS;NOT USE_INTERNAL_LIBS" ON)
 option(ENABLE_INTERNAL_LIBQRENCODE "Enable internal libqrencode?" OFF)
 option(ENABLE_INTERNAL_LMDB "Enable internal LMDB?" OFF)
+option(ENABLE_INTERNAL_LZ4 "Enable internal LZ4?" OFF)
 
 # Internal Depends - supported on UNIX platforms
 if(UNIX)
@@ -175,6 +176,7 @@ set(required_deps ASS
                   LibDvd
                   Libqrencode
                   LMDB
+                  LZ4
                   Lzo2
                   OpenSSL>=1.1.0
                   PCRE
