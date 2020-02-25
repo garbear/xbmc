@@ -10,7 +10,8 @@ NATIVE= m4-native gettext-native autoconf-native automake-native \
         pcre-native swig-native \
         libpng-native libjpeg-turbo-native liblzo2-native giflib-native \
         distribute-native distutilscross-native JsonSchemaBuilder TexturePacker \
-        flatbuffers-native
+        flatbuffers-native \
+        protobuf-native \
 
 
 ifeq ($(OS),ios)
@@ -53,6 +54,7 @@ python27-native: zlib-native
 python3-native: $(EXPAT) zlib-native
 wayland-scanner-native: expat-native
 waylandpp-scanner-native: cmake-native
+protobuf-native: libtool-native zlib-native
 
 #liblzo2 has stale packaged automake files that cause borked host/build detection
 liblzo2-native: automake-native

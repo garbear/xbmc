@@ -20,7 +20,15 @@ SOURCE=v$(VERSION)-p0
 ARCHIVE=$(SOURCE).tar.gz
 
 # The comma-separated list of boost libraries to build
-BOOST_LIBRARIES=random
+#
+# Dependency graph:
+#
+#   libp2p:
+#     * filesystem
+#     * program_options
+#     * random
+#
+BOOST_LIBRARIES=filesystem,program_options,random
 
 # The generated library
 LIBDYLIB=$(PLATFORM)/stage/lib/libboost_system.a
