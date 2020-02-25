@@ -47,7 +47,7 @@ Several different strategies are used to draw your attention to certain pieces o
 **[back to top](#table-of-contents)** | **[back to section top](#1-document-conventions)**
 
 ## 2. Install the required packages
-**NOTE:** Kodi requires a compiler with C++14 support, i.e. gcc >= 4.9 or clang >= 3.4
+**NOTE:** Kodi requires a compiler with C++17 support.
 
 Install build dependencies needed to cross-compile Kodi for the Raspberry Pi:
 ```
