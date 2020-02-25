@@ -17,6 +17,15 @@ DEPENDS = \
 	libxslt ffmpeg crossguid \
 	libdvdread libdvdnav libdvdcss p8-platform flatbuffers
 
+# libp2p dependencies
+DEPENDS += \
+  boost \
+  boost-di \
+  gsl \
+  hat-trie \
+  libp2p \
+  protobuf \
+  spdlog \
 
 FFMPEG_DEPENDS = gnutls
 
@@ -119,6 +128,9 @@ dbus: expat
 libinput: mtdev libevdev
 libevdev: libudev
 taglib: $(ZLIB)
+spdlog: libfmt
+protobuf: $(ZLIB)
+libp2p: boost boost-di gsl hat-trie openssl protobuf spdlog
 
 .installed-$(PLATFORM): $(DEPENDS)
 	touch $@
