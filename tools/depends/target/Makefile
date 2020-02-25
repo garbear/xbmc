@@ -28,6 +28,13 @@ DEPENDS += \
   protobuf \
   spdlog \
 
+# Filecoin dependencies
+DEPENDS += \
+  cppcodec \
+  filecoin \
+  leveldb \
+  tinycbor \
+
 FFMPEG_DEPENDS = gnutls
 
 ifeq ($(ENABLE_GPLV3),yes)
@@ -132,6 +139,7 @@ taglib: $(ZLIB)
 spdlog: libfmt
 protobuf: $(ZLIB)
 libp2p: boost boost-di gsl hat-trie openssl protobuf spdlog
+filecoin: boost boost-di cppcodec gsl hat-trie leveldb libp2p openssl protobuf spdlog tinycbor
 
 .installed-$(PLATFORM): $(DEPENDS)
 	touch $@
