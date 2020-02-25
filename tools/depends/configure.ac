@@ -7,7 +7,7 @@ AC_CONFIG_FILES([target/config.site native/config.site.native Makefile.include t
 AC_CANONICAL_HOST
 
 m4_include([m4/xbmc_arch.m4])
-m4_include([m4/ax_cxx_compile_stdcxx_14.m4])
+m4_include([m4/ax_cxx_compile_stdcxx_17.m4])
 
 # check for not same cpu value
 AC_DEFUN([MC_CHECK_NOT_CPU],
@@ -129,9 +129,9 @@ if test -n "$use_toolchain"; then
   esac
 fi
 AC_PROG_CXX([$COMPILER_LIST])
-AX_CXX_COMPILE_STDCXX_14([noext],[mandatory])
-c14_flags=$(echo "$CFLAGS" | sed 's/-O@<:@123@:>@//g;s/-g //g;s/ //g')
-cxx14_flags=$(echo "$CXXFLAGS" | sed 's/-O@<:@123@:>@//g;s/-g //g;s/ //g')
+AX_CXX_COMPILE_STDCXX_17([noext],[mandatory])
+c17_flags=$(echo "$CFLAGS" | sed 's/-O@<:@123@:>@//g;s/-g //g;s/ //g')
+cxx17_flags=$(echo "$CXXFLAGS" | sed 's/-O@<:@123@:>@//g;s/-g //g;s/ //g')
 PATH="${OLD_PATH}"
 
 if test "$use_ccache" = "yes"; then
@@ -604,8 +604,8 @@ if [ ! `mkdir -p $use_tarballs` ]; then
 fi
 
 # remove unwanted optimization flags
-tmp_cflags=$(echo $c14_flags $platform_cflags | sed 's/-O@<:@123@:>@//g;s/-g //g;s/ \{2,\}//g')
-tmp_cxxflags=$(echo $cxx14_flags $platform_cxxflags | sed 's/-O@<:@123@:>@//g;s/-g //g;s/ \{2,\}//g')
+tmp_cflags=$(echo $c17_flags $platform_cflags | sed 's/-O@<:@123@:>@//g;s/-g //g;s/ \{2,\}//g')
+tmp_cxxflags=$(echo $cxx17_flags $platform_cxxflags | sed 's/-O@<:@123@:>@//g;s/-g //g;s/ \{2,\}//g')
 
 release_cflags="-DNDEBUG=1"
 
