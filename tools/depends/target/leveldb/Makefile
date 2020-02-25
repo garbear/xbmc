@@ -1,11 +1,12 @@
 ################################################################################
-# Boost C++ Libraries
+# GSL: Guidelines Support Library
 #
-#   https://www.boost.org/
-#   SPDX-License-Identifier: BSL-1.0
+#   https://github.com/microsoft/GSL
+#   SPDX-License-Identifier: MIT
 #
-# Boost is a set of libraries for the C++ programming language that provide
-# support for common tasks.
+# The Guidelines Support Library (GSL) contains functions and types that are
+# suggested for use by the C++ Core Guidelines maintained by the Standard C++
+# Foundation.
 #
 ################################################################################
 
@@ -13,38 +14,22 @@
 DEPS = Makefile
 
 # lib name, version
-LIBNAME=boost
-VERSION=1.72.0
-SOURCE=$(LIBNAME)_$(shell echo $(VERSION) | tr "." "_")
+LIBNAME=leveldb
+VERSION=1.22
+SOURCE=$(VERSION)
 ARCHIVE=$(SOURCE).tar.gz
 
-# The comma-separated list of boost libraries to build
-#
-# Dependency graph:
-#
-#   libp2p:
-#     * filesystem
-#     * program_options
-#     * random
-#
-#   filecoin:
-#     * date_time
-#     * filesystem
-#     * random
-#     * system
-#
-BOOST_LIBRARIES=date_time,filesystem,program_options,random,system
+# The build directory
+BUILDDIR=$(PLATFORM)/build
 
 # The generated library
-LIBDYLIB=$(PLATFORM)/stage/lib/libboost_system.a
+LIBDYLIB=$(BUILDDIR)/lib$(LIBNAME).a
 
-# Boost build options
-BOOST_OPTIONS =
-ifeq ($(DEBUG_BUILD),yes)
-  BOOST_OPTIONS += variant=debug
-else
-  BOOST_OPTIONS += variant=release
-endif
+CMAKE_OPTIONS := \
+  -DCMAKE_INSTALL_PREFIX=$(PREFIX) \
+  -DLEVELDB_BUILD_TESTS=OFF \
+  -DLEVELDB_BUILD_BENCHMARKS=OFF \
+  $(CMAKE_OPTIONS)
 
 ifeq ($(CROSS_COMPILING), yes)
   DEPS += ../../Makefile.include
@@ -61,7 +46,7 @@ else
 endif
 
 # TODO
-BASE_URL := https://dl.bintray.com/boostorg/release/$(VERSION)/source
+BASE_URL := https://github.com/google/leveldb/archive
 
 all: .installed-$(PLATFORM)
 
@@ -77,19 +62,13 @@ endif
 	rm -rf $(PLATFORM); mkdir -p $(PLATFORM)
 	cd $(PLATFORM); $(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(TARBALLS_LOCATION)/$(ARCHIVE)
 
-$(PLATFORM)/b2: $(PLATFORM)
-	cd $(PLATFORM); ./bootstrap.sh \
-	  --prefix=$(PREFIX) \
-	  --with-python=$(NATIVEPREFIX)/bin/python3 \
-	  --with-toolset=gcc \
-	  --with-libraries=$(BOOST_LIBRARIES) \
-	  --without-icu
-
-$(LIBDYLIB): $(PLATFORM)/b2
-	cd $(PLATFORM); ./b2 $(BOOST_OPTIONS)
+$(LIBDYLIB): $(PLATFORM)
+	mkdir -p $(BUILDDIR)
+	cd $(BUILDDIR); $(CMAKE) $(CMAKE_OPTIONS) ..
+	$(MAKE) -C $(BUILDDIR)
 
 .installed-$(PLATFORM): $(LIBDYLIB)
-	cd $(PLATFORM); ./b2 $(BOOST_OPTIONS) install
+	$(MAKE) -C $(BUILDDIR) install
 	touch $@
 
 clean:

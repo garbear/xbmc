@@ -1,11 +1,10 @@
 ################################################################################
-# Boost C++ Libraries
+# Fuhon - C++17 implementation of Filecoin
 #
-#   https://www.boost.org/
-#   SPDX-License-Identifier: BSL-1.0
+#   https://filecoin.io
+#   SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Boost is a set of libraries for the C++ programming language that provide
-# support for common tasks.
+# Fuhon is an implementation of the Filecoin protocol being developed in C++.
 #
 ################################################################################
 
@@ -13,38 +12,27 @@
 DEPS = Makefile
 
 # lib name, version
-LIBNAME=boost
-VERSION=1.72.0
-SOURCE=$(LIBNAME)_$(shell echo $(VERSION) | tr "." "_")
+LIBNAME=filecoin
+VERSION=bd51e139a00e2c458ccc72758a4695165ca918ff
+SOURCE=$(VERSION)
 ARCHIVE=$(SOURCE).tar.gz
 
-# The comma-separated list of boost libraries to build
-#
-# Dependency graph:
-#
-#   libp2p:
-#     * filesystem
-#     * program_options
-#     * random
-#
-#   filecoin:
-#     * date_time
-#     * filesystem
-#     * random
-#     * system
-#
-BOOST_LIBRARIES=date_time,filesystem,program_options,random,system
+# The build directory
+BUILDDIR=$(PLATFORM)/build
 
 # The generated library
-LIBDYLIB=$(PLATFORM)/stage/lib/libboost_system.a
+# TODO
+LIBDYLIB=$(BUILDDIR)/core/storage/ipfs/libipfs_blockservice.a
 
-# Boost build options
-BOOST_OPTIONS =
-ifeq ($(DEBUG_BUILD),yes)
-  BOOST_OPTIONS += variant=debug
-else
-  BOOST_OPTIONS += variant=release
-endif
+CMAKE_OPTIONS := \
+  -DCMAKE_INSTALL_PREFIX=$(PREFIX) \
+  -DHUNTER_ENABLED=OFF \
+  -DBUILD_INTERNAL_DEPS=OFF \
+  -DTESTING=OFF \
+  -DCMAKE_CXX_STANDARD=17 \
+  -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+  -DCMAKE_CXX_EXTENSIONS=OFF \
+  $(CMAKE_OPTIONS)
 
 ifeq ($(CROSS_COMPILING), yes)
   DEPS += ../../Makefile.include
@@ -61,7 +49,7 @@ else
 endif
 
 # TODO
-BASE_URL := https://dl.bintray.com/boostorg/release/$(VERSION)/source
+BASE_URL := https://github.com/eigendude/cpp-filecoin/archive
 
 all: .installed-$(PLATFORM)
 
@@ -77,19 +65,13 @@ endif
 	rm -rf $(PLATFORM); mkdir -p $(PLATFORM)
 	cd $(PLATFORM); $(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(TARBALLS_LOCATION)/$(ARCHIVE)
 
-$(PLATFORM)/b2: $(PLATFORM)
-	cd $(PLATFORM); ./bootstrap.sh \
-	  --prefix=$(PREFIX) \
-	  --with-python=$(NATIVEPREFIX)/bin/python3 \
-	  --with-toolset=gcc \
-	  --with-libraries=$(BOOST_LIBRARIES) \
-	  --without-icu
-
-$(LIBDYLIB): $(PLATFORM)/b2
-	cd $(PLATFORM); ./b2 $(BOOST_OPTIONS)
+$(LIBDYLIB): $(PLATFORM)
+	mkdir -p $(BUILDDIR)
+	cd $(BUILDDIR); $(CMAKE) $(CMAKE_OPTIONS) ..
+	$(MAKE) -C $(BUILDDIR)
 
 .installed-$(PLATFORM): $(LIBDYLIB)
-	cd $(PLATFORM); ./b2 $(BOOST_OPTIONS) install
+	$(MAKE) -C $(BUILDDIR) install
 	touch $@
 
 clean:
