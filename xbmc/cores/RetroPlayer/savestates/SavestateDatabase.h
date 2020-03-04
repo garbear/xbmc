@@ -35,7 +35,7 @@ namespace RETRO
 
     bool RenameSavestate(const std::string& path, const std::string& label);
 
-    bool DeleteSavestate(const std::string& path);
+    bool DeleteSavestate(const std::string& gamePath);
 
     bool ClearSavestatesOfGame(const std::string& gamePath, const std::string& gameClient = "");
   };

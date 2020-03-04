@@ -107,10 +107,15 @@ bool CSavestateDatabase::RenameSavestate(const std::string& path, const std::str
   return false;
 }
 
-bool CSavestateDatabase::DeleteSavestate(const std::string& path)
+bool CSavestateDatabase::DeleteSavestate(const std::string& gamePath)
 {
-  //! @todo
-  return false;
+  const std::string savestatePath = CSavestateUtils::MakePath(gamePath);
+  if (!XFILE::CFile::Delete(savestatePath))
+  {
+    CLog::Log(LOGERROR, "Failed to delete savestate file %s", CURL::GetRedacted(savestatePath).c_str());
+    return false;
+  }
+  return true;
 }
 
 bool CSavestateDatabase::ClearSavestatesOfGame(const std::string& gamePath, const std::string& gameClient /* = "" */)
