@@ -1,7 +1,0 @@
-{
-    "@context": {
-        "Constant": "ra:Constant",
-        "ra": "http://retroachievements.org#",
-        "value": "ra:value"
-    }
-}
