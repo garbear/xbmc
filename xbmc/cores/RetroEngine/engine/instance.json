@@ -1,0 +1,11 @@
+{
+    "@context": {
+        "Instance": "ra:Instance",
+        "label": {
+            "@container": "@language",
+            "@id": "ra:label"
+        },
+        "ra": "http://retroachievements.org#",
+        "value": "ra:value"
+    }
+}

@@ -1,3 +1,6 @@
+xbmc/cores/RetroEngine                                          cores/RetroEngine
+xbmc/cores/RetroEngine/engine                                   cores/RetroEngine/engine
+xbmc/cores/RetroEngine/environment                              cores/RetroEngine/environment
 xbmc/cores/RetroPlayer                                          cores/RetroPlayer
 xbmc/cores/RetroPlayer/audio                                    cores/RetroPlayer/audio
 xbmc/cores/RetroPlayer/buffers                                  cores/RetroPlayer/buffers
