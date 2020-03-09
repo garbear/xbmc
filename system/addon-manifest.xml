@@ -51,6 +51,8 @@
   <addon optional="true">service.xbmc.versioncheck</addon>
   <addon>skin.estuary</addon>
   <addon>skin.estouchy</addon>
+  <addon optional="true">vfs.libarchive</addon>
+  <addon optional="true">vfs.rar</addon>
   <addon>webinterface.default</addon>
   <addon>xbmc.addon</addon>
   <addon>xbmc.core</addon>
