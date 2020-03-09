@@ -213,7 +213,7 @@ rem Runs in the build directory, where CMakeCache.txt records the selected CCACH
     IF %buildmode%==clean (
       call make-addons.bat clean
     )
-    call make-addons.bat
+    CALL make-addons.bat game.libretro game.shader.presets inputstream.adaptive peripheral.joystick screensaver.matrixtrails vfs.libarchive vfs.pdf vfs.rar
     IF %errorlevel%==1 (
       set DIETEXT="failed to build addons"
       cd %build_path%
