@@ -8,4 +8,5 @@ IF ERRORLEVEL 1 (
   EXIT /B 1
 )
 CALL make-addons.bat %*
+CALL make-addons.bat ^game\.libretro$
 POPD
