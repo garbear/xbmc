@@ -61,4 +61,6 @@
   <addon optional="true">repository.teeedubb</addon>
   <addon optional="true">repository.zachmorris</addon>
   <addon optional="true">service.xbmc.versioncheck</addon>
+  <addon optional="true">vfs.libarchive</addon>
+  <addon optional="true">vfs.rar</addon>
 </addons>
