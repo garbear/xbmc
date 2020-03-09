@@ -160,7 +160,11 @@ set WORKSPACE=%base_dir%\kodi-build.%TARGET_PLATFORM%
     IF %buildmode%==clean (
       call make-addons.bat clean
     )
-    call make-addons.bat
+    CALL make-addons.bat ^game\.libretro$
+    CALL make-addons.bat ^game\.shader\.presets$
+    CALL make-addons.bat ^peripheral\.joystick$
+    CALL make-addons.bat ^vfs\.libarchive$
+    CALL make-addons.bat ^vfs\.rar$
     IF %errorlevel%==1 (
       set DIETEXT="failed to build addons"
       cd %build_path%
