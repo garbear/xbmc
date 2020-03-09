@@ -7,5 +7,5 @@ IF ERRORLEVEL 1 (
   POPD
   EXIT /B 1
 )
-CALL make-addons.bat win10 %*
+CALL make-addons.bat win10 game.libretro game.shader.presets inputstream.adaptive peripheral.joystick screensaver.matrixtrails vfs.libarchive vfs.rar
 POPD
