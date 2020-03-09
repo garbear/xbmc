@@ -182,6 +182,7 @@ Section "${APP_NAME}" SecAPP
   SetOutPath "$INSTDIR\addons"
   File /r "${app_root}\application\addons\*.*"
   File /nonfatal /r "${app_root}\addons\peripheral.*"
+  File /nonfatal /r "${app_root}\addons\game.*"
   SetOutPath "$INSTDIR\media"
   File /r "${app_root}\application\media\*.*"
   SetOutPath "$INSTDIR\system"
