@@ -13,6 +13,14 @@
 #include "games/GameSettings.h"
 #include "profiles/ProfileManager.h"
 
+// Crypto testing
+#include "crypto/CryptoProvider.h"
+#include "crypto/CryptoTypes.h"
+#include "crypto/Key.h"
+#include "crypto/codecs/Base58.h"
+#include "crypto/ed25519/OpenSSLEd25519Provider.h"
+#include "crypto/random/BoostRandomGenerator.h"
+
 using namespace KODI;
 using namespace GAME;
 
@@ -29,6 +37,34 @@ CGameServices::CGameServices(CControllerManager &controllerManager,
   m_gameSettings(new CGameSettings()),
   m_videoShaders(new SHADER::CShaderPresetFactory(addons, binaryAddons))
 {
+  // Create CSPRNG
+  std::unique_ptr<CRYPTO::IRandomGenerator> csprng(new CRYPTO::CBoostRandomGenerator);
+  CRYPTO::ByteArray buffer = csprng->RandomBytes(32);
+
+  // Create Ed25519 signature scheme
+  std::unique_ptr<CRYPTO::IEd25519Provider> ed25519Provider(new CRYPTO::COpenSSLEd25519Provider);
+  std::unique_ptr<CRYPTO::IRandomGenerator> csrng(new CRYPTO::CBoostRandomGenerator);
+
+  // Create crypto provider
+  CRYPTO::CCryptoProvider cryptoProvider(std::move(ed25519Provider), std::move(csrng));
+
+  // Generate public/private key pair
+  auto keyPair = cryptoProvider.GenerateKeys(CRYPTO::Key::Type::Ed25519);
+
+  /*!
+   * DID format:
+   *
+   *   {
+   *     "id": "did:example:123#ZC2jXTO6t4R501bfCXv3RxarZyUbdP2w_psLwMuY6ec",
+   *     "type": "Ed25519VerificationKey2018",
+   *     "controller": "did:example:123",
+   *     "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+   *   }
+   */
+  const std::string id = "did:example:123#ZC2jXTO6t4R501bfCXv3RxarZyUbdP2w_psLwMuY6ec"; //! @todo
+  const std::string type = "Ed25519VerificationKey2018"; //! @todo
+  const std::string controller = "did:example:123"; //! @todo
+  auto publicKeyBase58 = CRYPTO::CBase58::EncodeBase58(keyPair.publicKey.data);
 }
 
 CGameServices::~CGameServices() = default;
