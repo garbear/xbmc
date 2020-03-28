@@ -24,11 +24,11 @@ if(NOT EXISTS "${APP_INCLUDE_DIR}/")
   file(MAKE_DIRECTORY ${APP_INCLUDE_DIR})
 endif()
 
-# make sure C++11 is always set
+# make sure C++14 is always set
 if(NOT WIN32)
-  string(REGEX MATCH "-std=(gnu|c)\\+\\+11" cxx11flag "${CMAKE_CXX_FLAGS}")
-  if(NOT cxx11flag)
-    set(CXX11_SWITCH "-std=c++11")
+  string(REGEX MATCH "-std=(gnu|c)\\+\\+14" cxx14flag "${CMAKE_CXX_FLAGS}")
+  if(NOT cxx14flag)
+    set(CXX14_SWITCH "-std=c++14")
   endif()
 endif()
 
