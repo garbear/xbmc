@@ -1,7 +1,6 @@
 include ../../Makefile.include
 DEPS= ../../Makefile.include Makefile crosscompile.patch android.patch no-export-path.patch android-nl_langinfo.patch \
-       setup.patch fix-datetime.patch fix-ffi.patch android-binmodule.patch no-abort.patch urllib.patch modules.setup make-fork-optional.patch \
-       Remove-register-keywork-for-C-17.patch
+       setup.patch fix-datetime.patch fix-ffi.patch android-binmodule.patch no-abort.patch urllib.patch modules.setup make-fork-optional.patch
 
 # lib name, version
 LIBNAME=Python
@@ -43,7 +42,6 @@ $(PLATFORM): $(TARBALLS_LOCATION)/$(ARCHIVE) $(DEPS)
 	cd $(PLATFORM); patch -p1 < ../android-binmodule.patch
 	cd $(PLATFORM); patch -p1 < ../no-abort.patch
 	cd $(PLATFORM); patch -p1 < ../android-nl_langinfo.patch
-	cd $(PLATFORM); patch -p1 < ../Remove-register-keywork-for-C-17.patch
 ifeq ($(OS),ios)
 	cd $(PLATFORM); patch -p1 < ../make-fork-optional.patch
 	cd $(PLATFORM); patch -p1 < ../urllib.patch

@@ -25,6 +25,8 @@ endif()
 # Additional SYSTEM_DEFINES
 list(APPEND SYSTEM_DEFINES -DHAS_LINUX_NETWORK -DHAS_SDL -DHAS_ZEROCONF)
 
+find_package(CXX11 REQUIRED)
+
 list(APPEND CMAKE_SYSTEM_PREFIX_PATH ${NATIVEPREFIX})
 
 list(APPEND DEPLIBS "-framework DiskArbitration" "-framework IOKit"
