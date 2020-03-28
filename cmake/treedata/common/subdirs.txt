@@ -15,6 +15,7 @@ xbmc/addons/kodi-addon-dev-kit/include/kodi/tools addons_kodi-addon-dev-kit_incl
 xbmc/addons/settings                            addons_settings
 xbmc/commons                                    commons
 xbmc/crypto                                     crypto
+xbmc/crypto/codecs                              crypto/codecs
 xbmc/crypto/ed25519                             crypto/ed25519
 xbmc/crypto/random                              crypto/random
 xbmc/dbwrappers                                 dbwrappers
