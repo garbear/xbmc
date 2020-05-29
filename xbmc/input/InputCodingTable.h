@@ -45,7 +45,9 @@ public:
   }
 
   /*! \brief Can be overridden if initialization is expensive to avoid calling initialize more than
-     needed \return true if initialization has been done and was successful, false otherwise.
+      needed
+
+      \return true if initialization has been done and was successful, false otherwise.
   */
   virtual bool IsInitialized() const
   {
