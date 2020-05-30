@@ -9,21 +9,24 @@
 #include "AddonInputHandling.h"
 #include "input/joysticks/generic/DriverReceiving.h"
 #include "input/joysticks/generic/InputHandling.h"
-#include "input/joysticks/interfaces/IInputHandler.h"
 #include "input/joysticks/interfaces/IDriverReceiver.h"
+#include "input/joysticks/interfaces/IInputHandler.h"
 #include "input/keyboard/generic/KeyboardInputHandling.h"
 #include "input/keyboard/interfaces/IKeyboardInputHandler.h"
 #include "input/mouse/generic/MouseInputHandling.h"
 #include "input/mouse/interfaces/IMouseInputHandler.h"
-#include "peripherals/addons/AddonButtonMap.h"
 #include "peripherals/Peripherals.h"
+#include "peripherals/addons/AddonButtonMap.h"
 #include "utils/log.h"
 
 using namespace KODI;
 using namespace JOYSTICK;
 using namespace PERIPHERALS;
 
-CAddonInputHandling::CAddonInputHandling(CPeripherals& manager, CPeripheral* peripheral, IInputHandler* handler, IDriverReceiver* receiver)
+CAddonInputHandling::CAddonInputHandling(CPeripherals& manager,
+                                         CPeripheral* peripheral,
+                                         IInputHandler* handler,
+                                         IDriverReceiver* receiver)
 {
   PeripheralAddonPtr addon = manager.GetAddonWithButtonMap(peripheral);
 
@@ -53,7 +56,9 @@ CAddonInputHandling::CAddonInputHandling(CPeripherals& manager, CPeripheral* per
   }
 }
 
-CAddonInputHandling::CAddonInputHandling(CPeripherals& manager, CPeripheral* peripheral, KEYBOARD::IKeyboardInputHandler* handler)
+CAddonInputHandling::CAddonInputHandling(CPeripherals& manager,
+                                         CPeripheral* peripheral,
+                                         KEYBOARD::IKeyboardInputHandler* handler)
 {
   PeripheralAddonPtr addon = manager.GetAddonWithButtonMap(peripheral);
 
@@ -75,7 +80,9 @@ CAddonInputHandling::CAddonInputHandling(CPeripherals& manager, CPeripheral* per
   }
 }
 
-CAddonInputHandling::CAddonInputHandling(CPeripherals& manager, CPeripheral* peripheral, MOUSE::IMouseInputHandler* handler)
+CAddonInputHandling::CAddonInputHandling(CPeripherals& manager,
+                                         CPeripheral* peripheral,
+                                         MOUSE::IMouseInputHandler* handler)
 {
   PeripheralAddonPtr addon = manager.GetAddonWithButtonMap(peripheral);
 
@@ -121,7 +128,10 @@ bool CAddonInputHandling::OnHatMotion(unsigned int hatIndex, HAT_STATE state)
   return false;
 }
 
-bool CAddonInputHandling::OnAxisMotion(unsigned int axisIndex, float position, int center, unsigned int range)
+bool CAddonInputHandling::OnAxisMotion(unsigned int axisIndex,
+                                       float position,
+                                       int center,
+                                       unsigned int range)
 {
   if (m_driverHandler)
     return m_driverHandler->OnAxisMotion(axisIndex, position, center, range);
@@ -148,7 +158,6 @@ void CAddonInputHandling::OnKeyRelease(const CKey& key)
   if (m_keyboardHandler)
     m_keyboardHandler->OnKeyRelease(key);
 }
-
 
 bool CAddonInputHandling::OnPosition(int x, int y)
 {
