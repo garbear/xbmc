@@ -10,8 +10,8 @@
 
 using namespace PERIPHERALS;
 
-CEventPollHandle::CEventPollHandle(IEventPollCallback &callback) :
-  m_callback(callback)
+CEventPollHandle::CEventPollHandle(IEventPollCallback& callback)
+    : m_callback(callback)
 {
 }
 
