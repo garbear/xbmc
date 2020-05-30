@@ -8,11 +8,11 @@
 
 #include "GUIDialogIgnoreInput.h"
 #include "guilib/LocalizeStrings.h"
+#include "input/joysticks/JoystickTranslator.h"
 #include "input/joysticks/interfaces/IButtonMap.h"
 #include "input/joysticks/interfaces/IButtonMapCallback.h"
-#include "input/joysticks/JoystickTranslator.h"
-#include "utils/log.h"
 #include "utils/StringUtils.h"
+#include "utils/log.h"
 
 #include <algorithm>
 #include <iterator>
@@ -42,11 +42,10 @@ std::string CGUIDialogIgnoreInput::GetDialogText()
 
   std::vector<std::string> primitives;
 
-  std::transform(m_capturedPrimitives.begin(), m_capturedPrimitives.end(), std::back_inserter(primitives),
-    [](const JOYSTICK::CDriverPrimitive& primitive)
-    {
-      return JOYSTICK::CJoystickTranslator::GetPrimitiveName(primitive);
-    });
+  std::transform(m_capturedPrimitives.begin(), m_capturedPrimitives.end(),
+                 std::back_inserter(primitives), [](const JOYSTICK::CDriverPrimitive& primitive) {
+                   return JOYSTICK::CJoystickTranslator::GetPrimitiveName(primitive);
+                 });
 
   return StringUtils::Format(dialogText.c_str(), StringUtils::Join(primitives, " | ").c_str());
 }
@@ -67,13 +66,15 @@ bool CGUIDialogIgnoreInput::MapPrimitiveInternal(JOYSTICK::IButtonMap* buttonMap
   // If a primitive comes from a different device, ignore it
   if (bHasDevice && m_deviceName != buttonMap->DeviceName())
   {
-    CLog::Log(LOGDEBUG, "%s: ignoring input from device %s", buttonMap->ControllerID().c_str(), buttonMap->DeviceName().c_str());
+    CLog::Log(LOGDEBUG, "%s: ignoring input from device %s", buttonMap->ControllerID().c_str(),
+              buttonMap->DeviceName().c_str());
     return false;
   }
 
   if (!bHasDevice)
   {
-    CLog::Log(LOGDEBUG, "%s: capturing input for device %s", buttonMap->ControllerID().c_str(), buttonMap->DeviceName().c_str());
+    CLog::Log(LOGDEBUG, "%s: capturing input for device %s", buttonMap->ControllerID().c_str(),
+              buttonMap->DeviceName().c_str());
     m_deviceName = buttonMap->DeviceName();
   }
 
@@ -112,13 +113,12 @@ bool CGUIDialogIgnoreInput::AddPrimitive(const JOYSTICK::CDriverPrimitive& primi
   if (primitive.Type() == JOYSTICK::PRIMITIVE_TYPE::BUTTON ||
       primitive.Type() == JOYSTICK::PRIMITIVE_TYPE::SEMIAXIS)
   {
-    auto PrimitiveMatch = [&primitive](const JOYSTICK::CDriverPrimitive& other)
-      {
-        return primitive.Type() == other.Type() &&
-               primitive.Index() == other.Index();
-      };
+    auto PrimitiveMatch = [&primitive](const JOYSTICK::CDriverPrimitive& other) {
+      return primitive.Type() == other.Type() && primitive.Index() == other.Index();
+    };
 
-    bValid = std::find_if(m_capturedPrimitives.begin(), m_capturedPrimitives.end(), PrimitiveMatch) == m_capturedPrimitives.end();
+    bValid = std::find_if(m_capturedPrimitives.begin(), m_capturedPrimitives.end(),
+                          PrimitiveMatch) == m_capturedPrimitives.end();
   }
 
   if (bValid)

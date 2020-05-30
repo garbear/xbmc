@@ -15,37 +15,43 @@ namespace KODI
 {
 namespace GAME
 {
-  class CGUISelectKeyButton : public CGUIFeatureButton
+class CGUISelectKeyButton : public CGUIFeatureButton
+{
+public:
+  CGUISelectKeyButton(const CGUIButtonControl& buttonTemplate,
+                      IConfigurationWizard* wizard,
+                      unsigned int index);
+
+  virtual ~CGUISelectKeyButton() = default;
+
+  // implementation of IFeatureButton
+  const CControllerFeature& Feature(void) const override;
+  bool AllowWizard() const override
   {
-  public:
-    CGUISelectKeyButton(const CGUIButtonControl& buttonTemplate,
-                        IConfigurationWizard* wizard,
-                        unsigned int index);
+    return false;
+  }
+  virtual bool PromptForInput(CEvent& waitEvent) override;
+  virtual bool IsFinished(void) const override;
+  bool NeedsKey() const override
+  {
+    return m_state == STATE::NEED_KEY;
+  }
+  void SetKey(const CControllerFeature& key) override;
+  virtual void Reset(void) override;
 
-    virtual ~CGUISelectKeyButton() = default;
+private:
+  static CControllerFeature GetFeature();
 
-    // implementation of IFeatureButton
-    const CControllerFeature& Feature(void) const override;
-    bool AllowWizard() const override { return false; }
-    virtual bool PromptForInput(CEvent& waitEvent) override;
-    virtual bool IsFinished(void) const override;
-    bool NeedsKey() const override { return m_state == STATE::NEED_KEY; }
-    void SetKey(const CControllerFeature &key) override;
-    virtual void Reset(void) override;
-
-  private:
-    static CControllerFeature GetFeature();
-
-    enum class STATE
-    {
-      NEED_KEY,
-      NEED_INPUT,
-      FINISHED,
-    };
-
-    STATE m_state = STATE::NEED_KEY;
-
-    CControllerFeature m_selectedKey;
+  enum class STATE
+  {
+    NEED_KEY,
+    NEED_INPUT,
+    FINISHED,
   };
-}
-}
+
+  STATE m_state = STATE::NEED_KEY;
+
+  CControllerFeature m_selectedKey;
+};
+} // namespace GAME
+} // namespace KODI

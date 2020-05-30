@@ -17,66 +17,75 @@ class CProfileManager;
 
 namespace ADDON
 {
-  class CAddonMgr;
-  class CBinaryAddonManager;
-}
+class CAddonMgr;
+class CBinaryAddonManager;
+} // namespace ADDON
 
 namespace PERIPHERALS
 {
-  class CPeripherals;
+class CPeripherals;
 }
 
 namespace KODI
 {
 namespace RETRO
 {
-  class CGUIGameRenderManager;
+class CGUIGameRenderManager;
 }
 
 namespace SHADER
 {
-  class CShaderPresetFactory;
+class CShaderPresetFactory;
 }
 
 namespace GAME
 {
-  class CControllerManager;
-  class CGameSettings;
+class CControllerManager;
+class CGameSettings;
 
-  class CGameServices
+class CGameServices
+{
+public:
+  CGameServices(CControllerManager& controllerManager,
+                RETRO::CGUIGameRenderManager& renderManager,
+                PERIPHERALS::CPeripherals& peripheralManager,
+                const CProfileManager& profileManager,
+                ADDON::CAddonMgr& addons,
+                ADDON::CBinaryAddonManager& binaryAddons);
+  ~CGameServices();
+
+  ControllerPtr GetController(const std::string& controllerId);
+  ControllerPtr GetDefaultController();
+  ControllerPtr GetDefaultKeyboard();
+  ControllerPtr GetDefaultMouse();
+  ControllerVector GetControllers();
+
+  std::string GetSavestatesFolder() const;
+
+  CGameSettings& GameSettings()
   {
-  public:
-    CGameServices(CControllerManager &controllerManager,
-                  RETRO::CGUIGameRenderManager &renderManager,
-                  PERIPHERALS::CPeripherals &peripheralManager,
-                  const CProfileManager &profileManager,
-                  ADDON::CAddonMgr &addons,
-                  ADDON::CBinaryAddonManager &binaryAddons);
-    ~CGameServices();
+    return *m_gameSettings;
+  }
 
-    ControllerPtr GetController(const std::string& controllerId);
-    ControllerPtr GetDefaultController();
-    ControllerPtr GetDefaultKeyboard();
-    ControllerPtr GetDefaultMouse();
-    ControllerVector GetControllers();
+  RETRO::CGUIGameRenderManager& GameRenderManager()
+  {
+    return m_gameRenderManager;
+  }
 
-    std::string GetSavestatesFolder() const;
+  SHADER::CShaderPresetFactory& VideoShaders()
+  {
+    return *m_videoShaders;
+  }
 
-    CGameSettings& GameSettings() { return *m_gameSettings; }
+private:
+  // Construction parameters
+  CControllerManager& m_controllerManager;
+  RETRO::CGUIGameRenderManager& m_gameRenderManager;
+  const CProfileManager& m_profileManager;
 
-    RETRO::CGUIGameRenderManager &GameRenderManager() { return m_gameRenderManager; }
-
-    SHADER::CShaderPresetFactory &VideoShaders() { return *m_videoShaders; }
-
-  private:
-    // Construction parameters
-    CControllerManager &m_controllerManager;
-    RETRO::CGUIGameRenderManager &m_gameRenderManager;
-    const CProfileManager &m_profileManager;
-
-    // Game services
-    std::unique_ptr<CGameSettings> m_gameSettings;
-    std::unique_ptr<SHADER::CShaderPresetFactory> m_videoShaders;
-  };
-}
-}
+  // Game services
+  std::unique_ptr<CGameSettings> m_gameSettings;
+  std::unique_ptr<SHADER::CShaderPresetFactory> m_videoShaders;
+};
+} // namespace GAME
+} // namespace KODI

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "games/controllers/types/ControllerTree.h"
 #include "games/GameTypes.h"
+#include "games/controllers/types/ControllerTree.h"
 
 #include <memory>
 
@@ -17,33 +17,43 @@ namespace KODI
 {
 namespace GAME
 {
-  class CGameClientTopology
+class CGameClientTopology
+{
+public:
+  CGameClientTopology() = default;
+  CGameClientTopology(GameClientPortVec ports, int playerLimit);
+
+  void Clear();
+
+  int PlayerLimit() const
   {
-  public:
-    CGameClientTopology() = default;
-    CGameClientTopology(GameClientPortVec ports, int playerLimit);
+    return m_playerLimit;
+  }
 
-    void Clear();
+  const CControllerTree& ControllerTree() const
+  {
+    return m_controllers;
+  }
+  CControllerTree& ControllerTree()
+  {
+    return m_controllers;
+  }
 
-    int PlayerLimit() const { return m_playerLimit; }
+private:
+  static CControllerTree GetControllerTree(const GameClientPortVec& ports);
+  static CControllerPortNode GetPortNode(const GameClientPortPtr& port, const std::string& address);
+  static CControllerNode GetControllerNode(const GameClientDevicePtr& device,
+                                           const std::string& portAddress);
 
-    const CControllerTree &ControllerTree() const { return m_controllers; }
-    CControllerTree &ControllerTree() { return m_controllers; }
+  // Utility function
+  static std::string MakeAddress(const std::string& baseAddress, const std::string& nodeId);
 
-  private:
-    static CControllerTree GetControllerTree(const GameClientPortVec &ports);
-    static CControllerPortNode GetPortNode(const GameClientPortPtr &port, const std::string &address);
-    static CControllerNode GetControllerNode(const GameClientDevicePtr &device, const std::string &portAddress);
+  // Game API parameters
+  GameClientPortVec m_ports;
+  int m_playerLimit = -1;
 
-    // Utility function
-    static std::string MakeAddress(const std::string &baseAddress, const std::string &nodeId);
-
-    // Game API parameters
-    GameClientPortVec m_ports;
-    int m_playerLimit = -1;
-
-    // Controller parameters
-    CControllerTree m_controllers;
-  };
-}
-}
+  // Controller parameters
+  CControllerTree m_controllers;
+};
+} // namespace GAME
+} // namespace KODI

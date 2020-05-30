@@ -7,6 +7,7 @@
  */
 
 #include "DialogGameVideoFilter.h"
+#include "URL.h"
 #include "cores/RetroPlayer/guibridge/GUIGameVideoHandle.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
 #include "cores/RetroPlayer/shaders/ShaderPresetFactory.h"
@@ -15,16 +16,15 @@
 #include "guilib/WindowIDs.h"
 #include "settings/GameSettings.h"
 #include "settings/MediaSettings.h"
-#include "utils/log.h"
 #include "utils/StringUtils.h"
 #include "utils/URIUtils.h"
 #include "utils/Variant.h"
 #include "utils/XBMCTinyXML.h"
-#include "URL.h"
+#include "utils/log.h"
 
-#include <stdlib.h>
 #include "ServiceBroker.h"
 #include "games/GameServices.h"
+#include <stdlib.h>
 
 using namespace KODI;
 using namespace GAME;
@@ -33,23 +33,22 @@ using namespace GAME;
 
 namespace
 {
-  struct ScalingMethodProperties
-  {
-    int nameIndex;
-    int categoryIndex;
-    int descriptionIndex;
-    RETRO::SCALINGMETHOD scalingMethod;
-  };
+struct ScalingMethodProperties
+{
+  int nameIndex;
+  int categoryIndex;
+  int descriptionIndex;
+  RETRO::SCALINGMETHOD scalingMethod;
+};
 
-  const std::vector<ScalingMethodProperties> scalingMethods =
-  {
-    { 16301, 16296, 16298, RETRO::SCALINGMETHOD::NEAREST },
-    { 16302, 16297, 16299, RETRO::SCALINGMETHOD::LINEAR },
-  };
-}
+const std::vector<ScalingMethodProperties> scalingMethods = {
+    {16301, 16296, 16298, RETRO::SCALINGMETHOD::NEAREST},
+    {16302, 16297, 16299, RETRO::SCALINGMETHOD::LINEAR},
+};
+} // namespace
 
-CDialogGameVideoFilter::CDialogGameVideoFilter() :
-  CDialogGameVideoSelect(WINDOW_DIALOG_GAME_VIDEO_FILTER)
+CDialogGameVideoFilter::CDialogGameVideoFilter()
+    : CDialogGameVideoSelect(WINDOW_DIALOG_GAME_VIDEO_FILTER)
 {
 }
 
@@ -78,17 +77,19 @@ void CDialogGameVideoFilter::InitScalingMethods()
 {
   if (m_gameVideoHandle)
   {
-    for (const auto &scalingMethodProps : scalingMethods)
+    for (const auto& scalingMethodProps : scalingMethods)
     {
       if (m_gameVideoHandle->SupportsScalingMethod(scalingMethodProps.scalingMethod))
       {
         RETRO::CRenderVideoSettings videoSettings;
         videoSettings.SetScalingMethod(scalingMethodProps.scalingMethod);
 
-        CFileItemPtr item = std::make_shared<CFileItem>(g_localizeStrings.Get(scalingMethodProps.nameIndex));
+        CFileItemPtr item =
+            std::make_shared<CFileItem>(g_localizeStrings.Get(scalingMethodProps.nameIndex));
         item->SetLabel2(g_localizeStrings.Get(scalingMethodProps.categoryIndex));
-        item->SetProperty("game.videofilter", CVariant{ videoSettings.GetVideoFilter() });
-        item->SetProperty("game.videofilterdescription", CVariant{ g_localizeStrings.Get(scalingMethodProps.descriptionIndex) });
+        item->SetProperty("game.videofilter", CVariant{videoSettings.GetVideoFilter()});
+        item->SetProperty("game.videofilterdescription",
+                          CVariant{g_localizeStrings.Get(scalingMethodProps.descriptionIndex)});
         m_items.Add(std::move(item));
       }
     }
@@ -108,7 +109,8 @@ void CDialogGameVideoFilter::InitVideoFilters()
 
   if (!xml.LoadFile())
   {
-    CLog::Log(LOGERROR, "%s - Couldn't load shader presets from default .xml, %s", __FUNCTION__, CURL::GetRedacted(xmlPath).c_str());
+    CLog::Log(LOGERROR, "%s - Couldn't load shader presets from default .xml, %s", __FUNCTION__,
+              CURL::GetRedacted(xmlPath).c_str());
     return;
   }
 
@@ -142,11 +144,13 @@ void CDialogGameVideoFilter::InitVideoFilters()
     videoFilters.emplace_back(videoFilter);
   }
 
-  CLog::Log(LOGDEBUG, "Loaded %d shader presets from default .xml, %s", videoFilters.size(), CURL::GetRedacted(xmlPath).c_str());
+  CLog::Log(LOGDEBUG, "Loaded %d shader presets from default .xml, %s", videoFilters.size(),
+            CURL::GetRedacted(xmlPath).c_str());
 
-  for (const auto &videoFilter : videoFilters)
+  for (const auto& videoFilter : videoFilters)
   {
-    bool canLoadPreset = CServiceBroker::GetGameServices().VideoShaders().CanLoadPreset(videoFilter.path);
+    bool canLoadPreset =
+        CServiceBroker::GetGameServices().VideoShaders().CanLoadPreset(videoFilter.path);
 
     if (!canLoadPreset)
       continue;
@@ -157,16 +161,16 @@ void CDialogGameVideoFilter::InitVideoFilters()
 
     CFileItemPtr item = std::make_shared<CFileItem>(localizedName);
     item->SetLabel2(localizedCategory);
-    item->SetProperty("game.videofilter", CVariant{ videoFilter.path });
-    item->SetProperty("game.videofilterdescription", CVariant{ localizedDescription });
+    item->SetProperty("game.videofilter", CVariant{videoFilter.path});
+    item->SetProperty("game.videofilterdescription", CVariant{localizedDescription});
 
     m_items.Add(std::move(item));
   }
 }
 
-void CDialogGameVideoFilter::GetItems(CFileItemList &items)
+void CDialogGameVideoFilter::GetItems(CFileItemList& items)
 {
-  for (const auto &item : m_items)
+  for (const auto& item : m_items)
     items.Add(item);
 }
 
@@ -180,7 +184,7 @@ void CDialogGameVideoFilter::OnItemFocus(unsigned int index)
     std::string description;
     GetProperties(*item, videoFilter, description);
 
-    ::CGameSettings &gameSettings = CMediaSettings::GetInstance().GetCurrentGameSettings();
+    ::CGameSettings& gameSettings = CMediaSettings::GetInstance().GetCurrentGameSettings();
 
     if (gameSettings.VideoFilter() != videoFilter)
     {
@@ -200,7 +204,7 @@ void CDialogGameVideoFilter::OnItemFocus(unsigned int index)
 
 unsigned int CDialogGameVideoFilter::GetFocusedItem() const
 {
-  ::CGameSettings &gameSettings = CMediaSettings::GetInstance().GetCurrentGameSettings();
+  ::CGameSettings& gameSettings = CMediaSettings::GetInstance().GetCurrentGameSettings();
 
   for (int i = 0; i < m_items.Size(); i++)
   {
@@ -227,7 +231,9 @@ std::string CDialogGameVideoFilter::GetLocalizedString(uint32_t code)
   return g_localizeStrings.Get(code);
 }
 
-void CDialogGameVideoFilter::GetProperties(const CFileItem &item, std::string &videoFilter, std::string &description)
+void CDialogGameVideoFilter::GetProperties(const CFileItem& item,
+                                           std::string& videoFilter,
+                                           std::string& description)
 {
   videoFilter = item.GetProperty("game.videofilter").asString();
   description = item.GetProperty("game.videofilterdescription").asString();
