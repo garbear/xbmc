@@ -7,11 +7,11 @@
  */
 
 #include "KeyHandler.h"
+#include "input/IKeymap.h"
 #include "input/actions/ActionIDs.h"
 #include "input/actions/ActionTranslator.h"
-#include "input/joysticks/interfaces/IKeymapHandler.h"
 #include "input/joysticks/JoystickUtils.h"
-#include "input/IKeymap.h"
+#include "input/joysticks/interfaces/IKeymapHandler.h"
 #include "interfaces/IActionListener.h"
 
 #include <algorithm>
@@ -20,16 +20,19 @@
 using namespace KODI;
 using namespace JOYSTICK;
 
-#define DIGITAL_ANALOG_THRESHOLD  0.5f
+#define DIGITAL_ANALOG_THRESHOLD 0.5f
 
-#define HOLD_TIMEOUT_MS     500
-#define REPEAT_TIMEOUT_MS   50
+#define HOLD_TIMEOUT_MS 500
+#define REPEAT_TIMEOUT_MS 50
 
-CKeyHandler::CKeyHandler(const std::string &keyName, IActionListener *actionHandler, const IKeymap *keymap, IKeymapHandler *keymapHandler) :
-  m_keyName(keyName),
-  m_actionHandler(actionHandler),
-  m_keymap(keymap),
-  m_keymapHandler(keymapHandler)
+CKeyHandler::CKeyHandler(const std::string& keyName,
+                         IActionListener* actionHandler,
+                         const IKeymap* keymap,
+                         IKeymapHandler* keymapHandler)
+    : m_keyName(keyName)
+    , m_actionHandler(actionHandler)
+    , m_keymap(keymap)
+    , m_keymapHandler(keymapHandler)
 {
   assert(m_actionHandler != nullptr);
   assert(m_keymap != nullptr);
@@ -62,9 +65,9 @@ bool CKeyHandler::OnAnalogMotion(float magnitude, unsigned int motionTimeMs)
     return false;
 
   // Get actions for the key
-  const auto &actionGroup = m_keymap->GetActions(m_keyName);
+  const auto& actionGroup = m_keymap->GetActions(m_keyName);
   const int windowId = actionGroup.windowId;
-  const auto &actions = actionGroup.actions;
+  const auto& actions = actionGroup.actions;
 
   // Calculate press state
   const bool bPressed = IsPressed(magnitude);
@@ -91,20 +94,21 @@ bool CKeyHandler::OnAnalogMotion(float magnitude, unsigned int motionTimeMs)
   // Give priority to actions with hotkeys
   std::vector<const KeymapAction*> actionsWithHotkeys;
 
-  for (const auto &action : actions)
+  for (const auto& action : actions)
   {
     if (!action.hotkeys.empty())
       actionsWithHotkeys.emplace_back(&action);
   }
 
-  CAction dispatchAction = ProcessActions(std::move(actionsWithHotkeys), windowId, magnitude, holdTimeMs);
+  CAction dispatchAction =
+      ProcessActions(std::move(actionsWithHotkeys), windowId, magnitude, holdTimeMs);
 
   // If that failed, try again with all actions
   if (dispatchAction.GetID() == ACTION_NONE)
   {
     std::vector<const KeymapAction*> allActions;
 
-    for (const auto &action : actions)
+    for (const auto& action : actions)
       allActions.emplace_back(&action);
 
     dispatchAction = ProcessActions(std::move(allActions), windowId, magnitude, holdTimeMs);
@@ -136,16 +140,19 @@ bool CKeyHandler::OnAnalogMotion(float magnitude, unsigned int motionTimeMs)
   return bHandled;
 }
 
-CAction CKeyHandler::ProcessActions(std::vector<const KeymapAction*> actions, int windowId, float magnitude, unsigned int holdTimeMs)
+CAction CKeyHandler::ProcessActions(std::vector<const KeymapAction*> actions,
+                                    int windowId,
+                                    float magnitude,
+                                    unsigned int holdTimeMs)
 {
   CAction dispatchAction;
 
   // Filter out actions without pressed hotkeys
   actions.erase(std::remove_if(actions.begin(), actions.end(),
-    [this](const KeymapAction *action)
-    {
-      return !m_keymapHandler->HotkeysPressed(action->hotkeys);
-    }), actions.end());
+                               [this](const KeymapAction* action) {
+                                 return !m_keymapHandler->HotkeysPressed(action->hotkeys);
+                               }),
+                actions.end());
 
   if (actions.empty())
     return false;
@@ -196,9 +203,9 @@ CAction CKeyHandler::ProcessRelease(std::vector<const KeymapAction*> actions, in
   const unsigned int holdTimeMs = m_lastHoldTimeMs;
 
   // Send an action on release if one occurs before the holdtime
-  for (auto it = actions.begin(); it != actions.end(); )
+  for (auto it = actions.begin(); it != actions.end();)
   {
-    const KeymapAction &action = **it;
+    const KeymapAction& action = **it;
 
     unsigned int thisHoldTime = (*it)->holdTimeMs;
 
@@ -218,7 +225,10 @@ CAction CKeyHandler::ProcessRelease(std::vector<const KeymapAction*> actions, in
   return dispatchAction;
 }
 
-CAction CKeyHandler::ProcessAction(const KeymapAction& action, int windowId, float magnitude, unsigned int holdTimeMs)
+CAction CKeyHandler::ProcessAction(const KeymapAction& action,
+                                   int windowId,
+                                   float magnitude,
+                                   unsigned int holdTimeMs)
 {
   CAction dispatchAction;
 
