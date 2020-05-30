@@ -16,12 +16,13 @@
  *
  * These values can be combined (bitwise OR) to specify multiple directions.
  */
-typedef enum {
-  TouchMoveDirectionNone   = 0x0,
-  TouchMoveDirectionLeft   = 0x1,
-  TouchMoveDirectionRight  = 0x2,
-  TouchMoveDirectionUp     = 0x4,
-  TouchMoveDirectionDown   = 0x8
+typedef enum
+{
+  TouchMoveDirectionNone = 0x0,
+  TouchMoveDirectionLeft = 0x1,
+  TouchMoveDirectionRight = 0x2,
+  TouchMoveDirectionUp = 0x4,
+  TouchMoveDirectionDown = 0x8
 } TouchMoveDirection;
 
 /*!
@@ -36,7 +37,7 @@ public:
   /*!
    * \brief A touch action has been aborted
    */
-  virtual void OnTouchAbort() { };
+  virtual void OnTouchAbort(){};
 
   /*!
    * \brief A single touch has started
@@ -48,7 +49,10 @@ public:
    *
    * \sa OnSingleTap
    */
-  virtual bool OnSingleTouchStart(float x, float y) { return true; }
+  virtual bool OnSingleTouchStart(float x, float y)
+  {
+    return true;
+  }
   /*!
    * \brief A single touch has been held down for a certain amount of time
    *
@@ -59,7 +63,10 @@ public:
    *
    * \sa OnSingleLongPress
    */
-  virtual bool OnSingleTouchHold(float x, float y) { return true; }
+  virtual bool OnSingleTouchHold(float x, float y)
+  {
+    return true;
+  }
   /*!
    * \brief A single touch has moved
    *
@@ -74,7 +81,11 @@ public:
    *
    * \sa OnTouchGesturePan
    */
-  virtual bool OnSingleTouchMove(float x, float y, float offsetX, float offsetY, float velocityX, float velocityY) { return true; }
+  virtual bool OnSingleTouchMove(
+      float x, float y, float offsetX, float offsetY, float velocityX, float velocityY)
+  {
+    return true;
+  }
   /*!
    * \brief A single touch has been lifted
    *
@@ -85,7 +96,10 @@ public:
    *
    * \sa OnSingleTap
    */
-  virtual bool OnSingleTouchEnd(float x, float y) { return true; }
+  virtual bool OnSingleTouchEnd(float x, float y)
+  {
+    return true;
+  }
 
   /*!
    * \brief An additional touch has been performed
@@ -96,7 +110,10 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnMultiTouchDown(float x, float y, int32_t pointer) { return true; }
+  virtual bool OnMultiTouchDown(float x, float y, int32_t pointer)
+  {
+    return true;
+  }
   /*!
    * \brief Multiple simultaneous touches have been held down for a certain amount of time
    *
@@ -106,7 +123,10 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnMultiTouchHold(float x, float y, int32_t pointers = 2) { return true; }
+  virtual bool OnMultiTouchHold(float x, float y, int32_t pointers = 2)
+  {
+    return true;
+  }
   /*!
    * \brief A touch has moved
    *
@@ -120,7 +140,16 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnMultiTouchMove(float x, float y, float offsetX, float offsetY, float velocityX, float velocityY, int32_t pointer) { return true; }
+  virtual bool OnMultiTouchMove(float x,
+                                float y,
+                                float offsetX,
+                                float offsetY,
+                                float velocityX,
+                                float velocityY,
+                                int32_t pointer)
+  {
+    return true;
+  }
   /*!
    * \brief A touch has been lifted (but there are still active touches)
    *
@@ -130,7 +159,10 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnMultiTouchUp(float x, float y, int32_t pointer) { return true; }
+  virtual bool OnMultiTouchUp(float x, float y, int32_t pointer)
+  {
+    return true;
+  }
 
   /*!
    * \brief A pan gesture with a single touch has been started
@@ -140,7 +172,10 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnTouchGestureStart(float x, float y) { return true; }
+  virtual bool OnTouchGestureStart(float x, float y)
+  {
+    return true;
+  }
   /*!
    * \brief A pan gesture with a single touch is in progress
    *
@@ -153,7 +188,11 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnTouchGesturePan(float x, float y, float offsetX, float offsetY, float velocityX, float velocityY) { return true; }
+  virtual bool OnTouchGesturePan(
+      float x, float y, float offsetX, float offsetY, float velocityX, float velocityY)
+  {
+    return true;
+  }
   /*!
    * \brief A pan gesture with a single touch has ended
    *
@@ -166,7 +205,11 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnTouchGestureEnd(float x, float y, float offsetX, float offsetY, float velocityX, float velocityY) { return true; }
+  virtual bool OnTouchGestureEnd(
+      float x, float y, float offsetX, float offsetY, float velocityX, float velocityY)
+  {
+    return true;
+  }
 
   // convenience events
   /*!
@@ -178,7 +221,9 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual void OnTap(float x, float y, int32_t pointers = 1) { }
+  virtual void OnTap(float x, float y, int32_t pointers = 1)
+  {
+  }
   /*!
    * \brief One or more touches have been held down for a certain amount of time
    *
@@ -190,7 +235,9 @@ public:
    *
    * \sa OnSingleTouchHold
    */
-  virtual void OnLongPress(float x, float y, int32_t pointers = 1) { }
+  virtual void OnLongPress(float x, float y, int32_t pointers = 1)
+  {
+  }
   /*!
    * \brief One or more touches has been moved quickly in a single direction in a short time
    *
@@ -205,9 +252,19 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual void OnSwipe(TouchMoveDirection direction, float xDown, float yDown, float xUp, float yUp, float velocityX, float velocityY, int32_t pointers = 1) { }
+  virtual void OnSwipe(TouchMoveDirection direction,
+                       float xDown,
+                       float yDown,
+                       float xUp,
+                       float yUp,
+                       float velocityX,
+                       float velocityY,
+                       int32_t pointers = 1)
+  {
+  }
   /*!
-   * \brief Two simultaneous touches have been held down and moved to perform a zooming/pinching gesture
+   * \brief Two simultaneous touches have been held down and moved to perform a zooming/pinching
+   * gesture
    *
    * \param centerX       The x coordinate (with sub-pixel) of the center of the two touches
    * \param centerY       The y coordinate (with sub-pixel) of the center of the two touches
@@ -215,7 +272,9 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual void OnZoomPinch(float centerX, float centerY, float zoomFactor) { }
+  virtual void OnZoomPinch(float centerX, float centerY, float zoomFactor)
+  {
+  }
   /*!
    * \brief Two simultaneous touches have been held down and moved to perform a rotating gesture
    *
@@ -225,5 +284,7 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual void OnRotate(float centerX, float centerY, float angle) { }
+  virtual void OnRotate(float centerX, float centerY, float angle)
+  {
+  }
 };

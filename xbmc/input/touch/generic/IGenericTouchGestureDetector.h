@@ -20,9 +20,9 @@
 class IGenericTouchGestureDetector : public ITouchInputHandling
 {
 public:
-  IGenericTouchGestureDetector(ITouchActionHandler *handler, float dpi)
-    : m_done(false),
-      m_dpi(dpi)
+  IGenericTouchGestureDetector(ITouchActionHandler* handler, float dpi)
+      : m_done(false)
+      , m_dpi(dpi)
   {
     RegisterHandler(handler);
   }
@@ -34,7 +34,10 @@ public:
    *
    * \return True if the gesture recognition is finished otherwise false
    */
-  bool IsDone() { return m_done; }
+  bool IsDone()
+  {
+    return m_done;
+  }
 
   /*!
    * \brief A new touch pointer has been recognised.
@@ -44,7 +47,7 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnTouchDown(unsigned int index, const Pointer &pointer) = 0;
+  virtual bool OnTouchDown(unsigned int index, const Pointer& pointer) = 0;
   /*!
    * \brief An active touch pointer has vanished.
    *
@@ -56,7 +59,10 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnTouchUp(unsigned int index, const Pointer &pointer) { return false; }
+  virtual bool OnTouchUp(unsigned int index, const Pointer& pointer)
+  {
+    return false;
+  }
   /*!
    * \brief An active touch pointer has moved.
    *
@@ -65,7 +71,10 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnTouchMove(unsigned int index, const Pointer &pointer) { return false; }
+  virtual bool OnTouchMove(unsigned int index, const Pointer& pointer)
+  {
+    return false;
+  }
   /*!
    * \brief An active touch pointer's values have been updated but no event has
    *        occured.
@@ -75,7 +84,10 @@ public:
    *
    * \return True if the event was handled otherwise false
    */
-  virtual bool OnTouchUpdate(unsigned int index, const Pointer &pointer) { return false; }
+  virtual bool OnTouchUpdate(unsigned int index, const Pointer& pointer)
+  {
+    return false;
+  }
 
 protected:
   /*!
