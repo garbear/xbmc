@@ -21,28 +21,37 @@ class CKeyboardLayout
 public:
   CKeyboardLayout();
   virtual ~CKeyboardLayout();
-  IInputCodingTablePtr GetCodingTable() { return m_codingtable; }
+  IInputCodingTablePtr GetCodingTable()
+  {
+    return m_codingtable;
+  }
 
   bool Load(const TiXmlElement* element);
 
   std::string GetIdentifier() const;
   std::string GetName() const;
-  const std::string& GetLanguage() const { return m_language; }
-  const std::string& GetLayout() const { return m_layout; }
+  const std::string& GetLanguage() const
+  {
+    return m_language;
+  }
+  const std::string& GetLayout() const
+  {
+    return m_layout;
+  }
 
   enum ModifierKey
   {
-    ModifierKeyNone   = 0x00,
-    ModifierKeyShift  = 0x01,
+    ModifierKeyNone = 0x00,
+    ModifierKeyShift = 0x01,
     ModifierKeySymbol = 0x02
   };
 
   std::string GetCharAt(unsigned int row, unsigned int column, unsigned int modifiers = 0) const;
 
 private:
-  static std::vector<std::string> BreakCharacters(const std::string &chars);
+  static std::vector<std::string> BreakCharacters(const std::string& chars);
 
-  typedef std::vector< std::vector<std::string> > KeyboardRows;
+  typedef std::vector<std::vector<std::string>> KeyboardRows;
   typedef std::map<unsigned int, KeyboardRows> Keyboards;
 
   std::string m_language;

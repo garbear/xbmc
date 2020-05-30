@@ -7,16 +7,17 @@
  */
 
 #include "MouseInputHandling.h"
+#include "input/InputTranslator.h"
 #include "input/joysticks/interfaces/IButtonMap.h"
 #include "input/mouse/interfaces/IMouseInputHandler.h"
-#include "input/InputTranslator.h"
 
 using namespace KODI;
 using namespace MOUSE;
 
-CMouseInputHandling::CMouseInputHandling(IMouseInputHandler* handler, JOYSTICK::IButtonMap* buttonMap) :
-  m_handler(handler),
-  m_buttonMap(buttonMap)
+CMouseInputHandling::CMouseInputHandling(IMouseInputHandler* handler,
+                                         JOYSTICK::IButtonMap* buttonMap)
+    : m_handler(handler)
+    , m_buttonMap(buttonMap)
 {
 }
 
@@ -63,7 +64,7 @@ bool CMouseInputHandling::OnPosition(int x, int y)
         dy *= -1;
 
         // Perform rotation
-        int rotation[2][2] = { {1, 0}, {0, 1} };
+        int rotation[2][2] = {{1, 0}, {0, 1}};
 
         GetRotation(dir, target.PointerDirection(), rotation);
 
@@ -73,7 +74,7 @@ bool CMouseInputHandling::OnPosition(int x, int y)
         if (targetCCW.IsValid())
         {
           // Perform reflection
-          int reflection[2][2] = { {1, 0}, {0, 1} };
+          int reflection[2][2] = {{1, 0}, {0, 1}};
 
           GetReflectionCCW(target.PointerDirection(), targetCCW.PointerDirection(), reflection);
 
@@ -133,18 +134,24 @@ POINTER_DIRECTION CMouseInputHandling::GetOrthogonalDirectionCCW(POINTER_DIRECTI
 {
   switch (direction)
   {
-  case POINTER_DIRECTION::RIGHT: return POINTER_DIRECTION::UP;
-  case POINTER_DIRECTION::UP: return POINTER_DIRECTION::LEFT;
-  case POINTER_DIRECTION::LEFT: return POINTER_DIRECTION::DOWN;
-  case POINTER_DIRECTION::DOWN: return POINTER_DIRECTION::RIGHT;
-    default:
+  case POINTER_DIRECTION::RIGHT:
+    return POINTER_DIRECTION::UP;
+  case POINTER_DIRECTION::UP:
+    return POINTER_DIRECTION::LEFT;
+  case POINTER_DIRECTION::LEFT:
+    return POINTER_DIRECTION::DOWN;
+  case POINTER_DIRECTION::DOWN:
+    return POINTER_DIRECTION::RIGHT;
+  default:
     break;
   }
 
   return POINTER_DIRECTION::NONE;
 }
 
-void CMouseInputHandling::GetRotation(POINTER_DIRECTION source, POINTER_DIRECTION target, int (&rotation)[2][2])
+void CMouseInputHandling::GetRotation(POINTER_DIRECTION source,
+                                      POINTER_DIRECTION target,
+                                      int (&rotation)[2][2])
 {
   switch (source)
   {
@@ -258,7 +265,9 @@ void CMouseInputHandling::GetRotation(int deg, int (&rotation)[2][2])
   }
 }
 
-void CMouseInputHandling::GetReflectionCCW(POINTER_DIRECTION source, POINTER_DIRECTION target, int (&rotation)[2][2])
+void CMouseInputHandling::GetReflectionCCW(POINTER_DIRECTION source,
+                                           POINTER_DIRECTION target,
+                                           int (&rotation)[2][2])
 {
   switch (source)
   {

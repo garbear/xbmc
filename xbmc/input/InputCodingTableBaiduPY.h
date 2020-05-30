@@ -29,6 +29,7 @@ public:
   void Process() override;
 
   std::vector<std::wstring> GetResponse(int response) override;
+
 private:
   std::wstring UnicodeToWString(const std::string& unicode);
   void HandleResponse(const std::string& strCode, const std::string& response);
@@ -43,6 +44,6 @@ private:
 
   std::deque<std::string> m_work;
   std::map<int, std::vector<std::wstring>> m_responses;
-  CEvent            m_Event;
-  CCriticalSection  m_CS;
+  CEvent m_Event;
+  CCriticalSection m_CS;
 };

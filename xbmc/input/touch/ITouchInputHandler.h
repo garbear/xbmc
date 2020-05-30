@@ -17,7 +17,8 @@
  * \ingroup touch
  * \brief Touch input event
  */
-typedef enum {
+typedef enum
+{
   TouchInputUnchanged = 0,
   TouchInputAbort,
   TouchInputDown,
@@ -38,8 +39,9 @@ class ITouchInputHandler : public ITouchInputHandling
 {
 public:
   ITouchInputHandler()
-    : m_dpi(160.0f)
-  { }
+      : m_dpi(160.0f)
+  {
+  }
   ~ITouchInputHandler() override = default;
 
   /*!
@@ -61,7 +63,8 @@ public:
    *
    * \sa Update
    */
-  virtual bool HandleTouchInput(TouchInput event, float x, float y, int64_t time, int32_t pointer = 0, float size = 0.0f) = 0;
+  virtual bool HandleTouchInput(
+      TouchInput event, float x, float y, int64_t time, int32_t pointer = 0, float size = 0.0f) = 0;
 
   /*!
    * \brief Update the coordinates of a pointer
@@ -83,9 +86,17 @@ public:
    *
    * \sa Handle
    */
-  virtual bool UpdateTouchPointer(int32_t pointer, float x, float y, int64_t time, float size = 0.0f) { return false; }
+  virtual bool UpdateTouchPointer(
+      int32_t pointer, float x, float y, int64_t time, float size = 0.0f)
+  {
+    return false;
+  }
 
-  void SetScreenDPI(float dpi) { if (dpi > 0.0f) m_dpi = dpi; }
+  void SetScreenDPI(float dpi)
+  {
+    if (dpi > 0.0f)
+      m_dpi = dpi;
+  }
 
 protected:
   /*!
