@@ -29,10 +29,17 @@ public:
   bool Load(const std::string& path = "");
   void Unload();
 
-  const KeyboardLayouts& GetLayouts() const { return m_layouts; }
+  const KeyboardLayouts& GetLayouts() const
+  {
+    return m_layouts;
+  }
   bool GetLayout(const std::string& name, CKeyboardLayout& layout) const;
 
-  static void SettingOptionsKeyboardLayoutsFiller(std::shared_ptr<const CSetting> setting, std::vector< std::pair<std::string, std::string> > &list, std::string &current, void* data);
+  static void SettingOptionsKeyboardLayoutsFiller(
+      std::shared_ptr<const CSetting> setting,
+      std::vector<std::pair<std::string, std::string>>& list,
+      std::string& current,
+      void* data);
 
 private:
   CKeyboardLayoutManager() = default;

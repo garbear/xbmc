@@ -17,42 +17,48 @@ namespace KODI
 {
 namespace JOYSTICK
 {
-  class IInputReceiver;
+class IInputReceiver;
 
-  class CRumbleGenerator : public CThread
+class CRumbleGenerator : public CThread
+{
+public:
+  CRumbleGenerator();
+
+  virtual ~CRumbleGenerator(void)
   {
-  public:
-    CRumbleGenerator();
+    AbortRumble();
+  }
 
-    virtual ~CRumbleGenerator(void) { AbortRumble(); }
+  std::string ControllerID() const;
 
-    std::string ControllerID() const;
+  void NotifyUser(IInputReceiver* receiver);
+  bool DoTest(IInputReceiver* receiver);
 
-    void NotifyUser(IInputReceiver* receiver);
-    bool DoTest(IInputReceiver* receiver);
+  void AbortRumble(void)
+  {
+    StopThread();
+  }
 
-    void AbortRumble(void) { StopThread(); }
+protected:
+  // implementation of CThread
+  void Process(void);
 
-  protected:
-    // implementation of CThread
-    void Process(void);
-
-  private:
-    enum RUMBLE_TYPE
-    {
-      RUMBLE_UNKNOWN,
-      RUMBLE_NOTIFICATION,
-      RUMBLE_TEST,
-    };
-
-    static std::vector<std::string> GetMotors(const std::string& controllerId);
-
-    // Construction param
-    const std::vector<std::string> m_motors;
-
-    // Test param
-    IInputReceiver* m_receiver = nullptr;
-    RUMBLE_TYPE     m_type = RUMBLE_UNKNOWN;
+private:
+  enum RUMBLE_TYPE
+  {
+    RUMBLE_UNKNOWN,
+    RUMBLE_NOTIFICATION,
+    RUMBLE_TEST,
   };
-}
-}
+
+  static std::vector<std::string> GetMotors(const std::string& controllerId);
+
+  // Construction param
+  const std::vector<std::string> m_motors;
+
+  // Test param
+  IInputReceiver* m_receiver = nullptr;
+  RUMBLE_TYPE m_type = RUMBLE_UNKNOWN;
+};
+} // namespace JOYSTICK
+} // namespace KODI
