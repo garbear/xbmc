@@ -14,7 +14,7 @@ using namespace SHADER;
 D3D11_TEXTURE_ADDRESS_MODE CShaderUtilsDX::TranslateWrapType(WRAP_TYPE wrap)
 {
   D3D11_TEXTURE_ADDRESS_MODE dxWrap;
-  switch(wrap)
+  switch (wrap)
   {
   case WRAP_TYPE_EDGE:
     dxWrap = D3D11_TEXTURE_ADDRESS_CLAMP;

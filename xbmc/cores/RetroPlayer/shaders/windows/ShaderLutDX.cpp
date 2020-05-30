@@ -20,14 +20,14 @@
 using namespace KODI;
 using namespace SHADER;
 
-CShaderLutDX::CShaderLutDX(const std::string& id, const std::string& path) :
-  IShaderLut(id, path)
+CShaderLutDX::CShaderLutDX(const std::string& id, const std::string& path)
+    : IShaderLut(id, path)
 {
 }
 
 CShaderLutDX::~CShaderLutDX() = default;
 
-bool CShaderLutDX::Create(RETRO::CRenderContext &context, const ShaderLut &lut)
+bool CShaderLutDX::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 {
   std::unique_ptr<IShaderSampler> lutSampler(CreateLUTSampler(context, lut));
   if (!lutSampler)
@@ -49,9 +49,10 @@ bool CShaderLutDX::Create(RETRO::CRenderContext &context, const ShaderLut &lut)
   return true;
 }
 
-std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderContext &context, const ShaderLut &lut)
+std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderContext& context,
+                                                               const ShaderLut& lut)
 {
-  CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(context.Rendering());
+  CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(context.Rendering());
 
   ID3D11SamplerState* samp;
   D3D11_SAMPLER_DESC sampDesc;
@@ -68,14 +69,15 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
   sampDesc.MinLOD = 0;
   sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-  FLOAT blackBorder[4] = { 0, 1, 0, 1 };  // TODO: turn this back to black
+  FLOAT blackBorder[4] = {0, 1, 0, 1}; // TODO: turn this back to black
   memcpy(sampDesc.BorderColor, &blackBorder, 4 * sizeof(FLOAT));
 
   ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
 
   if (FAILED(pDevice->CreateSamplerState(&sampDesc, &samp)))
   {
-    CLog::Log(LOGWARNING, "%s - failed to create LUT sampler for LUT &s", __FUNCTION__, lut.path.c_str());
+    CLog::Log(LOGWARNING, "%s - failed to create LUT sampler for LUT &s", __FUNCTION__,
+              lut.path.c_str());
     return std::unique_ptr<IShaderSampler>();
   }
 
@@ -83,7 +85,7 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
   return std::unique_ptr<IShaderSampler>(new CShaderSamplerDX(samp));
 }
 
-std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut &lut)
+std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& lut)
 {
   CDXTexture* texture = static_cast<CDXTexture*>(CDXTexture::LoadFromFile(lut.path));
   if (!texture)

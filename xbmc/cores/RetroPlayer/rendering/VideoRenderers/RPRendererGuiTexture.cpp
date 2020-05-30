@@ -31,29 +31,33 @@ std::string CRendererFactoryGuiTexture::RenderSystemName() const
   return "GUITexture";
 }
 
-CRPBaseRenderer *CRendererFactoryGuiTexture::CreateRenderer(const CRenderSettings &settings, CRenderContext &context, std::shared_ptr<IRenderBufferPool> bufferPool)
+CRPBaseRenderer* CRendererFactoryGuiTexture::CreateRenderer(
+    const CRenderSettings& settings,
+    CRenderContext& context,
+    std::shared_ptr<IRenderBufferPool> bufferPool)
 {
   return new CRPRendererGuiTexture(settings, context, std::move(bufferPool));
 }
 
-RenderBufferPoolVector CRendererFactoryGuiTexture::CreateBufferPools(CRenderContext &context)
+RenderBufferPoolVector CRendererFactoryGuiTexture::CreateBufferPools(CRenderContext& context)
 {
-  return {
+  return
+  {
 #if !defined(HAS_DX)
     std::make_shared<CRenderBufferPoolGuiTexture>(SCALINGMETHOD::NEAREST),
 #endif
-    std::make_shared<CRenderBufferPoolGuiTexture>(SCALINGMETHOD::LINEAR),
+        std::make_shared<CRenderBufferPoolGuiTexture>(SCALINGMETHOD::LINEAR),
   };
 }
 
 // --- CRenderBufferPoolGuiTexture -----------------------------------------------
 
-CRenderBufferPoolGuiTexture::CRenderBufferPoolGuiTexture(SCALINGMETHOD scalingMethod) :
-  m_scalingMethod(scalingMethod)
+CRenderBufferPoolGuiTexture::CRenderBufferPoolGuiTexture(SCALINGMETHOD scalingMethod)
+    : m_scalingMethod(scalingMethod)
 {
 }
 
-bool CRenderBufferPoolGuiTexture::IsCompatible(const CRenderVideoSettings &renderSettings) const
+bool CRenderBufferPoolGuiTexture::IsCompatible(const CRenderVideoSettings& renderSettings) const
 {
   if (renderSettings.GetScalingMethod() != m_scalingMethod)
     return false;
@@ -65,24 +69,24 @@ bool CRenderBufferPoolGuiTexture::IsCompatible(const CRenderVideoSettings &rende
   return true;
 }
 
-IRenderBuffer *CRenderBufferPoolGuiTexture::CreateRenderBuffer(void *header /* = nullptr */)
+IRenderBuffer* CRenderBufferPoolGuiTexture::CreateRenderBuffer(void* header /* = nullptr */)
 {
   return new CRenderBufferGuiTexture(m_scalingMethod);
 }
 
 // --- CRPRendererGuiTexture -----------------------------------------------------
 
-CRPRendererGuiTexture::CRPRendererGuiTexture(const CRenderSettings &renderSettings, CRenderContext &context, std::shared_ptr<IRenderBufferPool> bufferPool) :
-  CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
+CRPRendererGuiTexture::CRPRendererGuiTexture(const CRenderSettings& renderSettings,
+                                             CRenderContext& context,
+                                             std::shared_ptr<IRenderBufferPool> bufferPool)
+    : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
 }
 
 bool CRPRendererGuiTexture::Supports(RENDERFEATURE feature) const
 {
-  if (feature == RENDERFEATURE::STRETCH         ||
-      feature == RENDERFEATURE::ZOOM            ||
-      feature == RENDERFEATURE::PIXEL_RATIO     ||
-      feature == RENDERFEATURE::ROTATION)
+  if (feature == RENDERFEATURE::STRETCH || feature == RENDERFEATURE::ZOOM ||
+      feature == RENDERFEATURE::PIXEL_RATIO || feature == RENDERFEATURE::ROTATION)
   {
     return true;
   }
@@ -92,7 +96,7 @@ bool CRPRendererGuiTexture::Supports(RENDERFEATURE feature) const
 
 void CRPRendererGuiTexture::RenderInternal(bool clear, uint8_t alpha)
 {
-  CRenderBufferGuiTexture *renderBuffer = static_cast<CRenderBufferGuiTexture*>(m_renderBuffer);
+  CRenderBufferGuiTexture* renderBuffer = static_cast<CRenderBufferGuiTexture*>(m_renderBuffer);
 
   CRect rect = m_sourceRect;
 
@@ -126,14 +130,14 @@ void CRPRendererGuiTexture::RenderInternal(bool clear, uint8_t alpha)
 
   vertex[4] = vertex[0]; // Not used when renderBuffer != nullptr
 
-  CGUIShaderDX *pGUIShader = m_context.GetGUIShader();
+  CGUIShaderDX* pGUIShader = m_context.GetGUIShader();
   if (pGUIShader != nullptr)
   {
     pGUIShader->Begin(SHADER_METHOD_RENDER_TEXTURE_BLEND);
 
     // Set state to render the image
-    CTexture *dxTexture = renderBuffer->GetTexture();
-    ID3D11ShaderResourceView *shaderRes = dxTexture->GetShaderResource();
+    CTexture* dxTexture = renderBuffer->GetTexture();
+    ID3D11ShaderResourceView* shaderRes = dxTexture->GetShaderResource();
     pGUIShader->SetShaderViews(1, &shaderRes);
     pGUIShader->DrawQuad(vertex[0], vertex[1], vertex[2], vertex[3]);
   }
@@ -190,8 +194,10 @@ void CRPRendererGuiTexture::RenderInternal(bool clear, uint8_t alpha)
   glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_STATIC_DRAW);
 
-  glVertexAttribPointer(posLoc, 3, GL_FLOAT, 0, sizeof(PackedVertex), BUFFER_OFFSET(offsetof(PackedVertex, x)));
-  glVertexAttribPointer(tex0Loc, 2, GL_FLOAT, 0, sizeof(PackedVertex), BUFFER_OFFSET(offsetof(PackedVertex, u1)));
+  glVertexAttribPointer(posLoc, 3, GL_FLOAT, 0, sizeof(PackedVertex),
+                        BUFFER_OFFSET(offsetof(PackedVertex, x)));
+  glVertexAttribPointer(tex0Loc, 2, GL_FLOAT, 0, sizeof(PackedVertex),
+                        BUFFER_OFFSET(offsetof(PackedVertex, u1)));
 
   glEnableVertexAttribArray(posLoc);
   glEnableVertexAttribArray(tex0Loc);
@@ -209,8 +215,8 @@ void CRPRendererGuiTexture::RenderInternal(bool clear, uint8_t alpha)
     colour[2] = (235 - 16) * colour[2] / 255 + 16;
   }
 
-  glUniform4f(uniColLoc, (colour[0] / 255.0f), (colour[1] / 255.0f),
-                         (colour[2] / 255.0f), (colour[3] / 255.0f));
+  glUniform4f(uniColLoc, (colour[0] / 255.0f), (colour[1] / 255.0f), (colour[2] / 255.0f),
+              (colour[3] / 255.0f));
 
   glGenBuffers(1, &indexVBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
@@ -232,7 +238,7 @@ void CRPRendererGuiTexture::RenderInternal(bool clear, uint8_t alpha)
 
   renderBuffer->BindToUnit(0);
 
-  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND); // Turn blending On
 
   m_context.EnableGUIShader(GL_SHADER_METHOD::TEXTURE);
@@ -272,7 +278,8 @@ void CRPRendererGuiTexture::RenderInternal(bool clear, uint8_t alpha)
   tex[1][0] = tex[2][0] = u2;
   tex[2][1] = tex[3][1] = v2;
 
-  glUniform4f(uniColLoc,(col[0] / 255.0f), (col[1] / 255.0f), (col[2] / 255.0f), (col[3] / 255.0f));
+  glUniform4f(uniColLoc, (col[0] / 255.0f), (col[1] / 255.0f), (col[2] / 255.0f),
+              (col[3] / 255.0f));
   glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, idx);
 
   glDisableVertexAttribArray(posLoc);

@@ -21,40 +21,42 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CRenderContext;
+class CRenderContext;
 
-  class CRenderBufferGBM : public CBaseRenderBuffer
+class CRenderBufferGBM : public CBaseRenderBuffer
+{
+public:
+  CRenderBufferGBM(CRenderContext& context, int fourcc);
+  ~CRenderBufferGBM() override;
+
+  // implementation of IRenderBuffer via CRenderBufferSysMem
+  bool Allocate(AVPixelFormat format, unsigned int width, unsigned int height) override;
+  size_t GetFrameSize() const override;
+  uint8_t* GetMemory() override;
+  void ReleaseMemory() override;
+
+  // implementation of IRenderBuffer
+  bool UploadTexture() override;
+
+  GLuint TextureID() const
   {
-  public:
-    CRenderBufferGBM(CRenderContext &context,
-                     int fourcc);
-    ~CRenderBufferGBM() override;
+    return m_textureId;
+  }
 
-    // implementation of IRenderBuffer via CRenderBufferSysMem
-    bool Allocate(AVPixelFormat format, unsigned int width, unsigned int height) override;
-    size_t GetFrameSize() const override;
-    uint8_t *GetMemory() override;
-    void ReleaseMemory() override;
+protected:
+  // Construction parameters
+  CRenderContext& m_context;
+  const int m_fourcc = 0;
 
-    // implementation of IRenderBuffer
-    bool UploadTexture() override;
+  const GLenum m_textureTarget = GL_TEXTURE_EXTERNAL_OES;
+  GLuint m_textureId = 0;
 
-    GLuint TextureID() const { return m_textureId; }
+private:
+  void CreateTexture();
+  void DeleteTexture();
 
-  protected:
-    // Construction parameters
-    CRenderContext &m_context;
-    const int m_fourcc = 0;
-
-    const GLenum m_textureTarget = GL_TEXTURE_EXTERNAL_OES;
-    GLuint m_textureId = 0;
-
-  private:
-    void CreateTexture();
-    void DeleteTexture();
-
-    std::unique_ptr<CEGLImage> m_egl;
-    std::unique_ptr<CGBMBufferObject> m_bo;
-  };
-}
-}
+  std::unique_ptr<CEGLImage> m_egl;
+  std::unique_ptr<CGBMBufferObject> m_bo;
+};
+} // namespace RETRO
+} // namespace KODI

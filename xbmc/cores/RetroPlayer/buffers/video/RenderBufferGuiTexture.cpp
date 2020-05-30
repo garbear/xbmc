@@ -11,13 +11,15 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRenderBufferGuiTexture::CRenderBufferGuiTexture(SCALINGMETHOD scalingMethod) :
-  m_scalingMethod(scalingMethod)
+CRenderBufferGuiTexture::CRenderBufferGuiTexture(SCALINGMETHOD scalingMethod)
+    : m_scalingMethod(scalingMethod)
 {
   m_textureFormat = XB_FMT_A8R8G8B8;
 }
 
-bool CRenderBufferGuiTexture::Allocate(AVPixelFormat format, unsigned int width, unsigned int height)
+bool CRenderBufferGuiTexture::Allocate(AVPixelFormat format,
+                                       unsigned int width,
+                                       unsigned int height)
 {
   // Initialize IRenderBuffer
   m_format = TranslateFormat(m_textureFormat);
@@ -46,7 +48,7 @@ size_t CRenderBufferGuiTexture::GetFrameSize() const
   return 0;
 }
 
-uint8_t *CRenderBufferGuiTexture::GetMemory()
+uint8_t* CRenderBufferGuiTexture::GetMemory()
 {
   if (m_texture)
     return m_texture->GetPixels();

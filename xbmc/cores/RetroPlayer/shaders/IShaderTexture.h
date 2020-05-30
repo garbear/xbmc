@@ -12,22 +12,22 @@ namespace KODI
 {
 namespace SHADER
 {
-  class IShaderTexture
-  {
-  public:
-    virtual ~IShaderTexture();
+class IShaderTexture
+{
+public:
+  virtual ~IShaderTexture();
 
-    /*!
-     * \brief Return width of texture
-     * \return Width of the texture in texels
-     */
-    virtual float GetWidth() const = 0;
+  /*!
+   * \brief Return width of texture
+   * \return Width of the texture in texels
+   */
+  virtual float GetWidth() const = 0;
 
-    /*!
-     * \brief Return height of texture
-     * \return Height of the texture in texels
-     */
-    virtual float GetHeight() const = 0;
-  };
-}
-}
+  /*!
+   * \brief Return height of texture
+   * \return Height of the texture in texels
+   */
+  virtual float GetHeight() const = 0;
+};
+} // namespace SHADER
+} // namespace KODI

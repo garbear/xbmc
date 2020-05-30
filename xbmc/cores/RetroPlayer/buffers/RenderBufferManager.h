@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "cores/RetroPlayer/RetroPlayerTypes.h"
 #include "cores/GameSettings.h"
+#include "cores/RetroPlayer/RetroPlayerTypes.h"
 #include "threads/CriticalSection.h"
 
 #include <memory>
@@ -19,33 +19,33 @@ namespace KODI
 {
 namespace RETRO
 {
-  class IRendererFactory;
-  class IRenderBufferPools;
+class IRendererFactory;
+class IRenderBufferPools;
 
-  class CRenderBufferManager
+class CRenderBufferManager
+{
+public:
+  CRenderBufferManager() = default;
+  ~CRenderBufferManager();
+
+  void RegisterPools(IRendererFactory* factory, RenderBufferPoolVector pools);
+  RenderBufferPoolVector GetPools(IRendererFactory* factory);
+  std::vector<IRenderBufferPool*> GetBufferPools();
+  void FlushPools();
+
+  std::string GetRenderSystemName(IRenderBufferPool* renderBufferPool) const;
+
+  bool HasScalingMethod(SCALINGMETHOD scalingMethod) const;
+
+protected:
+  struct RenderBufferPools
   {
-  public:
-    CRenderBufferManager() = default;
-    ~CRenderBufferManager();
-
-    void RegisterPools(IRendererFactory *factory, RenderBufferPoolVector pools);
-    RenderBufferPoolVector GetPools(IRendererFactory *factory);
-    std::vector<IRenderBufferPool*> GetBufferPools();
-    void FlushPools();
-
-    std::string GetRenderSystemName(IRenderBufferPool *renderBufferPool) const;
-
-    bool HasScalingMethod(SCALINGMETHOD scalingMethod) const;
-
-  protected:
-    struct RenderBufferPools
-    {
-      IRendererFactory* factory;
-      RenderBufferPoolVector pools;
-    };
-
-    std::vector<RenderBufferPools> m_pools;
-    mutable CCriticalSection m_critSection;
+    IRendererFactory* factory;
+    RenderBufferPoolVector pools;
   };
-}
-}
+
+  std::vector<RenderBufferPools> m_pools;
+  mutable CCriticalSection m_critSection;
+};
+} // namespace RETRO
+} // namespace KODI

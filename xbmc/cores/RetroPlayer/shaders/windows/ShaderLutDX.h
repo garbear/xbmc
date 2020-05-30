@@ -19,7 +19,7 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CRenderContext;
+class CRenderContext;
 }
 
 namespace SHADER
@@ -29,7 +29,7 @@ class IShaderSampler;
 class IShaderTexture;
 struct ShaderLut;
 
-class CShaderLutDX: public IShaderLut
+class CShaderLutDX : public IShaderLut
 {
 public:
   CShaderLutDX() = default;
@@ -39,17 +39,24 @@ public:
   ~CShaderLutDX() override;
 
   // Implementation of IShaderLut
-  bool Create(RETRO::CRenderContext &context, const ShaderLut &lut) override;
-  IShaderSampler* GetSampler() override { return m_sampler.get(); }
-  IShaderTexture* GetTexture() override { return m_texture.get(); }
+  bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) override;
+  IShaderSampler* GetSampler() override
+  {
+    return m_sampler.get();
+  }
+  IShaderTexture* GetTexture() override
+  {
+    return m_texture.get();
+  }
 
 private:
-  static std::unique_ptr<IShaderSampler> CreateLUTSampler(RETRO::CRenderContext &context, const ShaderLut &lut); //! @todo Move context to class
-  static std::unique_ptr<IShaderTexture> CreateLUTexture(const ShaderLut &lut);
+  static std::unique_ptr<IShaderSampler> CreateLUTSampler(
+      RETRO::CRenderContext& context, const ShaderLut& lut); //! @todo Move context to class
+  static std::unique_ptr<IShaderTexture> CreateLUTexture(const ShaderLut& lut);
 
   std::unique_ptr<IShaderSampler> m_sampler;
   std::unique_ptr<IShaderTexture> m_texture;
 };
 
-}
-}
+} // namespace SHADER
+} // namespace KODI

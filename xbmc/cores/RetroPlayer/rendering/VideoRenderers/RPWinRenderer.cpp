@@ -34,28 +34,31 @@ std::string CWinRendererFactory::RenderSystemName() const
   return "DirectX";
 }
 
-CRPBaseRenderer *CWinRendererFactory::CreateRenderer(const CRenderSettings &settings, CRenderContext &context, std::shared_ptr<IRenderBufferPool> bufferPool)
+CRPBaseRenderer* CWinRendererFactory::CreateRenderer(const CRenderSettings& settings,
+                                                     CRenderContext& context,
+                                                     std::shared_ptr<IRenderBufferPool> bufferPool)
 {
   return new CRPWinRenderer(settings, context, std::move(bufferPool));
 }
 
-RenderBufferPoolVector CWinRendererFactory::CreateBufferPools(CRenderContext &context)
+RenderBufferPoolVector CWinRendererFactory::CreateBufferPools(CRenderContext& context)
 {
-  return { std::make_shared<CWinRenderBufferPool>() };
+  return {std::make_shared<CWinRenderBufferPool>()};
 }
 
 // --- CWinRenderBuffer --------------------------------------------------------
 
-CWinRenderBuffer::CWinRenderBuffer(AVPixelFormat pixFormat, DXGI_FORMAT dxFormat) :
-  m_pixFormat(pixFormat),
-  m_targetDxFormat(dxFormat),
-  m_targetPixFormat(GetPixFormat(dxFormat))
+CWinRenderBuffer::CWinRenderBuffer(AVPixelFormat pixFormat, DXGI_FORMAT dxFormat)
+    : m_pixFormat(pixFormat)
+    , m_targetDxFormat(dxFormat)
+    , m_targetPixFormat(GetPixFormat(dxFormat))
 {
 }
 
 bool CWinRenderBuffer::CreateTexture()
 {
-  if (!m_intermediateTarget->GetPointer()->Create(m_width, m_height, 1, D3D11_USAGE_DYNAMIC, m_targetDxFormat))
+  if (!m_intermediateTarget->GetPointer()->Create(m_width, m_height, 1, D3D11_USAGE_DYNAMIC,
+                                                  m_targetDxFormat))
   {
     CLog::Log(LOGERROR, "WinRenderer: Intermediate render target creation failed");
     return false;
@@ -113,7 +116,7 @@ bool CWinRenderBuffer::UploadTexture()
     }
   }
 
-  uint8_t *destData = nullptr;
+  uint8_t* destData = nullptr;
   unsigned int destStride = 0;
   if (!GetTexture(destData, destStride))
     return false;
@@ -131,8 +134,8 @@ bool CWinRenderBuffer::CreateScalingContext()
 {
   if (m_swsContext == nullptr)
   {
-    m_swsContext = sws_getContext(m_width, m_height, m_pixFormat, m_width, m_height, m_targetPixFormat,
-      SWS_FAST_BILINEAR, NULL, NULL, NULL);
+    m_swsContext = sws_getContext(m_width, m_height, m_pixFormat, m_width, m_height,
+                                  m_targetPixFormat, SWS_FAST_BILINEAR, NULL, NULL, NULL);
 
     if (m_swsContext == nullptr)
     {
@@ -144,12 +147,15 @@ bool CWinRenderBuffer::CreateScalingContext()
   return true;
 }
 
-void CWinRenderBuffer::ScalePixels(uint8_t *source, unsigned int sourceStride, uint8_t *target, unsigned int targetStride)
+void CWinRenderBuffer::ScalePixels(uint8_t* source,
+                                   unsigned int sourceStride,
+                                   uint8_t* target,
+                                   unsigned int targetStride)
 {
-  uint8_t* src[] =       { source,                          nullptr,   nullptr,   nullptr };
-  int      srcStride[] = { static_cast<int>(sourceStride),  0,         0,         0       };
-  uint8_t* dst[] =       { target,                          nullptr,   nullptr,   nullptr };
-  int      dstStride[] = { static_cast<int>(targetStride),  0,         0,         0       };
+  uint8_t* src[] = {source, nullptr, nullptr, nullptr};
+  int srcStride[] = {static_cast<int>(sourceStride), 0, 0, 0};
+  uint8_t* dst[] = {target, nullptr, nullptr, nullptr};
+  int dstStride[] = {static_cast<int>(targetStride), 0, 0, 0};
 
   sws_scale(m_swsContext, src, srcStride, 0, m_height, dst, dstStride);
 }
@@ -166,7 +172,7 @@ CWinRenderBufferPool::CWinRenderBufferPool()
   CompileOutputShaders();
 }
 
-bool CWinRenderBufferPool::IsCompatible(const CRenderVideoSettings &renderSettings) const
+bool CWinRenderBufferPool::IsCompatible(const CRenderVideoSettings& renderSettings) const
 {
   //! @todo Move this logic to generic class
 
@@ -178,7 +184,7 @@ bool CWinRenderBufferPool::IsCompatible(const CRenderVideoSettings &renderSettin
   return GetShader(renderSettings.GetScalingMethod()) != nullptr;
 }
 
-IRenderBuffer *CWinRenderBufferPool::CreateRenderBuffer(void *header /* = nullptr */)
+IRenderBuffer* CWinRenderBufferPool::CreateRenderBuffer(void* header /* = nullptr */)
 {
   return new CWinRenderBuffer(m_format, m_targetDxFormat);
 }
@@ -193,7 +199,7 @@ bool CWinRenderBufferPool::ConfigureDX(DXGI_FORMAT dxFormat)
   return true;
 }
 
-SHADER::CRPWinOutputShader *CWinRenderBufferPool::GetShader(SCALINGMETHOD scalingMethod) const
+SHADER::CRPWinOutputShader* CWinRenderBufferPool::GetShader(SCALINGMETHOD scalingMethod) const
 {
   auto it = m_outputShaders.find(scalingMethod);
 
@@ -203,11 +209,11 @@ SHADER::CRPWinOutputShader *CWinRenderBufferPool::GetShader(SCALINGMETHOD scalin
   return nullptr;
 }
 
-const std::vector<SCALINGMETHOD> &CWinRenderBufferPool::GetScalingMethods()
+const std::vector<SCALINGMETHOD>& CWinRenderBufferPool::GetScalingMethods()
 {
   static std::vector<SCALINGMETHOD> scalingMethods = {
-    SCALINGMETHOD::NEAREST,
-    SCALINGMETHOD::LINEAR,
+      SCALINGMETHOD::NEAREST,
+      SCALINGMETHOD::LINEAR,
   };
 
   return scalingMethods;
@@ -222,14 +228,16 @@ void CWinRenderBufferPool::CompileOutputShaders()
       m_outputShaders[scalingMethod] = std::move(outputShader);
     else
       CLog::Log(LOGERROR, "RPWinRenderer: Unable to create output shader (%s)",
-        CRenderTranslator::TranslateScalingMethod(scalingMethod));
+                CRenderTranslator::TranslateScalingMethod(scalingMethod));
   }
 }
 
 // --- CRPWinRenderer ----------------------------------------------------------
 
-CRPWinRenderer::CRPWinRenderer(const CRenderSettings &renderSettings, CRenderContext &context, std::shared_ptr<IRenderBufferPool> bufferPool) :
-  CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
+CRPWinRenderer::CRPWinRenderer(const CRenderSettings& renderSettings,
+                               CRenderContext& context,
+                               std::shared_ptr<IRenderBufferPool> bufferPool)
+    : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
   // Initialize CRPBaseRenderer fields
   m_shaderPreset.reset(new SHADER::CShaderPresetDX(m_context));
@@ -237,7 +245,7 @@ CRPWinRenderer::CRPWinRenderer(const CRenderSettings &renderSettings, CRenderCon
 
 bool CRPWinRenderer::ConfigureInternal()
 {
-  CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
+  CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
 
   DXGI_FORMAT targetDxFormat = renderingDx->GetBackBuffer()->GetFormat();
 
@@ -248,7 +256,7 @@ bool CRPWinRenderer::ConfigureInternal()
 
 void CRPWinRenderer::RenderInternal(bool clear, uint8_t alpha)
 {
-  CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
+  CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
 
   // Set alpha blend state
   renderingDx->SetAlphaBlendEnable(alpha < 0xFF);
@@ -258,10 +266,8 @@ void CRPWinRenderer::RenderInternal(bool clear, uint8_t alpha)
 
 bool CRPWinRenderer::Supports(RENDERFEATURE feature) const
 {
-  if (feature == RENDERFEATURE::STRETCH ||
-      feature == RENDERFEATURE::ZOOM ||
-      feature == RENDERFEATURE::PIXEL_RATIO ||
-      feature == RENDERFEATURE::ROTATION)
+  if (feature == RENDERFEATURE::STRETCH || feature == RENDERFEATURE::ZOOM ||
+      feature == RENDERFEATURE::PIXEL_RATIO || feature == RENDERFEATURE::ROTATION)
     return true;
 
   return false;
@@ -269,27 +275,22 @@ bool CRPWinRenderer::Supports(RENDERFEATURE feature) const
 
 bool CRPWinRenderer::SupportsScalingMethod(SCALINGMETHOD method)
 {
-  if (method == SCALINGMETHOD::LINEAR ||
-      method == SCALINGMETHOD::NEAREST)
+  if (method == SCALINGMETHOD::LINEAR || method == SCALINGMETHOD::NEAREST)
     return true;
 
   return false;
 }
 
-void CRPWinRenderer::Render(CD3DTexture *target)
+void CRPWinRenderer::Render(CD3DTexture* target)
 {
-  const CPoint destPoints[4] = {
-    m_rotatedDestCoords[0],
-    m_rotatedDestCoords[1],
-    m_rotatedDestCoords[2],
-    m_rotatedDestCoords[3]
-  };
+  const CPoint destPoints[4] = {m_rotatedDestCoords[0], m_rotatedDestCoords[1],
+                                m_rotatedDestCoords[2], m_rotatedDestCoords[3]};
 
-  CWinRenderBuffer *renderBuffer = static_cast<CWinRenderBuffer*>(m_renderBuffer);
+  CWinRenderBuffer* renderBuffer = static_cast<CWinRenderBuffer*>(m_renderBuffer);
   if (renderBuffer == nullptr)
     return;
 
-  SHADER::CShaderTextureCD3D *renderBufferTarget = renderBuffer->GetTarget();
+  SHADER::CShaderTextureCD3D* renderBufferTarget = renderBuffer->GetTarget();
   if (renderBufferTarget == nullptr)
     return;
 
@@ -325,9 +326,9 @@ void CRPWinRenderer::Render(CD3DTexture *target)
       m_bUseShaderPreset = false;
     }
   }
-  else  // Not using video shaders, output using output shader
+  else // Not using video shaders, output using output shader
   {
-    CD3DTexture *intermediateTarget = renderBufferTarget->GetPointer();
+    CD3DTexture* intermediateTarget = renderBufferTarget->GetPointer();
 
     if (intermediateTarget != nullptr)
     {
@@ -337,16 +338,15 @@ void CRPWinRenderer::Render(CD3DTexture *target)
       // Pick appropriate output shader depending on the scaling method of the renderer
       SCALINGMETHOD scalingMethod = m_renderSettings.VideoSettings().GetScalingMethod();
 
-      CWinRenderBufferPool *bufferPool = static_cast<CWinRenderBufferPool*>(m_bufferPool.get());
-      SHADER::CRPWinOutputShader *outputShader = bufferPool->GetShader(scalingMethod);
+      CWinRenderBufferPool* bufferPool = static_cast<CWinRenderBufferPool*>(m_bufferPool.get());
+      SHADER::CRPWinOutputShader* outputShader = bufferPool->GetShader(scalingMethod);
 
       // Use the picked output shader to render to the target
       if (outputShader != nullptr)
       {
-        outputShader->Render(*intermediateTarget,
-          m_sourceRect, destPoints, viewPort, target,
-          m_context.UseLimitedColor() ? 1 : 0);
+        outputShader->Render(*intermediateTarget, m_sourceRect, destPoints, viewPort, target,
+                             m_context.UseLimitedColor() ? 1 : 0);
+      }
     }
   }
-}
 }

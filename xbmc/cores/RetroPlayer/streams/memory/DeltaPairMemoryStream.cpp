@@ -35,7 +35,7 @@ void CDeltaPairMemoryStream::SubmitFrameInternal()
     uint32_t xor_val = currentFrame[i] ^ nextFrame[i];
     if (xor_val)
     {
-      DeltaPair pair = { i, xor_val };
+      DeltaPair pair = {i, xor_val};
       frame.buffer.push_back(pair);
     }
   }
@@ -88,7 +88,9 @@ void CDeltaPairMemoryStream::CullPastFrames(uint64_t frameCount)
   {
     if (m_rewindBuffer.empty())
     {
-      CLog::Log(LOGDEBUG, "CDeltaPairMemoryStream: Tried to cull %d frames too many. Check your math!", frameCount - removedCount);
+      CLog::Log(LOGDEBUG,
+                "CDeltaPairMemoryStream: Tried to cull %d frames too many. Check your math!",
+                frameCount - removedCount);
       break;
     }
     m_rewindBuffer.pop_front();

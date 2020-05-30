@@ -13,7 +13,7 @@ using namespace KODI;
 using namespace SHADER;
 
 CShaderSamplerDX::CShaderSamplerDX(ID3D11SamplerState* sampler)
-  : m_sampler(sampler)
+    : m_sampler(sampler)
 {
 }
 

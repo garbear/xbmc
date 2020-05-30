@@ -22,15 +22,15 @@
 
 namespace ADDON
 {
-  class CShaderPreset;
-  class CShaderPresetAddon;
-}
+class CShaderPreset;
+class CShaderPresetAddon;
+} // namespace ADDON
 
 namespace KODI
 {
 namespace RETRO
 {
-  class CRenderContext;
+class CRenderContext;
 }
 
 namespace SHADER
@@ -42,20 +42,28 @@ class CShaderPresetDX : public IShaderPreset
 {
 public:
   // Instance of CShaderPreset
-  explicit CShaderPresetDX(RETRO::CRenderContext &context, unsigned videoWidth = 0, unsigned videoHeight = 0);
+  explicit CShaderPresetDX(RETRO::CRenderContext& context,
+                           unsigned videoWidth = 0,
+                           unsigned videoHeight = 0);
   ~CShaderPresetDX() override;
 
   // implementation of IShaderPreset
   bool ReadPresetFile(const std::string& presetPath) override;
   bool RenderUpdate(const CPoint dest[], IShaderTexture* source, IShaderTexture* target) override;
-  void SetSpeed(double speed) override { m_speed = speed; }
+  void SetSpeed(double speed) override
+  {
+    m_speed = speed;
+  }
   void SetVideoSize(const unsigned videoWidth, const unsigned videoHeight) override;
   bool SetShaderPreset(const std::string& shaderPresetPath) override;
   const std::string& GetShaderPreset() const override;
-  ShaderPassVec& GetPasses() override { return m_passes; }
+  ShaderPassVec& GetPasses() override
+  {
+    return m_passes;
+  }
 
   bool Update();
-  //CShaderTextureDX* GetFirstTexture();
+  // CShaderTextureDX* GetFirstTexture();
 
 private:
   bool CreateShaderTextures();
@@ -72,7 +80,7 @@ private:
   bool HasPathFailed(const std::string& path) const;
 
   // Construction parameters
-  RETRO::CRenderContext &m_context;
+  RETRO::CRenderContext& m_context;
 
   // Relative path of the currently loaded shader preset
   // If empty, it means that a preset is not currently loaded
@@ -119,10 +127,11 @@ private:
   // Playback speed
   double m_speed = 0.0;
 
-  ShaderParameterMap GetShaderParameters(const std::vector<ShaderParameter> &parameters, const std::string& sourceStr) const;
+  ShaderParameterMap GetShaderParameters(const std::vector<ShaderParameter>& parameters,
+                                         const std::string& sourceStr) const;
 
   ShaderPassVec m_passes;
 };
 
-}
-}
+} // namespace SHADER
+} // namespace KODI

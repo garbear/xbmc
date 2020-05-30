@@ -19,7 +19,7 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CRenderContext;
+class CRenderContext;
 }
 
 namespace SHADER
@@ -31,12 +31,17 @@ namespace SHADER
 class CShaderDX : public CWinShader, public IShader
 {
 public:
-  CShaderDX(RETRO::CRenderContext &context);
+  CShaderDX(RETRO::CRenderContext& context);
   ~CShaderDX() override;
 
   // implementation of IShader
-  bool Create(const std::string& shaderSource, const std::string& shaderPath, ShaderParameterMap shaderParameters,
-    IShaderSampler* sampler, ShaderLutVec luts, float2 viewPortSize, unsigned frameCountMod = 0) override;
+  bool Create(const std::string& shaderSource,
+              const std::string& shaderPath,
+              ShaderParameterMap shaderParameters,
+              IShaderSampler* sampler,
+              ShaderLutVec luts,
+              float2 viewPortSize,
+              unsigned frameCountMod = 0) override;
   void Render(IShaderTexture* source, IShaderTexture* target) override;
   void SetSizes(const float2& prevSize, const float2& nextSize) override;
   void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) override;
@@ -47,7 +52,7 @@ public:
 
   // expose these from CWinShader
   bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) override;
-  bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC *layout, unsigned numElements) override;
+  bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements) override;
 
 protected:
   void SetShaderParameters(CD3DTexture& sourceTexture);
@@ -87,7 +92,7 @@ private:
   float2 m_viewportSize;
 
   // Resolution of the texture that holds the input
-  //float2 m_textureSize;
+  // float2 m_textureSize;
 
   // Holds the data bount to the input cbuffer (cbInput here)
   ID3D11Buffer* m_pInputBuffer = nullptr;
@@ -103,8 +108,8 @@ private:
   cbInput GetInputData(uint64_t frameCount = 0);
 
   // Construction parameters
-  RETRO::CRenderContext &m_context;
+  RETRO::CRenderContext& m_context;
 };
 
-}
-}
+} // namespace SHADER
+} // namespace KODI

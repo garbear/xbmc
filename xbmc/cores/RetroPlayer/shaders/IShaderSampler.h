@@ -12,10 +12,10 @@ namespace KODI
 {
 namespace SHADER
 {
-  class IShaderSampler
-  {
-  public:
-    virtual ~IShaderSampler() = default;
-  };
-}
-}
+class IShaderSampler
+{
+public:
+  virtual ~IShaderSampler() = default;
+};
+} // namespace SHADER
+} // namespace KODI

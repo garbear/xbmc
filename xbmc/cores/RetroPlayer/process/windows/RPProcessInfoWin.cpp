@@ -12,8 +12,8 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRPProcessInfoWin::CRPProcessInfoWin() :
-  CRPProcessInfo("Windows")
+CRPProcessInfoWin::CRPProcessInfoWin()
+    : CRPProcessInfo("Windows")
 {
 }
 

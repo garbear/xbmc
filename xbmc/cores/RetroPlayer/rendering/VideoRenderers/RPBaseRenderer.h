@@ -8,11 +8,12 @@
 
 #pragma once
 
-#include "cores/RetroPlayer/rendering/RenderSettings.h"
 #include "cores/GameSettings.h"
+#include "cores/RetroPlayer/rendering/RenderSettings.h"
 #include "utils/Geometry.h"
 
-extern "C" {
+extern "C"
+{
 #include <libavutil/pixfmt.h>
 }
 
@@ -24,102 +25,115 @@ namespace KODI
 {
 namespace SHADER
 {
-  class IShaderPreset;
+class IShaderPreset;
 }
 
 namespace RETRO
 {
-  class CRenderContext;
-  class IRenderBuffer;
-  class IRenderBufferPool;
+class CRenderContext;
+class IRenderBuffer;
+class IRenderBufferPool;
 
-  class CRPBaseRenderer
+class CRPBaseRenderer
+{
+public:
+  CRPBaseRenderer(const CRenderSettings& renderSettings,
+                  CRenderContext& context,
+                  std::shared_ptr<IRenderBufferPool> bufferPool);
+  virtual ~CRPBaseRenderer();
+
+  /*!
+   * \brief Get the buffer pool used by this renderer
+   */
+  IRenderBufferPool* GetBufferPool()
   {
-  public:
-    CRPBaseRenderer(const CRenderSettings &renderSettings, CRenderContext &context, std::shared_ptr<IRenderBufferPool> bufferPool);
-    virtual ~CRPBaseRenderer();
+    return m_bufferPool.get();
+  }
 
-    /*!
-     * \brief Get the buffer pool used by this renderer
-     */
-    IRenderBufferPool *GetBufferPool() { return m_bufferPool.get(); }
+  // Player functions
+  bool Configure(AVPixelFormat format);
+  void FrameMove();
+  /*!
+   * \brief Performs whatever necessary before rendering the frame
+   */
+  void PreRender(bool clear);
+  void SetBuffer(IRenderBuffer* buffer);
+  void RenderFrame(bool clear, uint8_t alpha);
 
-    // Player functions
-    bool Configure(AVPixelFormat format);
-    void FrameMove();
-    /*!
-     * \brief Performs whatever necessary before rendering the frame
-     */
-    void PreRender(bool clear);
-    void SetBuffer(IRenderBuffer *buffer);
-    void RenderFrame(bool clear, uint8_t alpha);
+  // Feature support
+  virtual bool Supports(RENDERFEATURE feature) const = 0;
+  bool IsCompatible(const CRenderVideoSettings& settings) const;
+  virtual SCALINGMETHOD GetDefaultScalingMethod() const = 0;
 
-    // Feature support
-    virtual bool Supports(RENDERFEATURE feature) const = 0;
-    bool IsCompatible(const CRenderVideoSettings &settings) const;
-    virtual SCALINGMETHOD GetDefaultScalingMethod() const = 0;
+  // Public renderer interface
+  virtual void Flush();
 
-    // Public renderer interface
-    virtual void Flush();
+  // Get render settings
+  const CRenderSettings& GetRenderSettings() const
+  {
+    return m_renderSettings;
+  }
 
-    // Get render settings
-    const CRenderSettings &GetRenderSettings() const { return m_renderSettings; }
+  // Set render settings
+  void SetScalingMethod(SCALINGMETHOD method);
+  void SetStretchMode(STRETCHMODE stretchMode);
+  void SetRenderRotation(unsigned int rotationDegCCW);
+  void SetShaderPreset(const std::string& presetPath);
 
-    // Set render settings
-    void SetScalingMethod(SCALINGMETHOD method);
-    void SetStretchMode(STRETCHMODE stretchMode);
-    void SetRenderRotation(unsigned int rotationDegCCW);
-    void SetShaderPreset(const std::string &presetPath);
+  bool IsVisible() const;
 
-    bool IsVisible() const;
+protected:
+  // Protected renderer interface
+  virtual bool ConfigureInternal()
+  {
+    return true;
+  }
+  virtual void RenderInternal(bool clear, uint8_t alpha) = 0;
+  virtual void FlushInternal()
+  {
+  }
 
-  protected:
-    // Protected renderer interface
-    virtual bool ConfigureInternal() { return true; }
-    virtual void RenderInternal(bool clear, uint8_t alpha) = 0;
-    virtual void FlushInternal() { }
+  // Construction parameters
+  CRenderContext& m_context;
+  std::shared_ptr<IRenderBufferPool> m_bufferPool;
 
-    // Construction parameters
-    CRenderContext &m_context;
-    std::shared_ptr<IRenderBufferPool> m_bufferPool;
+  // Stream properties
+  bool m_bConfigured = false;
+  AVPixelFormat m_format = AV_PIX_FMT_NONE;
 
-    // Stream properties
-    bool m_bConfigured = false;
-    AVPixelFormat m_format = AV_PIX_FMT_NONE;
+  // Rendering properties
+  CRenderSettings m_renderSettings;
+  IRenderBuffer* m_renderBuffer = nullptr;
 
-    // Rendering properties
-    CRenderSettings m_renderSettings;
-    IRenderBuffer *m_renderBuffer = nullptr;
+  // Geometry properties
+  CRect m_sourceRect;
+  std::array<CPoint, 4> m_rotatedDestCoords{};
 
-    // Geometry properties
-    CRect m_sourceRect;
-    std::array<CPoint, 4> m_rotatedDestCoords{};
+  // Video shaders
+  void Updateshaders();
+  std::unique_ptr<SHADER::IShaderPreset> m_shaderPreset;
 
-    // Video shaders
-    void Updateshaders();
-    std::unique_ptr<SHADER::IShaderPreset> m_shaderPreset;
+  bool m_shadersNeedUpdate;
+  bool m_bUseShaderPreset;
 
-    bool m_shadersNeedUpdate;
-    bool m_bUseShaderPreset;
+private:
+  /*!
+   * \brief Calculate driven dimensions
+   */
+  virtual void ManageRenderArea(const IRenderBuffer& renderBuffer);
 
-  private:
-    /*!
-     * \brief Calculate driven dimensions
-     */
-    virtual void ManageRenderArea(const IRenderBuffer &renderBuffer);
+  /*!
+   * \brief Performs whatever nessesary after a frame has been rendered
+   */
+  void PostRender();
 
-    /*!
-     * \brief Performs whatever nessesary after a frame has been rendered
-     */
-    void PostRender();
+  void MarkDirty();
 
-    void MarkDirty();
+  // Utility functions
+  void GetScreenDimensions(float& screenWidth, float& screenHeight, float& screenPixelRatio);
 
-    // Utility functions
-    void GetScreenDimensions(float &screenWidth, float &screenHeight, float &screenPixelRatio);
-
-    uint64_t m_renderFrameCount = 0;
-    uint64_t m_lastRender = 0;
-  };
-}
-}
+  uint64_t m_renderFrameCount = 0;
+  uint64_t m_lastRender = 0;
+};
+} // namespace RETRO
+} // namespace KODI

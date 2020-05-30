@@ -9,12 +9,12 @@
 #include "SavestateUtils.h"
 #include "utils/URIUtils.h"
 
-#define SAVESTATE_EXTENSION      ".sav"
+#define SAVESTATE_EXTENSION ".sav"
 
 using namespace KODI;
 using namespace RETRO;
 
-std::string CSavestateUtils::MakePath(const std::string &gamePath)
+std::string CSavestateUtils::MakePath(const std::string& gamePath)
 {
   return URIUtils::ReplaceExtension(gamePath, SAVESTATE_EXTENSION);
 }

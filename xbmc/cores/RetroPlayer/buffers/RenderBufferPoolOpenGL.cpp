@@ -16,7 +16,7 @@
 using namespace KODI;
 using namespace RETRO;
 
-bool CRenderBufferPoolOpenGL::IsCompatible(const CRenderVideoSettings &renderSettings) const
+bool CRenderBufferPoolOpenGL::IsCompatible(const CRenderVideoSettings& renderSettings) const
 {
   if (!CRPRendererOpenGL::SupportsScalingMethod(renderSettings.GetScalingMethod()))
     return false;
@@ -24,12 +24,9 @@ bool CRenderBufferPoolOpenGL::IsCompatible(const CRenderVideoSettings &renderSet
   return true;
 }
 
-IRenderBuffer *CRenderBufferPoolOpenGL::CreateRenderBuffer(void *header /* = nullptr */)
+IRenderBuffer* CRenderBufferPoolOpenGL::CreateRenderBuffer(void* header /* = nullptr */)
 {
-  return new CRenderBufferOpenGL(m_pixeltype,
-                                 m_internalformat,
-                                 m_pixelformat,
-                                 m_bpp);
+  return new CRenderBufferOpenGL(m_pixeltype, m_internalformat, m_pixelformat, m_bpp);
 }
 
 bool CRenderBufferPoolOpenGL::ConfigureInternal()

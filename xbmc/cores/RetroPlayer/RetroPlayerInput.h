@@ -13,33 +13,36 @@
 
 namespace PERIPHERALS
 {
-  class CPeripherals;
+class CPeripherals;
 }
 
 namespace KODI
 {
 namespace RETRO
 {
-  class CRetroPlayerInput : public GAME::IGameInputCallback
+class CRetroPlayerInput : public GAME::IGameInputCallback
+{
+public:
+  CRetroPlayerInput(PERIPHERALS::CPeripherals& peripheralManager);
+  ~CRetroPlayerInput() override;
+
+  void SetSpeed(double speed);
+  void EnableInput(bool bEnabled);
+
+  // implementation of IGameInputCallback
+  bool AcceptsInput() const override
   {
-  public:
-    CRetroPlayerInput(PERIPHERALS::CPeripherals &peripheralManager);
-    ~CRetroPlayerInput() override;
+    return m_bEnabled;
+  }
+  void PollInput() override;
 
-    void SetSpeed(double speed);
-    void EnableInput(bool bEnabled);
+private:
+  // Construction parameters
+  PERIPHERALS::CPeripherals& m_peripheralManager;
 
-    // implementation of IGameInputCallback
-    bool AcceptsInput() const override { return m_bEnabled; }
-    void PollInput() override;
-
-  private:
-    // Construction parameters
-    PERIPHERALS::CPeripherals &m_peripheralManager;
-
-    // Input variables
-    PERIPHERALS::EventPollHandlePtr m_inputPollHandle;
-    bool m_bEnabled = false;
-  };
-}
-}
+  // Input variables
+  PERIPHERALS::EventPollHandlePtr m_inputPollHandle;
+  bool m_bEnabled = false;
+};
+} // namespace RETRO
+} // namespace KODI

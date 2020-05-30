@@ -14,27 +14,27 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CRenderContext;
+class CRenderContext;
 
-  class CRenderBufferPoolGBM : public CBaseRenderBufferPool
-  {
-  public:
-    CRenderBufferPoolGBM(CRenderContext &context);
-    ~CRenderBufferPoolGBM() override = default;
+class CRenderBufferPoolGBM : public CBaseRenderBufferPool
+{
+public:
+  CRenderBufferPoolGBM(CRenderContext& context);
+  ~CRenderBufferPoolGBM() override = default;
 
-    // implementation of IRenderBufferPool via CBaseRenderBufferPool
-    bool IsCompatible(const CRenderVideoSettings &renderSettings) const override;
+  // implementation of IRenderBufferPool via CBaseRenderBufferPool
+  bool IsCompatible(const CRenderVideoSettings& renderSettings) const override;
 
-  protected:
-    // implementation of CBaseRenderBufferPool
-    IRenderBuffer *CreateRenderBuffer(void *header = nullptr) override;
-    bool ConfigureInternal();
+protected:
+  // implementation of CBaseRenderBufferPool
+  IRenderBuffer* CreateRenderBuffer(void* header = nullptr) override;
+  bool ConfigureInternal();
 
-    // Construction parameters
-    CRenderContext &m_context;
+  // Construction parameters
+  CRenderContext& m_context;
 
-    // Configuration parameters
-    int m_fourcc = 0;
-  };
-}
-}
+  // Configuration parameters
+  int m_fourcc = 0;
+};
+} // namespace RETRO
+} // namespace KODI

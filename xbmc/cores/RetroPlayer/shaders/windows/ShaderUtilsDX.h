@@ -16,17 +16,17 @@ namespace KODI
 {
 namespace SHADER
 {
-  class CShaderUtilsDX
-  {
-  public:
-    static D3D11_TEXTURE_ADDRESS_MODE TranslateWrapType(WRAP_TYPE wrap);
-  };
+class CShaderUtilsDX
+{
+public:
+  static D3D11_TEXTURE_ADDRESS_MODE TranslateWrapType(WRAP_TYPE wrap);
+};
 
-  /* todo
-  operator DirectX::XMFLOAT2(const float2& f) const
-  {
-    return DirectX::XMFLOAT2(static_cast<float>(f.x), static_cast<float>(f.y));
-  }
-  */
+/* todo
+operator DirectX::XMFLOAT2(const float2& f) const
+{
+  return DirectX::XMFLOAT2(static_cast<float>(f.x), static_cast<float>(f.y));
 }
-}
+*/
+} // namespace SHADER
+} // namespace KODI

@@ -14,23 +14,23 @@ namespace KODI
 {
 namespace SHADER
 {
-  inline bool operator==(const float2& lhs, const float2& rhs)
-  {
-    return lhs.x == rhs.x && lhs.y == rhs.y;
-  }
-
-  inline bool operator!=(const float2& lhs, const float2& rhs)
-  {
-    return !(lhs == rhs);
-  }
-
-  class CShaderUtils
-  {
-  public:
-    /*!
-     * \brief Returns smallest possible power-of-two sized texture
-     */
-    static float2 GetOptimalTextureSize(float2 videoSize);
-  };
+inline bool operator==(const float2& lhs, const float2& rhs)
+{
+  return lhs.x == rhs.x && lhs.y == rhs.y;
 }
+
+inline bool operator!=(const float2& lhs, const float2& rhs)
+{
+  return !(lhs == rhs);
 }
+
+class CShaderUtils
+{
+public:
+  /*!
+   * \brief Returns smallest possible power-of-two sized texture
+   */
+  static float2 GetOptimalTextureSize(float2 videoSize);
+};
+} // namespace SHADER
+} // namespace KODI
