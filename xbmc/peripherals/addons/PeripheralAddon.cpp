@@ -13,14 +13,14 @@
 #include "filesystem/SpecialProtocol.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerManager.h"
-#include "input/joysticks/interfaces/IButtonMap.h"
 #include "input/joysticks/DriverPrimitive.h"
+#include "input/joysticks/interfaces/IButtonMap.h"
 #include "peripherals/Peripherals.h"
 #include "peripherals/bus/virtual/PeripheralBusAddon.h"
 #include "peripherals/devices/PeripheralJoystick.h"
 #include "threads/SingleLock.h"
-#include "utils/log.h"
 #include "utils/StringUtils.h"
+#include "utils/log.h"
 
 #include <algorithm>
 #include <string.h>
@@ -31,24 +31,32 @@ using namespace JOYSTICK;
 using namespace PERIPHERALS;
 using namespace XFILE;
 
-#define KEYBOARD_BUTTON_MAP_NAME  "Keyboard"
-#define KEYBOARD_PROVIDER         "application"
+#define KEYBOARD_BUTTON_MAP_NAME "Keyboard"
+#define KEYBOARD_PROVIDER "application"
 
-#define MOUSE_BUTTON_MAP_NAME     "Mouse"
-#define MOUSE_PROVIDER            "application"
+#define MOUSE_BUTTON_MAP_NAME "Mouse"
+#define MOUSE_PROVIDER "application"
 
 #ifndef SAFE_DELETE
-  #define SAFE_DELETE(p)  do { delete (p); (p) = NULL; } while (0)
+#define SAFE_DELETE(p)                                                                             \
+  do                                                                                               \
+  {                                                                                                \
+    delete (p);                                                                                    \
+    (p) = NULL;                                                                                    \
+  } while (0)
 #endif
 
-CPeripheralAddon::CPeripheralAddon(const ADDON::BinaryAddonBasePtr& addonInfo, CPeripherals &manager)
-  : IAddonInstanceHandler(ADDON_INSTANCE_PERIPHERAL, addonInfo),
-    m_manager(manager),
-    m_bSupportsJoystickRumble(false),
-    m_bSupportsJoystickPowerOff(false)
+CPeripheralAddon::CPeripheralAddon(const ADDON::BinaryAddonBasePtr& addonInfo,
+                                   CPeripherals& manager)
+    : IAddonInstanceHandler(ADDON_INSTANCE_PERIPHERAL, addonInfo)
+    , m_manager(manager)
+    , m_bSupportsJoystickRumble(false)
+    , m_bSupportsJoystickPowerOff(false)
 {
-  m_bProvidesJoysticks = addonInfo->Type(ADDON::ADDON_PERIPHERALDLL)->GetValue("@provides_joysticks").asBoolean();
-  m_bProvidesButtonMaps = addonInfo->Type(ADDON::ADDON_PERIPHERALDLL)->GetValue("@provides_buttonmaps").asBoolean();
+  m_bProvidesJoysticks =
+      addonInfo->Type(ADDON::ADDON_PERIPHERALDLL)->GetValue("@provides_joysticks").asBoolean();
+  m_bProvidesButtonMaps =
+      addonInfo->Type(ADDON::ADDON_PERIPHERALDLL)->GetValue("@provides_buttonmaps").asBoolean();
 
   ResetProperties();
 }
@@ -64,7 +72,7 @@ void CPeripheralAddon::ResetProperties(void)
   m_strUserPath = CSpecialProtocol::TranslatePath(Profile());
   m_strClientPath = CSpecialProtocol::TranslatePath(Path());
 
-  m_struct = {{ 0 }};
+  m_struct = {{0}};
   m_struct.props.user_path = m_strUserPath.c_str();
   m_struct.props.addon_path = m_strClientPath.c_str();
 
@@ -87,7 +95,8 @@ bool CPeripheralAddon::CreateAddon(void)
     CDirectory::Create(m_strUserPath);
 
   // Initialise the add-on
-  CLog::Log(LOGDEBUG, "PERIPHERAL - %s - creating peripheral add-on instance '%s'", __FUNCTION__, Name().c_str());
+  CLog::Log(LOGDEBUG, "PERIPHERAL - %s - creating peripheral add-on instance '%s'", __FUNCTION__,
+            Name().c_str());
 
   if (CreateInstance(&m_struct) != ADDON_STATUS_OK)
     return false;
@@ -110,7 +119,8 @@ void CPeripheralAddon::DestroyAddon()
 
   {
     CSingleLock lock(m_buttonMapMutex);
-    // only clear buttonMaps but don't delete them as they are owned by a CAddonJoystickInputHandling instance
+    // only clear buttonMaps but don't delete them as they are owned by a
+    // CAddonJoystickInputHandling instance
     m_buttonMaps.clear();
   }
 
@@ -122,7 +132,7 @@ void CPeripheralAddon::DestroyAddon()
 
 bool CPeripheralAddon::GetAddonProperties(void)
 {
-  PERIPHERAL_CAPABILITIES addonCapabilities = { };
+  PERIPHERAL_CAPABILITIES addonCapabilities = {};
 
   // Get the capabilities
   m_struct.toAddon.get_capabilities(&m_struct, &addonCapabilities);
@@ -130,14 +140,20 @@ bool CPeripheralAddon::GetAddonProperties(void)
   // Verify capabilities against addon.xml
   if (m_bProvidesJoysticks != addonCapabilities.provides_joysticks)
   {
-    CLog::Log(LOGERROR, "PERIPHERAL - Add-on '%s': provides_joysticks'(%s) in add-on DLL  doesn't match 'provides_joysticks'(%s) in addon.xml. Please contact the developer of this add-on: %s",
+    CLog::Log(
+        LOGERROR,
+        "PERIPHERAL - Add-on '%s': provides_joysticks'(%s) in add-on DLL  doesn't match "
+        "'provides_joysticks'(%s) in addon.xml. Please contact the developer of this add-on: %s",
         Name().c_str(), addonCapabilities.provides_joysticks ? "true" : "false",
         m_bProvidesJoysticks ? "true" : "false", Author().c_str());
     return false;
   }
   if (m_bProvidesButtonMaps != addonCapabilities.provides_buttonmaps)
   {
-    CLog::Log(LOGERROR, "PERIPHERAL - Add-on '%s': provides_buttonmaps' (%s) in add-on DLL  doesn't match 'provides_buttonmaps' (%s) in addon.xml. Please contact the developer of this add-on: %s",
+    CLog::Log(
+        LOGERROR,
+        "PERIPHERAL - Add-on '%s': provides_buttonmaps' (%s) in add-on DLL  doesn't match "
+        "'provides_buttonmaps' (%s) in addon.xml. Please contact the developer of this add-on: %s",
         Name().c_str(), addonCapabilities.provides_buttonmaps ? "true" : "false",
         m_bProvidesButtonMaps ? "true" : "false", Author().c_str());
     return false;
@@ -162,10 +178,10 @@ bool CPeripheralAddon::Register(unsigned int peripheralIndex, const PeripheralPt
     {
       m_peripherals[peripheralIndex] = std::static_pointer_cast<CPeripheralJoystick>(peripheral);
 
-      CLog::Log(LOGNOTICE, "%s - new %s device registered on %s->%s: %s",
-          __FUNCTION__, PeripheralTypeTranslator::TypeToString(peripheral->Type()),
-          PeripheralTypeTranslator::BusTypeToString(PERIPHERAL_BUS_ADDON),
-          peripheral->Location().c_str(), peripheral->DeviceName().c_str());
+      CLog::Log(LOGNOTICE, "%s - new %s device registered on %s->%s: %s", __FUNCTION__,
+                PeripheralTypeTranslator::TypeToString(peripheral->Type()),
+                PeripheralTypeTranslator::BusTypeToString(PERIPHERAL_BUS_ADDON),
+                peripheral->Location().c_str(), peripheral->DeviceName().c_str());
 
       return true;
     }
@@ -173,7 +189,8 @@ bool CPeripheralAddon::Register(unsigned int peripheralIndex, const PeripheralPt
   return false;
 }
 
-void CPeripheralAddon::UnregisterRemovedDevices(const PeripheralScanResults &results, PeripheralVector& removedPeripherals)
+void CPeripheralAddon::UnregisterRemovedDevices(const PeripheralScanResults& results,
+                                                PeripheralVector& removedPeripherals)
 {
   std::vector<unsigned int> removedIndexes;
 
@@ -184,7 +201,7 @@ void CPeripheralAddon::UnregisterRemovedDevices(const PeripheralScanResults &res
       const PeripheralPtr& peripheral = it.second;
       PeripheralScanResult updatedDevice(PERIPHERAL_BUS_ADDON);
       if (!results.GetDeviceOnLocation(peripheral->Location(), &updatedDevice) ||
-        *peripheral != updatedDevice)
+          *peripheral != updatedDevice)
       {
         // Device removed
         removedIndexes.push_back(it.first);
@@ -196,7 +213,10 @@ void CPeripheralAddon::UnregisterRemovedDevices(const PeripheralScanResults &res
   {
     auto it = m_peripherals.find(index);
     const PeripheralPtr& peripheral = it->second;
-    CLog::Log(LOGNOTICE, "%s - device removed from %s/%s: %s (%s:%s)", __FUNCTION__, PeripheralTypeTranslator::TypeToString(peripheral->Type()), peripheral->Location().c_str(), peripheral->DeviceName().c_str(), peripheral->VendorIdAsString(), peripheral->ProductIdAsString());
+    CLog::Log(LOGNOTICE, "%s - device removed from %s/%s: %s (%s:%s)", __FUNCTION__,
+              PeripheralTypeTranslator::TypeToString(peripheral->Type()),
+              peripheral->Location().c_str(), peripheral->DeviceName().c_str(),
+              peripheral->VendorIdAsString(), peripheral->ProductIdAsString());
     UnregisterButtonMap(peripheral.get());
     peripheral->OnDeviceRemoved();
     removedPeripherals.push_back(peripheral);
@@ -212,9 +232,10 @@ bool CPeripheralAddon::HasFeature(const PeripheralFeature feature) const
   return false;
 }
 
-void CPeripheralAddon::GetFeatures(std::vector<PeripheralFeature> &features) const
+void CPeripheralAddon::GetFeatures(std::vector<PeripheralFeature>& features) const
 {
-  if (m_bProvidesJoysticks && std::find(features.begin(), features.end(), FEATURE_JOYSTICK) == features.end())
+  if (m_bProvidesJoysticks &&
+      std::find(features.begin(), features.end(), FEATURE_JOYSTICK) == features.end())
     features.push_back(FEATURE_JOYSTICK);
 }
 
@@ -228,7 +249,7 @@ PeripheralPtr CPeripheralAddon::GetPeripheral(unsigned int index) const
   return peripheral;
 }
 
-PeripheralPtr CPeripheralAddon::GetByPath(const std::string &strPath) const
+PeripheralPtr CPeripheralAddon::GetByPath(const std::string& strPath) const
 {
   PeripheralPtr result;
 
@@ -249,18 +270,19 @@ bool CPeripheralAddon::SupportsFeature(PeripheralFeature feature) const
 {
   switch (feature)
   {
-    case FEATURE_RUMBLE:
-      return m_bSupportsJoystickRumble;
-    case FEATURE_POWER_OFF:
-      return m_bSupportsJoystickPowerOff;
-    default:
-      break;
+  case FEATURE_RUMBLE:
+    return m_bSupportsJoystickRumble;
+  case FEATURE_POWER_OFF:
+    return m_bSupportsJoystickPowerOff;
+  default:
+    break;
   }
 
   return false;
 }
 
-unsigned int CPeripheralAddon::GetPeripheralsWithFeature(PeripheralVector &results, const PeripheralFeature feature) const
+unsigned int CPeripheralAddon::GetPeripheralsWithFeature(PeripheralVector& results,
+                                                         const PeripheralFeature feature) const
 {
   unsigned int iReturn = 0;
   CSingleLock lock(m_critSection);
@@ -281,21 +303,21 @@ unsigned int CPeripheralAddon::GetNumberOfPeripherals(void) const
   return static_cast<unsigned int>(m_peripherals.size());
 }
 
-unsigned int CPeripheralAddon::GetNumberOfPeripheralsWithId(const int iVendorId, const int iProductId) const
+unsigned int CPeripheralAddon::GetNumberOfPeripheralsWithId(const int iVendorId,
+                                                            const int iProductId) const
 {
   unsigned int iReturn = 0;
   CSingleLock lock(m_critSection);
   for (auto it : m_peripherals)
   {
-    if (it.second->VendorId() == iVendorId &&
-        it.second->ProductId() == iProductId)
+    if (it.second->VendorId() == iVendorId && it.second->ProductId() == iProductId)
       iReturn++;
   }
 
   return iReturn;
 }
 
-void CPeripheralAddon::GetDirectory(const std::string &strPath, CFileItemList &items) const
+void CPeripheralAddon::GetDirectory(const std::string& strPath, CFileItemList& items) const
 {
   CSingleLock lock(m_critSection);
   for (auto it : m_peripherals)
@@ -308,27 +330,31 @@ void CPeripheralAddon::GetDirectory(const std::string &strPath, CFileItemList &i
     peripheralFile->SetPath(peripheral->FileLocation());
     peripheralFile->SetProperty("vendor", peripheral->VendorIdAsString());
     peripheralFile->SetProperty("product", peripheral->ProductIdAsString());
-    peripheralFile->SetProperty("bus", PeripheralTypeTranslator::BusTypeToString(peripheral->GetBusType()));
+    peripheralFile->SetProperty(
+        "bus", PeripheralTypeTranslator::BusTypeToString(peripheral->GetBusType()));
     peripheralFile->SetProperty("location", peripheral->Location());
-    peripheralFile->SetProperty("class", PeripheralTypeTranslator::TypeToString(peripheral->Type()));
+    peripheralFile->SetProperty("class",
+                                PeripheralTypeTranslator::TypeToString(peripheral->Type()));
     peripheralFile->SetProperty("version", peripheral->GetVersionInfo());
     peripheralFile->SetIconImage(peripheral->GetIcon());
     items.Add(peripheralFile);
   }
 }
 
-bool CPeripheralAddon::PerformDeviceScan(PeripheralScanResults &results)
+bool CPeripheralAddon::PerformDeviceScan(PeripheralScanResults& results)
 {
-  unsigned int      peripheralCount;
-  PERIPHERAL_INFO*  pScanResults;
-  PERIPHERAL_ERROR  retVal;
+  unsigned int peripheralCount;
+  PERIPHERAL_INFO* pScanResults;
+  PERIPHERAL_ERROR retVal;
 
   CSharedLock lock(m_dllSection);
 
   if (!m_struct.toAddon.perform_device_scan)
     return false;
 
-  LogError(retVal = m_struct.toAddon.perform_device_scan(&m_struct, &peripheralCount, &pScanResults), "PerformDeviceScan()");
+  LogError(retVal =
+               m_struct.toAddon.perform_device_scan(&m_struct, &peripheralCount, &pScanResults),
+           "PerformDeviceScan()");
 
   if (retVal == PERIPHERAL_NO_ERROR)
   {
@@ -346,12 +372,12 @@ bool CPeripheralAddon::PerformDeviceScan(PeripheralScanResults &results)
       }
 
       result.m_strDeviceName = peripheral.Name();
-      result.m_strLocation   = StringUtils::Format("%s/%d", ID().c_str(), peripheral.Index());
-      result.m_iVendorId     = peripheral.VendorID();
-      result.m_iProductId    = peripheral.ProductID();
-      result.m_mappedType    = PERIPHERAL_JOYSTICK;
+      result.m_strLocation = StringUtils::Format("%s/%d", ID().c_str(), peripheral.Index());
+      result.m_iVendorId = peripheral.VendorID();
+      result.m_iProductId = peripheral.ProductID();
+      result.m_mappedType = PERIPHERAL_JOYSTICK;
       result.m_mappedBusType = PERIPHERAL_BUS_ADDON;
-      result.m_iSequence     = 0;
+      result.m_iSequence = 0;
 
       if (!results.ContainsResult(result))
         results.m_results.push_back(result);
@@ -377,7 +403,7 @@ bool CPeripheralAddon::ProcessEvents(void)
 
   PERIPHERAL_ERROR retVal;
 
-  unsigned int      eventCount = 0;
+  unsigned int eventCount = 0;
   PERIPHERAL_EVENT* pEvents = nullptr;
 
   LogError(retVal = m_struct.toAddon.get_events(&m_struct, &eventCount, &pEvents), "GetEvents()");
@@ -394,29 +420,30 @@ bool CPeripheralAddon::ProcessEvents(void)
       {
       case PERIPHERAL_JOYSTICK:
       {
-        std::shared_ptr<CPeripheralJoystick> joystickDevice = std::static_pointer_cast<CPeripheralJoystick>(device);
+        std::shared_ptr<CPeripheralJoystick> joystickDevice =
+            std::static_pointer_cast<CPeripheralJoystick>(device);
 
         switch (event.Type())
         {
-          case PERIPHERAL_EVENT_TYPE_DRIVER_BUTTON:
-          {
-            const bool bPressed = (event.ButtonState() == JOYSTICK_STATE_BUTTON_PRESSED);
-            joystickDevice->OnButtonMotion(event.DriverIndex(), bPressed);
-            break;
-          }
-          case PERIPHERAL_EVENT_TYPE_DRIVER_HAT:
-          {
-            const HAT_STATE state = CPeripheralAddonTranslator::TranslateHatState(event.HatState());
-            joystickDevice->OnHatMotion(event.DriverIndex(), state);
-            break;
-          }
-          case PERIPHERAL_EVENT_TYPE_DRIVER_AXIS:
-          {
-            joystickDevice->OnAxisMotion(event.DriverIndex(), event.AxisState());
-            break;
-          }
-          default:
-            break;
+        case PERIPHERAL_EVENT_TYPE_DRIVER_BUTTON:
+        {
+          const bool bPressed = (event.ButtonState() == JOYSTICK_STATE_BUTTON_PRESSED);
+          joystickDevice->OnButtonMotion(event.DriverIndex(), bPressed);
+          break;
+        }
+        case PERIPHERAL_EVENT_TYPE_DRIVER_HAT:
+        {
+          const HAT_STATE state = CPeripheralAddonTranslator::TranslateHatState(event.HatState());
+          joystickDevice->OnHatMotion(event.DriverIndex(), state);
+          break;
+        }
+        case PERIPHERAL_EVENT_TYPE_DRIVER_AXIS:
+        {
+          joystickDevice->OnAxisMotion(event.DriverIndex(), event.AxisState());
+          break;
+        }
+        default:
+          break;
         }
         break;
       }
@@ -439,7 +466,9 @@ bool CPeripheralAddon::ProcessEvents(void)
   return false;
 }
 
-bool CPeripheralAddon::SendRumbleEvent(unsigned int peripheralIndex, unsigned int driverIndex, float magnitude)
+bool CPeripheralAddon::SendRumbleEvent(unsigned int peripheralIndex,
+                                       unsigned int driverIndex,
+                                       float magnitude)
 {
   if (!m_bProvidesJoysticks)
     return false;
@@ -449,12 +478,12 @@ bool CPeripheralAddon::SendRumbleEvent(unsigned int peripheralIndex, unsigned in
   if (!m_struct.toAddon.send_event)
     return false;
 
-  PERIPHERAL_EVENT eventStruct = { };
+  PERIPHERAL_EVENT eventStruct = {};
 
   eventStruct.peripheral_index = peripheralIndex;
-  eventStruct.type             = PERIPHERAL_EVENT_TYPE_SET_MOTOR;
-  eventStruct.driver_index     = driverIndex;
-  eventStruct.motor_state      = magnitude;
+  eventStruct.type = PERIPHERAL_EVENT_TYPE_SET_MOTOR;
+  eventStruct.driver_index = driverIndex;
+  eventStruct.motor_state = magnitude;
 
   return m_struct.toAddon.send_event(&m_struct, &eventStruct);
 }
@@ -473,7 +502,8 @@ bool CPeripheralAddon::GetJoystickProperties(unsigned int index, CPeripheralJoys
 
   JOYSTICK_INFO joystickStruct;
 
-  LogError(retVal = m_struct.toAddon.get_joystick_info(&m_struct, index, &joystickStruct), "GetJoystickInfo()");
+  LogError(retVal = m_struct.toAddon.get_joystick_info(&m_struct, index, &joystickStruct),
+           "GetJoystickInfo()");
   if (retVal == PERIPHERAL_NO_ERROR)
   {
     kodi::addon::Joystick addonJoystick(joystickStruct);
@@ -507,11 +537,12 @@ bool CPeripheralAddon::GetFeatures(const CPeripheral* device,
   JOYSTICK_INFO joystickStruct;
   joystickInfo.ToStruct(joystickStruct);
 
-  unsigned int      featureCount = 0;
+  unsigned int featureCount = 0;
   JOYSTICK_FEATURE* pFeatures = nullptr;
 
-  LogError(retVal = m_struct.toAddon.get_features(&m_struct, &joystickStruct, strControllerId.c_str(),
-                                                  &featureCount, &pFeatures), "GetFeatures()");
+  LogError(retVal = m_struct.toAddon.get_features(
+               &m_struct, &joystickStruct, strControllerId.c_str(), &featureCount, &pFeatures),
+           "GetFeatures()");
 
   kodi::addon::Joystick::FreeStruct(joystickStruct);
 
@@ -555,8 +586,9 @@ bool CPeripheralAddon::MapFeature(const CPeripheral* device,
   JOYSTICK_FEATURE addonFeature;
   feature.ToStruct(addonFeature);
 
-  LogError(retVal = m_struct.toAddon.map_features(&m_struct, &joystickStruct, strControllerId.c_str(),
-                                                  1, &addonFeature), "MapFeatures()");
+  LogError(retVal = m_struct.toAddon.map_features(&m_struct, &joystickStruct,
+                                                  strControllerId.c_str(), 1, &addonFeature),
+           "MapFeatures()");
 
   kodi::addon::Joystick::FreeStruct(joystickStruct);
   kodi::addon::JoystickFeature::FreeStruct(addonFeature);
@@ -585,8 +617,9 @@ bool CPeripheralAddon::GetIgnoredPrimitives(const CPeripheral* device, Primitive
   unsigned int primitiveCount = 0;
   JOYSTICK_DRIVER_PRIMITIVE* pPrimitives = nullptr;
 
-  LogError(retVal = m_struct.toAddon.get_ignored_primitives(&m_struct, &joystickStruct, &primitiveCount,
-                                                            &pPrimitives), "GetIgnoredPrimitives()");
+  LogError(retVal = m_struct.toAddon.get_ignored_primitives(&m_struct, &joystickStruct,
+                                                            &primitiveCount, &pPrimitives),
+           "GetIgnoredPrimitives()");
 
   kodi::addon::Joystick::FreeStruct(joystickStruct);
 
@@ -601,10 +634,10 @@ bool CPeripheralAddon::GetIgnoredPrimitives(const CPeripheral* device, Primitive
   }
 
   return false;
-
 }
 
-bool CPeripheralAddon::SetIgnoredPrimitives(const CPeripheral* device, const PrimitiveVector& primitives)
+bool CPeripheralAddon::SetIgnoredPrimitives(const CPeripheral* device,
+                                            const PrimitiveVector& primitives)
 {
   if (!m_bProvidesButtonMaps)
     return false;
@@ -627,7 +660,8 @@ bool CPeripheralAddon::SetIgnoredPrimitives(const CPeripheral* device, const Pri
   const unsigned int primitiveCount = static_cast<unsigned int>(primitives.size());
 
   LogError(retVal = m_struct.toAddon.set_ignored_primitives(&m_struct, &joystickStruct,
-    primitiveCount, addonPrimitives), "SetIgnoredPrimitives()");
+                                                            primitiveCount, addonPrimitives),
+           "SetIgnoredPrimitives()");
 
   kodi::addon::Joystick::FreeStruct(joystickStruct);
   kodi::addon::DriverPrimitives::FreeStructs(primitiveCount, addonPrimitives);
@@ -741,11 +775,12 @@ void CPeripheralAddon::UnregisterButtonMap(CPeripheral* device)
 {
   CSingleLock lock(m_buttonMapMutex);
 
-  m_buttonMaps.erase(std::remove_if(m_buttonMaps.begin(), m_buttonMaps.end(),
-    [device](const std::pair<CPeripheral*, JOYSTICK::IButtonMap*>& buttonMap)
-    {
-      return buttonMap.first == device;
-    }), m_buttonMaps.end());
+  m_buttonMaps.erase(
+      std::remove_if(m_buttonMaps.begin(), m_buttonMaps.end(),
+                     [device](const std::pair<CPeripheral*, JOYSTICK::IButtonMap*>& buttonMap) {
+                       return buttonMap.first == device;
+                     }),
+      m_buttonMaps.end());
 }
 
 void CPeripheralAddon::RefreshButtonMaps(const std::string& strDeviceName /* = "" */)
@@ -764,7 +799,8 @@ void CPeripheralAddon::TriggerDeviceScan()
   m_manager.TriggerDeviceScan(PERIPHERAL_BUS_ADDON);
 }
 
-unsigned int CPeripheralAddon::FeatureCount(const std::string &controllerId, JOYSTICK_FEATURE_TYPE type) const
+unsigned int CPeripheralAddon::FeatureCount(const std::string& controllerId,
+                                            JOYSTICK_FEATURE_TYPE type) const
 {
   using namespace GAME;
 
@@ -778,7 +814,8 @@ unsigned int CPeripheralAddon::FeatureCount(const std::string &controllerId, JOY
   return count;
 }
 
-JOYSTICK_FEATURE_TYPE CPeripheralAddon::FeatureType(const std::string &controllerId, const std::string &featureName) const
+JOYSTICK_FEATURE_TYPE CPeripheralAddon::FeatureType(const std::string& controllerId,
+                                                    const std::string& featureName) const
 {
   using namespace GAME;
 
@@ -792,7 +829,8 @@ JOYSTICK_FEATURE_TYPE CPeripheralAddon::FeatureType(const std::string &controlle
   return type;
 }
 
-void CPeripheralAddon::GetPeripheralInfo(const CPeripheral* device, kodi::addon::Peripheral& peripheralInfo)
+void CPeripheralAddon::GetPeripheralInfo(const CPeripheral* device,
+                                         kodi::addon::Peripheral& peripheralInfo)
 {
   peripheralInfo.SetType(CPeripheralAddonTranslator::TranslateType(device->Type()));
   peripheralInfo.SetName(device->DeviceName());
@@ -800,7 +838,8 @@ void CPeripheralAddon::GetPeripheralInfo(const CPeripheral* device, kodi::addon:
   peripheralInfo.SetProductID(device->ProductId());
 }
 
-void CPeripheralAddon::GetJoystickInfo(const CPeripheral* device, kodi::addon::Joystick& joystickInfo)
+void CPeripheralAddon::GetJoystickInfo(const CPeripheral* device,
+                                       kodi::addon::Joystick& joystickInfo)
 {
   GetPeripheralInfo(device, joystickInfo);
 
@@ -814,15 +853,15 @@ void CPeripheralAddon::GetJoystickInfo(const CPeripheral* device, kodi::addon::J
     joystickInfo.SetMotorCount(joystick->MotorCount());
     joystickInfo.SetSupportsPowerOff(joystick->SupportsPowerOff());
   }
-  else if (device->Type() == PERIPHERAL_KEYBOARD ||
-           device->Type() == PERIPHERAL_MOUSE)
+  else if (device->Type() == PERIPHERAL_KEYBOARD || device->Type() == PERIPHERAL_MOUSE)
   {
     joystickInfo.SetName(GetDeviceName(device->Type())); // Override name with non-localized version
     joystickInfo.SetProvider(GetProvider(device->Type()));
   }
 }
 
-void CPeripheralAddon::SetJoystickInfo(CPeripheralJoystick& joystick, const kodi::addon::Joystick& joystickInfo)
+void CPeripheralAddon::SetJoystickInfo(CPeripheralJoystick& joystick,
+                                       const kodi::addon::Joystick& joystickInfo)
 {
   joystick.SetProvider(joystickInfo.Provider());
   joystick.SetRequestedPort(joystickInfo.RequestedPort());
@@ -833,12 +872,12 @@ void CPeripheralAddon::SetJoystickInfo(CPeripheralJoystick& joystick, const kodi
   joystick.SetSupportsPowerOff(joystickInfo.SupportsPowerOff());
 }
 
-bool CPeripheralAddon::LogError(const PERIPHERAL_ERROR error, const char *strMethod) const
+bool CPeripheralAddon::LogError(const PERIPHERAL_ERROR error, const char* strMethod) const
 {
   if (error != PERIPHERAL_NO_ERROR)
   {
-    CLog::Log(LOGERROR, "PERIPHERAL - %s - addon '%s' returned an error: %s",
-        strMethod, Name().c_str(), CPeripheralAddonTranslator::TranslateError(error));
+    CLog::Log(LOGERROR, "PERIPHERAL - %s - addon '%s' returned an error: %s", strMethod,
+              Name().c_str(), CPeripheralAddonTranslator::TranslateError(error));
     return false;
   }
   return true;
@@ -882,7 +921,9 @@ void CPeripheralAddon::cb_trigger_scan(void* kodiInstance)
   static_cast<CPeripheralAddon*>(kodiInstance)->TriggerDeviceScan();
 }
 
-void CPeripheralAddon::cb_refresh_button_maps(void* kodiInstance, const char* deviceName, const char* controllerId)
+void CPeripheralAddon::cb_refresh_button_maps(void* kodiInstance,
+                                              const char* deviceName,
+                                              const char* controllerId)
 {
   if (!kodiInstance)
     return;
@@ -890,7 +931,9 @@ void CPeripheralAddon::cb_refresh_button_maps(void* kodiInstance, const char* de
   static_cast<CPeripheralAddon*>(kodiInstance)->RefreshButtonMaps(deviceName ? deviceName : "");
 }
 
-unsigned int CPeripheralAddon::cb_feature_count(void* kodiInstance, const char* controllerId, JOYSTICK_FEATURE_TYPE type)
+unsigned int CPeripheralAddon::cb_feature_count(void* kodiInstance,
+                                                const char* controllerId,
+                                                JOYSTICK_FEATURE_TYPE type)
 {
   if (kodiInstance == nullptr || controllerId == nullptr)
     return 0;
@@ -898,7 +941,9 @@ unsigned int CPeripheralAddon::cb_feature_count(void* kodiInstance, const char* 
   return static_cast<CPeripheralAddon*>(kodiInstance)->FeatureCount(controllerId, type);
 }
 
-JOYSTICK_FEATURE_TYPE CPeripheralAddon::cb_feature_type(void* kodiInstance, const char* controllerId, const char* featureName)
+JOYSTICK_FEATURE_TYPE CPeripheralAddon::cb_feature_type(void* kodiInstance,
+                                                        const char* controllerId,
+                                                        const char* featureName)
 {
   if (kodiInstance == nullptr || controllerId == nullptr || featureName == nullptr)
     return JOYSTICK_FEATURE_TYPE_UNKNOWN;
