@@ -160,8 +160,11 @@ std::string CReversiblePlayback::CreateSavestate()
 
   savestate->Finalize();
 
-  if (!m_savestateDatabase->AddSavestate(m_gameClient->GetGamePath(), *savestate))
+  if (!m_savestateDatabase->AddSavestate(m_loadedSavestatePath, m_gameClient->GetGamePath(),
+                                         *savestate))
+  {
     return "";
+  }
 
   return m_gameClient->GetGamePath();
 }
@@ -175,6 +178,8 @@ bool CReversiblePlayback::LoadSavestate(const std::string& path)
     return false;
 
   bool bSuccess = false;
+
+  m_loadedSavestatePath = path;
 
   std::unique_ptr<ISavestate> savestate = m_savestateDatabase->CreateSavestate();
   if (m_savestateDatabase->GetSavestate(path, *savestate) &&

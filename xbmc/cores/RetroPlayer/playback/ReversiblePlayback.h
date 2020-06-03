@@ -90,6 +90,7 @@ private:
 
   // Savestate functionality
   std::unique_ptr<CSavestateDatabase> m_savestateDatabase;
+  std::string m_loadedSavestatePath{};
 
   // Playback stats
   uint64_t m_totalFrameCount;

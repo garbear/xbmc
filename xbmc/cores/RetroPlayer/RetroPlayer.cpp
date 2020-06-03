@@ -154,7 +154,7 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
     CSavestateDatabase savestateDb;
 
     std::unique_ptr<ISavestate> save = savestateDb.CreateSavestate();
-    if (savestateDb.GetSavestate(fileCopy.GetPath(), *save))
+    if (savestateDb.GetSavestate(savestatePath, *save))
     {
       // Check if game client is the same
       if (save->GameClientID() != m_gameClient->ID())
@@ -180,7 +180,7 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
     MESSAGING::CApplicationMessenger::GetInstance().PostMsg(TMSG_SWITCHTOFULLSCREEN);
 
     // Initialize gameplay
-    CreatePlayback(m_gameServices.GameSettings().AutosaveEnabled());
+    CreatePlayback(m_gameServices.GameSettings().AutosaveEnabled(), savestatePath);
     RegisterWindowCallbacks();
     m_playbackControl.reset(new CGUIPlaybackControl(*this));
     m_callback.OnPlayBackStarted(fileCopy);
@@ -551,7 +551,7 @@ void CRetroPlayer::OnSpeedChange(double newSpeed)
   m_processInfo->SetSpeed(static_cast<float>(newSpeed));
 }
 
-void CRetroPlayer::CreatePlayback(bool bRestoreState)
+void CRetroPlayer::CreatePlayback(bool bRestoreState, const std::string& savestatePath)
 {
   if (m_gameClient->RequiresGameLoop())
   {
@@ -569,7 +569,7 @@ void CRetroPlayer::CreatePlayback(bool bRestoreState)
     {
       CLog::Log(LOGDEBUG, "RetroPlayer[SAVE]: Loading savestate");
 
-      if (!SetPlayerState(m_gameClient->GetGamePath()))
+      if (!SetPlayerState(savestatePath))
         CLog::Log(LOGERROR, "RetroPlayer[SAVE]: Failed to load savestate");
     }
   }
