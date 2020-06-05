@@ -33,6 +33,7 @@ class CGUIRenderHandle;
 class CGUIRenderTarget;
 class IGameCallback;
 class IRenderCallback;
+class IPlayback;
 
 /*!
  * \brief Class to safely route commands between the GUI and RetroPlayer
@@ -139,6 +140,12 @@ protected:
   // Functions exposed to CGUIGameSettingsHandle
   void UnregisterHandle(CGUIGameSettingsHandle* handle) {}
   std::string GameClientID();
+  std::string GetPlayingGame();
+  std::string CreateSavestate();
+  void ResetLoadedSave();
+  bool LoadSavestate(const std::string& path);
+  void ResetGame();
+  void CloseOSD();
 
 private:
   /*!

@@ -210,6 +210,60 @@ std::string CGUIGameRenderManager::GameClientID()
   return "";
 }
 
+std::string CGUIGameRenderManager::GetPlayingGame()
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    return m_gameCallback->GetPlayingGame();
+
+  return "";
+}
+
+std::string CGUIGameRenderManager::CreateSavestate()
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    return m_gameCallback->CreateSavestate();
+
+  return "";
+}
+
+void CGUIGameRenderManager::ResetLoadedSave()
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    m_gameCallback->ResetLoadedSave();
+}
+
+bool CGUIGameRenderManager::LoadSavestate(const std::string& path)
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    return m_gameCallback->LoadSavestate(path);
+
+  return false;
+}
+
+void CGUIGameRenderManager::ResetGame()
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    m_gameCallback->ResetGame();
+}
+
+void CGUIGameRenderManager::CloseOSD()
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    m_gameCallback->CloseOSDCallback();
+}
+
 void CGUIGameRenderManager::UpdateRenderTargets()
 {
   if (m_factory != nullptr)
