@@ -7,11 +7,6 @@
  */
 
 #include "GUIDialogSelectGameClient.h"
-#include "ServiceBroker.h"
-#include "addons/AddonInstaller.h"
-#include "addons/AddonManager.h"
-#include "cores/RetroPlayer/savestates/ISavestate.h"
-#include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "dialogs/GUIDialogSelect.h"
 #include "filesystem/AddonsDirectory.h"
 #include "games/addons/GameClient.h"
@@ -19,7 +14,6 @@
 #include "guilib/GUIWindowManager.h"
 #include "guilib/LocalizeStrings.h"
 #include "guilib/WindowIDs.h"
-#include "messaging/helpers/DialogOKHelper.h"
 #include "utils/StringUtils.h"
 #include "utils/URIUtils.h"
 #include "utils/log.h"
@@ -38,21 +32,6 @@ std::string CGUIDialogSelectGameClient::ShowAndGetGameClient(const std::string& 
 
   std::string extension = URIUtils::GetExtension(gamePath);
 
-  // Load savestate
-  RETRO::CSavestateDatabase db;
-  std::unique_ptr<RETRO::ISavestate> save = db.CreateSavestate();
-
-  CLog::Log(LOGDEBUG, "Select game client dialog: Loading savestate metadata");
-  const bool bLoaded = db.GetSavestate(gamePath, *save);
-
-  // Get savestate game client
-  std::string saveGameClient;
-  if (bLoaded)
-  {
-    saveGameClient = save->GameClientID();
-    CLog::Log(LOGDEBUG, "Select game client dialog: Auto-selecting %s", saveGameClient.c_str());
-  }
-
   // "Select emulator for {0:s}"
   CGUIDialogSelect* dialog =
       GetDialog(StringUtils::Format(g_localizeStrings.Get(35258), extension));
@@ -65,8 +44,6 @@ std::string CGUIDialogSelectGameClient::ShowAndGetGameClient(const std::string& 
     {
       CFileItemPtr item(XFILE::CAddonsDirectory::FileItemFromAddon(candidate, candidate->ID()));
       item->SetLabel2(g_localizeStrings.Get(35257)); // "Installed"
-      if (item->GetPath() == saveGameClient)
-        item->SetLabel2(item->GetLabel2() + ", " + g_localizeStrings.Get(35259)); // "Saved"
       items.Add(std::move(item));
     }
     for (const auto& addon : installable)
@@ -80,12 +57,6 @@ std::string CGUIDialogSelectGameClient::ShowAndGetGameClient(const std::string& 
     items.Append(installableItems);
 
     dialog->SetItems(items);
-
-    for (int i = 0; i < items.Size(); i++)
-    {
-      if (items[i]->GetPath() == saveGameClient)
-        dialog->SetSelected(i);
-    }
 
     dialog->Open();
 
@@ -101,14 +72,6 @@ std::string CGUIDialogSelectGameClient::ShowAndGetGameClient(const std::string& 
         CLog::Log(LOGDEBUG, "Select game client dialog: User selected emulator %s",
                   gameClient.c_str());
 
-        if (Install(gameClient))
-        {
-          // If the addon is disabled we need to enable it
-          if (!Enable(gameClient))
-            CLog::Log(LOGDEBUG, "Failed to enable game client %s", gameClient.c_str());
-        }
-        else
-          CLog::Log(LOGDEBUG, "Failed to install game client: %s", gameClient.c_str());
       }
       else
       {
@@ -123,36 +86,6 @@ std::string CGUIDialogSelectGameClient::ShowAndGetGameClient(const std::string& 
   }
 
   return gameClient;
-}
-
-bool CGUIDialogSelectGameClient::Install(const std::string& gameClient)
-{
-  // If the addon isn't installed we need to install it
-  bool bInstalled = CServiceBroker::GetAddonMgr().IsAddonInstalled(gameClient);
-  if (!bInstalled)
-  {
-    ADDON::AddonPtr installedAddon;
-    bInstalled = CAddonInstaller::GetInstance().InstallModal(gameClient, installedAddon, false);
-    if (!bInstalled)
-    {
-      CLog::Log(LOGERROR, "Select game client dialog: Failed to install %s", gameClient.c_str());
-      // "Error"
-      // "Failed to install add-on."
-      HELPERS::ShowOKDialogText(257, 35256);
-    }
-  }
-
-  return bInstalled;
-}
-
-bool CGUIDialogSelectGameClient::Enable(const std::string& gameClient)
-{
-  bool bSuccess = true;
-
-  if (CServiceBroker::GetAddonMgr().IsAddonDisabled(gameClient))
-    bSuccess = CServiceBroker::GetAddonMgr().EnableAddon(gameClient);
-
-  return bSuccess;
 }
 
 CGUIDialogSelect* CGUIDialogSelectGameClient::GetDialog(const std::string& title)

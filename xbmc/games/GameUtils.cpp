@@ -11,6 +11,7 @@
 #include "ServiceBroker.h"
 #include "URL.h"
 #include "addons/Addon.h"
+#include "addons/AddonInstaller.h"
 #include "addons/AddonManager.h"
 #include "addons/BinaryAddonCache.h"
 #include "filesystem/SpecialProtocol.h"
@@ -18,6 +19,7 @@
 #include "games/dialogs/GUIDialogSelectGameClient.h"
 #include "games/tags/GameInfoTag.h"
 #include "messaging/helpers/DialogOKHelper.h"
+#include "utils/log.h"
 #include "utils/StringUtils.h"
 #include "utils/URIUtils.h"
 
@@ -68,6 +70,25 @@ bool CGameUtils::FillInGameClient(CFileItem& item, bool bPrompt)
           item.GetGameInfoTag()->SetGameClient(gameClient);
       }
     }
+  }
+
+  const std::string gameClient = item.GetGameInfoTag()->GetGameClient();
+  if (gameClient.empty())
+    return false;
+
+  if (Install(gameClient))
+  {
+    // If the addon is disabled we need to enable it
+    if (!Enable(gameClient))
+    {
+      CLog::Log(LOGDEBUG, "Failed to enable game client %s", gameClient.c_str());
+      item.GetGameInfoTag()->SetGameClient("");
+    }
+  }
+  else
+  {
+    CLog::Log(LOGDEBUG, "Failed to install game client: %s", gameClient.c_str());
+    item.GetGameInfoTag()->SetGameClient("");
   }
 
   return !item.GetGameInfoTag()->GetGameClient().empty();
@@ -241,4 +262,34 @@ bool CGameUtils::IsStandaloneGame(const ADDON::AddonPtr& addon)
   }
 
   return false;
+}
+
+bool CGameUtils::Install(const std::string& gameClient)
+{
+  // If the addon isn't installed we need to install it
+  bool bInstalled = CServiceBroker::GetAddonMgr().IsAddonInstalled(gameClient);
+  if (!bInstalled)
+  {
+    ADDON::AddonPtr installedAddon;
+    bInstalled = CAddonInstaller::GetInstance().InstallModal(gameClient, installedAddon, false);
+    if (!bInstalled)
+    {
+      CLog::Log(LOGERROR, "Game utils: Failed to install %s", gameClient.c_str());
+      // "Error"
+      // "Failed to install add-on."
+      MESSAGING::HELPERS::ShowOKDialogText(257, 35256);
+    }
+  }
+
+  return bInstalled;
+}
+
+bool CGameUtils::Enable(const std::string& gameClient)
+{
+  bool bSuccess = true;
+
+  if (CServiceBroker::GetAddonMgr().IsAddonDisabled(gameClient))
+    bSuccess = CServiceBroker::GetAddonMgr().EnableAddon(gameClient);
+
+  return bSuccess;
 }
