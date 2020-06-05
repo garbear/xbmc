@@ -1036,7 +1036,10 @@ msgctxt "#222"
 msgid "Cancel"
 msgstr ""
 
-#empty string with id 223
+#: xbmc/games/dialogs/GUIDialogSelectSavestate.cpp
+msgctxt "#223"
+msgid "New"
+msgstr ""
 
 msgctxt "#224"
 msgid "Speed"
@@ -17573,7 +17576,13 @@ msgctxt "#35258"
 msgid "Select emulator for {0:s} file"
 msgstr ""
 
-#empty strings from id 35259 to 35401
+#. Title of the dialog to select a savestate for the current game
+#: xbmc/games/dialogs/GUIDialogSelectSavestate.cpp
+msgctxt "#35259"
+msgid "Select savestate"
+msgstr ""
+
+#empty strings from id 35260 to 35401
 
 msgctxt "#35402"
 msgid "Replicates the 2.6-inch dot matrix screen of the Game Boy. Features the ghosting problems of the original handheld."

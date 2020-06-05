@@ -69,9 +69,13 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
 {
   CFileItem fileCopy(file);
 
-  // When playing a game, set the game client that we'll use to open the game
-  // Currently this may prompt the user, the goal is to figure this out silently
-  if (!GAME::CGameUtils::FillInGameClient(fileCopy, true))
+  std::string savestatePath;
+
+  // When playing a game, set the game client that we'll use to open the game.
+  // This will prompt the user to select a savestate if there are any.
+  // If there are no savestates, or the user wants to create a new savestate
+  // it will prompt the user to select a game client
+  if (!GAME::CGameUtils::FillInGameClient(fileCopy, savestatePath))
   {
     CLog::Log(LOGINFO,
               "RetroPlayer[PLAYER]: No compatible game client selected, aborting playback");

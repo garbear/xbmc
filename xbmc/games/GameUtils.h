@@ -30,14 +30,17 @@ class CGameUtils
 {
 public:
   /*!
-   * \brief Set the game client property, possibly via prompt, for the given item
+   * \brief Set the game client property, prompt the user for a savestate if there are any
+   * (savestates store the information of which game client created it).
+   * If there are no savestates or the user wants a new savestate, prompt the user
+   * for a game client.
    *
    * \param item The item with or without a game client in its info tag
-   * \param prompt If true and no game client was resolved, prompt the user for one
+   * \param savestatePath Output. The path to the savestate selected. Empty if new savestate was selected
    *
    * \return True if the item has a valid game client ID in its info tag
    */
-  static bool FillInGameClient(CFileItem& item, bool bPrompt);
+  static bool FillInGameClient(CFileItem& item, std::string& savestatePath);
 
   /*!
    * \brief Check if the file extension is supported by an add-on in
