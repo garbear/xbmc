@@ -70,6 +70,12 @@ public:
 
   // Implementation of IGameCallback
   std::string GameClientID() const override;
+  std::string GetPlayingGame() const override;
+  // std::string CreateSavestate() override;
+  void ResetLoadedSave() override;
+  bool LoadSavestate(const std::string& path) override;
+  void ResetGame() override;
+  void CloseOSDCallback() override;
 
   // Implementation of IPlaybackCallback
   void SetPlaybackSpeed(double speed) override;
@@ -89,7 +95,7 @@ private:
   void OnSpeedChange(double newSpeed);
 
   // Playback functions
-  void CreatePlayback(bool bRestoreState);
+  void CreatePlayback(bool bRestoreState, const std::string& savestatePath);
   void ResetPlayback();
 
   /*!

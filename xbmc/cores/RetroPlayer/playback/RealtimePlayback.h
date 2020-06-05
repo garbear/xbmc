@@ -33,6 +33,7 @@ public:
   void PauseAsync() override {}
   std::string CreateSavestate() override { return ""; }
   bool LoadSavestate(const std::string& path) override { return false; }
+  void ResetLoadedSave() override {}
 };
 } // namespace RETRO
 } // namespace KODI
