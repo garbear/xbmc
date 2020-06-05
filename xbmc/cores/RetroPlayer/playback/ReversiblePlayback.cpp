@@ -166,7 +166,7 @@ std::string CReversiblePlayback::CreateSavestate()
     return "";
   }
 
-  return m_gameClient->GetGamePath();
+  return m_loadedSavestatePath;
 }
 
 bool CReversiblePlayback::LoadSavestate(const std::string& path)
