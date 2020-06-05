@@ -9,6 +9,7 @@
 #include "ReversiblePlayback.h"
 
 #include "ServiceBroker.h"
+#include "cores/RetroPlayer/rendering/RPRenderManager.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "cores/RetroPlayer/streams/memory/DeltaPairMemoryStream.h"
@@ -27,9 +28,11 @@ using namespace RETRO;
 #define REWIND_FACTOR 0.25 // Rewind at 25% of gameplay speed
 
 CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
+                                         CRPRenderManager& renderManager,
                                          double fps,
                                          size_t serializeSize)
   : m_gameClient(gameClient),
+    m_renderManager(renderManager),
     m_gameLoop(this, fps),
     m_savestateDatabase(new CSavestateDatabase),
     m_totalFrameCount(0),
@@ -108,7 +111,7 @@ void CReversiblePlayback::PauseAsync()
   m_gameLoop.PauseAsync();
 }
 
-std::string CReversiblePlayback::CreateSavestate()
+std::string CReversiblePlayback::CreateSavestate(bool autosave /* = true*/)
 {
   const size_t memorySize = m_gameClient->SerializeSize();
 
@@ -122,8 +125,14 @@ std::string CReversiblePlayback::CreateSavestate()
     return "";
   }
 
-  const CDateTime now = CDateTime::GetCurrentDateTime();
-  const std::string label = now.GetAsLocalizedDateTime();
+  std::string label = "";
+  if (!m_autosavePath.empty())
+  {
+    std::unique_ptr<ISavestate> loadedSavestate = m_savestateDatabase->CreateSavestate();
+    if (m_savestateDatabase->GetSavestate(m_autosavePath, *loadedSavestate))
+      label = loadedSavestate->Label();
+  }
+  const CDateTime nowUTC = CDateTime::GetUTCDateTime();
   const std::string gameFileName = URIUtils::GetFileName(m_gameClient->GetGamePath());
   const uint64_t timestampFrames = m_totalFrameCount;
   const double timestampWallClock =
@@ -136,7 +145,7 @@ std::string CReversiblePlayback::CreateSavestate()
 
   savestate->SetType(SAVE_TYPE::AUTO);
   savestate->SetLabel(label);
-  savestate->SetCreated(now);
+  savestate->SetCreated(nowUTC);
   savestate->SetGameFileName(gameFileName);
   savestate->SetTimestampFrames(timestampFrames);
   savestate->SetTimestampWallClock(timestampWallClock);
@@ -161,10 +170,22 @@ std::string CReversiblePlayback::CreateSavestate()
 
   savestate->Finalize();
 
-  if (!m_savestateDatabase->AddSavestate(m_gameClient->GetGamePath(), *savestate))
+  std::string savePath;
+  if (autosave)
+    savePath = m_autosavePath;
+ 
+  if (!m_savestateDatabase->AddSavestate(savePath, m_gameClient->GetGamePath(),
+                                         *savestate))
+  {
     return "";
+  }
 
-  return m_gameClient->GetGamePath();
+  m_renderManager.SaveThumbnail(m_savestateDatabase->MakeThumbnailPath(savePath));
+
+  if (autosave)
+    m_autosavePath = savePath;
+
+  return savePath;
 }
 
 bool CReversiblePlayback::LoadSavestate(const std::string& path)
@@ -194,6 +215,7 @@ bool CReversiblePlayback::LoadSavestate(const std::string& path)
     if (m_gameClient->Deserialize(savestate->GetMemoryData(), memorySize))
     {
       m_totalFrameCount = savestate->TimestampFrames();
+      m_autosavePath = path;
       bSuccess = true;
     }
   }

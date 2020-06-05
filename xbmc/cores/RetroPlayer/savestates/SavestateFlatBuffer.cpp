@@ -140,14 +140,14 @@ CDateTime CSavestateFlatBuffer::Created() const
   CDateTime created;
 
   if (m_savestate != nullptr && m_savestate->created())
-    created.SetFromRFC1123DateTime(m_savestate->created()->c_str());
+    created.SetFromW3CDateTime(m_savestate->created()->c_str());
 
   return created;
 }
 
 void CSavestateFlatBuffer::SetCreated(const CDateTime& created)
 {
-  m_createdOffset.reset(new StringOffset{m_builder->CreateString(created.GetAsRFC1123DateTime())});
+  m_createdOffset.reset(new StringOffset{m_builder->CreateString(created.GetAsW3CDateTime(true))});
 }
 
 std::string CSavestateFlatBuffer::GameFileName() const
