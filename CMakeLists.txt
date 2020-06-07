@@ -261,6 +261,7 @@ set(optional_deps Alsa
                   CEC>=4.0.0
                   Dav1d
                   DBus
+                  #Filecoin
                   Iso9660pp
                   LCMS2
                   Libp2p

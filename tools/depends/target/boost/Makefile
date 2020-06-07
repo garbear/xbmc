@@ -28,7 +28,14 @@ ARCHIVE=$(SOURCE).tar.gz
 #     * program_options
 #     * random
 #
-BOOST_LIBRARIES=filesystem,program_options,random
+#   filecoin:
+#     * date_time
+#     * filesystem
+#     * iostreams
+#     * random
+#     * thread
+#
+BOOST_LIBRARIES=date_time,filesystem,iostreams,program_options,random,thread
 
 # The generated library
 LIBDYLIB=$(PLATFORM)/stage/lib/libboost_system.a
