@@ -130,6 +130,7 @@ set(required_deps ASS
                   CrossGUID
                   Curl
                   FFMPEG
+                  Filecoin
                   FlatBuffers
                   Fmt
                   FreeType
