@@ -1,0 +1,36 @@
+From ba68d36f369ee8088ff454cb125729f4f510c447 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Tue, 15 Feb 2022 10:46:07 -0800
+Subject: [PATCH] CMake: Fix build error
+
+Error was:
+
+  CMake Error at src/CMakeLists.txt:57 (target_link_libraries):
+    The keyword signature for target_link_libraries has already been used with
+    the target "civetweb-c-library".  All uses of target_link_libraries with a
+    target must be either all-keyword or all-plain.
+
+    The uses of the keyword signature are here:
+
+     * src/CMakeLists.txt:34 (target_link_libraries)
+     * src/CMakeLists.txt:42 (target_link_libraries)
+---
+ src/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0f5874c..1a45bcf 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -54,7 +54,7 @@ if (CIVETWEB_ENABLE_SSL)
+   if (CIVETWEB_ENABLE_SSL_DYNAMIC_LOADING)
+     find_package(LibDl)
+     if (LIBDL_FOUND)
+-      target_link_libraries(civetweb-c-library -ldl)
++      target_link_libraries(civetweb-c-library PUBLIC -ldl)
+     endif()
+   else()
+     hunter_add_package(OpenSSL)
+-- 
+2.30.2
+

@@ -1,0 +1,38 @@
+From c1887d6eaa9c99dbbe958b631057388716a0d618 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <eigendebugger@gmail.com>
+Date: Tue, 15 Feb 2022 18:11:46 -0800
+Subject: [PATCH] CMake: Add install target
+
+---
+ CMakeLists.txt     | 7 +++++++
+ src/CMakeLists.txt | 2 ++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8909187..92b3282 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,3 +15,10 @@ include_directories(
+ )
+ 
+ add_subdirectory(src)
++
++install(FILES
++    include/secp256k1_ecdh.h
++    include/secp256k1.h
++    include/secp256k1_recovery.h
++    DESTINATION include
++)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c700f1f..a3ae2ab 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -7,3 +7,5 @@ add_library(libsecp256k1
+     gen_context.c
+     secp256k1.c
+     )
++
++install(TARGETS libsecp256k1 DESTINATION lib)
+-- 
+2.30.2
+
