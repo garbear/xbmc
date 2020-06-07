@@ -72,6 +72,21 @@ DEPENDS += \
   sqlite-modern-cpp \
   yaml-cpp
 
+# Filecoin dependencies
+DEPENDS += \
+  civetweb \
+  cppcodec \
+  filecoin \
+  filecoin-ffi \
+  indicators \
+  jwt-cpp \
+  leveldb \
+  libarchive \
+  libsecp256k1 \
+  md5 \
+  prometheus-cpp \
+  tinycbor \
+
 ifeq ($(ENABLE_GPLV3),yes)
   DEPENDS+=samba-gplv3 libcdio-gplv3
 else
@@ -164,6 +179,8 @@ DEPENDS := $(filter-out $(EXCLUDED_DEPENDS),$(DEPENDS))
 
 all: .installed-$(PLATFORM)
 
+civetweb: md5
+
 EXCLUDE := linux-system-gl-libs linux-system-x11-libs
 DOWNLOAD_DEPS := $(filter-out $(EXCLUDE:%=%), $(DEPENDS))
 DOWNLOAD_TARGETS := $(addprefix download/, $(DOWNLOAD_DEPS))
@@ -177,6 +194,27 @@ crossguid: $(LIBUUID)
 curl: openssl nghttp2 $(ZLIB)
 dbus: expat
 ffmpeg: $(ICONV) $(ZLIB) bzip2 gnutls dav1d $(LIBVA)
+filecoin: \
+  boost \
+  boost-di \
+  civetweb \
+  cppcodec \
+  curl \
+  filecoin-ffi \
+  gsl \
+  hat-trie \
+  indicators \
+  jwt-cpp \
+  leveldb \
+  libarchive \
+  libp2p \
+  libsecp256k1 \
+  libspdlog \
+  md5 \
+  openssl \
+  prometheus-cpp \
+  protobuf \
+  tinycbor
 fontconfig: freetype2 expat $(ICONV) $(LIBUUID)
 freetype2: bzip2 harfbuzz $(ZLIB)
 gettext: $(ICONV)
