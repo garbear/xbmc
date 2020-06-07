@@ -1,22 +1,37 @@
-include ../../Makefile.include
-include BOOST-VERSION
-include ../../download-files.include
+################################################################################
+# Boost C++ Libraries
+#
+#   https://www.boost.org/
+#   SPDX-License-Identifier: BSL-1.0
+#
+# Boost is a set of libraries for the C++ programming language that provide
+# support for common tasks.
+#
+################################################################################
 
-DEPS := \
-  ../../download-files.include \
-  ../../Makefile.include \
-  BOOST-VERSION \
-  Makefile \
+-include ../../Makefile.include
+DEPS = ../../Makefile.include Makefile
+
+# lib name, version
+LIBNAME=boost
+VERSION=1.74.0-p0
+#SOURCE=$(LIBNAME)_$(shell echo $(VERSION) | tr "." "_")
+SOURCE=v$(VERSION)
+ARCHIVE=$(SOURCE).tar.gz
 
 # The comma-separated list of boost libraries to build
 #
 # Dependency graph:
 #
-#   libtorrent:
-#     * json
-#     * system
+#   libp2p:
+#     * filesystem
+#     * program_options
+#     * random
 #
-BOOST_LIBRARIES=json,system
+BOOST_LIBRARIES=filesystem,program_options,random
+
+# The generated library
+LIBDYLIB=$(PLATFORM)/stage/lib/libboost_system.a
 
 # Boost build options
 BOOST_OPTIONS := \
@@ -32,36 +47,52 @@ else
   BOOST_OPTIONS += variant=release
 endif
 
-BOOST_OPTIONS += toolset=gcc-cross
-ifneq (,$(findstring arm64,$(CPU)))
-  BOOST_OPTIONS += architecture=arm address-model=64
-else ifneq (,$(findstring arm,$(CPU)))
-  BOOST_OPTIONS += architecture=arm address-model=32
-else ifeq ($(CPU),i686)
-  BOOST_OPTIONS += architecture=x86 address-model=32
-else ifeq ($(CPU),x86_64)
-  BOOST_OPTIONS += architecture=x86 address-model=64
+ifeq ($(CROSS_COMPILING), yes)
+  DEPS += ../../Makefile.include
+
+  BOOST_OPTIONS += toolset=gcc-cross
+  ifneq (,$(findstring arm64,$(CPU)))
+    BOOST_OPTIONS += architecture=arm address-model=64
+  else ifneq (,$(findstring arm,$(CPU)))
+    BOOST_OPTIONS += architecture=arm address-model=32
+  else ifeq ($(CPU),i686)
+    BOOST_OPTIONS += architecture=x86 address-model=32
+  else ifeq ($(CPU),x86_64)
+    BOOST_OPTIONS += architecture=x86 address-model=64
+  endif
+
+  # TODO: FreeBSD (verify), iOS, tvOS
+  ifeq ($(OS),linux)
+    BOOST_OPTIONS += target-os=linux
+  else ifeq ($(OS),android)
+    BOOST_OPTIONS += target-os=android
+  else ifeq ($(OS),osx)
+    BOOST_OPTIONS += target-os=darwin
+  else ifeq ($(OS),freebsd)
+    BOOST_OPTIONS += target-os=freebsd
+  endif
+else
+  ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+  ifeq ($(PLATFORM),)
+    PLATFORM = native
+    TARBALLS_LOCATION = $(ROOT_DIR)
+    BASE_URL := http://mirrors.kodi.tv/build-deps/sources
+    RETRIEVE_TOOL := curl -Ls --create-dirs -f -O
+    ARCHIVE_TOOL := tar --strip-components=1 -xf
+  endif
 endif
 
-# TODO: FreeBSD (verify), iOS, tvOS
-ifeq ($(OS),linux)
-  BOOST_OPTIONS += target-os=linux
-else ifeq ($(OS),android)
-  BOOST_OPTIONS += target-os=android
-else ifeq ($(OS),osx)
-  BOOST_OPTIONS += target-os=darwin
-else ifeq ($(OS),freebsd)
-  BOOST_OPTIONS += target-os=freebsd
-endif
-
-# The generated library
-LIBDYLIB=$(PLATFORM)/$(BYPRODUCT)
-
-.PHONY: .installed-native
+# TODO
+#BASE_URL := https://dl.bintray.com/boostorg/release/$(VERSION)/source
+BASE_URL=https://github.com/cpp-pm/boost/archive
 
 all: .installed-$(PLATFORM)
 
-$(PLATFORM): $(TARBALLS_LOCATION)/$(ARCHIVE).$(HASH_TYPE) $(DEPS)
+$(TARBALLS_LOCATION)/$(ARCHIVE):
+	cd $(TARBALLS_LOCATION); $(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
+
+$(PLATFORM): $(TARBALLS_LOCATION)/$(ARCHIVE) $(DEPS)
 ifeq ($(PREFIX),)
 	@echo
 	@echo "ERROR: please set PREFIX to the kodi install path e.g. make PREFIX=/usr/local"
@@ -88,7 +119,7 @@ $(LIBDYLIB): $(PLATFORM)/b2
 	touch $@
 
 clean:
-	rm -f .installed-$(PLATFORM)
+	rm -rf .installed-$(PLATFORM)
 
-distclean:
+distclean::
 	rm -rf $(PLATFORM) .installed-$(PLATFORM)

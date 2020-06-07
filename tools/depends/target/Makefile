@@ -59,6 +59,19 @@ DEPENDS = \
   usrsctp \
   xz
 
+# libp2p dependencies
+DEPENDS += \
+  boost \
+  boost-di \
+  c-ares \
+  gsl \
+  hat-trie \
+  libp2p \
+  protobuf \
+  soralog \
+  sqlite-modern-cpp \
+  yaml-cpp
+
 ifeq ($(ENABLE_GPLV3),yes)
   DEPENDS+=samba-gplv3 libcdio-gplv3
 else
@@ -179,6 +192,16 @@ libevdev: libudev
 libgcrypt: libgpg-error
 libinput: mtdev libevdev
 libmicrohttpd: gnutls libgcrypt libgpg-error
+libp2p: \
+  boost \
+  boost-di \
+  c-ares \
+  gsl \
+  hat-trie \
+  openssl \
+  protobuf \
+  soralog \
+  sqlite-modern-cpp
 libplist: $(ZLIB)
 libpng: $(ZLIB)
 libqrencode: $(ICONV) libpng $(ZLIB)
@@ -192,11 +215,14 @@ mariadb: openssl $(ICONV) $(ZLIB)
 mesa: libdrm $(MESA_DEPS) $(ZLIB)
 nettle: gmp
 openssl: $(ZLIB)
+protobuf: $(ZLIB)
 python3: expat gettext libxml2 sqlite3 openssl libffi bzip2 xz $(ICONV)
 pythonmodule-pil: bzip2 $(PYMODULE_DEPS) $(ZLIB) libjpeg-turbo libpng freetype2 python3 pythonmodule-setuptools
 pythonmodule-pycryptodome: $(PYMODULE_DEPS) python3 pythonmodule-setuptools
 pythonmodule-setuptools: $(PYMODULE_DEPS) python3
 samba-gplv3: gnutls $(ZLIB)
+soralog: fmt yaml-cpp
+sqlite-modern-cpp: sqlite3
 taglib: $(ZLIB)
 wayland: expat libffi
 waylandpp: wayland $(WAYLANDPP_DEPS)

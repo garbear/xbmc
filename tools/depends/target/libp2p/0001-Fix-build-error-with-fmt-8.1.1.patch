@@ -1,0 +1,38 @@
+From 3c3b80765a373c033c79bd510671713d42de3275 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Thu, 10 Feb 2022 19:32:33 -0800
+Subject: [PATCH] Fix build error with fmt 8.1.1
+
+Error was:
+
+  multiselect_instance.cpp:347:7:   required from here
+  fmt/core.h:3061:52: error: static assertion failed: passing views as lvalues is disallowed
+   3059 |         detail::count<
+        |         ~~~~~~~~~~~~~~
+   3060 |             (std::is_base_of<detail::view, remove_reference_t<Args>>::value &&
+        |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   3061 |              std::is_reference<Args>::value)...>() == 0,
+        |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+
+fixup! Fix build error
+---
+ src/protocol_muxer/multiselect/multiselect_instance.cpp | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/protocol_muxer/multiselect/multiselect_instance.cpp b/src/protocol_muxer/multiselect/multiselect_instance.cpp
+index 3653391..816690e 100644
+--- a/src/protocol_muxer/multiselect/multiselect_instance.cpp
++++ b/src/protocol_muxer/multiselect/multiselect_instance.cpp
+@@ -344,8 +344,7 @@ namespace libp2p::protocol_muxer::multiselect {
+         return boost::none;
+       }
+ 
+-      SL_DEBUG(log(), "Failed to negotiate protocols: {}",
+-               fmt::join(protocols_.begin(), protocols_.end(), ", "));
++      SL_DEBUG(log(), "Failed to negotiate protocols");
+       return MaybeResult(ProtocolMuxer::Error::NEGOTIATION_FAILED);
+     }
+ 
+-- 
+2.30.2
+
