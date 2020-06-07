@@ -76,6 +76,22 @@ const std::string LOCALHOST_MULTIADDRESS = "/ip4/127.0.0.1/tcp/40010/ipfs";
 
 //#include <memory>
 
+// Filecoin
+#include "filesystem/Directory.h"
+#include "filesystem/SpecialProtocol.h"
+#include "profiles/ProfileManager.h"
+#include "utils/log.h"
+
+//#include <storage/ipfs/datastore.hpp>
+#include <filecoin/common/outcome.hpp>
+#include <leveldb/options.h>
+#include <libp2p/crypto/sha/sha256.hpp>
+#include <libp2p/multi/hash_type.hpp>
+#include <libp2p/multi/multicodec_type.hpp>
+#include <libp2p/multi/multihash.hpp>
+#include <filecoin/storage/repository/impl/filesystem_repository.hpp>
+#include <filecoin/crypto/blake2/blake2b160.hpp>
+
 using namespace KODI;
 using namespace GAME;
 
@@ -876,6 +892,138 @@ void RunGossip()
   CLog::Log(LOGDEBUG, "Node stopped");
 }
 
+/*!
+ * \brief Get the CID of a raw chunk of data
+ */
+fc::outcome::result<fc::CID> getCidOf(gsl::span<const uint8_t> bytes)
+{
+  using fc::CID;
+  using libp2p::common::Hash256;
+  using libp2p::multi::HashType;
+  using libp2p::multi::MulticodecType;
+  using libp2p::multi::Multihash;
+
+  Hash256 hash_raw = libp2p::crypto::sha256(bytes);
+  fc::outcome::result<Multihash> hashResult = Multihash::create(HashType::sha256, hash_raw);
+
+  if (hashResult)
+    return CID(CID::Version::V1, MulticodecType::RAW, hashResult.value());
+  else
+    return hashResult.error();
+}
+
+void RunFilecoinTest(const std::string& dataStorePath)
+{
+  using fc::CID;
+  using fc::common::Buffer;
+  using fc::outcome::result;
+  using fc::storage::ipfs::IpfsDatastore;
+  using fc::storage::repository::FileSystemRepository;
+  using fc::storage::repository::Repository;
+  using libp2p::multi::HashType;
+  using libp2p::multi::MulticodecType;
+  using libp2p::multi::Multihash;
+
+  // Ensure data store path exists exists
+  if (!XFILE::CDirectory::Exists(dataStorePath))
+  {
+    CLog::Log(LOGDEBUG, "Creating data store path: {}", dataStorePath);
+    XFILE::CDirectory::Create(dataStorePath);
+  }
+
+  std::string apiAddress; // TODO
+  leveldb::Options leveldbOptions{};
+  leveldbOptions.create_if_missing = true;
+
+  result<std::shared_ptr<Repository>> repoResult = FileSystemRepository::create(dataStorePath, apiAddress, leveldbOptions);
+  if (!repoResult)
+  {
+    CLog::Log(LOGERROR, "Failed to open data store: {}", repoResult.error().message());
+    return;
+  }
+
+  std::shared_ptr<Repository> repo = repoResult.value();
+  result<unsigned int> versionResult = repo->getVersion();
+  if (!versionResult)
+  {
+    CLog::Log(LOGERROR, "Can't get data store version");
+    return;
+  }
+
+  CLog::Log(LOGDEBUG, "Opened data store at version: {}", versionResult.value());
+
+  std::shared_ptr<IpfsDatastore> datastore = repo->getIpldStore();
+
+  CID cid1{
+      CID::Version::V1,
+      MulticodecType::SHA2_256,
+      Multihash::create(HashType::sha256,
+                        "0123456789ABCDEF0123456789ABCDEF"_unhex).value()
+  };
+  CID cid2{
+      CID::Version::V1,
+      MulticodecType::SHA2_256,
+      Multihash::create(HashType::sha256,
+                        "FEDCBA9876543210FEDCBA9876543210"_unhex).value()
+  };
+
+  Buffer value{"0123456789ABCDEF0123456789ABCDEF"_unhex};
+
+  if (!datastore->set(cid1, value))
+  {
+    CLog::Log(LOGERROR, "Failed to set value in data store");
+    return;
+  }
+  CLog::Log(LOGDEBUG, "Successfully set value in data store");
+
+  result<Buffer> valueResult = datastore->get(cid1);
+  if (!valueResult)
+  {
+    CLog::Log(LOGERROR, "Failed to get value from data store");
+    return;
+  }
+  CLog::Log(LOGDEBUG, "Successfully retrieved value from data store");
+
+  const Buffer& buffer = valueResult.value();
+
+  if (buffer == value)
+    CLog::Log(LOGDEBUG, "Values equal! Value: {}, Size: {}", buffer.toHex(), buffer.toVector().size());
+  else
+    CLog::Log(LOGERROR, "Values diverge!");
+
+  std::vector<uint8_t> data{2, 3};
+
+  result<CID> cidResult = getCidOf(data);
+  if (!cidResult)
+  {
+    CLog::Log(LOGERROR, "Error encoding CID: {}", cidResult.error().message());
+    return;
+  }
+
+  const CID& key = cidResult.value();
+
+  CLog::Log(LOGERROR, "Encoded CID: {}", key.toPrettyString(MULTIBASE_IDENTITY));
+
+  auto setResult = datastore->set(key, Buffer(std::move(data)));
+  if (!setResult)
+  {
+    CLog::Log(LOGERROR, "Failed to store data: {}", setResult.error().message());
+    return;
+  }
+
+  result<Buffer> getResult = datastore->get(key);
+  if (!getResult)
+  {
+    CLog::Log(LOGERROR, "Failed to retrieve data: {}", getResult.error().message());
+    return;
+  }
+
+  const auto& dataResult = getResult.value();
+
+  CLog::Log(LOGDEBUG, "Data size: {}", dataResult.size());
+  CLog::Log(LOGDEBUG, "Data: {}", dataResult[0]);
+}
+
 CGameServices::CGameServices(CControllerManager& controllerManager,
                              RETRO::CGUIGameRenderManager& renderManager,
                              PERIPHERALS::CPeripherals& peripheralManager,
@@ -974,6 +1122,10 @@ CGameServices::CGameServices(CControllerManager& controllerManager,
 
   // Gossip example
   RunGossip();
+
+  // Filecoin test
+  const std::string dataStorePath = CSpecialProtocol::TranslatePath(profileManager.GetDataStoreFolder());
+  RunFilecoinTest(dataStorePath);
 
   CLog::Log(LOGDEBUG, "Finished");
 }
