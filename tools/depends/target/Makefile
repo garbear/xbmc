@@ -68,6 +68,21 @@ DEPENDS += \
   sqlite-modern-cpp \
   yaml-cpp
 
+# Filecoin dependencies
+DEPENDS += \
+  civetweb \
+  cppcodec \
+  filecoin \
+  filecoin-ffi \
+  indicators \
+  jwt-cpp \
+  leveldb \
+  libarchive \
+  libsecp256k1 \
+  md5 \
+  prometheus-cpp \
+  tinycbor \
+
 ifeq ($(ENABLE_GPLV3),yes)
   DEPENDS+=samba-gplv3 libcdio-gplv3
 else
@@ -141,11 +156,33 @@ endif
 
 all: .installed-$(PLATFORM)
 
+civetweb: md5
 crossguid: $(LIBUUID)
 curl: openssl nghttp2
 dav1d: meson-cross-file
 dbus: expat
 ffmpeg: $(ICONV) $(ZLIB) bzip2 gnutls dav1d $(LIBVA)
+filecoin: \
+  boost \
+  boost-di \
+  civetweb \
+  cppcodec \
+  curl \
+  filecoin-ffi \
+  gsl \
+  hat-trie \
+  indicators \
+  jwt-cpp \
+  leveldb \
+  libarchive \
+  libp2p \
+  libsecp256k1 \
+  libspdlog \
+  md5 \
+  openssl \
+  prometheus-cpp \
+  protobuf \
+  tinycbor
 fontconfig: freetype2 expat $(ICONV) $(LIBUUID) meson-cross-file
 freetype2: bzip2 harfbuzz $(ZLIB)
 fribidi: meson-cross-file
