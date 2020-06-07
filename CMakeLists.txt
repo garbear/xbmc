@@ -62,6 +62,7 @@ option(ENABLE_AIRTUNES    "Enable AirTunes support?" ON)
 option(ENABLE_OPTICAL     "Enable optical support?" ON)
 option(ENABLE_PYTHON      "Enable python support?" ON)
 option(ENABLE_TESTING     "Enable testing support?" ON)
+option(ENABLE_LIBP2P      "Enable libp2p support?" OFF) # TODO: Change on ON
 option(ENABLE_LIBTORRENT  "Enable libtorrent support?" ON)
 
 # Internal Depends - supported on all platforms
@@ -124,6 +125,9 @@ if(NOT CMAKE_GENERATOR MATCHES "Visual Studio" AND NOT CMAKE_GENERATOR STREQUAL 
 else()
   set(ENABLE_STATIC_LIBS FALSE)
 endif()
+
+# Find Boost static libraries
+set(Boost_USE_STATIC_LIBS ON)
 
 core_find_git_rev(APP_SCMID FULL)
 
@@ -221,12 +225,14 @@ set(optional_deps Alsa
                   Avahi
                   Bluetooth
                   Bluray
+                  Boost
                   CAP
                   CEC
                   Dav1d
                   DBus
                   Iso9660pp
                   LCMS2
+                  Libp2p
                   LircClient
                   MDNS
                   MicroHttpd
@@ -237,6 +243,7 @@ set(optional_deps Alsa
                   Python
                   SmbClient
                   Sndio
+                  #soralog
                   UDEV
                   Udfread
                   XSLT
@@ -278,6 +285,10 @@ endif()
 
 if(ENABLE_LIBTORRENT)
   list(APPEND DEP_DEFINES "-DHAS_LIBTORRENT")
+endif()
+
+if(ENABLE_LIBP2P)
+  list(APPEND DEP_DEFINES "-DHAS_LIBP2P=1")
 endif()
 
 # find all folders containing addon.xml.in
