@@ -1,0 +1,35 @@
+From 91611bc8e3f6a903783a2b8d6d2e0a602b280307 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Sat, 12 Feb 2022 00:11:18 -0800
+Subject: [PATCH] Fix build error if DEBUG is defined
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Error was:
+
+  soralog/level.hpp:25:10: error: expected identifier before ‘,’ token
+     25 |     DEBUG,     /// Message for debug
+        |          ^
+---
+ include/soralog/level.hpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/include/soralog/level.hpp b/include/soralog/level.hpp
+index 70c2095..90b01b6 100644
+--- a/include/soralog/level.hpp
++++ b/include/soralog/level.hpp
+@@ -10,6 +10,10 @@
+ #include <cstddef>
+ #include <cstdint>
+ 
++#ifdef DEBUG
++#undef DEBUG
++#endif
++
+ namespace soralog {
+ 
+   /**
+-- 
+2.30.2
+

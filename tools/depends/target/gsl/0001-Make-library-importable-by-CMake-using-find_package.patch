@@ -1,0 +1,61 @@
+From b8bce02032fcc6a8847a3e627e6793dfee721d52 Mon Sep 17 00:00:00 2001
+From: Stefan Reinhold <sre@informatik.uni-kiel.de>
+Date: Tue, 17 Jul 2018 10:23:44 +0200
+Subject: [PATCH 1/4] Make library importable by CMake using find_package
+
+---
+ CMakeLists.txt | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0348f79..370f228 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,9 @@ project(GSL CXX)
+ include(ExternalProject)
+ find_package(Git)
+ 
++# Use GNUInstallDirs to provide the right locations on all platforms
++include(GNUInstallDirs)
++
+ # creates a library GSL which is an interface (header files only)
+ add_library(GSL INTERFACE)
+ 
+@@ -57,12 +60,14 @@ if(GSL_STANDALONE_PROJECT)
+         $<BUILD_INTERFACE:
+             ${CMAKE_CURRENT_SOURCE_DIR}/include
+         >
++        $<INSTALL_INTERFACE:include>
+     )
+ else()
+     target_include_directories(GSL SYSTEM INTERFACE
+         $<BUILD_INTERFACE:
+             ${CMAKE_CURRENT_SOURCE_DIR}/include
+         >
++        $<INSTALL_INTERFACE:include>
+     )
+ endif()
+ 
+@@ -82,10 +87,18 @@ if (CMAKE_VERSION VERSION_GREATER 3.7.8)
+     endif()
+ endif()
+ 
++install(TARGETS GSL EXPORT GSLConfig
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++)
+ install(
+     DIRECTORY include/gsl
+-    DESTINATION include
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ )
++# Make library importable by other projects
++install(EXPORT GSLConfig DESTINATION share/GSL/cmake)
++export(TARGETS GSL FILE GSLConfig.cmake)
+ 
+ option(GSL_TEST "Generate tests." ${GSL_STANDALONE_PROJECT})
+ if (GSL_TEST)
+-- 
+2.30.2
+

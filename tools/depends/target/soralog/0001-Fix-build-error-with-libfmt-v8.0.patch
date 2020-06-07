@@ -1,0 +1,38 @@
+From 8ed685e4ea1cbb65d40b377656bd4532dc6c5feb Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Mon, 14 Feb 2022 23:09:56 -0800
+Subject: [PATCH] Fix build error with libfmt v8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Error was:
+
+  sink_to_console.cpp: In function ‘void soralog::{anonymous}::put_reset_style(char*&)’:
+  sink_to_console.cpp:65:47: error: ‘reset_color’ is not a member of ‘fmt::v8::detail::data’
+     65 |       const auto &style = fmt_internal::data::reset_color;
+        |                                               ^~~~~~~~~~~
+---
+ src/impl/sink_to_console.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/impl/sink_to_console.cpp b/src/impl/sink_to_console.cpp
+index 36b3f8f..a6d81cf 100644
+--- a/src/impl/sink_to_console.cpp
++++ b/src/impl/sink_to_console.cpp
+@@ -62,10 +62,12 @@ namespace soralog {
+     };
+ 
+     void put_reset_style(char *&ptr) {
++      /*
+       const auto &style = fmt_internal::data::reset_color;
+       auto size = std::end(style) - std::begin(style) - 1;
+       std::memcpy(ptr, std::begin(style), size);
+       ptr = ptr + size;  // NOLINT
++      */
+     }
+ 
+     void put_level_style(char *&ptr, Level level) {
+-- 
+2.30.2
+

@@ -1,0 +1,29 @@
+From 4b022066afae210bb7dbc173aa8c428bf770a369 Mon Sep 17 00:00:00 2001
+From: Hannes Steffenhagen <LeExarmatio@gmail.com>
+Date: Sat, 8 Feb 2020 12:58:25 +0000
+Subject: [PATCH 2/4] Add Microsoft.GSL::GSL alias for GSL
+
+This ensures that dependents can be agnostic about
+whether GSL was added via `add_subdirectory` or `find_package`
+---
+ CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 370f228..09f6777 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -100,6 +100,10 @@ install(
+ install(EXPORT GSLConfig DESTINATION share/GSL/cmake)
+ export(TARGETS GSL FILE GSLConfig.cmake)
+ 
++# Add Microsoft.GSL::GSL alias for GSL so that dependents can be agnostic about
++# whether GSL was added via `add_subdirectory` or `find_package`
++add_library(Microsoft.GSL::GSL ALIAS GSL)
++
+ option(GSL_TEST "Generate tests." ${GSL_STANDALONE_PROJECT})
+ if (GSL_TEST)
+ 	enable_testing()
+-- 
+2.30.2
+

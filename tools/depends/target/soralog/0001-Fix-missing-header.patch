@@ -1,0 +1,33 @@
+From 039128d26db1816fd5ed9a8f70df457d9cd7fa7b Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Thu, 10 Feb 2022 19:19:20 -0800
+Subject: [PATCH] Fix missing header
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Error was:
+
+  event.hpp: In constructor ‘soralog::Event::Event(std::string_view, ThreadInfoType, soralog::Level, std::string_view, const Args& ...)’:
+  event.hpp:74:12: error: ‘copy_n’ is not a member of ‘std’; did you mean ‘copy’?
+     74 |       std::copy_n(name.begin(), name_size_, name_.begin());
+        |            ^~~~~~
+---
+ include/soralog/event.hpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/soralog/event.hpp b/include/soralog/event.hpp
+index 3bf3922..1400257 100644
+--- a/include/soralog/event.hpp
++++ b/include/soralog/event.hpp
+@@ -6,6 +6,7 @@
+ #ifndef SORALOG_EVENT
+ #define SORALOG_EVENT
+ 
++#include <algorithm>
+ #include <chrono>
+ #include <cstring>
+ #include <string_view>
+-- 
+2.30.2
+

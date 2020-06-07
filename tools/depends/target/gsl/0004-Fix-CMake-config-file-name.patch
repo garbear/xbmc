@@ -1,0 +1,36 @@
+From a37333337a7a23f5289fcc5665ec23869cdfdf23 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Tue, 15 Feb 2022 18:41:05 -0800
+Subject: [PATCH 4/4] Fix CMake config file name
+
+---
+ CMakeLists.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0a070bf..f1379cc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,7 +87,7 @@ if (CMAKE_VERSION VERSION_GREATER 3.7.8)
+     endif()
+ endif()
+ 
+-install(TARGETS GSL EXPORT GSLConfig
++install(TARGETS GSL EXPORT Microsoft.GSLConfig
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+@@ -97,8 +97,8 @@ install(
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ )
+ # Make library importable by other projects
+-install(EXPORT GSLConfig DESTINATION share/GSL/cmake)
+-export(TARGETS GSL FILE GSLConfig.cmake)
++install(EXPORT Microsoft.GSLConfig DESTINATION share/cmake/Microsoft.GSL)
++export(TARGETS GSL FILE Microsoft.GSLConfig.cmake)
+ 
+ # Add find_package() versioning support. The version for
+ # generated Microsoft.GSLConfigVersion.cmake will be used from
+-- 
+2.30.2
+

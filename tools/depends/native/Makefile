@@ -27,6 +27,7 @@ NATIVE= \
   pcre \
   perlmodule-parseyapp \
   pkg-config \
+  protobuf \
   python3 \
   setuptools \
   swig \
@@ -70,6 +71,7 @@ Mako: MarkupSafe
 meson: python3 setuptools
 ninja: meson
 openssl: zlib
+protobuf: zlib
 pugixml: cmake
 python3: $(EXPAT) $(LIBFFI) pkg-config zlib openssl autoconf-archive
 setuptools: python3
