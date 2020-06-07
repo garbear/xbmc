@@ -85,6 +85,9 @@ else()
   set(ENABLE_STATIC_LIBS FALSE)
 endif()
 
+# Find Boost static libraries
+set(Boost_USE_STATIC_LIBS ON)
+
 core_find_git_rev(APP_SCMID FULL)
 
 # Dynamically loaded libraries built with the project
@@ -122,6 +125,7 @@ endforeach()
 
 # Required dependencies. Keep in alphabetical order please
 set(required_deps ASS
+                  Boost
                   Cdio
                   CrossGUID
                   Curl
@@ -133,6 +137,7 @@ set(required_deps ASS
                   fstrcmp
                   Iconv
                   LibDvd
+                  Libp2p
                   Lzo2
                   OpenSSL>=1.0.2
                   PCRE

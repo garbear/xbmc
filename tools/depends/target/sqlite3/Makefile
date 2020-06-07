@@ -3,9 +3,12 @@ DEPS= ../../Makefile.include Makefile sqlite3.c.patch
 
 # lib name, version
 LIBNAME=sqlite
-VERSION=3260000
-SOURCE=$(LIBNAME)-autoconf-$(VERSION)
+VERSION=v3.27.2-p0
+SOURCE=$(VERSION)
 ARCHIVE=$(SOURCE).tar.gz
+
+# TODO
+BASE_URL=https://github.com/hunter-packages/sqlite3/archive
 
 # configuration settings
 export CXXFLAGS+=-DSQLITE_ENABLE_COLUMN_METADATA=1
@@ -14,7 +17,14 @@ CONFIGURE=cp -f $(CONFIG_SUB) $(CONFIG_GUESS) .; \
           ./configure --prefix=$(PREFIX) --disable-shared \
   --enable-threadsafe --disable-readline \
 
-LIBDYLIB=$(PLATFORM)/.libs/lib$(LIBNAME)3.a
+# The build directory
+BUILDDIR=$(PLATFORM)/build
+
+LIBDYLIB=$(BUILDDIR)/lib$(LIBNAME)3.a
+
+CMAKE_OPTIONS := \
+  -DCMAKE_INSTALL_PREFIX=$(PREFIX) \
+  $(CMAKE_OPTIONS)
 
 all: .installed-$(PLATFORM)
 
@@ -28,16 +38,14 @@ $(PLATFORM): $(TARBALLS_LOCATION)/$(ARCHIVE) $(DEPS)
 ifneq ($(OS),android)
 	cd $(PLATFORM); patch -p1 -i ../sqlite3.c.patch
 endif
-	# do not build the program sqlite3
-	sed -ie "s|bin_PROGRAMS = sqlite3||" "$(PLATFORM)/Makefile.am";
-	cd $(PLATFORM); $(AUTORECONF) -vif
-	cd $(PLATFORM); $(CONFIGURE)
 
 $(LIBDYLIB): $(PLATFORM)
-	$(MAKE) -C $(PLATFORM)
+	mkdir -p $(BUILDDIR)
+	cd $(BUILDDIR); $(CMAKE) $(CMAKE_OPTIONS) ..
+	$(MAKE) -C $(BUILDDIR)
 
 .installed-$(PLATFORM): $(LIBDYLIB)
-	$(MAKE) -C $(PLATFORM) install
+	$(MAKE) -C $(BUILDDIR) install
 	touch $@
 
 clean:

@@ -17,6 +17,19 @@ DEPENDS = \
 	libxslt ffmpeg crossguid libudfread \
 	libdvdread libdvdnav libdvdcss p8-platform flatbuffers dav1d
 
+# libp2p dependencies
+DEPENDS += \
+  boost \
+  boost-di \
+  c-ares \
+  gsl \
+  hat-trie \
+  libp2p \
+  protobuf \
+  soralog \
+  sqlite-modern-cpp \
+  yaml-cpp \
+
 ifeq ($(ENABLE_GPLV3),yes)
   DEPENDS+=samba-gplv3 libcdio-gplv3
 else
@@ -125,6 +138,19 @@ libspdlog: libfmt
 libdrm: meson-cross-file
 mesa: libdrm meson-cross-file $(MESA_DEPS)
 libva: libdrm $(LIBVA_DEPS)
+protobuf: $(ZLIB)
+soralog: libfmt yaml-cpp
+sqlite-modern-cpp: sqlite3
+libp2p: \
+  boost \
+  boost-di \
+  c-ares \
+  gsl \
+  hat-trie \
+  openssl \
+  protobuf \
+  soralog \
+  sqlite-modern-cpp
 
 .installed-$(PLATFORM): $(DEPENDS)
 	touch $@

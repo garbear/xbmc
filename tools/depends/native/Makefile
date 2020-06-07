@@ -11,7 +11,8 @@ NATIVE= m4 gettext heimdal autoconf automake \
         libpng libjpeg-turbo liblzo2 giflib \
         setuptools distutilscross JsonSchemaBuilder TexturePacker \
         flatbuffers \
-        meson ninja
+        meson ninja \
+        protobuf \
 
 
 ifeq ($(OS),darwin_embedded)
@@ -43,6 +44,7 @@ libjpeg-turbo: cmake yasm
 libpng: zlib automake
 meson: python3 setuptools
 ninja: meson
+protobuf: zlib
 swig: pcre
 distutilscross: python3
 tar: xz automake
