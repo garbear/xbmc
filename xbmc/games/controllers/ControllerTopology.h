@@ -38,21 +38,27 @@ public:
    *
    * \return The port's ID, e.g. "1", as a string
    */
-  const std::string &ID() const { return m_portId; }
+  const std::string& ID() const
+  {
+    return m_portId;
+  }
 
   /*!
    * \brief Get the controllers that can connect to this port
    *
    * \return A list of controllers that are physically compatible with this port
    */
-  const std::vector<std::string> &Accepts() const { return m_accepts; }
+  const std::vector<std::string>& Accepts() const
+  {
+    return m_accepts;
+  }
 
   /*!
    * \brief Check if the controller is compatible with this port
    *
    * \return True if the controller is accepted, false otherwise
    */
-  bool IsCompatible(const std::string &controllerId) const;
+  bool IsCompatible(const std::string& controllerId) const;
 
   bool Deserialize(const TiXmlElement* pElement);
 
@@ -83,14 +89,20 @@ public:
    *
    * \return True if the controller can provide player input, false otherwise
    */
-  bool ProvidesInput() const { return m_bProvidesInput; }
+  bool ProvidesInput() const
+  {
+    return m_bProvidesInput;
+  }
 
   /*!
    * \brief Get a list of ports provided by this controller
    *
    * \return The ports
    */
-  const std::vector<CControllerPort> &Ports() const { return m_ports; }
+  const std::vector<CControllerPort>& Ports() const
+  {
+    return m_ports;
+  }
 
   bool Deserialize(const TiXmlElement* pElement);
 
@@ -99,5 +111,5 @@ private:
   std::vector<CControllerPort> m_ports;
 };
 
-}
-}
+} // namespace GAME
+} // namespace KODI

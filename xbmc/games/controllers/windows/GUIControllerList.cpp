@@ -15,45 +15,50 @@
 #include "GUIControllerDefines.h"
 #include "GUIControllerWindow.h"
 #include "GUIFeatureList.h"
+#include "ServiceBroker.h"
 #include "addons/AddonManager.h"
 #include "dialogs/GUIDialogYesNo.h"
-#include "games/addons/input/GameClientInput.h"
+#include "games/GameServices.h"
 #include "games/addons/GameClient.h"
-#include "games/controllers/types/ControllerTree.h"
+#include "games/addons/input/GameClientInput.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerIDs.h"
 #include "games/controllers/ControllerLayout.h"
 #include "games/controllers/guicontrols/GUIControllerButton.h"
 #include "games/controllers/guicontrols/GUIGameController.h"
-#include "games/GameServices.h"
-#include "guilib/GUIMessage.h"
+#include "games/controllers/types/ControllerTree.h"
 #include "guilib/GUIButtonControl.h"
 #include "guilib/GUIControlGroupList.h"
+#include "guilib/GUIMessage.h"
 #include "guilib/GUIWindow.h"
 #include "messaging/ApplicationMessenger.h"
 #include "peripherals/Peripherals.h"
 #include "utils/StringUtils.h"
-#include "ServiceBroker.h"
 
 using namespace KODI;
 using namespace ADDON;
 using namespace GAME;
 
-CGUIControllerList::CGUIControllerList(CGUIWindow* window, IFeatureList* featureList, GameClientPtr gameClient) :
-  m_guiWindow(window),
-  m_featureList(featureList),
-  m_controllerList(nullptr),
-  m_controllerButton(nullptr),
-  m_focusedController(-1), // Initially unfocused
-  m_gameClient(std::move(gameClient))
+CGUIControllerList::CGUIControllerList(CGUIWindow* window,
+                                       IFeatureList* featureList,
+                                       GameClientPtr gameClient)
+    : m_guiWindow(window)
+    , m_featureList(featureList)
+    , m_controllerList(nullptr)
+    , m_controllerButton(nullptr)
+    , m_focusedController(-1)
+    , // Initially unfocused
+    m_gameClient(std::move(gameClient))
 {
   assert(m_featureList != nullptr);
 }
 
 bool CGUIControllerList::Initialize(void)
 {
-  m_controllerList = dynamic_cast<CGUIControlGroupList*>(m_guiWindow->GetControl(CONTROL_CONTROLLER_LIST));
-  m_controllerButton = dynamic_cast<CGUIButtonControl*>(m_guiWindow->GetControl(CONTROL_CONTROLLER_BUTTON_TEMPLATE));
+  m_controllerList =
+      dynamic_cast<CGUIControlGroupList*>(m_guiWindow->GetControl(CONTROL_CONTROLLER_LIST));
+  m_controllerButton =
+      dynamic_cast<CGUIButtonControl*>(m_guiWindow->GetControl(CONTROL_CONTROLLER_BUTTON_TEMPLATE));
 
   if (m_controllerButton)
     m_controllerButton->SetVisible(false);
@@ -61,8 +66,7 @@ bool CGUIControllerList::Initialize(void)
   CServiceBroker::GetAddonMgr().Events().Subscribe(this, &CGUIControllerList::OnEvent);
   Refresh("");
 
-  return m_controllerList != nullptr &&
-         m_controllerButton != nullptr;
+  return m_controllerList != nullptr && m_controllerButton != nullptr;
 }
 
 void CGUIControllerList::Deinitialize(void)
@@ -94,11 +98,13 @@ bool CGUIControllerList::Refresh(const std::string& controllerId)
   if (m_controllerList)
   {
     unsigned int buttonId = 0;
-    for (ControllerVector::const_iterator it = m_controllers.begin(); it != m_controllers.end(); ++it)
+    for (ControllerVector::const_iterator it = m_controllers.begin(); it != m_controllers.end();
+         ++it)
     {
       const ControllerPtr& controller = *it;
 
-      CGUIButtonControl* pButton = new CGUIControllerButton(*m_controllerButton, controller->Layout().Label(), buttonId++);
+      CGUIButtonControl* pButton =
+          new CGUIControllerButton(*m_controllerButton, controller->Layout().Label(), buttonId++);
       m_controllerList->AddControl(pButton);
 
       if (!focusController.empty() && controller->ID() == focusController)
@@ -126,7 +132,8 @@ void CGUIControllerList::OnFocus(unsigned int controllerIndex)
     m_featureList->Load(controller);
 
     //! @todo Activate controller for all game controller controls
-    CGUIGameController* pController = dynamic_cast<CGUIGameController*>(m_guiWindow->GetControl(CONTROL_GAME_CONTROLLER));
+    CGUIGameController* pController =
+        dynamic_cast<CGUIGameController*>(m_guiWindow->GetControl(CONTROL_GAME_CONTROLLER));
     if (pController)
       pController->ActivateController(controller);
 
@@ -187,28 +194,28 @@ bool CGUIControllerList::RefreshControllers(void)
   // Filter by current game add-on
   if (m_gameClient)
   {
-    const CControllerTree &controllers = m_gameClient->Input().GetControllerTree();
+    const CControllerTree& controllers = m_gameClient->Input().GetControllerTree();
 
-    auto ControllerNotAccepted = [&controllers](const ControllerPtr &controller)
-      {
-        return !controllers.IsControllerAccepted(controller->ID());
-      };
+    auto ControllerNotAccepted = [&controllers](const ControllerPtr& controller) {
+      return !controllers.IsControllerAccepted(controller->ID());
+    };
 
     if (!std::all_of(newControllers.begin(), newControllers.end(), ControllerNotAccepted))
-      newControllers.erase(std::remove_if(newControllers.begin(), newControllers.end(), ControllerNotAccepted), newControllers.end());
+      newControllers.erase(
+          std::remove_if(newControllers.begin(), newControllers.end(), ControllerNotAccepted),
+          newControllers.end());
   }
 
   // Check for changes
   std::set<std::string> oldControllerIds;
   std::set<std::string> newControllerIds;
 
-  auto GetControllerID = [](const ControllerPtr& controller)
-    {
-      return controller->ID();
-    };
+  auto GetControllerID = [](const ControllerPtr& controller) { return controller->ID(); };
 
-  std::transform(m_controllers.begin(), m_controllers.end(), std::inserter(oldControllerIds, oldControllerIds.begin()), GetControllerID);
-  std::transform(newControllers.begin(), newControllers.end(), std::inserter(newControllerIds, newControllerIds.begin()), GetControllerID);
+  std::transform(m_controllers.begin(), m_controllers.end(),
+                 std::inserter(oldControllerIds, oldControllerIds.begin()), GetControllerID);
+  std::transform(newControllers.begin(), newControllers.end(),
+                 std::inserter(newControllerIds, newControllerIds.begin()), GetControllerID);
 
   const bool bChanged = (oldControllerIds != newControllerIds);
   if (bChanged)
@@ -217,13 +224,14 @@ bool CGUIControllerList::RefreshControllers(void)
 
     // Sort add-ons, with default controller first
     std::sort(m_controllers.begin(), m_controllers.end(),
-      [](const ControllerPtr& i, const ControllerPtr& j)
-      {
-        if (i->ID() == DEFAULT_CONTROLLER_ID && j->ID() != DEFAULT_CONTROLLER_ID) return true;
-        if (i->ID() != DEFAULT_CONTROLLER_ID && j->ID() == DEFAULT_CONTROLLER_ID) return false;
+              [](const ControllerPtr& i, const ControllerPtr& j) {
+                if (i->ID() == DEFAULT_CONTROLLER_ID && j->ID() != DEFAULT_CONTROLLER_ID)
+                  return true;
+                if (i->ID() != DEFAULT_CONTROLLER_ID && j->ID() == DEFAULT_CONTROLLER_ID)
+                  return false;
 
-        return StringUtils::CompareNoCase(i->Layout().Label(), j->Layout().Label()) < 0;
-      });
+                return StringUtils::CompareNoCase(i->Layout().Label(), j->Layout().Label()) < 0;
+              });
   }
 
   return bChanged;

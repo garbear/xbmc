@@ -8,48 +8,48 @@
 
 #include "DialogGameOSD.h"
 #include "DialogGameOSDHelp.h"
+#include "ServiceBroker.h"
 #include "games/GameServices.h"
 #include "games/GameSettings.h"
 #include "guilib/WindowIDs.h"
 #include "input/actions/Action.h"
 #include "input/actions/ActionIDs.h"
-#include "ServiceBroker.h"
 
 using namespace KODI;
 using namespace GAME;
 
-CDialogGameOSD::CDialogGameOSD() :
-  CGUIDialog(WINDOW_DIALOG_GAME_OSD, "GameOSD.xml"),
-  m_helpDialog(new CDialogGameOSDHelp(*this))
+CDialogGameOSD::CDialogGameOSD()
+    : CGUIDialog(WINDOW_DIALOG_GAME_OSD, "GameOSD.xml")
+    , m_helpDialog(new CDialogGameOSDHelp(*this))
 {
   // Initialize CGUIWindow
   m_loadType = KEEP_IN_MEMORY;
 }
 
-bool CDialogGameOSD::OnAction(const CAction &action)
+bool CDialogGameOSD::OnAction(const CAction& action)
 {
   switch (action.GetID())
   {
-    case ACTION_PARENT_DIR:
-    case ACTION_PREVIOUS_MENU:
-    case ACTION_NAV_BACK:
-    case ACTION_SHOW_OSD:
-    case ACTION_PLAYER_PLAY:
+  case ACTION_PARENT_DIR:
+  case ACTION_PREVIOUS_MENU:
+  case ACTION_NAV_BACK:
+  case ACTION_SHOW_OSD:
+  case ACTION_PLAYER_PLAY:
+  {
+    // Disable OSD help if visible
+    if (m_helpDialog->IsVisible() && CServiceBroker::IsServiceManagerUp())
     {
-      // Disable OSD help if visible
-      if (m_helpDialog->IsVisible() && CServiceBroker::IsServiceManagerUp())
+      GAME::CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
+      if (gameSettings.ShowOSDHelp())
       {
-        GAME::CGameSettings &gameSettings = CServiceBroker::GetGameServices().GameSettings();
-        if (gameSettings.ShowOSDHelp())
-        {
-          gameSettings.SetShowOSDHelp(false);
-          return true;
-        }
+        gameSettings.SetShowOSDHelp(false);
+        return true;
       }
-      break;
     }
-    default:
-      break;
+    break;
+  }
+  default:
+    break;
   }
 
   return CGUIDialog::OnAction(action);
@@ -70,7 +70,7 @@ void CDialogGameOSD::OnDeinitWindow(int nextWindowID)
 
   if (CServiceBroker::IsServiceManagerUp())
   {
-    GAME::CGameSettings &gameSettings = CServiceBroker::GetGameServices().GameSettings();
+    GAME::CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
     gameSettings.SetShowOSDHelp(false);
   }
 }

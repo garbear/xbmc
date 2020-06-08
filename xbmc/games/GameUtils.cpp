@@ -7,26 +7,26 @@
  */
 
 #include "GameUtils.h"
-#include "addons/Addon.h"
-#include "addons/AddonManager.h"
-#include "addons/BinaryAddonCache.h"
-#include "games/addons/GameClient.h"
-#include "games/dialogs/GUIDialogSelectGameClient.h"
-#include "games/tags/GameInfoTag.h"
-#include "filesystem/SpecialProtocol.h"
-#include "messaging/helpers/DialogOKHelper.h"
-#include "utils/StringUtils.h"
-#include "utils/URIUtils.h"
 #include "FileItem.h"
 #include "ServiceBroker.h"
 #include "URL.h"
+#include "addons/Addon.h"
+#include "addons/AddonManager.h"
+#include "addons/BinaryAddonCache.h"
+#include "filesystem/SpecialProtocol.h"
+#include "games/addons/GameClient.h"
+#include "games/dialogs/GUIDialogSelectGameClient.h"
+#include "games/tags/GameInfoTag.h"
+#include "messaging/helpers/DialogOKHelper.h"
+#include "utils/StringUtils.h"
+#include "utils/URIUtils.h"
 
 #include <algorithm>
 
 using namespace KODI;
 using namespace GAME;
 
-bool CGameUtils::FillInGameClient(CFileItem &item, bool bPrompt)
+bool CGameUtils::FillInGameClient(CFileItem& item, bool bPrompt)
 {
   using namespace ADDON;
 
@@ -47,12 +47,13 @@ bool CGameUtils::FillInGameClient(CFileItem &item, bool bPrompt)
 
       if (candidates.empty() && installable.empty())
       {
-        int errorTextId = bHasVfsGameClient ?
-            35214 : // "This game can only be played directly from a hard drive or partition. Compressed files must be extracted."
-            35212;  // "This game isn't compatible with any available emulators."
+        int errorTextId =
+            bHasVfsGameClient ? 35214 : // "This game can only be played directly from a hard drive
+                                        // or partition. Compressed files must be extracted."
+                35212; // "This game isn't compatible with any available emulators."
 
         // "Failed to play game"
-        KODI::MESSAGING::HELPERS::ShowOKDialogText(CVariant{ 35210 }, CVariant{ errorTextId });
+        KODI::MESSAGING::HELPERS::ShowOKDialogText(CVariant{35210}, CVariant{errorTextId});
       }
       else if (candidates.size() == 1 && installable.empty())
       {
@@ -61,7 +62,8 @@ bool CGameUtils::FillInGameClient(CFileItem &item, bool bPrompt)
       }
       else
       {
-        std::string gameClient = CGUIDialogSelectGameClient::ShowAndGetGameClient(item.GetPath(), candidates, installable);
+        std::string gameClient = CGUIDialogSelectGameClient::ShowAndGetGameClient(
+            item.GetPath(), candidates, installable);
         if (!gameClient.empty())
           item.GetGameInfoTag()->SetGameClient(gameClient);
       }
@@ -71,7 +73,10 @@ bool CGameUtils::FillInGameClient(CFileItem &item, bool bPrompt)
   return !item.GetGameInfoTag()->GetGameClient().empty();
 }
 
-void CGameUtils::GetGameClients(const CFileItem& file, GameClientVector& candidates, GameClientVector& installable, bool& bHasVfsGameClient)
+void CGameUtils::GetGameClients(const CFileItem& file,
+                                GameClientVector& candidates,
+                                GameClientVector& installable,
+                                bool& bHasVfsGameClient)
 {
   using namespace ADDON;
 
@@ -99,8 +104,7 @@ void CGameUtils::GetGameClients(const CFileItem& file, GameClientVector& candida
 
   // Sort by name
   //! @todo Move to presentation code
-  auto SortByName = [](const GameClientPtr& lhs, const GameClientPtr& rhs)
-  {
+  auto SortByName = [](const GameClientPtr& lhs, const GameClientPtr& rhs) {
     std::string lhsName = lhs->Name();
     std::string rhsName = rhs->Name();
 
@@ -114,14 +118,17 @@ void CGameUtils::GetGameClients(const CFileItem& file, GameClientVector& candida
   std::sort(installable.begin(), installable.end(), SortByName);
 }
 
-void CGameUtils::GetGameClients(const ADDON::VECADDONS& addons, const CURL& translatedUrl, GameClientVector& candidates, bool& bHasVfsGameClient)
+void CGameUtils::GetGameClients(const ADDON::VECADDONS& addons,
+                                const CURL& translatedUrl,
+                                GameClientVector& candidates,
+                                bool& bHasVfsGameClient)
 {
   bHasVfsGameClient = false;
 
   const std::string extension = URIUtils::GetExtension(translatedUrl.Get());
 
-  const bool bIsLocalFile = (translatedUrl.GetProtocol() == "file" ||
-                             translatedUrl.GetProtocol().empty());
+  const bool bIsLocalFile =
+      (translatedUrl.GetProtocol() == "file" || translatedUrl.GetProtocol().empty());
 
   for (auto& addon : addons)
   {
@@ -142,7 +149,7 @@ void CGameUtils::GetGameClients(const ADDON::VECADDONS& addons, const CURL& tran
   }
 }
 
-bool CGameUtils::HasGameExtension(const std::string &path)
+bool CGameUtils::HasGameExtension(const std::string& path)
 {
   using namespace ADDON;
 
@@ -221,16 +228,16 @@ bool CGameUtils::IsStandaloneGame(const ADDON::AddonPtr& addon)
 
   switch (addon->Type())
   {
-    case ADDON_GAMEDLL:
-    {
-      return std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsStandalone();
-    }
-    case ADDON_SCRIPT:
-    {
-      return addon->IsType(ADDON_GAME);
-    }
-    default:
-      break;
+  case ADDON_GAMEDLL:
+  {
+    return std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsStandalone();
+  }
+  case ADDON_SCRIPT:
+  {
+    return addon->IsType(ADDON_GAME);
+  }
+  default:
+    break;
   }
 
   return false;
