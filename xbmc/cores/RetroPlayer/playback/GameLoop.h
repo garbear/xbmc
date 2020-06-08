@@ -17,53 +17,59 @@ namespace KODI
 {
 namespace RETRO
 {
-  class IGameLoopCallback
+class IGameLoopCallback
+{
+public:
+  virtual ~IGameLoopCallback() = default;
+
+  /*!
+   * \brief The next frame is being shown
+   */
+  virtual void FrameEvent() = 0;
+
+  /*!
+   * \brief The prior frame is being shown
+   */
+  virtual void RewindEvent() = 0;
+};
+
+class CGameLoop : protected CThread
+{
+public:
+  CGameLoop(IGameLoopCallback* callback, double fps);
+
+  virtual ~CGameLoop();
+
+  void Start();
+  void Stop();
+
+  double FPS() const
   {
-  public:
-    virtual ~IGameLoopCallback() = default;
+    return m_fps;
+  }
 
-    /*!
-     * \brief The next frame is being shown
-     */
-    virtual void FrameEvent() = 0;
-
-    /*!
-     * \brief The prior frame is being shown
-     */
-    virtual void RewindEvent() = 0;
-  };
-
-  class CGameLoop : protected CThread
+  double GetSpeed() const
   {
-  public:
-    CGameLoop(IGameLoopCallback* callback, double fps);
+    return m_speedFactor;
+  }
+  void SetSpeed(double speedFactor);
+  void PauseAsync();
 
-    virtual ~CGameLoop();
+protected:
+  // implementation of CThread
+  virtual void Process() override;
 
-    void Start();
-    void Stop();
+private:
+  double FrameTimeMs() const;
+  double SleepTimeMs() const;
+  double NowMs() const;
 
-    double FPS() const { return m_fps; }
-
-    double GetSpeed() const { return m_speedFactor; }
-    void SetSpeed(double speedFactor);
-    void PauseAsync();
-
-  protected:
-    // implementation of CThread
-    virtual void Process() override;
-
-  private:
-    double FrameTimeMs() const;
-    double SleepTimeMs() const;
-    double NowMs() const;
-
-    IGameLoopCallback* const m_callback;
-    const double             m_fps;
-    std::atomic<double>      m_speedFactor;
-    double                   m_lastFrameMs;
-    mutable double           m_adjustTime;
-    CEvent                   m_sleepEvent;
-  };
-}
-}
+  IGameLoopCallback* const m_callback;
+  const double m_fps;
+  std::atomic<double> m_speedFactor;
+  double m_lastFrameMs;
+  mutable double m_adjustTime;
+  CEvent m_sleepEvent;
+};
+} // namespace RETRO
+} // namespace KODI

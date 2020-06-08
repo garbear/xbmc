@@ -16,9 +16,9 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRPStreamManager::CRPStreamManager(CRPRenderManager& renderManager, CRPProcessInfo& processInfo) :
-  m_renderManager(renderManager),
-  m_processInfo(processInfo)
+CRPStreamManager::CRPStreamManager(CRPRenderManager& renderManager, CRPProcessInfo& processInfo)
+    : m_renderManager(renderManager)
+    , m_processInfo(processInfo)
 {
 }
 
@@ -46,7 +46,7 @@ StreamPtr CRPStreamManager::CreateStream(StreamType streamType)
   }
   case StreamType::HW_BUFFER:
   {
-    //return StreamPtr(new CRetroPlayerHardware(m_renderManager, m_processInfo)); //! @todo
+    // return StreamPtr(new CRetroPlayerHardware(m_renderManager, m_processInfo)); //! @todo
   }
   default:
     break;

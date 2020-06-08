@@ -11,8 +11,8 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRPProcessInfoIOS::CRPProcessInfoIOS() :
-  CRPProcessInfo("iOS")
+CRPProcessInfoIOS::CRPProcessInfoIOS()
+    : CRPProcessInfo("iOS")
 {
 }
 

@@ -12,65 +12,74 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CGameWindowFullScreen;
-  class CGUIGameControl;
-  class CGUIGameRenderManager;
+class CGameWindowFullScreen;
+class CGUIGameControl;
+class CGUIGameRenderManager;
 
-  enum class RENDER_HANDLE
+enum class RENDER_HANDLE
+{
+  CONTROL,
+  WINDOW,
+};
+
+// --- CGUIRenderHandle ------------------------------------------------------
+
+class CGUIRenderHandle
+{
+public:
+  CGUIRenderHandle(CGUIGameRenderManager& renderManager, RENDER_HANDLE type);
+  virtual ~CGUIRenderHandle();
+
+  RENDER_HANDLE Type() const
   {
-    CONTROL,
-    WINDOW,
-  };
+    return m_type;
+  }
 
-  // --- CGUIRenderHandle ------------------------------------------------------
+  void Render();
+  void RenderEx();
+  bool IsDirty();
+  void ClearBackground();
 
-  class CGUIRenderHandle
+private:
+  // Construction parameters
+  CGUIGameRenderManager& m_renderManager;
+  const RENDER_HANDLE m_type;
+};
+
+// --- CGUIRenderControlHandle -----------------------------------------------
+
+class CGUIRenderControlHandle : public CGUIRenderHandle
+{
+public:
+  CGUIRenderControlHandle(CGUIGameRenderManager& renderManager, CGUIGameControl& control);
+  ~CGUIRenderControlHandle() override = default;
+
+  CGUIGameControl& GetControl()
   {
-  public:
-    CGUIRenderHandle(CGUIGameRenderManager &renderManager, RENDER_HANDLE type);
-    virtual ~CGUIRenderHandle();
+    return m_control;
+  }
 
-    RENDER_HANDLE Type() const { return m_type; }
+private:
+  // Construction parameters
+  CGUIGameControl& m_control;
+};
 
-    void Render();
-    void RenderEx();
-    bool IsDirty();
-    void ClearBackground();
+// --- CGUIRenderFullScreenHandle --------------------------------------------
 
-  private:
-    // Construction parameters
-    CGUIGameRenderManager &m_renderManager;
-    const RENDER_HANDLE m_type;
-  };
+class CGUIRenderFullScreenHandle : public CGUIRenderHandle
+{
+public:
+  CGUIRenderFullScreenHandle(CGUIGameRenderManager& renderManager, CGameWindowFullScreen& window);
+  ~CGUIRenderFullScreenHandle() override = default;
 
-  // --- CGUIRenderControlHandle -----------------------------------------------
-
-  class CGUIRenderControlHandle : public CGUIRenderHandle
+  CGameWindowFullScreen& GetWindow()
   {
-  public:
-    CGUIRenderControlHandle(CGUIGameRenderManager &renderManager, CGUIGameControl &control);
-    ~CGUIRenderControlHandle() override = default;
+    return m_window;
+  }
 
-    CGUIGameControl &GetControl() { return m_control; }
-
-  private:
-    // Construction parameters
-    CGUIGameControl &m_control;
-  };
-
-  // --- CGUIRenderFullScreenHandle --------------------------------------------
-
-  class CGUIRenderFullScreenHandle : public CGUIRenderHandle
-  {
-  public:
-    CGUIRenderFullScreenHandle(CGUIGameRenderManager &renderManager, CGameWindowFullScreen &window);
-    ~CGUIRenderFullScreenHandle() override = default;
-
-    CGameWindowFullScreen &GetWindow() { return m_window; }
-
-  private:
-    // Construction parameters
-    CGameWindowFullScreen &m_window;
-  };
-}
-}
+private:
+  // Construction parameters
+  CGameWindowFullScreen& m_window;
+};
+} // namespace RETRO
+} // namespace KODI
