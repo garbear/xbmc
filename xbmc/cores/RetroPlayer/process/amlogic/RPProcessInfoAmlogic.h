@@ -14,17 +14,16 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CRPProcessInfoAmlogic : public CRPProcessInfo
-  {
-  public:
-    CRPProcessInfoAmlogic();
+class CRPProcessInfoAmlogic : public CRPProcessInfo
+{
+public:
+  CRPProcessInfoAmlogic();
 
-    static CRPProcessInfo* Create();
-    static void Register();
+  static CRPProcessInfo* Create();
+  static void Register();
 
-    // Implementation of CRPProcessInfo
-    void ConfigureRenderSystem(AVPixelFormat format) override;
-
-  };
-}
-}
+  // Implementation of CRPProcessInfo
+  void ConfigureRenderSystem(AVPixelFormat format) override;
+};
+} // namespace RETRO
+} // namespace KODI

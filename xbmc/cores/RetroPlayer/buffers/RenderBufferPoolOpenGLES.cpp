@@ -16,12 +16,12 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRenderBufferPoolOpenGLES::CRenderBufferPoolOpenGLES(CRenderContext &context)
-  : m_context(context)
+CRenderBufferPoolOpenGLES::CRenderBufferPoolOpenGLES(CRenderContext& context)
+    : m_context(context)
 {
 }
 
-bool CRenderBufferPoolOpenGLES::IsCompatible(const CRenderVideoSettings &renderSettings) const
+bool CRenderBufferPoolOpenGLES::IsCompatible(const CRenderVideoSettings& renderSettings) const
 {
   if (!CRPRendererOpenGLES::SupportsScalingMethod(renderSettings.GetScalingMethod()))
     return false;
@@ -29,13 +29,9 @@ bool CRenderBufferPoolOpenGLES::IsCompatible(const CRenderVideoSettings &renderS
   return true;
 }
 
-IRenderBuffer *CRenderBufferPoolOpenGLES::CreateRenderBuffer(void *header /* = nullptr */)
+IRenderBuffer* CRenderBufferPoolOpenGLES::CreateRenderBuffer(void* header /* = nullptr */)
 {
-  return new CRenderBufferOpenGLES(m_context,
-                                   m_pixeltype,
-                                   m_internalformat,
-                                   m_pixelformat,
-                                   m_bpp);
+  return new CRenderBufferOpenGLES(m_context, m_pixeltype, m_internalformat, m_pixelformat, m_bpp);
 }
 
 bool CRenderBufferPoolOpenGLES::ConfigureInternal()

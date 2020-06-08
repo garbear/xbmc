@@ -16,12 +16,12 @@ using namespace KODI::WINDOWING::GBM;
 using namespace KODI;
 using namespace RETRO;
 
-CRenderBufferGBM::CRenderBufferGBM(CRenderContext &context,
-                                   int fourcc) :
-  m_context(context),
-  m_fourcc(fourcc),
-  m_egl(new CEGLImage(static_cast<CWinSystemGbmEGLContext*>(CServiceBroker::GetWinSystem())->GetEGLDisplay())),
-  m_bo(new CGBMBufferObject(fourcc))
+CRenderBufferGBM::CRenderBufferGBM(CRenderContext& context, int fourcc)
+    : m_context(context)
+    , m_fourcc(fourcc)
+    , m_egl(new CEGLImage(
+          static_cast<CWinSystemGbmEGLContext*>(CServiceBroker::GetWinSystem())->GetEGLDisplay()))
+    , m_bo(new CGBMBufferObject(fourcc))
 {
 }
 
@@ -47,7 +47,7 @@ size_t CRenderBufferGBM::GetFrameSize() const
   return m_bo->GetStride() * m_height;
 }
 
-uint8_t *CRenderBufferGBM::GetMemory()
+uint8_t* CRenderBufferGBM::GetMemory()
 {
   return m_bo->GetMemory();
 }

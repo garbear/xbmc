@@ -13,7 +13,7 @@
 using namespace KODI;
 using namespace RETRO;
 
-const char *CRenderTranslator::TranslatePixelFormat(AVPixelFormat format)
+const char* CRenderTranslator::TranslatePixelFormat(AVPixelFormat format)
 {
   switch (format)
   {
@@ -30,7 +30,7 @@ const char *CRenderTranslator::TranslatePixelFormat(AVPixelFormat format)
   return "unknown";
 }
 
-const char *CRenderTranslator::TranslateScalingMethod(SCALINGMETHOD scalingMethod)
+const char* CRenderTranslator::TranslateScalingMethod(SCALINGMETHOD scalingMethod)
 {
   switch (scalingMethod)
   {
