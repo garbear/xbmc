@@ -15,22 +15,22 @@ const char* CRetroPlayerUtils::StretchModeToIdentifier(STRETCHMODE stretchMode)
 {
   switch (stretchMode)
   {
-    case STRETCHMODE::Normal:
-      return STRETCHMODE_NORMAL_ID;
-    case STRETCHMODE::Stretch4x3:
-      return STRETCHMODE_STRETCH_4_3_ID;
-    case STRETCHMODE::Fullscreen:
-      return STRETCHMODE_FULLSCREEN_ID;
-    case STRETCHMODE::Original:
-      return STRETCHMODE_ORIGINAL_ID;
-    default:
-      break;
+  case STRETCHMODE::Normal:
+    return STRETCHMODE_NORMAL_ID;
+  case STRETCHMODE::Stretch4x3:
+    return STRETCHMODE_STRETCH_4_3_ID;
+  case STRETCHMODE::Fullscreen:
+    return STRETCHMODE_FULLSCREEN_ID;
+  case STRETCHMODE::Original:
+    return STRETCHMODE_ORIGINAL_ID;
+  default:
+    break;
   }
 
   return "";
 }
 
-STRETCHMODE CRetroPlayerUtils::IdentifierToStretchMode(const std::string &stretchMode)
+STRETCHMODE CRetroPlayerUtils::IdentifierToStretchMode(const std::string& stretchMode)
 {
   if (stretchMode == STRETCHMODE_NORMAL_ID)
     return STRETCHMODE::Normal;

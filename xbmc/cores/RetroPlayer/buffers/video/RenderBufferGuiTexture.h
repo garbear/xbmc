@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "cores/RetroPlayer/buffers/BaseRenderBuffer.h"
 #include "cores/GameSettings.h"
+#include "cores/RetroPlayer/buffers/BaseRenderBuffer.h"
 #include "guilib/Texture.h"
 #include "guilib/TextureFormats.h"
 
@@ -19,31 +19,34 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CRenderBufferGuiTexture : public CBaseRenderBuffer
+class CRenderBufferGuiTexture : public CBaseRenderBuffer
+{
+public:
+  CRenderBufferGuiTexture(SCALINGMETHOD scalingMethod);
+  virtual ~CRenderBufferGuiTexture() = default;
+
+  // implementation of IRenderBuffer via CBaseRenderBuffer
+  bool Allocate(AVPixelFormat format, unsigned int width, unsigned int height) override;
+  size_t GetFrameSize() const override;
+  uint8_t* GetMemory() override;
+  bool UploadTexture() override;
+  void BindToUnit(unsigned int unit) override;
+
+  // GUI texture interface
+  CTexture* GetTexture()
   {
-  public:
-    CRenderBufferGuiTexture(SCALINGMETHOD scalingMethod);
-    virtual ~CRenderBufferGuiTexture() = default;
+    return m_texture.get();
+  }
 
-    // implementation of IRenderBuffer via CBaseRenderBuffer
-    bool Allocate(AVPixelFormat format, unsigned int width, unsigned int height) override;
-    size_t GetFrameSize() const override;
-    uint8_t *GetMemory() override;
-    bool UploadTexture() override;
-    void BindToUnit(unsigned int unit) override;
+protected:
+  AVPixelFormat TranslateFormat(unsigned int textureFormat);
+  TEXTURE_SCALING TranslateScalingMethod(SCALINGMETHOD scalingMethod);
 
-    // GUI texture interface
-    CTexture *GetTexture() { return m_texture.get(); }
+  // Texture parameters
+  SCALINGMETHOD m_scalingMethod;
+  unsigned int m_textureFormat = XB_FMT_UNKNOWN;
+  std::unique_ptr<CTexture> m_texture;
+};
 
-  protected:
-    AVPixelFormat TranslateFormat(unsigned int textureFormat);
-    TEXTURE_SCALING TranslateScalingMethod(SCALINGMETHOD scalingMethod);
-
-    // Texture parameters
-    SCALINGMETHOD m_scalingMethod;
-    unsigned int m_textureFormat = XB_FMT_UNKNOWN;
-    std::unique_ptr<CTexture> m_texture;
-  };
-
-}
-}
+} // namespace RETRO
+} // namespace KODI
