@@ -31,13 +31,13 @@
 using namespace KODI;
 using namespace GAME;
 
-CGameClientController::CGameClientController(CGameClientInput &input, ControllerPtr controller) :
-  m_input(input),
-  m_controller(std::move(controller)),
-  m_controllerId(m_controller->ID())
+CGameClientController::CGameClientController(CGameClientInput& input, ControllerPtr controller)
+    : m_input(input)
+    , m_controller(std::move(controller))
+    , m_controllerId(m_controller->ID())
 {
   // Generate arrays of features
-  for (const CControllerFeature &feature : m_controller->Features())
+  for (const CControllerFeature& feature : m_controller->Features())
   {
     // Skip feature if not supported by the game client
     if (!m_input.HasFeature(m_controller->ID(), feature.Name()))
@@ -46,41 +46,41 @@ CGameClientController::CGameClientController(CGameClientInput &input, Controller
     // Add feature to array of the appropriate type
     switch (feature.Type())
     {
-      case FEATURE_TYPE::SCALAR:
+    case FEATURE_TYPE::SCALAR:
+    {
+      switch (feature.InputType())
       {
-        switch (feature.InputType())
-        {
-          case JOYSTICK::INPUT_TYPE::DIGITAL:
-            m_digitalButtons.emplace_back(const_cast<char*>(feature.Name().c_str()));
-            break;
-          case JOYSTICK::INPUT_TYPE::ANALOG:
-            m_analogButtons.emplace_back(const_cast<char*>(feature.Name().c_str()));
-            break;
-          default:
-            break;
-        }
+      case JOYSTICK::INPUT_TYPE::DIGITAL:
+        m_digitalButtons.emplace_back(const_cast<char*>(feature.Name().c_str()));
         break;
-      }
-      case FEATURE_TYPE::ANALOG_STICK:
-        m_analogSticks.emplace_back(const_cast<char*>(feature.Name().c_str()));
-        break;
-      case FEATURE_TYPE::ACCELEROMETER:
-        m_accelerometers.emplace_back(const_cast<char*>(feature.Name().c_str()));
-        break;
-      case FEATURE_TYPE::KEY:
-        m_keys.emplace_back(const_cast<char*>(feature.Name().c_str()));
-        break;
-      case FEATURE_TYPE::RELPOINTER:
-        m_relPointers.emplace_back(const_cast<char*>(feature.Name().c_str()));
-        break;
-      case FEATURE_TYPE::ABSPOINTER:
-        m_absPointers.emplace_back(const_cast<char*>(feature.Name().c_str()));
-        break;
-      case FEATURE_TYPE::MOTOR:
-        m_motors.emplace_back(const_cast<char*>(feature.Name().c_str()));
+      case JOYSTICK::INPUT_TYPE::ANALOG:
+        m_analogButtons.emplace_back(const_cast<char*>(feature.Name().c_str()));
         break;
       default:
         break;
+      }
+      break;
+    }
+    case FEATURE_TYPE::ANALOG_STICK:
+      m_analogSticks.emplace_back(const_cast<char*>(feature.Name().c_str()));
+      break;
+    case FEATURE_TYPE::ACCELEROMETER:
+      m_accelerometers.emplace_back(const_cast<char*>(feature.Name().c_str()));
+      break;
+    case FEATURE_TYPE::KEY:
+      m_keys.emplace_back(const_cast<char*>(feature.Name().c_str()));
+      break;
+    case FEATURE_TYPE::RELPOINTER:
+      m_relPointers.emplace_back(const_cast<char*>(feature.Name().c_str()));
+      break;
+    case FEATURE_TYPE::ABSPOINTER:
+      m_absPointers.emplace_back(const_cast<char*>(feature.Name().c_str()));
+      break;
+    case FEATURE_TYPE::MOTOR:
+      m_motors.emplace_back(const_cast<char*>(feature.Name().c_str()));
+      break;
+    default:
+      break;
     }
   }
 

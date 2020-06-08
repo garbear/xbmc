@@ -17,8 +17,8 @@ using namespace GAME;
 CGUIScalarFeatureButton::CGUIScalarFeatureButton(const CGUIButtonControl& buttonTemplate,
                                                  IConfigurationWizard* wizard,
                                                  const CControllerFeature& feature,
-                                                 unsigned int index) :
-  CGUIFeatureButton(buttonTemplate, wizard, feature, index)
+                                                 unsigned int index)
+    : CGUIFeatureButton(buttonTemplate, wizard, feature, index)
 {
   Reset();
 }
@@ -29,19 +29,19 @@ bool CGUIScalarFeatureButton::PromptForInput(CEvent& waitEvent)
 
   switch (m_state)
   {
-    case STATE::NEED_INPUT:
-    {
-      std::string strPrompt = g_localizeStrings.Get(35090);  // "Press %s"
-      std::string strWarn = g_localizeStrings.Get(35091);  // "Press %s (%d)"
+  case STATE::NEED_INPUT:
+  {
+    std::string strPrompt = g_localizeStrings.Get(35090); // "Press %s"
+    std::string strWarn = g_localizeStrings.Get(35091);   // "Press %s (%d)"
 
-      bInterrupted = DoPrompt(strPrompt, strWarn, m_feature.Label(), waitEvent);
+    bInterrupted = DoPrompt(strPrompt, strWarn, m_feature.Label(), waitEvent);
 
-      m_state = GetNextState(m_state);
+    m_state = GetNextState(m_state);
 
-      break;
-    }
-    default:
-      break;
+    break;
+  }
+  default:
+    break;
   }
 
   return bInterrupted;

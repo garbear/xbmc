@@ -16,9 +16,9 @@ namespace KODI
 {
 namespace RETRO
 {
-  class IRetroPlayerStream;
-  struct VideoStreamProperties;
-}
+class IRetroPlayerStream;
+struct VideoStreamProperties;
+} // namespace RETRO
 
 namespace GAME
 {
@@ -27,7 +27,10 @@ class CGameClientStreamVideo : public IGameClientStream
 {
 public:
   CGameClientStreamVideo() = default;
-  ~CGameClientStreamVideo() override { CloseStream(); }
+  ~CGameClientStreamVideo() override
+  {
+    CloseStream();
+  }
 
   // Implementation of IGameClientStream
   bool OpenStream(RETRO::IRetroPlayerStream* stream,
@@ -41,7 +44,8 @@ protected:
 
 private:
   // Utility functions
-  static RETRO::VideoStreamProperties* TranslateProperties(const game_stream_video_properties &properties);
+  static RETRO::VideoStreamProperties* TranslateProperties(
+      const game_stream_video_properties& properties);
 };
 
 } // namespace GAME
