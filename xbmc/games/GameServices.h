@@ -17,50 +17,56 @@ class CProfileManager;
 
 namespace PERIPHERALS
 {
-  class CPeripherals;
+class CPeripherals;
 }
 
 namespace KODI
 {
 namespace RETRO
 {
-  class CGUIGameRenderManager;
+class CGUIGameRenderManager;
 }
 
 namespace GAME
 {
-  class CControllerManager;
-  class CGameSettings;
+class CControllerManager;
+class CGameSettings;
 
-  class CGameServices
+class CGameServices
+{
+public:
+  CGameServices(CControllerManager& controllerManager,
+                RETRO::CGUIGameRenderManager& renderManager,
+                PERIPHERALS::CPeripherals& peripheralManager,
+                const CProfileManager& profileManager);
+  ~CGameServices();
+
+  ControllerPtr GetController(const std::string& controllerId);
+  ControllerPtr GetDefaultController();
+  ControllerPtr GetDefaultKeyboard();
+  ControllerPtr GetDefaultMouse();
+  ControllerVector GetControllers();
+
+  std::string GetSavestatesFolder() const;
+
+  CGameSettings& GameSettings()
   {
-  public:
-    CGameServices(CControllerManager &controllerManager,
-                  RETRO::CGUIGameRenderManager &renderManager,
-                  PERIPHERALS::CPeripherals &peripheralManager,
-                  const CProfileManager &profileManager);
-    ~CGameServices();
+    return *m_gameSettings;
+  }
 
-    ControllerPtr GetController(const std::string& controllerId);
-    ControllerPtr GetDefaultController();
-    ControllerPtr GetDefaultKeyboard();
-    ControllerPtr GetDefaultMouse();
-    ControllerVector GetControllers();
+  RETRO::CGUIGameRenderManager& GameRenderManager()
+  {
+    return m_gameRenderManager;
+  }
 
-    std::string GetSavestatesFolder() const;
+private:
+  // Construction parameters
+  CControllerManager& m_controllerManager;
+  RETRO::CGUIGameRenderManager& m_gameRenderManager;
+  const CProfileManager& m_profileManager;
 
-    CGameSettings& GameSettings() { return *m_gameSettings; }
-
-    RETRO::CGUIGameRenderManager &GameRenderManager() { return m_gameRenderManager; }
-
-  private:
-    // Construction parameters
-    CControllerManager &m_controllerManager;
-    RETRO::CGUIGameRenderManager &m_gameRenderManager;
-    const CProfileManager &m_profileManager;
-
-    // Game services
-    std::unique_ptr<CGameSettings> m_gameSettings;
-  };
-}
-}
+  // Game services
+  std::unique_ptr<CGameSettings> m_gameSettings;
+};
+} // namespace GAME
+} // namespace KODI

@@ -7,19 +7,22 @@
  */
 
 #include "GameClient.h"
+#include "FileItem.h"
 #include "GameClientCallbacks.h"
 #include "GameClientInGameSaves.h"
 #include "GameClientProperties.h"
 #include "GameClientTranslator.h"
+#include "ServiceBroker.h"
+#include "URL.h"
 #include "addons/AddonManager.h"
 #include "addons/BinaryAddonCache.h"
 #include "filesystem/Directory.h"
 #include "filesystem/File.h"
 #include "filesystem/SpecialProtocol.h"
+#include "games/GameServices.h"
 #include "games/addons/input/GameClientInput.h"
 #include "games/addons/streams/GameClientStreams.h"
 #include "games/addons/streams/IGameClientStream.h"
-#include "games/GameServices.h"
 #include "guilib/GUIWindowManager.h"
 #include "guilib/LocalizeStrings.h"
 #include "guilib/WindowIDs.h"
@@ -28,12 +31,9 @@
 #include "messaging/ApplicationMessenger.h"
 #include "messaging/helpers/DialogOKHelper.h"
 #include "threads/SingleLock.h"
-#include "utils/log.h"
 #include "utils/StringUtils.h"
 #include "utils/URIUtils.h"
-#include "FileItem.h"
-#include "ServiceBroker.h"
-#include "URL.h"
+#include "utils/log.h"
 
 #include <algorithm>
 #include <cstring>
@@ -44,39 +44,40 @@ using namespace KODI;
 using namespace GAME;
 using namespace KODI::MESSAGING;
 
-#define EXTENSION_SEPARATOR          "|"
-#define EXTENSION_WILDCARD           "*"
+#define EXTENSION_SEPARATOR "|"
+#define EXTENSION_WILDCARD "*"
 
-#define GAME_PROPERTY_EXTENSIONS           "extensions"
-#define GAME_PROPERTY_SUPPORTS_VFS         "supports_vfs"
-#define GAME_PROPERTY_SUPPORTS_STANDALONE  "supports_standalone"
+#define GAME_PROPERTY_EXTENSIONS "extensions"
+#define GAME_PROPERTY_SUPPORTS_VFS "supports_vfs"
+#define GAME_PROPERTY_SUPPORTS_STANDALONE "supports_standalone"
 
 // --- NormalizeExtension ------------------------------------------------------
 
 namespace
 {
-  /*
-   * \brief Convert to lower case and canonicalize with a leading "."
-   */
-  std::string NormalizeExtension(const std::string& strExtension)
+/*
+ * \brief Convert to lower case and canonicalize with a leading "."
+ */
+std::string NormalizeExtension(const std::string& strExtension)
+{
+  std::string ext = strExtension;
+
+  if (!ext.empty() && ext != EXTENSION_WILDCARD)
   {
-    std::string ext = strExtension;
+    StringUtils::ToLower(ext);
 
-    if (!ext.empty() && ext != EXTENSION_WILDCARD)
-    {
-      StringUtils::ToLower(ext);
-
-      if (ext[0] != '.')
-        ext.insert(0, ".");
-    }
-
-    return ext;
+    if (ext[0] != '.')
+      ext.insert(0, ".");
   }
+
+  return ext;
 }
+} // namespace
 
 // --- CGameClient -------------------------------------------------------------
 
-std::unique_ptr<CGameClient> CGameClient::FromExtension(ADDON::CAddonInfo addonInfo, const cp_extension_t* ext)
+std::unique_ptr<CGameClient> CGameClient::FromExtension(ADDON::CAddonInfo addonInfo,
+                                                        const cp_extension_t* ext)
 {
   using namespace ADDON;
 
@@ -88,7 +89,8 @@ std::unique_ptr<CGameClient> CGameClient::FromExtension(ADDON::CAddonInfo addonI
 
   for (const auto& property : properties)
   {
-    std::string strProperty = CServiceBroker::GetAddonMgr().GetExtValue(ext->configuration, property.c_str());
+    std::string strProperty =
+        CServiceBroker::GetAddonMgr().GetExtValue(ext->configuration, property.c_str());
     if (!strProperty.empty())
       addonInfo.AddExtraInfo(property, strProperty);
   }
@@ -96,15 +98,15 @@ std::unique_ptr<CGameClient> CGameClient::FromExtension(ADDON::CAddonInfo addonI
   return std::unique_ptr<CGameClient>(new CGameClient(std::move(addonInfo)));
 }
 
-CGameClient::CGameClient(ADDON::CAddonInfo addonInfo) :
-  CAddonDll(std::move(addonInfo)),
-  m_subsystems(CGameClientSubsystem::CreateSubsystems(*this, m_struct, m_critSection)),
-  m_bSupportsVFS(false),
-  m_bSupportsStandalone(false),
-  m_bSupportsAllExtensions(false),
-  m_bIsPlaying(false),
-  m_serializeSize(0),
-  m_region(GAME_REGION_UNKNOWN)
+CGameClient::CGameClient(ADDON::CAddonInfo addonInfo)
+    : CAddonDll(std::move(addonInfo))
+    , m_subsystems(CGameClientSubsystem::CreateSubsystems(*this, m_struct, m_critSection))
+    , m_bSupportsVFS(false)
+    , m_bSupportsStandalone(false)
+    , m_bSupportsAllExtensions(false)
+    , m_bIsPlaying(false)
+    , m_serializeSize(0)
+    , m_region(GAME_REGION_UNKNOWN)
 {
   const ADDON::InfoMap& extraInfo = m_addonInfo.ExtraInfo();
   ADDON::InfoMap::const_iterator it;
@@ -114,7 +116,7 @@ CGameClient::CGameClient(ADDON::CAddonInfo addonInfo) :
   {
     std::vector<std::string> extensions = StringUtils::Split(it->second, EXTENSION_SEPARATOR);
     std::transform(extensions.begin(), extensions.end(),
-      std::inserter(m_extensions, m_extensions.begin()), NormalizeExtension);
+                   std::inserter(m_extensions, m_extensions.begin()), NormalizeExtension);
 
     // Check for wildcard extension
     if (m_extensions.find(EXTENSION_WILDCARD) != m_extensions.end())
@@ -181,7 +183,7 @@ bool CGameClient::Initialize(void)
     CDirectory::Create(Profile());
 
   // Ensure directory exists for savestates
-  const CGameServices &gameServices = CServiceBroker::GetGameServices();
+  const CGameServices& gameServices = CServiceBroker::GetGameServices();
   std::string savestatesDir = URIUtils::AddFileToFolder(gameServices.GetSavestatesFolder(), ID());
   if (!CDirectory::Exists(savestatesDir))
     CDirectory::Create(savestatesDir);
@@ -216,7 +218,9 @@ void CGameClient::Unload()
   Destroy();
 }
 
-bool CGameClient::OpenFile(const CFileItem& file, RETRO::IStreamManager& streamManager, IGameInputCallback *input)
+bool CGameClient::OpenFile(const CFileItem& file,
+                           RETRO::IStreamManager& streamManager,
+                           IGameInputCallback* input)
 {
   // Check if we should open in standalone mode
   if (file.GetPath().empty())
@@ -228,7 +232,7 @@ bool CGameClient::OpenFile(const CFileItem& file, RETRO::IStreamManager& streamM
 
     // Failed to play game
     // The required files can't be found.
-    HELPERS::ShowOKDialogText(CVariant{ 35210 }, CVariant{ g_localizeStrings.Get(35219) });
+    HELPERS::ShowOKDialogText(CVariant{35210}, CVariant{g_localizeStrings.Get(35219)});
     return false;
   }
 
@@ -254,8 +258,14 @@ bool CGameClient::OpenFile(const CFileItem& file, RETRO::IStreamManager& streamM
 
   GAME_ERROR error = GAME_ERROR_FAILED;
 
-  try { LogError(error = m_struct.toAddon.LoadGame(path.c_str()), "LoadGame()"); }
-  catch (...) { LogException("LoadGame()"); }
+  try
+  {
+    LogError(error = m_struct.toAddon.LoadGame(path.c_str()), "LoadGame()");
+  }
+  catch (...)
+  {
+    LogException("LoadGame()");
+  }
 
   if (error != GAME_ERROR_NO_ERROR)
   {
@@ -271,7 +281,7 @@ bool CGameClient::OpenFile(const CFileItem& file, RETRO::IStreamManager& streamM
   return true;
 }
 
-bool CGameClient::OpenStandalone(RETRO::IStreamManager& streamManager, IGameInputCallback *input)
+bool CGameClient::OpenStandalone(RETRO::IStreamManager& streamManager, IGameInputCallback* input)
 {
   CLog::Log(LOGDEBUG, "GameClient: Loading %s in standalone mode", ID().c_str());
 
@@ -284,8 +294,14 @@ bool CGameClient::OpenStandalone(RETRO::IStreamManager& streamManager, IGameInpu
 
   GAME_ERROR error = GAME_ERROR_FAILED;
 
-  try { LogError(error = m_struct.toAddon.LoadStandalone(), "LoadStandalone()"); }
-  catch (...) { LogException("LoadStandalone()"); }
+  try
+  {
+    LogError(error = m_struct.toAddon.LoadStandalone(), "LoadStandalone()");
+  }
+  catch (...)
+  {
+    LogException("LoadStandalone()");
+  }
 
   if (error != GAME_ERROR_NO_ERROR)
   {
@@ -301,16 +317,18 @@ bool CGameClient::OpenStandalone(RETRO::IStreamManager& streamManager, IGameInpu
   return true;
 }
 
-bool CGameClient::InitializeGameplay(const std::string& gamePath, RETRO::IStreamManager& streamManager, IGameInputCallback *input)
+bool CGameClient::InitializeGameplay(const std::string& gamePath,
+                                     RETRO::IStreamManager& streamManager,
+                                     IGameInputCallback* input)
 {
   if (LoadGameInfo())
   {
     Streams().Initialize(streamManager);
     Input().Start(input);
 
-    m_bIsPlaying      = true;
-    m_gamePath        = gamePath;
-    m_input           = input;
+    m_bIsPlaying = true;
+    m_gamePath = gamePath;
+    m_input = input;
 
     m_inGameSaves.reset(new CGameClientInGameSaves(this, &m_struct.toAddon));
     m_inGameSaves->Load();
@@ -336,11 +354,17 @@ bool CGameClient::LoadGameInfo()
 
   // Get information about system timings
   // Can be called only after retro_load_game()
-  game_system_timing timingInfo = { };
+  game_system_timing timingInfo = {};
 
   bool bSuccess = false;
-  try { bSuccess = LogError(m_struct.toAddon.GetGameTiming(&timingInfo), "GetGameTiming()"); }
-  catch (...) { LogException("GetGameTiming()"); }
+  try
+  {
+    bSuccess = LogError(m_struct.toAddon.GetGameTiming(&timingInfo), "GetGameTiming()");
+  }
+  catch (...)
+  {
+    LogException("GetGameTiming()");
+  }
 
   if (!bSuccess)
   {
@@ -349,8 +373,15 @@ bool CGameClient::LoadGameInfo()
   }
 
   GAME_REGION region;
-  try { region = m_struct.toAddon.GetRegion(); }
-  catch (...) { LogException("GetRegion()"); return false; }
+  try
+  {
+    region = m_struct.toAddon.GetRegion();
+  }
+  catch (...)
+  {
+    LogException("GetRegion()");
+    return false;
+  }
 
   size_t serializeSize;
   try
@@ -391,13 +422,17 @@ void CGameClient::NotifyError(GAME_ERROR error)
   {
     // Failed to play game
     // This game requires the following add-on: %s
-    HELPERS::ShowOKDialogText(CVariant{ 35210 }, CVariant{ StringUtils::Format(g_localizeStrings.Get(35211).c_str(), missingResource.c_str()) });
+    HELPERS::ShowOKDialogText(CVariant{35210},
+                              CVariant{StringUtils::Format(g_localizeStrings.Get(35211).c_str(),
+                                                           missingResource.c_str())});
   }
   else
   {
     // Failed to play game
     // The emulator "%s" had an internal error.
-    HELPERS::ShowOKDialogText(CVariant{ 35210 }, CVariant{ StringUtils::Format(g_localizeStrings.Get(35213).c_str(), Name().c_str()) });
+    HELPERS::ShowOKDialogText(
+        CVariant{35210},
+        CVariant{StringUtils::Format(g_localizeStrings.Get(35213).c_str(), Name().c_str())});
   }
 }
 
@@ -432,8 +467,14 @@ void CGameClient::Reset()
 
   if (m_bIsPlaying)
   {
-    try { LogError(m_struct.toAddon.Reset(), "Reset()"); }
-    catch (...) { LogException("Reset()"); }
+    try
+    {
+      LogError(m_struct.toAddon.Reset(), "Reset()");
+    }
+    catch (...)
+    {
+      LogException("Reset()");
+    }
   }
 }
 
@@ -453,8 +494,14 @@ void CGameClient::CloseFile()
 
     Input().Stop();
 
-    try { LogError(m_struct.toAddon.UnloadGame(), "UnloadGame()"); }
-    catch (...) { LogException("UnloadGame()"); }
+    try
+    {
+      LogError(m_struct.toAddon.UnloadGame(), "UnloadGame()");
+    }
+    catch (...)
+    {
+      LogException("UnloadGame()");
+    }
 
     Streams().Deinitialize();
   }
@@ -462,7 +509,7 @@ void CGameClient::CloseFile()
 
 void CGameClient::RunFrame()
 {
-  IGameInputCallback *input;
+  IGameInputCallback* input;
 
   {
     CSingleLock lock(m_critSection);
@@ -476,8 +523,14 @@ void CGameClient::RunFrame()
 
   if (m_bIsPlaying)
   {
-    try { LogError(m_struct.toAddon.RunFrame(), "RunFrame()"); }
-    catch (...) { LogException("RunFrame()"); }
+    try
+    {
+      LogError(m_struct.toAddon.RunFrame(), "RunFrame()");
+    }
+    catch (...)
+    {
+      LogException("RunFrame()");
+    }
   }
 }
 
@@ -491,8 +544,14 @@ bool CGameClient::Serialize(uint8_t* data, size_t size)
   bool bSuccess = false;
   if (m_bIsPlaying)
   {
-    try { bSuccess = LogError(m_struct.toAddon.Serialize(data, size), "Serialize()"); }
-    catch (...) { LogException("Serialize()"); }
+    try
+    {
+      bSuccess = LogError(m_struct.toAddon.Serialize(data, size), "Serialize()");
+    }
+    catch (...)
+    {
+      LogException("Serialize()");
+    }
   }
 
   return bSuccess;
@@ -508,8 +567,14 @@ bool CGameClient::Deserialize(const uint8_t* data, size_t size)
   bool bSuccess = false;
   if (m_bIsPlaying)
   {
-    try { bSuccess = LogError(m_struct.toAddon.Deserialize(data, size), "Deserialize()"); }
-    catch (...) { LogException("Deserialize()"); }
+    try
+    {
+      bSuccess = LogError(m_struct.toAddon.Deserialize(data, size), "Deserialize()");
+    }
+    catch (...)
+    {
+      LogException("Deserialize()");
+    }
   }
 
   return bSuccess;
@@ -519,10 +584,12 @@ void CGameClient::LogAddonProperties(void) const
 {
   CLog::Log(LOGINFO, "GAME: ------------------------------------");
   CLog::Log(LOGINFO, "GAME: Loaded DLL for %s", ID().c_str());
-  CLog::Log(LOGINFO, "GAME: Client: %s at version %s", Name().c_str(), Version().asString().c_str());
+  CLog::Log(LOGINFO, "GAME: Client: %s at version %s", Name().c_str(),
+            Version().asString().c_str());
   CLog::Log(LOGINFO, "GAME: Valid extensions: %s", StringUtils::Join(m_extensions, " ").c_str());
   CLog::Log(LOGINFO, "GAME: Supports VFS:                  %s", m_bSupportsVFS ? "yes" : "no");
-  CLog::Log(LOGINFO, "GAME: Supports standalone execution: %s", m_bSupportsStandalone ? "yes" : "no");
+  CLog::Log(LOGINFO, "GAME: Supports standalone execution: %s",
+            m_bSupportsStandalone ? "yes" : "no");
   CLog::Log(LOGINFO, "GAME: ------------------------------------");
 }
 
@@ -530,8 +597,8 @@ bool CGameClient::LogError(GAME_ERROR error, const char* strMethod) const
 {
   if (error != GAME_ERROR_NO_ERROR)
   {
-    CLog::Log(LOGERROR, "GAME - %s - addon '%s' returned an error: %s",
-        strMethod, ID().c_str(), CGameClientTranslator::ToString(error));
+    CLog::Log(LOGERROR, "GAME - %s - addon '%s' returned an error: %s", strMethod, ID().c_str(),
+              CGameClientTranslator::ToString(error));
     return false;
   }
   return true;
@@ -540,82 +607,90 @@ bool CGameClient::LogError(GAME_ERROR error, const char* strMethod) const
 void CGameClient::LogException(const char* strFunctionName) const
 {
   CLog::Log(LOGERROR, "GAME: exception caught while trying to call '%s' on add-on %s",
-      strFunctionName, ID().c_str());
+            strFunctionName, ID().c_str());
   CLog::Log(LOGERROR, "Please contact the developer of this add-on: %s", Author().c_str());
 }
-
 
 void CGameClient::cb_close_game(void* kodiInstance)
 {
   using namespace MESSAGING;
 
-  CApplicationMessenger::GetInstance().PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1, static_cast<void*>(new CAction(ACTION_STOP)));
+  CApplicationMessenger::GetInstance().PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1,
+                                               static_cast<void*>(new CAction(ACTION_STOP)));
 }
 
-void* CGameClient::cb_open_stream(void* kodiInstance, const game_stream_properties *properties)
+void* CGameClient::cb_open_stream(void* kodiInstance, const game_stream_properties* properties)
 {
   if (properties == nullptr)
     return nullptr;
 
-  CGameClient *gameClient = static_cast<CGameClient*>(kodiInstance);
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
   if (gameClient == nullptr)
     return nullptr;
 
   return gameClient->Streams().OpenStream(*properties);
 }
 
-bool CGameClient::cb_get_stream_buffer(void* kodiInstance, void *stream, unsigned int width, unsigned int height, game_stream_buffer *buffer)
+bool CGameClient::cb_get_stream_buffer(void* kodiInstance,
+                                       void* stream,
+                                       unsigned int width,
+                                       unsigned int height,
+                                       game_stream_buffer* buffer)
 {
   if (buffer == nullptr)
     return false;
 
-  IGameClientStream *gameClientStream = static_cast<IGameClientStream*>(stream);
+  IGameClientStream* gameClientStream = static_cast<IGameClientStream*>(stream);
   if (gameClientStream == nullptr)
     return false;
 
   return gameClientStream->GetBuffer(width, height, *buffer);
 }
 
-void CGameClient::cb_add_stream_data(void* kodiInstance, void *stream, const game_stream_packet *packet)
+void CGameClient::cb_add_stream_data(void* kodiInstance,
+                                     void* stream,
+                                     const game_stream_packet* packet)
 {
   if (packet == nullptr)
     return;
 
-  IGameClientStream *gameClientStream = static_cast<IGameClientStream*>(stream);
+  IGameClientStream* gameClientStream = static_cast<IGameClientStream*>(stream);
   if (gameClientStream == nullptr)
     return;
 
   gameClientStream->AddData(*packet);
 }
 
-void CGameClient::cb_release_stream_buffer(void* kodiInstance, void *stream, game_stream_buffer *buffer)
+void CGameClient::cb_release_stream_buffer(void* kodiInstance,
+                                           void* stream,
+                                           game_stream_buffer* buffer)
 {
   if (buffer == nullptr)
     return;
 
-  IGameClientStream *gameClientStream = static_cast<IGameClientStream*>(stream);
+  IGameClientStream* gameClientStream = static_cast<IGameClientStream*>(stream);
   if (gameClientStream == nullptr)
     return;
 
   gameClientStream->ReleaseBuffer(*buffer);
 }
 
-void CGameClient::cb_close_stream(void* kodiInstance, void *stream)
+void CGameClient::cb_close_stream(void* kodiInstance, void* stream)
 {
-  CGameClient *gameClient = static_cast<CGameClient*>(kodiInstance);
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
   if (gameClient == nullptr)
     return;
 
-  IGameClientStream *gameClientStream = static_cast<IGameClientStream*>(stream);
+  IGameClientStream* gameClientStream = static_cast<IGameClientStream*>(stream);
   if (gameClientStream == nullptr)
     return;
 
   gameClient->Streams().CloseStream(gameClientStream);
 }
 
-game_proc_address_t CGameClient::cb_hw_get_proc_address(void* kodiInstance, const char *sym)
+game_proc_address_t CGameClient::cb_hw_get_proc_address(void* kodiInstance, const char* sym)
 {
-  CGameClient *gameClient = static_cast<CGameClient*>(kodiInstance);
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
   if (!gameClient)
     return nullptr;
 
@@ -625,7 +700,7 @@ game_proc_address_t CGameClient::cb_hw_get_proc_address(void* kodiInstance, cons
 
 bool CGameClient::cb_input_event(void* kodiInstance, const game_input_event* event)
 {
-  CGameClient *gameClient = static_cast<CGameClient*>(kodiInstance);
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
   if (!gameClient)
     return false;
 

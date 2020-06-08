@@ -9,9 +9,9 @@
 #pragma once
 
 #include "IConfigurationWindow.h"
+#include "games/GameTypes.h"
 #include "games/controllers/ControllerFeature.h"
 #include "games/controllers/ControllerTypes.h"
-#include "games/GameTypes.h"
 #include "input/joysticks/JoystickTypes.h"
 
 class CGUIButtonControl;
@@ -24,52 +24,56 @@ namespace KODI
 {
 namespace GAME
 {
-  class CGUIFeatureList : public IFeatureList
+class CGUIFeatureList : public IFeatureList
+{
+public:
+  CGUIFeatureList(CGUIWindow* window, GameClientPtr gameClient);
+  virtual ~CGUIFeatureList(void);
+
+  // implementation of IFeatureList
+  virtual bool Initialize(void) override;
+  virtual void Deinitialize(void) override;
+  virtual bool HasButton(JOYSTICK::FEATURE_TYPE type) const override;
+  virtual void Load(const ControllerPtr& controller) override;
+  virtual void OnFocus(unsigned int buttonIndex) override
   {
-  public:
-    CGUIFeatureList(CGUIWindow* window, GameClientPtr gameClient);
-    virtual ~CGUIFeatureList(void);
+  }
+  virtual void OnSelect(unsigned int buttonIndex) override;
 
-    // implementation of IFeatureList
-    virtual bool Initialize(void) override;
-    virtual void Deinitialize(void) override;
-    virtual bool HasButton(JOYSTICK::FEATURE_TYPE type) const override;
-    virtual void Load(const ControllerPtr& controller) override;
-    virtual void OnFocus(unsigned int buttonIndex) override { }
-    virtual void OnSelect(unsigned int buttonIndex) override;
+private:
+  IFeatureButton* GetButtonControl(unsigned int buttonIndex);
 
-  private:
-    IFeatureButton* GetButtonControl(unsigned int buttonIndex);
+  void CleanupButtons(void);
 
-    void CleanupButtons(void);
-
-    // Helper functions
-    struct FeatureGroup
-    {
-      std::string groupName;
-      std::vector<CControllerFeature> features;
-      /*!
-       * True if this group is a button that allows the user to map a key of
-       * their choosing.
-       */
-      bool bIsVirtualKey = false;
-    };
-    std::vector<FeatureGroup> GetFeatureGroups(const std::vector<CControllerFeature>& features) const;
-    std::vector<CGUIButtonControl*> GetButtons(const std::vector<CControllerFeature>& features, unsigned int startIndex);
-    CGUIButtonControl* GetSelectKeyButton(const std::vector<CControllerFeature>& features, unsigned int buttonIndex);
-
-    // GUI stuff
-    CGUIWindow* const       m_window;
-    unsigned int            m_buttonCount = 0;
-    CGUIControlGroupList*   m_guiList;
-    CGUIButtonControl*      m_guiButtonTemplate;
-    CGUILabelControl*       m_guiGroupTitle;
-    CGUIImage*              m_guiFeatureSeparator;
-
-    // Game window stuff
-    GameClientPtr           m_gameClient;
-    ControllerPtr           m_controller;
-    IConfigurationWizard*   m_wizard;
+  // Helper functions
+  struct FeatureGroup
+  {
+    std::string groupName;
+    std::vector<CControllerFeature> features;
+    /*!
+     * True if this group is a button that allows the user to map a key of
+     * their choosing.
+     */
+    bool bIsVirtualKey = false;
   };
-}
-}
+  std::vector<FeatureGroup> GetFeatureGroups(const std::vector<CControllerFeature>& features) const;
+  std::vector<CGUIButtonControl*> GetButtons(const std::vector<CControllerFeature>& features,
+                                             unsigned int startIndex);
+  CGUIButtonControl* GetSelectKeyButton(const std::vector<CControllerFeature>& features,
+                                        unsigned int buttonIndex);
+
+  // GUI stuff
+  CGUIWindow* const m_window;
+  unsigned int m_buttonCount = 0;
+  CGUIControlGroupList* m_guiList;
+  CGUIButtonControl* m_guiButtonTemplate;
+  CGUILabelControl* m_guiGroupTitle;
+  CGUIImage* m_guiFeatureSeparator;
+
+  // Game window stuff
+  GameClientPtr m_gameClient;
+  ControllerPtr m_controller;
+  IConfigurationWizard* m_wizard;
+};
+} // namespace GAME
+} // namespace KODI

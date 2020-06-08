@@ -8,8 +8,8 @@
 
 #include "ControllerTopology.h"
 #include "ControllerDefinitions.h"
-#include "utils/log.h"
 #include "utils/XMLUtils.h"
+#include "utils/log.h"
 #include <algorithm>
 
 using namespace KODI;
@@ -17,9 +17,9 @@ using namespace GAME;
 
 // --- CControllerPort ---------------------------------------------------------
 
-CControllerPort::CControllerPort(std::string portId, std::vector<std::string> accepts) :
-  m_portId(std::move(portId)),
-  m_accepts(std::move(accepts))
+CControllerPort::CControllerPort(std::string portId, std::vector<std::string> accepts)
+    : m_portId(std::move(portId))
+    , m_accepts(std::move(accepts))
 {
 }
 
@@ -29,7 +29,7 @@ void CControllerPort::Reset(void)
   *this = std::move(defaultPort);
 }
 
-bool CControllerPort::IsCompatible(const std::string &controllerId) const
+bool CControllerPort::IsCompatible(const std::string& controllerId) const
 {
   return std::find(m_accepts.begin(), m_accepts.end(), controllerId) != m_accepts.end();
 }
@@ -43,7 +43,8 @@ bool CControllerPort::Deserialize(const TiXmlElement* pElement)
 
   m_portId = XMLUtils::GetAttribute(pElement, LAYOUT_XML_ATTR_PORT_ID);
 
-  for (const TiXmlElement* pChild = pElement->FirstChildElement(); pChild != nullptr; pChild = pChild->NextSiblingElement())
+  for (const TiXmlElement* pChild = pElement->FirstChildElement(); pChild != nullptr;
+       pChild = pChild->NextSiblingElement())
   {
     if (pChild->ValueStr() == LAYOUT_XML_ELM_ACCEPTS)
     {
@@ -52,7 +53,8 @@ bool CControllerPort::Deserialize(const TiXmlElement* pElement)
       if (!controller.empty())
         m_accepts.emplace_back(std::move(controller));
       else
-        CLog::Log(LOGWARNING, "<%s> tag is missing \"%s\" attribute", LAYOUT_XML_ELM_ACCEPTS, LAYOUT_XML_ATTR_CONTROLLER);
+        CLog::Log(LOGWARNING, "<%s> tag is missing \"%s\" attribute", LAYOUT_XML_ELM_ACCEPTS,
+                  LAYOUT_XML_ATTR_CONTROLLER);
     }
     else
     {
@@ -65,9 +67,9 @@ bool CControllerPort::Deserialize(const TiXmlElement* pElement)
 
 // --- CControllerTopology -----------------------------------------------------
 
-CControllerTopology::CControllerTopology(bool bProvidesInput, std::vector<CControllerPort> ports) :
-  m_bProvidesInput(bProvidesInput),
-  m_ports(std::move(ports))
+CControllerTopology::CControllerTopology(bool bProvidesInput, std::vector<CControllerPort> ports)
+    : m_bProvidesInput(bProvidesInput)
+    , m_ports(std::move(ports))
 {
 }
 
@@ -86,7 +88,8 @@ bool CControllerTopology::Deserialize(const TiXmlElement* pElement)
 
   m_bProvidesInput = (XMLUtils::GetAttribute(pElement, LAYOUT_XML_ATTR_PROVIDES_INPUT) != "false");
 
-  for (const TiXmlElement* pChild = pElement->FirstChildElement(); pChild != nullptr; pChild = pChild->NextSiblingElement())
+  for (const TiXmlElement* pChild = pElement->FirstChildElement(); pChild != nullptr;
+       pChild = pChild->NextSiblingElement())
   {
     if (pChild->ValueStr() == LAYOUT_XML_ELM_PORT)
     {
