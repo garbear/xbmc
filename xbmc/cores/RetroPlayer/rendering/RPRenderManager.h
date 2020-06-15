@@ -23,6 +23,7 @@ extern "C"
 #include <memory>
 #include <set>
 #include <vector>
+#include <string>
 
 struct SwsContext;
 
@@ -109,6 +110,8 @@ public:
   // Implementation of IRenderCallback
   bool SupportsRenderFeature(RENDERFEATURE feature) const override;
   bool SupportsScalingMethod(SCALINGMETHOD method) const override;
+
+  void SaveThumbnail(const std::string& path);
 
 private:
   /*!

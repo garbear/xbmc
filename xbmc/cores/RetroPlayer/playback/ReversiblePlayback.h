@@ -28,11 +28,15 @@ namespace RETRO
 {
 class CSavestateDatabase;
 class IMemoryStream;
+class CRPRenderManager;
 
 class CReversiblePlayback : public IPlayback, public IGameLoopCallback, public Observer
 {
 public:
-  CReversiblePlayback(GAME::CGameClient* gameClient, double fps, size_t serializeSize);
+  CReversiblePlayback(GAME::CGameClient* gameClient,
+                      double fps,
+                      size_t serializeSize,
+                      CRPRenderManager& renderManager);
 
   virtual ~CReversiblePlayback();
 
@@ -91,6 +95,8 @@ private:
   // Savestate functionality
   std::unique_ptr<CSavestateDatabase> m_savestateDatabase;
   std::string m_loadedSavestatePath{};
+
+  CRPRenderManager& m_renderManager;
 
   // Playback stats
   uint64_t m_totalFrameCount;

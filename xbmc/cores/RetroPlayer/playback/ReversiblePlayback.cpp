@@ -8,6 +8,7 @@
 
 #include "ReversiblePlayback.h"
 #include "ServiceBroker.h"
+#include "cores/RetroPlayer/rendering/RPRenderManager.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "cores/RetroPlayer/streams/memory/DeltaPairMemoryStream.h"
@@ -27,7 +28,8 @@ using namespace RETRO;
 
 CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
                                          double fps,
-                                         size_t serializeSize)
+                                         size_t serializeSize,
+                                         CRPRenderManager& renderManager)
     : m_gameClient(gameClient)
     , m_gameLoop(this, fps)
     , m_savestateDatabase(new CSavestateDatabase)
@@ -37,6 +39,7 @@ CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
     , m_playTimeMs(0)
     , m_totalTimeMs(0)
     , m_cacheTimeMs(0)
+    , m_renderManager(renderManager)
 {
   UpdateMemoryStream();
 
@@ -165,6 +168,8 @@ std::string CReversiblePlayback::CreateSavestate()
   {
     return "";
   }
+
+  m_renderManager.SaveThumbnail(m_savestateDatabase->MakeThumbnailPath(m_loadedSavestatePath));
 
   return m_loadedSavestatePath;
 }
