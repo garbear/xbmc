@@ -349,7 +349,7 @@
 			</control>
 		</control>
 	</include>
-	<include name="GameDialogSelectSaveLayout">
+	<include name="GameDialogSelectSaveInGameLayout">
 		<control type="button">
 			<description>background close area</description>
 			<left>0</left>
@@ -382,7 +382,7 @@
 							<width>444</width>
 							<height>250</height>
 							<aspectratio>scale</aspectratio>
-							<texture border="4">DefaultVideo.png</texture>
+							<texture border="4">$INFO[ListItem.Icon]</texture>
 							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
 							<bordersize>4</bordersize>
 						</control>
@@ -411,7 +411,7 @@
 							<width>444</width>
 							<height>250</height>
 							<aspectratio>scale</aspectratio>
-							<texture border="4">DefaultVideo.png</texture>
+							<texture border="4">$INFO[ListItem.Icon]</texture>
 							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
 							<bordersize>4</bordersize>
 						</control>

@@ -67,6 +67,9 @@ public:
   {
     return false;
   }
+  virtual void ResetLoadedSave() override
+  {
+  }
 };
 } // namespace RETRO
 } // namespace KODI

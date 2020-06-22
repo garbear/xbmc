@@ -79,6 +79,9 @@ public:
 
   // Implementation of IGameCallback
   std::string GameClientID() const override;
+  std::string GetPlayingGame() const override;
+  IPlayback* GetPlayback() const override;
+  void ResetGame() override;
 
   // Implementation of IPlaybackCallback
   void SetPlaybackSpeed(double speed) override;

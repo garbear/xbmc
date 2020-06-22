@@ -15,11 +15,11 @@ namespace KODI
 {
 namespace GAME
 {
-class CDialogGameSaves : public CDialogGameVideoSelect
+class CDialogInGameSaves : public CDialogGameVideoSelect
 {
 public:
-  CDialogGameSaves();
-  ~CDialogGameSaves() override = default;
+  CDialogInGameSaves();
+  ~CDialogInGameSaves() override = default;
 
 protected:
   // implementation of CDialogGameVideoSelect
@@ -29,6 +29,7 @@ protected:
   void OnItemFocus(unsigned int index) override;
   unsigned int GetFocusedItem() const override;
   void PostExit() override;
+  void OnClickAction() override;
 
 private:
   void InitSavedGames();
@@ -38,6 +39,7 @@ private:
                             std::string& description);
 
   CFileItemList m_items;
+  unsigned int m_focusedItemIndex;
 };
 } // namespace GAME
 } // namespace KODI

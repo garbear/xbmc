@@ -26,3 +26,18 @@ std::string CGUIGameSettingsHandle::GameClientID()
 {
   return m_renderManager.GameClientID();
 }
+
+std::string CGUIGameSettingsHandle::GetPlayingGame()
+{
+  return m_renderManager.GetPlayingGame();
+}
+
+IPlayback* CGUIGameSettingsHandle::GetPlayback()
+{
+  return m_renderManager.GetPlayback();
+}
+
+void CGUIGameSettingsHandle::ResetGame()
+{
+  m_renderManager.ResetGame();
+}

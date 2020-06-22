@@ -33,6 +33,7 @@ class CGUIRenderHandle;
 class CGUIRenderTarget;
 class IGameCallback;
 class IRenderCallback;
+class IPlayback;
 
 /*!
  * \brief Class to safely route commands between the GUI and RetroPlayer
@@ -143,6 +144,9 @@ protected:
   {
   }
   std::string GameClientID();
+  std::string GetPlayingGame();
+  IPlayback* GetPlayback();
+  void ResetGame();
 
 private:
   /*!

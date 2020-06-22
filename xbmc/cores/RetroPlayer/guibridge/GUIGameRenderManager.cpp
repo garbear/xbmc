@@ -209,6 +209,34 @@ std::string CGUIGameRenderManager::GameClientID()
   return "";
 }
 
+std::string CGUIGameRenderManager::GetPlayingGame()
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    return m_gameCallback->GetPlayingGame();
+
+  return "";
+}
+
+IPlayback* CGUIGameRenderManager::GetPlayback()
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    return m_gameCallback->GetPlayback();
+
+  return nullptr;
+}
+
+void CGUIGameRenderManager::ResetGame()
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    m_gameCallback->ResetGame();
+}
+
 void CGUIGameRenderManager::UpdateRenderTargets()
 {
   if (m_factory != nullptr)

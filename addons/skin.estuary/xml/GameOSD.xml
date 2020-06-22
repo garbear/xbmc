@@ -223,7 +223,7 @@
 								<description>Saved games button</description>
 								<label>$LOCALIZE[35249]</label>
 								<icon>osd/fullscreen/buttons/saves.png</icon>
-								<onclick>ActivateWindow(GameSaves)</onclick>
+								<onclick>ActivateWindow(InGameSaves)</onclick>
 							</item>
 							<item id="2108">
 								<description>Settings button</description>

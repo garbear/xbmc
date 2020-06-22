@@ -1037,6 +1037,7 @@ msgid "Cancel"
 msgstr ""
 
 #: xbmc/games/dialogs/GUIDialogSelectSavestate.cpp
+#: xbmc/games/dialogs/osd/DialogGameSaves.cpp
 msgctxt "#223"
 msgid "New"
 msgstr ""

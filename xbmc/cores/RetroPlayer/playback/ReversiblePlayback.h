@@ -69,6 +69,10 @@ public:
   virtual void PauseAsync() override;
   virtual std::string CreateSavestate() override;
   virtual bool LoadSavestate(const std::string& path) override;
+  virtual void ResetLoadedSave() override
+  {
+    m_loadedSavestatePath = "";
+  }
 
   // implementation of IGameLoopCallback
   virtual void FrameEvent() override;
