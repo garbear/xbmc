@@ -184,8 +184,6 @@ bool CReversiblePlayback::LoadSavestate(const std::string& path)
 
   bool bSuccess = false;
 
-  m_loadedSavestatePath = path;
-
   std::unique_ptr<ISavestate> savestate = m_savestateDatabase->CreateSavestate();
   if (m_savestateDatabase->GetSavestate(path, *savestate) &&
       savestate->GetMemorySize() == memorySize)
@@ -203,6 +201,7 @@ bool CReversiblePlayback::LoadSavestate(const std::string& path)
     if (m_gameClient->Deserialize(savestate->GetMemoryData(), memorySize))
     {
       m_totalFrameCount = savestate->TimestampFrames();
+      m_loadedSavestatePath = path;
       bSuccess = true;
     }
   }
