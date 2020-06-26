@@ -49,6 +49,7 @@ void CGUIConfigurationWizard::InitializeState(void)
   m_history.clear();
   m_lateAxisDetected = false;
   m_deviceName.clear();
+  m_requestedPort = 0;
 }
 
 void CGUIConfigurationWizard::Run(const std::string& strControllerId,
@@ -191,7 +192,8 @@ void CGUIConfigurationWizard::Process(void)
   }
 
   RemoveHooks();
-
+  // Resets the controller being mapped at end of mapping
+  m_location.clear();
   CLog::Log(LOGDEBUG, "Configuration wizard ended");
 }
 
@@ -203,9 +205,14 @@ bool CGUIConfigurationWizard::MapPrimitive(JOYSTICK::IButtonMap* buttonMap,
   using namespace JOYSTICK;
 
   bool bHandled = false;
-
+  // Initializes the location of the peripheral being mapped to 
+  // that corresponding to the peripheral that initiates the mapping
+  if (!IsMapping())
+  {
+      m_location = buttonMap->Location();
+  }
   // Abort if another controller cancels the prompt
-  if (IsMapping() && !IsMapping(buttonMap->DeviceName()))
+  if (!IsMapping(buttonMap->Location()))
   {
     //! @todo This only succeeds for game.controller.default; no actions are
     //        currently defined for other controllers
@@ -341,6 +348,7 @@ bool CGUIConfigurationWizard::MapPrimitive(JOYSTICK::IButtonMap* buttonMap,
           if (m_deviceName.empty())
           {
             m_deviceName = buttonMap->DeviceName();
+            m_requestedPort = 
             m_bIsKeyboard = (primitive.Type() == PRIMITIVE_TYPE::KEY);
           }
         }
@@ -443,12 +451,12 @@ bool CGUIConfigurationWizard::OnAction(unsigned int actionId)
 
 bool CGUIConfigurationWizard::IsMapping() const
 {
-  return !m_deviceName.empty();
+  return !m_location.empty();
 }
 
-bool CGUIConfigurationWizard::IsMapping(const std::string& deviceName) const
+bool CGUIConfigurationWizard::IsMapping(const std::string& location) const
 {
-  return m_deviceName == deviceName;
+  return m_location == location;
 }
 
 void CGUIConfigurationWizard::InstallHooks(void)

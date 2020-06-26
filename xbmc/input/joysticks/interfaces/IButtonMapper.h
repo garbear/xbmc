@@ -44,6 +44,7 @@ public:
    */
   virtual std::string ControllerID(void) const = 0;
 
+
   /*!
    * \brief Return true if the button mapper wants a cooldown between button
    *        mapping commands

@@ -48,6 +48,13 @@ public:
   virtual std::string DeviceName(void) const = 0;
 
   /*!
+   * \brief The location of the peripheral associated with this button map
+   *
+   * \return The peripheral's location
+   */
+  virtual std::string Location(void) const = 0;
+
+  /*!
    * \brief Load the button map into memory
    *
    * \return True if button map is ready to start translating buttons, false otherwise

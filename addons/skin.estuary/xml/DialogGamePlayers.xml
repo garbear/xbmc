@@ -43,7 +43,6 @@
 					<right>100</right>
 					<control type="group">
 						<description>Player area</description>
-						<!--
 						<control type="image">
 							<description>Player panel background</description>
 							<top>-20</top>
@@ -52,7 +51,6 @@
 							<right>-20</right>
 							<texture border="40">buttons/dialogbutton-nofo.png</texture>
 						</control>
-						<!-- -->
 						<control type="playerlist" id="4">
 							<description>Player list</description>
 							<onup></onup>
@@ -69,8 +67,17 @@
 									<right>14</right>
 									<texture>$INFO[ListItem.Icon]</texture>
 								</control>
+								<!--
+								<control type="image">
+									<top>4</top>
+									<bottom>4</bottom>
+									<left>4</left>
+									<right>4</right>
+									<texture border="4">buttons/dialogbutton-fo.png</texture>
+								<control>
+								-->
 							</itemlayout>
-							<focusedlayout width="540" height="540">
+							<focusedlayout width="520" height="520">
 								<control type="image">
 									<visible>Control.HasFocus(4)</visible>
 									<texture colordiffuse="button_focus">lists/focus.png</texture>
@@ -82,6 +89,15 @@
 									<right>14</right>
 									<texture>$INFO[ListItem.Icon]</texture>
 								</control>
+								<!--
+								<control type="image">
+									<top>4</top>
+									<bottom>4</bottom>
+									<left>4</left>
+									<right>4</right>
+									<texture border="4">buttons/dialogbutton-nofo.png</texture>
+								<control>
+								-->
 							</focusedlayout>
 						</control>
 					</control>

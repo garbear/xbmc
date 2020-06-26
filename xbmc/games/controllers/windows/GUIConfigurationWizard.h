@@ -58,6 +58,7 @@ public:
   {
     return m_strControllerId;
   }
+
   virtual bool NeedsCooldown(void) const override
   {
     return true;
@@ -110,7 +111,9 @@ private:
   JOYSTICK::THROTTLE_DIRECTION m_throttleDirection;
   std::set<JOYSTICK::CDriverPrimitive> m_history; // History to avoid repeated features
   bool m_lateAxisDetected;    // Set to true if an axis is detected during button mapping
-  std::string m_deviceName;   // Name of device that we're mapping
+  std::string m_deviceName;  // Name of device that we're mapping
+  std::string m_location;  // Location of device that we're mapping
+  int m_requestedPort ;  // Specific port for joystick
   bool m_bIsKeyboard = false; // True if we're mapping keyboard keys
   CCriticalSection m_stateMutex;
 

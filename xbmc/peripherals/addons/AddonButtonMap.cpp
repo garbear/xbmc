@@ -43,6 +43,10 @@ std::string CAddonButtonMap::DeviceName(void) const
 {
   return m_device->DeviceName();
 }
+std::string CAddonButtonMap::Location(void) const
+{
+  return m_device->Location();
+}
 
 bool CAddonButtonMap::Load(void)
 {
