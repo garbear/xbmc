@@ -32,7 +32,7 @@ public:
   // Implementation of IButtonMap
   std::string ControllerID(void) const override { return m_strControllerId; }
 
-  std::string DeviceName(void) const override;
+  std::string Location(void) const override;
 
   bool Load(void) override;
 
