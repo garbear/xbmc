@@ -38,9 +38,9 @@ CAddonButtonMap::~CAddonButtonMap(void)
     addon->UnregisterButtonMap(this);
 }
 
-std::string CAddonButtonMap::DeviceName(void) const
+std::string CAddonButtonMap::Location(void) const
 {
-  return m_device->DeviceName();
+  return m_device->Location();
 }
 
 bool CAddonButtonMap::Load(void)
@@ -65,7 +65,8 @@ bool CAddonButtonMap::Load(void)
   if (bSuccess)
     driverMap = CreateLookupTable(features);
   else
-    CLog::Log(LOGDEBUG, "Failed to load button map for \"%s\"", m_device->DeviceName().c_str());
+    CLog::Log(LOGDEBUG, "Failed to load button map for device at location \"%s\"",
+              m_device->Location().c_str());
 
   {
     CSingleLock lock(m_mutex);
