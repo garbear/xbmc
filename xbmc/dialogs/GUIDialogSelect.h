@@ -53,16 +53,17 @@ protected:
 
   virtual void OnSelect(int idx);
 
+  CGUIViewControl m_viewControl;
+  std::unique_ptr<CFileItemList> m_vecList;
+  CFileItemPtr m_selectedItem;
+
 private:
   bool m_bButtonEnabled;
   bool m_bButtonPressed;
   int m_buttonLabel;
-  CFileItemPtr m_selectedItem;
   bool m_useDetails;
   bool m_multiSelection;
   bool m_focusToButton{};
 
   std::vector<int> m_selectedItems;
-  std::unique_ptr<CFileItemList> m_vecList;
-  CGUIViewControl m_viewControl;
 };

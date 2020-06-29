@@ -124,8 +124,14 @@ std::string CReversiblePlayback::CreateSavestate()
     return "";
   }
 
+  std::string label = "";
+  if (!m_loadedSavestatePath.empty())
+  {
+    std::unique_ptr<ISavestate> loadedSavestate = m_savestateDatabase->CreateSavestate();
+    if (m_savestateDatabase->GetSavestate(m_loadedSavestatePath, *loadedSavestate))
+      label = loadedSavestate->Label();
+  }
   const CDateTime now = CDateTime::GetCurrentDateTime();
-  const std::string label = now.GetAsLocalizedDateTime();
   const std::string gameFileName = URIUtils::GetFileName(m_gameClient->GetGamePath());
   const uint64_t timestampFrames = m_totalFrameCount;
   const double timestampWallClock =

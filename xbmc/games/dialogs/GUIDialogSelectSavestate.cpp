@@ -8,8 +8,9 @@
 
 #include "GUIDialogSelectSavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
-#include "dialogs/GUIDialogSelect.h"
+#include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "FileItem.h"
+#include "games/dialogs/osd/DialogGameSaves.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h"
 #include "guilib/LocalizeStrings.h"
@@ -37,7 +38,18 @@ bool CGUIDialogSelectSavestate::ShowAndGetSavestate(const std::string& gamePath,
 
   for (int i = 0; i < items.Size(); i++)
   {
-    items[i]->SetLabel(items[i]->m_dateTime.GetAsLocalizedDateTime());
+    std::unique_ptr<RETRO::ISavestate> savestate = db.CreateSavestate();
+    db.GetSavestate(items[i]->GetPath(), *savestate);
+
+    const std::string label = savestate->Label();
+    if (label.empty())
+      items[i]->SetLabel(items[i]->m_dateTime.GetAsLocalizedDateTime());
+    else
+    {
+      items[i]->SetLabel(label);
+      items[i]->SetLabel2(items[i]->m_dateTime.GetAsLocalizedDateTime());
+    }
+
     items[i]->SetIconImage(db.MakeThumbnailPath(items[i]->GetPath()));
   }
 
@@ -52,7 +64,7 @@ bool CGUIDialogSelectSavestate::ShowAndGetSavestate(const std::string& gamePath,
   else
   {
     // "Select savestate"
-    CGUIDialogSelect* dialog = GetDialog(g_localizeStrings.Get(35259));
+    CDialogGameSaves* dialog = GetDialog(g_localizeStrings.Get(35260));
 
     if (dialog != nullptr)
     {
@@ -61,17 +73,16 @@ bool CGUIDialogSelectSavestate::ShowAndGetSavestate(const std::string& gamePath,
 
       if (dialog->IsConfirmed())
       {
-        int selectedIndex = dialog->GetSelectedItem();
+        std::string itemPath = dialog->GetSelectedItemPath();
 
-        if (selectedIndex >= 0 && selectedIndex <= items.Size())
+        if (!itemPath.empty())
         {
-          savestatePath = items[selectedIndex]->GetPath();
+          savestatePath = itemPath;
           bSuccess = true;
         }
         else
         {
-          CLog::Log(LOGDEBUG, "Select savestate dialog: User selected invalid savestate %d",
-                    selectedIndex);
+          CLog::Log(LOGDEBUG, "Select savestate dialog: User selected invalid savestate");
         }
       }
       else if (dialog->IsButtonPressed())
@@ -85,18 +96,18 @@ bool CGUIDialogSelectSavestate::ShowAndGetSavestate(const std::string& gamePath,
   return bSuccess;
 }
 
-CGUIDialogSelect* CGUIDialogSelectSavestate::GetDialog(const std::string& title)
+CDialogGameSaves* CGUIDialogSelectSavestate::GetDialog(const std::string& title)
 {
-  CGUIDialogSelect* dialog =
-      CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIDialogSelect>(
-          WINDOW_DIALOG_SELECT);
+  CDialogGameSaves* dialog =
+      CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CDialogGameSaves>(
+          WINDOW_DIALOG_GAME_SAVES);
 
   if (dialog != nullptr)
   {
     dialog->Reset();
     dialog->SetHeading(CVariant{title});
     dialog->SetUseDetails(true);
-    dialog->EnableButton(true, 223); // "New"
+    dialog->EnableButton(true, 35261); // "New game"
   }
 
   return dialog;
