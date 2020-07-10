@@ -3,7 +3,7 @@ DEPS = Makefile
 
 # lib name, version
 LIBNAME=rcheevoslib
-VERSION=8.1.0
+VERSION=9.1.0
 SOURCE=v$(VERSION)
 ARCHIVE=$(SOURCE).tar.gz
 

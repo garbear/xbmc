@@ -3,7 +3,7 @@ DEPS = Makefile 0001-Remove-readline-dependency.patch
 
 # lib name, version
 LIBNAME=lua
-VERSION=5.3.5
+VERSION=5.4.0
 SOURCE=v$(VERSION)
 ARCHIVE=$(SOURCE).tar.gz
 
