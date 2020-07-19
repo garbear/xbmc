@@ -169,6 +169,7 @@ bool CGameClient::Initialize(void)
   m_struct.toKodi.CloseStream = cb_close_stream;
   m_struct.toKodi.HwGetProcAddress = cb_hw_get_proc_address;
   m_struct.toKodi.InputEvent = cb_input_event;
+  m_struct.toKodi.SetMemoryMap = cb_set_memory_map;
 
   if (CreateInstance(ADDON_INSTANCE_GAME, this, "", &m_struct, nullptr) == ADDON_STATUS_OK)
   {
@@ -685,4 +686,17 @@ bool CGameClient::cb_input_event(void* kodiInstance, const game_input_event* eve
     return false;
 
   return gameClient->Input().ReceiveInputEvent(*event);
+}
+
+void CGameClient::cb_set_memory_map(void* kodiInstance, const game_memory_map* memory_map)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (!gameClient)
+    return;
+
+  if (memory_map == nullptr)
+    return;
+
+  //! @todo
+  //return gameClient->SetMemoryMap(*memory_map);
 }

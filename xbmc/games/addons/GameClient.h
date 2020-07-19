@@ -161,6 +161,7 @@ private:
   static void cb_close_stream(void* kodiInstance, void* stream);
   static game_proc_address_t cb_hw_get_proc_address(void* kodiInstance, const char* sym);
   static bool cb_input_event(void* kodiInstance, const game_input_event* event);
+  static void cb_set_memory_map(void* kodiInstance, const game_memory_map* memory_map);
   //@}
 
   // Game subsystems
