@@ -41,3 +41,8 @@ void CGUIGameSettingsHandle::ResetGame()
 {
   m_renderManager.ResetGame();
 }
+
+void CGUIGameSettingsHandle::CloseOSD()
+{
+  m_renderManager.CloseOSD();
+}

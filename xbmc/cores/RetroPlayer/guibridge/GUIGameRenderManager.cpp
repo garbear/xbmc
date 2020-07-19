@@ -237,6 +237,14 @@ void CGUIGameRenderManager::ResetGame()
     m_gameCallback->ResetGame();
 }
 
+void CGUIGameRenderManager::CloseOSD()
+{
+  CSingleLock lock(m_callbackMutex);
+
+  if (m_gameCallback != nullptr)
+    m_gameCallback->CloseOSDCallback();
+}
+
 void CGUIGameRenderManager::UpdateRenderTargets()
 {
   if (m_factory != nullptr)

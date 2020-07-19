@@ -39,6 +39,7 @@ public:
 
   virtual void ResetGame() = 0;
 
+  virtual void CloseOSDCallback() = 0;
 };
 } // namespace RETRO
 } // namespace KODI

@@ -115,5 +115,7 @@ void CDialogInGameSaves::OnClickAction()
     }
     else
       playback->LoadSavestate(savePath);
+
+    gameSettings->CloseOSD();
   }
 }

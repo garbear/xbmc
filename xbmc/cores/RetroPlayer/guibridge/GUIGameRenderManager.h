@@ -147,6 +147,7 @@ protected:
   std::string GetPlayingGame();
   IPlayback* GetPlayback();
   void ResetGame();
+  void CloseOSD();
 
 private:
   /*!

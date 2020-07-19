@@ -82,6 +82,7 @@ public:
   std::string GetPlayingGame() const override;
   IPlayback* GetPlayback() const override;
   void ResetGame() override;
+  void CloseOSDCallback() override;
 
   // Implementation of IPlaybackCallback
   void SetPlaybackSpeed(double speed) override;
