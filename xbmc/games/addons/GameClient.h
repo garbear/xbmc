@@ -213,6 +213,7 @@ private:
   static void cb_close_stream(KODI_HANDLE kodiInstance, KODI_GAME_STREAM_HANDLE stream);
   static game_proc_address_t cb_hw_get_proc_address(KODI_HANDLE kodiInstance, const char* sym);
   static bool cb_input_event(KODI_HANDLE kodiInstance, const game_input_event* event);
+  static void cb_set_memory_map(void* kodiInstance, const game_memory_map* memory_map);
   //@}
 
   /*!

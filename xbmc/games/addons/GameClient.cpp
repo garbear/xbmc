@@ -175,6 +175,7 @@ bool CGameClient::Initialize(void)
   m_ifc.game->toKodi->CloseStream = cb_close_stream;
   m_ifc.game->toKodi->HwGetProcAddress = cb_hw_get_proc_address;
   m_ifc.game->toKodi->InputEvent = cb_input_event;
+  m_ifc.game->toKodi->SetMemoryMap = cb_set_memory_map;
 
   memset(m_ifc.game->toAddon, 0, sizeof(KodiToAddonFuncTable_Game));
 
@@ -699,6 +700,19 @@ bool CGameClient::cb_input_event(KODI_HANDLE kodiInstance, const game_input_even
     return false;
 
   return gameClient->Input().ReceiveInputEvent(*event);
+}
+
+void CGameClient::cb_set_memory_map(void* kodiInstance, const game_memory_map* memory_map)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (!gameClient)
+    return;
+
+  if (memory_map == nullptr)
+    return;
+
+  //! @todo
+  //return gameClient->SetMemoryMap(*memory_map);
 }
 
 std::pair<std::string, std::string> CGameClient::ParseLibretroName(const std::string& addonName)

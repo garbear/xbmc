@@ -843,6 +843,38 @@ public:
   //--==----==----==----==----==----==----==----==----==----==----==----==----==--
 
   //============================================================================
+  ///
+  /// @defgroup cpp_kodi_addon_game_MemoryMapOperations 5. Memory map operations
+  /// @ingroup cpp_kodi_addon_game
+  /// @brief **Memory map operations**
+  ///
+  //@{
+
+  //============================================================================
+  ///
+  /// @brief **Callback to Kodi Function**<br>Set the memory map that the core
+  /// emulates.
+  ///
+  /// This can be used to implement, for example, cheats in a core-agnostic way.
+  ///
+  /// Should only be used by emulators; it doesn't make much sense for anything
+  /// else.
+  ///
+  /// @param[in] memory_map The memory map
+  ///
+  /// @remarks Can only be called from the add-on during initialization or
+  /// from within Open().
+  ///
+  virtual void SetMemoryMap(const game_memory_map& memory_map)
+  {
+  }
+
+  ///@}
+
+  //--==----==----==----==----==----==----==----==----==----==----==----==----==--
+
+  //============================================================================
+  ///
   /// @defgroup cpp_kodi_addon_game_CheatOperations 6. Cheat operations
   /// @ingroup cpp_kodi_addon_game
   /// @brief **Cheat operations**
@@ -1268,6 +1300,14 @@ private:
                                              size_t size)
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->Deserialize(data, size);
+  }
+
+  // --- Memory map operation ----------------------------------------------------
+
+  inline static void ADDON_SetMemoryMap(const AddonInstance_Game* instance,
+    const game_memory_map& memory_map)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->SetMemoryMap(memory_map);
   }
 
   // --- Cheat operations --------------------------------------------------------
