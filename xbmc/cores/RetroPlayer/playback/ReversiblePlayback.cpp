@@ -27,10 +27,11 @@ using namespace RETRO;
 #define REWIND_FACTOR 0.25 // Rewind at 25% of gameplay speed
 
 CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
+                                         CRPRenderManager& renderManager,
                                          double fps,
-                                         size_t serializeSize,
-                                         CRPRenderManager& renderManager)
+                                         size_t serializeSize)
     : m_gameClient(gameClient)
+    , m_renderManager(renderManager)
     , m_gameLoop(this, fps)
     , m_savestateDatabase(new CSavestateDatabase)
     , m_totalFrameCount(0)
@@ -39,7 +40,6 @@ CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
     , m_playTimeMs(0)
     , m_totalTimeMs(0)
     , m_cacheTimeMs(0)
-    , m_renderManager(renderManager)
 {
   UpdateMemoryStream();
 

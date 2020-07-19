@@ -34,9 +34,9 @@ class CReversiblePlayback : public IPlayback, public IGameLoopCallback, public O
 {
 public:
   CReversiblePlayback(GAME::CGameClient* gameClient,
+                      CRPRenderManager& renderManager,
                       double fps,
-                      size_t serializeSize,
-                      CRPRenderManager& renderManager);
+                      size_t serializeSize);
 
   virtual ~CReversiblePlayback();
 
@@ -90,6 +90,7 @@ private:
 
   // Construction parameter
   GAME::CGameClient* const m_gameClient;
+  CRPRenderManager& m_renderManager;
 
   // Gameplay functionality
   CGameLoop m_gameLoop;
@@ -99,8 +100,6 @@ private:
   // Savestate functionality
   std::unique_ptr<CSavestateDatabase> m_savestateDatabase;
   std::string m_loadedSavestatePath{};
-
-  CRPRenderManager& m_renderManager;
 
   // Playback stats
   uint64_t m_totalFrameCount;

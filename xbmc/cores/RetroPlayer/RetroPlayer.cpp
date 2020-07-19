@@ -580,8 +580,9 @@ void CRetroPlayer::CreatePlayback(bool bRestoreState, const std::string& savesta
   if (m_gameClient->RequiresGameLoop())
   {
     m_playback->Deinitialize();
-    m_playback.reset(new CReversiblePlayback(m_gameClient.get(), m_gameClient->GetFrameRate(),
-                                             m_gameClient->GetSerializeSize(), *m_renderManager));
+    m_playback.reset(new CReversiblePlayback(m_gameClient.get(), *m_renderManager,
+                                             m_gameClient->GetFrameRate(),
+                                             m_gameClient->GetSerializeSize()));
   }
   else
     ResetPlayback();
