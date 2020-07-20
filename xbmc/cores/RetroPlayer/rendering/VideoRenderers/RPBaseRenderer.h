@@ -110,6 +110,7 @@ private:
 
   uint64_t m_renderFrameCount = 0;
   uint64_t m_lastRender = 0;
+  bool m_gameon{false};
 };
 } // namespace RETRO
 } // namespace KODI

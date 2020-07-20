@@ -8,6 +8,9 @@
 
 #include "RPBaseRenderer.h"
 
+#include "windowing/GraphicContext.h"
+#include "settings/Settings.h"
+#include "settings/SettingsComponent.h"
 #include "cores/RetroPlayer/buffers/IRenderBuffer.h"
 #include "cores/RetroPlayer/buffers/IRenderBufferPool.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
@@ -16,6 +19,7 @@
 
 using namespace KODI;
 using namespace RETRO;
+const std::string SETTING_VIDEOSCREEN_HW_SCALING_FILTER = "videoscreen.hwscalingfilter";
 
 // Consider renderer visible until this many frames have passed without rendering
 #define VISIBLE_DURATION_FRAME_COUNT 1
@@ -33,6 +37,8 @@ CRPBaseRenderer::~CRPBaseRenderer()
   SetBuffer(nullptr);
 
   m_bufferPool->UnregisterRenderer(this);
+
+  m_gameon = false;
 }
 
 bool CRPBaseRenderer::IsCompatible(const CRenderVideoSettings& settings) const
@@ -134,6 +140,13 @@ void CRPBaseRenderer::ManageRenderArea(const IRenderBuffer& renderBuffer)
   const unsigned int rotationDegCCW =
       (sourceRotationDegCCW + m_renderSettings.VideoSettings().GetRenderRotation()) % 360;
 
+  const SCALINGMETHOD scaleMode = m_renderSettings.VideoSettings().GetScalingMethod();
+  // Check if Display Hardware supports filters
+  bool hw_filter{false};
+  auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
+  if (nullptr != settings)
+    hw_filter = settings->GetBool(SETTING_VIDEOSCREEN_HW_SCALING_FILTER);
+
   // Get screen parameters
   float screenWidth;
   float screenHeight;
@@ -141,8 +154,37 @@ void CRPBaseRenderer::ManageRenderArea(const IRenderBuffer& renderBuffer)
   GetScreenDimensions(screenWidth, screenHeight, screenPixelRatio);
 
   // Entire target rendering area for the video (including black bars)
-  const CRect viewRect = m_context.GetViewWindow();
+  CRect viewRect = m_context.GetViewWindow();
 
+  if (hw_filter && scaleMode == SCALINGMETHOD::NEAREST && stretchMode == STRETCHMODE::Original)
+  {
+    RESOLUTION_INFO m_gameRes=m_context.GetResInfo();
+    m_gameRes.Overscan.left = 0;
+    m_gameRes.Overscan.top = 0;
+    m_gameRes.Overscan.right = sourceWidth;
+    m_gameRes.Overscan.bottom = sourceHeight;
+    m_gameRes.iWidth = sourceWidth;
+    m_gameRes.iHeight = sourceHeight;
+    m_gameRes.iScreenWidth = sourceWidth;
+    m_gameRes.iScreenHeight = sourceHeight;
+    if (!m_gameon)
+    {
+      CLog::Log(LOGDEBUG, "Retroplayer: Configuring game frame to window size once per game\n");
+      auto winSystem = CServiceBroker::GetWinSystem();
+      if (nullptr != winSystem)
+      {
+        winSystem->SetFullScreen(true, m_gameRes, false);
+        m_gameon = true;
+      }
+    }
+    screenWidth = sourceWidth;
+    screenHeight = sourceHeight;
+    screenPixelRatio = 1.0;
+    viewRect.x1 = 0;
+    viewRect.y1 = 0;
+    viewRect.x2 = sourceWidth;
+    viewRect.y2 = sourceHeight;
+  }
   // Calculate pixel ratio and zoom amount
   float pixelRatio = 1.0f;
   float zoomAmount = 1.0f;

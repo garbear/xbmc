@@ -3391,6 +3391,12 @@ void CApplication::StopPlaying()
     int iWin = gui->GetWindowManager().GetActiveWindow();
     if (m_appPlayer.IsPlaying())
     {
+      auto winSystem = CServiceBroker::GetWinSystem();
+      if (nullptr != winSystem)
+      {
+        RESOLUTION_INFO res = winSystem->GetGfxContext().GetResInfo();
+        winSystem->SetFullScreen(true, res, false);
+      }
       m_appPlayer.ClosePlayer();
 
       // turn off visualisation window when stopping
