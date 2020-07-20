@@ -22143,3 +22143,13 @@ msgstr ""
 msgctxt "#39120"
 msgid "Skip filename matching for external audio tracks"
 msgstr ""
+
+#.Display Hardware scaling filter setting toggle
+msgctxt "#39121"
+msgid "Display hardware scaling filter"
+msgstr ""
+
+#. Description
+msgctxt "#39122"
+msgid "Integer scaling (IS) is a Nearest-Neighbor(NN) upscaling technique using Display Engine"
+msgstr ""
