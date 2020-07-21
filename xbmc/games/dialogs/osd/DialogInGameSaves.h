@@ -39,7 +39,7 @@ private:
                             std::string& description);
 
   CFileItemList m_items;
-  unsigned int m_focusedItemIndex;
+  unsigned int m_focusedItemIndex = false;
 };
 } // namespace GAME
 } // namespace KODI
