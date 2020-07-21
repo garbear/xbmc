@@ -138,6 +138,25 @@ bool CSavestateDatabase::GetSavestatesNav(CFileItemList& items,
     }
   }
 
+  for (int i = 0; i < items.Size(); i++)
+  {
+    std::unique_ptr<ISavestate> savestate = CreateSavestate();
+    GetSavestate(items[i]->GetPath(), *savestate);
+
+    const std::string label = savestate->Label();
+    const CDateTime created = savestate->Created();
+
+    if (label.empty())
+      items[i]->SetLabel(items[i]->m_dateTime.GetAsLocalizedDateTime());
+    else
+    {
+      items[i]->SetLabel(label);
+      items[i]->SetLabel2(items[i]->m_dateTime.GetAsLocalizedDateTime());
+    }
+
+    items[i]->SetIconImage(MakeThumbnailPath(items[i]->GetPath()));
+  }
+
   return true;
 }
 

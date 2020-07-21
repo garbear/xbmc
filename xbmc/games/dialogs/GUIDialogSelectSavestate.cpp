@@ -36,23 +36,6 @@ bool CGUIDialogSelectSavestate::ShowAndGetSavestate(const std::string& gamePath,
 
   LogSavestates(items);
 
-  for (int i = 0; i < items.Size(); i++)
-  {
-    std::unique_ptr<RETRO::ISavestate> savestate = db.CreateSavestate();
-    db.GetSavestate(items[i]->GetPath(), *savestate);
-
-    const std::string label = savestate->Label();
-    if (label.empty())
-      items[i]->SetLabel(items[i]->m_dateTime.GetAsLocalizedDateTime());
-    else
-    {
-      items[i]->SetLabel(label);
-      items[i]->SetLabel2(items[i]->m_dateTime.GetAsLocalizedDateTime());
-    }
-
-    items[i]->SetIconImage(db.MakeThumbnailPath(items[i]->GetPath()));
-  }
-
   items.Sort(SortByDate, SortOrderDescending);
 
   // if there are no saves there is no need to prompt the user

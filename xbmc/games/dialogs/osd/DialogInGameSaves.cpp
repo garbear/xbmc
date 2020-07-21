@@ -58,23 +58,6 @@ void CDialogInGameSaves::InitSavedGames()
   CSavestateDatabase db;
   db.GetSavestatesNav(m_items, gameSettings->GetPlayingGame(), gameSettings->GameClientID());
 
-  for (int i = 0; i < m_items.Size(); i++)
-  {
-    std::unique_ptr<ISavestate> savestate = db.CreateSavestate();
-    db.GetSavestate(m_items[i]->GetPath(), *savestate);
-
-    const std::string label = savestate->Label();
-    if (label.empty())
-      m_items[i]->SetLabel(m_items[i]->m_dateTime.GetAsLocalizedDateTime());
-    else
-    {
-      m_items[i]->SetLabel(label);
-      m_items[i]->SetLabel2(m_items[i]->m_dateTime.GetAsLocalizedDateTime());
-    }
-
-    m_items[i]->SetIconImage(db.MakeThumbnailPath(m_items[i]->GetPath()));
-  }
-
   m_items.Sort(SortByDate, SortOrderDescending);
 }
 
