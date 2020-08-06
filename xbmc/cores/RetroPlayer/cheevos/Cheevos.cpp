@@ -7,6 +7,7 @@
  */
 
 #include "Cheevos.h"
+#include "filesystem/CurlFile.h"
 #include "filesystem/File.h"
 #include "games/addons/GameClient.h"
 #include "URL.h"
@@ -123,5 +124,16 @@ bool CCheevos::GetRichPresenceEvaluation(char* evaluation, size_t size)
   }
 
   m_gameClient->GetRichPresenceEvaluation(evaluation, size);
+
+  char url[URL_SIZE];
+  char postData[1024];
+  if (m_gameClient->RCPostRichPresenceUrl(url, URL_SIZE, postData, 1024, m_userName.c_str(),
+                                          m_loginToken.c_str(), m_gameID, evaluation))
+  {
+    XFILE::CCurlFile curl;
+    std::string res;
+    curl.Post(url, postData, res);
+  }
+
   return true;
 }

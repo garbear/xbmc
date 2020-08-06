@@ -122,6 +122,14 @@ public:
   bool RCGenerateHashFromFile(char* hash, int consoleID, const char* filePath);
   bool RCGetGameIDUrl(char* url, size_t size, const char* hash);
   bool RCGetPatchFileUrl(char* url, size_t size, const char* username, const char* token, unsigned gameID);
+  bool RCPostRichPresenceUrl(char* url,
+                             size_t urlSize,
+                             char* postData,
+                             size_t postSize,
+                             const char* username,
+                             const char* token,
+                             unsigned gameID,
+                             const char* richPresence);
   void EnableRichPresence(const char* script);
   void GetRichPresenceEvaluation(char*& evaluation, size_t size);
 

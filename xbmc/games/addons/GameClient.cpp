@@ -621,6 +621,35 @@ bool CGameClient::RCGetPatchFileUrl(char* url,
   return true;
 }
 
+bool CGameClient::RCPostRichPresenceUrl(char* url,
+                                        size_t urlSize,
+                                        char* postData,
+                                        size_t postSize,
+                                        const char* username,
+                                        const char* token,
+                                        unsigned gameID,
+                                        const char* richPresence)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error =
+                 m_struct.toAddon.RCPostRichPresenceUrl(&m_struct, url, urlSize, postData, postSize,
+                                                        username, token, gameID, richPresence),
+             "RCPostRichPresenceUrl()");
+  }
+  catch (...)
+  {
+    LogException("RCPostRichPresenceUrl()");
+  }
+
+  if (error != GAME_ERROR_NO_ERROR)
+    return false;
+
+  return true;
+}
+
 void CGameClient::EnableRichPresence(const char* script)
 {
   GAME_ERROR error = GAME_ERROR_NO_ERROR;
