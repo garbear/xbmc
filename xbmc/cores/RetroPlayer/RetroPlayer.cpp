@@ -16,6 +16,7 @@
 #include "addons/AddonManager.h"
 #include "cores/DataCacheCore.h"
 #include "cores/IPlayerCallback.h"
+#include "cores/RetroPlayer/cheevos/Cheevos.h"
 #include "cores/RetroPlayer/guibridge/GUIGameRenderManager.h"
 #include "cores/RetroPlayer/guiplayback/GUIPlaybackControl.h"
 #include "cores/RetroPlayer/playback/IPlayback.h"
@@ -179,6 +180,12 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
     // Switch to fullscreen
     MESSAGING::CApplicationMessenger::GetInstance().PostMsg(TMSG_SWITCHTOFULLSCREEN);
 
+    m_cheevos.reset(new CCheevos(m_gameClient.get(),
+                                 m_gameServices.GameSettings().RAUsername(),
+                                 m_gameServices.GameSettings().RAToken()));
+
+    m_cheevos->EnableRichPresence();
+
     // Initialize gameplay
     CreatePlayback(m_gameServices.GameSettings().AutosaveEnabled(), savestatePath);
     RegisterWindowCallbacks();
@@ -232,6 +239,8 @@ bool CRetroPlayer::CloseFile(bool reopen /* = false */)
 
   m_input.reset();
   m_streamManager.reset();
+
+  m_cheevos.reset();
 
   if (m_gameClient)
     m_gameClient->Unload();
@@ -594,7 +603,7 @@ void CRetroPlayer::CreatePlayback(bool bRestoreState, const std::string& savesta
   if (m_gameClient->RequiresGameLoop())
   {
     m_playback->Deinitialize();
-    m_playback.reset(new CReversiblePlayback(m_gameClient.get(), *m_renderManager,
+    m_playback.reset(new CReversiblePlayback(m_gameClient.get(), *m_renderManager, m_cheevos.get(),
                                              m_gameClient->GetFrameRate(),
                                              m_gameClient->GetSerializeSize()));
   }
