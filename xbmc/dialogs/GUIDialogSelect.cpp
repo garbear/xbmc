@@ -24,14 +24,14 @@ CGUIDialogSelect::CGUIDialogSelect() : CGUIDialogSelect(WINDOW_DIALOG_SELECT) {}
 
 CGUIDialogSelect::CGUIDialogSelect(int windowId)
     : CGUIDialogBoxBase(windowId, "DialogSelect.xml"),
+    m_vecList(new CFileItemList()),
+    m_selectedItem(nullptr),
     m_bButtonEnabled(false),
     m_bButtonPressed(false),
     m_buttonLabel(-1),
-    m_selectedItem(nullptr),
     m_useDetails(false),
     m_multiSelection(false),
-    m_selectedItems(),
-    m_vecList(new CFileItemList())
+    m_selectedItems()
 {
   m_bConfirmed = false;
   m_loadType = KEEP_IN_MEMORY;
