@@ -144,7 +144,6 @@ bool CSavestateDatabase::GetSavestatesNav(CFileItemList& items,
     GetSavestate(items[i]->GetPath(), *savestate);
 
     const std::string label = savestate->Label();
-    const CDateTime created = savestate->Created();
 
     if (label.empty())
       items[i]->SetLabel(items[i]->m_dateTime.GetAsLocalizedDateTime());
