@@ -26,6 +26,7 @@ class CCheevos
 {
 public:
   CCheevos(GAME::CGameClient* gameClient, const std::string userName, const std::string loginToken);
+  void ResetRuntime();
   void EnableRichPresence();
   bool GetRichPresenceEvaluation(char* evaluation, size_t size);
 

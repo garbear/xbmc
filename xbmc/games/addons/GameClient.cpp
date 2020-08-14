@@ -679,6 +679,20 @@ void CGameClient::GetRichPresenceEvaluation(char*& evaluation, size_t size)
   }
 }
 
+void CGameClient::RCResetRuntime()
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon.RCResetRuntime(&m_struct), "RCResetRuntime()");
+  }
+  catch (...)
+  {
+    LogException("RCResetRuntime()");
+  }
+}
+
 void CGameClient::LogAddonProperties(void) const
 {
   CLog::Log(LOGINFO, "GAME: ------------------------------------");

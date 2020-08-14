@@ -35,6 +35,11 @@ CCheevos::CCheevos(GAME::CGameClient* gameClient, const std::string userName, co
 {
 }
 
+void CCheevos::ResetRuntime()
+{
+  m_gameClient->RCResetRuntime();
+}
+
 bool CCheevos::LoadData()
 {
   const std::string extension = URIUtils::GetExtension(m_gameClient->GetGamePath());

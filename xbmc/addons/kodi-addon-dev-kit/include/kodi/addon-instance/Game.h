@@ -1483,6 +1483,7 @@ typedef struct KodiToAddonFuncTable_Game
 
   GAME_ERROR(__cdecl* EnableRichPresence)(const AddonInstance_Game*, const char*);
   GAME_ERROR(__cdecl* GetRichPresenceEvaluation)(const AddonInstance_Game*, char*, size_t);
+  GAME_ERROR(__cdecl* RCResetRuntime)(const AddonInstance_Game*);
 } KodiToAddonFuncTable_Game;
 
 /*!
@@ -2424,6 +2425,12 @@ public:
   {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
+
+  virtual GAME_ERROR RCResetRuntime()
+  { 
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
   //----------------------------------------------------------------------------
 
   //@}
@@ -2474,6 +2481,7 @@ private:
     m_instanceData->toAddon.RCPostRichPresenceUrl = ADDON_RCPostRichPresenceUrl;
     m_instanceData->toAddon.EnableRichPresence = ADDON_EnableRichPresence;
     m_instanceData->toAddon.GetRichPresenceEvaluation = ADDON_GetRichPresenceEvaluation;
+    m_instanceData->toAddon.RCResetRuntime = ADDON_RCResetRuntime;
   }
 
   // --- Game operations ---------------------------------------------------------
@@ -2707,6 +2715,11 @@ private:
                                                            size_t size)
   {
     return instance->toAddon.addonInstance->GetRichPresenceEvaluation(evaluation, size);
+  }
+
+  inline static GAME_ERROR ADDON_RCResetRuntime(const AddonInstance_Game* instance)
+  {
+    return instance->toAddon.addonInstance->RCResetRuntime();
   }
 
   AddonInstance_Game* m_instanceData;

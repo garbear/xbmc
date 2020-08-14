@@ -132,6 +132,8 @@ public:
                              const char* richPresence);
   void EnableRichPresence(const char* script);
   void GetRichPresenceEvaluation(char*& evaluation, size_t size);
+  // When the game is reset, the runtime should also be reset
+  void RCResetRuntime();
 
   /*!
    * @brief To get the interface table used between addon and kodi
