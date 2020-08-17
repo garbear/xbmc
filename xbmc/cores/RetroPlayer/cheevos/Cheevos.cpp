@@ -70,8 +70,8 @@ bool CCheevos::LoadData()
   response.CURLCreate(requestURL);
   response.CURLOpen(0);
 
-  char responseStr[50];
-  response.ReadString(responseStr, 50);
+  char responseStr[64];
+  response.ReadString(responseStr, sizeof(responseStr));
 
   response.Close();
 
@@ -132,7 +132,7 @@ bool CCheevos::GetRichPresenceEvaluation(char* evaluation, size_t size)
 
   char url[URL_SIZE];
   char postData[1024];
-  if (m_gameClient->RCPostRichPresenceUrl(url, URL_SIZE, postData, 1024, m_userName.c_str(),
+  if (m_gameClient->RCPostRichPresenceUrl(url, URL_SIZE, postData, sizeof(postData), m_userName.c_str(),
                                           m_loginToken.c_str(), m_gameID, evaluation))
   {
     XFILE::CCurlFile curl;
