@@ -143,6 +143,24 @@ public:
   bool Serialize(uint8_t* data, size_t size);
   bool Deserialize(const uint8_t* data, size_t size);
 
+  // RCheevos
+  bool RCGenerateHashFromFile(char* hash, int consoleID, const char* filePath);
+  bool RCGetGameIDUrl(char* url, size_t size, const char* hash);
+  bool RCGetPatchFileUrl(
+      char* url, size_t size, const char* username, const char* token, unsigned gameID);
+  bool RCPostRichPresenceUrl(char* url,
+                             size_t urlSize,
+                             char* postData,
+                             size_t postSize,
+                             const char* username,
+                             const char* token,
+                             unsigned gameID,
+                             const char* richPresence);
+  void EnableRichPresence(const char* script);
+  void GetRichPresenceEvaluation(char*& evaluation, size_t size);
+  // When the game is reset, the runtime should also be reset
+  void RCResetRuntime();
+
   /*!
    * @brief To get the interface table used between addon and kodi
    * @todo This function becomes removed after old callback library system

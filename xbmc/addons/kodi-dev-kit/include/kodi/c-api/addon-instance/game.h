@@ -1189,6 +1189,23 @@ extern "C"
     (const struct AddonInstance_Game*, enum GAME_MEMORY, uint8_t**, size_t*);
     GAME_ERROR(__cdecl* SetCheat)
     (const struct AddonInstance_Game*, unsigned int, bool, const char*);
+    GAME_ERROR(__cdecl* RCGenerateHashFromFile)(const AddonInstance_Game*, char*, int, const char*);
+    GAME_ERROR(__cdecl* RCGetGameIDUrl)(const AddonInstance_Game*, char*, size_t, const char*);
+    GAME_ERROR(__cdecl* RCGetPatchFileUrl)
+    (const AddonInstance_Game*, char*, size_t, const char*, const char*, unsigned);
+    GAME_ERROR(__cdecl* RCPostRichPresenceUrl)
+    (const AddonInstance_Game*,
+     char*,
+     size_t,
+     char*,
+     size_t,
+     const char*,
+     const char*,
+     unsigned,
+     const char*);
+    GAME_ERROR(__cdecl* EnableRichPresence)(const AddonInstance_Game*, const char*);
+    GAME_ERROR(__cdecl* GetRichPresenceEvaluation)(const AddonInstance_Game*, char*, size_t);
+    GAME_ERROR(__cdecl* RCResetRuntime)(const AddonInstance_Game*);
   } KodiToAddonFuncTable_Game;
 
   /*!
