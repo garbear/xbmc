@@ -552,6 +552,140 @@ bool CGameClient::Deserialize(const uint8_t* data, size_t size)
   return bSuccess;
 }
 
+bool CGameClient::RCGenerateHashFromFile(char* hash, int consoleID, const char* filePath)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->RCGenerateHashFromFile(&m_struct, hash, consoleID, filePath),
+             "RCGenerateHashFromFile()");
+  }
+  catch (...)
+  {
+    LogException("RCGenerateHashFromFile()");
+  }
+
+  if (error != GAME_ERROR_NO_ERROR)
+    return false;
+
+  return true;
+}
+
+bool CGameClient::RCGetGameIDUrl(char* url, size_t size, const char* hash)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->RCGetGameIDUrl(&m_struct, url, size, hash),
+             "RCGetGameIDUrl()");
+  }
+  catch (...)
+  {
+    LogException("RCGetGameIDUrl()");
+  }
+
+  if (error != GAME_ERROR_NO_ERROR)
+    return false;
+
+  return true;
+}
+
+bool CGameClient::RCGetPatchFileUrl(
+    char* url, size_t size, const char* username, const char* token, unsigned gameID)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error =
+                 m_struct.toAddon->RCGetPatchFileUrl(&m_struct, url, size, username, token, gameID),
+             "RCGetPatchFileUrl()");
+  }
+  catch (...)
+  {
+    LogException("RCGetPatchFileUrl()");
+  }
+
+  if (error != GAME_ERROR_NO_ERROR)
+    return false;
+
+  return true;
+}
+
+bool CGameClient::RCPostRichPresenceUrl(char* url,
+                                        size_t urlSize,
+                                        char* postData,
+                                        size_t postSize,
+                                        const char* username,
+                                        const char* token,
+                                        unsigned gameID,
+                                        const char* richPresence)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->RCPostRichPresenceUrl(&m_struct, url, urlSize, postData,
+                                                             postSize, username, token, gameID,
+                                                             richPresence),
+             "RCPostRichPresenceUrl()");
+  }
+  catch (...)
+  {
+    LogException("RCPostRichPresenceUrl()");
+  }
+
+  if (error != GAME_ERROR_NO_ERROR)
+    return false;
+
+  return true;
+}
+
+void CGameClient::EnableRichPresence(const char* script)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->EnableRichPresence(&m_struct, script), "GetRichPresence()");
+  }
+  catch (...)
+  {
+    LogException("GetRichPresence()");
+  }
+}
+
+void CGameClient::GetRichPresenceEvaluation(char*& evaluation, size_t size)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->GetRichPresenceEvaluation(&m_struct, evaluation, size),
+             "GetRichPresence()");
+  }
+  catch (...)
+  {
+    LogException("GetRichPresence()");
+  }
+}
+
+void CGameClient::RCResetRuntime()
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->RCResetRuntime(&m_struct), "RCResetRuntime()");
+  }
+  catch (...)
+  {
+    LogException("RCResetRuntime()");
+  }
+}
+
 void CGameClient::LogAddonProperties(void) const
 {
   CLog::Log(LOGINFO, "GAME: ------------------------------------");
