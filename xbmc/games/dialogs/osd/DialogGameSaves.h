@@ -21,11 +21,22 @@ class CDialogGameSaves : public CGUIDialogSelect
 public:
   CDialogGameSaves();
   ~CDialogGameSaves() override = default;
+
+  // implementation of CGUIControl via CGUIDialog
   bool OnMessage(CGUIMessage& message) override;
+
+  // implementation of CGUIWindow via CGUIDialog
+  void FrameMove() override;
+
   std::string GetSelectedItemPath();
 
 private:
-  void OnPopupMenu(int itemIndex);
+  void OnFocus(CFileItemPtr item);
+  void OnPopupMenu(CFileItemPtr item);
+  void HandleCaption(const std::string& caption);
+
+  // State parameters
+  std::string m_currentCaption;
 };
 } // namespace GAME
 } // namespace KODI
