@@ -9,6 +9,7 @@
 #include "ReversiblePlayback.h"
 
 #include "ServiceBroker.h"
+#include "cores/RetroPlayer/cheevos/Cheevos.h"
 #include "cores/RetroPlayer/rendering/RPRenderManager.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
@@ -27,12 +28,16 @@ using namespace RETRO;
 
 #define REWIND_FACTOR 0.25 // Rewind at 25% of gameplay speed
 
+constexpr int RICH_PRESENCE_EVAL_SIZE = 512;
+
 CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
                                          CRPRenderManager& renderManager,
+                                         CCheevos* cheevos,
                                          double fps,
                                          size_t serializeSize)
   : m_gameClient(gameClient),
     m_renderManager(renderManager),
+    m_cheevos(cheevos),
     m_gameLoop(this, fps),
     m_savestateDatabase(new CSavestateDatabase),
     m_totalFrameCount(0),
@@ -126,12 +131,16 @@ std::string CReversiblePlayback::CreateSavestate()
   }
 
   std::string label = "";
-  if (!m_loadedSavestatePath.empty())
+  char eval[RICH_PRESENCE_EVAL_SIZE];
+  if (m_cheevos->GetRichPresenceEvaluation(eval, RICH_PRESENCE_EVAL_SIZE))
+    label = eval;
+  else if (!m_loadedSavestatePath.empty())
   {
     std::unique_ptr<ISavestate> loadedSavestate = m_savestateDatabase->CreateSavestate();
     if (m_savestateDatabase->GetSavestate(m_loadedSavestatePath, *loadedSavestate))
       label = loadedSavestate->Label();
   }
+
   const CDateTime now = CDateTime::GetCurrentDateTime();
   const std::string gameFileName = URIUtils::GetFileName(m_gameClient->GetGamePath());
   const uint64_t timestampFrames = m_totalFrameCount;
@@ -212,6 +221,8 @@ bool CReversiblePlayback::LoadSavestate(const std::string& path)
       bSuccess = true;
     }
   }
+
+  m_cheevos->ResetRuntime();
 
   return bSuccess;
 }
