@@ -9,6 +9,7 @@
 #include "ReversiblePlayback.h"
 
 #include "ServiceBroker.h"
+#include "cores/RetroPlayer/cheevos/Cheevos.h"
 #include "cores/RetroPlayer/rendering/RPRenderManager.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
@@ -27,12 +28,16 @@ using namespace RETRO;
 
 #define REWIND_FACTOR 0.25 // Rewind at 25% of gameplay speed
 
+constexpr int RICH_PRESENCE_EVAL_SIZE = 512;
+
 CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
                                          CRPRenderManager& renderManager,
+                                         CCheevos* cheevos,
                                          double fps,
                                          size_t serializeSize)
   : m_gameClient(gameClient),
     m_renderManager(renderManager),
+    m_cheevos(cheevos),
     m_gameLoop(this, fps),
     m_savestateDatabase(new CSavestateDatabase),
     m_totalFrameCount(0),
@@ -126,12 +131,19 @@ std::string CReversiblePlayback::CreateSavestate(bool autosave)
   }
 
   std::string label = "";
+
+  std::string caption;
+  char eval[RICH_PRESENCE_EVAL_SIZE];
+  if (m_cheevos->GetRichPresenceEvaluation(eval, RICH_PRESENCE_EVAL_SIZE))
+    caption = eval;
+
   if (!m_autosavePath.empty())
   {
     std::unique_ptr<ISavestate> loadedSavestate = CSavestateDatabase::AllocateSavestate();
     if (m_savestateDatabase->GetSavestate(m_autosavePath, *loadedSavestate))
       label = loadedSavestate->Label();
   }
+
   const CDateTime nowUTC = CDateTime::GetUTCDateTime();
   const std::string gameFileName = URIUtils::GetFileName(m_gameClient->GetGamePath());
   const uint64_t timestampFrames = m_totalFrameCount;
@@ -145,6 +157,7 @@ std::string CReversiblePlayback::CreateSavestate(bool autosave)
 
   savestate->SetType(autosave ? SAVE_TYPE::AUTO : SAVE_TYPE::MANUAL);
   savestate->SetLabel(label);
+  savestate->SetCaption(caption);
   savestate->SetCreated(nowUTC);
   savestate->SetGameFileName(gameFileName);
   savestate->SetTimestampFrames(timestampFrames);
@@ -218,6 +231,8 @@ bool CReversiblePlayback::LoadSavestate(const std::string& path)
       bSuccess = true;
     }
   }
+
+  m_cheevos->ResetRuntime();
 
   return bSuccess;
 }
