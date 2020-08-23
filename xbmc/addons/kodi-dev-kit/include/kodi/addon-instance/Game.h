@@ -947,6 +947,53 @@ public:
   {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
+
+  virtual GAME_ERROR RCGenerateHashFromFile(char* hash, int consoleID, const char* filePath)
+  { 
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  virtual GAME_ERROR RCGetGameIDUrl(char* url, size_t size, const char* hash) 
+  { 
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  virtual GAME_ERROR RCGetPatchFileUrl(char* url,
+                                       size_t size,
+                                       const char* username,
+                                       const char* token,
+                                       unsigned gameID)
+  { 
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  virtual GAME_ERROR RCPostRichPresenceUrl(char* url,
+                                           size_t urlSize,
+                                           char* postData,
+                                           size_t postSize,
+                                           const char* username,
+                                           const char* token,
+                                           unsigned gameID,
+                                           const char* richPresence)
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  virtual GAME_ERROR EnableRichPresence(const char* script) 
+  { 
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  virtual GAME_ERROR GetRichPresenceEvaluation(char* evaluation, size_t size)
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  virtual GAME_ERROR RCResetRuntime()
+  { 
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
   //----------------------------------------------------------------------------
 
   ///@}
@@ -990,6 +1037,14 @@ private:
     m_instanceData->toAddon->CheatReset = ADDON_CheatReset;
     m_instanceData->toAddon->GetMemory = ADDON_GetMemory;
     m_instanceData->toAddon->SetCheat = ADDON_SetCheat;
+
+    m_instanceData->toAddon->RCGenerateHashFromFile = ADDON_RCGenerateHashFromFile;
+    m_instanceData->toAddon->RCGetGameIDUrl = ADDON_RCGetGameIDUrl;
+    m_instanceData->toAddon->RCGetPatchFileUrl = ADDON_RCGetPatchFileUrl;
+    m_instanceData->toAddon->RCPostRichPresenceUrl = ADDON_RCPostRichPresenceUrl;
+    m_instanceData->toAddon->EnableRichPresence = ADDON_EnableRichPresence;
+    m_instanceData->toAddon->GetRichPresenceEvaluation = ADDON_GetRichPresenceEvaluation;
+    m_instanceData->toAddon->RCResetRuntime = ADDON_RCResetRuntime;
   }
 
   // --- Game operations ---------------------------------------------------------
@@ -1179,6 +1234,70 @@ private:
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
         ->SetCheat(index, enabled, code);
+  }
+
+  inline static GAME_ERROR ADDON_RCGenerateHashFromFile(const AddonInstance_Game* instance,
+                                                        char* hash, 
+                                                        int consoleID,
+                                                        const char* filePath)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->RCGenerateHashFromFile(hash, consoleID, filePath);
+  }
+
+  inline static GAME_ERROR ADDON_RCGetGameIDUrl(const AddonInstance_Game* instance,
+                                                char* url,
+                                                size_t size,
+                                                const char* hash)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->RCGetGameIDUrl(url, size, hash);
+  }
+
+  inline static GAME_ERROR ADDON_RCGetPatchFileUrl(const AddonInstance_Game* instance,
+                                                   char* url,
+                                                   size_t size,
+                                                   const char* username,
+                                                   const char* token,
+                                                   unsigned gameID)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->RCGetPatchFileUrl(url, size, username, token, gameID);
+  }
+
+  inline static GAME_ERROR ADDON_RCPostRichPresenceUrl(const AddonInstance_Game* instance,
+                                                       char* url,
+                                                       size_t urlSize,
+                                                       char* postData,
+                                                       size_t postSize,
+                                                       const char* username,
+                                                       const char* token,
+                                                       unsigned gameID,
+                                                       const char* richPresence)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->RCPostRichPresenceUrl(url, urlSize, postData, postSize, username, token, gameID,
+                                richPresence);
+  }
+
+  inline static GAME_ERROR ADDON_EnableRichPresence(const AddonInstance_Game* instance,
+                                                    const char* script)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->EnableRichPresence(script);
+  }
+
+  inline static GAME_ERROR ADDON_GetRichPresenceEvaluation(const AddonInstance_Game* instance,
+                                                           char* evaluation,
+                                                           size_t size)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->GetRichPresenceEvaluation(evaluation, size);
+  }
+
+  inline static GAME_ERROR ADDON_RCResetRuntime(const AddonInstance_Game* instance)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->RCResetRuntime();
   }
 
   AddonInstance_Game* m_instanceData;
