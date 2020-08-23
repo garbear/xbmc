@@ -14,6 +14,7 @@
 #include "cores/RetroPlayer/playback/IPlayback.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
+#include "games/dialogs/DialogGameDefines.h"
 #include "guilib/LocalizeStrings.h"
 #include "guilib/WindowIDs.h"
 #include "settings/GameSettings.h"
@@ -40,9 +41,14 @@ void CDialogInGameSaves::PreInit()
 
   InitSavedGames();
 
-  CFileItemPtr item = std::make_shared<CFileItem>(g_localizeStrings.Get(15314)); // "Save progress"
+  // "Save progress"
+  CFileItemPtr item = std::make_shared<CFileItem>(g_localizeStrings.Get(15314));
+
   item->SetArt("icon", "DefaultAddSource.png");
   item->SetPath("");
+
+  // "Save progress to new save file"
+  item->SetProperty(SAVESTATE_CAPTION, g_localizeStrings.Get(15315));
 
   m_items.AddFront(std::move(item), 0);
 }
