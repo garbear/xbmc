@@ -8631,7 +8631,19 @@ msgctxt "#15311"
 msgid "Path:"
 msgstr ""
 
-#empty strings from id 15312 to 15999
+#. Game settings category name
+#: system/settings/settings.xml
+msgctxt "#15312"
+msgid "Achievements"
+msgstr ""
+
+#. Group label for Achievements category in game settings
+#: system/settings/settings.xml
+msgctxt "#15313"
+msgid "Login to RetroAchievements"
+msgstr ""
+
+#empty strings from id 15314 to 15999
 
 #. Label for button in the in-game savestate manager
 #: xbmc/games/dialogs/osd/DialogInGameSaves.cpp
@@ -18096,7 +18108,30 @@ msgctxt "#35261"
 msgid "New game"
 msgstr ""
 
-#empty strings from id 35262 to 35401
+#. Help text for RetroAchievements username input setting
+#: system/settings/settings.xml
+msgctxt "#35262"
+msgid "Enter your RetroAchievements account username"
+msgstr ""
+
+#. Help text for RetroAchievements password input setting
+#: system/settings/settings.xml
+msgctxt "#35263"
+msgid "Enter your RetroAchievements account password"
+msgstr ""
+
+#. Label for notification events regarding RetroAchievements login
+#: xbmc/games/GameSettings.cpp
+msgctxt "#35264"
+msgid "RetroAchievements"
+msgstr ""
+
+#: xbmc/games/GameSettings.cpp
+msgctxt "#35265"
+msgid "Incorrect User/Password!"
+msgstr ""
+
+#empty strings from id 35266 to 35401
 
 msgctxt "#35402"
 msgid "Replicates the 2.6-inch dot matrix screen of the Game Boy. Features the ghosting problems of the original handheld."

@@ -9,9 +9,17 @@
 #include "GameSettings.h"
 
 #include "ServiceBroker.h"
+#include "URL.h"
+#include "events/EventLog.h"
+#include "events/NotificationEvent.h"
+#include "filesystem/File.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
 #include "settings/lib/Setting.h"
+#include "utils/JSONVariantParser.h"
+#include "utils/StringUtils.h"
+#include "utils/Variant.h"
+#include "utils/auto_buffer.h"
 
 #include <algorithm>
 
@@ -25,16 +33,18 @@ const std::string SETTING_GAMES_SHOW_OSD_HELP = "gamesgeneral.showosdhelp";
 const std::string SETTING_GAMES_ENABLEAUTOSAVE = "gamesgeneral.enableautosave";
 const std::string SETTING_GAMES_ENABLEREWIND = "gamesgeneral.enablerewind";
 const std::string SETTING_GAMES_REWINDTIME = "gamesgeneral.rewindtime";
+const std::string SETTING_GAMES_ACHIEVEMENTS_USERNAME = "gamesachievements.username";
+const std::string SETTING_GAMES_ACHIEVEMENTS_PASSWORD = "gamesachievements.password";
+const std::string SETTING_GAMES_ACHIEVEMENTS_TOKEN = "gamesachievements.token";
 } // namespace
 
 CGameSettings::CGameSettings()
 {
   m_settings = CServiceBroker::GetSettingsComponent()->GetSettings();
 
-  m_settings->RegisterCallback(this, {
-                                         SETTING_GAMES_ENABLEREWIND,
-                                         SETTING_GAMES_REWINDTIME,
-                                     });
+  m_settings->RegisterCallback(this, {SETTING_GAMES_ENABLEREWIND, SETTING_GAMES_REWINDTIME,
+                                      SETTING_GAMES_ACHIEVEMENTS_USERNAME,
+                                      SETTING_GAMES_ACHIEVEMENTS_PASSWORD});
 }
 
 CGameSettings::~CGameSettings()
@@ -85,6 +95,16 @@ unsigned int CGameSettings::MaxRewindTimeSec()
   return static_cast<unsigned int>(std::max(rewindTimeSec, 0));
 }
 
+std::string CGameSettings::RAUsername()
+{
+  return m_settings->GetString(SETTING_GAMES_ACHIEVEMENTS_USERNAME);
+}
+
+std::string CGameSettings::RAToken()
+{
+  return m_settings->GetString(SETTING_GAMES_ACHIEVEMENTS_TOKEN);
+}
+
 void CGameSettings::OnSettingChanged(const std::shared_ptr<const CSetting>& setting)
 {
   if (setting == nullptr)
@@ -96,5 +116,38 @@ void CGameSettings::OnSettingChanged(const std::shared_ptr<const CSetting>& sett
   {
     SetChanged();
     NotifyObservers(ObservableMessageSettingsChanged);
+  }
+  else if (settingId == SETTING_GAMES_ACHIEVEMENTS_USERNAME ||
+           settingId == SETTING_GAMES_ACHIEVEMENTS_PASSWORD)
+  {
+    const std::string username = m_settings->GetString(SETTING_GAMES_ACHIEVEMENTS_USERNAME);
+    const std::string password = m_settings->GetString(SETTING_GAMES_ACHIEVEMENTS_PASSWORD);
+
+    if (!username.empty() && !password.empty())
+    {
+      XFILE::CFile request;
+      const CURL loginUrl(StringUtils::Format(
+          "http://retroachievements.org/dorequest.php?r=login&u=%s&p=%s", username, password));
+      XUTILS::auto_buffer response;
+      CVariant data(CVariant::VariantTypeObject);
+
+      request.LoadFile(loginUrl, response);
+      CJSONVariantParser::Parse(response.get(), data);
+
+      if (data["Success"].asBoolean())
+      {
+        const std::string token = data["Token"].asString();
+        m_settings->SetString(SETTING_GAMES_ACHIEVEMENTS_TOKEN, token);
+      }
+      else
+      {
+        m_settings->SetString(SETTING_GAMES_ACHIEVEMENTS_PASSWORD, "");
+        m_settings->SetString(SETTING_GAMES_ACHIEVEMENTS_TOKEN, "");
+
+        // "RetroAchievements", "Incorrect User/Password!"
+        CServiceBroker::GetEventLog().AddWithNotification(
+            EventPtr(new CNotificationEvent(35264, 35265, EventLevel::Error)));
+      }
+    }
   }
 }
