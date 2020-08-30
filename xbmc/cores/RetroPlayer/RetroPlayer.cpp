@@ -154,7 +154,7 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
   {
     CSavestateDatabase savestateDb;
 
-    std::unique_ptr<ISavestate> save = savestateDb.CreateSavestate();
+    std::unique_ptr<ISavestate> save = CSavestateDatabase::AllocateSavestate();
     if (savestateDb.GetSavestate(savestatePath, *save))
     {
       // Check if game client is the same
