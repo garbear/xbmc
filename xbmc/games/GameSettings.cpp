@@ -20,6 +20,7 @@
 #include "utils/StringUtils.h"
 #include "utils/Variant.h"
 #include "utils/auto_buffer.h"
+#include "utils/log.h"
 
 #include <algorithm>
 
@@ -36,6 +37,7 @@ const std::string SETTING_GAMES_REWINDTIME = "gamesgeneral.rewindtime";
 const std::string SETTING_GAMES_ACHIEVEMENTS_USERNAME = "gamesachievements.username";
 const std::string SETTING_GAMES_ACHIEVEMENTS_PASSWORD = "gamesachievements.password";
 const std::string SETTING_GAMES_ACHIEVEMENTS_TOKEN = "gamesachievements.token";
+const std::string SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN = "gamesachievements.loggedin";
 } // namespace
 
 CGameSettings::CGameSettings()
@@ -44,7 +46,8 @@ CGameSettings::CGameSettings()
 
   m_settings->RegisterCallback(this, {SETTING_GAMES_ENABLEREWIND, SETTING_GAMES_REWINDTIME,
                                       SETTING_GAMES_ACHIEVEMENTS_USERNAME,
-                                      SETTING_GAMES_ACHIEVEMENTS_PASSWORD});
+                                      SETTING_GAMES_ACHIEVEMENTS_PASSWORD,
+                                      SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN});
 }
 
 CGameSettings::~CGameSettings()
@@ -118,36 +121,84 @@ void CGameSettings::OnSettingChanged(const std::shared_ptr<const CSetting>& sett
     NotifyObservers(ObservableMessageSettingsChanged);
   }
   else if (settingId == SETTING_GAMES_ACHIEVEMENTS_USERNAME ||
-           settingId == SETTING_GAMES_ACHIEVEMENTS_PASSWORD)
+           settingId == SETTING_GAMES_ACHIEVEMENTS_PASSWORD ||
+           (settingId == SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN &&
+            std::dynamic_pointer_cast<const CSettingBool>(setting)->GetValue()))
   {
     const std::string username = m_settings->GetString(SETTING_GAMES_ACHIEVEMENTS_USERNAME);
     const std::string password = m_settings->GetString(SETTING_GAMES_ACHIEVEMENTS_PASSWORD);
+    std::string token = m_settings->GetString(SETTING_GAMES_ACHIEVEMENTS_TOKEN);
 
-    if (!username.empty() && !password.empty())
+    // TODO: Async login, this freezes the GUI
+    token = LoginToRA(username, password, std::move(token));
+
+    m_settings->SetString(SETTING_GAMES_ACHIEVEMENTS_TOKEN, token);
+
+    if (!token.empty())
     {
-      XFILE::CFile request;
-      const CURL loginUrl(StringUtils::Format(
-          "http://retroachievements.org/dorequest.php?r=login&u=%s&p=%s", username, password));
-      XUTILS::auto_buffer response;
+      m_settings->SetBool(SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN, true);
+    }
+    else
+    {
+      if (settingId == SETTING_GAMES_ACHIEVEMENTS_PASSWORD)
+        m_settings->SetString(SETTING_GAMES_ACHIEVEMENTS_PASSWORD, "");
+      m_settings->SetBool(SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN, false);
+    }
+
+    m_settings->Save();
+  }
+  else if (settingId == SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN &&
+           !std::dynamic_pointer_cast<const CSettingBool>(setting)->GetValue())
+  {
+    m_settings->SetString(SETTING_GAMES_ACHIEVEMENTS_TOKEN, "");
+    m_settings->Save();
+  }
+}
+
+std::string CGameSettings::LoginToRA(const std::string& username,
+                                     const std::string& password,
+                                     std::string token)
+{
+  if (!username.empty() && !password.empty())
+  {
+    XFILE::CFile request;
+    const CURL loginUrl(StringUtils::Format(
+        "http://retroachievements.org/dorequest.php?r=login&u={}&p={}", username, password));
+
+    XUTILS::auto_buffer response;
+    if (request.LoadFile(loginUrl, response) > 0)
+    {
+      std::string strResponse(response.get(), response.size());
       CVariant data(CVariant::VariantTypeObject);
-
-      request.LoadFile(loginUrl, response);
-      CJSONVariantParser::Parse(response.get(), data);
-
-      if (data["Success"].asBoolean())
+      if (CJSONVariantParser::Parse(strResponse, data))
       {
-        const std::string token = data["Token"].asString();
-        m_settings->SetString(SETTING_GAMES_ACHIEVEMENTS_TOKEN, token);
+        if (data["Success"].asBoolean())
+          token = data["Token"].asString();
+        else
+        {
+          token.clear();
+
+          // "RetroAchievements", "Incorrect User/Password!"
+          CServiceBroker::GetEventLog().AddWithNotification(
+              EventPtr(new CNotificationEvent(35264, 35265, EventLevel::Error)));
+        }
       }
       else
       {
-        m_settings->SetString(SETTING_GAMES_ACHIEVEMENTS_PASSWORD, "");
-        m_settings->SetString(SETTING_GAMES_ACHIEVEMENTS_TOKEN, "");
-
-        // "RetroAchievements", "Incorrect User/Password!"
+        // "RetroAchievements", "Invalid response from server"
         CServiceBroker::GetEventLog().AddWithNotification(
-            EventPtr(new CNotificationEvent(35264, 35265, EventLevel::Error)));
+            EventPtr(new CNotificationEvent(35264, 35267, EventLevel::Error)));
+
+        CLog::Log(LOGERROR, "Invalid server response: {}", strResponse);
       }
     }
+    else
+    {
+      // "RetroAchievements", "Failed to contact server"
+      CServiceBroker::GetEventLog().AddWithNotification(
+          EventPtr(new CNotificationEvent(35264, 35266, EventLevel::Error)));
+    }
   }
+
+  return token;
 }
