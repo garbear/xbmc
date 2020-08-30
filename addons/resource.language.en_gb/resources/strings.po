@@ -18137,7 +18137,33 @@ msgctxt "#35265"
 msgid "Incorrect User/Password!"
 msgstr ""
 
-#empty strings from id 35266 to 35401
+#. TODO
+#: xbmc/games/GameSettings.cpp
+msgctxt "#35266"
+msgid "Failed to contact server"
+msgstr ""
+
+#. TODO
+#: xbmc/games/GameSettings.cpp
+msgctxt "#35267"
+msgid "Invalid response from server"
+msgstr ""
+
+#. Setting to show if the user is logged in to RetroAchievements
+#. Settings -> Games -> Achievements -> Logged in
+#: system/settings/settings.xml
+msgctxt "#35268"
+msgid "Logged in"
+msgstr ""
+
+#. Help text for the setting that shows if the user is logged in to RetroAchievements
+#. Settings -> Games -> Achievements -> Logged in
+#: system/settings/settings.xml
+msgctxt "#35269"
+msgid "Toggle this setting to log in or out of RetroAchievemts."
+msgstr ""
+
+#empty strings from id 35270 to 35401
 
 msgctxt "#35402"
 msgid "Replicates the 2.6-inch dot matrix screen of the Game Boy. Features the ghosting problems of the original handheld."
