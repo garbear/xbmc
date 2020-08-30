@@ -42,6 +42,11 @@ public:
   void OnSettingChanged(const std::shared_ptr<const CSetting>& setting) override;
 
 private:
+  std::string LoginToRA(const std::string& username,
+                        const std::string& password,
+                        std::string token);
+  bool IsAccountVerified(const std::string& username, const std::string& token);
+
   // Construction parameters
   std::shared_ptr<CSettings> m_settings;
 };
