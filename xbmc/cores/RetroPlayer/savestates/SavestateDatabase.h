@@ -25,7 +25,7 @@ public:
   CSavestateDatabase();
   virtual ~CSavestateDatabase() = default;
 
-  std::unique_ptr<ISavestate> CreateSavestate();
+  static std::unique_ptr<ISavestate> AllocateSavestate();
 
   bool AddSavestate(std::string& savestatePath,
                     const std::string& gamePath,

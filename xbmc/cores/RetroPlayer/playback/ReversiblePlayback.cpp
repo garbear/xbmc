@@ -139,7 +139,7 @@ std::string CReversiblePlayback::CreateSavestate(bool autosave /* = true*/)
 
   if (!m_autosavePath.empty())
   {
-    std::unique_ptr<ISavestate> loadedSavestate = m_savestateDatabase->CreateSavestate();
+    std::unique_ptr<ISavestate> loadedSavestate = CSavestateDatabase::AllocateSavestate();
     if (m_savestateDatabase->GetSavestate(m_autosavePath, *loadedSavestate))
       label = loadedSavestate->Label();
   }
@@ -153,7 +153,7 @@ std::string CReversiblePlayback::CreateSavestate(bool autosave /* = true*/)
   const std::string gameClientId = m_gameClient->ID();
   const std::string gameClientVersion = m_gameClient->Version().asString();
 
-  std::unique_ptr<ISavestate> savestate = m_savestateDatabase->CreateSavestate();
+  std::unique_ptr<ISavestate> savestate = CSavestateDatabase::AllocateSavestate();
 
   savestate->SetType(autosave ? SAVE_TYPE::AUTO : SAVE_TYPE::MANUAL);
   savestate->SetLabel(label);
@@ -211,7 +211,7 @@ bool CReversiblePlayback::LoadSavestate(const std::string& path)
 
   bool bSuccess = false;
 
-  std::unique_ptr<ISavestate> savestate = m_savestateDatabase->CreateSavestate();
+  std::unique_ptr<ISavestate> savestate = CSavestateDatabase::AllocateSavestate();
   if (m_savestateDatabase->GetSavestate(path, *savestate) &&
       savestate->GetMemorySize() == memorySize)
   {

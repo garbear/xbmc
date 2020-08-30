@@ -27,7 +27,7 @@ using namespace RETRO;
 
 CSavestateDatabase::CSavestateDatabase() = default;
 
-std::unique_ptr<ISavestate> CSavestateDatabase::CreateSavestate()
+std::unique_ptr<ISavestate> CSavestateDatabase::AllocateSavestate()
 {
   std::unique_ptr<ISavestate> savestate;
 
@@ -133,7 +133,7 @@ bool CSavestateDatabase::GetSavestatesNav(CFileItemList& items,
   {
     for (int i = items.Size() - 1; i >= 0; i--)
     {
-      std::unique_ptr<ISavestate> save = CreateSavestate();
+      std::unique_ptr<ISavestate> save = AllocateSavestate();
       GetSavestate(items[i]->GetPath(), *save);
       if (save->GameClientID() != gameClient)
         items.Remove(i);
@@ -142,7 +142,7 @@ bool CSavestateDatabase::GetSavestatesNav(CFileItemList& items,
 
   for (int i = 0; i < items.Size(); i++)
   {
-    std::unique_ptr<ISavestate> savestate = CreateSavestate();
+    std::unique_ptr<ISavestate> savestate = AllocateSavestate();
     GetSavestate(items[i]->GetPath(), *savestate);
 
     const std::string label = savestate->Label();
@@ -166,11 +166,11 @@ bool CSavestateDatabase::GetSavestatesNav(CFileItemList& items,
 
 bool CSavestateDatabase::RenameSavestate(const std::string& savestatePath, const std::string& label)
 {
-  std::unique_ptr<ISavestate> savestate = CreateSavestate();
+  std::unique_ptr<ISavestate> savestate = AllocateSavestate();
   if (!GetSavestate(savestatePath, *savestate))
     return false;
 
-  std::unique_ptr<ISavestate> newSavestate = CreateSavestate();
+  std::unique_ptr<ISavestate> newSavestate = AllocateSavestate();
 
   newSavestate->SetLabel(label);
   newSavestate->SetCaption(savestate->Caption());

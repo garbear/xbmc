@@ -51,7 +51,7 @@ bool CGameUtils::FillInGameClient(CFileItem& item, std::string& savestatePath)
       if (!savestatePath.empty())
       {
         RETRO::CSavestateDatabase db;
-        std::unique_ptr<RETRO::ISavestate> save = db.CreateSavestate();
+        std::unique_ptr<RETRO::ISavestate> save = RETRO::CSavestateDatabase::AllocateSavestate();
         db.GetSavestate(savestatePath, *save);
         item.GetGameInfoTag()->SetGameClient(save->GameClientID());
       }
