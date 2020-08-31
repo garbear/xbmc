@@ -58,11 +58,11 @@ protected:
   CFileItemPtr m_selectedItem;
 
 private:
-  bool m_bButtonEnabled;
-  bool m_bButtonPressed;
-  int m_buttonLabel;
-  bool m_useDetails;
-  bool m_multiSelection;
+  bool m_bButtonEnabled = false;
+  bool m_bButtonPressed = false;
+  int m_buttonLabel = -1;
+  bool m_useDetails = false;
+  bool m_multiSelection = false;
   bool m_focusToButton{};
 
   std::vector<int> m_selectedItems;
