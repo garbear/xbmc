@@ -56,7 +56,10 @@ bool CDialogGameSaves::OnMessage(CGUIMessage& message)
           }
         }
       }
+      break;
     }
+    default:
+      break;
   }
 
   return CGUIDialogSelect::OnMessage(message);
@@ -64,11 +67,22 @@ bool CDialogGameSaves::OnMessage(CGUIMessage& message)
 
 void CDialogGameSaves::FrameMove()
 {
-  int selectedItem = m_viewControl.GetSelectedItem();
-  if (selectedItem >= 0 && selectedItem < m_vecList->Size())
+  CGUIControl* itemContainer = GetControl(CONTROL_DETAILED_LIST);
+  if (itemContainer != nullptr)
   {
-    CFileItemPtr item = m_vecList->Get(selectedItem);
-    OnFocus(std::move(item));
+    if (itemContainer->HasFocus())
+    {
+      int selectedItem = m_viewControl.GetSelectedItem();
+      if (selectedItem >= 0 && selectedItem < m_vecList->Size())
+      {
+        CFileItemPtr item = m_vecList->Get(selectedItem);
+        OnFocus(std::move(item));
+      }
+    }
+    else
+    {
+      OnFocusLost();
+    }
   }
 
   CGUIDialogSelect::FrameMove();
@@ -84,6 +98,11 @@ void CDialogGameSaves::OnFocus(CFileItemPtr item)
   const std::string caption = item->GetProperty(SAVESTATE_CAPTION).asString();
 
   HandleCaption(caption);
+}
+
+void CDialogGameSaves::OnFocusLost()
+{
+  HandleCaption("");
 }
 
 void CDialogGameSaves::OnPopupMenu(CFileItemPtr item)
