@@ -54,7 +54,7 @@ public:
   double GetSpeed() const override;
   void SetSpeed(double speedFactor) override;
   void PauseAsync() override;
-  std::string CreateSavestate(bool autosave = true) override;
+  std::string CreateSavestate(bool autosave) override;
   bool LoadSavestate(const std::string& path) override;
 
   // implementation of IGameLoopCallback

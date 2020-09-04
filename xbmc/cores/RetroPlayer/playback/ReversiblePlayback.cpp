@@ -116,7 +116,7 @@ void CReversiblePlayback::PauseAsync()
   m_gameLoop.PauseAsync();
 }
 
-std::string CReversiblePlayback::CreateSavestate(bool autosave /* = true*/)
+std::string CReversiblePlayback::CreateSavestate(bool autosave)
 {
   const size_t memorySize = m_gameClient->SerializeSize();
 

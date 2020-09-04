@@ -223,7 +223,7 @@ bool CRetroPlayer::CloseFile(bool reopen /* = false */)
 
   if (m_gameClient && m_gameServices.GameSettings().AutosaveEnabled())
   {
-    std::string savePath = m_playback->CreateSavestate();
+    std::string savePath = m_playback->CreateSavestate(true);
     if (!savePath.empty())
       CLog::Log(LOGDEBUG, "RetroPlayer[SAVE]: Saved state to %s",
                 CURL::GetRedacted(savePath).c_str());
@@ -449,7 +449,7 @@ std::string CRetroPlayer::GetPlayerState()
 
   if (m_autoSave)
   {
-    savestatePath = m_playback->CreateSavestate();
+    savestatePath = m_playback->CreateSavestate(true);
     if (savestatePath.empty())
     {
       CLog::Log(LOGDEBUG, "RetroPlayer[SAVE]: Continuing without saving");
@@ -563,9 +563,9 @@ bool CRetroPlayer::IsAutoSaveEnabled() const
   return m_playback->GetSpeed() > 0.0;
 }
 
-std::string CRetroPlayer::CreateSavestate()
+std::string CRetroPlayer::CreateAutosave()
 {
-  return m_playback->CreateSavestate();
+  return m_playback->CreateSavestate(true);
 }
 
 void CRetroPlayer::SetSpeedInternal(double speed)
