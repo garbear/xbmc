@@ -155,7 +155,7 @@ std::string CReversiblePlayback::CreateSavestate(bool autosave /* = true*/)
 
   std::unique_ptr<ISavestate> savestate = m_savestateDatabase->CreateSavestate();
 
-  savestate->SetType(SAVE_TYPE::AUTO);
+  savestate->SetType(autosave ? SAVE_TYPE::AUTO : SAVE_TYPE::MANUAL);
   savestate->SetLabel(label);
   savestate->SetCaption(caption);
   savestate->SetCreated(nowUTC);
