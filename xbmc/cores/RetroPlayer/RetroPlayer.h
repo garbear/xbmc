@@ -82,7 +82,7 @@ public:
 
   // Implementation of IAutoSaveCallback
   bool IsAutoSaveEnabled() const override;
-  std::string CreateSavestate() override;
+  std::string CreateAutosave() override;
 
 private:
   void SetSpeedInternal(double speed);
