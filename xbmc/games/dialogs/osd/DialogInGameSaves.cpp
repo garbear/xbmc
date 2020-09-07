@@ -44,7 +44,8 @@ void CDialogInGameSaves::PreInit()
   CFileItemPtr item = std::make_shared<CFileItem>(g_localizeStrings.Get(15314)); // "Save progress"
   item->SetArt("icon", "DefaultAddSource.png");
   item->SetPath("");
-  item->SetProperty(SAVESTATE_CAPTION, g_localizeStrings.Get(15315)); // "Save progress to new save file"
+  item->SetProperty(SAVESTATE_CAPTION,
+                    g_localizeStrings.Get(15315)); // "Save progress to new save file"
 
   m_items.AddFront(std::move(item), 0);
 }
