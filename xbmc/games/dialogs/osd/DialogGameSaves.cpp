@@ -125,7 +125,8 @@ void CDialogGameSaves::OnPopupMenu(CFileItemPtr item)
     {
       if (db.RenameSavestate(savePath, label))
       {
-        std::unique_ptr<RETRO::ISavestate> savestate = RETRO::CSavestateDatabase::AllocateSavestate();
+        std::unique_ptr<RETRO::ISavestate> savestate =
+            RETRO::CSavestateDatabase::AllocateSavestate();
         db.GetSavestate(savePath, *savestate);
 
         item->SetLabel(label);
