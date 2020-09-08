@@ -31,6 +31,8 @@ public:
   std::string GetSelectedItemPath();
 
 private:
+  using CGUIControl::OnFocus;
+
   /*!
    * \brief Called every frame with the item being focused
    */
