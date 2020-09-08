@@ -57,9 +57,9 @@ protected:
 
   virtual void OnSelect(int idx);
 
-  CGUIViewControl m_viewControl;
-  std::unique_ptr<CFileItemList> m_vecList;
   CFileItemPtr m_selectedItem;
+  std::unique_ptr<CFileItemList> m_vecList;
+  CGUIViewControl m_viewControl;
 
 private:
   bool m_bButtonEnabled;

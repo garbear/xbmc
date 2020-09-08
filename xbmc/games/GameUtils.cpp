@@ -290,7 +290,7 @@ bool CGameUtils::Install(const std::string& gameClient)
   if (!bInstalled)
   {
     ADDON::AddonPtr installedAddon;
-    bInstalled = CAddonInstaller::GetInstance().InstallModal(gameClient, installedAddon, false);
+    bInstalled = ADDON::CAddonInstaller::GetInstance().InstallModal(gameClient, installedAddon, false);
     if (!bInstalled)
     {
       CLog::Log(LOGERROR, "Game utils: Failed to install %s", gameClient.c_str());

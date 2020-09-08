@@ -88,37 +88,6 @@ std::string CGUIDialogSelectGameClient::ShowAndGetGameClient(const std::string& 
   return gameClient;
 }
 
-bool CGUIDialogSelectGameClient::Install(const std::string& gameClient)
-{
-  // If the addon isn't installed we need to install it
-  bool bInstalled = CServiceBroker::GetAddonMgr().IsAddonInstalled(gameClient);
-  if (!bInstalled)
-  {
-    ADDON::AddonPtr installedAddon;
-    bInstalled =
-        ADDON::CAddonInstaller::GetInstance().InstallModal(gameClient, installedAddon, false);
-    if (!bInstalled)
-    {
-      CLog::Log(LOGERROR, "Select game client dialog: Failed to install %s", gameClient.c_str());
-      // "Error"
-      // "Failed to install add-on."
-      HELPERS::ShowOKDialogText(257, 35256);
-    }
-  }
-
-  return bInstalled;
-}
-
-bool CGUIDialogSelectGameClient::Enable(const std::string& gameClient)
-{
-  bool bSuccess = true;
-
-  if (CServiceBroker::GetAddonMgr().IsAddonDisabled(gameClient))
-    bSuccess = CServiceBroker::GetAddonMgr().EnableAddon(gameClient);
-
-  return bSuccess;
-}
-
 CGUIDialogSelect* CGUIDialogSelectGameClient::GetDialog(const std::string& title)
 {
   CGUIDialogSelect* dialog =
