@@ -1,3 +1,6 @@
+# TODO
+ADDONS_OVERRIDE = ^(peripheral.joystick|inputstream.adaptive|game.libretro)$$
+
 ADDON_DEPS_DIR := $(BUILDDIR)/$(PLATFORM)/build/depends
 TOOLCHAIN_FILE = $(ADDON_DEPS_DIR)/share/Toolchain_binaddons.cmake
 ADDON_PROJECT_DIR = $(BUILDDIR)/../../../../cmake/addons
@@ -82,7 +85,7 @@ endif
 	cd $(PLATFORM); \
          $(CMAKE) -DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX) $(CMAKE_EXTRA) \
          $(TOOLCHAIN) \
-         -DADDONS_TO_BUILD="$(ADDONS)" $(ADDON_PROJECT_DIR) -DBUILD_DIR=$(BUILDDIR)/$(PLATFORM)/build ;\
+         -DADDONS_TO_BUILD="$(ADDONS_OVERRIDE)" $(ADDON_PROJECT_DIR) -DBUILD_DIR=$(BUILDDIR)/$(PLATFORM)/build ;\
          for addon in $$($(MAKE) supported_addons | awk '/^ALL_ADDONS_BUILDING: .*$$/ { first = $$1; $$1 = ""; print $$0 }'); do \
            $(MAKE) $(MAKE_PACKAGE)$$addon && echo $$addon >> $(ADDON_PROJECT_DIR)/.success || echo $$addon >> $(ADDON_PROJECT_DIR)/.failure ;\
          done
