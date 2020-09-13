@@ -143,6 +143,7 @@ set(required_deps ASS
                   Lzo2
                   OpenSSL>=1.0.2
                   PCRE
+                  QrCodeGen
                   RapidJSON
                   Spdlog
                   Sqlite3

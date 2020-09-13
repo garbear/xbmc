@@ -16,6 +16,7 @@ DEPENDS = \
 	taglib libusb libnfs \
 	pythonmodule-pil pythonmodule-pycryptodome pythonmodule-setuptools \
 	libxslt ffmpeg crossguid libudfread \
+	qrcodegen \
 	libdvdread libdvdnav libdvdcss p8-platform flatbuffers dav1d
 
 # libp2p dependencies
