@@ -30,6 +30,13 @@ public:
   void EnableRichPresence();
   bool GetRichPresenceEvaluation(char* evaluation, size_t size);
 
+  std::string GetTitle() { return m_title; }
+  std::string GetPublisher() { return m_publisher; }
+  std::string GetDeveloper() { return m_developer; }
+  std::string GetGenre() { return m_genre; }
+  std::string GetConsoleName() { return m_consoleName; }
+  std::string GetReleased() { return m_released; }
+
 private:
   bool LoadData();
 
@@ -40,6 +47,14 @@ private:
   std::string m_richPresenceScript{};
   unsigned m_gameID{};
   bool m_richPresenceLoaded{};
+
+  // Game metadata
+  std::string m_title;
+  std::string m_publisher;
+  std::string m_developer;
+  std::string m_genre;
+  std::string m_consoleName;
+  std::string m_released;
 
   const std::map<std::string, int> m_extensionToConsole = {{".a26", RC_CONSOLE_ATARI_2600},
                                                            {".a78", RC_CONSOLE_ATARI_7800},

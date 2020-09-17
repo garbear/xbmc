@@ -23,9 +23,15 @@ using namespace RETRO;
 
 // API JSON Field names
 constexpr auto SUCCESS = "Success";
-constexpr auto GAME_ID = "GameID";
 constexpr auto PATCH_DATA = "PatchData";
+constexpr auto GAME_ID = "GameID";
 constexpr auto RICH_PRESENCE = "RichPresencePatch";
+constexpr auto GAME_TITLE = "Title";
+constexpr auto PUBLISHER = "Publisher";
+constexpr auto DEVELOPER = "Developer";
+constexpr auto GENRE = "Genre";
+constexpr auto CONSOLE_NAME = "ConsoleName";
+//constexpr auto RELEASED = "Released"; // TODO: Currently unused
 
 constexpr int HASH_SIZE = 33;
 constexpr int RESPORNSE_SIZE = 64;
@@ -109,6 +115,13 @@ bool CCheevos::LoadData()
 
   m_richPresenceScript = data[PATCH_DATA][RICH_PRESENCE].asString();
   m_richPresenceLoaded = true;
+
+  m_title = data[PATCH_DATA][GAME_TITLE].asString();
+  m_publisher = data[PATCH_DATA][PUBLISHER].asString();
+  m_developer = data[PATCH_DATA][DEVELOPER].asString();
+  m_genre = data[PATCH_DATA][GENRE].asString();
+  m_consoleName = data[PATCH_DATA][CONSOLE_NAME].asString();
+  m_released = data[PATCH_DATA][RELEASED].asString();
 
   return true;
 }
