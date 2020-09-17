@@ -8,10 +8,13 @@
 
 #include "Cheevos.h"
 
+#include "FileItem.h"
 #include "URL.h"
 #include "filesystem/CurlFile.h"
 #include "filesystem/File.h"
 #include "games/addons/GameClient.h"
+#include "games/tags/GameInfoTag.h"
+#include "messaging/ApplicationMessenger.h"
 #include "utils/JSONVariantParser.h"
 #include "utils/URIUtils.h"
 #include "utils/Variant.h"
@@ -23,9 +26,14 @@ using namespace RETRO;
 
 // API JSON Field names
 constexpr auto SUCCESS = "Success";
-constexpr auto GAME_ID = "GameID";
 constexpr auto PATCH_DATA = "PatchData";
+constexpr auto GAME_ID = "GameID";
 constexpr auto RICH_PRESENCE = "RichPresencePatch";
+constexpr auto GAME_TITLE = "Title";
+constexpr auto PUBLISHER = "Publisher";
+constexpr auto DEVELOPER = "Developer";
+constexpr auto GENRE = "Genre";
+constexpr auto CONSOLE_NAME = "ConsoleName";
 
 constexpr int HASH_SIZE = 33;
 constexpr int RESPORNSE_SIZE = 64;
@@ -33,9 +41,13 @@ constexpr int URL_SIZE = 512;
 constexpr int POST_DATA_SIZE = 1024;
 
 CCheevos::CCheevos(GAME::CGameClient* gameClient,
-                   const std::string userName,
-                   const std::string loginToken)
-  : m_gameClient(gameClient), m_userName(userName), m_loginToken(loginToken)
+                   CFileItem& fileItem,
+                   std::string userName,
+                   std::string loginToken)
+  : m_gameClient(gameClient),
+    m_fileItem(fileItem),
+    m_userName(std::move(userName)),
+    m_loginToken(std::move(loginToken))
 {
 }
 
@@ -110,6 +122,14 @@ bool CCheevos::LoadData()
   m_richPresenceScript = data[PATCH_DATA][RICH_PRESENCE].asString();
   m_richPresenceLoaded = true;
 
+  GAME::CGameInfoTag& tag = *m_fileItem.GetGameInfoTag();
+
+  tag.SetTitle(data[PATCH_DATA][GAME_TITLE].asString());
+  tag.SetPublisher(data[PATCH_DATA][PUBLISHER].asString());
+  tag.SetDeveloper(data[PATCH_DATA][DEVELOPER].asString());
+  tag.SetGenres({data[PATCH_DATA][GENRE].asString()});
+  tag.SetPlatform(data[PATCH_DATA][CONSOLE_NAME].asString());
+
   return true;
 }
 
@@ -137,6 +157,14 @@ bool CCheevos::GetRichPresenceEvaluation(char* evaluation, size_t size)
   }
 
   m_gameClient->GetRichPresenceEvaluation(evaluation, size);
+
+  GAME::CGameInfoTag& tag = *m_fileItem.GetGameInfoTag();
+
+  tag.SetCaption(evaluation);
+
+  CFileItem* file = new CFileItem(m_fileItem);
+  MESSAGING::CApplicationMessenger::GetInstance().PostMsg(TMSG_SET_PLAYER_ITEM, -1, -1,
+                                                          static_cast<void*>(file));
 
   char url[URL_SIZE];
   char postData[POST_DATA_SIZE];
