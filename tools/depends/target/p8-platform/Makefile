@@ -3,9 +3,10 @@ DEPS= ../../Makefile.include Makefile
 
 # lib name, version
 LIBNAME=p8-platform
-VERSION=2.1.0.1
-SOURCE=$(LIBNAME)-$(VERSION)
+VERSION=a7cd0d5780ed80a4e70480d1650749f29e8a1fb2
+SOURCE=$(VERSION)
 ARCHIVE=$(SOURCE).tar.gz
+BASE_URL=https://github.com/Pulse-Eight/platform/archive
 
 LIBDYLIB=$(PLATFORM)/build/lib$(LIBNAME).a
 
@@ -31,4 +32,3 @@ clean:
 
 distclean::
 	rm -rf $(PLATFORM) .installed-$(PLATFORM)
-
