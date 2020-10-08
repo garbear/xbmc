@@ -68,7 +68,7 @@ bool CGameUtils::FillInGameClient(CFileItem& item, std::string& savestatePath)
           int errorTextId = bHasVfsGameClient
                                 ? 35214
                                 : // "This game can only be played directly from a hard drive
-                                  // or partition. Compressed files must be extracted."
+                                // or partition. Compressed files must be extracted."
                                 35212; // "This game isn't compatible with any available emulators."
 
           // "Failed to play game"
@@ -290,8 +290,8 @@ bool CGameUtils::Install(const std::string& gameClient)
   if (!bInstalled)
   {
     ADDON::AddonPtr installedAddon;
-    bInstalled =
-        ADDON::CAddonInstaller::GetInstance().InstallModal(gameClient, installedAddon, false);
+    bInstalled = ADDON::CAddonInstaller::GetInstance().InstallModal(
+        gameClient, installedAddon, ADDON::InstallModalPrompt::NO_PROMPT);
     if (!bInstalled)
     {
       CLog::Log(LOGERROR, "Game utils: Failed to install %s", gameClient.c_str());
