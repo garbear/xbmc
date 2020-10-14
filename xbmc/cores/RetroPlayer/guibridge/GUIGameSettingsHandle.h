@@ -15,6 +15,7 @@ namespace KODI
 namespace RETRO
 {
 class CGUIGameRenderManager;
+class IPlayback;
 
 class CGUIGameSettingsHandle
 {
@@ -23,6 +24,10 @@ public:
   virtual ~CGUIGameSettingsHandle();
 
   std::string GameClientID();
+  std::string GetPlayingGame();
+  std::string CreateSavestate(bool autosave);
+  bool LoadSavestate(const std::string& path);
+  void CloseOSD();
 
 private:
   // Construction parameters
