@@ -14,6 +14,8 @@ namespace KODI
 {
 namespace RETRO
 {
+class IPlayback;
+
 class IGameCallback
 {
 public:
@@ -25,6 +27,19 @@ public:
    * \return The game client's ID, or empty if no game is being played
    */
   virtual std::string GameClientID() const = 0;
+
+  /*!
+   * \brief Get the game that is being played
+   *
+   * \return The path to the game, or empty if no game is being played
+   */
+  virtual std::string GetPlayingGame() const = 0;
+
+  virtual std::string CreateSavestate(bool autosave) = 0;
+
+  virtual bool LoadSavestate(const std::string& path) = 0;
+
+  virtual void CloseOSDCallback() = 0;
 };
 } // namespace RETRO
 } // namespace KODI

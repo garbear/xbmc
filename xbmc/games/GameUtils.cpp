@@ -12,22 +12,27 @@
 #include "ServiceBroker.h"
 #include "URL.h"
 #include "addons/Addon.h"
+#include "addons/AddonInstaller.h"
 #include "addons/AddonManager.h"
 #include "addons/BinaryAddonCache.h"
+#include "cores/RetroPlayer/savestates/ISavestate.h"
+#include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "filesystem/SpecialProtocol.h"
 #include "games/addons/GameClient.h"
 #include "games/dialogs/GUIDialogSelectGameClient.h"
+#include "games/dialogs/GUIDialogSelectSavestate.h"
 #include "games/tags/GameInfoTag.h"
 #include "messaging/helpers/DialogOKHelper.h"
 #include "utils/StringUtils.h"
 #include "utils/URIUtils.h"
+#include "utils/log.h"
 
 #include <algorithm>
 
 using namespace KODI;
 using namespace GAME;
 
-bool CGameUtils::FillInGameClient(CFileItem& item, bool bPrompt)
+bool CGameUtils::FillInGameClient(CFileItem& item, std::string& savestatePath)
 {
   using namespace ADDON;
 
@@ -38,46 +43,73 @@ bool CGameUtils::FillInGameClient(CFileItem& item, bool bPrompt)
     {
       item.GetGameInfoTag()->SetGameClient(item.GetAddonInfo()->ID());
     }
-    else if (bPrompt)
+    else
     {
-      // No game client specified, need to ask the user
-      GameClientVector candidates;
-      GameClientVector installable;
-      bool bHasVfsGameClient;
-      GetGameClients(item, candidates, installable, bHasVfsGameClient);
+      if (!CGUIDialogSelectSavestate::ShowAndGetSavestate(item.GetPath(), savestatePath))
+        return false;
 
-      if (candidates.empty() && installable.empty())
+      if (!savestatePath.empty())
       {
-        int errorTextId = 0;
+        std::unique_ptr<RETRO::ISavestate> save = RETRO::CSavestateDatabase::AllocateSavestate();
 
-        if (bHasVfsGameClient)
-        {
-          // "This game can only be played directly from a hard drive
-          // or partition. Compressed files must be extracted."
-          errorTextId = 35214;
-        }
-        else
-        {
-          // "This game isn't compatible with any available emulators."
-          errorTextId = 35212;
-        }
+        RETRO::CSavestateDatabase db;
+        db.GetSavestate(savestatePath, *save);
 
-        // "Failed to play game"
-        KODI::MESSAGING::HELPERS::ShowOKDialogText(CVariant{35210}, CVariant{errorTextId});
-      }
-      else if (candidates.size() == 1 && installable.empty())
-      {
-        // Only 1 option, avoid prompting the user
-        item.GetGameInfoTag()->SetGameClient(candidates[0]->ID());
+        item.GetGameInfoTag()->SetGameClient(save->GameClientID());
       }
       else
       {
-        std::string gameClient = CGUIDialogSelectGameClient::ShowAndGetGameClient(
-            item.GetPath(), candidates, installable);
-        if (!gameClient.empty())
-          item.GetGameInfoTag()->SetGameClient(gameClient);
+        // No game client specified, need to ask the user
+        GameClientVector candidates;
+        GameClientVector installable;
+        bool bHasVfsGameClient;
+        GetGameClients(item, candidates, installable, bHasVfsGameClient);
+
+        if (candidates.empty() && installable.empty())
+        {
+          int errorTextId = bHasVfsGameClient
+                                ? 35214
+                                : // "This game can only be played directly from a hard drive
+                                // or partition. Compressed files must be extracted."
+                                35212; // "This game isn't compatible with any available emulators."
+
+          // "Failed to play game"
+          KODI::MESSAGING::HELPERS::ShowOKDialogText(CVariant{35210}, CVariant{errorTextId});
+        }
+        else if (candidates.size() == 1 && installable.empty())
+        {
+          // Only 1 option, avoid prompting the user
+          item.GetGameInfoTag()->SetGameClient(candidates[0]->ID());
+        }
+        else
+        {
+          std::string gameClient = CGUIDialogSelectGameClient::ShowAndGetGameClient(
+              item.GetPath(), candidates, installable);
+
+          if (!gameClient.empty())
+            item.GetGameInfoTag()->SetGameClient(gameClient);
+        }
       }
     }
+  }
+
+  const std::string gameClient = item.GetGameInfoTag()->GetGameClient();
+  if (gameClient.empty())
+    return false;
+
+  if (Install(gameClient))
+  {
+    // If the addon is disabled we need to enable it
+    if (!Enable(gameClient))
+    {
+      CLog::Log(LOGDEBUG, "Failed to enable game client %s", gameClient.c_str());
+      item.GetGameInfoTag()->SetGameClient("");
+    }
+  }
+  else
+  {
+    CLog::Log(LOGDEBUG, "Failed to install game client: %s", gameClient.c_str());
+    item.GetGameInfoTag()->SetGameClient("");
   }
 
   return !item.GetGameInfoTag()->GetGameClient().empty();
@@ -251,4 +283,35 @@ bool CGameUtils::IsStandaloneGame(const ADDON::AddonPtr& addon)
   }
 
   return false;
+}
+
+bool CGameUtils::Install(const std::string& gameClient)
+{
+  // If the addon isn't installed we need to install it
+  bool bInstalled = CServiceBroker::GetAddonMgr().IsAddonInstalled(gameClient);
+  if (!bInstalled)
+  {
+    ADDON::AddonPtr installedAddon;
+    bInstalled = ADDON::CAddonInstaller::GetInstance().InstallModal(
+        gameClient, installedAddon, ADDON::InstallModalPrompt::NO_PROMPT);
+    if (!bInstalled)
+    {
+      CLog::Log(LOGERROR, "Game utils: Failed to install %s", gameClient.c_str());
+      // "Error"
+      // "Failed to install add-on."
+      MESSAGING::HELPERS::ShowOKDialogText(257, 35256);
+    }
+  }
+
+  return bInstalled;
+}
+
+bool CGameUtils::Enable(const std::string& gameClient)
+{
+  bool bSuccess = true;
+
+  if (CServiceBroker::GetAddonMgr().IsAddonDisabled(gameClient))
+    bSuccess = CServiceBroker::GetAddonMgr().EnableAddon(gameClient);
+
+  return bSuccess;
 }
