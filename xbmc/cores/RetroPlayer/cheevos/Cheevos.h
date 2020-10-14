@@ -13,6 +13,8 @@
 #include <map>
 #include <string>
 
+class CFileItem;
+
 namespace KODI
 {
 namespace GAME
@@ -25,36 +27,28 @@ namespace RETRO
 class CCheevos
 {
 public:
-  CCheevos(GAME::CGameClient* gameClient, const std::string userName, const std::string loginToken);
+  CCheevos(GAME::CGameClient* gameClient,
+           CFileItem& fileItem,
+           std::string userName,
+           std::string loginToken);
   void ResetRuntime();
   void EnableRichPresence();
   bool GetRichPresenceEvaluation(char* evaluation, size_t size);
 
-  std::string GetTitle() { return m_title; }
-  std::string GetPublisher() { return m_publisher; }
-  std::string GetDeveloper() { return m_developer; }
-  std::string GetGenre() { return m_genre; }
-  std::string GetConsoleName() { return m_consoleName; }
-  std::string GetReleased() { return m_released; }
-
 private:
   bool LoadData();
 
+  // Construction parameters
   GAME::CGameClient* const m_gameClient;
-  std::string m_userName;
-  std::string m_loginToken;
-  std::string m_romHash{};
-  std::string m_richPresenceScript{};
-  unsigned m_gameID{};
-  bool m_richPresenceLoaded{};
+  CFileItem& m_fileItem;
+  const std::string m_userName;
+  const std::string m_loginToken;
 
-  // Game metadata
-  std::string m_title;
-  std::string m_publisher;
-  std::string m_developer;
-  std::string m_genre;
-  std::string m_consoleName;
-  std::string m_released;
+  // Game parameters
+  std::string m_romHash;
+  std::string m_richPresenceScript;
+  unsigned m_gameID = 0;
+  bool m_richPresenceLoaded = false;
 
   const std::map<std::string, int> m_extensionToConsole = {{".a26", RC_CONSOLE_ATARI_2600},
                                                            {".a78", RC_CONSOLE_ATARI_7800},

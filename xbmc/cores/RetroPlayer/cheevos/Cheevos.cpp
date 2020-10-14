@@ -8,10 +8,13 @@
 
 #include "Cheevos.h"
 
+#include "FileItem.h"
 #include "URL.h"
 #include "filesystem/CurlFile.h"
 #include "filesystem/File.h"
 #include "games/addons/GameClient.h"
+#include "games/tags/GameInfoTag.h"
+#include "messaging/ApplicationMessenger.h"
 #include "utils/JSONVariantParser.h"
 #include "utils/URIUtils.h"
 #include "utils/Variant.h"
@@ -39,9 +42,13 @@ constexpr int URL_SIZE = 512;
 constexpr int POST_DATA_SIZE = 1024;
 
 CCheevos::CCheevos(GAME::CGameClient* gameClient,
-                   const std::string userName,
-                   const std::string loginToken)
-  : m_gameClient(gameClient), m_userName(userName), m_loginToken(loginToken)
+                   CFileItem& fileItem,
+                   std::string userName,
+                   std::string loginToken)
+  : m_gameClient(gameClient),
+    m_fileItem(fileItem),
+    m_userName(std::move(userName)),
+    m_loginToken(std::move(loginToken))
 {
 }
 
@@ -116,12 +123,13 @@ bool CCheevos::LoadData()
   m_richPresenceScript = data[PATCH_DATA][RICH_PRESENCE].asString();
   m_richPresenceLoaded = true;
 
-  m_title = data[PATCH_DATA][GAME_TITLE].asString();
-  m_publisher = data[PATCH_DATA][PUBLISHER].asString();
-  m_developer = data[PATCH_DATA][DEVELOPER].asString();
-  m_genre = data[PATCH_DATA][GENRE].asString();
-  m_consoleName = data[PATCH_DATA][CONSOLE_NAME].asString();
-  m_released = data[PATCH_DATA][RELEASED].asString();
+  GAME::CGameInfoTag& tag = *m_fileItem.GetGameInfoTag();
+
+  tag.SetTitle(data[PATCH_DATA][GAME_TITLE].asString());
+  tag.SetPublisher(data[PATCH_DATA][PUBLISHER].asString());
+  tag.SetDeveloper(data[PATCH_DATA][DEVELOPER].asString());
+  tag.SetGenres({data[PATCH_DATA][GENRE].asString()});
+  tag.SetPlatform(data[PATCH_DATA][CONSOLE_NAME].asString());
 
   return true;
 }
@@ -150,6 +158,14 @@ bool CCheevos::GetRichPresenceEvaluation(char* evaluation, size_t size)
   }
 
   m_gameClient->GetRichPresenceEvaluation(evaluation, size);
+
+  GAME::CGameInfoTag& tag = *m_fileItem.GetGameInfoTag();
+
+  tag.SetCaption(evaluation);
+
+  CFileItem* file = new CFileItem(m_fileItem);
+  MESSAGING::CApplicationMessenger::GetInstance().PostMsg(TMSG_SET_PLAYER_ITEM, -1, -1,
+                                                          static_cast<void*>(file));
 
   char url[URL_SIZE];
   char postData[POST_DATA_SIZE];

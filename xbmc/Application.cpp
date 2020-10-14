@@ -2380,6 +2380,19 @@ void CApplication::OnApplicationMessage(ThreadMessage* pMsg)
   }
   break;
 
+  case TMSG_SET_PLAYER_ITEM:
+  {
+    CFileItem* item = static_cast<CFileItem*>(pMsg->lpVoid);
+    if (item == nullptr)
+      return;
+
+    *m_itemCurrentFile = *item;
+    CServiceBroker::GetGUI()->GetInfoManager().SetCurrentItem(*m_itemCurrentFile);
+
+    delete item;
+  }
+  break;
+
   default:
     CLog::Log(LOGERROR, "%s: Unhandled threadmessage sent, %u", __FUNCTION__, msg);
     break;
