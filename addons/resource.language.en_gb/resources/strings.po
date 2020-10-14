@@ -457,12 +457,14 @@ msgid "Move"
 msgstr ""
 
 #: xbmc/windows/GUIWindowFileManager.cpp
+#: xbmc/games/dialogs/osd/DialogGameSaves.cpp
 msgctxt "#117"
 msgid "Delete"
 msgstr ""
 
 #: xbmc/dialogs/GUIDialogFavourites.cpp
 #: xbmc/windows/GUIWindowFileManager.cpp
+#: xbmc/games/dialogs/osd/DialogGameSaves.cpp
 msgctxt "#118"
 msgid "Rename"
 msgstr ""
@@ -483,6 +485,7 @@ msgid "Confirm move"
 msgstr ""
 
 #: xbmc/windows/GUIWindowFileManager.cpp
+#: xbmc/games/dialogs/osd/DialogGameSaves.cpp
 msgctxt "#122"
 msgid "Confirm delete"
 msgstr ""
@@ -498,6 +501,7 @@ msgid "Would you like to move the selected file(s)?"
 msgstr ""
 
 #: xbmc/windows/GUIWindowFileManager.cpp
+#: xbmc/games/dialogs/osd/DialogGameSaves.cpp
 msgctxt "#125"
 msgid "Would you like to delete the selected file(s)?[CR]Warning - this action can't be undone!"
 msgstr ""
@@ -8629,6 +8633,14 @@ msgstr ""
 
 #empty strings from id 15312 to 15999
 
+#. Label for button in the in-game savestate manager
+#: xbmc/games/dialogs/osd/DialogInGameSaves.cpp
+msgctxt "#15314"
+msgid "Save progress"
+msgstr ""
+
+#empty strings from id 15315 to 15999
+
 #: system/settings/settings.xml
 msgctxt "#16000"
 msgid "General"
@@ -8674,6 +8686,7 @@ msgid "Enter the playlist name"
 msgstr ""
 
 #: xbmc/dialogs/GUIDialogSmartPlaylistEditor.cpp
+#: xbmc/games/dialogs/osd/DialogGameSaves.cpp
 msgctxt "#16013"
 msgid "Enter new filename"
 msgstr ""
@@ -18011,7 +18024,13 @@ msgctxt "#35236"
 msgid "In this release, only controllers can be used to play games."
 msgstr ""
 
-#empty strings from id 35237 to 35249
+#empty strings from id 35237 to 35248
+
+#. Button to open the saved game manager from the game OSD
+#: addons/skin.estuary/xml/GameOSD.xml
+msgctxt "#35249"
+msgid "Saved games"
+msgstr ""
 
 #: xbmc/windows/GUIMediaWindow.cpp
 msgctxt "#35250"
@@ -18066,7 +18085,18 @@ msgctxt "#35259"
 msgid "Saved"
 msgstr ""
 
-#empty strings from id 35260 to 35401
+#. Title of the dialog to select a savestate for the current game
+#: xbmc/games/dialogs/GUIDialogSelectSavestate.cpp
+msgctxt "#35260"
+msgid "Select savestate"
+msgstr ""
+
+#: xbmc/games/dialogs/GUIDialogSelectSavestate.cpp
+msgctxt "#35261"
+msgid "New game"
+msgstr ""
+
+#empty strings from id 35262 to 35401
 
 msgctxt "#35402"
 msgid "Replicates the 2.6-inch dot matrix screen of the Game Boy. Features the ghosting problems of the original handheld."
