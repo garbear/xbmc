@@ -36,9 +36,18 @@ public:
   virtual void SetSpeed(double speedFactor) = 0;
   virtual void PauseAsync() = 0; // Pauses after the following frame
 
-  // Savestates
-  virtual std::string CreateSavestate() = 0; // Returns the path of savestate on success
+  /*!
+   * @brief Savestates
+   */
+  //@{
+
+  //! Returns the path of savestate on success
+  virtual std::string CreateSavestate(bool autosave) = 0;
+
+  //! Loads the specified savestate by its path returned from CreateSavestate()
   virtual bool LoadSavestate(const std::string& path) = 0;
+
+  //@}
 };
 } // namespace RETRO
 } // namespace KODI
