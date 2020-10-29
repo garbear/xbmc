@@ -9,6 +9,7 @@
 #pragma once
 
 #include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
+
 #include "system_gl.h"
 
 namespace KODI
@@ -24,10 +25,7 @@ public:
   ~CRenderBufferOpenGL() override;
 
   bool UploadTexture() override;
-  GLuint TextureID() const
-  {
-    return m_textureId;
-  }
+  GLuint TextureID() const { return m_textureId; }
 
 private:
   // Construction parameters

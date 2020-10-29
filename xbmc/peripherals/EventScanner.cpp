@@ -7,6 +7,7 @@
  */
 
 #include "EventScanner.h"
+
 #include "IEventScannerCallback.h"
 #include "threads/SingleLock.h"
 #include "threads/SystemClock.h"
@@ -25,8 +26,7 @@ using namespace XbmcThreads;
 #define WATCHDOG_TIMEOUT_MS 80
 
 CEventScanner::CEventScanner(IEventScannerCallback& callback)
-    : CThread("PeripEventScanner")
-    , m_callback(callback)
+  : CThread("PeripEventScanner"), m_callback(callback)
 {
 }
 

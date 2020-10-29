@@ -27,10 +27,7 @@ class CGameClientStreamVideo : public IGameClientStream
 {
 public:
   CGameClientStreamVideo() = default;
-  ~CGameClientStreamVideo() override
-  {
-    CloseStream();
-  }
+  ~CGameClientStreamVideo() override { CloseStream(); }
 
   // Implementation of IGameClientStream
   bool OpenStream(RETRO::IRetroPlayerStream* stream,

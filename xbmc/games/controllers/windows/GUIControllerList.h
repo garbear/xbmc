@@ -30,10 +30,7 @@ class CGUIControllerList : public IControllerList
 {
 public:
   CGUIControllerList(CGUIWindow* window, IFeatureList* featureList, GameClientPtr gameClient);
-  virtual ~CGUIControllerList(void)
-  {
-    Deinitialize();
-  }
+  virtual ~CGUIControllerList(void) { Deinitialize(); }
 
   // implementation of IControllerList
   virtual bool Initialize(void) override;
@@ -41,10 +38,7 @@ public:
   virtual bool Refresh(const std::string& controllerId) override;
   virtual void OnFocus(unsigned int controllerIndex) override;
   virtual void OnSelect(unsigned int controllerIndex) override;
-  virtual int GetFocusedController() const override
-  {
-    return m_focusedController;
-  }
+  virtual int GetFocusedController() const override { return m_focusedController; }
   virtual void ResetController(void) override;
 
 private:

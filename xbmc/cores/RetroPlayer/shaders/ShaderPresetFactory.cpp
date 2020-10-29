@@ -7,6 +7,7 @@
  */
 
 #include "ShaderPresetFactory.h"
+
 #include "addons/AddonManager.h"
 #include "addons/ShaderPreset.h"
 #include "addons/binary-addons/BinaryAddonBase.h"
@@ -22,8 +23,7 @@ using namespace SHADER;
 
 CShaderPresetFactory::CShaderPresetFactory(ADDON::CAddonMgr& addons,
                                            ADDON::CBinaryAddonManager& binaryAddons)
-    : m_addons(addons)
-    , m_binaryAddons(binaryAddons)
+  : m_addons(addons), m_binaryAddons(binaryAddons)
 {
   UpdateAddons();
 

@@ -7,6 +7,7 @@
  */
 
 #include "FeatureHandling.h"
+
 #include "ServiceBroker.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerManager.h"
@@ -30,10 +31,10 @@ using namespace JOYSTICK;
 CJoystickFeature::CJoystickFeature(const FeatureName& name,
                                    IInputHandler* handler,
                                    IButtonMap* buttonMap)
-    : m_name(name)
-    , m_handler(handler)
-    , m_buttonMap(buttonMap)
-    , m_bEnabled(m_handler->HasFeature(name))
+  : m_name(name),
+    m_handler(handler),
+    m_buttonMap(buttonMap),
+    m_bEnabled(m_handler->HasFeature(name))
 {
 }
 
@@ -78,11 +79,11 @@ unsigned int CJoystickFeature::MotionTimeMs() const
 CScalarFeature::CScalarFeature(const FeatureName& name,
                                IInputHandler* handler,
                                IButtonMap* buttonMap)
-    : CJoystickFeature(name, handler, buttonMap)
-    , m_bDigitalState(false)
-    , m_analogState(0.0f)
-    , m_bActivated(false)
-    , m_bDiscrete(true)
+  : CJoystickFeature(name, handler, buttonMap),
+    m_bDigitalState(false),
+    m_analogState(0.0f),
+    m_bActivated(false),
+    m_bDiscrete(true)
 {
   GAME::ControllerPtr controller =
       CServiceBroker::GetGameControllerManager().GetController(handler->ControllerID());
@@ -224,8 +225,7 @@ void CScalarFeature::ProcessAnalogMotion()
 // --- CAxisFeature ------------------------------------------------------------
 
 CAxisFeature::CAxisFeature(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap)
-    : CJoystickFeature(name, handler, buttonMap)
-    , m_state(0.0f)
+  : CJoystickFeature(name, handler, buttonMap), m_state(0.0f)
 {
 }
 
@@ -271,14 +271,14 @@ void CAxisFeature::ProcessMotions(void)
 
     switch (m_buttonMap->GetFeatureType(m_name))
     {
-    case FEATURE_TYPE::WHEEL:
-      m_handler->OnWheelMotion(m_name, newState, motionTimeMs);
-      break;
-    case FEATURE_TYPE::THROTTLE:
-      m_handler->OnThrottleMotion(m_name, newState, motionTimeMs);
-      break;
-    default:
-      break;
+      case FEATURE_TYPE::WHEEL:
+        m_handler->OnWheelMotion(m_name, newState, motionTimeMs);
+        break;
+      case FEATURE_TYPE::THROTTLE:
+        m_handler->OnThrottleMotion(m_name, newState, motionTimeMs);
+        break;
+      default:
+        break;
     }
   }
 }
@@ -286,7 +286,7 @@ void CAxisFeature::ProcessMotions(void)
 // --- CWheel ------------------------------------------------------------------
 
 CWheel::CWheel(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap)
-    : CAxisFeature(name, handler, buttonMap)
+  : CAxisFeature(name, handler, buttonMap)
 {
 }
 
@@ -314,16 +314,16 @@ bool CWheel::OnAnalogMotion(const CDriverPrimitive& source, float magnitude)
 
   switch (direction)
   {
-  case WHEEL_DIRECTION::RIGHT:
-    m_axis.SetPositiveDistance(magnitude);
-    break;
-  case WHEEL_DIRECTION::LEFT:
-    m_axis.SetNegativeDistance(magnitude);
-    break;
-  default:
-    // Just in case, avoid sticking
-    m_axis.Reset();
-    break;
+    case WHEEL_DIRECTION::RIGHT:
+      m_axis.SetPositiveDistance(magnitude);
+      break;
+    case WHEEL_DIRECTION::LEFT:
+      m_axis.SetNegativeDistance(magnitude);
+      break;
+    default:
+      // Just in case, avoid sticking
+      m_axis.Reset();
+      break;
   }
 
   return bHandled;
@@ -332,7 +332,7 @@ bool CWheel::OnAnalogMotion(const CDriverPrimitive& source, float magnitude)
 // --- CThrottle ---------------------------------------------------------------
 
 CThrottle::CThrottle(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap)
-    : CAxisFeature(name, handler, buttonMap)
+  : CAxisFeature(name, handler, buttonMap)
 {
 }
 
@@ -360,16 +360,16 @@ bool CThrottle::OnAnalogMotion(const CDriverPrimitive& source, float magnitude)
 
   switch (direction)
   {
-  case THROTTLE_DIRECTION::UP:
-    m_axis.SetPositiveDistance(magnitude);
-    break;
-  case THROTTLE_DIRECTION::DOWN:
-    m_axis.SetNegativeDistance(magnitude);
-    break;
-  default:
-    // Just in case, avoid sticking
-    m_axis.Reset();
-    break;
+    case THROTTLE_DIRECTION::UP:
+      m_axis.SetPositiveDistance(magnitude);
+      break;
+    case THROTTLE_DIRECTION::DOWN:
+      m_axis.SetNegativeDistance(magnitude);
+      break;
+    default:
+      // Just in case, avoid sticking
+      m_axis.Reset();
+      break;
   }
 
   return bHandled;
@@ -378,9 +378,7 @@ bool CThrottle::OnAnalogMotion(const CDriverPrimitive& source, float magnitude)
 // --- CAnalogStick ------------------------------------------------------------
 
 CAnalogStick::CAnalogStick(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap)
-    : CJoystickFeature(name, handler, buttonMap)
-    , m_vertState(0.0f)
-    , m_horizState(0.0f)
+  : CJoystickFeature(name, handler, buttonMap), m_vertState(0.0f), m_horizState(0.0f)
 {
 }
 
@@ -415,23 +413,23 @@ bool CAnalogStick::OnAnalogMotion(const CDriverPrimitive& source, float magnitud
 
   switch (direction)
   {
-  case ANALOG_STICK_DIRECTION::UP:
-    m_vertAxis.SetPositiveDistance(magnitude);
-    break;
-  case ANALOG_STICK_DIRECTION::DOWN:
-    m_vertAxis.SetNegativeDistance(magnitude);
-    break;
-  case ANALOG_STICK_DIRECTION::RIGHT:
-    m_horizAxis.SetPositiveDistance(magnitude);
-    break;
-  case ANALOG_STICK_DIRECTION::LEFT:
-    m_horizAxis.SetNegativeDistance(magnitude);
-    break;
-  default:
-    // Just in case, avoid sticking
-    m_vertAxis.Reset();
-    m_horizAxis.Reset();
-    break;
+    case ANALOG_STICK_DIRECTION::UP:
+      m_vertAxis.SetPositiveDistance(magnitude);
+      break;
+    case ANALOG_STICK_DIRECTION::DOWN:
+      m_vertAxis.SetNegativeDistance(magnitude);
+      break;
+    case ANALOG_STICK_DIRECTION::RIGHT:
+      m_horizAxis.SetPositiveDistance(magnitude);
+      break;
+    case ANALOG_STICK_DIRECTION::LEFT:
+      m_horizAxis.SetNegativeDistance(magnitude);
+      break;
+    default:
+      // Just in case, avoid sticking
+      m_vertAxis.Reset();
+      m_horizAxis.Reset();
+      break;
   }
 
   return bHandled;
@@ -483,10 +481,10 @@ void CAnalogStick::ProcessMotions(void)
 CAccelerometer::CAccelerometer(const FeatureName& name,
                                IInputHandler* handler,
                                IButtonMap* buttonMap)
-    : CJoystickFeature(name, handler, buttonMap)
-    , m_xAxisState(0.0f)
-    , m_yAxisState(0.0f)
-    , m_zAxisState(0.0f)
+  : CJoystickFeature(name, handler, buttonMap),
+    m_xAxisState(0.0f),
+    m_yAxisState(0.0f),
+    m_zAxisState(0.0f)
 {
 }
 

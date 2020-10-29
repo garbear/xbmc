@@ -8,11 +8,6 @@
 
 #pragma once
 
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
-
 #include "input/KeyboardStat.h"
 #include "input/actions/Action.h"
 #include "input/mouse/MouseStat.h"
@@ -22,6 +17,11 @@
 #include "threads/CriticalSection.h"
 #include "utils/Observer.h"
 #include "windowing/XBMC_events.h"
+
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
 class CAppParamParser;
 class CButtonTranslator;
@@ -192,10 +192,7 @@ public:
   void AddKeymap(const std::string& keymap);
   void RemoveKeymap(const std::string& keymap);
 
-  const IKeymapEnvironment* KeymapEnvironment() const
-  {
-    return m_keymapEnvironment.get();
-  }
+  const IKeymapEnvironment* KeymapEnvironment() const { return m_keymapEnvironment.get(); }
 
   /*! \brief Obtain the action configured for a given window and key
    *

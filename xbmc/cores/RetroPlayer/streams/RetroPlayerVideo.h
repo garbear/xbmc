@@ -30,12 +30,12 @@ struct VideoStreamProperties : public StreamProperties
                         unsigned int maxWidth,
                         unsigned int maxHeight,
                         float pixelAspectRatio)
-      : pixfmt(pixfmt)
-      , nominalWidth(nominalWidth)
-      , nominalHeight(nominalHeight)
-      , maxWidth(maxWidth)
-      , maxHeight(maxHeight)
-      , pixelAspectRatio(pixelAspectRatio)
+    : pixfmt(pixfmt),
+      nominalWidth(nominalWidth),
+      nominalHeight(nominalHeight),
+      maxWidth(maxWidth),
+      maxHeight(maxHeight),
+      pixelAspectRatio(pixelAspectRatio)
   {
   }
 
@@ -61,11 +61,7 @@ struct VideoStreamPacket : public StreamPacket
                     VideoRotation rotation,
                     const uint8_t* data,
                     size_t size)
-      : width(width)
-      , height(height)
-      , rotation(rotation)
-      , data(data)
-      , size(size)
+    : width(width), height(height), rotation(rotation), data(data), size(size)
   {
   }
 

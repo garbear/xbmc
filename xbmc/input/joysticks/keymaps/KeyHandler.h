@@ -41,10 +41,7 @@ public:
   virtual ~CKeyHandler() = default;
 
   // implementation of IKeyHandler
-  virtual bool IsPressed() const override
-  {
-    return m_bHeld;
-  }
+  virtual bool IsPressed() const override { return m_bHeld; }
   virtual bool OnDigitalMotion(bool bPressed, unsigned int holdTimeMs) override;
   virtual bool OnAnalogMotion(float magnitude, unsigned int motionTimeMs) override;
 

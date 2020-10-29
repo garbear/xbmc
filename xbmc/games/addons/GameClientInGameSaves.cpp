@@ -28,8 +28,7 @@ using namespace GAME;
 
 CGameClientInGameSaves::CGameClientInGameSaves(CGameClient* addon,
                                                const KodiToAddonFuncTable_Game* dllStruct)
-    : m_gameClient(addon)
-    , m_dllStruct(dllStruct)
+  : m_gameClient(addon), m_dllStruct(dllStruct)
 {
   assert(m_gameClient != nullptr);
   assert(m_dllStruct != nullptr);
@@ -62,12 +61,12 @@ std::string CGameClientInGameSaves::GetPath(GAME_MEMORY memoryType)
   // Append file extension
   switch (memoryType)
   {
-  case GAME_MEMORY_SAVE_RAM:
-    return path + INGAME_SAVES_EXTENSION_SAVE_RAM;
-  case GAME_MEMORY_RTC:
-    return path + INGAME_SAVES_EXTENSION_RTC;
-  default:
-    break;
+    case GAME_MEMORY_SAVE_RAM:
+      return path + INGAME_SAVES_EXTENSION_SAVE_RAM;
+    case GAME_MEMORY_RTC:
+      return path + INGAME_SAVES_EXTENSION_RTC;
+    default:
+      break;
   }
   return std::string();
 }

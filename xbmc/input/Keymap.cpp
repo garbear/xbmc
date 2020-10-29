@@ -7,13 +7,13 @@
  */
 
 #include "Keymap.h"
+
 #include "IKeymapEnvironment.h"
 
 using namespace KODI;
 
 CKeymap::CKeymap(std::shared_ptr<const IWindowKeymap> keymap, const IKeymapEnvironment* environment)
-    : m_keymap(std::move(keymap))
-    , m_environment(environment)
+  : m_keymap(std::move(keymap)), m_environment(environment)
 {
 }
 

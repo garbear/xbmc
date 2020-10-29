@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralAddon.h"
+
 #include "PeripheralAddonTranslator.h"
 #include "addons/AddonManager.h"
 #include "filesystem/Directory.h"
@@ -38,20 +39,20 @@ using namespace XFILE;
 #define MOUSE_PROVIDER "application"
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p)                                                                             \
-  do                                                                                               \
-  {                                                                                                \
-    delete (p);                                                                                    \
-    (p) = NULL;                                                                                    \
+#define SAFE_DELETE(p) \
+  do \
+  { \
+    delete (p); \
+    (p) = NULL; \
   } while (0)
 #endif
 
 CPeripheralAddon::CPeripheralAddon(const ADDON::BinaryAddonBasePtr& addonInfo,
                                    CPeripherals& manager)
-    : IAddonInstanceHandler(ADDON_INSTANCE_PERIPHERAL, addonInfo)
-    , m_manager(manager)
-    , m_bSupportsJoystickRumble(false)
-    , m_bSupportsJoystickPowerOff(false)
+  : IAddonInstanceHandler(ADDON_INSTANCE_PERIPHERAL, addonInfo),
+    m_manager(manager),
+    m_bSupportsJoystickRumble(false),
+    m_bSupportsJoystickPowerOff(false)
 {
   m_bProvidesJoysticks =
       addonInfo->Type(ADDON::ADDON_PERIPHERALDLL)->GetValue("@provides_joysticks").asBoolean();
@@ -270,12 +271,12 @@ bool CPeripheralAddon::SupportsFeature(PeripheralFeature feature) const
 {
   switch (feature)
   {
-  case FEATURE_RUMBLE:
-    return m_bSupportsJoystickRumble;
-  case FEATURE_POWER_OFF:
-    return m_bSupportsJoystickPowerOff;
-  default:
-    break;
+    case FEATURE_RUMBLE:
+      return m_bSupportsJoystickRumble;
+    case FEATURE_POWER_OFF:
+      return m_bSupportsJoystickPowerOff;
+    default:
+      break;
   }
 
   return false;
@@ -364,11 +365,11 @@ bool CPeripheralAddon::PerformDeviceScan(PeripheralScanResults& results)
       PeripheralScanResult result(PERIPHERAL_BUS_ADDON);
       switch (peripheral.Type())
       {
-      case PERIPHERAL_TYPE_JOYSTICK:
-        result.m_type = PERIPHERAL_JOYSTICK;
-        break;
-      default:
-        continue;
+        case PERIPHERAL_TYPE_JOYSTICK:
+          result.m_type = PERIPHERAL_JOYSTICK;
+          break;
+        default:
+          continue;
       }
 
       result.m_strDeviceName = peripheral.Name();
@@ -418,37 +419,38 @@ bool CPeripheralAddon::ProcessEvents(void)
 
       switch (device->Type())
       {
-      case PERIPHERAL_JOYSTICK:
-      {
-        std::shared_ptr<CPeripheralJoystick> joystickDevice =
-            std::static_pointer_cast<CPeripheralJoystick>(device);
+        case PERIPHERAL_JOYSTICK:
+        {
+          std::shared_ptr<CPeripheralJoystick> joystickDevice =
+              std::static_pointer_cast<CPeripheralJoystick>(device);
 
-        switch (event.Type())
-        {
-        case PERIPHERAL_EVENT_TYPE_DRIVER_BUTTON:
-        {
-          const bool bPressed = (event.ButtonState() == JOYSTICK_STATE_BUTTON_PRESSED);
-          joystickDevice->OnButtonMotion(event.DriverIndex(), bPressed);
-          break;
-        }
-        case PERIPHERAL_EVENT_TYPE_DRIVER_HAT:
-        {
-          const HAT_STATE state = CPeripheralAddonTranslator::TranslateHatState(event.HatState());
-          joystickDevice->OnHatMotion(event.DriverIndex(), state);
-          break;
-        }
-        case PERIPHERAL_EVENT_TYPE_DRIVER_AXIS:
-        {
-          joystickDevice->OnAxisMotion(event.DriverIndex(), event.AxisState());
+          switch (event.Type())
+          {
+            case PERIPHERAL_EVENT_TYPE_DRIVER_BUTTON:
+            {
+              const bool bPressed = (event.ButtonState() == JOYSTICK_STATE_BUTTON_PRESSED);
+              joystickDevice->OnButtonMotion(event.DriverIndex(), bPressed);
+              break;
+            }
+            case PERIPHERAL_EVENT_TYPE_DRIVER_HAT:
+            {
+              const HAT_STATE state =
+                  CPeripheralAddonTranslator::TranslateHatState(event.HatState());
+              joystickDevice->OnHatMotion(event.DriverIndex(), state);
+              break;
+            }
+            case PERIPHERAL_EVENT_TYPE_DRIVER_AXIS:
+            {
+              joystickDevice->OnAxisMotion(event.DriverIndex(), event.AxisState());
+              break;
+            }
+            default:
+              break;
+          }
           break;
         }
         default:
           break;
-        }
-        break;
-      }
-      default:
-        break;
       }
     }
 
@@ -887,12 +889,12 @@ std::string CPeripheralAddon::GetDeviceName(PeripheralType type)
 {
   switch (type)
   {
-  case PERIPHERAL_KEYBOARD:
-    return KEYBOARD_BUTTON_MAP_NAME;
-  case PERIPHERAL_MOUSE:
-    return MOUSE_BUTTON_MAP_NAME;
-  default:
-    break;
+    case PERIPHERAL_KEYBOARD:
+      return KEYBOARD_BUTTON_MAP_NAME;
+    case PERIPHERAL_MOUSE:
+      return MOUSE_BUTTON_MAP_NAME;
+    default:
+      break;
   }
 
   return "";
@@ -902,12 +904,12 @@ std::string CPeripheralAddon::GetProvider(PeripheralType type)
 {
   switch (type)
   {
-  case PERIPHERAL_KEYBOARD:
-    return KEYBOARD_PROVIDER;
-  case PERIPHERAL_MOUSE:
-    return MOUSE_PROVIDER;
-  default:
-    break;
+    case PERIPHERAL_KEYBOARD:
+      return KEYBOARD_PROVIDER;
+    case PERIPHERAL_MOUSE:
+      return MOUSE_PROVIDER;
+    default:
+      break;
   }
 
   return "";

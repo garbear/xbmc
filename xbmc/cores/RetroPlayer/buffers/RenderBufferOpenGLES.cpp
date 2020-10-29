@@ -7,6 +7,7 @@
  */
 
 #include "RenderBufferOpenGLES.h"
+
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 
 using namespace KODI;
@@ -17,11 +18,11 @@ CRenderBufferOpenGLES::CRenderBufferOpenGLES(CRenderContext& context,
                                              GLuint internalformat,
                                              GLuint pixelformat,
                                              GLuint bpp)
-    : m_context(context)
-    , m_pixeltype(pixeltype)
-    , m_internalformat(internalformat)
-    , m_pixelformat(pixelformat)
-    , m_bpp(bpp)
+  : m_context(context),
+    m_pixeltype(pixeltype),
+    m_internalformat(internalformat),
+    m_pixelformat(pixelformat),
+    m_bpp(bpp)
 {
 }
 

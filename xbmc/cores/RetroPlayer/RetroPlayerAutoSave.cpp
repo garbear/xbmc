@@ -7,6 +7,7 @@
  */
 
 #include "RetroPlayerAutoSave.h"
+
 #include "URL.h"
 #include "games/GameSettings.h"
 #include "utils/log.h"
@@ -18,9 +19,7 @@ using namespace RETRO;
 
 CRetroPlayerAutoSave::CRetroPlayerAutoSave(IAutoSaveCallback& callback,
                                            GAME::CGameSettings& settings)
-    : CThread("CRetroPlayerAutoSave")
-    , m_callback(callback)
-    , m_settings(settings)
+  : CThread("CRetroPlayerAutoSave"), m_callback(callback), m_settings(settings)
 {
   CLog::Log(LOGDEBUG, "RetroPlayer[SAVE]: Initializing autosave");
 

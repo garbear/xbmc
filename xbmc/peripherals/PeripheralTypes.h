@@ -114,30 +114,30 @@ public:
   {
     switch (type)
     {
-    case PERIPHERAL_BLUETOOTH:
-      return "bluetooth";
-    case PERIPHERAL_CEC:
-      return "cec";
-    case PERIPHERAL_DISK:
-      return "disk";
-    case PERIPHERAL_HID:
-      return "hid";
-    case PERIPHERAL_NIC:
-      return "nic";
-    case PERIPHERAL_NYXBOARD:
-      return "nyxboard";
-    case PERIPHERAL_TUNER:
-      return "tuner";
-    case PERIPHERAL_IMON:
-      return "imon";
-    case PERIPHERAL_JOYSTICK:
-      return "joystick";
-    case PERIPHERAL_KEYBOARD:
-      return "keyboard";
-    case PERIPHERAL_MOUSE:
-      return "mouse";
-    default:
-      return "unknown";
+      case PERIPHERAL_BLUETOOTH:
+        return "bluetooth";
+      case PERIPHERAL_CEC:
+        return "cec";
+      case PERIPHERAL_DISK:
+        return "disk";
+      case PERIPHERAL_HID:
+        return "hid";
+      case PERIPHERAL_NIC:
+        return "nic";
+      case PERIPHERAL_NYXBOARD:
+        return "nyxboard";
+      case PERIPHERAL_TUNER:
+        return "tuner";
+      case PERIPHERAL_IMON:
+        return "imon";
+      case PERIPHERAL_JOYSTICK:
+        return "joystick";
+      case PERIPHERAL_KEYBOARD:
+        return "keyboard";
+      case PERIPHERAL_MOUSE:
+        return "mouse";
+      default:
+        return "unknown";
     }
   };
 
@@ -176,24 +176,24 @@ public:
   {
     switch (type)
     {
-    case PERIPHERAL_BUS_USB:
-      return "usb";
-    case PERIPHERAL_BUS_PCI:
-      return "pci";
-    case PERIPHERAL_BUS_RPI:
-      return "rpi";
-    case PERIPHERAL_BUS_CEC:
-      return "cec";
-    case PERIPHERAL_BUS_ADDON:
-      return "addon";
+      case PERIPHERAL_BUS_USB:
+        return "usb";
+      case PERIPHERAL_BUS_PCI:
+        return "pci";
+      case PERIPHERAL_BUS_RPI:
+        return "rpi";
+      case PERIPHERAL_BUS_CEC:
+        return "cec";
+      case PERIPHERAL_BUS_ADDON:
+        return "addon";
 #ifdef TARGET_ANDROID
-    case PERIPHERAL_BUS_ANDROID:
-      return "android";
+      case PERIPHERAL_BUS_ANDROID:
+        return "android";
 #endif
-    case PERIPHERAL_BUS_APPLICATION:
-      return "application";
-    default:
-      return "unknown";
+      case PERIPHERAL_BUS_APPLICATION:
+        return "application";
+      default:
+        return "unknown";
     }
   };
 
@@ -226,35 +226,35 @@ public:
   {
     switch (type)
     {
-    case FEATURE_HID:
-      return "HID";
-    case FEATURE_NIC:
-      return "NIC";
-    case FEATURE_DISK:
-      return "disk";
-    case FEATURE_NYXBOARD:
-      return "nyxboard";
-    case FEATURE_CEC:
-      return "CEC";
-    case FEATURE_BLUETOOTH:
-      return "bluetooth";
-    case FEATURE_TUNER:
-      return "tuner";
-    case FEATURE_IMON:
-      return "imon";
-    case FEATURE_JOYSTICK:
-      return "joystick";
-    case FEATURE_RUMBLE:
-      return "rumble";
-    case FEATURE_POWER_OFF:
-      return "poweroff";
-    case FEATURE_KEYBOARD:
-      return "keyboard";
-    case FEATURE_MOUSE:
-      return "mouse";
-    case FEATURE_UNKNOWN:
-    default:
-      return "unknown";
+      case FEATURE_HID:
+        return "HID";
+      case FEATURE_NIC:
+        return "NIC";
+      case FEATURE_DISK:
+        return "disk";
+      case FEATURE_NYXBOARD:
+        return "nyxboard";
+      case FEATURE_CEC:
+        return "CEC";
+      case FEATURE_BLUETOOTH:
+        return "bluetooth";
+      case FEATURE_TUNER:
+        return "tuner";
+      case FEATURE_IMON:
+        return "imon";
+      case FEATURE_JOYSTICK:
+        return "joystick";
+      case FEATURE_RUMBLE:
+        return "rumble";
+      case FEATURE_POWER_OFF:
+        return "poweroff";
+      case FEATURE_KEYBOARD:
+        return "keyboard";
+      case FEATURE_MOUSE:
+        return "mouse";
+      case FEATURE_UNKNOWN:
+      default:
+        return "unknown";
     }
   };
 
@@ -313,8 +313,7 @@ class PeripheralScanResult
 {
 public:
   explicit PeripheralScanResult(const PeripheralBusType busType)
-      : m_busType(busType)
-      , m_mappedBusType(busType)
+    : m_busType(busType), m_mappedBusType(busType)
   {
   }
 
@@ -327,10 +326,7 @@ public:
            StringUtils::EqualsNoCase(m_strLocation, right.m_strLocation);
   }
 
-  bool operator!=(const PeripheralScanResult& right) const
-  {
-    return !(*this == right);
-  }
+  bool operator!=(const PeripheralScanResult& right) const { return !(*this == right); }
 
   PeripheralType m_type = PERIPHERAL_UNKNOWN;
   std::string m_strLocation;

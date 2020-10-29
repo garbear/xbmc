@@ -7,6 +7,7 @@
  */
 
 #include "JoystickMapper.h"
+
 #include "input/WindowKeymap.h"
 #include "input/actions/ActionIDs.h"
 #include "input/actions/ActionTranslator.h"

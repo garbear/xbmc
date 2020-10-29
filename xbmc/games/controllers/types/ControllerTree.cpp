@@ -7,6 +7,7 @@
  */
 
 #include "ControllerTree.h"
+
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerTopology.h"
 
@@ -18,8 +19,7 @@ using namespace GAME;
 
 // --- CControllerNode ---------------------------------------------------------
 
-CControllerNode::CControllerNode()
-    : m_hub(new CControllerHub)
+CControllerNode::CControllerNode() : m_hub(new CControllerHub)
 {
 }
 

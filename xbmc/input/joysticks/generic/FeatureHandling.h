@@ -133,8 +133,8 @@ private:
 
   // Analog state variables
   float m_analogState; // The current magnitude
-  float m_bActivated;  // Set to true when first activated (magnitude > 0.0)
-  bool m_bDiscrete;    // Set to false when a non-discrete axis is detected
+  float m_bActivated; // Set to true when first activated (magnitude > 0.0)
+  bool m_bDiscrete; // Set to false when a non-discrete axis is detected
 };
 
 /*!
@@ -153,26 +153,17 @@ private:
 class CFeatureAxis
 {
 public:
-  CFeatureAxis(void)
-  {
-    Reset();
-  }
+  CFeatureAxis(void) { Reset(); }
 
   /*!
    * \brief Set value of positive axis
    */
-  void SetPositiveDistance(float distance)
-  {
-    m_positiveDistance = distance;
-  }
+  void SetPositiveDistance(float distance) { m_positiveDistance = distance; }
 
   /*!
    * \brief Set value of negative axis
    */
-  void SetNegativeDistance(float distance)
-  {
-    m_negativeDistance = distance;
-  }
+  void SetNegativeDistance(float distance) { m_negativeDistance = distance; }
 
   /*!
    * \brief Get the final value of this axis.
@@ -199,18 +190,12 @@ public:
    *      Pos - Neg:      0.0 (Emulated analog stick is centered)
    *
    */
-  float GetPosition(void) const
-  {
-    return m_positiveDistance - m_negativeDistance;
-  }
+  float GetPosition(void) const { return m_positiveDistance - m_negativeDistance; }
 
   /*!
    * \brief Reset both positive and negative values to zero
    */
-  void Reset(void)
-  {
-    m_positiveDistance = m_negativeDistance = 0.0f;
-  }
+  void Reset(void) { m_positiveDistance = m_negativeDistance = 0.0f; }
 
 protected:
   float m_positiveDistance;

@@ -51,55 +51,25 @@ public:
   virtual ~CGameClient(void);
 
   // Game subsystems (const)
-  const CGameClientInput& Input() const
-  {
-    return *m_subsystems.Input;
-  }
-  const CGameClientProperties& AddonProperties() const
-  {
-    return *m_subsystems.AddonProperties;
-  }
-  const CGameClientStreams& Streams() const
-  {
-    return *m_subsystems.Streams;
-  }
+  const CGameClientInput& Input() const { return *m_subsystems.Input; }
+  const CGameClientProperties& AddonProperties() const { return *m_subsystems.AddonProperties; }
+  const CGameClientStreams& Streams() const { return *m_subsystems.Streams; }
 
   // Game subsystems (mutable)
-  CGameClientInput& Input()
-  {
-    return *m_subsystems.Input;
-  }
-  CGameClientProperties& AddonProperties()
-  {
-    return *m_subsystems.AddonProperties;
-  }
-  CGameClientStreams& Streams()
-  {
-    return *m_subsystems.Streams;
-  }
+  CGameClientInput& Input() { return *m_subsystems.Input; }
+  CGameClientProperties& AddonProperties() { return *m_subsystems.AddonProperties; }
+  CGameClientStreams& Streams() { return *m_subsystems.Streams; }
 
   // Implementation of IAddon via CAddonDll
   virtual std::string LibPath() const override;
   virtual ADDON::AddonPtr GetRunningInstance() const override;
 
   // Query properties of the game client
-  bool SupportsStandalone() const
-  {
-    return m_bSupportsStandalone;
-  }
+  bool SupportsStandalone() const { return m_bSupportsStandalone; }
   bool SupportsPath() const;
-  bool SupportsVFS() const
-  {
-    return m_bSupportsVFS;
-  }
-  const std::set<std::string>& GetExtensions() const
-  {
-    return m_extensions;
-  }
-  bool SupportsAllExtensions() const
-  {
-    return m_bSupportsAllExtensions;
-  }
+  bool SupportsVFS() const { return m_bSupportsVFS; }
+  const std::set<std::string>& GetExtensions() const { return m_extensions; }
+  bool SupportsAllExtensions() const { return m_bSupportsAllExtensions; }
   bool IsExtensionValid(const std::string& strExtension) const;
 
   // Start/stop gameplay
@@ -111,39 +81,18 @@ public:
   bool OpenStandalone(RETRO::IStreamManager& streamManager, IGameInputCallback* input);
   void Reset();
   void CloseFile();
-  const std::string& GetGamePath() const
-  {
-    return m_gamePath;
-  }
+  const std::string& GetGamePath() const { return m_gamePath; }
 
   // Playback control
-  bool RequiresGameLoop() const
-  {
-    return m_bRequiresGameLoop;
-  }
-  bool IsPlaying() const
-  {
-    return m_bIsPlaying;
-  }
-  size_t GetSerializeSize() const
-  {
-    return m_serializeSize;
-  }
-  double GetFrameRate() const
-  {
-    return m_framerate;
-  }
-  double GetSampleRate() const
-  {
-    return m_samplerate;
-  }
+  bool RequiresGameLoop() const { return m_bRequiresGameLoop; }
+  bool IsPlaying() const { return m_bIsPlaying; }
+  size_t GetSerializeSize() const { return m_serializeSize; }
+  double GetFrameRate() const { return m_framerate; }
+  double GetSampleRate() const { return m_samplerate; }
   void RunFrame();
 
   // Access memory
-  size_t SerializeSize() const
-  {
-    return m_serializeSize;
-  }
+  size_t SerializeSize() const { return m_serializeSize; }
   bool Serialize(uint8_t* data, size_t size);
   bool Deserialize(const uint8_t* data, size_t size);
 
@@ -152,10 +101,7 @@ public:
    * @todo This function becomes removed after old callback library system
    * is removed.
    */
-  AddonInstance_Game* GetInstanceInterface()
-  {
-    return &m_struct;
-  }
+  AddonInstance_Game* GetInstanceInterface() { return &m_struct; }
 
   // Helper functions
   bool LogError(GAME_ERROR error, const char* strMethod) const;
@@ -211,9 +157,9 @@ private:
   bool m_bRequiresGameLoop = false;
   size_t m_serializeSize;
   IGameInputCallback* m_input = nullptr; // The input callback passed to OpenFile()
-  double m_framerate = 0.0;              // Video frame rate (fps)
-  double m_samplerate = 0.0;             // Audio sample rate (Hz)
-  GAME_REGION m_region;                  // Region of the loaded game
+  double m_framerate = 0.0; // Video frame rate (fps)
+  double m_samplerate = 0.0; // Audio sample rate (Hz)
+  GAME_REGION m_region; // Region of the loaded game
 
   // In-game saves
   std::unique_ptr<CGameClientInGameSaves> m_inGameSaves;

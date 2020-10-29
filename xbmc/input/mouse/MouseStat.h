@@ -37,9 +37,9 @@
 enum MOUSE_STATE
 {
   MOUSE_STATE_NORMAL = 1, /*! < Normal state */
-  MOUSE_STATE_FOCUS,      /*! < Control below the mouse is currently in focus */
-  MOUSE_STATE_DRAG,       /*! < A drag operation is being performed */
-  MOUSE_STATE_CLICK       /*! < A mousebutton is being clicked */
+  MOUSE_STATE_FOCUS, /*! < Control below the mouse is currently in focus */
+  MOUSE_STATE_DRAG, /*! < A drag operation is being performed */
+  MOUSE_STATE_CLICK /*! < A mousebutton is being clicked */
 };
 
 enum MOUSE_BUTTON
@@ -56,13 +56,13 @@ enum MOUSE_BUTTON
 // this holds everything we know about the current state of the mouse
 struct MouseState
 {
-  int x;                         // x location
-  int y;                         // y location
-  int16_t dx;                    // change in x
-  int16_t dy;                    // change in y
-  int8_t dz;                     // change in z (wheel)
+  int x; // x location
+  int y; // y location
+  int16_t dx; // change in x
+  int16_t dy; // change in y
+  int8_t dz; // change in z (wheel)
   bool button[MOUSE_MAX_BUTTON]; // current state of the buttons
-  bool active;                   // true if the mouse is active
+  bool active; // true if the mouse is active
 };
 
 struct MousePosition
@@ -86,38 +86,17 @@ public:
   bool IsEnabled() const;
 
   void SetActive(bool active = true);
-  void SetState(MOUSE_STATE state)
-  {
-    m_pointerState = state;
-  };
+  void SetState(MOUSE_STATE state) { m_pointerState = state; };
   void SetEnabled(bool enabled = true);
-  MOUSE_STATE GetState() const
-  {
-    return m_pointerState;
-  };
+  MOUSE_STATE GetState() const { return m_pointerState; };
   uint32_t GetKey() const;
 
   int GetHold(int ButtonID) const;
-  inline int GetX(void) const
-  {
-    return m_mouseState.x;
-  }
-  inline int GetY(void) const
-  {
-    return m_mouseState.y;
-  }
-  inline int GetDX(void) const
-  {
-    return m_mouseState.dx;
-  }
-  inline int GetDY(void) const
-  {
-    return m_mouseState.dy;
-  }
-  MousePosition GetPosition()
-  {
-    return MousePosition{m_mouseState.x, m_mouseState.y};
-  }
+  inline int GetX(void) const { return m_mouseState.x; }
+  inline int GetY(void) const { return m_mouseState.y; }
+  inline int GetDX(void) const { return m_mouseState.dx; }
+  inline int GetDY(void) const { return m_mouseState.dy; }
+  MousePosition GetPosition() { return MousePosition{m_mouseState.x, m_mouseState.y}; }
 
 private:
   /*! \brief Holds information regarding a particular mouse button state
@@ -144,12 +123,12 @@ private:
      */
     enum BUTTON_ACTION
     {
-      MB_NONE = 0,     ///< no action should occur
-      MB_SHORT_CLICK,  ///< a short click has occurred (a double click may be in process)
-      MB_LONG_CLICK,   ///< a long click has occurred
+      MB_NONE = 0, ///< no action should occur
+      MB_SHORT_CLICK, ///< a short click has occurred (a double click may be in process)
+      MB_LONG_CLICK, ///< a long click has occurred
       MB_DOUBLE_CLICK, ///< a double click has occurred
-      MB_DRAG_START,   ///< a drag action has started
-      MB_DRAG,         ///< a drag action is in progress
+      MB_DRAG_START, ///< a drag action has started
+      MB_DRAG, ///< a drag action is in progress
       MB_DRAG_END
     }; ///< a drag action has finished
 
@@ -168,7 +147,7 @@ private:
 
   private:
     static const unsigned int click_confines = 5; ///< number of pixels that the pointer may move
-                                                  ///< while the button is down to trigger a click
+        ///< while the button is down to trigger a click
     static const unsigned int short_click_time =
         1000; ///< time for mouse down/up to trigger a short click rather than a long click
     static const unsigned int double_click_time =
@@ -178,9 +157,9 @@ private:
 
     enum BUTTON_STATE
     {
-      STATE_RELEASED = 0,     ///< mouse button is released, no events pending
-      STATE_IN_CLICK,         ///< mouse button is down, a click is pending
-      STATE_IN_DOUBLE_CLICK,  ///< mouse button is released, pending double click
+      STATE_RELEASED = 0, ///< mouse button is released, no events pending
+      STATE_IN_CLICK, ///< mouse button is down, a click is pending
+      STATE_IN_DOUBLE_CLICK, ///< mouse button is released, pending double click
       STATE_IN_DOUBLE_IGNORE, ///< mouse button is down following double click
       STATE_IN_DRAG
     }; ///< mouse button is down during a drag

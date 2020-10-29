@@ -34,10 +34,7 @@ class CGameClientProperties
 {
 public:
   CGameClientProperties(const CGameClient& parent, AddonProps_Game& props);
-  ~CGameClientProperties(void)
-  {
-    ReleaseResources();
-  }
+  ~CGameClientProperties(void) { ReleaseResources(); }
 
   bool InitializeProperties(void);
 

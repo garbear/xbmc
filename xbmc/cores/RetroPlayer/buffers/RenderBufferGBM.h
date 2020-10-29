@@ -10,9 +10,9 @@
 
 #include "cores/RetroPlayer/buffers/BaseRenderBuffer.h"
 
-#include "system_gl.h"
-
 #include <memory>
+
+#include "system_gl.h"
 
 class CEGLImage;
 class CGBMBufferObject;
@@ -38,10 +38,7 @@ public:
   // implementation of IRenderBuffer
   bool UploadTexture() override;
 
-  GLuint TextureID() const
-  {
-    return m_textureId;
-  }
+  GLuint TextureID() const { return m_textureId; }
 
 protected:
   // Construction parameters

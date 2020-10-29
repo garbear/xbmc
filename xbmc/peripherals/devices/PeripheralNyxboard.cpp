@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralNyxboard.h"
+
 #include "Application.h"
 #include "PeripheralHID.h"
 #include "utils/log.h"
@@ -16,7 +17,7 @@ using namespace PERIPHERALS;
 CPeripheralNyxboard::CPeripheralNyxboard(CPeripherals& manager,
                                          const PeripheralScanResult& scanResult,
                                          CPeripheralBus* bus)
-    : CPeripheralHID(manager, scanResult, bus)
+  : CPeripheralHID(manager, scanResult, bus)
 {
   m_features.push_back(FEATURE_NYXBOARD);
 }

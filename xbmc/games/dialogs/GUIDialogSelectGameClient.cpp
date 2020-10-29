@@ -7,6 +7,7 @@
  */
 
 #include "GUIDialogSelectGameClient.h"
+
 #include "ServiceBroker.h"
 #include "addons/AddonInstaller.h"
 #include "addons/AddonManager.h"

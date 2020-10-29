@@ -7,6 +7,7 @@
  */
 
 #include "ControllerGrid.h"
+
 #include "games/controllers/Controller.h"
 #include "utils/log.h"
 
@@ -21,8 +22,7 @@ CControllerGrid::CControllerGrid()
 }
 
 CControllerGrid::CControllerGrid(const CControllerGrid& other)
-    : m_grid(other.m_grid)
-    , m_height(other.m_height)
+  : m_grid(other.m_grid), m_height(other.m_height)
 {
 }
 
@@ -169,24 +169,24 @@ unsigned int CControllerGrid::AddController(const CControllerPortNode& port,
   {
     switch (GetDirection(activeController))
     {
-    case GRID_DIRECTION::RIGHT:
-    {
-      height = std::max(height, AddHub(ports, height - 1, false, grid));
-      break;
-    }
-    case GRID_DIRECTION::DOWN:
-    {
-      const unsigned int row = height;
+      case GRID_DIRECTION::RIGHT:
+      {
+        height = std::max(height, AddHub(ports, height - 1, false, grid));
+        break;
+      }
+      case GRID_DIRECTION::DOWN:
+      {
+        const unsigned int row = height;
 
-      // Add the first controller to the column
-      const CControllerPortNode& firstController = ports.at(0);
-      height = std::max(height, AddController(firstController, row, column, grid));
+        // Add the first controller to the column
+        const CControllerPortNode& firstController = ports.at(0);
+        height = std::max(height, AddController(firstController, row, column, grid));
 
-      // Add the remaining controllers on the same row
-      height = std::max(height, AddHub(ports, row, true, grid));
+        // Add the remaining controllers on the same row
+        height = std::max(height, AddHub(ports, row, true, grid));
 
-      break;
-    }
+        break;
+      }
     }
   }
 

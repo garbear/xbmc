@@ -49,7 +49,7 @@ RenderBufferPoolVector CRendererFactoryGBM::CreateBufferPools(CRenderContext& co
 CRPRendererGBM::CRPRendererGBM(const CRenderSettings& renderSettings,
                                CRenderContext& context,
                                std::shared_ptr<IRenderBufferPool> bufferPool)
-    : CRPRendererOpenGLES(renderSettings, context, std::move(bufferPool))
+  : CRPRendererOpenGLES(renderSettings, context, std::move(bufferPool))
 {
   m_textureTarget = GL_TEXTURE_EXTERNAL_OES;
 }

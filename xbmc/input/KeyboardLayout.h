@@ -8,11 +8,11 @@
 
 #pragma once
 
+#include "InputCodingTable.h"
+
 #include <map>
 #include <string>
 #include <vector>
-
-#include "InputCodingTable.h"
 
 class TiXmlElement;
 
@@ -21,23 +21,14 @@ class CKeyboardLayout
 public:
   CKeyboardLayout();
   virtual ~CKeyboardLayout();
-  IInputCodingTablePtr GetCodingTable()
-  {
-    return m_codingtable;
-  }
+  IInputCodingTablePtr GetCodingTable() { return m_codingtable; }
 
   bool Load(const TiXmlElement* element);
 
   std::string GetIdentifier() const;
   std::string GetName() const;
-  const std::string& GetLanguage() const
-  {
-    return m_language;
-  }
-  const std::string& GetLayout() const
-  {
-    return m_layout;
-  }
+  const std::string& GetLanguage() const { return m_language; }
+  const std::string& GetLayout() const { return m_layout; }
 
   enum ModifierKey
   {

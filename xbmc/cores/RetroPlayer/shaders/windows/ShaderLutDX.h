@@ -11,9 +11,10 @@
 #include "cores/RetroPlayer/shaders/IShaderLut.h"
 #include "cores/RetroPlayer/shaders/ShaderTypes.h"
 
-#include <d3d11.h>
 #include <memory>
 #include <string>
+
+#include <d3d11.h>
 
 namespace KODI
 {
@@ -40,14 +41,8 @@ public:
 
   // Implementation of IShaderLut
   bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) override;
-  IShaderSampler* GetSampler() override
-  {
-    return m_sampler.get();
-  }
-  IShaderTexture* GetTexture() override
-  {
-    return m_texture.get();
-  }
+  IShaderSampler* GetSampler() override { return m_sampler.get(); }
+  IShaderTexture* GetTexture() override { return m_texture.get(); }
 
 private:
   static std::unique_ptr<IShaderSampler> CreateLUTSampler(

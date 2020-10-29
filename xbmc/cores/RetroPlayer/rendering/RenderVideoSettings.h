@@ -22,23 +22,14 @@ namespace RETRO
 class CRenderVideoSettings
 {
 public:
-  CRenderVideoSettings()
-  {
-    Reset();
-  }
+  CRenderVideoSettings() { Reset(); }
 
   void Reset();
 
   bool operator==(const CRenderVideoSettings& rhs) const;
-  bool operator!=(const CRenderVideoSettings& rhs) const
-  {
-    return !(*this == rhs);
-  }
+  bool operator!=(const CRenderVideoSettings& rhs) const { return !(*this == rhs); }
   bool operator<(const CRenderVideoSettings& rhs) const;
-  bool operator>(const CRenderVideoSettings& rhs) const
-  {
-    return !(*this == rhs || *this < rhs);
-  }
+  bool operator>(const CRenderVideoSettings& rhs) const { return !(*this == rhs || *this < rhs); }
 
   /*!
    * \brief Get a string representation of the video filter parameters
@@ -46,42 +37,18 @@ public:
   std::string GetVideoFilter() const;
   void SetVideoFilter(const std::string& videoFilter);
 
-  SCALINGMETHOD GetScalingMethod() const
-  {
-    return m_scalingMethod;
-  }
-  void SetScalingMethod(SCALINGMETHOD method)
-  {
-    m_scalingMethod = method;
-  }
+  SCALINGMETHOD GetScalingMethod() const { return m_scalingMethod; }
+  void SetScalingMethod(SCALINGMETHOD method) { m_scalingMethod = method; }
 
-  STRETCHMODE GetRenderStretchMode() const
-  {
-    return m_stretchMode;
-  }
-  void SetRenderStretchMode(STRETCHMODE mode)
-  {
-    m_stretchMode = mode;
-  }
+  STRETCHMODE GetRenderStretchMode() const { return m_stretchMode; }
+  void SetRenderStretchMode(STRETCHMODE mode) { m_stretchMode = mode; }
 
-  const std::string& GetShaderPreset() const
-  {
-    return m_shaderPreset;
-  }
-  void SetShaderPreset(const std::string& shaderPreset)
-  {
-    m_shaderPreset = shaderPreset;
-  }
+  const std::string& GetShaderPreset() const { return m_shaderPreset; }
+  void SetShaderPreset(const std::string& shaderPreset) { m_shaderPreset = shaderPreset; }
   void ResetShaderPreset();
 
-  unsigned int GetRenderRotation() const
-  {
-    return m_rotationDegCCW;
-  }
-  void SetRenderRotation(unsigned int rotationDegCCW)
-  {
-    m_rotationDegCCW = rotationDegCCW;
-  }
+  unsigned int GetRenderRotation() const { return m_rotationDegCCW; }
+  void SetRenderRotation(unsigned int rotationDegCCW) { m_rotationDegCCW = rotationDegCCW; }
 
 private:
   bool UsesShaderPreset() const;

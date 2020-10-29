@@ -7,6 +7,7 @@
  */
 
 #include "GameClientSubsystem.h"
+
 #include "GameClient.h"
 #include "GameClientProperties.h"
 #include "addons/kodi-addon-dev-kit/include/kodi/kodi_game_types.h"
@@ -19,9 +20,7 @@ using namespace GAME;
 CGameClientSubsystem::CGameClientSubsystem(CGameClient& gameClient,
                                            AddonInstance_Game& addonStruct,
                                            CCriticalSection& clientAccess)
-    : m_gameClient(gameClient)
-    , m_struct(addonStruct)
-    , m_clientAccess(clientAccess)
+  : m_gameClient(gameClient), m_struct(addonStruct), m_clientAccess(clientAccess)
 {
 }
 

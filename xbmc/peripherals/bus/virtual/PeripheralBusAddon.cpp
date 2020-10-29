@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralBusAddon.h"
+
 #include "ServiceBroker.h"
 #include "addons/AddonManager.h"
 #include "addons/binary-addons/BinaryAddonManager.h"
@@ -24,7 +25,7 @@ using namespace KODI;
 using namespace PERIPHERALS;
 
 CPeripheralBusAddon::CPeripheralBusAddon(CPeripherals& manager)
-    : CPeripheralBus("PeripBusAddon", manager, PERIPHERAL_BUS_ADDON)
+  : CPeripheralBus("PeripBusAddon", manager, PERIPHERAL_BUS_ADDON)
 {
   using namespace ADDON;
 
@@ -127,12 +128,13 @@ bool CPeripheralBusAddon::InitializeProperties(CPeripheral& peripheral)
   {
     switch (peripheral.Type())
     {
-    case PERIPHERAL_JOYSTICK:
-      bSuccess = addon->GetJoystickProperties(index, static_cast<CPeripheralJoystick&>(peripheral));
-      break;
+      case PERIPHERAL_JOYSTICK:
+        bSuccess =
+            addon->GetJoystickProperties(index, static_cast<CPeripheralJoystick&>(peripheral));
+        break;
 
-    default:
-      break;
+      default:
+        break;
     }
   }
 

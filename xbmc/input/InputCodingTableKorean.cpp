@@ -7,7 +7,9 @@
  */
 
 #include "InputCodingTableKorean.h"
+
 #include "utils/CharsetConverter.h"
+
 #include <stdlib.h>
 
 CInputCodingTableKorean::CInputCodingTableKorean() = default;
@@ -102,7 +104,7 @@ std::wstring CInputCodingTableKorean::InputToKorean(const std::wstring& input)
       if (jungseong != -1)
       {
         if (choseong == -1) // Jungseong without choseong cannot have jongseong.
-                            // So inputted key is jungseong character, new character is begun.
+            // So inputted key is jungseong character, new character is begun.
         {
           korean += dicJungseong.at(jungseong);
           jungseong = -1;
@@ -153,13 +155,13 @@ std::wstring CInputCodingTableKorean::InputToKorean(const std::wstring& input)
         }
       }
       else // If there is no jungseong, new consonant can be choseong or second part of double
-           // consonant.
+          // consonant.
       {
         if (choseong ==
             -1) // New consonant is choseong. Also it could be first part of double consonant.
         {
           if (jongseong != -1) // If choseong is already completed, new consonant is another
-                               // choseong. So previous character has only jongseong.
+              // choseong. So previous character has only jongseong.
           {
             korean += dicJongseong.at(jongseong);
             jongseong = -1;
@@ -231,9 +233,8 @@ std::wstring CInputCodingTableKorean::InputToKorean(const std::wstring& input)
     }
     else // If key is vowel, key is jungseong.
     {
-      if (jongseong !=
-          -1) // If previous character has jongseong and this key is jungseong,
-              // actually latest vowel is not jongseong. It's choseong of new character.
+      if (jongseong != -1) // If previous character has jongseong and this key is jungseong,
+          // actually latest vowel is not jongseong. It's choseong of new character.
       {
         // If jongseong of previous character is double consonant, we will separate it to two vowel
         // again. First part of double consonant is jongseong of previous character. Second part of
@@ -295,7 +296,7 @@ std::wstring CInputCodingTableKorean::InputToKorean(const std::wstring& input)
           newCho = 9;
         }
         else // If jongseong is single consonant, previous character has no chongseong.
-             // It's choseong of current character.
+            // It's choseong of current character.
         {
           newCho = dicChoseong.find(dicJongseong.at(jongseong));
           jongseong = -1;
@@ -331,7 +332,7 @@ std::wstring CInputCodingTableKorean::InputToKorean(const std::wstring& input)
       else // If two vowel cannot be double vowel.
       {
         if (choseong != -1) // Previous character is completed.
-                            // Current character is begin with jungseong.
+            // Current character is begin with jungseong.
         {
           korean += MergeCode(choseong, jungseong, jongseong);
           choseong = -1;

@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralBus.h"
+
 #include "FileItem.h"
 #include "guilib/LocalizeStrings.h"
 #include "peripherals/Peripherals.h"
@@ -22,12 +23,12 @@ using namespace PERIPHERALS;
 CPeripheralBus::CPeripheralBus(const std::string& threadname,
                                CPeripherals& manager,
                                PeripheralBusType type)
-    : CThread(threadname.c_str())
-    , m_iRescanTime(PERIPHERAL_DEFAULT_RESCAN_INTERVAL)
-    , m_bNeedsPolling(true)
-    , m_manager(manager)
-    , m_type(type)
-    , m_triggerEvent(true)
+  : CThread(threadname.c_str()),
+    m_iRescanTime(PERIPHERAL_DEFAULT_RESCAN_INTERVAL),
+    m_bNeedsPolling(true),
+    m_manager(manager),
+    m_type(type),
+    m_triggerEvent(true)
 {
 }
 

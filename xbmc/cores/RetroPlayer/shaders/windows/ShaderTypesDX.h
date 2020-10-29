@@ -9,8 +9,9 @@
 #pragma once
 
 #include <memory>
-#include <minwindef.h>
 #include <vector>
+
+#include <minwindef.h>
 
 namespace KODI
 {

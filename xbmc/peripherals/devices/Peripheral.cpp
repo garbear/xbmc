@@ -8,8 +8,6 @@
 
 #include "Peripheral.h"
 
-#include <utility>
-
 #include "Util.h"
 #include "filesystem/File.h"
 #include "guilib/LocalizeStrings.h"
@@ -26,6 +24,8 @@
 #include "utils/XMLUtils.h"
 #include "utils/log.h"
 
+#include <utility>
+
 using namespace KODI;
 using namespace JOYSTICK;
 using namespace PERIPHERALS;
@@ -41,20 +41,19 @@ struct SortBySettingsOrder
 CPeripheral::CPeripheral(CPeripherals& manager,
                          const PeripheralScanResult& scanResult,
                          CPeripheralBus* bus)
-    : m_manager(manager)
-    , m_type(scanResult.m_mappedType)
-    , m_busType(scanResult.m_busType)
-    , m_mappedBusType(scanResult.m_mappedBusType)
-    , m_strLocation(scanResult.m_strLocation)
-    , m_strDeviceName(scanResult.m_strDeviceName)
-    , m_iVendorId(scanResult.m_iVendorId)
-    , m_iProductId(scanResult.m_iProductId)
-    , m_strVersionInfo(g_localizeStrings.Get(13205))
-    , // "unknown"
-    m_bInitialised(false)
-    , m_bHidden(false)
-    , m_bError(false)
-    , m_bus(bus)
+  : m_manager(manager),
+    m_type(scanResult.m_mappedType),
+    m_busType(scanResult.m_busType),
+    m_mappedBusType(scanResult.m_mappedBusType),
+    m_strLocation(scanResult.m_strLocation),
+    m_strDeviceName(scanResult.m_strDeviceName),
+    m_iVendorId(scanResult.m_iVendorId),
+    m_iProductId(scanResult.m_iProductId),
+    m_strVersionInfo(g_localizeStrings.Get(13205)), // "unknown"
+    m_bInitialised(false),
+    m_bHidden(false),
+    m_bError(false),
+    m_bus(bus)
 {
   PeripheralTypeTranslator::FormatHexString(scanResult.m_iVendorId, m_strVendorId);
   PeripheralTypeTranslator::FormatHexString(scanResult.m_iProductId, m_strProductId);
@@ -229,61 +228,61 @@ void CPeripheral::AddSetting(const std::string& strKey, SettingConstPtr setting,
     PeripheralDeviceSetting deviceSetting = {NULL, order};
     switch (setting->GetType())
     {
-    case SettingType::Boolean:
-    {
-      std::shared_ptr<const CSettingBool> mappedSetting =
-          std::static_pointer_cast<const CSettingBool>(setting);
-      std::shared_ptr<CSettingBool> boolSetting =
-          std::make_shared<CSettingBool>(strKey, *mappedSetting);
-      if (boolSetting)
+      case SettingType::Boolean:
       {
-        boolSetting->SetVisible(mappedSetting->IsVisible());
-        deviceSetting.m_setting = boolSetting;
+        std::shared_ptr<const CSettingBool> mappedSetting =
+            std::static_pointer_cast<const CSettingBool>(setting);
+        std::shared_ptr<CSettingBool> boolSetting =
+            std::make_shared<CSettingBool>(strKey, *mappedSetting);
+        if (boolSetting)
+        {
+          boolSetting->SetVisible(mappedSetting->IsVisible());
+          deviceSetting.m_setting = boolSetting;
+        }
       }
-    }
-    break;
-    case SettingType::Integer:
-    {
-      std::shared_ptr<const CSettingInt> mappedSetting =
-          std::static_pointer_cast<const CSettingInt>(setting);
-      std::shared_ptr<CSettingInt> intSetting =
-          std::make_shared<CSettingInt>(strKey, *mappedSetting);
-      if (intSetting)
-      {
-        intSetting->SetVisible(mappedSetting->IsVisible());
-        deviceSetting.m_setting = intSetting;
-      }
-    }
-    break;
-    case SettingType::Number:
-    {
-      std::shared_ptr<const CSettingNumber> mappedSetting =
-          std::static_pointer_cast<const CSettingNumber>(setting);
-      std::shared_ptr<CSettingNumber> floatSetting =
-          std::make_shared<CSettingNumber>(strKey, *mappedSetting);
-      if (floatSetting)
-      {
-        floatSetting->SetVisible(mappedSetting->IsVisible());
-        deviceSetting.m_setting = floatSetting;
-      }
-    }
-    break;
-    case SettingType::String:
-    {
-      std::shared_ptr<const CSettingString> mappedSetting =
-          std::static_pointer_cast<const CSettingString>(setting);
-      std::shared_ptr<CSettingString> stringSetting =
-          std::make_shared<CSettingString>(strKey, *mappedSetting);
-      if (stringSetting)
-      {
-        stringSetting->SetVisible(mappedSetting->IsVisible());
-        deviceSetting.m_setting = stringSetting;
-      }
-    }
-    break;
-    default:
-      //! @todo add more types if needed
       break;
+      case SettingType::Integer:
+      {
+        std::shared_ptr<const CSettingInt> mappedSetting =
+            std::static_pointer_cast<const CSettingInt>(setting);
+        std::shared_ptr<CSettingInt> intSetting =
+            std::make_shared<CSettingInt>(strKey, *mappedSetting);
+        if (intSetting)
+        {
+          intSetting->SetVisible(mappedSetting->IsVisible());
+          deviceSetting.m_setting = intSetting;
+        }
+      }
+      break;
+      case SettingType::Number:
+      {
+        std::shared_ptr<const CSettingNumber> mappedSetting =
+            std::static_pointer_cast<const CSettingNumber>(setting);
+        std::shared_ptr<CSettingNumber> floatSetting =
+            std::make_shared<CSettingNumber>(strKey, *mappedSetting);
+        if (floatSetting)
+        {
+          floatSetting->SetVisible(mappedSetting->IsVisible());
+          deviceSetting.m_setting = floatSetting;
+        }
+      }
+      break;
+      case SettingType::String:
+      {
+        std::shared_ptr<const CSettingString> mappedSetting =
+            std::static_pointer_cast<const CSettingString>(setting);
+        std::shared_ptr<CSettingString> stringSetting =
+            std::make_shared<CSettingString>(strKey, *mappedSetting);
+        if (stringSetting)
+        {
+          stringSetting->SetVisible(mappedSetting->IsVisible());
+          deviceSetting.m_setting = stringSetting;
+        }
+      }
+      break;
+      default:
+        //! @todo add more types if needed
+        break;
     }
 
     if (deviceSetting.m_setting != NULL)
@@ -489,40 +488,40 @@ void CPeripheral::PersistSettings(bool bExiting /* = false */)
     std::string strValue;
     switch ((*itr).second.m_setting->GetType())
     {
-    case SettingType::String:
-    {
-      std::shared_ptr<CSettingString> stringSetting =
-          std::static_pointer_cast<CSettingString>((*itr).second.m_setting);
-      if (stringSetting)
-        strValue = stringSetting->GetValue();
-    }
-    break;
-    case SettingType::Integer:
-    {
-      std::shared_ptr<CSettingInt> intSetting =
-          std::static_pointer_cast<CSettingInt>((*itr).second.m_setting);
-      if (intSetting)
-        strValue = StringUtils::Format("%d", intSetting->GetValue());
-    }
-    break;
-    case SettingType::Number:
-    {
-      std::shared_ptr<CSettingNumber> floatSetting =
-          std::static_pointer_cast<CSettingNumber>((*itr).second.m_setting);
-      if (floatSetting)
-        strValue = StringUtils::Format("%.2f", floatSetting->GetValue());
-    }
-    break;
-    case SettingType::Boolean:
-    {
-      std::shared_ptr<CSettingBool> boolSetting =
-          std::static_pointer_cast<CSettingBool>((*itr).second.m_setting);
-      if (boolSetting)
-        strValue = StringUtils::Format("%d", boolSetting->GetValue() ? 1 : 0);
-    }
-    break;
-    default:
+      case SettingType::String:
+      {
+        std::shared_ptr<CSettingString> stringSetting =
+            std::static_pointer_cast<CSettingString>((*itr).second.m_setting);
+        if (stringSetting)
+          strValue = stringSetting->GetValue();
+      }
       break;
+      case SettingType::Integer:
+      {
+        std::shared_ptr<CSettingInt> intSetting =
+            std::static_pointer_cast<CSettingInt>((*itr).second.m_setting);
+        if (intSetting)
+          strValue = StringUtils::Format("%d", intSetting->GetValue());
+      }
+      break;
+      case SettingType::Number:
+      {
+        std::shared_ptr<CSettingNumber> floatSetting =
+            std::static_pointer_cast<CSettingNumber>((*itr).second.m_setting);
+        if (floatSetting)
+          strValue = StringUtils::Format("%.2f", floatSetting->GetValue());
+      }
+      break;
+      case SettingType::Boolean:
+      {
+        std::shared_ptr<CSettingBool> boolSetting =
+            std::static_pointer_cast<CSettingBool>((*itr).second.m_setting);
+        if (boolSetting)
+          strValue = StringUtils::Format("%d", boolSetting->GetValue() ? 1 : 0);
+      }
+      break;
+      default:
+        break;
     }
     nodeSetting.SetAttribute("value", strValue.c_str());
     doc.RootElement()->InsertEndChild(nodeSetting);

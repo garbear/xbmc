@@ -32,17 +32,11 @@ public:
   void RegisterInput(JOYSTICK::IInputProvider* provider);
   void UnregisterInput(JOYSTICK::IInputProvider* provider);
 
-  JOYSTICK::IInputHandler* InputHandler()
-  {
-    return m_gameInput;
-  }
+  JOYSTICK::IInputHandler* InputHandler() { return m_gameInput; }
 
   // Implementation of IInputHandler
   virtual std::string ControllerID() const override;
-  virtual bool HasFeature(const std::string& feature) const override
-  {
-    return true;
-  }
+  virtual bool HasFeature(const std::string& feature) const override { return true; }
   virtual bool AcceptsInput(const std::string& feature) const override;
   virtual bool OnButtonPress(const std::string& feature, bool bPressed) override;
   virtual void OnButtonHold(const std::string& feature, unsigned int holdTimeMs) override;
@@ -66,21 +60,10 @@ public:
 
   // Implementation of IKeymapEnvironment
   virtual int GetWindowID() const override;
-  virtual void SetWindowID(int windowId) override
-  {
-  }
-  virtual int GetFallthrough(int windowId) const override
-  {
-    return -1;
-  }
-  virtual bool UseGlobalFallthrough() const override
-  {
-    return false;
-  }
-  virtual bool UseEasterEgg() const override
-  {
-    return false;
-  }
+  virtual void SetWindowID(int windowId) override {}
+  virtual int GetFallthrough(int windowId) const override { return -1; }
+  virtual bool UseGlobalFallthrough() const override { return false; }
+  virtual bool UseEasterEgg() const override { return false; }
 
 private:
   // Construction parameters

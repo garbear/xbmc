@@ -7,6 +7,7 @@
  */
 
 #include "input/XBMC_keytable.h"
+
 #include "input/XBMC_keysym.h"
 #include "input/XBMC_vkeys.h"
 #include "utils/StringUtils.h"

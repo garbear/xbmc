@@ -7,15 +7,15 @@
  */
 
 #include "InertialScrollingHandler.h"
+
 #include "Application.h"
 #include "ServiceBroker.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h"
 #include "input/Key.h"
 #include "utils/TimeUtils.h"
-#include "windowing/WinSystem.h"
-
 #include "utils/log.h"
+#include "windowing/WinSystem.h"
 
 #include <cmath>
 #include <numeric>
@@ -27,8 +27,7 @@
 // maximum time between last movement and gesture end in ms to consider as moving
 #define MAXIMUM_DELAY_FOR_INERTIA 200
 
-CInertialScrollingHandler::CInertialScrollingHandler()
-    : m_iLastGesturePoint(CPoint(0, 0))
+CInertialScrollingHandler::CInertialScrollingHandler() : m_iLastGesturePoint(CPoint(0, 0))
 {
 }
 
@@ -125,8 +124,8 @@ bool CInertialScrollingHandler::CheckForInertialScrolling(const CAction* action)
 
       if (inertialRequested)
       {
-        m_iFlickVelocity.x = velocityX;               // in pixels per sec
-        m_iFlickVelocity.y = velocityY;               // in pixels per sec
+        m_iFlickVelocity.x = velocityX; // in pixels per sec
+        m_iFlickVelocity.y = velocityY; // in pixels per sec
         m_iLastGesturePoint.x = action->GetAmount(2); // last gesture point x
         m_iLastGesturePoint.y = action->GetAmount(3); // last gesture point y
 

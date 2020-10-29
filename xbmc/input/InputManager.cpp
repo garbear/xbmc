@@ -6,7 +6,7 @@
  *  See LICENSES/README.md for more information.
  */
 
-#include <math.h>
+#include "InputManager.h"
 
 #include "AppInboundProtocol.h"
 #include "AppParamParser.h"
@@ -14,7 +14,6 @@
 #include "ButtonTranslator.h"
 #include "CustomControllerTranslator.h"
 #include "IRTranslator.h"
-#include "InputManager.h"
 #include "JoystickMapper.h"
 #include "KeymapEnvironment.h"
 #include "ServiceBroker.h"
@@ -43,6 +42,7 @@
 #include "utils/log.h"
 
 #include <algorithm>
+#include <math.h>
 
 using EVENTSERVER::CEventServer;
 
@@ -52,12 +52,12 @@ using namespace MESSAGING;
 const std::string CInputManager::SETTING_INPUT_ENABLE_CONTROLLER = "input.enablejoystick";
 
 CInputManager::CInputManager(const CAppParamParser& params)
-    : m_keymapEnvironment(new CKeymapEnvironment)
-    , m_buttonTranslator(new CButtonTranslator)
-    , m_customControllerTranslator(new CCustomControllerTranslator)
-    , m_touchTranslator(new CTouchTranslator)
-    , m_joystickTranslator(new CJoystickMapper)
-    , m_keyboardEasterEgg(new KEYBOARD::CKeyboardEasterEgg)
+  : m_keymapEnvironment(new CKeymapEnvironment),
+    m_buttonTranslator(new CButtonTranslator),
+    m_customControllerTranslator(new CCustomControllerTranslator),
+    m_touchTranslator(new CTouchTranslator),
+    m_joystickTranslator(new CJoystickMapper),
+    m_keyboardEasterEgg(new KEYBOARD::CKeyboardEasterEgg)
 {
   m_buttonTranslator->RegisterMapper("touch", m_touchTranslator.get());
   m_buttonTranslator->RegisterMapper("customcontroller", m_customControllerTranslator.get());
@@ -332,115 +332,116 @@ bool CInputManager::OnEvent(XBMC_Event& newEvent)
 {
   switch (newEvent.type)
   {
-  case XBMC_KEYDOWN:
-  {
-    m_Keyboard.ProcessKeyDown(newEvent.key.keysym);
-    CKey key = m_Keyboard.TranslateKey(newEvent.key.keysym);
-    OnKey(key);
-    break;
-  }
-  case XBMC_KEYUP:
-    m_Keyboard.ProcessKeyUp();
-    OnKeyUp(m_Keyboard.TranslateKey(newEvent.key.keysym));
-    break;
-  case XBMC_MOUSEBUTTONDOWN:
-  case XBMC_MOUSEBUTTONUP:
-  case XBMC_MOUSEMOTION:
-  {
-    bool handled = false;
-
-    for (auto driverHandler : m_mouseHandlers)
+    case XBMC_KEYDOWN:
     {
-      switch (newEvent.type)
+      m_Keyboard.ProcessKeyDown(newEvent.key.keysym);
+      CKey key = m_Keyboard.TranslateKey(newEvent.key.keysym);
+      OnKey(key);
+      break;
+    }
+    case XBMC_KEYUP:
+      m_Keyboard.ProcessKeyUp();
+      OnKeyUp(m_Keyboard.TranslateKey(newEvent.key.keysym));
+      break;
+    case XBMC_MOUSEBUTTONDOWN:
+    case XBMC_MOUSEBUTTONUP:
+    case XBMC_MOUSEMOTION:
+    {
+      bool handled = false;
+
+      for (auto driverHandler : m_mouseHandlers)
       {
-      case XBMC_MOUSEMOTION:
-      {
-        if (driverHandler->OnPosition(newEvent.motion.x, newEvent.motion.y))
-          handled = true;
-        break;
-      }
-      case XBMC_MOUSEBUTTONDOWN:
-      {
-        MOUSE::BUTTON_ID buttonId;
-        if (CMouseTranslator::TranslateEventID(newEvent.button.button, buttonId))
+        switch (newEvent.type)
         {
-          if (driverHandler->OnButtonPress(buttonId))
-            handled = true;
+          case XBMC_MOUSEMOTION:
+          {
+            if (driverHandler->OnPosition(newEvent.motion.x, newEvent.motion.y))
+              handled = true;
+            break;
+          }
+          case XBMC_MOUSEBUTTONDOWN:
+          {
+            MOUSE::BUTTON_ID buttonId;
+            if (CMouseTranslator::TranslateEventID(newEvent.button.button, buttonId))
+            {
+              if (driverHandler->OnButtonPress(buttonId))
+                handled = true;
+            }
+            break;
+          }
+          case XBMC_MOUSEBUTTONUP:
+          {
+            MOUSE::BUTTON_ID buttonId;
+            if (CMouseTranslator::TranslateEventID(newEvent.button.button, buttonId))
+              driverHandler->OnButtonRelease(buttonId);
+            break;
+          }
+          default:
+            break;
         }
-        break;
+
+        if (handled)
+          break;
       }
-      case XBMC_MOUSEBUTTONUP:
+
+      if (!handled)
       {
-        MOUSE::BUTTON_ID buttonId;
-        if (CMouseTranslator::TranslateEventID(newEvent.button.button, buttonId))
-          driverHandler->OnButtonRelease(buttonId);
-        break;
+        m_Mouse.HandleEvent(newEvent);
+        ProcessMouse(CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindowOrDialog());
       }
-      default:
-        break;
+      break;
+    }
+    case XBMC_TOUCH:
+    {
+      if (newEvent.touch.action == ACTION_TOUCH_TAP)
+      { // Send a mouse motion event with no dx,dy for getting the current guiitem selected
+        g_application.OnAction(
+            CAction(ACTION_MOUSE_MOVE, 0, newEvent.touch.x, newEvent.touch.y, 0, 0));
       }
-
-      if (handled)
-        break;
-    }
-
-    if (!handled)
-    {
-      m_Mouse.HandleEvent(newEvent);
-      ProcessMouse(CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindowOrDialog());
-    }
-    break;
-  }
-  case XBMC_TOUCH:
-  {
-    if (newEvent.touch.action == ACTION_TOUCH_TAP)
-    { // Send a mouse motion event with no dx,dy for getting the current guiitem selected
-      g_application.OnAction(
-          CAction(ACTION_MOUSE_MOVE, 0, newEvent.touch.x, newEvent.touch.y, 0, 0));
-    }
-    int actionId = 0;
-    std::string actionString;
-    if (newEvent.touch.action == ACTION_GESTURE_BEGIN ||
-        newEvent.touch.action == ACTION_GESTURE_END ||
-        newEvent.touch.action == ACTION_GESTURE_ABORT)
-      actionId = newEvent.touch.action;
-    else
-    {
-      int iWin = CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindowOrDialog();
-      m_touchTranslator->TranslateTouchAction(iWin, newEvent.touch.action, newEvent.touch.pointers,
-                                              actionId, actionString);
-    }
-
-    if (actionId <= 0)
-      return false;
-
-    if ((actionId >= ACTION_TOUCH_TAP && actionId <= ACTION_GESTURE_END) ||
-        (actionId >= ACTION_MOUSE_START && actionId <= ACTION_MOUSE_END))
-    {
-      auto action = new CAction(actionId, 0, newEvent.touch.x, newEvent.touch.y, newEvent.touch.x2,
-                                newEvent.touch.y2, newEvent.touch.x3, newEvent.touch.y3);
-      CApplicationMessenger::GetInstance().PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1,
-                                                   static_cast<void*>(action));
-    }
-    else
-    {
-      if (actionId == ACTION_BUILT_IN_FUNCTION && !actionString.empty())
-        CApplicationMessenger::GetInstance().PostMsg(
-            TMSG_GUI_ACTION, WINDOW_INVALID, -1,
-            static_cast<void*>(new CAction(actionId, actionString)));
+      int actionId = 0;
+      std::string actionString;
+      if (newEvent.touch.action == ACTION_GESTURE_BEGIN ||
+          newEvent.touch.action == ACTION_GESTURE_END ||
+          newEvent.touch.action == ACTION_GESTURE_ABORT)
+        actionId = newEvent.touch.action;
       else
-        CApplicationMessenger::GetInstance().PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1,
-                                                     static_cast<void*>(new CAction(actionId)));
-    }
+      {
+        int iWin = CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindowOrDialog();
+        m_touchTranslator->TranslateTouchAction(iWin, newEvent.touch.action,
+                                                newEvent.touch.pointers, actionId, actionString);
+      }
 
-    break;
-  } // case
-  case XBMC_BUTTON:
-  {
-    CKey key(newEvent.keybutton.button, newEvent.keybutton.holdtime);
-    OnKey(key);
-    break;
-  }
+      if (actionId <= 0)
+        return false;
+
+      if ((actionId >= ACTION_TOUCH_TAP && actionId <= ACTION_GESTURE_END) ||
+          (actionId >= ACTION_MOUSE_START && actionId <= ACTION_MOUSE_END))
+      {
+        auto action =
+            new CAction(actionId, 0, newEvent.touch.x, newEvent.touch.y, newEvent.touch.x2,
+                        newEvent.touch.y2, newEvent.touch.x3, newEvent.touch.y3);
+        CApplicationMessenger::GetInstance().PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1,
+                                                     static_cast<void*>(action));
+      }
+      else
+      {
+        if (actionId == ACTION_BUILT_IN_FUNCTION && !actionString.empty())
+          CApplicationMessenger::GetInstance().PostMsg(
+              TMSG_GUI_ACTION, WINDOW_INVALID, -1,
+              static_cast<void*>(new CAction(actionId, actionString)));
+        else
+          CApplicationMessenger::GetInstance().PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1,
+                                                       static_cast<void*>(new CAction(actionId)));
+      }
+
+      break;
+    } // case
+    case XBMC_BUTTON:
+    {
+      CKey key(newEvent.keybutton.button, newEvent.keybutton.holdtime);
+      OnKey(key);
+      break;
+    }
   } // switch
 
   return true;
@@ -799,17 +800,17 @@ bool CInputManager::OnAction(const CAction& action)
 
         switch (action.GetID())
         {
-        case ACTION_MOVE_LEFT:
-        case ACTION_MOVE_RIGHT:
-        case ACTION_MOVE_UP:
-        case ACTION_MOVE_DOWN:
-        case ACTION_PAGE_UP:
-        case ACTION_PAGE_DOWN:
-          bIsNavigation = true;
-          break;
+          case ACTION_MOVE_LEFT:
+          case ACTION_MOVE_RIGHT:
+          case ACTION_MOVE_UP:
+          case ACTION_MOVE_DOWN:
+          case ACTION_PAGE_UP:
+          case ACTION_PAGE_DOWN:
+            bIsNavigation = true;
+            break;
 
-        default:
-          break;
+          default:
+            break;
         }
 
         if (bIsNavigation)

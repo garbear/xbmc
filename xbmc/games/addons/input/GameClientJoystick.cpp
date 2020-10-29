@@ -7,6 +7,7 @@
  */
 
 #include "GameClientJoystick.h"
+
 #include "GameClientInput.h"
 #include "games/addons/GameClient.h"
 #include "games/controllers/Controller.h"
@@ -22,10 +23,10 @@ using namespace GAME;
 CGameClientJoystick::CGameClientJoystick(CGameClient& gameClient,
                                          const std::string& portAddress,
                                          const ControllerPtr& controller)
-    : m_gameClient(gameClient)
-    , m_portAddress(portAddress)
-    , m_controller(controller)
-    , m_port(new CPort(this))
+  : m_gameClient(gameClient),
+    m_portAddress(portAddress),
+    m_controller(controller),
+    m_port(new CPort(this))
 {
   assert(m_controller.get() != NULL);
 }

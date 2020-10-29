@@ -7,6 +7,7 @@
  */
 
 #include "GameClient.h"
+
 #include "FileItem.h"
 #include "GameClientCallbacks.h"
 #include "GameClientInGameSaves.h"
@@ -99,14 +100,14 @@ std::unique_ptr<CGameClient> CGameClient::FromExtension(ADDON::CAddonInfo addonI
 }
 
 CGameClient::CGameClient(ADDON::CAddonInfo addonInfo)
-    : CAddonDll(std::move(addonInfo))
-    , m_subsystems(CGameClientSubsystem::CreateSubsystems(*this, m_struct, m_critSection))
-    , m_bSupportsVFS(false)
-    , m_bSupportsStandalone(false)
-    , m_bSupportsAllExtensions(false)
-    , m_bIsPlaying(false)
-    , m_serializeSize(0)
-    , m_region(GAME_REGION_UNKNOWN)
+  : CAddonDll(std::move(addonInfo)),
+    m_subsystems(CGameClientSubsystem::CreateSubsystems(*this, m_struct, m_critSection)),
+    m_bSupportsVFS(false),
+    m_bSupportsStandalone(false),
+    m_bSupportsAllExtensions(false),
+    m_bIsPlaying(false),
+    m_serializeSize(0),
+    m_region(GAME_REGION_UNKNOWN)
 {
   const ADDON::InfoMap& extraInfo = m_addonInfo.ExtraInfo();
   ADDON::InfoMap::const_iterator it;

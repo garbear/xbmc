@@ -24,10 +24,10 @@
 // ASCII/unicode could be derived from scancodes, virtual keys, modifiers and/or other
 // ASCII/unicode.
 
-#include <string>
-
 #include "input/Key.h"
 #include "input/XBMC_keyboard.h"
+
+#include <string>
 
 class CKeyboardStat
 {

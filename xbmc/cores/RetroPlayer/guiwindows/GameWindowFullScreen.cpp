@@ -7,9 +7,10 @@
  */
 
 #include "GameWindowFullScreen.h"
-#include "Application.h"       //! @todo Remove me
+
+#include "Application.h" //! @todo Remove me
 #include "ApplicationPlayer.h" //! @todo Remove me
-#include "GUIInfoManager.h"    //! @todo Remove me
+#include "GUIInfoManager.h" //! @todo Remove me
 #include "GameWindowFullScreenText.h"
 #include "ServiceBroker.h"
 #include "cores/RetroPlayer/guibridge/GUIGameRenderManager.h"
@@ -30,8 +31,8 @@ using namespace KODI::GUILIB;
 using namespace RETRO;
 
 CGameWindowFullScreen::CGameWindowFullScreen(void)
-    : CGUIWindow(WINDOW_FULLSCREEN_GAME, "VideoFullScreen.xml")
-    , m_fullscreenText(new CGameWindowFullScreenText(*this))
+  : CGUIWindow(WINDOW_FULLSCREEN_GAME, "VideoFullScreen.xml"),
+    m_fullscreenText(new CGameWindowFullScreenText(*this))
 {
   // initialize CGUIControl
   m_controlStats = new GUICONTROLSTATS;
@@ -83,40 +84,40 @@ bool CGameWindowFullScreen::OnAction(const CAction& action)
 {
   switch (action.GetID())
   {
-  case ACTION_SHOW_OSD:
-  case ACTION_TRIGGER_OSD:
-  {
-    TriggerOSD();
-    return true;
-  }
-  case ACTION_MOUSE_MOVE:
-  {
-    if (action.GetAmount(2) || action.GetAmount(3))
+    case ACTION_SHOW_OSD:
+    case ACTION_TRIGGER_OSD:
     {
       TriggerOSD();
       return true;
     }
-    break;
-  }
-  case ACTION_MOUSE_LEFT_CLICK:
-  {
-    TriggerOSD();
-    return true;
-  }
-  case ACTION_SHOW_GUI:
-  {
-    // Switch back to the menu
-    CServiceBroker::GetGUI()->GetWindowManager().PreviousWindow();
-    return true;
-  }
-  case ACTION_ASPECT_RATIO:
-  {
-    // Toggle the aspect ratio mode (only if the info is onscreen)
-    // g_application.GetAppPlayer().SetRenderViewMode(CViewModeSettings::GetNextQuickCycleViewMode(CMediaSettings::GetInstance().GetCurrentVideoSettings().m_ViewMode));
-    return true;
-  }
-  default:
-    break;
+    case ACTION_MOUSE_MOVE:
+    {
+      if (action.GetAmount(2) || action.GetAmount(3))
+      {
+        TriggerOSD();
+        return true;
+      }
+      break;
+    }
+    case ACTION_MOUSE_LEFT_CLICK:
+    {
+      TriggerOSD();
+      return true;
+    }
+    case ACTION_SHOW_GUI:
+    {
+      // Switch back to the menu
+      CServiceBroker::GetGUI()->GetWindowManager().PreviousWindow();
+      return true;
+    }
+    case ACTION_ASPECT_RATIO:
+    {
+      // Toggle the aspect ratio mode (only if the info is onscreen)
+      // g_application.GetAppPlayer().SetRenderViewMode(CViewModeSettings::GetNextQuickCycleViewMode(CMediaSettings::GetInstance().GetCurrentVideoSettings().m_ViewMode));
+      return true;
+    }
+    default:
+      break;
   }
 
   return CGUIWindow::OnAction(action);
@@ -126,15 +127,15 @@ bool CGameWindowFullScreen::OnMessage(CGUIMessage& message)
 {
   switch (message.GetMessage())
   {
-  case GUI_MSG_SETFOCUS:
-  case GUI_MSG_LOSTFOCUS:
-  {
-    if (message.GetSenderId() != WINDOW_FULLSCREEN_GAME)
-      return true;
-    break;
-  }
-  default:
-    break;
+    case GUI_MSG_SETFOCUS:
+    case GUI_MSG_LOSTFOCUS:
+    {
+      if (message.GetSenderId() != WINDOW_FULLSCREEN_GAME)
+        return true;
+      break;
+    }
+    default:
+      break;
   }
 
   return CGUIWindow::OnMessage(message);

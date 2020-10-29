@@ -8,8 +8,6 @@
 
 #include "Peripherals.h"
 
-#include <utility>
-
 #include "EventScanner.h"
 #include "addons/AddonButtonMap.h"
 #include "addons/AddonManager.h"
@@ -17,6 +15,8 @@
 #include "addons/settings/GUIDialogAddonSettings.h"
 #include "bus/PeripheralBus.h"
 #include "bus/PeripheralBusUSB.h"
+
+#include <utility>
 #if defined(TARGET_ANDROID)
 #include "platform/android/peripherals/PeripheralBusAndroid.h"
 #endif
@@ -71,9 +71,9 @@ using namespace KODI::MESSAGING;
 
 CPeripherals::CPeripherals(CInputManager& inputManager,
                            GAME::CControllerManager& controllerProfiles)
-    : m_inputManager(inputManager)
-    , m_controllerProfiles(controllerProfiles)
-    , m_eventScanner(new CEventScanner(*this))
+  : m_inputManager(inputManager),
+    m_controllerProfiles(controllerProfiles),
+    m_eventScanner(new CEventScanner(*this))
 {
   // Register settings
   std::set<std::string> settingSet;
@@ -305,65 +305,67 @@ void CPeripherals::CreatePeripheral(CPeripheralBus& bus, const PeripheralScanRes
 
   switch (mappedResult.m_mappedType)
   {
-  case PERIPHERAL_HID:
-    peripheral = PeripheralPtr(new CPeripheralHID(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_HID:
+      peripheral = PeripheralPtr(new CPeripheralHID(*this, mappedResult, &bus));
+      break;
 
-  case PERIPHERAL_NIC:
-    peripheral = PeripheralPtr(new CPeripheralNIC(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_NIC:
+      peripheral = PeripheralPtr(new CPeripheralNIC(*this, mappedResult, &bus));
+      break;
 
-  case PERIPHERAL_DISK:
-    peripheral = PeripheralPtr(new CPeripheralDisk(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_DISK:
+      peripheral = PeripheralPtr(new CPeripheralDisk(*this, mappedResult, &bus));
+      break;
 
-  case PERIPHERAL_NYXBOARD:
-    peripheral = PeripheralPtr(new CPeripheralNyxboard(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_NYXBOARD:
+      peripheral = PeripheralPtr(new CPeripheralNyxboard(*this, mappedResult, &bus));
+      break;
 
-  case PERIPHERAL_TUNER:
-    peripheral = PeripheralPtr(new CPeripheralTuner(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_TUNER:
+      peripheral = PeripheralPtr(new CPeripheralTuner(*this, mappedResult, &bus));
+      break;
 
-  case PERIPHERAL_BLUETOOTH:
-    peripheral = PeripheralPtr(new CPeripheralBluetooth(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_BLUETOOTH:
+      peripheral = PeripheralPtr(new CPeripheralBluetooth(*this, mappedResult, &bus));
+      break;
 
-  case PERIPHERAL_CEC:
+    case PERIPHERAL_CEC:
 #if defined(HAVE_LIBCEC)
-    if (bus.Type() == PERIPHERAL_BUS_CEC)
-      peripheral = PeripheralPtr(new CPeripheralCecAdapter(*this, mappedResult, &bus));
+      if (bus.Type() == PERIPHERAL_BUS_CEC)
+        peripheral = PeripheralPtr(new CPeripheralCecAdapter(*this, mappedResult, &bus));
 #else
-    if (!m_bMissingLibCecWarningDisplayed)
-    {
-      m_bMissingLibCecWarningDisplayed = true;
-      CLog::Log(LOGWARNING,
-                "%s - libCEC support has not been compiled in, so the CEC adapter cannot be used.",
-                __FUNCTION__);
-      CGUIDialogKaiToast::QueueNotification(
-          CGUIDialogKaiToast::Warning, g_localizeStrings.Get(36000), g_localizeStrings.Get(36017));
-    }
+      if (!m_bMissingLibCecWarningDisplayed)
+      {
+        m_bMissingLibCecWarningDisplayed = true;
+        CLog::Log(
+            LOGWARNING,
+            "%s - libCEC support has not been compiled in, so the CEC adapter cannot be used.",
+            __FUNCTION__);
+        CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Warning,
+                                              g_localizeStrings.Get(36000),
+                                              g_localizeStrings.Get(36017));
+      }
 #endif
-    break;
+      break;
 
-  case PERIPHERAL_IMON:
-    peripheral = PeripheralPtr(new CPeripheralImon(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_IMON:
+      peripheral = PeripheralPtr(new CPeripheralImon(*this, mappedResult, &bus));
+      break;
 
-  case PERIPHERAL_JOYSTICK:
-    peripheral = PeripheralPtr(new CPeripheralJoystick(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_JOYSTICK:
+      peripheral = PeripheralPtr(new CPeripheralJoystick(*this, mappedResult, &bus));
+      break;
 
-  case PERIPHERAL_KEYBOARD:
-    peripheral = PeripheralPtr(new CPeripheralKeyboard(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_KEYBOARD:
+      peripheral = PeripheralPtr(new CPeripheralKeyboard(*this, mappedResult, &bus));
+      break;
 
-  case PERIPHERAL_MOUSE:
-    peripheral = PeripheralPtr(new CPeripheralMouse(*this, mappedResult, &bus));
-    break;
+    case PERIPHERAL_MOUSE:
+      peripheral = PeripheralPtr(new CPeripheralMouse(*this, mappedResult, &bus));
+      break;
 
-  default:
-    break;
+    default:
+      break;
   }
 
   if (peripheral)
@@ -982,17 +984,17 @@ void CPeripherals::OnApplicationMessage(MESSAGING::ThreadMessage* pMsg)
 {
   switch (pMsg->dwMessage)
   {
-  case TMSG_CECTOGGLESTATE:
-    *static_cast<bool*>(pMsg->lpVoid) = ToggleDeviceState(STATE_SWITCH_TOGGLE);
-    break;
+    case TMSG_CECTOGGLESTATE:
+      *static_cast<bool*>(pMsg->lpVoid) = ToggleDeviceState(STATE_SWITCH_TOGGLE);
+      break;
 
-  case TMSG_CECACTIVATESOURCE:
-    ToggleDeviceState(STATE_ACTIVATE_SOURCE);
-    break;
+    case TMSG_CECACTIVATESOURCE:
+      ToggleDeviceState(STATE_ACTIVATE_SOURCE);
+      break;
 
-  case TMSG_CECSTANDBY:
-    ToggleDeviceState(STATE_STANDBY);
-    break;
+    case TMSG_CECSTANDBY:
+      ToggleDeviceState(STATE_STANDBY);
+      break;
   }
 }
 

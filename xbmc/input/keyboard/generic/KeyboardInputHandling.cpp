@@ -7,6 +7,7 @@
  */
 
 #include "KeyboardInputHandling.h"
+
 #include "input/XBMC_keysym.h"
 #include "input/joysticks/DriverPrimitive.h"
 #include "input/joysticks/interfaces/IButtonMap.h"
@@ -17,8 +18,7 @@ using namespace KEYBOARD;
 
 CKeyboardInputHandling::CKeyboardInputHandling(IKeyboardInputHandler* handler,
                                                JOYSTICK::IButtonMap* buttonMap)
-    : m_handler(handler)
-    , m_buttonMap(buttonMap)
+  : m_handler(handler), m_buttonMap(buttonMap)
 {
 }
 

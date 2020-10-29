@@ -7,6 +7,7 @@
  */
 
 #include "Port.h"
+
 #include "InputSink.h"
 #include "games/addons/GameClient.h"
 #include "guilib/WindowIDs.h"
@@ -17,8 +18,7 @@ using namespace KODI;
 using namespace GAME;
 
 CPort::CPort(JOYSTICK::IInputHandler* gameInput)
-    : m_gameInput(gameInput)
-    , m_inputSink(new CInputSink(gameInput))
+  : m_gameInput(gameInput), m_inputSink(new CInputSink(gameInput))
 {
 }
 

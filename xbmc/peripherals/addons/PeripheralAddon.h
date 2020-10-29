@@ -79,10 +79,7 @@ public:
   /** @name Joystick methods */
   //@{
   bool GetJoystickProperties(unsigned int index, CPeripheralJoystick& joystick);
-  bool HasButtonMaps(void) const
-  {
-    return m_bProvidesButtonMaps;
-  }
+  bool HasButtonMaps(void) const { return m_bProvidesButtonMaps; }
   bool GetFeatures(const CPeripheral* device,
                    const std::string& strControllerId,
                    FeatureMap& features);
@@ -150,7 +147,7 @@ private:
   CPeripherals& m_manager;
 
   /* @brief Cache for const char* members in PERIPHERAL_PROPERTIES */
-  std::string m_strUserPath;   /*!< @brief translated path to the user profile */
+  std::string m_strUserPath; /*!< @brief translated path to the user profile */
   std::string m_strClientPath; /*!< @brief translated path to this add-on */
 
   /*!

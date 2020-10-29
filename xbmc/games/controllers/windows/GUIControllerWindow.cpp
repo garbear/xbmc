@@ -7,6 +7,7 @@
  */
 
 #include "GUIControllerWindow.h"
+
 #include "ControllerInstaller.h"
 #include "GUIControllerDefines.h"
 #include "GUIControllerList.h"
@@ -33,8 +34,8 @@ using namespace GAME;
 using namespace KODI::MESSAGING;
 
 CGUIControllerWindow::CGUIControllerWindow(void)
-    : CGUIDialog(WINDOW_DIALOG_GAME_CONTROLLERS, "DialogGameControllers.xml")
-    , m_installer(new CControllerInstaller)
+  : CGUIDialog(WINDOW_DIALOG_GAME_CONTROLLERS, "DialogGameControllers.xml"),
+    m_installer(new CControllerInstaller)
 {
   // initialize CGUIWindow
   m_loadType = KEEP_IN_MEMORY;
@@ -87,97 +88,102 @@ bool CGUIControllerWindow::OnMessage(CGUIMessage& message)
 
   switch (message.GetMessage())
   {
-  case GUI_MSG_CLICKED:
-  {
-    int controlId = message.GetSenderId();
+    case GUI_MSG_CLICKED:
+    {
+      int controlId = message.GetSenderId();
 
-    if (controlId == CONTROL_CLOSE_BUTTON)
-    {
-      Close();
-      bHandled = true;
-    }
-    else if (controlId == CONTROL_GET_MORE)
-    {
-      GetMoreControllers();
-      bHandled = true;
-    }
-    else if (controlId == CONTROL_GET_ALL)
-    {
-      GetAllControllers();
-      bHandled = true;
-    }
-    else if (controlId == CONTROL_RESET_BUTTON)
-    {
-      ResetController();
-      bHandled = true;
-    }
-    else if (controlId == CONTROL_HELP_BUTTON)
-    {
-      ShowHelp();
-      bHandled = true;
-    }
-    else if (controlId == CONTROL_FIX_SKIPPING)
-    {
-      ShowButtonCaptureDialog();
-    }
-    else if (CONTROL_CONTROLLER_BUTTONS_START <= controlId &&
-             controlId < CONTROL_CONTROLLER_BUTTONS_END)
-    {
-      OnControllerSelected(controlId - CONTROL_CONTROLLER_BUTTONS_START);
-      bHandled = true;
-    }
-    else if (CONTROL_FEATURE_BUTTONS_START <= controlId && controlId < CONTROL_FEATURE_BUTTONS_END)
-    {
-      OnFeatureSelected(controlId - CONTROL_FEATURE_BUTTONS_START);
-      bHandled = true;
-    }
-    break;
-  }
-  case GUI_MSG_FOCUSED:
-  {
-    int controlId = message.GetControlId();
-
-    if (CONTROL_CONTROLLER_BUTTONS_START <= controlId && controlId < CONTROL_CONTROLLER_BUTTONS_END)
-    {
-      OnControllerFocused(controlId - CONTROL_CONTROLLER_BUTTONS_START);
-    }
-    else if (CONTROL_FEATURE_BUTTONS_START <= controlId && controlId < CONTROL_FEATURE_BUTTONS_END)
-    {
-      OnFeatureFocused(controlId - CONTROL_FEATURE_BUTTONS_START);
-    }
-    break;
-  }
-  case GUI_MSG_SETFOCUS:
-  {
-    int controlId = message.GetControlId();
-
-    if (CONTROL_CONTROLLER_BUTTONS_START <= controlId && controlId < CONTROL_CONTROLLER_BUTTONS_END)
-    {
-      OnControllerFocused(controlId - CONTROL_CONTROLLER_BUTTONS_START);
-    }
-    else if (CONTROL_FEATURE_BUTTONS_START <= controlId && controlId < CONTROL_FEATURE_BUTTONS_END)
-    {
-      OnFeatureFocused(controlId - CONTROL_FEATURE_BUTTONS_START);
-    }
-    break;
-  }
-  case GUI_MSG_REFRESH_LIST:
-  {
-    int controlId = message.GetControlId();
-
-    if (controlId == CONTROL_CONTROLLER_LIST)
-    {
-      const std::string controllerId = message.GetStringParam();
-      if (m_controllerList && m_controllerList->Refresh(controllerId))
+      if (controlId == CONTROL_CLOSE_BUTTON)
       {
-        CGUIDialog::OnMessage(message);
+        Close();
         bHandled = true;
       }
+      else if (controlId == CONTROL_GET_MORE)
+      {
+        GetMoreControllers();
+        bHandled = true;
+      }
+      else if (controlId == CONTROL_GET_ALL)
+      {
+        GetAllControllers();
+        bHandled = true;
+      }
+      else if (controlId == CONTROL_RESET_BUTTON)
+      {
+        ResetController();
+        bHandled = true;
+      }
+      else if (controlId == CONTROL_HELP_BUTTON)
+      {
+        ShowHelp();
+        bHandled = true;
+      }
+      else if (controlId == CONTROL_FIX_SKIPPING)
+      {
+        ShowButtonCaptureDialog();
+      }
+      else if (CONTROL_CONTROLLER_BUTTONS_START <= controlId &&
+               controlId < CONTROL_CONTROLLER_BUTTONS_END)
+      {
+        OnControllerSelected(controlId - CONTROL_CONTROLLER_BUTTONS_START);
+        bHandled = true;
+      }
+      else if (CONTROL_FEATURE_BUTTONS_START <= controlId &&
+               controlId < CONTROL_FEATURE_BUTTONS_END)
+      {
+        OnFeatureSelected(controlId - CONTROL_FEATURE_BUTTONS_START);
+        bHandled = true;
+      }
+      break;
     }
-    break;
-  }
-  default:
-    break;
+    case GUI_MSG_FOCUSED:
+    {
+      int controlId = message.GetControlId();
+
+      if (CONTROL_CONTROLLER_BUTTONS_START <= controlId &&
+          controlId < CONTROL_CONTROLLER_BUTTONS_END)
+      {
+        OnControllerFocused(controlId - CONTROL_CONTROLLER_BUTTONS_START);
+      }
+      else if (CONTROL_FEATURE_BUTTONS_START <= controlId &&
+               controlId < CONTROL_FEATURE_BUTTONS_END)
+      {
+        OnFeatureFocused(controlId - CONTROL_FEATURE_BUTTONS_START);
+      }
+      break;
+    }
+    case GUI_MSG_SETFOCUS:
+    {
+      int controlId = message.GetControlId();
+
+      if (CONTROL_CONTROLLER_BUTTONS_START <= controlId &&
+          controlId < CONTROL_CONTROLLER_BUTTONS_END)
+      {
+        OnControllerFocused(controlId - CONTROL_CONTROLLER_BUTTONS_START);
+      }
+      else if (CONTROL_FEATURE_BUTTONS_START <= controlId &&
+               controlId < CONTROL_FEATURE_BUTTONS_END)
+      {
+        OnFeatureFocused(controlId - CONTROL_FEATURE_BUTTONS_START);
+      }
+      break;
+    }
+    case GUI_MSG_REFRESH_LIST:
+    {
+      int controlId = message.GetControlId();
+
+      if (controlId == CONTROL_CONTROLLER_LIST)
+      {
+        const std::string controllerId = message.GetStringParam();
+        if (m_controllerList && m_controllerList->Refresh(controllerId))
+        {
+          CGUIDialog::OnMessage(message);
+          bHandled = true;
+        }
+      }
+      break;
+    }
+    default:
+      break;
   }
 
   if (!bHandled)
@@ -195,7 +201,7 @@ void CGUIControllerWindow::OnEvent(const ADDON::AddonEvent& event)
 {
   using namespace ADDON;
 
-  if (typeid(event) == typeid(AddonEvents::Enabled) ||  // also called on install,
+  if (typeid(event) == typeid(AddonEvents::Enabled) || // also called on install,
       typeid(event) == typeid(AddonEvents::Disabled) || // not called on uninstall
       typeid(event) == typeid(AddonEvents::UnInstalled) ||
       typeid(event) == typeid(AddonEvents::ReInstalled))

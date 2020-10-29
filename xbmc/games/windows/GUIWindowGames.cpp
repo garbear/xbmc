@@ -39,8 +39,7 @@ using namespace GAME;
 #define CONTROL_BTNSORTBY 3
 #define CONTROL_BTNSORTASC 4
 
-CGUIWindowGames::CGUIWindowGames()
-    : CGUIMediaWindow(WINDOW_GAMES, "MyGames.xml")
+CGUIWindowGames::CGUIWindowGames() : CGUIMediaWindow(WINDOW_GAMES, "MyGames.xml")
 {
 }
 
@@ -48,28 +47,28 @@ bool CGUIWindowGames::OnMessage(CGUIMessage& message)
 {
   switch (message.GetMessage())
   {
-  case GUI_MSG_WINDOW_INIT:
-  {
-    m_rootDir.AllowNonLocalSources(true); //! @todo
+    case GUI_MSG_WINDOW_INIT:
+    {
+      m_rootDir.AllowNonLocalSources(true); //! @todo
 
-    // Is this the first time the window is opened?
-    if (m_vecItems->GetPath() == "?" && message.GetStringParam().empty())
-      message.SetStringParam(CMediaSourceSettings::GetInstance().GetDefaultSource("games"));
+      // Is this the first time the window is opened?
+      if (m_vecItems->GetPath() == "?" && message.GetStringParam().empty())
+        message.SetStringParam(CMediaSourceSettings::GetInstance().GetDefaultSource("games"));
 
-    //! @todo
-    m_dlgProgress = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIDialogProgress>(
-        WINDOW_DIALOG_PROGRESS);
+      //! @todo
+      m_dlgProgress = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIDialogProgress>(
+          WINDOW_DIALOG_PROGRESS);
 
-    break;
-  }
-  case GUI_MSG_CLICKED:
-  {
-    if (OnClickMsg(message.GetSenderId(), message.GetParam1()))
-      return true;
-    break;
-  }
-  default:
-    break;
+      break;
+    }
+    case GUI_MSG_CLICKED:
+    {
+      if (OnClickMsg(message.GetSenderId(), message.GetParam1()))
+        return true;
+      break;
+    }
+    default:
+      break;
   }
   return CGUIMediaWindow::OnMessage(message);
 }
@@ -87,37 +86,37 @@ bool CGUIWindowGames::OnClickMsg(int controlId, int actionId)
 
   switch (actionId)
   {
-  case ACTION_DELETE_ITEM:
-  {
-    // Is delete allowed?
-    if (CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
-            CSettings::SETTING_FILELISTS_ALLOWFILEDELETION))
+    case ACTION_DELETE_ITEM:
     {
-      OnDeleteItem(iItem);
-      return true;
-    }
-    break;
-  }
-  case ACTION_PLAYER_PLAY:
-  {
-    if (OnClick(iItem))
-      return true;
-    break;
-  }
-  case ACTION_SHOW_INFO:
-  {
-    if (!m_vecItems->IsPlugin())
-    {
-      if (pItem->HasAddonInfo())
+      // Is delete allowed?
+      if (CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+              CSettings::SETTING_FILELISTS_ALLOWFILEDELETION))
       {
-        CGUIDialogAddonInfo::ShowForItem(pItem);
+        OnDeleteItem(iItem);
         return true;
       }
+      break;
     }
-    break;
-  }
-  default:
-    break;
+    case ACTION_PLAYER_PLAY:
+    {
+      if (OnClick(iItem))
+        return true;
+      break;
+    }
+    case ACTION_SHOW_INFO:
+    {
+      if (!m_vecItems->IsPlugin())
+      {
+        if (pItem->HasAddonInfo())
+        {
+          CGUIDialogAddonInfo::ShowForItem(pItem);
+          return true;
+        }
+      }
+      break;
+    }
+    default:
+      break;
   }
 
   return false;
@@ -215,20 +214,20 @@ bool CGUIWindowGames::OnContextButton(int itemNumber, CONTEXT_BUTTON button)
     }
     switch (button)
     {
-    case CONTEXT_BUTTON_PLAY_ITEM:
-      PlayGame(*item);
-      return true;
-    case CONTEXT_BUTTON_INFO:
-      CGUIDialogAddonInfo::ShowForItem(item);
-      return true;
-    case CONTEXT_BUTTON_DELETE:
-      OnDeleteItem(itemNumber);
-      return true;
-    case CONTEXT_BUTTON_RENAME:
-      OnRenameItem(itemNumber);
-      return true;
-    default:
-      break;
+      case CONTEXT_BUTTON_PLAY_ITEM:
+        PlayGame(*item);
+        return true;
+      case CONTEXT_BUTTON_INFO:
+        CGUIDialogAddonInfo::ShowForItem(item);
+        return true;
+      case CONTEXT_BUTTON_DELETE:
+        OnDeleteItem(itemNumber);
+        return true;
+      case CONTEXT_BUTTON_RENAME:
+        OnRenameItem(itemNumber);
+        return true;
+      default:
+        break;
     }
   }
   return CGUIMediaWindow::OnContextButton(itemNumber, button);
@@ -262,7 +261,7 @@ bool CGUIWindowGames::GetDirectory(const std::string& strDirectory, CFileItemLis
   if (items.GetContent().empty())
   {
     if (!items.IsVirtualDirectoryRoot() && // Don't set content for root directory
-        !items.IsPlugin())                 // Don't set content for plugins
+        !items.IsPlugin()) // Don't set content for plugins
     {
       content = "games";
     }

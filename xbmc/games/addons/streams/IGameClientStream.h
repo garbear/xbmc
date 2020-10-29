@@ -63,9 +63,7 @@ public:
    *
    * \param buffer The buffer returned from GetStreamBuffer()
    */
-  virtual void ReleaseBuffer(game_stream_buffer& buffer)
-  {
-  }
+  virtual void ReleaseBuffer(game_stream_buffer& buffer) {}
 
   /*!
    * \brief Add a data packet to a stream

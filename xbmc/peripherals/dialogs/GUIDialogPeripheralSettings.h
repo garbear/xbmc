@@ -30,10 +30,7 @@ protected:
   void OnSettingChanged(std::shared_ptr<const CSetting> setting) override;
 
   // specialization of CGUIDialogSettingsBase
-  bool AllowResettingSettings() const override
-  {
-    return false;
-  }
+  bool AllowResettingSettings() const override { return false; }
   void Save() override;
   void OnResetSettings() override;
   void SetupView() override;

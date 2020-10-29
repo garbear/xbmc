@@ -7,6 +7,7 @@
  */
 
 #include "GameClientMouse.h"
+
 #include "GameClientInput.h"
 #include "addons/kodi-addon-dev-kit/include/kodi/kodi_game_types.h"
 #include "games/addons/GameClient.h"
@@ -20,9 +21,9 @@ using namespace GAME;
 CGameClientMouse::CGameClientMouse(CGameClient& gameClient,
                                    std::string controllerId,
                                    MOUSE::IMouseInputProvider* inputProvider)
-    : m_gameClient(gameClient)
-    , m_controllerId(std::move(controllerId))
-    , m_inputProvider(inputProvider)
+  : m_gameClient(gameClient),
+    m_controllerId(std::move(controllerId)),
+    m_inputProvider(inputProvider)
 {
   inputProvider->RegisterMouseHandler(this, false);
 }

@@ -7,6 +7,7 @@
  */
 
 #include "GUIDialogIgnoreInput.h"
+
 #include "guilib/LocalizeStrings.h"
 #include "input/joysticks/JoystickTranslator.h"
 #include "input/joysticks/interfaces/IButtonMap.h"
@@ -24,11 +25,11 @@ bool CGUIDialogIgnoreInput::AcceptsPrimitive(JOYSTICK::PRIMITIVE_TYPE type) cons
 {
   switch (type)
   {
-  case JOYSTICK::PRIMITIVE_TYPE::BUTTON:
-  case JOYSTICK::PRIMITIVE_TYPE::SEMIAXIS:
-    return true;
-  default:
-    break;
+    case JOYSTICK::PRIMITIVE_TYPE::BUTTON:
+    case JOYSTICK::PRIMITIVE_TYPE::SEMIAXIS:
+      return true;
+    default:
+      break;
   }
 
   return false;

@@ -14,7 +14,7 @@ using namespace PERIPHERALS;
 using namespace CEC;
 
 CPeripheralBusCEC::CPeripheralBusCEC(CPeripherals& manager)
-    : CPeripheralBus("PeripBusCEC", manager, PERIPHERAL_BUS_CEC)
+  : CPeripheralBus("PeripBusCEC", manager, PERIPHERAL_BUS_CEC)
 {
   m_cecAdapter = CECInitialise(&m_configuration);
 }
@@ -41,17 +41,17 @@ bool CPeripheralBusCEC::PerformDeviceScan(PeripheralScanResults& results)
     // override the bus type, so users don't have to reconfigure their adapters
     switch (deviceList[iDevicePtr].adapterType)
     {
-    case ADAPTERTYPE_P8_EXTERNAL:
-    case ADAPTERTYPE_P8_DAUGHTERBOARD:
-      result.m_mappedBusType = PERIPHERAL_BUS_USB;
-      break;
-    case ADAPTERTYPE_RPI:
-      result.m_mappedBusType = PERIPHERAL_BUS_RPI;
-      /** the Pi's adapter cannot be removed, no need to rescan */
-      m_bNeedsPolling = false;
-      break;
-    default:
-      break;
+      case ADAPTERTYPE_P8_EXTERNAL:
+      case ADAPTERTYPE_P8_DAUGHTERBOARD:
+        result.m_mappedBusType = PERIPHERAL_BUS_USB;
+        break;
+      case ADAPTERTYPE_RPI:
+        result.m_mappedBusType = PERIPHERAL_BUS_RPI;
+        /** the Pi's adapter cannot be removed, no need to rescan */
+        m_bNeedsPolling = false;
+        break;
+      default:
+        break;
     }
 
     result.m_iSequence = GetNumberOfPeripheralsWithId(result.m_iVendorId, result.m_iProductId);

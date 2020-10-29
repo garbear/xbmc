@@ -30,40 +30,25 @@ public:
   void UnregisterRenderer(CRPBaseRenderer* renderer) override;
   bool HasVisibleRenderer() const override;
   bool Configure(AVPixelFormat format) override;
-  bool IsConfigured() const override
-  {
-    return m_bConfigured;
-  }
+  bool IsConfigured() const override { return m_bConfigured; }
   IRenderBuffer* GetBuffer(unsigned int width, unsigned int height) override;
   void Return(IRenderBuffer* buffer) override;
   void Prime(unsigned int width, unsigned int height) override;
   void Flush() override;
 
   // Buffer properties
-  AVPixelFormat Format() const
-  {
-    return m_format;
-  }
+  AVPixelFormat Format() const { return m_format; }
 
 protected:
   virtual IRenderBuffer* CreateRenderBuffer(void* header = nullptr) = 0;
-  virtual bool ConfigureInternal()
-  {
-    return true;
-  }
-  virtual void* GetHeader(unsigned int timeoutMs = 0)
-  {
-    return nullptr;
-  }
+  virtual bool ConfigureInternal() { return true; }
+  virtual void* GetHeader(unsigned int timeoutMs = 0) { return nullptr; }
   virtual bool GetHeaderWithTimeout(void*& header)
   {
     header = nullptr;
     return true;
   }
-  virtual bool SendBuffer(IRenderBuffer* buffer)
-  {
-    return false;
-  }
+  virtual bool SendBuffer(IRenderBuffer* buffer) { return false; }
 
   // Configuration parameters
   bool m_bConfigured = false;

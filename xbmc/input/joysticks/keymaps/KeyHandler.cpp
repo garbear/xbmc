@@ -7,6 +7,7 @@
  */
 
 #include "KeyHandler.h"
+
 #include "input/IKeymap.h"
 #include "input/actions/ActionIDs.h"
 #include "input/actions/ActionTranslator.h"
@@ -29,10 +30,10 @@ CKeyHandler::CKeyHandler(const std::string& keyName,
                          IActionListener* actionHandler,
                          const IKeymap* keymap,
                          IKeymapHandler* keymapHandler)
-    : m_keyName(keyName)
-    , m_actionHandler(actionHandler)
-    , m_keymap(keymap)
-    , m_keymapHandler(keymapHandler)
+  : m_keyName(keyName),
+    m_actionHandler(actionHandler),
+    m_keymap(keymap),
+    m_keymapHandler(keymapHandler)
 {
   assert(m_actionHandler != nullptr);
   assert(m_keymap != nullptr);

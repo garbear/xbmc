@@ -7,6 +7,7 @@
  */
 
 #include "GUIDialogAxisDetection.h"
+
 #include "guilib/LocalizeStrings.h"
 #include "input/joysticks/DriverPrimitive.h"
 #include "input/joysticks/JoystickTranslator.h"
@@ -53,10 +54,10 @@ bool CGUIDialogAxisDetection::AcceptsPrimitive(JOYSTICK::PRIMITIVE_TYPE type) co
 {
   switch (type)
   {
-  case JOYSTICK::PRIMITIVE_TYPE::SEMIAXIS:
-    return true;
-  default:
-    break;
+    case JOYSTICK::PRIMITIVE_TYPE::SEMIAXIS:
+      return true;
+    default:
+      break;
   }
 
   return false;

@@ -36,9 +36,7 @@ protected:
   virtual bool MapPrimitiveInternal(JOYSTICK::IButtonMap* buttonMap,
                                     IKeymap* keymap,
                                     const JOYSTICK::CDriverPrimitive& primitive) override;
-  virtual void OnClose(bool bAccepted) override
-  {
-  }
+  virtual void OnClose(bool bAccepted) override {}
 
 private:
   void AddAxis(const std::string& deviceLocation, unsigned int axisIndex);

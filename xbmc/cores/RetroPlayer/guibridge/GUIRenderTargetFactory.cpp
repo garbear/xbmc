@@ -7,13 +7,14 @@
  */
 
 #include "GUIRenderTargetFactory.h"
+
 #include "GUIRenderTarget.h"
 
 using namespace KODI;
 using namespace RETRO;
 
 CGUIRenderTargetFactory::CGUIRenderTargetFactory(IRenderManager* renderManager)
-    : m_renderManager(renderManager)
+  : m_renderManager(renderManager)
 {
 }
 

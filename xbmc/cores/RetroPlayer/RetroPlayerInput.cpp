@@ -7,6 +7,7 @@
  */
 
 #include "RetroPlayerInput.h"
+
 #include "peripherals/EventPollHandle.h"
 #include "peripherals/Peripherals.h"
 #include "utils/log.h"
@@ -15,7 +16,7 @@ using namespace KODI;
 using namespace RETRO;
 
 CRetroPlayerInput::CRetroPlayerInput(PERIPHERALS::CPeripherals& peripheralManager)
-    : m_peripheralManager(peripheralManager)
+  : m_peripheralManager(peripheralManager)
 {
   CLog::Log(LOGDEBUG, "RetroPlayer[INPUT]: Initializing input");
 

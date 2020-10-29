@@ -25,15 +25,10 @@ public:
 
   // Implementation of IInputHandler
   virtual std::string ControllerID(void) const override;
-  virtual bool HasFeature(const std::string& feature) const override
-  {
-    return true;
-  }
+  virtual bool HasFeature(const std::string& feature) const override { return true; }
   virtual bool AcceptsInput(const std::string& feature) const override;
   virtual bool OnButtonPress(const std::string& feature, bool bPressed) override;
-  virtual void OnButtonHold(const std::string& feature, unsigned int holdTimeMs) override
-  {
-  }
+  virtual void OnButtonHold(const std::string& feature, unsigned int holdTimeMs) override {}
   virtual bool OnButtonMotion(const std::string& feature,
                               float magnitude,
                               unsigned int motionTimeMs) override;

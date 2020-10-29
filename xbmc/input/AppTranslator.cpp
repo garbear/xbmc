@@ -7,6 +7,7 @@
  */
 
 #include "AppTranslator.h"
+
 #include "Key.h"
 #include "utils/StringUtils.h"
 #include "utils/log.h"

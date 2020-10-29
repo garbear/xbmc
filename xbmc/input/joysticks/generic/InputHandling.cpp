@@ -7,6 +7,7 @@
  */
 
 #include "InputHandling.h"
+
 #include "input/joysticks/DriverPrimitive.h"
 #include "input/joysticks/JoystickUtils.h"
 #include "input/joysticks/dialogs/GUIDialogNewJoystick.h"
@@ -22,8 +23,7 @@ using namespace JOYSTICK;
 CGUIDialogNewJoystick* const CInputHandling::m_dialog = new CGUIDialogNewJoystick;
 
 CInputHandling::CInputHandling(IInputHandler* handler, IButtonMap* buttonMap)
-    : m_handler(handler)
-    , m_buttonMap(buttonMap)
+  : m_handler(handler), m_buttonMap(buttonMap)
 {
 }
 
@@ -145,23 +145,23 @@ CJoystickFeature* CInputHandling::CreateFeature(const FeatureName& featureName)
 
   switch (m_buttonMap->GetFeatureType(featureName))
   {
-  case FEATURE_TYPE::SCALAR:
-  {
-    feature = new CScalarFeature(featureName, m_handler, m_buttonMap);
-    break;
-  }
-  case FEATURE_TYPE::ANALOG_STICK:
-  {
-    feature = new CAnalogStick(featureName, m_handler, m_buttonMap);
-    break;
-  }
-  case FEATURE_TYPE::ACCELEROMETER:
-  {
-    feature = new CAccelerometer(featureName, m_handler, m_buttonMap);
-    break;
-  }
-  default:
-    break;
+    case FEATURE_TYPE::SCALAR:
+    {
+      feature = new CScalarFeature(featureName, m_handler, m_buttonMap);
+      break;
+    }
+    case FEATURE_TYPE::ANALOG_STICK:
+    {
+      feature = new CAnalogStick(featureName, m_handler, m_buttonMap);
+      break;
+    }
+    case FEATURE_TYPE::ACCELEROMETER:
+    {
+      feature = new CAccelerometer(featureName, m_handler, m_buttonMap);
+      break;
+    }
+    default:
+      break;
   }
 
   return feature;

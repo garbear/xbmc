@@ -7,6 +7,7 @@
  */
 
 #include "ControllerLayout.h"
+
 #include "Controller.h"
 #include "ControllerDefinitions.h"
 #include "ControllerTopology.h"
@@ -21,17 +22,16 @@
 using namespace KODI;
 using namespace GAME;
 
-CControllerLayout::CControllerLayout()
-    : m_topology(new CControllerTopology)
+CControllerLayout::CControllerLayout() : m_topology(new CControllerTopology)
 {
 }
 
 CControllerLayout::CControllerLayout(const CControllerLayout& other)
-    : m_controller(other.m_controller)
-    , m_labelId(other.m_labelId)
-    , m_icon(other.m_icon)
-    , m_strImage(other.m_strImage)
-    , m_topology(new CControllerTopology(*other.m_topology))
+  : m_controller(other.m_controller),
+    m_labelId(other.m_labelId),
+    m_icon(other.m_icon),
+    m_strImage(other.m_strImage),
+    m_topology(new CControllerTopology(*other.m_topology))
 {
 }
 

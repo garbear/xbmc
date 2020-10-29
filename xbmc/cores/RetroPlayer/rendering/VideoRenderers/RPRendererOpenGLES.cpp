@@ -7,6 +7,7 @@
  */
 
 #include "RPRendererOpenGLES.h"
+
 #include "cores/RetroPlayer/buffers/RenderBufferOpenGLES.h"
 #include "cores/RetroPlayer/buffers/RenderBufferPoolOpenGLES.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
@@ -47,7 +48,7 @@ RenderBufferPoolVector CRendererFactoryOpenGLES::CreateBufferPools(CRenderContex
 CRPRendererOpenGLES::CRPRendererOpenGLES(const CRenderSettings& renderSettings,
                                          CRenderContext& context,
                                          std::shared_ptr<IRenderBufferPool> bufferPool)
-    : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
+  : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
   glGenBuffers(1, &m_mainIndexVBO);
   glGenBuffers(1, &m_mainVertexVBO);

@@ -39,21 +39,12 @@ public:
 
   // implementation of IKeymapHandler
   virtual bool HotkeysPressed(const std::set<std::string>& keyNames) const override;
-  virtual std::string GetLastPressed() const override
-  {
-    return m_lastPressed;
-  }
-  virtual void OnPress(const std::string& keyName) override
-  {
-    m_lastPressed = keyName;
-  }
+  virtual std::string GetLastPressed() const override { return m_lastPressed; }
+  virtual void OnPress(const std::string& keyName) override { m_lastPressed = keyName; }
 
   // implementation of IInputHandler
   virtual std::string ControllerID() const override;
-  virtual bool HasFeature(const FeatureName& feature) const override
-  {
-    return true;
-  }
+  virtual bool HasFeature(const FeatureName& feature) const override { return true; }
   virtual bool AcceptsInput(const FeatureName& feature) const override;
   virtual bool OnButtonPress(const FeatureName& feature, bool bPressed) override;
   virtual void OnButtonHold(const FeatureName& feature, unsigned int holdTimeMs) override;

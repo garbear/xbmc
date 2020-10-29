@@ -7,6 +7,7 @@
  */
 
 #include "RetroPlayer.h"
+
 #include "FileItem.h"
 #include "RetroPlayerAutoSave.h"
 #include "RetroPlayerInput.h"
@@ -52,8 +53,7 @@ using namespace GAME;
 using namespace RETRO;
 
 CRetroPlayer::CRetroPlayer(IPlayerCallback& callback)
-    : IPlayer(callback)
-    , m_gameServices(CServiceBroker::GetGameServices())
+  : IPlayer(callback), m_gameServices(CServiceBroker::GetGameServices())
 {
   ResetPlayback();
   CServiceBroker::GetWinSystem()->RegisterRenderLoop(this);
@@ -395,36 +395,36 @@ bool CRetroPlayer::OnAction(const CAction& action)
 {
   switch (action.GetID())
   {
-  case ACTION_PLAYER_RESET:
-  {
-    if (m_gameClient)
+    case ACTION_PLAYER_RESET:
     {
-      float speed = static_cast<float>(m_playback->GetSpeed());
+      if (m_gameClient)
+      {
+        float speed = static_cast<float>(m_playback->GetSpeed());
 
-      m_playback->SetSpeed(0.0);
+        m_playback->SetSpeed(0.0);
 
-      CLog::Log(LOGDEBUG, "RetroPlayer[PLAYER]: Sending reset command via ACTION_PLAYER_RESET");
-      m_gameClient->Input().HardwareReset();
+        CLog::Log(LOGDEBUG, "RetroPlayer[PLAYER]: Sending reset command via ACTION_PLAYER_RESET");
+        m_gameClient->Input().HardwareReset();
 
-      // If rewinding or paused, begin playback
-      if (speed <= 0.0f)
-        speed = 1.0f;
+        // If rewinding or paused, begin playback
+        if (speed <= 0.0f)
+          speed = 1.0f;
 
-      SetSpeed(speed);
-    }
-    return true;
-  }
-  case ACTION_SHOW_OSD:
-  {
-    if (m_gameClient)
-    {
-      CLog::Log(LOGDEBUG, "RetroPlayer[PLAYER]: Closing OSD via ACTION_SHOW_OSD");
-      CloseOSD();
+        SetSpeed(speed);
+      }
       return true;
     }
-  }
-  default:
-    break;
+    case ACTION_SHOW_OSD:
+    {
+      if (m_gameClient)
+      {
+        CLog::Log(LOGDEBUG, "RetroPlayer[PLAYER]: Closing OSD via ACTION_SHOW_OSD");
+        CloseOSD();
+        return true;
+      }
+    }
+    default:
+      break;
   }
 
   return false;

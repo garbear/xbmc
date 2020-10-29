@@ -131,17 +131,13 @@ protected:
   bool IsDirty(CGUIRenderHandle* handle);
 
   // Functions exposed to friend class CGUIGameVideoHandle
-  void UnregisterHandle(CGUIGameVideoHandle* handle)
-  {
-  }
+  void UnregisterHandle(CGUIGameVideoHandle* handle) {}
   bool IsPlayingGame();
   bool SupportsRenderFeature(RENDERFEATURE feature);
   bool SupportsScalingMethod(SCALINGMETHOD method);
 
   // Functions exposed to CGUIGameSettingsHandle
-  void UnregisterHandle(CGUIGameSettingsHandle* handle)
-  {
-  }
+  void UnregisterHandle(CGUIGameSettingsHandle* handle) {}
   std::string GameClientID();
 
 private:

@@ -7,6 +7,7 @@
  */
 
 #include "ShaderDX.h"
+
 #include "Application.h"
 #include "ShaderTextureDX.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
@@ -14,15 +15,15 @@
 #include "cores/RetroPlayer/shaders/ShaderUtils.h"
 #include "cores/RetroPlayer/shaders/windows/ShaderTypesDX.h"
 #include "rendering/dx/RenderSystemDX.h"
-#include "system.h"
 #include "utils/URIUtils.h"
 #include "utils/log.h"
+
+#include "system.h"
 
 using namespace KODI;
 using namespace SHADER;
 
-CShaderDX::CShaderDX(RETRO::CRenderContext& context)
-    : m_context(context)
+CShaderDX::CShaderDX(RETRO::CRenderContext& context) : m_context(context)
 {
 }
 
@@ -55,7 +56,7 @@ bool CShaderDX::Create(const std::string& shaderSource,
 
   DefinesMap defines;
 
-  defines["HLSL_4"] = "";  // using Shader Model 4
+  defines["HLSL_4"] = ""; // using Shader Model 4
   defines["HLSL_FX"] = ""; // and the FX11 framework
 
   // We implement runtime shader parameters ("#pragma parameter")

@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "IEventScannerCallback.h"
 #include "bus/PeripheralBus.h"
 #include "devices/Peripheral.h"
@@ -20,6 +17,9 @@
 #include "threads/CriticalSection.h"
 #include "threads/Thread.h"
 #include "utils/Observer.h"
+
+#include <memory>
+#include <vector>
 
 class CFileItemList;
 class CInputManager;
@@ -334,18 +334,12 @@ public:
   /*!
    * \brief Access the input manager passed to the constructor
    */
-  CInputManager& GetInputManager()
-  {
-    return m_inputManager;
-  }
+  CInputManager& GetInputManager() { return m_inputManager; }
 
   /*!
    * \brief Access controller profiles through the construction parameter
    */
-  KODI::GAME::CControllerManager& GetControllerProfiles()
-  {
-    return m_controllerProfiles;
-  }
+  KODI::GAME::CControllerManager& GetControllerProfiles() { return m_controllerProfiles; }
 
 private:
   bool LoadMappings();

@@ -191,9 +191,9 @@ typedef enum
   XBMCK_LALT = 0x134,
   XBMCK_RMETA = 0x135,
   XBMCK_LMETA = 0x136,
-  XBMCK_LSUPER = 0x137,  // Left "Windows" key
-  XBMCK_RSUPER = 0x138,  // Right "Windows" key
-  XBMCK_MODE = 0x139,    // "Alt Gr" key
+  XBMCK_LSUPER = 0x137, // Left "Windows" key
+  XBMCK_RSUPER = 0x138, // Right "Windows" key
+  XBMCK_MODE = 0x139, // "Alt Gr" key
   XBMCK_COMPOSE = 0x13A, // Multi-key compose key
 
   // Miscellaneous function keys
@@ -203,8 +203,8 @@ typedef enum
   XBMCK_BREAK = 0x13E,
   XBMCK_MENU = 0x13F,
   XBMCK_POWER = 0x140, // Power Macintosh power key
-  XBMCK_EURO = 0x141,  // Some european keyboards
-  XBMCK_UNDO = 0x142,  // Atari keyboard has Undo
+  XBMCK_EURO = 0x141, // Some european keyboards
+  XBMCK_UNDO = 0x142, // Atari keyboard has Undo
   XBMCK_SLEEP = 0x143, // Sleep button on Nyxboard remote (and others?)
   XBMCK_GUIDE = 0x144,
   XBMCK_SETTINGS = 0x145,

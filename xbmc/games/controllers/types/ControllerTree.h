@@ -32,10 +32,7 @@ class CControllerNode
 {
 public:
   CControllerNode();
-  CControllerNode(const CControllerNode& other)
-  {
-    *this = other;
-  }
+  CControllerNode(const CControllerNode& other) { *this = other; }
   CControllerNode(CControllerNode&& other) = default;
   CControllerNode& operator=(const CControllerNode& rhs);
   ~CControllerNode();
@@ -49,10 +46,7 @@ public:
    *
    * \sa IsValid()
    */
-  const ControllerPtr& Controller() const
-  {
-    return m_controller;
-  }
+  const ControllerPtr& Controller() const { return m_controller; }
   void SetController(ControllerPtr controller);
 
   void GetControllers(ControllerVector& controllers) const;
@@ -60,10 +54,7 @@ public:
   /*!
    * \brief Address given to the node by the implementation
    */
-  const std::string& Address() const
-  {
-    return m_address;
-  }
+  const std::string& Address() const { return m_address; }
   void SetAddress(std::string address);
 
   /*!
@@ -72,23 +63,14 @@ public:
    * \return A hub with controller ports, or an empty hub if this controller
    *         has no available ports
    */
-  const CControllerHub& Hub() const
-  {
-    return *m_hub;
-  }
-  CControllerHub& Hub()
-  {
-    return *m_hub;
-  }
+  const CControllerHub& Hub() const { return *m_hub; }
+  CControllerHub& Hub() { return *m_hub; }
   void SetHub(CControllerHub hub);
 
   /*!
    * \brief Check if this node has a valid controller profile
    */
-  bool IsValid() const
-  {
-    return m_controller.get() != nullptr;
-  }
+  bool IsValid() const { return m_controller.get() != nullptr; }
 
   /*!
    * \brief Check to see if a controller is compatible with a controller port
@@ -129,10 +111,7 @@ class CControllerPortNode
 {
 public:
   CControllerPortNode() = default;
-  CControllerPortNode(const CControllerPortNode& other)
-  {
-    *this = other;
-  }
+  CControllerPortNode(const CControllerPortNode& other) { *this = other; }
   CControllerPortNode(CControllerPortNode&& other) = default;
   CControllerPortNode& operator=(const CControllerPortNode& rhs);
   ~CControllerPortNode();
@@ -142,14 +121,8 @@ public:
    *
    * \return True if a controller is connected, false otherwise
    */
-  bool Connected() const
-  {
-    return m_bConnected;
-  }
-  void SetConnected(bool bConnected)
-  {
-    m_bConnected = bConnected;
-  }
+  bool Connected() const { return m_bConnected; }
+  void SetConnected(bool bConnected) { m_bConnected = bConnected; }
 
   /*!
    * \brief The controller that is active on this port
@@ -158,24 +131,15 @@ public:
    */
   const CControllerNode& ActiveController() const;
   CControllerNode& ActiveController();
-  void SetActiveController(unsigned int controllerIndex)
-  {
-    m_active = controllerIndex;
-  }
+  void SetActiveController(unsigned int controllerIndex) { m_active = controllerIndex; }
 
   /*!
    * \brief The port type
    *
    * \return The port type, if known
    */
-  PORT_TYPE PortType() const
-  {
-    return m_portType;
-  }
-  void SetPortType(PORT_TYPE type)
-  {
-    m_portType = type;
-  }
+  PORT_TYPE PortType() const { return m_portType; }
+  void SetPortType(PORT_TYPE type) { m_portType = type; }
 
   /*!
    * \brief The hardware or controller port ID
@@ -183,19 +147,13 @@ public:
    * \return The port ID of the hardware port or controller port, or empty if
    *         the port is only identified by its type
    */
-  const std::string& PortID() const
-  {
-    return m_portId;
-  }
+  const std::string& PortID() const { return m_portId; }
   void SetPortID(std::string portId);
 
   /*!
    * \brief Address given to the node by the implementation
    */
-  const std::string& Address() const
-  {
-    return m_address;
-  }
+  const std::string& Address() const { return m_address; }
   void SetAddress(std::string address);
 
   /*!
@@ -204,10 +162,7 @@ public:
    * \return The controller profiles, or empty if this port doesn't support
    *         any controller profiles
    */
-  const ControllerNodeVec& CompatibleControllers() const
-  {
-    return m_controllers;
-  }
+  const ControllerNodeVec& CompatibleControllers() const { return m_controllers; }
   void SetCompatibleControllers(ControllerNodeVec controllers);
 
   /*!
@@ -252,28 +207,16 @@ class CControllerHub
 {
 public:
   CControllerHub() = default;
-  CControllerHub(const CControllerHub& other)
-  {
-    *this = other;
-  }
+  CControllerHub(const CControllerHub& other) { *this = other; }
   CControllerHub(CControllerHub&& other) = default;
   CControllerHub& operator=(const CControllerHub& rhs);
   ~CControllerHub();
 
   void Clear();
 
-  bool HasPorts() const
-  {
-    return !m_ports.empty();
-  }
-  ControllerPortVec& Ports()
-  {
-    return m_ports;
-  }
-  const ControllerPortVec& Ports() const
-  {
-    return m_ports;
-  }
+  bool HasPorts() const { return !m_ports.empty(); }
+  ControllerPortVec& Ports() { return m_ports; }
+  const ControllerPortVec& Ports() const { return m_ports; }
   void SetPorts(ControllerPortVec ports);
 
   bool IsControllerAccepted(const std::string& controllerId) const;

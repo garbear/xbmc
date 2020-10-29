@@ -7,6 +7,7 @@
  */
 
 #include "KeyboardTranslator.h"
+
 #include "Key.h"
 #include "XBMC_keytable.h"
 #include "utils/StringUtils.h"

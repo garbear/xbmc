@@ -7,6 +7,7 @@
  */
 
 #include "TouchTranslator.h"
+
 #include "WindowTranslator.h" //! @todo
 #include "input/actions/ActionIDs.h"
 #include "input/actions/ActionTranslator.h"

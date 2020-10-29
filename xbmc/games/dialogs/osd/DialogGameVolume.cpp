@@ -7,6 +7,7 @@
  */
 
 #include "DialogGameVolume.h"
+
 #include "Application.h"
 #include "ServiceBroker.h"
 #include "dialogs/GUIDialogVolumeBar.h"
@@ -38,19 +39,19 @@ bool CDialogGameVolume::OnMessage(CGUIMessage& message)
 {
   switch (message.GetMessage())
   {
-  case GUI_MSG_STATE_CHANGED:
-  {
-    int controlId = message.GetControlId();
-    if (controlId == GetID())
+    case GUI_MSG_STATE_CHANGED:
     {
-      OnStateChanged();
-      return true;
-    }
+      int controlId = message.GetControlId();
+      if (controlId == GetID())
+      {
+        OnStateChanged();
+        return true;
+      }
 
-    break;
-  }
-  default:
-    break;
+      break;
+    }
+    default:
+      break;
   }
 
   return CGUIDialogSlider::OnMessage(message);

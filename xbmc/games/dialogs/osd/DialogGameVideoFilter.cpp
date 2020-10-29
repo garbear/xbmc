@@ -7,10 +7,13 @@
  */
 
 #include "DialogGameVideoFilter.h"
+
+#include "ServiceBroker.h"
 #include "URL.h"
 #include "cores/RetroPlayer/guibridge/GUIGameVideoHandle.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
 #include "cores/RetroPlayer/shaders/ShaderPresetFactory.h"
+#include "games/GameServices.h"
 #include "games/dialogs/DialogGameDefines.h"
 #include "guilib/LocalizeStrings.h"
 #include "guilib/WindowIDs.h"
@@ -22,8 +25,6 @@
 #include "utils/XBMCTinyXML.h"
 #include "utils/log.h"
 
-#include "ServiceBroker.h"
-#include "games/GameServices.h"
 #include <stdlib.h>
 
 using namespace KODI;
@@ -48,7 +49,7 @@ const std::vector<ScalingMethodProperties> scalingMethods = {
 } // namespace
 
 CDialogGameVideoFilter::CDialogGameVideoFilter()
-    : CDialogGameVideoSelect(WINDOW_DIALOG_GAME_VIDEO_FILTER)
+  : CDialogGameVideoSelect(WINDOW_DIALOG_GAME_VIDEO_FILTER)
 {
 }
 

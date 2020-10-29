@@ -27,9 +27,7 @@ public:
 
   // implementation of IKeyboardDriverHandler
   bool OnKeyPress(const CKey& key) override;
-  void OnKeyRelease(const CKey& key) override
-  {
-  }
+  void OnKeyRelease(const CKey& key) override {}
 
 private:
   static std::vector<XBMCVKey> m_sequence;

@@ -157,10 +157,7 @@ public:
    * \brief Allow the wizard to include this feature in a list of buttons
    *        to map
    */
-  virtual bool AllowWizard() const
-  {
-    return true;
-  }
+  virtual bool AllowWizard() const { return true; }
 
   /*!
    * \brief Prompt the user for a single input element
@@ -203,19 +200,14 @@ public:
   /*!
    * \brief True if the button is waiting for a key press
    */
-  virtual bool NeedsKey() const
-  {
-    return false;
-  }
+  virtual bool NeedsKey() const { return false; }
 
   /*!
    * \brief Set the pressed key that the user will be prompted to map
    *
    * \param key The key that was pressed
    */
-  virtual void SetKey(const CControllerFeature& key)
-  {
-  }
+  virtual void SetKey(const CControllerFeature& key) {}
 
   /*!
    * \brief Reset button after prompting for input has finished

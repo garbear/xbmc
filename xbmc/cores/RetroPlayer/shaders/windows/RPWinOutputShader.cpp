@@ -7,6 +7,7 @@
  */
 
 #include "RPWinOutputShader.h"
+
 #include "ShaderTypesDX.h"
 #include "utils/log.h"
 
@@ -20,12 +21,12 @@ bool CRPWinOutputShader::Create(RETRO::SCALINGMETHOD scalingMethod)
   DefinesMap defines;
   switch (scalingMethod)
   {
-  case RETRO::SCALINGMETHOD::NEAREST:
-    defines["SAMP_NEAREST"] = "";
-    break;
-  case RETRO::SCALINGMETHOD::LINEAR:
-  default:
-    break;
+    case RETRO::SCALINGMETHOD::NEAREST:
+      defines["SAMP_NEAREST"] = "";
+      break;
+    case RETRO::SCALINGMETHOD::LINEAR:
+    default:
+      break;
   }
 
   std::string effectPath("special://xbmc/system/shaders/rp_output_d3d.fx");

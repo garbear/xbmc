@@ -8,10 +8,6 @@
 
 #include "GUIControllerList.h"
 
-#include <algorithm>
-#include <assert.h>
-#include <iterator>
-
 #include "GUIControllerDefines.h"
 #include "GUIControllerWindow.h"
 #include "GUIFeatureList.h"
@@ -35,6 +31,10 @@
 #include "peripherals/Peripherals.h"
 #include "utils/StringUtils.h"
 
+#include <algorithm>
+#include <assert.h>
+#include <iterator>
+
 using namespace KODI;
 using namespace ADDON;
 using namespace GAME;
@@ -42,12 +42,11 @@ using namespace GAME;
 CGUIControllerList::CGUIControllerList(CGUIWindow* window,
                                        IFeatureList* featureList,
                                        GameClientPtr gameClient)
-    : m_guiWindow(window)
-    , m_featureList(featureList)
-    , m_controllerList(nullptr)
-    , m_controllerButton(nullptr)
-    , m_focusedController(-1)
-    , // Initially unfocused
+  : m_guiWindow(window),
+    m_featureList(featureList),
+    m_controllerList(nullptr),
+    m_controllerButton(nullptr),
+    m_focusedController(-1), // Initially unfocused
     m_gameClient(std::move(gameClient))
 {
   assert(m_featureList != nullptr);
@@ -168,7 +167,7 @@ void CGUIControllerList::ResetController(void)
 
 void CGUIControllerList::OnEvent(const ADDON::AddonEvent& event)
 {
-  if (typeid(event) == typeid(ADDON::AddonEvents::Enabled) ||  // also called on install,
+  if (typeid(event) == typeid(ADDON::AddonEvents::Enabled) || // also called on install,
       typeid(event) == typeid(ADDON::AddonEvents::Disabled) || // not called on uninstall
       typeid(event) == typeid(ADDON::AddonEvents::ReInstalled) ||
       typeid(event) == typeid(ADDON::AddonEvents::UnInstalled))

@@ -7,6 +7,7 @@
  */
 
 #include "GUIFeatureButton.h"
+
 #include "games/controllers/windows/GUIControllerDefines.h"
 #include "guilib/GUIMessage.h"
 #include "guilib/WindowIDs.h"
@@ -21,9 +22,7 @@ CGUIFeatureButton::CGUIFeatureButton(const CGUIButtonControl& buttonTemplate,
                                      IConfigurationWizard* wizard,
                                      const CControllerFeature& feature,
                                      unsigned int index)
-    : CGUIButtonControl(buttonTemplate)
-    , m_feature(feature)
-    , m_wizard(wizard)
+  : CGUIButtonControl(buttonTemplate), m_feature(feature), m_wizard(wizard)
 {
   // Initialize CGUIButtonControl
   SetLabel(m_feature.Label());

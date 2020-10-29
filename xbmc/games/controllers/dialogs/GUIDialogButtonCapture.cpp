@@ -7,6 +7,7 @@
  */
 
 #include "GUIDialogButtonCapture.h"
+
 #include "ServiceBroker.h"
 #include "games/controllers/ControllerIDs.h"
 #include "input/IKeymap.h"
@@ -24,8 +25,7 @@ using namespace KODI;
 using namespace GAME;
 using namespace KODI::MESSAGING;
 
-CGUIDialogButtonCapture::CGUIDialogButtonCapture()
-    : CThread("ButtonCaptureDlg")
+CGUIDialogButtonCapture::CGUIDialogButtonCapture() : CThread("ButtonCaptureDlg")
 {
 }
 
@@ -88,12 +88,12 @@ bool CGUIDialogButtonCapture::MapPrimitive(JOYSTICK::IButtonMap* buttonMap,
       {
         switch (actions.begin()->actionId)
         {
-        case ACTION_SELECT_ITEM:
-        case ACTION_NAV_BACK:
-        case ACTION_PREVIOUS_MENU:
-          return false;
-        default:
-          break;
+          case ACTION_SELECT_ITEM:
+          case ACTION_NAV_BACK:
+          case ACTION_PREVIOUS_MENU:
+            return false;
+          default:
+            break;
         }
       }
     }
@@ -118,13 +118,13 @@ void CGUIDialogButtonCapture::Notify(const Observable& obs, const ObservableMess
 {
   switch (msg)
   {
-  case ObservableMessagePeripheralsChanged:
-  {
-    CServiceBroker::GetPeripherals().UnregisterJoystickButtonMapper(this);
-    CServiceBroker::GetPeripherals().RegisterJoystickButtonMapper(this);
-    break;
-  }
-  default:
-    break;
+    case ObservableMessagePeripheralsChanged:
+    {
+      CServiceBroker::GetPeripherals().UnregisterJoystickButtonMapper(this);
+      CServiceBroker::GetPeripherals().RegisterJoystickButtonMapper(this);
+      break;
+    }
+    default:
+      break;
   }
 }

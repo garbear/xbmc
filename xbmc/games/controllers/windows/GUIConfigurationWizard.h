@@ -54,18 +54,9 @@ public:
   void UnregisterKeys() override;
 
   // implementation of IButtonMapper
-  virtual std::string ControllerID(void) const override
-  {
-    return m_strControllerId;
-  }
-  virtual bool NeedsCooldown(void) const override
-  {
-    return true;
-  }
-  virtual bool AcceptsPrimitive(JOYSTICK::PRIMITIVE_TYPE type) const override
-  {
-    return true;
-  }
+  virtual std::string ControllerID(void) const override { return m_strControllerId; }
+  virtual bool NeedsCooldown(void) const override { return true; }
+  virtual bool AcceptsPrimitive(JOYSTICK::PRIMITIVE_TYPE type) const override { return true; }
   virtual bool MapPrimitive(JOYSTICK::IButtonMap* buttonMap,
                             IKeymap* keymap,
                             const JOYSTICK::CDriverPrimitive& primitive) override;
@@ -74,9 +65,7 @@ public:
 
   // implementation of IKeyboardDriverHandler
   virtual bool OnKeyPress(const CKey& key) override;
-  virtual void OnKeyRelease(const CKey& key) override
-  {
-  }
+  virtual void OnKeyRelease(const CKey& key) override {}
 
   // implementation of Observer
   virtual void Notify(const Observable& obs, const ObservableMessage msg) override;
@@ -109,8 +98,8 @@ private:
   JOYSTICK::WHEEL_DIRECTION m_wheelDirection;
   JOYSTICK::THROTTLE_DIRECTION m_throttleDirection;
   std::set<JOYSTICK::CDriverPrimitive> m_history; // History to avoid repeated features
-  bool m_lateAxisDetected;    // Set to true if an axis is detected during button mapping
-  std::string m_location;   // Peripheral Location of device that we're mapping
+  bool m_lateAxisDetected; // Set to true if an axis is detected during button mapping
+  std::string m_location; // Peripheral Location of device that we're mapping
   bool m_bIsKeyboard = false; // True if we're mapping keyboard keys
   CCriticalSection m_stateMutex;
 

@@ -7,12 +7,14 @@
  */
 
 #include "RPRendererGuiTexture.h"
+
 #include "cores/RetroPlayer/buffers/video/RenderBufferGuiTexture.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
 
 #if defined(HAS_DX)
 #include "guilib/GUIShaderDX.h"
+
 #include <DirectXMath.h>
 using namespace DirectX;
 #endif
@@ -53,7 +55,7 @@ RenderBufferPoolVector CRendererFactoryGuiTexture::CreateBufferPools(CRenderCont
 // --- CRenderBufferPoolGuiTexture -----------------------------------------------
 
 CRenderBufferPoolGuiTexture::CRenderBufferPoolGuiTexture(SCALINGMETHOD scalingMethod)
-    : m_scalingMethod(scalingMethod)
+  : m_scalingMethod(scalingMethod)
 {
 }
 
@@ -79,7 +81,7 @@ IRenderBuffer* CRenderBufferPoolGuiTexture::CreateRenderBuffer(void* header /* =
 CRPRendererGuiTexture::CRPRendererGuiTexture(const CRenderSettings& renderSettings,
                                              CRenderContext& context,
                                              std::shared_ptr<IRenderBufferPool> bufferPool)
-    : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
+  : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
 }
 

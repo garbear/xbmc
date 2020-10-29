@@ -7,6 +7,7 @@
  */
 
 #include "RetroPlayerVideo.h"
+
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
 #include "cores/RetroPlayer/rendering/RPRenderManager.h"
 #include "cores/RetroPlayer/rendering/RenderTranslator.h"
@@ -16,8 +17,7 @@ using namespace KODI;
 using namespace RETRO;
 
 CRetroPlayerVideo::CRetroPlayerVideo(CRPRenderManager& renderManager, CRPProcessInfo& processInfo)
-    : m_renderManager(renderManager)
-    , m_processInfo(processInfo)
+  : m_renderManager(renderManager), m_processInfo(processInfo)
 {
   CLog::Log(LOGDEBUG, "RetroPlayer[VIDEO]: Initializing video");
 
@@ -88,17 +88,17 @@ void CRetroPlayerVideo::AddStreamData(const StreamPacket& packet)
     unsigned int orientationDegCCW = 0;
     switch (videoPacket.rotation)
     {
-    case VideoRotation::ROTATION_90_CCW:
-      orientationDegCCW = 90;
-      break;
-    case VideoRotation::ROTATION_180_CCW:
-      orientationDegCCW = 180;
-      break;
-    case VideoRotation::ROTATION_270_CCW:
-      orientationDegCCW = 270;
-      break;
-    default:
-      break;
+      case VideoRotation::ROTATION_90_CCW:
+        orientationDegCCW = 90;
+        break;
+      case VideoRotation::ROTATION_180_CCW:
+        orientationDegCCW = 180;
+        break;
+      case VideoRotation::ROTATION_270_CCW:
+        orientationDegCCW = 270;
+        break;
+      default:
+        break;
     }
 
     m_renderManager.AddFrame(videoPacket.data, videoPacket.size, videoPacket.width,

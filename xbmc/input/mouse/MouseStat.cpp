@@ -7,10 +7,12 @@
  */
 
 #include "MouseStat.h"
+
 #include "ServiceBroker.h"
 #include "input/Key.h"
 #include "utils/TimeUtils.h"
 #include "windowing/WinSystem.h"
+
 #include <algorithm>
 #include <cstring>
 
@@ -117,32 +119,32 @@ void CMouseStat::HandleEvent(XBMC_Event& newEvent)
         m_buttonState[i].Update(now, m_mouseState.x, m_mouseState.y, m_mouseState.button[i]);
     switch (action)
     {
-    case CButtonState::MB_SHORT_CLICK:
-      bClick[i] = true;
-      bNothingDown = false;
-      break;
-    case CButtonState::MB_LONG_CLICK:
-      bLongClick[i] = true;
-      bNothingDown = false;
-      break;
-    case CButtonState::MB_DOUBLE_CLICK:
-      bDoubleClick[i] = true;
-      bNothingDown = false;
-      break;
-    case CButtonState::MB_DRAG_START:
-      bHold[i] = CButtonState::MB_DRAG_START;
-      bNothingDown = false;
-      break;
-    case CButtonState::MB_DRAG:
-      bHold[i] = CButtonState::MB_DRAG;
-      bNothingDown = false;
-      break;
-    case CButtonState::MB_DRAG_END:
-      bHold[i] = CButtonState::MB_DRAG_END;
-      bNothingDown = false;
-      break;
-    default:
-      break;
+      case CButtonState::MB_SHORT_CLICK:
+        bClick[i] = true;
+        bNothingDown = false;
+        break;
+      case CButtonState::MB_LONG_CLICK:
+        bLongClick[i] = true;
+        bNothingDown = false;
+        break;
+      case CButtonState::MB_DOUBLE_CLICK:
+        bDoubleClick[i] = true;
+        bNothingDown = false;
+        break;
+      case CButtonState::MB_DRAG_START:
+        bHold[i] = CButtonState::MB_DRAG_START;
+        bNothingDown = false;
+        break;
+      case CButtonState::MB_DRAG:
+        bHold[i] = CButtonState::MB_DRAG;
+        bNothingDown = false;
+        break;
+      case CButtonState::MB_DRAG_END:
+        bHold[i] = CButtonState::MB_DRAG_END;
+        bNothingDown = false;
+        break;
+      default:
+        break;
     }
   }
 
@@ -175,30 +177,30 @@ void CMouseStat::HandleEvent(XBMC_Event& newEvent)
     {
       switch (bHold[MOUSE_LEFT_BUTTON])
       {
-      case CButtonState::MB_DRAG:
-        m_Key = KEY_MOUSE_DRAG;
-        break;
-      case CButtonState::MB_DRAG_START:
-        m_Key = KEY_MOUSE_DRAG_START;
-        break;
-      case CButtonState::MB_DRAG_END:
-        m_Key = KEY_MOUSE_DRAG_END;
-        break;
+        case CButtonState::MB_DRAG:
+          m_Key = KEY_MOUSE_DRAG;
+          break;
+        case CButtonState::MB_DRAG_START:
+          m_Key = KEY_MOUSE_DRAG_START;
+          break;
+        case CButtonState::MB_DRAG_END:
+          m_Key = KEY_MOUSE_DRAG_END;
+          break;
       }
     }
     else if (bHold[MOUSE_RIGHT_BUTTON] != 0)
     {
       switch (bHold[MOUSE_RIGHT_BUTTON])
       {
-      case CButtonState::MB_DRAG:
-        m_Key = KEY_MOUSE_RDRAG;
-        break;
-      case CButtonState::MB_DRAG_START:
-        m_Key = KEY_MOUSE_RDRAG_START;
-        break;
-      case CButtonState::MB_DRAG_END:
-        m_Key = KEY_MOUSE_RDRAG_END;
-        break;
+        case CButtonState::MB_DRAG:
+          m_Key = KEY_MOUSE_RDRAG;
+          break;
+        case CButtonState::MB_DRAG_START:
+          m_Key = KEY_MOUSE_RDRAG_START;
+          break;
+        case CButtonState::MB_DRAG_END:
+          m_Key = KEY_MOUSE_RDRAG_END;
+          break;
       }
     }
 
@@ -282,8 +284,8 @@ int CMouseStat::GetHold(int ButtonID) const
 {
   switch (ButtonID)
   {
-  case MOUSE_LEFT_BUTTON:
-    return bHold[MOUSE_LEFT_BUTTON];
+    case MOUSE_LEFT_BUTTON:
+      return bHold[MOUSE_LEFT_BUTTON];
   }
   return false;
 }
@@ -341,7 +343,7 @@ CMouseStat::CButtonState::BUTTON_ACTION CMouseStat::CButtonState::Update(unsigne
       { // single click
         m_state = STATE_IN_DOUBLE_CLICK;
         m_time = time; // double click time and positioning is measured from the
-        m_x = x;       // end of a single click
+        m_x = x; // end of a single click
         m_y = y;
         return MB_SHORT_CLICK;
       }

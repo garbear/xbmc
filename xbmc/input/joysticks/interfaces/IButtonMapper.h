@@ -114,14 +114,8 @@ public:
   {
     m_callbacks[deviceName] = callback;
   }
-  void ResetButtonMapCallbacks(void)
-  {
-    m_callbacks.clear();
-  }
-  std::map<std::string, IButtonMapCallback*>& ButtonMapCallbacks(void)
-  {
-    return m_callbacks;
-  }
+  void ResetButtonMapCallbacks(void) { m_callbacks.clear(); }
+  std::map<std::string, IButtonMapCallback*>& ButtonMapCallbacks(void) { return m_callbacks; }
 
 private:
   std::map<std::string, IButtonMapCallback*> m_callbacks;

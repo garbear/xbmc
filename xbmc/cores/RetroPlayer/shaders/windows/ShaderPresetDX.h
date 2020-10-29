@@ -15,10 +15,11 @@
 #include "games/GameServices.h"
 #include "utils/Geometry.h"
 
-#include <d3d11.h>
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <d3d11.h>
 
 namespace ADDON
 {
@@ -50,17 +51,11 @@ public:
   // implementation of IShaderPreset
   bool ReadPresetFile(const std::string& presetPath) override;
   bool RenderUpdate(const CPoint dest[], IShaderTexture* source, IShaderTexture* target) override;
-  void SetSpeed(double speed) override
-  {
-    m_speed = speed;
-  }
+  void SetSpeed(double speed) override { m_speed = speed; }
   void SetVideoSize(const unsigned videoWidth, const unsigned videoHeight) override;
   bool SetShaderPreset(const std::string& shaderPresetPath) override;
   const std::string& GetShaderPreset() const override;
-  ShaderPassVec& GetPasses() override
-  {
-    return m_passes;
-  }
+  ShaderPassVec& GetPasses() override { return m_passes; }
 
   bool Update();
   // CShaderTextureDX* GetFirstTexture();

@@ -7,6 +7,7 @@
  */
 
 #include "GameClientInput.h"
+
 #include "GameClientController.h"
 #include "GameClientHardware.h"
 #include "GameClientJoystick.h"
@@ -35,8 +36,7 @@ using namespace GAME;
 CGameClientInput::CGameClientInput(CGameClient& gameClient,
                                    AddonInstance_Game& addonStruct,
                                    CCriticalSection& clientAccess)
-    : CGameClientSubsystem(gameClient, addonStruct, clientAccess)
-    , m_topology(new CGameClientTopology)
+  : CGameClientSubsystem(gameClient, addonStruct, clientAccess), m_topology(new CGameClientTopology)
 {
 }
 
@@ -534,12 +534,12 @@ bool CGameClientInput::ReceiveInputEvent(const game_input_event& event)
 
   switch (event.type)
   {
-  case GAME_INPUT_EVENT_MOTOR:
-    if (event.port_address != nullptr && event.feature_name != nullptr)
-      bHandled = SetRumble(event.port_address, event.feature_name, event.motor.magnitude);
-    break;
-  default:
-    break;
+    case GAME_INPUT_EVENT_MOTOR:
+      if (event.port_address != nullptr && event.feature_name != nullptr)
+        bHandled = SetRumble(event.port_address, event.feature_name, event.motor.magnitude);
+      break;
+    default:
+      break;
   }
 
   return bHandled;
@@ -562,16 +562,16 @@ void CGameClientInput::Notify(const Observable& obs, const ObservableMessage msg
 {
   switch (msg)
   {
-  case ObservableMessagePeripheralsChanged:
-  {
-    PERIPHERALS::EventLockHandlePtr lock = CServiceBroker::GetPeripherals().RegisterEventLock();
+    case ObservableMessagePeripheralsChanged:
+    {
+      PERIPHERALS::EventLockHandlePtr lock = CServiceBroker::GetPeripherals().RegisterEventLock();
 
-    ProcessJoysticks();
+      ProcessJoysticks();
 
-    break;
-  }
-  default:
-    break;
+      break;
+    }
+    default:
+      break;
   }
 }
 

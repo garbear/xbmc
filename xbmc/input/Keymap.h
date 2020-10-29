@@ -21,10 +21,7 @@ public:
 
   // implementation of IKeymap
   virtual std::string ControllerID() const override;
-  virtual const IKeymapEnvironment* Environment() const override
-  {
-    return m_environment;
-  }
+  virtual const IKeymapEnvironment* Environment() const override { return m_environment; }
   const KODI::JOYSTICK::KeymapActionGroup& GetActions(const std::string& keyName) const override;
 
 private:

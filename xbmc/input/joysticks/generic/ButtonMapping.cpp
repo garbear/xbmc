@@ -7,6 +7,7 @@
  */
 
 #include "ButtonMapping.h"
+
 #include "ServiceBroker.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerFeature.h"
@@ -31,14 +32,14 @@ using namespace JOYSTICK;
 using namespace XbmcThreads;
 
 #define MAPPING_COOLDOWN_MS 50 // Guard against repeated input
-#define AXIS_THRESHOLD 0.75f   // Axis must exceed this value to be mapped
-#define TRIGGER_DELAY_MS                                                                           \
+#define AXIS_THRESHOLD 0.75f // Axis must exceed this value to be mapped
+#define TRIGGER_DELAY_MS \
   200 // Delay trigger detection to handle anomalous triggers with non-zero center
 
 // --- CPrimitiveDetector ------------------------------------------------------
 
 CPrimitiveDetector::CPrimitiveDetector(CButtonMapping* buttonMapping)
-    : m_buttonMapping(buttonMapping)
+  : m_buttonMapping(buttonMapping)
 {
 }
 
@@ -53,8 +54,7 @@ bool CPrimitiveDetector::MapPrimitive(const CDriverPrimitive& primitive)
 // --- CButtonDetector ---------------------------------------------------------
 
 CButtonDetector::CButtonDetector(CButtonMapping* buttonMapping, unsigned int buttonIndex)
-    : CPrimitiveDetector(buttonMapping)
-    , m_buttonIndex(buttonIndex)
+  : CPrimitiveDetector(buttonMapping), m_buttonIndex(buttonIndex)
 {
 }
 
@@ -69,8 +69,7 @@ bool CButtonDetector::OnMotion(bool bPressed)
 // --- CHatDetector ------------------------------------------------------------
 
 CHatDetector::CHatDetector(CButtonMapping* buttonMapping, unsigned int hatIndex)
-    : CPrimitiveDetector(buttonMapping)
-    , m_hatIndex(hatIndex)
+  : CPrimitiveDetector(buttonMapping), m_hatIndex(hatIndex)
 {
 }
 
@@ -84,15 +83,15 @@ bool CHatDetector::OnMotion(HAT_STATE state)
 CAxisDetector::CAxisDetector(CButtonMapping* buttonMapping,
                              unsigned int axisIndex,
                              const AxisConfiguration& config)
-    : CPrimitiveDetector(buttonMapping)
-    , m_axisIndex(axisIndex)
-    , m_config(config)
-    , m_state(AXIS_STATE::INACTIVE)
-    , m_type(AXIS_TYPE::UNKNOWN)
-    , m_initialPositionKnown(false)
-    , m_initialPosition(0.0f)
-    , m_initialPositionChanged(false)
-    , m_activationTimeMs(0)
+  : CPrimitiveDetector(buttonMapping),
+    m_axisIndex(axisIndex),
+    m_config(config),
+    m_state(AXIS_STATE::INACTIVE),
+    m_type(AXIS_TYPE::UNKNOWN),
+    m_initialPositionKnown(false),
+    m_initialPosition(0.0f),
+    m_initialPositionChanged(false),
+    m_activationTimeMs(0)
 {
 }
 
@@ -243,8 +242,7 @@ void CAxisDetector::DetectType(float position)
 // --- CKeyDetector ---------------------------------------------------------
 
 CKeyDetector::CKeyDetector(CButtonMapping* buttonMapping, XBMCKey keycode)
-    : CPrimitiveDetector(buttonMapping)
-    , m_keycode(keycode)
+  : CPrimitiveDetector(buttonMapping), m_keycode(keycode)
 {
 }
 
@@ -260,8 +258,7 @@ bool CKeyDetector::OnMotion(bool bPressed)
 
 CMouseButtonDetector::CMouseButtonDetector(CButtonMapping* buttonMapping,
                                            MOUSE::BUTTON_ID buttonIndex)
-    : CPrimitiveDetector(buttonMapping)
-    , m_buttonIndex(buttonIndex)
+  : CPrimitiveDetector(buttonMapping), m_buttonIndex(buttonIndex)
 {
 }
 
@@ -276,7 +273,7 @@ bool CMouseButtonDetector::OnMotion(bool bPressed)
 // --- CPointerDetector --------------------------------------------------------
 
 CPointerDetector::CPointerDetector(CButtonMapping* buttonMapping)
-    : CPrimitiveDetector(buttonMapping)
+  : CPrimitiveDetector(buttonMapping)
 {
 }
 
@@ -322,11 +319,11 @@ KODI::INPUT::INTERCARDINAL_DIRECTION CPointerDetector::GetPointerDirection(int x
 // --- CButtonMapping ----------------------------------------------------------
 
 CButtonMapping::CButtonMapping(IButtonMapper* buttonMapper, IButtonMap* buttonMap, IKeymap* keymap)
-    : m_buttonMapper(buttonMapper)
-    , m_buttonMap(buttonMap)
-    , m_keymap(keymap)
-    , m_lastAction(0)
-    , m_frameCount(0)
+  : m_buttonMapper(buttonMapper),
+    m_buttonMap(buttonMap),
+    m_keymap(keymap),
+    m_lastAction(0),
+    m_frameCount(0)
 {
   assert(m_buttonMapper != nullptr);
   assert(m_buttonMap != nullptr);

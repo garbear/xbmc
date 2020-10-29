@@ -7,6 +7,7 @@
  */
 
 #include "GUIConfigurationWizard.h"
+
 #include "ServiceBroker.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerFeature.h"
@@ -32,8 +33,7 @@ using namespace GAME;
 #define POST_MAPPING_WAIT_TIME_MS (5 * 1000)
 
 CGUIConfigurationWizard::CGUIConfigurationWizard()
-    : CThread("GUIConfigurationWizard")
-    , m_actionMap(new KEYBOARD::CKeymapActionMap)
+  : CThread("GUIConfigurationWizard"), m_actionMap(new KEYBOARD::CKeymapActionMap)
 {
   InitializeState();
 }
@@ -282,49 +282,50 @@ bool CGUIConfigurationWizard::MapPrimitive(JOYSTICK::IButtonMap* buttonMap,
         }
         else
         {
-          CLog::Log(LOGDEBUG, "%s: mapping feature \"%s\" for device at location %s", m_strControllerId.c_str(),
-                    feature.Name().c_str(), buttonMap->Location().c_str());
+          CLog::Log(LOGDEBUG, "%s: mapping feature \"%s\" for device at location %s",
+                    m_strControllerId.c_str(), feature.Name().c_str(),
+                    buttonMap->Location().c_str());
 
           switch (feature.Type())
           {
-          case FEATURE_TYPE::SCALAR:
-          {
-            buttonMap->AddScalar(feature.Name(), primitive);
-            bHandled = true;
-            break;
-          }
-          case FEATURE_TYPE::ANALOG_STICK:
-          {
-            buttonMap->AddAnalogStick(feature.Name(), cardinalDirection, primitive);
-            bHandled = true;
-            break;
-          }
-          case FEATURE_TYPE::RELPOINTER:
-          {
-            buttonMap->AddRelativePointer(feature.Name(), cardinalDirection, primitive);
-            bHandled = true;
-            break;
-          }
-          case FEATURE_TYPE::WHEEL:
-          {
-            buttonMap->AddWheel(feature.Name(), wheelDirection, primitive);
-            bHandled = true;
-            break;
-          }
-          case FEATURE_TYPE::THROTTLE:
-          {
-            buttonMap->AddThrottle(feature.Name(), throttleDirection, primitive);
-            bHandled = true;
-            break;
-          }
-          case FEATURE_TYPE::KEY:
-          {
-            buttonMap->AddKey(feature.Name(), primitive);
-            bHandled = true;
-            break;
-          }
-          default:
-            break;
+            case FEATURE_TYPE::SCALAR:
+            {
+              buttonMap->AddScalar(feature.Name(), primitive);
+              bHandled = true;
+              break;
+            }
+            case FEATURE_TYPE::ANALOG_STICK:
+            {
+              buttonMap->AddAnalogStick(feature.Name(), cardinalDirection, primitive);
+              bHandled = true;
+              break;
+            }
+            case FEATURE_TYPE::RELPOINTER:
+            {
+              buttonMap->AddRelativePointer(feature.Name(), cardinalDirection, primitive);
+              bHandled = true;
+              break;
+            }
+            case FEATURE_TYPE::WHEEL:
+            {
+              buttonMap->AddWheel(feature.Name(), wheelDirection, primitive);
+              bHandled = true;
+              break;
+            }
+            case FEATURE_TYPE::THROTTLE:
+            {
+              buttonMap->AddThrottle(feature.Name(), throttleDirection, primitive);
+              bHandled = true;
+              break;
+            }
+            case FEATURE_TYPE::KEY:
+            {
+              buttonMap->AddKey(feature.Name(), primitive);
+              bHandled = true;
+              break;
+            }
+            default:
+              break;
           }
         }
 
@@ -412,30 +413,30 @@ bool CGUIConfigurationWizard::OnAction(unsigned int actionId)
 
   switch (actionId)
   {
-  case ACTION_MOVE_LEFT:
-  case ACTION_MOVE_RIGHT:
-  case ACTION_MOVE_UP:
-  case ACTION_MOVE_DOWN:
-  case ACTION_PAGE_UP:
-  case ACTION_PAGE_DOWN:
-    // Abort and allow motion
-    Abort(false);
-    bHandled = false;
-    break;
+    case ACTION_MOVE_LEFT:
+    case ACTION_MOVE_RIGHT:
+    case ACTION_MOVE_UP:
+    case ACTION_MOVE_DOWN:
+    case ACTION_PAGE_UP:
+    case ACTION_PAGE_DOWN:
+      // Abort and allow motion
+      Abort(false);
+      bHandled = false;
+      break;
 
-  case ACTION_PARENT_DIR:
-  case ACTION_PREVIOUS_MENU:
-  case ACTION_STOP:
-  case ACTION_NAV_BACK:
-    // Abort and prevent action
-    Abort(false);
-    bHandled = true;
-    break;
+    case ACTION_PARENT_DIR:
+    case ACTION_PREVIOUS_MENU:
+    case ACTION_STOP:
+    case ACTION_NAV_BACK:
+      // Abort and prevent action
+      Abort(false);
+      bHandled = true;
+      break;
 
-  default:
-    // Absorb keypress
-    bHandled = true;
-    break;
+    default:
+      // Absorb keypress
+      bHandled = true;
+      break;
   }
 
   return bHandled;
@@ -474,13 +475,13 @@ void CGUIConfigurationWizard::Notify(const Observable& obs, const ObservableMess
 {
   switch (msg)
   {
-  case ObservableMessagePeripheralsChanged:
-  {
-    CServiceBroker::GetPeripherals().UnregisterJoystickButtonMapper(this);
-    CServiceBroker::GetPeripherals().RegisterJoystickButtonMapper(this);
-    break;
-  }
-  default:
-    break;
+    case ObservableMessagePeripheralsChanged:
+    {
+      CServiceBroker::GetPeripherals().UnregisterJoystickButtonMapper(this);
+      CServiceBroker::GetPeripherals().RegisterJoystickButtonMapper(this);
+      break;
+    }
+    default:
+      break;
   }
 }

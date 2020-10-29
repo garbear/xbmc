@@ -64,10 +64,7 @@ public:
   /*!
    * \brief Call in GetBuffer() before returning buffer to caller
    */
-  virtual std::shared_ptr<IRenderBufferPool> GetPtr()
-  {
-    return shared_from_this();
-  }
+  virtual std::shared_ptr<IRenderBufferPool> GetPtr() { return shared_from_this(); }
 };
 } // namespace RETRO
 } // namespace KODI

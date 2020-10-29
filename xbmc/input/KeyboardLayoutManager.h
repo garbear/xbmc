@@ -8,12 +8,12 @@
 
 #pragma once
 
+#include "input/KeyboardLayout.h"
+
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
-
-#include "input/KeyboardLayout.h"
 
 class CSetting;
 
@@ -29,10 +29,7 @@ public:
   bool Load(const std::string& path = "");
   void Unload();
 
-  const KeyboardLayouts& GetLayouts() const
-  {
-    return m_layouts;
-  }
+  const KeyboardLayouts& GetLayouts() const { return m_layouts; }
   bool GetLayout(const std::string& name, CKeyboardLayout& layout) const;
 
   static void SettingOptionsKeyboardLayoutsFiller(

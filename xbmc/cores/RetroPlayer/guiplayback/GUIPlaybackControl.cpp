@@ -7,6 +7,7 @@
  */
 
 #include "GUIPlaybackControl.h"
+
 #include "ServiceBroker.h"
 #include "games/dialogs/osd/DialogGameOSD.h"
 #include "guilib/GUIComponent.h"
@@ -15,8 +16,7 @@
 using namespace KODI;
 using namespace RETRO;
 
-CGUIPlaybackControl::CGUIPlaybackControl(IPlaybackCallback& callback)
-    : m_callback(callback)
+CGUIPlaybackControl::CGUIPlaybackControl(IPlaybackCallback& callback) : m_callback(callback)
 {
 }
 
@@ -64,45 +64,45 @@ CGUIPlaybackControl::GuiState CGUIPlaybackControl::NextState(bool bFullscreen,
 
   switch (m_state)
   {
-  case GuiState::UNKNOWN:
-  {
-    // Wait for game to enter fullscreen
-    if (bFullscreen)
-      newState = GuiState::FULLSCREEN;
-    break;
-  }
-  case GuiState::FULLSCREEN:
-  {
-    if (bInMenu)
+    case GuiState::UNKNOWN:
     {
-      if (bInBackground)
-        newState = GuiState::MENU_PLAYING;
-      else
-        newState = GuiState::MENU_PAUSED;
+      // Wait for game to enter fullscreen
+      if (bFullscreen)
+        newState = GuiState::FULLSCREEN;
+      break;
     }
-    break;
-  }
-  case GuiState::MENU_PAUSED:
-  {
-    if (!bInMenu)
-      newState = GuiState::FULLSCREEN;
-    else if (bInBackground)
-      newState = GuiState::MENU_PLAYING;
-    break;
-  }
-  case GuiState::MENU_PLAYING:
-  {
-    if (!bInBackground)
+    case GuiState::FULLSCREEN:
+    {
+      if (bInMenu)
+      {
+        if (bInBackground)
+          newState = GuiState::MENU_PLAYING;
+        else
+          newState = GuiState::MENU_PAUSED;
+      }
+      break;
+    }
+    case GuiState::MENU_PAUSED:
     {
       if (!bInMenu)
         newState = GuiState::FULLSCREEN;
-      else
-        newState = GuiState::MENU_PAUSED;
+      else if (bInBackground)
+        newState = GuiState::MENU_PLAYING;
+      break;
     }
-    break;
-  }
-  default:
-    break;
+    case GuiState::MENU_PLAYING:
+    {
+      if (!bInBackground)
+      {
+        if (!bInMenu)
+          newState = GuiState::FULLSCREEN;
+        else
+          newState = GuiState::MENU_PAUSED;
+      }
+      break;
+    }
+    default:
+      break;
   }
 
   return newState;
@@ -114,23 +114,23 @@ double CGUIPlaybackControl::GetTargetSpeed(GuiState state)
 
   switch (state)
   {
-  case GuiState::FULLSCREEN:
-  {
-    targetSpeed = 1.0;
-    break;
-  }
-  case GuiState::MENU_PAUSED:
-  {
-    targetSpeed = 0.0;
-    break;
-  }
-  case GuiState::MENU_PLAYING:
-  {
-    targetSpeed = 1.0;
-    break;
-  }
-  default:
-    break;
+    case GuiState::FULLSCREEN:
+    {
+      targetSpeed = 1.0;
+      break;
+    }
+    case GuiState::MENU_PAUSED:
+    {
+      targetSpeed = 0.0;
+      break;
+    }
+    case GuiState::MENU_PLAYING:
+    {
+      targetSpeed = 1.0;
+      break;
+    }
+    default:
+      break;
   }
 
   return targetSpeed;
@@ -142,13 +142,13 @@ bool CGUIPlaybackControl::AcceptsInput(GuiState state)
 
   switch (state)
   {
-  case GuiState::FULLSCREEN:
-  {
-    bEnableInput = true;
-    break;
-  }
-  default:
-    break;
+    case GuiState::FULLSCREEN:
+    {
+      bEnableInput = true;
+      break;
+    }
+    default:
+      break;
   }
 
   return bEnableInput;

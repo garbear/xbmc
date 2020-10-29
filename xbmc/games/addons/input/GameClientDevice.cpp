@@ -7,6 +7,7 @@
  */
 
 #include "GameClientDevice.h"
+
 #include "GameClientPort.h"
 #include "ServiceBroker.h"
 #include "addons/kodi-addon-dev-kit/include/kodi/kodi_game_types.h"
@@ -21,7 +22,7 @@ using namespace KODI;
 using namespace GAME;
 
 CGameClientDevice::CGameClientDevice(const game_input_device& device)
-    : m_controller(GetController(device.controller_id))
+  : m_controller(GetController(device.controller_id))
 {
   if (m_controller && device.available_ports != nullptr)
   {
@@ -43,8 +44,7 @@ CGameClientDevice::CGameClientDevice(const game_input_device& device)
   }
 }
 
-CGameClientDevice::CGameClientDevice(const ControllerPtr& controller)
-    : m_controller(controller)
+CGameClientDevice::CGameClientDevice(const ControllerPtr& controller) : m_controller(controller)
 {
 }
 

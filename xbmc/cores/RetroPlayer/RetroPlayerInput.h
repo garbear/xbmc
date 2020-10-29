@@ -30,10 +30,7 @@ public:
   void EnableInput(bool bEnabled);
 
   // implementation of IGameInputCallback
-  bool AcceptsInput() const override
-  {
-    return m_bEnabled;
-  }
+  bool AcceptsInput() const override { return m_bEnabled; }
   void PollInput() override;
 
 private:

@@ -27,10 +27,7 @@ public:
   void Acquire() override;
   void Acquire(std::shared_ptr<IRenderBufferPool> pool) override;
   void Release() override;
-  IRenderBufferPool* GetPool() override
-  {
-    return m_pool.get();
-  }
+  IRenderBufferPool* GetPool() override { return m_pool.get(); }
 
 protected:
   // Reference counting

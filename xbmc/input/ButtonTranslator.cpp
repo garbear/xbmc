@@ -8,9 +8,6 @@
 
 #include "ButtonTranslator.h"
 
-#include <algorithm>
-#include <utility>
-
 #include "AppTranslator.h"
 #include "CustomControllerTranslator.h"
 #include "FileItem.h"
@@ -28,6 +25,9 @@
 #include "input/mouse/MouseTranslator.h"
 #include "utils/XBMCTinyXML.h"
 #include "utils/log.h"
+
+#include <algorithm>
+#include <utility>
 
 using namespace KODI;
 

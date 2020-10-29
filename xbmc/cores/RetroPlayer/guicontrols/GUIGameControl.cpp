@@ -7,6 +7,7 @@
  */
 
 #include "GUIGameControl.h"
+
 #include "Application.h"
 #include "GUIRenderSettings.h"
 #include "ServiceBroker.h"
@@ -25,8 +26,8 @@ using namespace RETRO;
 
 CGUIGameControl::CGUIGameControl(
     int parentID, int controlID, float posX, float posY, float width, float height)
-    : CGUIControl(parentID, controlID, posX, posY, width, height)
-    , m_renderSettings(new CGUIRenderSettings(*this))
+  : CGUIControl(parentID, controlID, posX, posY, width, height),
+    m_renderSettings(new CGUIRenderSettings(*this))
 {
   // Initialize CGUIControl
   ControlType = GUICONTROL_GAME;
@@ -37,14 +38,14 @@ CGUIGameControl::CGUIGameControl(
 }
 
 CGUIGameControl::CGUIGameControl(const CGUIGameControl& other)
-    : CGUIControl(other)
-    , m_videoFilterInfo(other.m_videoFilterInfo)
-    , m_stretchModeInfo(other.m_stretchModeInfo)
-    , m_rotationInfo(other.m_rotationInfo)
-    , m_bHasVideoFilter(other.m_bHasVideoFilter)
-    , m_bHasStretchMode(other.m_bHasStretchMode)
-    , m_bHasRotation(other.m_bHasRotation)
-    , m_renderSettings(new CGUIRenderSettings(*this))
+  : CGUIControl(other),
+    m_videoFilterInfo(other.m_videoFilterInfo),
+    m_stretchModeInfo(other.m_stretchModeInfo),
+    m_rotationInfo(other.m_rotationInfo),
+    m_bHasVideoFilter(other.m_bHasVideoFilter),
+    m_bHasStretchMode(other.m_bHasStretchMode),
+    m_bHasRotation(other.m_bHasRotation),
+    m_renderSettings(new CGUIRenderSettings(*this))
 {
   m_renderSettings->SetSettings(other.m_renderSettings->GetSettings());
   m_renderSettings->SetDimensions(CRect(CPoint(m_posX, m_posY), CSize(m_width, m_height)));

@@ -7,6 +7,7 @@
  */
 
 #include "KeymapHandler.h"
+
 #include "KeyHandler.h"
 #include "games/controllers/Controller.h"
 #include "input/IKeymap.h"
@@ -26,8 +27,7 @@ using namespace KODI;
 using namespace JOYSTICK;
 
 CKeymapHandler::CKeymapHandler(IActionListener* actionHandler, const IKeymap* keymap)
-    : m_actionHandler(actionHandler)
-    , m_keymap(keymap)
+  : m_actionHandler(actionHandler), m_keymap(keymap)
 {
   assert(m_actionHandler != nullptr);
   assert(m_keymap != nullptr);

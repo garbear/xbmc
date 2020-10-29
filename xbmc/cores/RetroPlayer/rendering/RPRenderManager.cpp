@@ -7,6 +7,7 @@
  */
 
 #include "RPRenderManager.h"
+
 #include "RenderContext.h"
 #include "RenderSettings.h"
 #include "RenderTranslator.h"
@@ -35,10 +36,10 @@ using namespace KODI;
 using namespace RETRO;
 
 CRPRenderManager::CRPRenderManager(CRPProcessInfo& processInfo)
-    : m_processInfo(processInfo)
-    , m_renderContext(processInfo.GetRenderContext())
-    , m_renderSettings(new CGUIGameSettings(processInfo))
-    , m_renderControlFactory(new CGUIRenderTargetFactory(this))
+  : m_processInfo(processInfo),
+    m_renderContext(processInfo.GetRenderContext()),
+    m_renderSettings(new CGUIGameSettings(processInfo)),
+    m_renderControlFactory(new CGUIRenderTargetFactory(this))
 {
 }
 

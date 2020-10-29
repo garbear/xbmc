@@ -28,10 +28,7 @@ class CGameClientStreamAudio : public IGameClientStream
 {
 public:
   CGameClientStreamAudio(double sampleRate);
-  ~CGameClientStreamAudio() override
-  {
-    CloseStream();
-  }
+  ~CGameClientStreamAudio() override { CloseStream(); }
 
   // Implementation of IGameClientStream
   bool OpenStream(RETRO::IRetroPlayerStream* stream,

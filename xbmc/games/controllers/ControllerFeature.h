@@ -26,45 +26,24 @@ class CControllerFeature
 public:
   CControllerFeature() = default;
   CControllerFeature(int labelId);
-  CControllerFeature(const CControllerFeature& other)
-  {
-    *this = other;
-  }
+  CControllerFeature(const CControllerFeature& other) { *this = other; }
 
   void Reset(void);
 
   CControllerFeature& operator=(const CControllerFeature& rhs);
 
-  JOYSTICK::FEATURE_TYPE Type(void) const
-  {
-    return m_type;
-  }
-  JOYSTICK::FEATURE_CATEGORY Category(void) const
-  {
-    return m_category;
-  }
-  const std::string& Name(void) const
-  {
-    return m_strName;
-  }
+  JOYSTICK::FEATURE_TYPE Type(void) const { return m_type; }
+  JOYSTICK::FEATURE_CATEGORY Category(void) const { return m_category; }
+  const std::string& Name(void) const { return m_strName; }
 
   // GUI properties
   std::string Label(void) const;
-  int LabelID(void) const
-  {
-    return m_labelId;
-  }
+  int LabelID(void) const { return m_labelId; }
   std::string CategoryLabel(void) const;
 
   // Input properties
-  JOYSTICK::INPUT_TYPE InputType(void) const
-  {
-    return m_inputType;
-  }
-  KEYBOARD::KeySymbol Keycode() const
-  {
-    return m_keycode;
-  }
+  JOYSTICK::INPUT_TYPE InputType(void) const { return m_inputType; }
+  KEYBOARD::KeySymbol Keycode() const { return m_keycode; }
 
   bool Deserialize(const TiXmlElement* pElement,
                    const CController* controller,

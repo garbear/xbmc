@@ -25,9 +25,7 @@ class IRenderBufferPool;
 class IRenderBuffer
 {
 public:
-  virtual ~IRenderBuffer()
-  {
-  }
+  virtual ~IRenderBuffer() {}
 
   // Pool functions
   virtual void Acquire() = 0;
@@ -37,59 +35,24 @@ public:
 
   // Buffer functions
   virtual bool Allocate(AVPixelFormat format, unsigned int width, unsigned int height) = 0;
-  virtual void Update()
-  {
-  } //! @todo Remove me
+  virtual void Update() {} //! @todo Remove me
   virtual size_t GetFrameSize() const = 0;
   virtual uint8_t* GetMemory() = 0;
-  virtual void ReleaseMemory()
-  {
-  }
+  virtual void ReleaseMemory() {}
   virtual bool UploadTexture() = 0;
-  virtual void BindToUnit(unsigned int unit)
-  {
-  }
-  virtual void SetHeader(void* header)
-  {
-  }
+  virtual void BindToUnit(unsigned int unit) {}
+  virtual void SetHeader(void* header) {}
 
   // Buffer properties
-  AVPixelFormat GetFormat() const
-  {
-    return m_format;
-  }
-  unsigned int GetWidth() const
-  {
-    return m_width;
-  }
-  unsigned int GetHeight() const
-  {
-    return m_height;
-  }
-  bool IsLoaded() const
-  {
-    return m_bLoaded;
-  }
-  void SetLoaded(bool bLoaded)
-  {
-    m_bLoaded = bLoaded;
-  }
-  bool IsRendered() const
-  {
-    return m_bRendered;
-  }
-  void SetRendered(bool bRendered)
-  {
-    m_bRendered = bRendered;
-  }
-  unsigned int GetRotation() const
-  {
-    return m_rotationDegCCW;
-  }
-  void SetRotation(unsigned int rotationDegCCW)
-  {
-    m_rotationDegCCW = rotationDegCCW;
-  }
+  AVPixelFormat GetFormat() const { return m_format; }
+  unsigned int GetWidth() const { return m_width; }
+  unsigned int GetHeight() const { return m_height; }
+  bool IsLoaded() const { return m_bLoaded; }
+  void SetLoaded(bool bLoaded) { m_bLoaded = bLoaded; }
+  bool IsRendered() const { return m_bRendered; }
+  void SetRendered(bool bRendered) { m_bRendered = bRendered; }
+  unsigned int GetRotation() const { return m_rotationDegCCW; }
+  void SetRotation(unsigned int rotationDegCCW) { m_rotationDegCCW = rotationDegCCW; }
 
 protected:
   AVPixelFormat m_format = AV_PIX_FMT_NONE;

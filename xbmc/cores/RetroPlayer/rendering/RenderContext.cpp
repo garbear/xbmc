@@ -7,12 +7,14 @@
  */
 
 #include "RenderContext.h"
+
 #include "rendering/RenderSystem.h"
 #include "settings/DisplaySettings.h"
 #include "settings/MediaSettings.h"
-#include "system_gl.h"
 #include "windowing/GraphicContext.h"
 #include "windowing/WinSystem.h"
+
+#include "system_gl.h"
 
 #if defined(HAS_GL)
 #include "rendering/gl/RenderSystemGL.h"
@@ -30,11 +32,11 @@ CRenderContext::CRenderContext(CRenderSystemBase* rendering,
                                CGraphicContext& graphicsContext,
                                CDisplaySettings& displaySettings,
                                CMediaSettings& mediaSettings)
-    : m_rendering(rendering)
-    , m_windowing(windowing)
-    , m_graphicsContext(graphicsContext)
-    , m_displaySettings(displaySettings)
-    , m_mediaSettings(mediaSettings)
+  : m_rendering(rendering),
+    m_windowing(windowing),
+    m_graphicsContext(graphicsContext),
+    m_displaySettings(displaySettings),
+    m_mediaSettings(mediaSettings)
 {
 }
 
@@ -70,18 +72,18 @@ static ESHADERMETHOD TranslateShaderMethod(GL_SHADER_METHOD method)
 {
   switch (method)
   {
-  case GL_SHADER_METHOD::DEFAULT:
-    return SM_DEFAULT;
-  case GL_SHADER_METHOD::TEXTURE:
-    return SM_TEXTURE;
+    case GL_SHADER_METHOD::DEFAULT:
+      return SM_DEFAULT;
+    case GL_SHADER_METHOD::TEXTURE:
+      return SM_TEXTURE;
 #if defined(HAS_GLES)
-  case GL_SHADER_METHOD::TEXTURE_RGBA_OES:
-    return SM_TEXTURE_RGBA_OES;
-  case GL_SHADER_METHOD::TEXTURE_NOALPHA:
-    return SM_TEXTURE_NOALPHA;
+    case GL_SHADER_METHOD::TEXTURE_RGBA_OES:
+      return SM_TEXTURE_RGBA_OES;
+    case GL_SHADER_METHOD::TEXTURE_NOALPHA:
+      return SM_TEXTURE_NOALPHA;
 #endif
-  default:
-    break;
+    default:
+      break;
   }
 
   return SM_DEFAULT;

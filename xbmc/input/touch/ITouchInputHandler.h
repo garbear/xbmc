@@ -8,10 +8,10 @@
 
 #pragma once
 
+#include "input/touch/ITouchInputHandling.h"
+
 #include <atomic>
 #include <stdint.h>
-
-#include "input/touch/ITouchInputHandling.h"
 
 /*!
  * \ingroup touch
@@ -38,10 +38,7 @@ typedef enum
 class ITouchInputHandler : public ITouchInputHandling
 {
 public:
-  ITouchInputHandler()
-      : m_dpi(160.0f)
-  {
-  }
+  ITouchInputHandler() : m_dpi(160.0f) {}
   ~ITouchInputHandler() override = default;
 
   /*!

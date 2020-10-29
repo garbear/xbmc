@@ -7,6 +7,7 @@
  */
 
 #include "GUIGameSettings.h"
+
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "settings/GameSettings.h"
@@ -16,8 +17,7 @@ using namespace KODI;
 using namespace RETRO;
 
 CGUIGameSettings::CGUIGameSettings(CRPProcessInfo& processInfo)
-    : m_processInfo(processInfo)
-    , m_guiSettings(processInfo.GetRenderContext().GetGameSettings())
+  : m_processInfo(processInfo), m_guiSettings(processInfo.GetRenderContext().GetGameSettings())
 {
   // Reset game settings
   m_guiSettings = m_processInfo.GetRenderContext().GetDefaultGameSettings();
@@ -43,13 +43,13 @@ void CGUIGameSettings::Notify(const Observable& obs, const ObservableMessage msg
 {
   switch (msg)
   {
-  case ObservableMessageSettingsChanged:
-  {
-    UpdateSettings();
-    break;
-  }
-  default:
-    break;
+    case ObservableMessageSettingsChanged:
+    {
+      UpdateSettings();
+      break;
+    }
+    default:
+      break;
   }
 }
 

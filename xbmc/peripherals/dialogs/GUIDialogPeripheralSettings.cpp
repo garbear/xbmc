@@ -7,25 +7,25 @@
  */
 
 #include "GUIDialogPeripheralSettings.h"
-#include "guilib/GUIMessage.h"
-
-#include <utility>
 
 #include "FileItem.h"
 #include "ServiceBroker.h"
 #include "addons/Skin.h"
 #include "dialogs/GUIDialogYesNo.h"
+#include "guilib/GUIMessage.h"
 #include "peripherals/Peripherals.h"
 #include "settings/lib/Setting.h"
 #include "settings/lib/SettingSection.h"
 #include "utils/Variant.h"
 #include "utils/log.h"
 
+#include <utility>
+
 using namespace PERIPHERALS;
 
 CGUIDialogPeripheralSettings::CGUIDialogPeripheralSettings()
-    : CGUIDialogSettingsManualBase(WINDOW_DIALOG_PERIPHERAL_SETTINGS, "DialogSettings.xml")
-    , m_item(NULL)
+  : CGUIDialogSettingsManualBase(WINDOW_DIALOG_PERIPHERAL_SETTINGS, "DialogSettings.xml"),
+    m_item(NULL)
 {
 }
 
@@ -173,53 +173,53 @@ void CGUIDialogPeripheralSettings::InitializeSettings()
     SettingPtr settingCopy;
     switch (setting->GetType())
     {
-    case SettingType::Boolean:
-    {
-      std::shared_ptr<CSettingBool> settingBool = std::make_shared<CSettingBool>(
-          setting->GetId(), *std::static_pointer_cast<CSettingBool>(setting));
-      settingBool->SetControl(GetCheckmarkControl());
+      case SettingType::Boolean:
+      {
+        std::shared_ptr<CSettingBool> settingBool = std::make_shared<CSettingBool>(
+            setting->GetId(), *std::static_pointer_cast<CSettingBool>(setting));
+        settingBool->SetControl(GetCheckmarkControl());
 
-      settingCopy = std::static_pointer_cast<CSetting>(settingBool);
-      break;
-    }
+        settingCopy = std::static_pointer_cast<CSetting>(settingBool);
+        break;
+      }
 
-    case SettingType::Integer:
-    {
-      std::shared_ptr<CSettingInt> settingInt = std::make_shared<CSettingInt>(
-          setting->GetId(), *std::static_pointer_cast<CSettingInt>(setting));
-      if (settingInt->GetTranslatableOptions().empty())
-        settingInt->SetControl(GetSliderControl("integer", false, -1, usePopup, -1, "%i"));
-      else
-        settingInt->SetControl(GetSpinnerControl("string"));
+      case SettingType::Integer:
+      {
+        std::shared_ptr<CSettingInt> settingInt = std::make_shared<CSettingInt>(
+            setting->GetId(), *std::static_pointer_cast<CSettingInt>(setting));
+        if (settingInt->GetTranslatableOptions().empty())
+          settingInt->SetControl(GetSliderControl("integer", false, -1, usePopup, -1, "%i"));
+        else
+          settingInt->SetControl(GetSpinnerControl("string"));
 
-      settingCopy = std::static_pointer_cast<CSetting>(settingInt);
-      break;
-    }
+        settingCopy = std::static_pointer_cast<CSetting>(settingInt);
+        break;
+      }
 
-    case SettingType::Number:
-    {
-      std::shared_ptr<CSettingNumber> settingNumber = std::make_shared<CSettingNumber>(
-          setting->GetId(), *std::static_pointer_cast<CSettingNumber>(setting));
-      settingNumber->SetControl(GetSliderControl("number", false, -1, usePopup, -1, "%2.2f"));
+      case SettingType::Number:
+      {
+        std::shared_ptr<CSettingNumber> settingNumber = std::make_shared<CSettingNumber>(
+            setting->GetId(), *std::static_pointer_cast<CSettingNumber>(setting));
+        settingNumber->SetControl(GetSliderControl("number", false, -1, usePopup, -1, "%2.2f"));
 
-      settingCopy = std::static_pointer_cast<CSetting>(settingNumber);
-      break;
-    }
+        settingCopy = std::static_pointer_cast<CSetting>(settingNumber);
+        break;
+      }
 
-    case SettingType::String:
-    {
-      std::shared_ptr<CSettingString> settingString = std::make_shared<CSettingString>(
-          setting->GetId(), *std::static_pointer_cast<CSettingString>(setting));
-      settingString->SetControl(GetEditControl("string"));
+      case SettingType::String:
+      {
+        std::shared_ptr<CSettingString> settingString = std::make_shared<CSettingString>(
+            setting->GetId(), *std::static_pointer_cast<CSettingString>(setting));
+        settingString->SetControl(GetEditControl("string"));
 
-      settingCopy = std::static_pointer_cast<CSetting>(settingString);
-      break;
-    }
+        settingCopy = std::static_pointer_cast<CSetting>(settingString);
+        break;
+      }
 
-    default:
-      //! @todo add more types if needed
-      CLog::Log(LOGDEBUG, "%s - unknown type", __FUNCTION__);
-      break;
+      default:
+        //! @todo add more types if needed
+        CLog::Log(LOGDEBUG, "%s - unknown type", __FUNCTION__);
+        break;
     }
 
     if (settingCopy != NULL && settingCopy->GetControl() != NULL)

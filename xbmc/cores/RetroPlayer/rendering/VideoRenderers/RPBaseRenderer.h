@@ -45,10 +45,7 @@ public:
   /*!
    * \brief Get the buffer pool used by this renderer
    */
-  IRenderBufferPool* GetBufferPool()
-  {
-    return m_bufferPool.get();
-  }
+  IRenderBufferPool* GetBufferPool() { return m_bufferPool.get(); }
 
   // Player functions
   bool Configure(AVPixelFormat format);
@@ -69,10 +66,7 @@ public:
   virtual void Flush();
 
   // Get render settings
-  const CRenderSettings& GetRenderSettings() const
-  {
-    return m_renderSettings;
-  }
+  const CRenderSettings& GetRenderSettings() const { return m_renderSettings; }
 
   // Set render settings
   void SetScalingMethod(SCALINGMETHOD method);
@@ -84,14 +78,9 @@ public:
 
 protected:
   // Protected renderer interface
-  virtual bool ConfigureInternal()
-  {
-    return true;
-  }
+  virtual bool ConfigureInternal() { return true; }
   virtual void RenderInternal(bool clear, uint8_t alpha) = 0;
-  virtual void FlushInternal()
-  {
-  }
+  virtual void FlushInternal() {}
 
   // Construction parameters
   CRenderContext& m_context;

@@ -7,6 +7,7 @@
  */
 
 #include "GameWindowFullScreenText.h"
+
 #include "guilib/GUIMessage.h"
 #include "guilib/GUIWindow.h"
 #include "video/windows/GUIWindowFullScreenDefines.h"
@@ -15,7 +16,7 @@ using namespace KODI;
 using namespace RETRO;
 
 CGameWindowFullScreenText::CGameWindowFullScreenText(CGUIWindow& fullscreenWindow)
-    : m_fullscreenWindow(fullscreenWindow)
+  : m_fullscreenWindow(fullscreenWindow)
 {
 }
 
@@ -113,14 +114,14 @@ int CGameWindowFullScreenText::GetControlID(unsigned int lineIndex)
 {
   switch (lineIndex)
   {
-  case 0:
-    return LABEL_ROW1;
-  case 1:
-    return LABEL_ROW2;
-  case 2:
-    return LABEL_ROW3;
-  default:
-    break;
+    case 0:
+      return LABEL_ROW1;
+    case 1:
+      return LABEL_ROW2;
+    case 2:
+      return LABEL_ROW3;
+    default:
+      break;
   }
 
   return -1;

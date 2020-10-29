@@ -7,6 +7,7 @@
  */
 
 #include "RPProcessInfo.h"
+
 #include "ServiceBroker.h"
 #include "cores/DataCacheCore.h"
 #include "cores/RetroPlayer/buffers/RenderBufferManager.h"
@@ -33,13 +34,13 @@ std::vector<std::unique_ptr<IRendererFactory>> CRPProcessInfo::m_rendererFactori
 CCriticalSection CRPProcessInfo::m_createSection;
 
 CRPProcessInfo::CRPProcessInfo(std::string platformName)
-    : m_platformName(std::move(platformName))
-    , m_renderBufferManager(new CRenderBufferManager)
-    , m_renderContext(new CRenderContext(CServiceBroker::GetRenderSystem(),
-                                         CServiceBroker::GetWinSystem(),
-                                         CServiceBroker::GetWinSystem()->GetGfxContext(),
-                                         CDisplaySettings::GetInstance(),
-                                         CMediaSettings::GetInstance()))
+  : m_platformName(std::move(platformName)),
+    m_renderBufferManager(new CRenderBufferManager),
+    m_renderContext(new CRenderContext(CServiceBroker::GetRenderSystem(),
+                                       CServiceBroker::GetWinSystem(),
+                                       CServiceBroker::GetWinSystem()->GetGfxContext(),
+                                       CDisplaySettings::GetInstance(),
+                                       CMediaSettings::GetInstance()))
 {
   for (auto& rendererFactory : m_rendererFactories)
   {
@@ -163,7 +164,7 @@ void CRPProcessInfo::ResetInfo()
     m_dataCache->SetRenderClockSync(false);
     m_dataCache->SetStateSeeking(false);
     m_dataCache->SetSpeed(1.0f, 1.0f);
-    m_dataCache->SetGuiRender(true);    //! @todo
+    m_dataCache->SetGuiRender(true); //! @todo
     m_dataCache->SetVideoRender(false); //! @todo
     m_dataCache->SetPlayTimes(0, 0, 0, 0);
   }

@@ -7,6 +7,7 @@
  */
 
 #include "RenderBufferGBM.h"
+
 #include "ServiceBroker.h"
 #include "utils/EGLImage.h"
 #include "utils/GBMBufferObject.h"
@@ -17,11 +18,11 @@ using namespace KODI;
 using namespace RETRO;
 
 CRenderBufferGBM::CRenderBufferGBM(CRenderContext& context, int fourcc)
-    : m_context(context)
-    , m_fourcc(fourcc)
-    , m_egl(new CEGLImage(
-          static_cast<CWinSystemGbmEGLContext*>(CServiceBroker::GetWinSystem())->GetEGLDisplay()))
-    , m_bo(new CGBMBufferObject(fourcc))
+  : m_context(context),
+    m_fourcc(fourcc),
+    m_egl(new CEGLImage(
+        static_cast<CWinSystemGbmEGLContext*>(CServiceBroker::GetWinSystem())->GetEGLDisplay())),
+    m_bo(new CGBMBufferObject(fourcc))
 {
 }
 

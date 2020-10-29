@@ -34,11 +34,7 @@ class IShaderLut
 {
 public:
   IShaderLut() = default;
-  IShaderLut(const std::string& id, const std::string& path)
-      : m_id(id)
-      , m_path(path)
-  {
-  }
+  IShaderLut(const std::string& id, const std::string& path) : m_id(id), m_path(path) {}
 
   virtual ~IShaderLut() = default;
 
@@ -54,19 +50,13 @@ public:
    * \brief Gets ID of LUT
    * \return Unique name (ID) of look up texture
    */
-  const std::string& GetID() const
-  {
-    return m_id;
-  }
+  const std::string& GetID() const { return m_id; }
 
   /*!
    * \brief Gets full path of LUT
    * \return Full path of look up texture
    */
-  const std::string& GetPath() const
-  {
-    return m_path;
-  }
+  const std::string& GetPath() const { return m_path; }
 
   /*!
    * \brief Gets sampler of LUT

@@ -7,6 +7,7 @@
  */
 
 #include "RetroPlayerAudio.h"
+
 #include "ServiceBroker.h"
 #include "cores/AudioEngine/Interfaces/AE.h"
 #include "cores/AudioEngine/Interfaces/AEStream.h"
@@ -24,9 +25,7 @@ using namespace RETRO;
 const double MAX_DELAY = 0.3; // seconds
 
 CRetroPlayerAudio::CRetroPlayerAudio(CRPProcessInfo& processInfo)
-    : m_processInfo(processInfo)
-    , m_pAudioStream(nullptr)
-    , m_bAudioEnabled(true)
+  : m_processInfo(processInfo), m_pAudioStream(nullptr), m_bAudioEnabled(true)
 {
   CLog::Log(LOGDEBUG, "RetroPlayer[AUDIO]: Initializing audio");
 }

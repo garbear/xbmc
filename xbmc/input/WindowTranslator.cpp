@@ -7,6 +7,7 @@
  */
 
 #include "WindowTranslator.h"
+
 #include "Application.h"
 #include "ServiceBroker.h"
 #include "guilib/WindowIDs.h"
@@ -118,12 +119,12 @@ const CWindowTranslator::WindowMapByName CWindowTranslator::WindowMappingByName 
     {"textviewer", WINDOW_DIALOG_TEXT_VIEWER},
     {"fullscreenvideo", WINDOW_FULLSCREEN_VIDEO},
     {"fullscreenlivetv", WINDOW_FULLSCREEN_LIVETV}, // virtual window for fullscreen radio, uses
-                                                    // WINDOW_FULLSCREEN_VIDEO as fallback
+    // WINDOW_FULLSCREEN_VIDEO as fallback
     {"fullscreenlivetvpreview", WINDOW_FULLSCREEN_LIVETV_PREVIEW}, // Live TV channel preview
     {"fullscreenlivetvinput",
-     WINDOW_FULLSCREEN_LIVETV_INPUT},             // Livr TV direct channel number input
+     WINDOW_FULLSCREEN_LIVETV_INPUT}, // Livr TV direct channel number input
     {"fullscreenradio", WINDOW_FULLSCREEN_RADIO}, // virtual window for fullscreen radio, uses
-                                                  // WINDOW_VISUALISATION as fallback
+    // WINDOW_VISUALISATION as fallback
     {"fullscreenradiopreview", WINDOW_FULLSCREEN_RADIO_PREVIEW}, // PVR Radio channel preview
     {"fullscreenradioinput",
      WINDOW_FULLSCREEN_RADIO_INPUT}, // PVR radio direct channel number input

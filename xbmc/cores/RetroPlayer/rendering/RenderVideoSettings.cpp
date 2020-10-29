@@ -69,12 +69,12 @@ std::string CRenderVideoSettings::GetVideoFilter() const
 
   switch (m_scalingMethod)
   {
-  case SCALINGMETHOD::NEAREST:
-    return VIDEO_FILTER_NEAREST;
-  case SCALINGMETHOD::LINEAR:
-    return VIDEO_FILTER_LINEAR;
-  default:
-    break;
+    case SCALINGMETHOD::NEAREST:
+      return VIDEO_FILTER_NEAREST;
+    case SCALINGMETHOD::LINEAR:
+      return VIDEO_FILTER_LINEAR;
+    default:
+      break;
   }
 
   return "";

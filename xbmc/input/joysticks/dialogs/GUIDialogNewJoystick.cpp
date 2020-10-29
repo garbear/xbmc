@@ -7,6 +7,7 @@
  */
 
 #include "GUIDialogNewJoystick.h"
+
 #include "ServiceBroker.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h"
@@ -18,8 +19,7 @@
 using namespace KODI;
 using namespace JOYSTICK;
 
-CGUIDialogNewJoystick::CGUIDialogNewJoystick()
-    : CThread("NewJoystickDlg")
+CGUIDialogNewJoystick::CGUIDialogNewJoystick() : CThread("NewJoystickDlg")
 {
 }
 

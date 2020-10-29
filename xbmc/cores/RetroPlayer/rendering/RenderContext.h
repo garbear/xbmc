@@ -43,18 +43,9 @@ public:
                  CDisplaySettings& displaySettings,
                  CMediaSettings& mediaSettings);
 
-  CRenderSystemBase* Rendering()
-  {
-    return m_rendering;
-  }
-  CWinSystemBase* Windowing()
-  {
-    return m_windowing;
-  }
-  CGraphicContext& GraphicsContext()
-  {
-    return m_graphicsContext;
-  }
+  CRenderSystemBase* Rendering() { return m_rendering; }
+  CWinSystemBase* Windowing() { return m_windowing; }
+  CGraphicContext& GraphicsContext() { return m_graphicsContext; }
 
   // Rendering functions
   void SetViewPort(const CRect& viewPort);

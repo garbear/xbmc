@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralImon.h"
+
 #include "input/InputManager.h"
 #include "settings/Settings.h"
 #include "utils/log.h"
@@ -18,7 +19,7 @@ std::atomic<long> CPeripheralImon::m_lCountOfImonsConflictWithDInput(0L);
 CPeripheralImon::CPeripheralImon(CPeripherals& manager,
                                  const PeripheralScanResult& scanResult,
                                  CPeripheralBus* bus)
-    : CPeripheralHID(manager, scanResult, bus)
+  : CPeripheralHID(manager, scanResult, bus)
 {
   m_features.push_back(FEATURE_IMON);
   m_bImonConflictsWithDInput = false;

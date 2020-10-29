@@ -7,6 +7,7 @@
  */
 
 #include "ShaderLutDX.h"
+
 #include "ShaderSamplerDX.h"
 #include "ShaderTextureDX.h"
 #include "ShaderUtilsDX.h"
@@ -20,8 +21,7 @@
 using namespace KODI;
 using namespace SHADER;
 
-CShaderLutDX::CShaderLutDX(const std::string& id, const std::string& path)
-    : IShaderLut(id, path)
+CShaderLutDX::CShaderLutDX(const std::string& id, const std::string& path) : IShaderLut(id, path)
 {
 }
 

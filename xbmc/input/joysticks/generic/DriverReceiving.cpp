@@ -7,6 +7,7 @@
  */
 
 #include "DriverReceiving.h"
+
 #include "input/joysticks/DriverPrimitive.h"
 #include "input/joysticks/interfaces/IButtonMap.h"
 #include "input/joysticks/interfaces/IDriverReceiver.h"
@@ -15,8 +16,7 @@ using namespace KODI;
 using namespace JOYSTICK;
 
 CDriverReceiving::CDriverReceiving(IDriverReceiver* receiver, IButtonMap* buttonMap)
-    : m_receiver(receiver)
-    , m_buttonMap(buttonMap)
+  : m_receiver(receiver), m_buttonMap(buttonMap)
 {
 }
 

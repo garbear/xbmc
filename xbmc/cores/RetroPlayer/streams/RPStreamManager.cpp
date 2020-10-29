@@ -7,6 +7,7 @@
  */
 
 #include "RPStreamManager.h"
+
 #include "IRetroPlayerStream.h"
 #include "RetroPlayerAudio.h"
 //#include "RetroPlayerHardwareBuffer.h" //! @todo
@@ -17,8 +18,7 @@ using namespace KODI;
 using namespace RETRO;
 
 CRPStreamManager::CRPStreamManager(CRPRenderManager& renderManager, CRPProcessInfo& processInfo)
-    : m_renderManager(renderManager)
-    , m_processInfo(processInfo)
+  : m_renderManager(renderManager), m_processInfo(processInfo)
 {
 }
 
@@ -32,24 +32,24 @@ StreamPtr CRPStreamManager::CreateStream(StreamType streamType)
 {
   switch (streamType)
   {
-  case StreamType::AUDIO:
-  {
-    // Save pointer to audio stream
-    m_audioStream = new CRetroPlayerAudio(m_processInfo);
+    case StreamType::AUDIO:
+    {
+      // Save pointer to audio stream
+      m_audioStream = new CRetroPlayerAudio(m_processInfo);
 
-    return StreamPtr(m_audioStream);
-  }
-  case StreamType::VIDEO:
-  case StreamType::SW_BUFFER:
-  {
-    return StreamPtr(new CRetroPlayerVideo(m_renderManager, m_processInfo));
-  }
-  case StreamType::HW_BUFFER:
-  {
-    // return StreamPtr(new CRetroPlayerHardware(m_renderManager, m_processInfo)); //! @todo
-  }
-  default:
-    break;
+      return StreamPtr(m_audioStream);
+    }
+    case StreamType::VIDEO:
+    case StreamType::SW_BUFFER:
+    {
+      return StreamPtr(new CRetroPlayerVideo(m_renderManager, m_processInfo));
+    }
+    case StreamType::HW_BUFFER:
+    {
+      // return StreamPtr(new CRetroPlayerHardware(m_renderManager, m_processInfo)); //! @todo
+    }
+    default:
+      break;
   }
 
   return StreamPtr();

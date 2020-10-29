@@ -153,18 +153,9 @@ public:
                                 unsigned int motionTimeMs) = 0;
 
   // Input receiver interface
-  void SetInputReceiver(IInputReceiver* receiver)
-  {
-    m_receiver = receiver;
-  }
-  void ResetInputReceiver(void)
-  {
-    m_receiver = nullptr;
-  }
-  IInputReceiver* InputReceiver(void)
-  {
-    return m_receiver;
-  }
+  void SetInputReceiver(IInputReceiver* receiver) { m_receiver = receiver; }
+  void ResetInputReceiver(void) { m_receiver = nullptr; }
+  IInputReceiver* InputReceiver(void) { return m_receiver; }
 
 private:
   IInputReceiver* m_receiver = nullptr;

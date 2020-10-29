@@ -7,6 +7,7 @@
  */
 
 #include "DialogGameAdvancedSettings.h"
+
 #include "ServiceBroker.h"
 #include "addons/AddonManager.h"
 #include "addons/settings/GUIDialogAddonSettings.h"
@@ -19,7 +20,7 @@ using namespace KODI;
 using namespace GAME;
 
 CDialogGameAdvancedSettings::CDialogGameAdvancedSettings()
-    : CGUIDialog(WINDOW_DIALOG_GAME_ADVANCED_SETTINGS, "")
+  : CGUIDialog(WINDOW_DIALOG_GAME_ADVANCED_SETTINGS, "")
 {
 }
 
@@ -27,24 +28,24 @@ bool CDialogGameAdvancedSettings::OnMessage(CGUIMessage& message)
 {
   switch (message.GetMessage())
   {
-  case GUI_MSG_WINDOW_INIT:
-  {
-    auto gameSettingsHandle = CServiceBroker::GetGameRenderManager().RegisterGameSettingsDialog();
-    if (gameSettingsHandle)
+    case GUI_MSG_WINDOW_INIT:
     {
-      ADDON::AddonPtr addon;
-      if (CServiceBroker::GetAddonMgr().GetAddon(gameSettingsHandle->GameClientID(), addon,
-                                                 ADDON::ADDON_GAMEDLL))
+      auto gameSettingsHandle = CServiceBroker::GetGameRenderManager().RegisterGameSettingsDialog();
+      if (gameSettingsHandle)
       {
-        gameSettingsHandle.reset();
-        CGUIDialogAddonSettings::ShowForAddon(addon);
+        ADDON::AddonPtr addon;
+        if (CServiceBroker::GetAddonMgr().GetAddon(gameSettingsHandle->GameClientID(), addon,
+                                                   ADDON::ADDON_GAMEDLL))
+        {
+          gameSettingsHandle.reset();
+          CGUIDialogAddonSettings::ShowForAddon(addon);
+        }
       }
-    }
 
-    return false;
-  }
-  default:
-    break;
+      return false;
+    }
+    default:
+      break;
   }
 
   return CGUIDialog::OnMessage(message);

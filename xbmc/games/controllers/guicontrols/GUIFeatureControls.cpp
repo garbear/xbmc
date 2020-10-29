@@ -7,6 +7,7 @@
  */
 
 #include "GUIFeatureControls.h"
+
 #include "games/controllers/windows/GUIControllerDefines.h"
 
 using namespace KODI;
@@ -15,7 +16,7 @@ using namespace GAME;
 CGUIFeatureGroupTitle::CGUIFeatureGroupTitle(const CGUILabelControl& groupTitleTemplate,
                                              const std::string& groupName,
                                              unsigned int buttonIndex)
-    : CGUILabelControl(groupTitleTemplate)
+  : CGUILabelControl(groupTitleTemplate)
 {
   // Initialize CGUILabelControl
   SetLabel(groupName);
@@ -26,7 +27,7 @@ CGUIFeatureGroupTitle::CGUIFeatureGroupTitle(const CGUILabelControl& groupTitleT
 
 CGUIFeatureSeparator::CGUIFeatureSeparator(const CGUIImage& separatorTemplate,
                                            unsigned int buttonIndex)
-    : CGUIImage(separatorTemplate)
+  : CGUIImage(separatorTemplate)
 {
   // Initialize CGUIImage
   SetID(CONTROL_FEATURE_SEPARATORS_START + buttonIndex);

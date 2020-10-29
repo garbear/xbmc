@@ -12,11 +12,11 @@
 #include "cores/RetroPlayer/RetroPlayerTypes.h"
 #include "threads/CriticalSection.h"
 
-#include <libavutil/pixfmt.h>
-
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <libavutil/pixfmt.h>
 
 class CDataCacheCore;
 
@@ -87,10 +87,7 @@ public:
    *
    * \return The name of the platform as set by windowing
    */
-  const std::string& GetPlatformName() const
-  {
-    return m_platformName;
-  }
+  const std::string& GetPlatformName() const { return m_platformName; }
 
   /*!
    * \brief Get the descriptive name of the rendering system
@@ -128,18 +125,12 @@ public:
   /*!
    * \brief Get the context shared by the rendering system
    */
-  CRenderContext& GetRenderContext()
-  {
-    return *m_renderContext;
-  }
+  CRenderContext& GetRenderContext() { return *m_renderContext; }
 
   /*!
    * \brief Get the buffer manager that owns the buffer pools
    */
-  CRenderBufferManager& GetBufferManager()
-  {
-    return *m_renderBufferManager;
-  }
+  CRenderBufferManager& GetBufferManager() { return *m_renderBufferManager; }
 
   /*!
    * \brief Check if a buffer pool supports the given scaling method
@@ -149,10 +140,7 @@ public:
   /*!
    * \brief Get the default scaling method for this rendering system
    */
-  SCALINGMETHOD GetDefaultScalingMethod() const
-  {
-    return m_defaultScalingMethod;
-  }
+  SCALINGMETHOD GetDefaultScalingMethod() const { return m_defaultScalingMethod; }
 
   /*!
    * \brief Configure the render system
@@ -160,9 +148,7 @@ public:
    * \param format The pixel format of the video stream, or AV_PIX_FMT_NONE
    *        if the stream has ended
    */
-  virtual void ConfigureRenderSystem(AVPixelFormat format)
-  {
-  }
+  virtual void ConfigureRenderSystem(AVPixelFormat format) {}
 
   ///}
 

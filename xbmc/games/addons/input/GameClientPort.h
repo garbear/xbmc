@@ -73,28 +73,19 @@ public:
    * The port type identifies if this port is for a keyboard, mouse, or
    * controller.
    */
-  PORT_TYPE PortType() const
-  {
-    return m_type;
-  }
+  PORT_TYPE PortType() const { return m_type; }
 
   /*!
    * \brief Get the ID of the port
    *
    * The ID is used when creating a toplogical address for the port.
    */
-  const std::string& ID() const
-  {
-    return m_portId;
-  }
+  const std::string& ID() const { return m_portId; }
 
   /*!
    * \brief Get the list of devices accepted by this port
    */
-  const GameClientDeviceVec& Devices() const
-  {
-    return m_acceptedDevices;
-  }
+  const GameClientDeviceVec& Devices() const { return m_acceptedDevices; }
 
 private:
   PORT_TYPE m_type;

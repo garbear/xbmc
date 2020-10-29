@@ -18,39 +18,19 @@ namespace PERIPHERALS
 class CPeripheralCecAdapter : public CPeripheral
 {
 public:
-  bool HasAudioControl(void)
-  {
-    return false;
-  }
-  void VolumeUp(void)
-  {
-  }
-  void VolumeDown(void)
-  {
-  }
-  bool IsMuted(void)
-  {
-    return false;
-  }
-  void ToggleMute(void)
-  {
-  }
+  bool HasAudioControl(void) { return false; }
+  void VolumeUp(void) {}
+  void VolumeDown(void) {}
+  bool IsMuted(void) { return false; }
+  void ToggleMute(void) {}
   bool ToggleDeviceState(CecStateChange mode = STATE_SWITCH_TOGGLE, bool forceType = false)
   {
     return false;
   }
 
-  int GetButton(void)
-  {
-    return 0;
-  }
-  unsigned int GetHoldTime(void)
-  {
-    return 0;
-  }
-  void ResetButton(void)
-  {
-  }
+  int GetButton(void) { return 0; }
+  unsigned int GetHoldTime(void) { return 0; }
+  void ResetButton(void) {}
 };
 } // namespace PERIPHERALS
 
@@ -60,6 +40,7 @@ public:
 #include "interfaces/AnnouncementManager.h"
 #include "threads/CriticalSection.h"
 #include "threads/Thread.h"
+
 #include <queue>
 #include <vector>
 

@@ -7,6 +7,7 @@
  */
 
 #include "GameUtils.h"
+
 #include "FileItem.h"
 #include "ServiceBroker.h"
 #include "URL.h"
@@ -49,7 +50,7 @@ bool CGameUtils::FillInGameClient(CFileItem& item, bool bPrompt)
       {
         int errorTextId =
             bHasVfsGameClient ? 35214 : // "This game can only be played directly from a hard drive
-                                        // or partition. Compressed files must be extracted."
+                // or partition. Compressed files must be extracted."
                 35212; // "This game isn't compatible with any available emulators."
 
         // "Failed to play game"
@@ -228,16 +229,16 @@ bool CGameUtils::IsStandaloneGame(const ADDON::AddonPtr& addon)
 
   switch (addon->Type())
   {
-  case ADDON_GAMEDLL:
-  {
-    return std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsStandalone();
-  }
-  case ADDON_SCRIPT:
-  {
-    return addon->IsType(ADDON_GAME);
-  }
-  default:
-    break;
+    case ADDON_GAMEDLL:
+    {
+      return std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsStandalone();
+    }
+    case ADDON_SCRIPT:
+    {
+      return addon->IsType(ADDON_GAME);
+    }
+    default:
+      break;
   }
 
   return false;

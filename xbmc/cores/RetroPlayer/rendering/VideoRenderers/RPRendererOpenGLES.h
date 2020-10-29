@@ -14,11 +14,11 @@
 #include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
 
-#include "system_gl.h"
-
 #include <atomic>
 #include <stdint.h>
 #include <vector>
+
+#include "system_gl.h"
 
 namespace KODI
 {
@@ -47,10 +47,7 @@ public:
 
   // implementation of CRPBaseRenderer
   bool Supports(RENDERFEATURE feature) const override;
-  SCALINGMETHOD GetDefaultScalingMethod() const override
-  {
-    return SCALINGMETHOD::NEAREST;
-  }
+  SCALINGMETHOD GetDefaultScalingMethod() const override { return SCALINGMETHOD::NEAREST; }
 
   static bool SupportsScalingMethod(SCALINGMETHOD method);
 

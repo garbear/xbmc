@@ -30,10 +30,7 @@ public:
   ~CAddonButtonMap(void) override;
 
   // Implementation of IButtonMap
-  std::string ControllerID(void) const override
-  {
-    return m_strControllerId;
-  }
+  std::string ControllerID(void) const override { return m_strControllerId; }
 
   std::string Location(void) const override;
 

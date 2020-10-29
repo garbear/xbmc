@@ -44,17 +44,12 @@ public:
   /*!
    * \brief Clear the background of the rendering area
    */
-  virtual void ClearBackground()
-  {
-  } //! @todo
+  virtual void ClearBackground() {} //! @todo
 
   /*!
    * \brief Check of the rendering area is dirty
    */
-  virtual bool IsDirty()
-  {
-    return true;
-  } //! @todo
+  virtual bool IsDirty() { return true; } //! @todo
 
 protected:
   // Construction parameters

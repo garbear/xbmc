@@ -7,6 +7,7 @@
  */
 
 #include "Controller.h"
+
 #include "ControllerDefinitions.h"
 #include "ControllerLayout.h"
 #include "ControllerTopology.h"
@@ -25,8 +26,7 @@ using namespace GAME;
 struct FeatureTypeEqual
 {
   FeatureTypeEqual(FEATURE_TYPE type, JOYSTICK::INPUT_TYPE inputType)
-      : type(type)
-      , inputType(inputType)
+    : type(type), inputType(inputType)
   {
   }
 
@@ -61,8 +61,7 @@ std::unique_ptr<CController> CController::FromExtension(ADDON::CAddonInfo addonI
 }
 
 CController::CController(ADDON::CAddonInfo addonInfo)
-    : CAddon(std::move(addonInfo))
-    , m_layout(new CControllerLayout)
+  : CAddon(std::move(addonInfo)), m_layout(new CControllerLayout)
 {
 }
 

@@ -62,20 +62,11 @@ public:
 
   std::string GetSavestatesFolder() const;
 
-  CGameSettings& GameSettings()
-  {
-    return *m_gameSettings;
-  }
+  CGameSettings& GameSettings() { return *m_gameSettings; }
 
-  RETRO::CGUIGameRenderManager& GameRenderManager()
-  {
-    return m_gameRenderManager;
-  }
+  RETRO::CGUIGameRenderManager& GameRenderManager() { return m_gameRenderManager; }
 
-  SHADER::CShaderPresetFactory& VideoShaders()
-  {
-    return *m_videoShaders;
-  }
+  SHADER::CShaderPresetFactory& VideoShaders() { return *m_videoShaders; }
 
 private:
   // Construction parameters

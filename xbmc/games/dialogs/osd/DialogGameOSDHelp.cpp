@@ -7,6 +7,7 @@
  */
 
 #include "DialogGameOSDHelp.h"
+
 #include "DialogGameOSD.h"
 #include "ServiceBroker.h"
 #include "games/GameServices.h"
@@ -22,8 +23,7 @@ using namespace GAME;
 const int CDialogGameOSDHelp::CONTROL_ID_HELP_TEXT = 1101;
 const int CDialogGameOSDHelp::CONTROL_ID_GAME_CONTROLLER = 1102;
 
-CDialogGameOSDHelp::CDialogGameOSDHelp(CDialogGameOSD& dialog)
-    : m_dialog(dialog)
+CDialogGameOSDHelp::CDialogGameOSDHelp(CDialogGameOSD& dialog) : m_dialog(dialog)
 {
 }
 

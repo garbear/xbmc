@@ -45,10 +45,7 @@ public:
    * disconnects a controller. This prevents accessing the invalidated
    * input provider when keymaps are unloaded upon destruction.
    */
-  void UnregisterInputProvider()
-  {
-    m_inputProvider = nullptr;
-  }
+  void UnregisterInputProvider() { m_inputProvider = nullptr; }
 
   /*!
    * \brief

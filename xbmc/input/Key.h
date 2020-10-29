@@ -40,7 +40,7 @@
 #define KEY_BUTTON_LEFT_THUMB_STICK 264
 #define KEY_BUTTON_RIGHT_THUMB_STICK 265
 
-#define KEY_BUTTON_RIGHT_THUMB_STICK_UP 266   // right thumb stick directions
+#define KEY_BUTTON_RIGHT_THUMB_STICK_UP 266 // right thumb stick directions
 #define KEY_BUTTON_RIGHT_THUMB_STICK_DOWN 267 // for defining different actions per direction
 #define KEY_BUTTON_RIGHT_THUMB_STICK_LEFT 268
 #define KEY_BUTTON_RIGHT_THUMB_STICK_RIGHT 269
@@ -60,17 +60,17 @@
 #define KEY_BUTTON_LEFT_ANALOG_TRIGGER 278
 #define KEY_BUTTON_RIGHT_ANALOG_TRIGGER 279
 
-#define KEY_BUTTON_LEFT_THUMB_STICK_UP 280   // left thumb stick directions
+#define KEY_BUTTON_LEFT_THUMB_STICK_UP 280 // left thumb stick directions
 #define KEY_BUTTON_LEFT_THUMB_STICK_DOWN 281 // for defining different actions per direction
 #define KEY_BUTTON_LEFT_THUMB_STICK_LEFT 282
 #define KEY_BUTTON_LEFT_THUMB_STICK_RIGHT 283
 
 // 0xF000 -> 0xF200 is reserved for the keyboard; a keyboard press is either
 #define KEY_VKEY 0xF000 // a virtual key/functional key e.g. cursor left
-#define KEY_ASCII                                                                                  \
-  0xF100 // a printable character in the range of TRUE ASCII (from 0 to 127) // FIXME make it clean
-         // and pure unicode! remove the need for KEY_ASCII
-#define KEY_UNICODE                                                                                \
+#define KEY_ASCII \
+  0xF100 // a printable character in the range of TRUE ASCII (from 0 to 127) // FIXME make it clean \
+      // and pure unicode! remove the need for KEY_ASCII
+#define KEY_UNICODE \
   0xF200 // another printable character whose range is not included in this KEY code
 
 // 0xE000 -> 0xEFFF is reserved for mouse actions
@@ -171,43 +171,16 @@ public:
   bool IsAnalogButton() const;
   bool IsIRRemote() const;
   void SetFromService(bool fromService);
-  bool GetFromService() const
-  {
-    return m_fromService;
-  }
+  bool GetFromService() const { return m_fromService; }
 
-  inline uint32_t GetButtonCode() const
-  {
-    return m_buttonCode;
-  }
-  inline uint32_t GetKeycode() const
-  {
-    return m_keycode;
-  } // XBMCKey enum in XBMC_keysym.h
-  inline uint8_t GetVKey() const
-  {
-    return m_vkey;
-  }
-  inline wchar_t GetUnicode() const
-  {
-    return m_unicode;
-  }
-  inline char GetAscii() const
-  {
-    return m_ascii;
-  }
-  inline uint32_t GetModifiers() const
-  {
-    return m_modifiers;
-  };
-  inline uint32_t GetLockingModifiers() const
-  {
-    return m_lockingModifiers;
-  };
-  inline unsigned int GetHeld() const
-  {
-    return m_held;
-  }
+  inline uint32_t GetButtonCode() const { return m_buttonCode; }
+  inline uint32_t GetKeycode() const { return m_keycode; } // XBMCKey enum in XBMC_keysym.h
+  inline uint8_t GetVKey() const { return m_vkey; }
+  inline wchar_t GetUnicode() const { return m_unicode; }
+  inline char GetAscii() const { return m_ascii; }
+  inline uint32_t GetModifiers() const { return m_modifiers; };
+  inline uint32_t GetLockingModifiers() const { return m_lockingModifiers; };
+  inline unsigned int GetHeld() const { return m_held; }
 
   enum Modifier
   {

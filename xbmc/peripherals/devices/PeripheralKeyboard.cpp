@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralKeyboard.h"
+
 #include "input/InputManager.h"
 #include "peripherals/Peripherals.h"
 #include "threads/SingleLock.h"
@@ -19,7 +20,7 @@ using namespace PERIPHERALS;
 CPeripheralKeyboard::CPeripheralKeyboard(CPeripherals& manager,
                                          const PeripheralScanResult& scanResult,
                                          CPeripheralBus* bus)
-    : CPeripheral(manager, scanResult, bus)
+  : CPeripheral(manager, scanResult, bus)
 {
   // Initialize CPeripheral
   m_features.push_back(FEATURE_KEYBOARD);
@@ -38,13 +39,13 @@ bool CPeripheralKeyboard::InitialiseFeature(const PeripheralFeature feature)
   {
     switch (feature)
     {
-    case FEATURE_KEYBOARD:
-    {
-      m_manager.GetInputManager().RegisterKeyboardDriverHandler(this);
-      break;
-    }
-    default:
-      break;
+      case FEATURE_KEYBOARD:
+      {
+        m_manager.GetInputManager().RegisterKeyboardDriverHandler(this);
+        break;
+      }
+      default:
+        break;
     }
 
     bSuccess = true;

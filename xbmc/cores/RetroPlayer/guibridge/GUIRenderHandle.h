@@ -30,10 +30,7 @@ public:
   CGUIRenderHandle(CGUIGameRenderManager& renderManager, RENDER_HANDLE type);
   virtual ~CGUIRenderHandle();
 
-  RENDER_HANDLE Type() const
-  {
-    return m_type;
-  }
+  RENDER_HANDLE Type() const { return m_type; }
 
   void Render();
   void RenderEx();
@@ -54,10 +51,7 @@ public:
   CGUIRenderControlHandle(CGUIGameRenderManager& renderManager, CGUIGameControl& control);
   ~CGUIRenderControlHandle() override = default;
 
-  CGUIGameControl& GetControl()
-  {
-    return m_control;
-  }
+  CGUIGameControl& GetControl() { return m_control; }
 
 private:
   // Construction parameters
@@ -72,10 +66,7 @@ public:
   CGUIRenderFullScreenHandle(CGUIGameRenderManager& renderManager, CGameWindowFullScreen& window);
   ~CGUIRenderFullScreenHandle() override = default;
 
-  CGameWindowFullScreen& GetWindow()
-  {
-    return m_window;
-  }
+  CGameWindowFullScreen& GetWindow() { return m_window; }
 
 private:
   // Construction parameters

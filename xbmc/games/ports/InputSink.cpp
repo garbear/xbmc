@@ -7,13 +7,13 @@
  */
 
 #include "InputSink.h"
+
 #include "games/controllers/ControllerIDs.h"
 
 using namespace KODI;
 using namespace GAME;
 
-CInputSink::CInputSink(JOYSTICK::IInputHandler* gameInput)
-    : m_gameInput(gameInput)
+CInputSink::CInputSink(JOYSTICK::IInputHandler* gameInput) : m_gameInput(gameInput)
 {
 }
 

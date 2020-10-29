@@ -26,26 +26,17 @@ public:
   /*!
    * \brief Returns true if this render target has a video filter set
    */
-  virtual bool HasVideoFilter() const
-  {
-    return true;
-  }
+  virtual bool HasVideoFilter() const { return true; }
 
   /*!
    * \brief Returns true if this render target has a stretch mode set
    */
-  virtual bool HasStretchMode() const
-  {
-    return true;
-  }
+  virtual bool HasStretchMode() const { return true; }
 
   /*!
    * \brief Returns true if this render target has a video rotation set
    */
-  virtual bool HasRotation() const
-  {
-    return true;
-  }
+  virtual bool HasRotation() const { return true; }
 
   /*!
    * \brief Get the settings used to render this target
@@ -61,10 +52,7 @@ public:
    *
    * \return The destination dimensions, or unused for fullscreen window
    */
-  virtual CRect GetDimensions() const
-  {
-    return CRect{};
-  }
+  virtual CRect GetDimensions() const { return CRect{}; }
 };
 } // namespace RETRO
 } // namespace KODI

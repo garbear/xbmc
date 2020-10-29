@@ -7,6 +7,7 @@
  */
 
 #include "JoystickUtils.h"
+
 #include "JoystickTranslator.h"
 #include "utils/StringUtils.h"
 
@@ -34,14 +35,14 @@ std::string CJoystickUtils::MakeKeyName(const FeatureName& feature, WHEEL_DIRECT
 
   switch (dir)
   {
-  case WHEEL_DIRECTION::LEFT:
-    stickDir = ANALOG_STICK_DIRECTION::LEFT;
-    break;
-  case WHEEL_DIRECTION::RIGHT:
-    stickDir = ANALOG_STICK_DIRECTION::RIGHT;
-    break;
-  default:
-    break;
+    case WHEEL_DIRECTION::LEFT:
+      stickDir = ANALOG_STICK_DIRECTION::LEFT;
+      break;
+    case WHEEL_DIRECTION::RIGHT:
+      stickDir = ANALOG_STICK_DIRECTION::RIGHT;
+      break;
+    default:
+      break;
   }
 
   return MakeKeyName(feature, stickDir);
@@ -53,14 +54,14 @@ std::string CJoystickUtils::MakeKeyName(const FeatureName& feature, THROTTLE_DIR
 
   switch (dir)
   {
-  case THROTTLE_DIRECTION::UP:
-    stickDir = ANALOG_STICK_DIRECTION::UP;
-    break;
-  case THROTTLE_DIRECTION::DOWN:
-    stickDir = ANALOG_STICK_DIRECTION::DOWN;
-    break;
-  default:
-    break;
+    case THROTTLE_DIRECTION::UP:
+      stickDir = ANALOG_STICK_DIRECTION::UP;
+      break;
+    case THROTTLE_DIRECTION::DOWN:
+      stickDir = ANALOG_STICK_DIRECTION::DOWN;
+      break;
+    default:
+      break;
   }
 
   return MakeKeyName(feature, stickDir);

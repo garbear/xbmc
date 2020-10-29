@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralHID.h"
+
 #include "guilib/LocalizeStrings.h"
 #include "input/InputManager.h"
 #include "peripherals/Peripherals.h"
@@ -17,7 +18,7 @@ using namespace PERIPHERALS;
 CPeripheralHID::CPeripheralHID(CPeripherals& manager,
                                const PeripheralScanResult& scanResult,
                                CPeripheralBus* bus)
-    : CPeripheral(manager, scanResult, bus)
+  : CPeripheral(manager, scanResult, bus)
 {
   m_strDeviceName = scanResult.m_strDeviceName.empty() ? g_localizeStrings.Get(35001)
                                                        : scanResult.m_strDeviceName;

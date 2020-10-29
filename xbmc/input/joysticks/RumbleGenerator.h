@@ -24,20 +24,14 @@ class CRumbleGenerator : public CThread
 public:
   CRumbleGenerator();
 
-  virtual ~CRumbleGenerator(void)
-  {
-    AbortRumble();
-  }
+  virtual ~CRumbleGenerator(void) { AbortRumble(); }
 
   std::string ControllerID() const;
 
   void NotifyUser(IInputReceiver* receiver);
   bool DoTest(IInputReceiver* receiver);
 
-  void AbortRumble(void)
-  {
-    StopThread();
-  }
+  void AbortRumble(void) { StopThread(); }
 
 protected:
   // implementation of CThread

@@ -7,14 +7,14 @@
  */
 
 #include "GUIRenderSettings.h"
+
 #include "GUIGameControl.h"
 #include "threads/SingleLock.h"
 
 using namespace KODI;
 using namespace RETRO;
 
-CGUIRenderSettings::CGUIRenderSettings(CGUIGameControl& guiControl)
-    : m_guiControl(guiControl)
+CGUIRenderSettings::CGUIRenderSettings(CGUIGameControl& guiControl) : m_guiControl(guiControl)
 {
 }
 

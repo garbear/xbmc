@@ -35,9 +35,7 @@ public:
   virtual void Deinitialize(void) override;
   virtual bool HasButton(JOYSTICK::FEATURE_TYPE type) const override;
   virtual void Load(const ControllerPtr& controller) override;
-  virtual void OnFocus(unsigned int buttonIndex) override
-  {
-  }
+  virtual void OnFocus(unsigned int buttonIndex) override {}
   virtual void OnSelect(unsigned int buttonIndex) override;
 
 private:

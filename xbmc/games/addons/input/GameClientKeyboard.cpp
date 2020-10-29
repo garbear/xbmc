@@ -7,6 +7,7 @@
  */
 
 #include "GameClientKeyboard.h"
+
 #include "GameClientInput.h"
 #include "addons/kodi-addon-dev-kit/include/kodi/kodi_game_types.h"
 #include "games/addons/GameClient.h"
@@ -24,9 +25,9 @@ using namespace GAME;
 CGameClientKeyboard::CGameClientKeyboard(CGameClient& gameClient,
                                          std::string controllerId,
                                          KEYBOARD::IKeyboardInputProvider* inputProvider)
-    : m_gameClient(gameClient)
-    , m_controllerId(std::move(controllerId))
-    , m_inputProvider(inputProvider)
+  : m_gameClient(gameClient),
+    m_controllerId(std::move(controllerId)),
+    m_inputProvider(inputProvider)
 {
   m_inputProvider->RegisterKeyboardHandler(this, false);
 }

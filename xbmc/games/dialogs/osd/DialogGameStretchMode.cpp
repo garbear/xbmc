@@ -7,6 +7,7 @@
  */
 
 #include "DialogGameStretchMode.h"
+
 #include "FileItem.h"
 #include "cores/RetroPlayer/RetroPlayerUtils.h"
 #include "cores/RetroPlayer/guibridge/GUIGameVideoHandle.h"
@@ -30,7 +31,7 @@ const std::vector<CDialogGameStretchMode::StretchModeProperties>
 };
 
 CDialogGameStretchMode::CDialogGameStretchMode()
-    : CDialogGameVideoSelect(WINDOW_DIALOG_GAME_STRETCH_MODE)
+  : CDialogGameVideoSelect(WINDOW_DIALOG_GAME_STRETCH_MODE)
 {
 }
 
@@ -49,22 +50,22 @@ void CDialogGameStretchMode::PreInit()
 
     switch (stretchMode.stretchMode)
     {
-    case RETRO::STRETCHMODE::Normal:
-    case RETRO::STRETCHMODE::Original:
-      bSupported = true;
-      break;
+      case RETRO::STRETCHMODE::Normal:
+      case RETRO::STRETCHMODE::Original:
+        bSupported = true;
+        break;
 
-    case RETRO::STRETCHMODE::Stretch4x3:
-    case RETRO::STRETCHMODE::Fullscreen:
-      if (m_gameVideoHandle)
-      {
-        bSupported = m_gameVideoHandle->SupportsRenderFeature(RETRO::RENDERFEATURE::STRETCH) ||
-                     m_gameVideoHandle->SupportsRenderFeature(RETRO::RENDERFEATURE::PIXEL_RATIO);
-      }
-      break;
+      case RETRO::STRETCHMODE::Stretch4x3:
+      case RETRO::STRETCHMODE::Fullscreen:
+        if (m_gameVideoHandle)
+        {
+          bSupported = m_gameVideoHandle->SupportsRenderFeature(RETRO::RENDERFEATURE::STRETCH) ||
+                       m_gameVideoHandle->SupportsRenderFeature(RETRO::RENDERFEATURE::PIXEL_RATIO);
+        }
+        break;
 
-    default:
-      break;
+      default:
+        break;
     }
 
     if (bSupported)

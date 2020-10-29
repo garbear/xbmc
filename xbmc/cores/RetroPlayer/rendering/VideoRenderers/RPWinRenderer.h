@@ -15,11 +15,12 @@
 #include "cores/RetroPlayer/shaders/windows/RPWinOutputShader.h"
 #include "cores/RetroPlayer/shaders/windows/ShaderTextureDX.h"
 
-#include <dxgi.h>
 #include <map>
 #include <memory>
 #include <stdint.h>
 #include <vector>
+
+#include <dxgi.h>
 
 class CD3DTexture;
 struct SwsContext;
@@ -53,10 +54,7 @@ public:
   // implementation of IRenderBuffer via CRenderBufferSysMem
   bool UploadTexture() override;
 
-  SHADER::CShaderTextureCD3D* GetTarget()
-  {
-    return m_intermediateTarget.get();
-  }
+  SHADER::CShaderTextureCD3D* GetTarget() { return m_intermediateTarget.get(); }
 
 private:
   bool CreateTexture();
@@ -116,10 +114,7 @@ public:
 
   // implementation of CRPBaseRenderer
   bool Supports(RENDERFEATURE feature) const override;
-  SCALINGMETHOD GetDefaultScalingMethod() const override
-  {
-    return DEFAULT_SCALING_METHOD;
-  }
+  SCALINGMETHOD GetDefaultScalingMethod() const override { return DEFAULT_SCALING_METHOD; }
 
   static bool SupportsScalingMethod(SCALINGMETHOD method);
 

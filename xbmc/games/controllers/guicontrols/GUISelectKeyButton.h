@@ -26,16 +26,10 @@ public:
 
   // implementation of IFeatureButton
   const CControllerFeature& Feature(void) const override;
-  bool AllowWizard() const override
-  {
-    return false;
-  }
+  bool AllowWizard() const override { return false; }
   virtual bool PromptForInput(CEvent& waitEvent) override;
   virtual bool IsFinished(void) const override;
-  bool NeedsKey() const override
-  {
-    return m_state == STATE::NEED_KEY;
-  }
+  bool NeedsKey() const override { return m_state == STATE::NEED_KEY; }
   void SetKey(const CControllerFeature& key) override;
   virtual void Reset(void) override;
 

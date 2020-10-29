@@ -7,6 +7,7 @@
  */
 
 #include "GUIDialogPeripherals.h"
+
 #include "FileItem.h"
 #include "ServiceBroker.h"
 #include "dialogs/GUIDialogSelect.h"
@@ -126,14 +127,14 @@ bool CGUIDialogPeripherals::OnMessage(CGUIMessage& message)
 {
   switch (message.GetMessage())
   {
-  case GUI_MSG_REFRESH_LIST:
-  {
-    if (m_manager && message.GetControlId() == -1)
-      UpdatePeripheralsSync();
-    return true;
-  }
-  default:
-    break;
+    case GUI_MSG_REFRESH_LIST:
+    {
+      if (m_manager && message.GetControlId() == -1)
+        UpdatePeripheralsSync();
+      return true;
+    }
+    default:
+      break;
   }
 
   return CGUIDialogSelect::OnMessage(message);
@@ -143,11 +144,11 @@ void CGUIDialogPeripherals::Notify(const Observable& obs, const ObservableMessag
 {
   switch (msg)
   {
-  case ObservableMessagePeripheralsChanged:
-    UpdatePeripheralsAsync();
-    break;
-  default:
-    break;
+    case ObservableMessagePeripheralsChanged:
+      UpdatePeripheralsAsync();
+      break;
+    default:
+      break;
   }
 }
 

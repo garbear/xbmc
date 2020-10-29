@@ -7,6 +7,7 @@
  */
 
 #include "ReversiblePlayback.h"
+
 #include "ServiceBroker.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
@@ -28,15 +29,15 @@ using namespace RETRO;
 CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
                                          double fps,
                                          size_t serializeSize)
-    : m_gameClient(gameClient)
-    , m_gameLoop(this, fps)
-    , m_savestateDatabase(new CSavestateDatabase)
-    , m_totalFrameCount(0)
-    , m_pastFrameCount(0)
-    , m_futureFrameCount(0)
-    , m_playTimeMs(0)
-    , m_totalTimeMs(0)
-    , m_cacheTimeMs(0)
+  : m_gameClient(gameClient),
+    m_gameLoop(this, fps),
+    m_savestateDatabase(new CSavestateDatabase),
+    m_totalFrameCount(0),
+    m_pastFrameCount(0),
+    m_futureFrameCount(0),
+    m_playTimeMs(0),
+    m_totalTimeMs(0),
+    m_cacheTimeMs(0)
 {
   UpdateMemoryStream();
 
@@ -276,11 +277,11 @@ void CReversiblePlayback::Notify(const Observable& obs, const ObservableMessage 
 {
   switch (msg)
   {
-  case ObservableMessageSettingsChanged:
-    UpdateMemoryStream();
-    break;
-  default:
-    break;
+    case ObservableMessageSettingsChanged:
+      UpdateMemoryStream();
+      break;
+    default:
+      break;
   }
 }
 

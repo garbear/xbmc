@@ -112,30 +112,15 @@ public:
   bool operator==(const CDriverPrimitive& rhs) const;
   bool operator<(const CDriverPrimitive& rhs) const;
 
-  bool operator!=(const CDriverPrimitive& rhs) const
-  {
-    return !operator==(rhs);
-  }
-  bool operator>(const CDriverPrimitive& rhs) const
-  {
-    return !(operator<(rhs) || operator==(rhs));
-  }
-  bool operator<=(const CDriverPrimitive& rhs) const
-  {
-    return operator<(rhs) || operator==(rhs);
-  }
-  bool operator>=(const CDriverPrimitive& rhs) const
-  {
-    return !operator<(rhs);
-  }
+  bool operator!=(const CDriverPrimitive& rhs) const { return !operator==(rhs); }
+  bool operator>(const CDriverPrimitive& rhs) const { return !(operator<(rhs) || operator==(rhs)); }
+  bool operator<=(const CDriverPrimitive& rhs) const { return operator<(rhs) || operator==(rhs); }
+  bool operator>=(const CDriverPrimitive& rhs) const { return !operator<(rhs); }
 
   /*!
    * \brief The type of driver primitive
    */
-  PRIMITIVE_TYPE Type(void) const
-  {
-    return m_type;
-  }
+  PRIMITIVE_TYPE Type(void) const { return m_type; }
 
   /*!
    * \brief The index used by the joystick driver
@@ -146,66 +131,42 @@ public:
    *   - semiaxes
    *   - motors
    */
-  unsigned int Index(void) const
-  {
-    return m_driverIndex;
-  }
+  unsigned int Index(void) const { return m_driverIndex; }
 
   /*!
    * \brief The direction arrow (valid for hat directions)
    */
-  HAT_DIRECTION HatDirection(void) const
-  {
-    return m_hatDirection;
-  }
+  HAT_DIRECTION HatDirection(void) const { return m_hatDirection; }
 
   /*!
    * \brief The location of the zero point of the semiaxis
    */
-  int Center() const
-  {
-    return m_center;
-  }
+  int Center() const { return m_center; }
 
   /*!
    * \brief The semiaxis direction (valid for semiaxes)
    */
-  SEMIAXIS_DIRECTION SemiAxisDirection(void) const
-  {
-    return m_semiAxisDirection;
-  }
+  SEMIAXIS_DIRECTION SemiAxisDirection(void) const { return m_semiAxisDirection; }
 
   /*!
    * \brief The distance between the center and the farthest valid value (valid for semiaxes)
    */
-  unsigned int Range() const
-  {
-    return m_range;
-  }
+  unsigned int Range() const { return m_range; }
 
   /*!
    * \brief The keybord symbol (valid for keys)
    */
-  KEYBOARD::KeySymbol Keycode() const
-  {
-    return m_keycode;
-  }
+  KEYBOARD::KeySymbol Keycode() const { return m_keycode; }
 
   /*!
    * \brief The mouse button ID (valid for mouse buttons)
    */
-  MOUSE::BUTTON_ID MouseButton() const
-  {
-    return static_cast<MOUSE::BUTTON_ID>(m_driverIndex);
-  }
+  MOUSE::BUTTON_ID MouseButton() const { return static_cast<MOUSE::BUTTON_ID>(m_driverIndex); }
 
   /*!
    * \brief The relative pointer direction (valid for relative pointers)
    */
-  RELATIVE_POINTER_DIRECTION PointerDirection() const
-  {
-    return m_pointerDirection;
-  }
+  RELATIVE_POINTER_DIRECTION PointerDirection() const { return m_pointerDirection; }
 
   /*!
    * \brief Test if an driver primitive is valid

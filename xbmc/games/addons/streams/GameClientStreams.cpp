@@ -7,6 +7,7 @@
  */
 
 #include "GameClientStreams.h"
+
 #include "GameClientStreamAudio.h"
 #include "GameClientStreamSwFramebuffer.h"
 #include "GameClientStreamVideo.h"
@@ -22,8 +23,7 @@
 using namespace KODI;
 using namespace GAME;
 
-CGameClientStreams::CGameClientStreams(CGameClient& gameClient)
-    : m_gameClient(gameClient)
+CGameClientStreams::CGameClientStreams(CGameClient& gameClient) : m_gameClient(gameClient)
 {
 }
 
@@ -95,23 +95,23 @@ std::unique_ptr<IGameClientStream> CGameClientStreams::CreateStream(
 
   switch (streamType)
   {
-  case GAME_STREAM_AUDIO:
-  {
-    gameStream.reset(new CGameClientStreamAudio(m_gameClient.GetSampleRate()));
-    break;
-  }
-  case GAME_STREAM_VIDEO:
-  {
-    gameStream.reset(new CGameClientStreamVideo);
-    break;
-  }
-  case GAME_STREAM_SW_FRAMEBUFFER:
-  {
-    gameStream.reset(new CGameClientStreamSwFramebuffer);
-    break;
-  }
-  default:
-    break;
+    case GAME_STREAM_AUDIO:
+    {
+      gameStream.reset(new CGameClientStreamAudio(m_gameClient.GetSampleRate()));
+      break;
+    }
+    case GAME_STREAM_VIDEO:
+    {
+      gameStream.reset(new CGameClientStreamVideo);
+      break;
+    }
+    case GAME_STREAM_SW_FRAMEBUFFER:
+    {
+      gameStream.reset(new CGameClientStreamSwFramebuffer);
+      break;
+    }
+    default:
+      break;
   }
 
   return gameStream;

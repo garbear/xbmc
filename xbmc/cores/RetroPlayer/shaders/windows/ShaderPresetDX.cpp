@@ -7,6 +7,7 @@
  */
 
 #include "ShaderPresetDX.h"
+
 #include "ServiceBroker.h"
 #include "addons/binary-addons/BinaryAddonBase.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
@@ -29,8 +30,7 @@ using namespace SHADER;
 CShaderPresetDX::CShaderPresetDX(RETRO::CRenderContext& context,
                                  unsigned videoWidth,
                                  unsigned videoHeight)
-    : m_context(context)
-    , m_videoSize(videoWidth, videoHeight)
+  : m_context(context), m_videoSize(videoWidth, videoHeight)
 {
   m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
 
@@ -237,29 +237,29 @@ bool CShaderPresetDX::CreateShaderTextures()
     float2 scaledSize;
     switch (pass.fbo.scaleX.type)
     {
-    case SCALE_TYPE_ABSOLUTE:
-      scaledSize.x = static_cast<float>(pass.fbo.scaleX.abs);
-      break;
-    case SCALE_TYPE_VIEWPORT:
-      scaledSize.x = m_outputSize.x;
-      break;
-    case SCALE_TYPE_INPUT:
-    default:
-      scaledSize.x = prevSize.x;
-      break;
+      case SCALE_TYPE_ABSOLUTE:
+        scaledSize.x = static_cast<float>(pass.fbo.scaleX.abs);
+        break;
+      case SCALE_TYPE_VIEWPORT:
+        scaledSize.x = m_outputSize.x;
+        break;
+      case SCALE_TYPE_INPUT:
+      default:
+        scaledSize.x = prevSize.x;
+        break;
     }
     switch (pass.fbo.scaleY.type)
     {
-    case SCALE_TYPE_ABSOLUTE:
-      scaledSize.y = static_cast<float>(pass.fbo.scaleY.abs);
-      break;
-    case SCALE_TYPE_VIEWPORT:
-      scaledSize.y = m_outputSize.y;
-      break;
-    case SCALE_TYPE_INPUT:
-    default:
-      scaledSize.y = prevSize.y;
-      break;
+      case SCALE_TYPE_ABSOLUTE:
+        scaledSize.y = static_cast<float>(pass.fbo.scaleY.abs);
+        break;
+      case SCALE_TYPE_VIEWPORT:
+        scaledSize.y = m_outputSize.y;
+        break;
+      case SCALE_TYPE_INPUT:
+      default:
+        scaledSize.y = prevSize.y;
+        break;
     }
 
     // if the scale was unspecified

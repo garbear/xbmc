@@ -31,18 +31,9 @@ public:
 
   void Reset(void);
 
-  int LabelID(void) const
-  {
-    return m_labelId;
-  }
-  const std::string& Icon(void) const
-  {
-    return m_icon;
-  }
-  const std::string& Image(void) const
-  {
-    return m_strImage;
-  }
+  int LabelID(void) const { return m_labelId; }
+  const std::string& Icon(void) const { return m_icon; }
+  const std::string& Image(void) const { return m_strImage; }
 
   /*!
    * \brief Ensures the layout was deserialized correctly, and optionally logs if not
@@ -76,10 +67,7 @@ public:
    *
    * \return The physical topology of the controller
    */
-  const CControllerTopology& Topology(void) const
-  {
-    return *m_topology;
-  }
+  const CControllerTopology& Topology(void) const { return *m_topology; }
 
   /*!
    * \brief Deserialize the specified XML element

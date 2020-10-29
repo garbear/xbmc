@@ -7,6 +7,7 @@
  */
 
 #include "JoystickTranslator.h"
+
 #include "guilib/LocalizeStrings.h"
 #include "input/joysticks/DriverPrimitive.h"
 #include "utils/StringUtils.h"
@@ -18,24 +19,24 @@ const char* CJoystickTranslator::HatStateToString(HAT_STATE state)
 {
   switch (state)
   {
-  case HAT_STATE::UP:
-    return "UP";
-  case HAT_STATE::DOWN:
-    return "DOWN";
-  case HAT_STATE::RIGHT:
-    return "RIGHT";
-  case HAT_STATE::LEFT:
-    return "LEFT";
-  case HAT_STATE::RIGHTUP:
-    return "UP RIGHT";
-  case HAT_STATE::RIGHTDOWN:
-    return "DOWN RIGHT";
-  case HAT_STATE::LEFTUP:
-    return "UP LEFT";
-  case HAT_STATE::LEFTDOWN:
-    return "DOWN LEFT";
-  default:
-    break;
+    case HAT_STATE::UP:
+      return "UP";
+    case HAT_STATE::DOWN:
+      return "DOWN";
+    case HAT_STATE::RIGHT:
+      return "RIGHT";
+    case HAT_STATE::LEFT:
+      return "LEFT";
+    case HAT_STATE::RIGHTUP:
+      return "UP RIGHT";
+    case HAT_STATE::RIGHTDOWN:
+      return "DOWN RIGHT";
+    case HAT_STATE::LEFTUP:
+      return "UP LEFT";
+    case HAT_STATE::LEFTDOWN:
+      return "DOWN LEFT";
+    default:
+      break;
   }
 
   return "RELEASED";
@@ -45,16 +46,16 @@ const char* CJoystickTranslator::TranslateAnalogStickDirection(ANALOG_STICK_DIRE
 {
   switch (dir)
   {
-  case ANALOG_STICK_DIRECTION::UP:
-    return "up";
-  case ANALOG_STICK_DIRECTION::DOWN:
-    return "down";
-  case ANALOG_STICK_DIRECTION::RIGHT:
-    return "right";
-  case ANALOG_STICK_DIRECTION::LEFT:
-    return "left";
-  default:
-    break;
+    case ANALOG_STICK_DIRECTION::UP:
+      return "up";
+    case ANALOG_STICK_DIRECTION::DOWN:
+      return "down";
+    case ANALOG_STICK_DIRECTION::RIGHT:
+      return "right";
+    case ANALOG_STICK_DIRECTION::LEFT:
+      return "left";
+    default:
+      break;
   }
 
   return "";
@@ -78,12 +79,12 @@ const char* CJoystickTranslator::TranslateWheelDirection(WHEEL_DIRECTION dir)
 {
   switch (dir)
   {
-  case WHEEL_DIRECTION::RIGHT:
-    return "right";
-  case WHEEL_DIRECTION::LEFT:
-    return "left";
-  default:
-    break;
+    case WHEEL_DIRECTION::RIGHT:
+      return "right";
+    case WHEEL_DIRECTION::LEFT:
+      return "left";
+    default:
+      break;
   }
 
   return "";
@@ -103,12 +104,12 @@ const char* CJoystickTranslator::TranslateThrottleDirection(THROTTLE_DIRECTION d
 {
   switch (dir)
   {
-  case THROTTLE_DIRECTION::UP:
-    return "up";
-  case THROTTLE_DIRECTION::DOWN:
-    return "down";
-  default:
-    break;
+    case THROTTLE_DIRECTION::UP:
+      return "up";
+    case THROTTLE_DIRECTION::DOWN:
+      return "down";
+    default:
+      break;
   }
 
   return "";
@@ -160,14 +161,14 @@ std::string CJoystickTranslator::GetPrimitiveName(const CDriverPrimitive& primit
 
   switch (primitive.Type())
   {
-  case PRIMITIVE_TYPE::BUTTON:
-    primitiveTemplate = g_localizeStrings.Get(35015); // "Button %d"
-    break;
-  case PRIMITIVE_TYPE::SEMIAXIS:
-    primitiveTemplate = g_localizeStrings.Get(35016); // "Axis %d"
-    break;
-  default:
-    break;
+    case PRIMITIVE_TYPE::BUTTON:
+      primitiveTemplate = g_localizeStrings.Get(35015); // "Button %d"
+      break;
+    case PRIMITIVE_TYPE::SEMIAXIS:
+      primitiveTemplate = g_localizeStrings.Get(35016); // "Axis %d"
+      break;
+    default:
+      break;
   }
 
   return StringUtils::Format(primitiveTemplate.c_str(), primitive.Index());

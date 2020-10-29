@@ -7,9 +7,9 @@
  */
 
 #include "SavestateFlatBuffer.h"
-#include "utils/log.h"
 
 #include "savestate_generated.h"
+#include "utils/log.h"
 
 using namespace KODI;
 using namespace RETRO;
@@ -33,12 +33,12 @@ SaveType TranslateType(SAVE_TYPE type)
 {
   switch (type)
   {
-  case SAVE_TYPE::AUTO:
-    return SaveType_Auto;
-  case SAVE_TYPE::MANUAL:
-    return SaveType_Manual;
-  default:
-    break;
+    case SAVE_TYPE::AUTO:
+      return SaveType_Auto;
+    case SAVE_TYPE::MANUAL:
+      return SaveType_Manual;
+    default:
+      break;
   }
 
   return SaveType_Unknown;
@@ -51,12 +51,12 @@ SAVE_TYPE TranslateType(SaveType type)
 {
   switch (type)
   {
-  case SaveType_Auto:
-    return SAVE_TYPE::AUTO;
-  case SaveType_Manual:
-    return SAVE_TYPE::MANUAL;
-  default:
-    break;
+    case SaveType_Auto:
+      return SAVE_TYPE::AUTO;
+    case SaveType_Manual:
+      return SAVE_TYPE::MANUAL;
+    default:
+      break;
   }
 
   return SAVE_TYPE::UNKNOWN;

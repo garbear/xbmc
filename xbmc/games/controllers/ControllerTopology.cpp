@@ -7,9 +7,11 @@
  */
 
 #include "ControllerTopology.h"
+
 #include "ControllerDefinitions.h"
 #include "utils/XMLUtils.h"
 #include "utils/log.h"
+
 #include <algorithm>
 
 using namespace KODI;
@@ -18,8 +20,7 @@ using namespace GAME;
 // --- CControllerPort ---------------------------------------------------------
 
 CControllerPort::CControllerPort(std::string portId, std::vector<std::string> accepts)
-    : m_portId(std::move(portId))
-    , m_accepts(std::move(accepts))
+  : m_portId(std::move(portId)), m_accepts(std::move(accepts))
 {
 }
 
@@ -68,8 +69,7 @@ bool CControllerPort::Deserialize(const TiXmlElement* pElement)
 // --- CControllerTopology -----------------------------------------------------
 
 CControllerTopology::CControllerTopology(bool bProvidesInput, std::vector<CControllerPort> ports)
-    : m_bProvidesInput(bProvidesInput)
-    , m_ports(std::move(ports))
+  : m_bProvidesInput(bProvidesInput), m_ports(std::move(ports))
 {
 }
 

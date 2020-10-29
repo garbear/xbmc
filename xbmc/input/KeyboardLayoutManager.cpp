@@ -8,14 +8,14 @@
 
 #include "KeyboardLayoutManager.h"
 
-#include <algorithm>
-
 #include "FileItem.h"
 #include "URL.h"
 #include "filesystem/Directory.h"
 #include "settings/lib/Setting.h"
 #include "utils/XBMCTinyXML.h"
 #include "utils/log.h"
+
+#include <algorithm>
 
 #define KEYBOARD_LAYOUTS_PATH "special://xbmc/system/keyboardlayouts"
 

@@ -34,25 +34,13 @@ public:
   void SetRotation(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& rotation);
 
   // Rendering functions
-  bool HasVideoFilter() const
-  {
-    return m_bHasVideoFilter;
-  }
-  bool HasStretchMode() const
-  {
-    return m_bHasStretchMode;
-  }
-  bool HasRotation() const
-  {
-    return m_bHasRotation;
-  }
+  bool HasVideoFilter() const { return m_bHasVideoFilter; }
+  bool HasStretchMode() const { return m_bHasStretchMode; }
+  bool HasRotation() const { return m_bHasRotation; }
   IGUIRenderSettings* GetRenderSettings() const;
 
   // implementation of CGUIControl
-  CGUIGameControl* Clone() const override
-  {
-    return new CGUIGameControl(*this);
-  };
+  CGUIGameControl* Clone() const override { return new CGUIGameControl(*this); };
   void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
   void RenderEx() override;

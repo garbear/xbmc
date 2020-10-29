@@ -7,6 +7,7 @@
  */
 
 #include "ControllerInstaller.h"
+
 #include "FileItem.h"
 #include "ServiceBroker.h"
 #include "addons/Addon.h"
@@ -25,8 +26,7 @@
 using namespace KODI;
 using namespace GAME;
 
-CControllerInstaller::CControllerInstaller()
-    : CThread("ControllerInstaller")
+CControllerInstaller::CControllerInstaller() : CThread("ControllerInstaller")
 {
 }
 

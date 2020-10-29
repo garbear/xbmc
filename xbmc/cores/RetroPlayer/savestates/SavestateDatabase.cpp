@@ -7,6 +7,7 @@
  */
 
 #include "SavestateDatabase.h"
+
 #include "SavestateFlatBuffer.h"
 #include "SavestateUtils.h"
 #include "URL.h"

@@ -44,10 +44,7 @@ public:
    *
    * \return The features
    */
-  const std::vector<CControllerFeature>& Features(void) const
-  {
-    return m_features;
-  }
+  const std::vector<CControllerFeature>& Features(void) const { return m_features; }
 
   /*!
    * \brief Get a feature by its name
@@ -105,10 +102,7 @@ public:
   /*!
    * \brief Get the controller layout
    */
-  const CControllerLayout& Layout(void) const
-  {
-    return *m_layout;
-  }
+  const CControllerLayout& Layout(void) const { return *m_layout; }
 
   /*!
    * \brief Get the controller's physical topology

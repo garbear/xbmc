@@ -13,9 +13,9 @@
 
 /* Include file for SDL keyboard event handling */
 
-#include <stdint.h>
-
 #include "XBMC_keysym.h"
+
+#include <stdint.h>
 
 /* Keysym structure
    - The scancode is hardware dependent, and should not be used by general
@@ -36,9 +36,9 @@
 typedef struct XBMC_keysym
 {
   unsigned char scancode; /* hardware specific scancode */
-  XBMCKey sym;            /* SDL virtual keysym */
-  XBMCMod mod;            /* current key modifiers */
-  uint16_t unicode;       /* translated character */
+  XBMCKey sym; /* SDL virtual keysym */
+  XBMCMod mod; /* current key modifiers */
+  uint16_t unicode; /* translated character */
 } XBMC_keysym;
 
 /* This is the mask which refers to all hotkey bindings */

@@ -12,6 +12,7 @@
 //#define DEBUG_KEYBOARD_GETCHAR
 
 #include "KeyboardStat.h"
+
 #include "ServiceBroker.h"
 #include "input/XBMC_keytable.h"
 #include "input/XBMC_vkeys.h"

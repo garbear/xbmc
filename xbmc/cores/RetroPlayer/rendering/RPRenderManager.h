@@ -72,10 +72,7 @@ public:
   /*!
    * \brief Access the factory for creating GUI render targets
    */
-  CGUIRenderTargetFactory* GetGUIRenderTargetFactory()
-  {
-    return m_renderControlFactory.get();
-  }
+  CGUIRenderTargetFactory* GetGUIRenderTargetFactory() { return m_renderControlFactory.get(); }
 
   // Functions called from game loop
   bool Configure(AVPixelFormat format,

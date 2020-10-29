@@ -76,9 +76,9 @@ enum class FEATURE_CATEGORY
   POINTER,
   LIGHTGUN,
   OFFSCREEN, // Virtual button to shoot light gun offscreen
-  KEY,       // A keyboard key
-  KEYPAD,    // A key on a numeric keymap, including star and pound
-  HARDWARE,  // A button or functionality on the console
+  KEY, // A keyboard key
+  KEYPAD, // A key on a numeric keymap, including star and pound
+  HARDWARE, // A button or functionality on the console
   WHEEL,
   JOYSTICK,
   PADDLE,
@@ -110,8 +110,8 @@ using RELATIVE_POINTER_DIRECTION = INPUT::CARDINAL_DIRECTION;
 enum class SEMIAXIS_DIRECTION
 {
   NEGATIVE = -1, // semiaxis lies in the interval [-1.0, 0.0]
-  ZERO = 0,      // semiaxis is unknown or invalid
-  POSITIVE = 1,  // semiaxis lies in the interval [0.0, 1.0]
+  ZERO = 0, // semiaxis is unknown or invalid
+  POSITIVE = 1, // semiaxis lies in the interval [0.0, 1.0]
 };
 
 /*!
@@ -149,13 +149,13 @@ enum class INPUT_TYPE
  */
 enum class PRIMITIVE_TYPE
 {
-  UNKNOWN = 0,      // primitive has no type (invalid)
-  BUTTON,           // a digital button
-  HAT,              // one of the four direction arrows on a D-pad
-  SEMIAXIS,         // the positive or negative half of an axis
-  MOTOR,            // a rumble motor
-  KEY,              // a keyboard key
-  MOUSE_BUTTON,     // a mouse button
+  UNKNOWN = 0, // primitive has no type (invalid)
+  BUTTON, // a digital button
+  HAT, // one of the four direction arrows on a D-pad
+  SEMIAXIS, // the positive or negative half of an axis
+  MOTOR, // a rumble motor
+  KEY, // a keyboard key
+  MOUSE_BUTTON, // a mouse button
   RELATIVE_POINTER, // a relative pointer, such as on a mouse
 };
 
@@ -170,10 +170,7 @@ struct KeymapAction
   unsigned int holdTimeMs;
   std::set<std::string> hotkeys;
 
-  bool operator<(const KeymapAction& rhs) const
-  {
-    return holdTimeMs < rhs.holdTimeMs;
-  }
+  bool operator<(const KeymapAction& rhs) const { return holdTimeMs < rhs.holdTimeMs; }
 };
 
 /*!

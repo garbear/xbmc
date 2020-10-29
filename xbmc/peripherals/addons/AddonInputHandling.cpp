@@ -7,6 +7,7 @@
  */
 
 #include "AddonInputHandling.h"
+
 #include "input/joysticks/generic/DriverReceiving.h"
 #include "input/joysticks/generic/InputHandling.h"
 #include "input/joysticks/interfaces/IDriverReceiver.h"

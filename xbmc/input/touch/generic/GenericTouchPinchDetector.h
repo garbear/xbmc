@@ -21,7 +21,7 @@ class CGenericTouchPinchDetector : public IGenericTouchGestureDetector
 {
 public:
   CGenericTouchPinchDetector(ITouchActionHandler* handler, float dpi)
-      : IGenericTouchGestureDetector(handler, dpi)
+    : IGenericTouchGestureDetector(handler, dpi)
   {
   }
   ~CGenericTouchPinchDetector() override = default;

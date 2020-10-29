@@ -107,16 +107,10 @@ struct ShaderPass
 
 struct float2
 {
-  float2()
-      : x(0)
-      , y(0)
-  {
-  }
+  float2() : x(0), y(0) {}
 
   template<typename T>
-  float2(T x_, T y_)
-      : x(static_cast<float>(x_))
-      , y(static_cast<float>(y_))
+  float2(T x_, T y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_))
   {
     static_assert(std::is_arithmetic<T>::value, "Not an arithmetic type");
   }

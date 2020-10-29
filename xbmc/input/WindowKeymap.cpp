@@ -7,12 +7,12 @@
  */
 
 #include "WindowKeymap.h"
+
 #include "WindowTranslator.h"
 
 using namespace KODI;
 
-CWindowKeymap::CWindowKeymap(const std::string& controllerId)
-    : m_controllerId(controllerId)
+CWindowKeymap::CWindowKeymap(const std::string& controllerId) : m_controllerId(controllerId)
 {
 }
 

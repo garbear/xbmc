@@ -23,9 +23,7 @@ class CRPProcessInfo;
 struct AudioStreamProperties : public StreamProperties
 {
   AudioStreamProperties(PCMFormat format, double sampleRate, AudioChannelMap channelMap)
-      : format(format)
-      , sampleRate(sampleRate)
-      , channelMap(channelMap)
+    : format(format), sampleRate(sampleRate), channelMap(channelMap)
   {
   }
 
@@ -36,11 +34,7 @@ struct AudioStreamProperties : public StreamProperties
 
 struct AudioStreamPacket : public StreamPacket
 {
-  AudioStreamPacket(const uint8_t* data, size_t size)
-      : data(data)
-      , size(size)
-  {
-  }
+  AudioStreamPacket(const uint8_t* data, size_t size) : data(data), size(size) {}
 
   const uint8_t* data;
   size_t size;
@@ -52,10 +46,7 @@ public:
   explicit CRetroPlayerAudio(CRPProcessInfo& processInfo);
   ~CRetroPlayerAudio() override;
 
-  void Enable(bool bEnabled)
-  {
-    m_bAudioEnabled = bEnabled;
-  }
+  void Enable(bool bEnabled) { m_bAudioEnabled = bEnabled; }
 
   // implementation of IRetroPlayerStream
   bool OpenStream(const StreamProperties& properties) override;

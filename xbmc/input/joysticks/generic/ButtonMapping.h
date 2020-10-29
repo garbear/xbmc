@@ -139,10 +139,7 @@ public:
    *
    * \return True between when the axis is mapped and when it crosses zero
    */
-  bool IsMapping() const
-  {
-    return m_state == AXIS_STATE::MAPPED;
-  }
+  bool IsMapping() const { return m_state == AXIS_STATE::MAPPED; }
 
   /*!
    * \brief Set the state such that this axis has generated a mapping event
@@ -215,8 +212,8 @@ private:
   AXIS_STATE m_state;
   CDriverPrimitive m_activatedPrimitive;
   AXIS_TYPE m_type;
-  bool m_initialPositionKnown;   // set to true on first motion
-  float m_initialPosition;       // set to position of first motion
+  bool m_initialPositionKnown; // set to true on first motion
+  float m_initialPosition; // set to position of first motion
   bool m_initialPositionChanged; // set to true when position differs from the initial position
   unsigned int
       m_activationTimeMs; // only used to delay anomalous trigger mapping to detect full range
@@ -338,9 +335,7 @@ public:
 
   // implementation of IKeyboardDriverHandler
   bool OnKeyPress(const CKey& key) override;
-  void OnKeyRelease(const CKey& key) override
-  {
-  }
+  void OnKeyRelease(const CKey& key) override {}
 
   // implementation of IMouseDriverHandler
   bool OnPosition(int x, int y) override;

@@ -7,6 +7,7 @@
  */
 
 #include "RPWinRenderer.h"
+
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderTranslator.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
@@ -49,9 +50,7 @@ RenderBufferPoolVector CWinRendererFactory::CreateBufferPools(CRenderContext& co
 // --- CWinRenderBuffer --------------------------------------------------------
 
 CWinRenderBuffer::CWinRenderBuffer(AVPixelFormat pixFormat, DXGI_FORMAT dxFormat)
-    : m_pixFormat(pixFormat)
-    , m_targetDxFormat(dxFormat)
-    , m_targetPixFormat(GetPixFormat(dxFormat))
+  : m_pixFormat(pixFormat), m_targetDxFormat(dxFormat), m_targetPixFormat(GetPixFormat(dxFormat))
 {
 }
 
@@ -237,7 +236,7 @@ void CWinRenderBufferPool::CompileOutputShaders()
 CRPWinRenderer::CRPWinRenderer(const CRenderSettings& renderSettings,
                                CRenderContext& context,
                                std::shared_ptr<IRenderBufferPool> bufferPool)
-    : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
+  : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
   // Initialize CRPBaseRenderer fields
   m_shaderPreset.reset(new SHADER::CShaderPresetDX(m_context));

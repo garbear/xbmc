@@ -8,13 +8,13 @@
 
 #pragma once
 
+#include "InputCodingTable.h"
+#include "threads/Thread.h"
+
 #include <deque>
 #include <map>
 #include <string>
 #include <vector>
-
-#include "InputCodingTable.h"
-#include "threads/Thread.h"
 
 class CInputCodingTableBaiduPY : public IInputCodingTable, public CThread
 {
@@ -38,7 +38,7 @@ private:
   std::string m_code;
   int m_messageCounter;
   int m_api_begin; // baidu api begin num
-  int m_api_end;   // baidu api end num
+  int m_api_end; // baidu api end num
   bool m_api_nomore;
   bool m_initialized;
 

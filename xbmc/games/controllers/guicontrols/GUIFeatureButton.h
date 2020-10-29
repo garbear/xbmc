@@ -32,10 +32,7 @@ public:
   virtual void OnUnFocus(void) override;
 
   // partial implementation of IFeatureButton
-  virtual const CControllerFeature& Feature(void) const override
-  {
-    return m_feature;
-  }
+  virtual const CControllerFeature& Feature(void) const override { return m_feature; }
   virtual INPUT::CARDINAL_DIRECTION GetCardinalDirection(void) const override
   {
     return INPUT::CARDINAL_DIRECTION::NONE;

@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralJoystick.h"
+
 #include "Application.h"
 #include "games/controllers/ControllerIDs.h"
 #include "input/InputManager.h"
@@ -31,14 +32,14 @@ using namespace PERIPHERALS;
 CPeripheralJoystick::CPeripheralJoystick(CPeripherals& manager,
                                          const PeripheralScanResult& scanResult,
                                          CPeripheralBus* bus)
-    : CPeripheral(manager, scanResult, bus)
-    , m_requestedPort(JOYSTICK_PORT_UNKNOWN)
-    , m_buttonCount(0)
-    , m_hatCount(0)
-    , m_axisCount(0)
-    , m_motorCount(0)
-    , m_supportsPowerOff(false)
-    , m_rumbleGenerator(new CRumbleGenerator)
+  : CPeripheral(manager, scanResult, bus),
+    m_requestedPort(JOYSTICK_PORT_UNKNOWN),
+    m_buttonCount(0),
+    m_hatCount(0),
+    m_axisCount(0),
+    m_motorCount(0),
+    m_supportsPowerOff(false),
+    m_rumbleGenerator(new CRumbleGenerator)
 {
   m_features.push_back(FEATURE_JOYSTICK);
   // FEATURE_RUMBLE conditionally added via SetMotorCount()
@@ -148,21 +149,22 @@ bool CPeripheralJoystick::TestFeature(PeripheralFeature feature)
 
   switch (feature)
   {
-  case FEATURE_RUMBLE:
-  {
-    IInputReceiver* inputReceiver = m_appInput->GetInputReceiver(m_rumbleGenerator->ControllerID());
-    bSuccess = m_rumbleGenerator->DoTest(inputReceiver);
-    break;
-  }
-  case FEATURE_POWER_OFF:
-    if (m_supportsPowerOff)
+    case FEATURE_RUMBLE:
     {
-      PowerOff();
-      bSuccess = true;
+      IInputReceiver* inputReceiver =
+          m_appInput->GetInputReceiver(m_rumbleGenerator->ControllerID());
+      bSuccess = m_rumbleGenerator->DoTest(inputReceiver);
+      break;
     }
-    break;
-  default:
-    break;
+    case FEATURE_POWER_OFF:
+      if (m_supportsPowerOff)
+      {
+        PowerOff();
+        bSuccess = true;
+      }
+      break;
+    default:
+      break;
   }
 
   return bSuccess;

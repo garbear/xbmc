@@ -7,6 +7,7 @@
  */
 
 #include "GameClientProperties.h"
+
 #include "GameClient.h"
 #include "ServiceBroker.h"
 #include "addons/AddonManager.h"
@@ -30,8 +31,7 @@ using namespace XFILE;
 #define GAME_CLIENT_RESOURCES_DIRECTORY "resources"
 
 CGameClientProperties::CGameClientProperties(const CGameClient& parent, AddonProps_Game& props)
-    : m_parent(parent)
-    , m_properties(props)
+  : m_parent(parent), m_properties(props)
 {
 }
 

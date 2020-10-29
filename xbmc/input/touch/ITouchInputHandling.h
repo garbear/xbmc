@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <stdlib.h>
-
 #include "input/touch/ITouchActionHandler.h"
+
+#include <stdlib.h>
 
 /*!
  * \ingroup touch
@@ -23,10 +23,7 @@
 class ITouchInputHandling : protected ITouchActionHandler
 {
 public:
-  ITouchInputHandling()
-      : m_handler(NULL)
-  {
-  }
+  ITouchInputHandling() : m_handler(NULL) {}
   ~ITouchInputHandling() override = default;
 
   /*!

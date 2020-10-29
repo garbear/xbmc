@@ -24,10 +24,7 @@ public:
    *
    * \return True if the touch is valid otherwise false
    */
-  bool valid() const
-  {
-    return x >= 0.0f && y >= 0.0f && time >= 0;
-  }
+  bool valid() const { return x >= 0.0f && y >= 0.0f && time >= 0; }
 
   /*!
    * \brief Copies the x/y coordinates and the time from the given touch
@@ -52,10 +49,7 @@ public:
 class Pointer
 {
 public:
-  Pointer()
-  {
-    reset();
-  }
+  Pointer() { reset(); }
 
   /*!
    * \brief Resets the pointer and all its touches
@@ -73,10 +67,7 @@ public:
    *
    * \return True if the "down" touch is valid otherwise false
    */
-  bool valid() const
-  {
-    return down.valid();
-  }
+  bool valid() const { return down.valid(); }
 
   /*!
    * \brief Calculates the velocity in x/y direction using the "down" and

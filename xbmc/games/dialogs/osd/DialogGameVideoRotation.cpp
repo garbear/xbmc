@@ -7,6 +7,7 @@
  */
 
 #include "DialogGameVideoRotation.h"
+
 #include "FileItem.h"
 #include "guilib/LocalizeStrings.h"
 #include "guilib/WindowIDs.h"
@@ -18,7 +19,7 @@ using namespace KODI;
 using namespace GAME;
 
 CDialogGameVideoRotation::CDialogGameVideoRotation()
-    : CDialogGameVideoSelect(WINDOW_DIALOG_GAME_VIDEO_ROTATION)
+  : CDialogGameVideoSelect(WINDOW_DIALOG_GAME_VIDEO_ROTATION)
 {
 }
 
@@ -86,16 +87,16 @@ std::string CDialogGameVideoRotation::GetRotationLabel(unsigned int rotationDegC
 {
   switch (rotationDegCCW)
   {
-  case 0:
-    return g_localizeStrings.Get(35228); // 0
-  case 90:
-    return g_localizeStrings.Get(35231); // 270
-  case 180:
-    return g_localizeStrings.Get(35230); // 180
-  case 270:
-    return g_localizeStrings.Get(35229); // 90
-  default:
-    break;
+    case 0:
+      return g_localizeStrings.Get(35228); // 0
+    case 90:
+      return g_localizeStrings.Get(35231); // 270
+    case 180:
+      return g_localizeStrings.Get(35230); // 180
+    case 270:
+      return g_localizeStrings.Get(35229); // 90
+    default:
+      break;
   }
 
   return "";

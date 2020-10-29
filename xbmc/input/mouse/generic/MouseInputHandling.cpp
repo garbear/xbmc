@@ -7,6 +7,7 @@
  */
 
 #include "MouseInputHandling.h"
+
 #include "input/InputTranslator.h"
 #include "input/joysticks/interfaces/IButtonMap.h"
 #include "input/mouse/interfaces/IMouseInputHandler.h"
@@ -16,8 +17,7 @@ using namespace MOUSE;
 
 CMouseInputHandling::CMouseInputHandling(IMouseInputHandler* handler,
                                          JOYSTICK::IButtonMap* buttonMap)
-    : m_handler(handler)
-    , m_buttonMap(buttonMap)
+  : m_handler(handler), m_buttonMap(buttonMap)
 {
 }
 
@@ -134,16 +134,16 @@ POINTER_DIRECTION CMouseInputHandling::GetOrthogonalDirectionCCW(POINTER_DIRECTI
 {
   switch (direction)
   {
-  case POINTER_DIRECTION::RIGHT:
-    return POINTER_DIRECTION::UP;
-  case POINTER_DIRECTION::UP:
-    return POINTER_DIRECTION::LEFT;
-  case POINTER_DIRECTION::LEFT:
-    return POINTER_DIRECTION::DOWN;
-  case POINTER_DIRECTION::DOWN:
-    return POINTER_DIRECTION::RIGHT;
-  default:
-    break;
+    case POINTER_DIRECTION::RIGHT:
+      return POINTER_DIRECTION::UP;
+    case POINTER_DIRECTION::UP:
+      return POINTER_DIRECTION::LEFT;
+    case POINTER_DIRECTION::LEFT:
+      return POINTER_DIRECTION::DOWN;
+    case POINTER_DIRECTION::DOWN:
+      return POINTER_DIRECTION::RIGHT;
+    default:
+      break;
   }
 
   return POINTER_DIRECTION::NONE;
@@ -155,80 +155,80 @@ void CMouseInputHandling::GetRotation(POINTER_DIRECTION source,
 {
   switch (source)
   {
-  case POINTER_DIRECTION::RIGHT:
-  {
-    switch (target)
-    {
-    case POINTER_DIRECTION::UP:
-      GetRotation(90, rotation);
-      break;
-    case POINTER_DIRECTION::LEFT:
-      GetRotation(180, rotation);
-      break;
-    case POINTER_DIRECTION::DOWN:
-      GetRotation(270, rotation);
-      break;
-    default:
-      break;
-    }
-    break;
-  }
-  case POINTER_DIRECTION::UP:
-  {
-    switch (target)
-    {
-    case POINTER_DIRECTION::LEFT:
-      GetRotation(90, rotation);
-      break;
-    case POINTER_DIRECTION::DOWN:
-      GetRotation(180, rotation);
-      break;
     case POINTER_DIRECTION::RIGHT:
-      GetRotation(270, rotation);
-      break;
-    default:
+    {
+      switch (target)
+      {
+        case POINTER_DIRECTION::UP:
+          GetRotation(90, rotation);
+          break;
+        case POINTER_DIRECTION::LEFT:
+          GetRotation(180, rotation);
+          break;
+        case POINTER_DIRECTION::DOWN:
+          GetRotation(270, rotation);
+          break;
+        default:
+          break;
+      }
       break;
     }
-    break;
-  }
-  case POINTER_DIRECTION::LEFT:
-  {
-    switch (target)
-    {
-    case POINTER_DIRECTION::DOWN:
-      GetRotation(90, rotation);
-      break;
-    case POINTER_DIRECTION::RIGHT:
-      GetRotation(180, rotation);
-      break;
     case POINTER_DIRECTION::UP:
-      GetRotation(270, rotation);
-      break;
-    default:
+    {
+      switch (target)
+      {
+        case POINTER_DIRECTION::LEFT:
+          GetRotation(90, rotation);
+          break;
+        case POINTER_DIRECTION::DOWN:
+          GetRotation(180, rotation);
+          break;
+        case POINTER_DIRECTION::RIGHT:
+          GetRotation(270, rotation);
+          break;
+        default:
+          break;
+      }
       break;
     }
-    break;
-  }
-  case POINTER_DIRECTION::DOWN:
-  {
-    switch (target)
-    {
-    case POINTER_DIRECTION::RIGHT:
-      GetRotation(90, rotation);
-      break;
-    case POINTER_DIRECTION::UP:
-      GetRotation(180, rotation);
-      break;
     case POINTER_DIRECTION::LEFT:
-      GetRotation(270, rotation);
-      break;
-    default:
+    {
+      switch (target)
+      {
+        case POINTER_DIRECTION::DOWN:
+          GetRotation(90, rotation);
+          break;
+        case POINTER_DIRECTION::RIGHT:
+          GetRotation(180, rotation);
+          break;
+        case POINTER_DIRECTION::UP:
+          GetRotation(270, rotation);
+          break;
+        default:
+          break;
+      }
       break;
     }
-    break;
-  }
-  default:
-    break;
+    case POINTER_DIRECTION::DOWN:
+    {
+      switch (target)
+      {
+        case POINTER_DIRECTION::RIGHT:
+          GetRotation(90, rotation);
+          break;
+        case POINTER_DIRECTION::UP:
+          GetRotation(180, rotation);
+          break;
+        case POINTER_DIRECTION::LEFT:
+          GetRotation(270, rotation);
+          break;
+        default:
+          break;
+      }
+      break;
+    }
+    default:
+      break;
   }
 }
 
@@ -236,32 +236,32 @@ void CMouseInputHandling::GetRotation(int deg, int (&rotation)[2][2])
 {
   switch (deg)
   {
-  case 90:
-  {
-    rotation[0][0] = 0;
-    rotation[0][1] = -1;
-    rotation[1][0] = 1;
-    rotation[1][1] = 0;
-    break;
-  }
-  case 180:
-  {
-    rotation[0][0] = -1;
-    rotation[0][1] = 0;
-    rotation[1][0] = 0;
-    rotation[1][1] = -1;
-    break;
-  }
-  case 270:
-  {
-    rotation[0][0] = 0;
-    rotation[0][1] = 1;
-    rotation[1][0] = -1;
-    rotation[1][1] = 0;
-    break;
-  }
-  default:
-    break;
+    case 90:
+    {
+      rotation[0][0] = 0;
+      rotation[0][1] = -1;
+      rotation[1][0] = 1;
+      rotation[1][1] = 0;
+      break;
+    }
+    case 180:
+    {
+      rotation[0][0] = -1;
+      rotation[0][1] = 0;
+      rotation[1][0] = 0;
+      rotation[1][1] = -1;
+      break;
+    }
+    case 270:
+    {
+      rotation[0][0] = 0;
+      rotation[0][1] = 1;
+      rotation[1][0] = -1;
+      rotation[1][1] = 0;
+      break;
+    }
+    default:
+      break;
   }
 }
 
@@ -271,56 +271,56 @@ void CMouseInputHandling::GetReflectionCCW(POINTER_DIRECTION source,
 {
   switch (source)
   {
-  case POINTER_DIRECTION::RIGHT:
-  {
-    switch (target)
-    {
-    case POINTER_DIRECTION::DOWN:
-      GetReflection(0, rotation);
-      break;
-    default:
-      break;
-    }
-    break;
-  }
-  case POINTER_DIRECTION::UP:
-  {
-    switch (target)
-    {
     case POINTER_DIRECTION::RIGHT:
-      GetReflection(90, rotation);
-      break;
-    default:
+    {
+      switch (target)
+      {
+        case POINTER_DIRECTION::DOWN:
+          GetReflection(0, rotation);
+          break;
+        default:
+          break;
+      }
       break;
     }
-    break;
-  }
-  case POINTER_DIRECTION::LEFT:
-  {
-    switch (target)
-    {
     case POINTER_DIRECTION::UP:
-      GetReflection(180, rotation);
-      break;
-    default:
-      break;
-    }
-    break;
-  }
-  case POINTER_DIRECTION::DOWN:
-  {
-    switch (target)
     {
-    case POINTER_DIRECTION::LEFT:
-      GetReflection(270, rotation);
-      break;
-    default:
+      switch (target)
+      {
+        case POINTER_DIRECTION::RIGHT:
+          GetReflection(90, rotation);
+          break;
+        default:
+          break;
+      }
       break;
     }
-    break;
-  }
-  default:
-    break;
+    case POINTER_DIRECTION::LEFT:
+    {
+      switch (target)
+      {
+        case POINTER_DIRECTION::UP:
+          GetReflection(180, rotation);
+          break;
+        default:
+          break;
+      }
+      break;
+    }
+    case POINTER_DIRECTION::DOWN:
+    {
+      switch (target)
+      {
+        case POINTER_DIRECTION::LEFT:
+          GetReflection(270, rotation);
+          break;
+        default:
+          break;
+      }
+      break;
+    }
+    default:
+      break;
   }
 }
 
@@ -328,25 +328,25 @@ void CMouseInputHandling::GetReflection(int deg, int (&reflection)[2][2])
 {
   switch (deg)
   {
-  case 0:
-  case 180:
-  {
-    reflection[0][0] = 1;
-    reflection[0][1] = 0;
-    reflection[1][0] = 0;
-    reflection[1][1] = -1;
-    break;
-  }
-  case 90:
-  case 270:
-  {
-    reflection[0][0] = -1;
-    reflection[0][1] = 0;
-    reflection[1][0] = 0;
-    reflection[1][1] = 1;
-    break;
-  }
-  default:
-    break;
+    case 0:
+    case 180:
+    {
+      reflection[0][0] = 1;
+      reflection[0][1] = 0;
+      reflection[1][0] = 0;
+      reflection[1][1] = -1;
+      break;
+    }
+    case 90:
+    case 270:
+    {
+      reflection[0][0] = -1;
+      reflection[0][1] = 0;
+      reflection[1][0] = 0;
+      reflection[1][1] = 1;
+      break;
+    }
+    default:
+      break;
   }
 }

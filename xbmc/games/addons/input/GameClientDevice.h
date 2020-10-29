@@ -51,18 +51,12 @@ public:
   /*!
    * \brief The controller profile
    */
-  const ControllerPtr& Controller() const
-  {
-    return m_controller;
-  }
+  const ControllerPtr& Controller() const { return m_controller; }
 
   /*!
    * \brief The ports on this device
    */
-  const GameClientPortVec& Ports() const
-  {
-    return m_ports;
-  }
+  const GameClientPortVec& Ports() const { return m_ports; }
 
 private:
   /*!

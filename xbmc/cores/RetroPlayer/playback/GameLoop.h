@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <atomic>
-
 #include "threads/Event.h"
 #include "threads/Thread.h"
+
+#include <atomic>
 
 namespace KODI
 {
@@ -43,15 +43,9 @@ public:
   void Start();
   void Stop();
 
-  double FPS() const
-  {
-    return m_fps;
-  }
+  double FPS() const { return m_fps; }
 
-  double GetSpeed() const
-  {
-    return m_speedFactor;
-  }
+  double GetSpeed() const { return m_speedFactor; }
   void SetSpeed(double speedFactor);
   void PauseAsync();
 

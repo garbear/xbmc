@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include <map>
-#include <set>
-#include <string>
-#include <vector>
-
 #include "XBDateTime.h"
 #include "input/joysticks/interfaces/IInputProvider.h"
 #include "input/keyboard/interfaces/IKeyboardInputProvider.h"
 #include "input/mouse/interfaces/IMouseInputProvider.h"
 #include "peripherals/PeripheralTypes.h"
+
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
 
 class TiXmlDocument;
 class CSetting;
@@ -73,54 +73,18 @@ public:
   bool operator==(const PeripheralScanResult& right) const;
   bool operator!=(const PeripheralScanResult& right) const;
 
-  const std::string& FileLocation(void) const
-  {
-    return m_strFileLocation;
-  }
-  const std::string& Location(void) const
-  {
-    return m_strLocation;
-  }
-  int VendorId(void) const
-  {
-    return m_iVendorId;
-  }
-  const char* VendorIdAsString(void) const
-  {
-    return m_strVendorId.c_str();
-  }
-  int ProductId(void) const
-  {
-    return m_iProductId;
-  }
-  const char* ProductIdAsString(void) const
-  {
-    return m_strProductId.c_str();
-  }
-  PeripheralType Type(void) const
-  {
-    return m_type;
-  }
-  PeripheralBusType GetBusType(void) const
-  {
-    return m_busType;
-  };
-  const std::string& DeviceName(void) const
-  {
-    return m_strDeviceName;
-  }
-  bool IsHidden(void) const
-  {
-    return m_bHidden;
-  }
-  void SetHidden(bool bSetTo = true)
-  {
-    m_bHidden = bSetTo;
-  }
-  const std::string& GetVersionInfo(void) const
-  {
-    return m_strVersionInfo;
-  }
+  const std::string& FileLocation(void) const { return m_strFileLocation; }
+  const std::string& Location(void) const { return m_strLocation; }
+  int VendorId(void) const { return m_iVendorId; }
+  const char* VendorIdAsString(void) const { return m_strVendorId.c_str(); }
+  int ProductId(void) const { return m_iProductId; }
+  const char* ProductIdAsString(void) const { return m_strProductId.c_str(); }
+  PeripheralType Type(void) const { return m_type; }
+  PeripheralBusType GetBusType(void) const { return m_busType; };
+  const std::string& DeviceName(void) const { return m_strDeviceName; }
+  bool IsHidden(void) const { return m_bHidden; }
+  void SetHidden(bool bSetTo = true) { m_bHidden = bSetTo; }
+  const std::string& GetVersionInfo(void) const { return m_strVersionInfo; }
 
   /*!
    * @brief Get an icon for this peripheral
@@ -152,27 +116,19 @@ public:
    * @param feature The feature to initialise.
    * @return True when the feature has been initialised successfully, false otherwise.
    */
-  virtual bool InitialiseFeature(const PeripheralFeature feature)
-  {
-    return true;
-  }
+  virtual bool InitialiseFeature(const PeripheralFeature feature) { return true; }
 
   /*!
    * @brief Briefly activate a feature to notify the user
    */
-  virtual void OnUserNotification()
-  {
-  }
+  virtual void OnUserNotification() {}
 
   /*!
    * @brief Briefly test one of the features of this peripheral.
    * @param feature The feature to test.
    * @return True if the test succeeded, false otherwise.
    */
-  virtual bool TestFeature(PeripheralFeature feature)
-  {
-    return false;
-  }
+  virtual bool TestFeature(PeripheralFeature feature) { return false; }
 
   /*!
    * @brief Called when a setting changed.
@@ -183,9 +139,7 @@ public:
   /*!
    * @brief Called when this device is removed, before calling the destructor.
    */
-  virtual void OnDeviceRemoved(void)
-  {
-  }
+  virtual void OnDeviceRemoved(void) {}
 
   /*!
    * @brief Get all subdevices if this device is multifunctional.
@@ -250,34 +204,25 @@ public:
 
   virtual std::vector<std::shared_ptr<CSetting>> GetSettings(void) const;
 
-  virtual bool ErrorOccured(void) const
-  {
-    return m_bError;
-  }
+  virtual bool ErrorOccured(void) const { return m_bError; }
 
   virtual void RegisterJoystickDriverHandler(KODI::JOYSTICK::IDriverHandler* handler,
                                              bool bPromiscuous)
   {
   }
-  virtual void UnregisterJoystickDriverHandler(KODI::JOYSTICK::IDriverHandler* handler)
-  {
-  }
+  virtual void UnregisterJoystickDriverHandler(KODI::JOYSTICK::IDriverHandler* handler) {}
 
   virtual void RegisterKeyboardDriverHandler(KODI::KEYBOARD::IKeyboardDriverHandler* handler,
                                              bool bPromiscuous)
   {
   }
-  virtual void UnregisterKeyboardDriverHandler(KODI::KEYBOARD::IKeyboardDriverHandler* handler)
-  {
-  }
+  virtual void UnregisterKeyboardDriverHandler(KODI::KEYBOARD::IKeyboardDriverHandler* handler) {}
 
   virtual void RegisterMouseDriverHandler(KODI::MOUSE::IMouseDriverHandler* handler,
                                           bool bPromiscuous)
   {
   }
-  virtual void UnregisterMouseDriverHandler(KODI::MOUSE::IMouseDriverHandler* handler)
-  {
-  }
+  virtual void UnregisterMouseDriverHandler(KODI::MOUSE::IMouseDriverHandler* handler) {}
 
   // implementation of IInputProvider
   void RegisterInputHandler(KODI::JOYSTICK::IInputHandler* handler, bool bPromiscuous) override;
@@ -295,25 +240,16 @@ public:
   virtual void RegisterJoystickButtonMapper(KODI::JOYSTICK::IButtonMapper* mapper);
   virtual void UnregisterJoystickButtonMapper(KODI::JOYSTICK::IButtonMapper* mapper);
 
-  virtual KODI::JOYSTICK::IDriverReceiver* GetDriverReceiver()
-  {
-    return nullptr;
-  }
+  virtual KODI::JOYSTICK::IDriverReceiver* GetDriverReceiver() { return nullptr; }
 
-  virtual IKeymap* GetKeymap(const std::string& controllerId)
-  {
-    return nullptr;
-  }
+  virtual IKeymap* GetKeymap(const std::string& controllerId) { return nullptr; }
 
   /*!
    * \brief Return the last time this peripheral was active
    *
    * \return The time of last activation, or invalid if unknown/never active
    */
-  virtual CDateTime LastActive()
-  {
-    return CDateTime();
-  }
+  virtual CDateTime LastActive() { return CDateTime(); }
 
 protected:
   virtual void ClearSettings(void);

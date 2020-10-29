@@ -53,15 +53,9 @@ public:
   void RegisterJoystickDriverHandler(KODI::JOYSTICK::IDriverHandler* handler,
                                      bool bPromiscuous) override;
   void UnregisterJoystickDriverHandler(KODI::JOYSTICK::IDriverHandler* handler) override;
-  KODI::JOYSTICK::IDriverReceiver* GetDriverReceiver() override
-  {
-    return this;
-  }
+  KODI::JOYSTICK::IDriverReceiver* GetDriverReceiver() override { return this; }
   IKeymap* GetKeymap(const std::string& controllerId) override;
-  CDateTime LastActive() override
-  {
-    return m_lastActive;
-  }
+  CDateTime LastActive() override { return m_lastActive; }
 
   bool OnButtonMotion(unsigned int buttonIndex, bool bPressed);
   bool OnHatMotion(unsigned int hatIndex, KODI::JOYSTICK::HAT_STATE state);
@@ -74,10 +68,7 @@ public:
   /*!
    * \brief Get the name of the driver or API providing this joystick
    */
-  const std::string& Provider(void) const
-  {
-    return m_strProvider;
-  }
+  const std::string& Provider(void) const { return m_strProvider; }
 
   /*!
    * \brief Get the specific port number requested by this joystick
@@ -88,59 +79,26 @@ public:
    *
    * \return The 0-indexed port number, or JOYSTICK_PORT_UNKNOWN if no port is requested
    */
-  int RequestedPort(void) const
-  {
-    return m_requestedPort;
-  }
+  int RequestedPort(void) const { return m_requestedPort; }
 
   /*!
    * \brief Get the number of elements reported by the driver
    */
-  unsigned int ButtonCount(void) const
-  {
-    return m_buttonCount;
-  }
-  unsigned int HatCount(void) const
-  {
-    return m_hatCount;
-  }
-  unsigned int AxisCount(void) const
-  {
-    return m_axisCount;
-  }
-  unsigned int MotorCount(void) const
-  {
-    return m_motorCount;
-  }
-  bool SupportsPowerOff(void) const
-  {
-    return m_supportsPowerOff;
-  }
+  unsigned int ButtonCount(void) const { return m_buttonCount; }
+  unsigned int HatCount(void) const { return m_hatCount; }
+  unsigned int AxisCount(void) const { return m_axisCount; }
+  unsigned int MotorCount(void) const { return m_motorCount; }
+  bool SupportsPowerOff(void) const { return m_supportsPowerOff; }
 
   /*!
    * \brief Set joystick properties
    */
-  void SetProvider(const std::string& provider)
-  {
-    m_strProvider = provider;
-  }
-  void SetRequestedPort(int port)
-  {
-    m_requestedPort = port;
-  }
-  void SetButtonCount(unsigned int buttonCount)
-  {
-    m_buttonCount = buttonCount;
-  }
-  void SetHatCount(unsigned int hatCount)
-  {
-    m_hatCount = hatCount;
-  }
-  void SetAxisCount(unsigned int axisCount)
-  {
-    m_axisCount = axisCount;
-  }
-  void SetMotorCount(unsigned int motorCount);      // specialized to update m_features
+  void SetProvider(const std::string& provider) { m_strProvider = provider; }
+  void SetRequestedPort(int port) { m_requestedPort = port; }
+  void SetButtonCount(unsigned int buttonCount) { m_buttonCount = buttonCount; }
+  void SetHatCount(unsigned int hatCount) { m_hatCount = hatCount; }
+  void SetAxisCount(unsigned int axisCount) { m_axisCount = axisCount; }
+  void SetMotorCount(unsigned int motorCount); // specialized to update m_features
   void SetSupportsPowerOff(bool bSupportsPowerOff); // specialized to update m_features
 
 protected:

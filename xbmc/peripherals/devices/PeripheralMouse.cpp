@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralMouse.h"
+
 #include "input/InputManager.h"
 #include "peripherals/Peripherals.h"
 #include "threads/SingleLock.h"
@@ -19,7 +20,7 @@ using namespace PERIPHERALS;
 CPeripheralMouse::CPeripheralMouse(CPeripherals& manager,
                                    const PeripheralScanResult& scanResult,
                                    CPeripheralBus* bus)
-    : CPeripheral(manager, scanResult, bus)
+  : CPeripheral(manager, scanResult, bus)
 {
   // Initialize CPeripheral
   m_features.push_back(FEATURE_MOUSE);

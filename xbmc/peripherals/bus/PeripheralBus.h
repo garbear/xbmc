@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "peripherals/PeripheralTypes.h"
 #include "threads/Thread.h"
+
+#include <memory>
+#include <vector>
 
 class CFileItemList;
 
@@ -34,18 +34,12 @@ class CPeripheralBus : protected CThread
 {
 public:
   CPeripheralBus(const std::string& threadname, CPeripherals& manager, PeripheralBusType type);
-  ~CPeripheralBus(void) override
-  {
-    Clear();
-  }
+  ~CPeripheralBus(void) override { Clear(); }
 
   /*!
    * @return The bus type
    */
-  PeripheralBusType Type(void) const
-  {
-    return m_type;
-  }
+  PeripheralBusType Type(void) const { return m_type; }
 
   /*!
    * @return True if this bus needs to be polled for changes, false if this bus performs updates via
@@ -81,10 +75,7 @@ public:
    * @param feature The feature to check for
    * @return True if the bus supports the feature, false otherwise
    */
-  virtual bool SupportsFeature(PeripheralFeature feature) const
-  {
-    return false;
-  }
+  virtual bool SupportsFeature(PeripheralFeature feature) const { return false; }
 
   /*!
    * @brief Get all peripheral instances that have the given feature.
@@ -165,33 +156,24 @@ public:
    */
   virtual void Register(const PeripheralPtr& peripheral);
 
-  virtual bool FindComPort(std::string& strLocation)
-  {
-    return false;
-  }
+  virtual bool FindComPort(std::string& strLocation) { return false; }
 
   /*!
    * \brief Poll for events
    */
-  virtual void ProcessEvents(void)
-  {
-  }
+  virtual void ProcessEvents(void) {}
 
   /*!
    * \brief Initialize button mapping
    * \return True if button mapping is enabled for this bus
    */
-  virtual void EnableButtonMapping()
-  {
-  }
+  virtual void EnableButtonMapping() {}
 
   /*!
    * \brief Power off the specified device
    * \param strLocation The device's location
    */
-  virtual void PowerOff(const std::string& strLocation)
-  {
-  }
+  virtual void PowerOff(const std::string& strLocation) {}
 
 protected:
   void Process(void) override;

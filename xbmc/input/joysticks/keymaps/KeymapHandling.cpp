@@ -7,6 +7,7 @@
  */
 
 #include "KeymapHandling.h"
+
 #include "KeymapHandler.h"
 #include "ServiceBroker.h"
 #include "input/ButtonTranslator.h"
@@ -24,9 +25,7 @@ using namespace JOYSTICK;
 CKeymapHandling::CKeymapHandling(IInputProvider* inputProvider,
                                  bool pPromiscuous,
                                  const IKeymapEnvironment* environment)
-    : m_inputProvider(inputProvider)
-    , m_pPromiscuous(pPromiscuous)
-    , m_environment(environment)
+  : m_inputProvider(inputProvider), m_pPromiscuous(pPromiscuous), m_environment(environment)
 {
   LoadKeymaps();
   CServiceBroker::GetInputManager().RegisterObserver(this);

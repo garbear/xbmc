@@ -7,6 +7,7 @@
  */
 
 #include "PeripheralBusApplication.h"
+
 #include "ServiceBroker.h"
 #include "guilib/LocalizeStrings.h"
 #include "settings/Settings.h"
@@ -16,7 +17,7 @@
 using namespace PERIPHERALS;
 
 CPeripheralBusApplication::CPeripheralBusApplication(CPeripherals& manager)
-    : CPeripheralBus("PeripBusApplication", manager, PERIPHERAL_BUS_APPLICATION)
+  : CPeripheralBus("PeripBusApplication", manager, PERIPHERAL_BUS_APPLICATION)
 {
   // Initialize CPeripheralBus
   m_bNeedsPolling = false;

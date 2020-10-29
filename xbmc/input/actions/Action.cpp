@@ -7,12 +7,12 @@
  */
 
 #include "Action.h"
+
 #include "ActionIDs.h"
 #include "ActionTranslator.h"
 #include "input/Key.h"
 
-CAction::CAction()
-    : m_id(ACTION_NONE)
+CAction::CAction() : m_id(ACTION_NONE)
 {
 }
 
@@ -41,7 +41,7 @@ CAction::CAction(int actionID,
                  float velocityX,
                  float velocityY,
                  const std::string& name)
-    : m_name(name)
+  : m_name(name)
 {
   m_id = actionID;
   m_amount[0] = posX;
@@ -65,8 +65,7 @@ CAction::CAction(int actionID, wchar_t unicode)
   m_holdTime = 0;
 }
 
-CAction::CAction(int actionID, const std::string& name, const CKey& key)
-    : m_name(name)
+CAction::CAction(int actionID, const std::string& name, const CKey& key) : m_name(name)
 {
   m_id = actionID;
   m_amount[0] = 1; // digital button (could change this for repeat acceleration)
@@ -107,8 +106,7 @@ CAction::CAction(int actionID, const std::string& name, const CKey& key)
     m_amount[0] = key.GetRightThumbX();
 }
 
-CAction::CAction(int actionID, const std::string& name)
-    : m_name(name)
+CAction::CAction(int actionID, const std::string& name) : m_name(name)
 {
   m_id = actionID;
   m_repeat = 0;

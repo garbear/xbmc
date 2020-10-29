@@ -7,6 +7,7 @@
  */
 
 #include "DeadzoneFilter.h"
+
 #include "JoystickIDs.h"
 #include "games/controllers/ControllerIDs.h"
 #include "input/joysticks/interfaces/IButtonMap.h"
@@ -19,17 +20,16 @@
 using namespace KODI;
 using namespace JOYSTICK;
 
-#define AXIS_EPSILON                                                                               \
-  0.01f // Allowed noise for detecting discrete D-pads (value of 0.007 when centered has been
-        // observed)
+#define AXIS_EPSILON \
+  0.01f // Allowed noise for detecting discrete D-pads (value of 0.007 when centered has been \
+      // observed)
 
 // Settings for analog sticks
 #define SETTING_LEFT_STICK_DEADZONE "left_stick_deadzone"
 #define SETTING_RIGHT_STICK_DEADZONE "right_stick_deadzone"
 
 CDeadzoneFilter::CDeadzoneFilter(IButtonMap* buttonMap, PERIPHERALS::CPeripheral* peripheral)
-    : m_buttonMap(buttonMap)
-    , m_peripheral(peripheral)
+  : m_buttonMap(buttonMap), m_peripheral(peripheral)
 {
   if (m_buttonMap->ControllerID() != DEFAULT_CONTROLLER_ID)
     CLog::Log(LOGERROR, "ERROR: Must use default controller profile instead of %s",

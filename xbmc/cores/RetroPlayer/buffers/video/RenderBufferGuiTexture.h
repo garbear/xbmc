@@ -33,10 +33,7 @@ public:
   void BindToUnit(unsigned int unit) override;
 
   // GUI texture interface
-  CTexture* GetTexture()
-  {
-    return m_texture.get();
-  }
+  CTexture* GetTexture() { return m_texture.get(); }
 
 protected:
   AVPixelFormat TranslateFormat(unsigned int textureFormat);

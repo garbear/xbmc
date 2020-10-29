@@ -7,13 +7,13 @@
  */
 
 #include "ShaderSamplerDX.h"
+
 #include "system.h"
 
 using namespace KODI;
 using namespace SHADER;
 
-CShaderSamplerDX::CShaderSamplerDX(ID3D11SamplerState* sampler)
-    : m_sampler(sampler)
+CShaderSamplerDX::CShaderSamplerDX(ID3D11SamplerState* sampler) : m_sampler(sampler)
 {
 }
 

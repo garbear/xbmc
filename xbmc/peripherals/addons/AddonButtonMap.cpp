@@ -7,6 +7,7 @@
  */
 
 #include "AddonButtonMap.h"
+
 #include "PeripheralAddonTranslator.h"
 #include "input/joysticks/JoystickUtils.h"
 #include "peripherals/devices/Peripheral.h"
@@ -23,9 +24,7 @@ using namespace PERIPHERALS;
 CAddonButtonMap::CAddonButtonMap(CPeripheral* device,
                                  const std::weak_ptr<CPeripheralAddon>& addon,
                                  const std::string& strControllerId)
-    : m_device(device)
-    , m_addon(addon)
-    , m_strControllerId(strControllerId)
+  : m_device(device), m_addon(addon), m_strControllerId(strControllerId)
 {
   auto peripheralAddon = m_addon.lock();
   assert(peripheralAddon != nullptr);
@@ -66,7 +65,8 @@ bool CAddonButtonMap::Load(void)
   if (bSuccess)
     driverMap = CreateLookupTable(features);
   else
-    CLog::Log(LOGDEBUG, "Failed to load button map for device at location \"%s\"", m_device->Location().c_str());
+    CLog::Log(LOGDEBUG, "Failed to load button map for device at location \"%s\"",
+              m_device->Location().c_str());
 
   {
     CSingleLock lock(m_mutex);
@@ -523,94 +523,94 @@ CAddonButtonMap::DriverMap CAddonButtonMap::CreateLookupTable(const FeatureMap& 
 
     switch (feature.Type())
     {
-    case JOYSTICK_FEATURE_TYPE_SCALAR:
-    case JOYSTICK_FEATURE_TYPE_KEY:
-    {
-      driverMap[CPeripheralAddonTranslator::TranslatePrimitive(
-          feature.Primitive(JOYSTICK_SCALAR_PRIMITIVE))] = it->first;
-      break;
-    }
-
-    case JOYSTICK_FEATURE_TYPE_ANALOG_STICK:
-    {
-      std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
-          JOYSTICK_ANALOG_STICK_UP,
-          JOYSTICK_ANALOG_STICK_DOWN,
-          JOYSTICK_ANALOG_STICK_RIGHT,
-          JOYSTICK_ANALOG_STICK_LEFT,
-      };
-
-      for (auto primitive : primitives)
-        driverMap[CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive))] =
-            it->first;
-      break;
-    }
-
-    case JOYSTICK_FEATURE_TYPE_ACCELEROMETER:
-    {
-      std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
-          JOYSTICK_ACCELEROMETER_POSITIVE_X,
-          JOYSTICK_ACCELEROMETER_POSITIVE_Y,
-          JOYSTICK_ACCELEROMETER_POSITIVE_Z,
-      };
-
-      for (auto primitive : primitives)
+      case JOYSTICK_FEATURE_TYPE_SCALAR:
+      case JOYSTICK_FEATURE_TYPE_KEY:
       {
-        CDriverPrimitive translatedPrimitive =
-            CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive));
-        driverMap[translatedPrimitive] = it->first;
-
-        // Map opposite semiaxis
-        CDriverPrimitive oppositePrimitive = CDriverPrimitive(
-            translatedPrimitive.Index(), 0, translatedPrimitive.SemiAxisDirection() * -1, 1);
-        driverMap[oppositePrimitive] = it->first;
+        driverMap[CPeripheralAddonTranslator::TranslatePrimitive(
+            feature.Primitive(JOYSTICK_SCALAR_PRIMITIVE))] = it->first;
+        break;
       }
-      break;
-    }
 
-    case JOYSTICK_FEATURE_TYPE_WHEEL:
-    {
-      std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
-          JOYSTICK_WHEEL_LEFT,
-          JOYSTICK_WHEEL_RIGHT,
-      };
+      case JOYSTICK_FEATURE_TYPE_ANALOG_STICK:
+      {
+        std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
+            JOYSTICK_ANALOG_STICK_UP,
+            JOYSTICK_ANALOG_STICK_DOWN,
+            JOYSTICK_ANALOG_STICK_RIGHT,
+            JOYSTICK_ANALOG_STICK_LEFT,
+        };
 
-      for (auto primitive : primitives)
-        driverMap[CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive))] =
-            it->first;
-      break;
-    }
+        for (auto primitive : primitives)
+          driverMap[CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive))] =
+              it->first;
+        break;
+      }
 
-    case JOYSTICK_FEATURE_TYPE_THROTTLE:
-    {
-      std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
-          JOYSTICK_THROTTLE_UP,
-          JOYSTICK_THROTTLE_DOWN,
-      };
+      case JOYSTICK_FEATURE_TYPE_ACCELEROMETER:
+      {
+        std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
+            JOYSTICK_ACCELEROMETER_POSITIVE_X,
+            JOYSTICK_ACCELEROMETER_POSITIVE_Y,
+            JOYSTICK_ACCELEROMETER_POSITIVE_Z,
+        };
 
-      for (auto primitive : primitives)
-        driverMap[CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive))] =
-            it->first;
-      break;
-    }
+        for (auto primitive : primitives)
+        {
+          CDriverPrimitive translatedPrimitive =
+              CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive));
+          driverMap[translatedPrimitive] = it->first;
 
-    case JOYSTICK_FEATURE_TYPE_RELPOINTER:
-    {
-      std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
-          JOYSTICK_RELPOINTER_UP,
-          JOYSTICK_RELPOINTER_DOWN,
-          JOYSTICK_RELPOINTER_RIGHT,
-          JOYSTICK_RELPOINTER_LEFT,
-      };
+          // Map opposite semiaxis
+          CDriverPrimitive oppositePrimitive = CDriverPrimitive(
+              translatedPrimitive.Index(), 0, translatedPrimitive.SemiAxisDirection() * -1, 1);
+          driverMap[oppositePrimitive] = it->first;
+        }
+        break;
+      }
 
-      for (auto primitive : primitives)
-        driverMap[CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive))] =
-            it->first;
-      break;
-    }
+      case JOYSTICK_FEATURE_TYPE_WHEEL:
+      {
+        std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
+            JOYSTICK_WHEEL_LEFT,
+            JOYSTICK_WHEEL_RIGHT,
+        };
 
-    default:
-      break;
+        for (auto primitive : primitives)
+          driverMap[CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive))] =
+              it->first;
+        break;
+      }
+
+      case JOYSTICK_FEATURE_TYPE_THROTTLE:
+      {
+        std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
+            JOYSTICK_THROTTLE_UP,
+            JOYSTICK_THROTTLE_DOWN,
+        };
+
+        for (auto primitive : primitives)
+          driverMap[CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive))] =
+              it->first;
+        break;
+      }
+
+      case JOYSTICK_FEATURE_TYPE_RELPOINTER:
+      {
+        std::vector<JOYSTICK_FEATURE_PRIMITIVE> primitives = {
+            JOYSTICK_RELPOINTER_UP,
+            JOYSTICK_RELPOINTER_DOWN,
+            JOYSTICK_RELPOINTER_RIGHT,
+            JOYSTICK_RELPOINTER_LEFT,
+        };
+
+        for (auto primitive : primitives)
+          driverMap[CPeripheralAddonTranslator::TranslatePrimitive(feature.Primitive(primitive))] =
+              it->first;
+        break;
+      }
+
+      default:
+        break;
     }
   }
 
@@ -624,16 +624,16 @@ JOYSTICK_FEATURE_PRIMITIVE CAddonButtonMap::GetAnalogStickIndex(
 
   switch (dir)
   {
-  case ANALOG_STICK_DIRECTION::UP:
-    return JOYSTICK_ANALOG_STICK_UP;
-  case ANALOG_STICK_DIRECTION::DOWN:
-    return JOYSTICK_ANALOG_STICK_DOWN;
-  case ANALOG_STICK_DIRECTION::RIGHT:
-    return JOYSTICK_ANALOG_STICK_RIGHT;
-  case ANALOG_STICK_DIRECTION::LEFT:
-    return JOYSTICK_ANALOG_STICK_LEFT;
-  default:
-    break;
+    case ANALOG_STICK_DIRECTION::UP:
+      return JOYSTICK_ANALOG_STICK_UP;
+    case ANALOG_STICK_DIRECTION::DOWN:
+      return JOYSTICK_ANALOG_STICK_DOWN;
+    case ANALOG_STICK_DIRECTION::RIGHT:
+      return JOYSTICK_ANALOG_STICK_RIGHT;
+    case ANALOG_STICK_DIRECTION::LEFT:
+      return JOYSTICK_ANALOG_STICK_LEFT;
+    default:
+      break;
   }
 
   return static_cast<JOYSTICK_FEATURE_PRIMITIVE>(0);
@@ -646,16 +646,16 @@ JOYSTICK_FEATURE_PRIMITIVE CAddonButtonMap::GetRelativePointerIndex(
 
   switch (dir)
   {
-  case RELATIVE_POINTER_DIRECTION::UP:
-    return JOYSTICK_RELPOINTER_UP;
-  case RELATIVE_POINTER_DIRECTION::DOWN:
-    return JOYSTICK_RELPOINTER_DOWN;
-  case RELATIVE_POINTER_DIRECTION::RIGHT:
-    return JOYSTICK_RELPOINTER_RIGHT;
-  case RELATIVE_POINTER_DIRECTION::LEFT:
-    return JOYSTICK_RELPOINTER_LEFT;
-  default:
-    break;
+    case RELATIVE_POINTER_DIRECTION::UP:
+      return JOYSTICK_RELPOINTER_UP;
+    case RELATIVE_POINTER_DIRECTION::DOWN:
+      return JOYSTICK_RELPOINTER_DOWN;
+    case RELATIVE_POINTER_DIRECTION::RIGHT:
+      return JOYSTICK_RELPOINTER_RIGHT;
+    case RELATIVE_POINTER_DIRECTION::LEFT:
+      return JOYSTICK_RELPOINTER_LEFT;
+    default:
+      break;
   }
 
   return static_cast<JOYSTICK_FEATURE_PRIMITIVE>(0);
@@ -667,12 +667,12 @@ JOYSTICK_FEATURE_PRIMITIVE CAddonButtonMap::GetPrimitiveIndex(JOYSTICK::WHEEL_DI
 
   switch (dir)
   {
-  case WHEEL_DIRECTION::RIGHT:
-    return JOYSTICK_WHEEL_RIGHT;
-  case WHEEL_DIRECTION::LEFT:
-    return JOYSTICK_WHEEL_LEFT;
-  default:
-    break;
+    case WHEEL_DIRECTION::RIGHT:
+      return JOYSTICK_WHEEL_RIGHT;
+    case WHEEL_DIRECTION::LEFT:
+      return JOYSTICK_WHEEL_LEFT;
+    default:
+      break;
   }
 
   return static_cast<JOYSTICK_FEATURE_PRIMITIVE>(0);
@@ -684,12 +684,12 @@ JOYSTICK_FEATURE_PRIMITIVE CAddonButtonMap::GetPrimitiveIndex(JOYSTICK::THROTTLE
 
   switch (dir)
   {
-  case THROTTLE_DIRECTION::UP:
-    return JOYSTICK_THROTTLE_UP;
-  case THROTTLE_DIRECTION::DOWN:
-    return JOYSTICK_THROTTLE_DOWN;
-  default:
-    break;
+    case THROTTLE_DIRECTION::UP:
+      return JOYSTICK_THROTTLE_UP;
+    case THROTTLE_DIRECTION::DOWN:
+      return JOYSTICK_THROTTLE_DOWN;
+    default:
+      break;
   }
 
   return static_cast<JOYSTICK_FEATURE_PRIMITIVE>(0);

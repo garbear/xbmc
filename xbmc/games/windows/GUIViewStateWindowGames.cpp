@@ -7,6 +7,7 @@
  */
 
 #include "GUIViewStateWindowGames.h"
+
 #include "FileItem.h"
 #include "games/GameUtils.h"
 #include "guilib/LocalizeStrings.h"
@@ -24,7 +25,7 @@ using namespace KODI;
 using namespace GAME;
 
 CGUIViewStateWindowGames::CGUIViewStateWindowGames(const CFileItemList& items)
-    : CGUIViewState(items)
+  : CGUIViewState(items)
 {
   if (items.IsVirtualDirectoryRoot())
   {

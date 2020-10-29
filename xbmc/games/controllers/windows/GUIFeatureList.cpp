@@ -7,6 +7,7 @@
  */
 
 #include "GUIFeatureList.h"
+
 #include "GUIConfigurationWizard.h"
 #include "GUIControllerDefines.h"
 #include "games/addons/GameClient.h"
@@ -28,13 +29,13 @@ using namespace KODI;
 using namespace GAME;
 
 CGUIFeatureList::CGUIFeatureList(CGUIWindow* window, GameClientPtr gameClient)
-    : m_window(window)
-    , m_guiList(nullptr)
-    , m_guiButtonTemplate(nullptr)
-    , m_guiGroupTitle(nullptr)
-    , m_guiFeatureSeparator(nullptr)
-    , m_gameClient(std::move(gameClient))
-    , m_wizard(new CGUIConfigurationWizard)
+  : m_window(window),
+    m_guiList(nullptr),
+    m_guiButtonTemplate(nullptr),
+    m_guiGroupTitle(nullptr),
+    m_guiFeatureSeparator(nullptr),
+    m_gameClient(std::move(gameClient)),
+    m_wizard(new CGUIConfigurationWizard)
 {
 }
 

@@ -7,6 +7,7 @@
  */
 
 #include "RenderBufferPoolOpenGL.h"
+
 #include "RenderBufferOpenGL.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
@@ -34,32 +35,32 @@ bool CRenderBufferPoolOpenGL::ConfigureInternal()
   // Configure CRenderBufferPoolOpenGLES
   switch (m_format)
   {
-  case AV_PIX_FMT_0RGB32:
-  {
-    m_pixeltype = GL_UNSIGNED_BYTE;
-    m_internalformat = GL_RGBA;
-    m_pixelformat = GL_BGRA;
-    m_bpp = sizeof(uint32_t);
-    return true;
-  }
-  case AV_PIX_FMT_RGB555:
-  {
-    m_pixeltype = GL_UNSIGNED_SHORT_5_5_5_1;
-    m_internalformat = GL_RGB;
-    m_pixelformat = GL_RGB;
-    m_bpp = sizeof(uint16_t);
-    return true;
-  }
-  case AV_PIX_FMT_RGB565:
-  {
-    m_pixeltype = GL_UNSIGNED_SHORT_5_6_5;
-    m_internalformat = GL_RGB;
-    m_pixelformat = GL_RGB;
-    m_bpp = sizeof(uint16_t);
-    return true;
-  }
-  default:
-    break;
+    case AV_PIX_FMT_0RGB32:
+    {
+      m_pixeltype = GL_UNSIGNED_BYTE;
+      m_internalformat = GL_RGBA;
+      m_pixelformat = GL_BGRA;
+      m_bpp = sizeof(uint32_t);
+      return true;
+    }
+    case AV_PIX_FMT_RGB555:
+    {
+      m_pixeltype = GL_UNSIGNED_SHORT_5_5_5_1;
+      m_internalformat = GL_RGB;
+      m_pixelformat = GL_RGB;
+      m_bpp = sizeof(uint16_t);
+      return true;
+    }
+    case AV_PIX_FMT_RGB565:
+    {
+      m_pixeltype = GL_UNSIGNED_SHORT_5_6_5;
+      m_internalformat = GL_RGB;
+      m_pixelformat = GL_RGB;
+      m_bpp = sizeof(uint16_t);
+      return true;
+    }
+    default:
+      break;
   }
 
   return false;

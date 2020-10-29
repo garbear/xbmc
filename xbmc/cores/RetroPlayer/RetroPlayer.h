@@ -49,18 +49,9 @@ public:
   bool IsPlaying() const override;
   bool CanPause() override;
   void Pause() override;
-  bool HasVideo() const override
-  {
-    return true;
-  }
-  bool HasAudio() const override
-  {
-    return true;
-  }
-  bool HasGame() const override
-  {
-    return true;
-  }
+  bool HasVideo() const override { return true; }
+  bool HasAudio() const override { return true; }
+  bool HasGame() const override { return true; }
   bool CanSeek() override;
   void Seek(bool bPlus = true, bool bLargeStep = false, bool bChapterOverride = false) override;
   void SeekPercentage(float fPercent = 0) override;
