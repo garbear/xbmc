@@ -7,26 +7,26 @@
  */
 
 #include "RumbleGenerator.h"
+
+#include "ServiceBroker.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerIDs.h"
 #include "games/controllers/ControllerManager.h"
 #include "input/joysticks/interfaces/IInputReceiver.h"
-#include "ServiceBroker.h"
 
 #include <algorithm>
 
-#define RUMBLE_TEST_DURATION_MS          1000 // Per motor
-#define RUMBLE_NOTIFICATION_DURATION_MS  300
+#define RUMBLE_TEST_DURATION_MS 1000 // Per motor
+#define RUMBLE_NOTIFICATION_DURATION_MS 300
 
- // From game.controller.default profile
-#define WEAK_MOTOR_NAME        "rightmotor"
+// From game.controller.default profile
+#define WEAK_MOTOR_NAME "rightmotor"
 
 using namespace KODI;
 using namespace JOYSTICK;
 
-CRumbleGenerator::CRumbleGenerator() :
-  CThread("RumbleGenerator"),
-  m_motors(GetMotors(ControllerID()))
+CRumbleGenerator::CRumbleGenerator()
+  : CThread("RumbleGenerator"), m_motors(GetMotors(ControllerID()))
 {
 }
 
@@ -61,52 +61,52 @@ bool CRumbleGenerator::DoTest(IInputReceiver* receiver)
 
     return true;
   }
-  return  false;
+  return false;
 }
 
 void CRumbleGenerator::Process(void)
 {
   switch (m_type)
   {
-  case RUMBLE_NOTIFICATION:
-  {
-    std::vector<std::string> motors;
-
-    if (std::find(m_motors.begin(), m_motors.end(), WEAK_MOTOR_NAME) != m_motors.end())
-      motors.push_back(WEAK_MOTOR_NAME);
-    else
-      motors = m_motors; // Not using default profile? Just rumble all motors
-
-    for (const std::string& motor : motors)
-      m_receiver->SetRumbleState(motor, 1.0f);
-
-    Sleep(RUMBLE_NOTIFICATION_DURATION_MS);
-
-    if (m_bStop)
-      break;
-
-    for (const std::string& motor : motors)
-      m_receiver->SetRumbleState(motor, 0.0f);
-
-    break;
-  }
-  case RUMBLE_TEST:
-  {
-    for (const std::string& motor : m_motors)
+    case RUMBLE_NOTIFICATION:
     {
-      m_receiver->SetRumbleState(motor, 1.0f);
+      std::vector<std::string> motors;
 
-      Sleep(RUMBLE_TEST_DURATION_MS);
+      if (std::find(m_motors.begin(), m_motors.end(), WEAK_MOTOR_NAME) != m_motors.end())
+        motors.push_back(WEAK_MOTOR_NAME);
+      else
+        motors = m_motors; // Not using default profile? Just rumble all motors
+
+      for (const std::string& motor : motors)
+        m_receiver->SetRumbleState(motor, 1.0f);
+
+      Sleep(RUMBLE_NOTIFICATION_DURATION_MS);
 
       if (m_bStop)
         break;
 
-      m_receiver->SetRumbleState(motor, 0.0f);
+      for (const std::string& motor : motors)
+        m_receiver->SetRumbleState(motor, 0.0f);
+
+      break;
     }
-    break;
-  }
-  default:
-    break;
+    case RUMBLE_TEST:
+    {
+      for (const std::string& motor : m_motors)
+      {
+        m_receiver->SetRumbleState(motor, 1.0f);
+
+        Sleep(RUMBLE_TEST_DURATION_MS);
+
+        if (m_bStop)
+          break;
+
+        m_receiver->SetRumbleState(motor, 0.0f);
+      }
+      break;
+    }
+    default:
+      break;
   }
 }
 

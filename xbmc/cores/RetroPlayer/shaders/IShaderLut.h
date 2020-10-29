@@ -19,62 +19,60 @@ namespace KODI
 
 namespace RETRO
 {
-  class CRenderContext;
+class CRenderContext;
 }
 
 namespace SHADER
 {
-  class IShaderSampler;
-  class IShaderTexture;
+class IShaderSampler;
+class IShaderTexture;
 
-  /*!
+/*!
    * \brief A lookup table to apply color transforms in a shader
    */
-  class IShaderLut
-  {
-  public:
-    IShaderLut() = default;
-    IShaderLut(const std::string& id, const std::string& path)
-      : m_id(id), m_path(path) {}
+class IShaderLut
+{
+public:
+  IShaderLut() = default;
+  IShaderLut(const std::string& id, const std::string& path) : m_id(id), m_path(path) {}
 
-    virtual ~IShaderLut() = default;
+  virtual ~IShaderLut() = default;
 
-    /*!
+  /*!
      * \brief Create the LUT and allocate resources
      * \param context The render context
      * \param lut The LUT information structure
      * \return True if successful and the LUT can be used, false otherwise
      */
-    virtual bool Create(RETRO::CRenderContext &context, const ShaderLut &lut) = 0;
+  virtual bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) = 0;
 
-    /*!
+  /*!
      * \brief Gets ID of LUT
      * \return Unique name (ID) of look up texture
      */
-    const std::string& GetID() const { return m_id; }
+  const std::string& GetID() const { return m_id; }
 
-    /*!
+  /*!
      * \brief Gets full path of LUT
      * \return Full path of look up texture
      */
-    const std::string& GetPath() const { return m_path; }
+  const std::string& GetPath() const { return m_path; }
 
-    /*!
+  /*!
      * \brief Gets sampler of LUT
      * \return Pointer to the sampler associated with the LUT
      */
-    virtual IShaderSampler* GetSampler() = 0;
+  virtual IShaderSampler* GetSampler() = 0;
 
-    /*!
+  /*!
      * \brief Gets sampler of LUT
      * \return Pointer to the texture where the LUT data is stored in
      */
-    virtual IShaderTexture* GetTexture() = 0;
+  virtual IShaderTexture* GetTexture() = 0;
 
-  protected:
-    std::string m_id;
-    std::string m_path;
-  };
-}
-}
-
+protected:
+  std::string m_id;
+  std::string m_path;
+};
+} // namespace SHADER
+} // namespace KODI

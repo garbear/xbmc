@@ -7,31 +7,34 @@
  */
 
 #include "FeatureHandling.h"
+
+#include "ServiceBroker.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerManager.h"
+#include "input/joysticks/DriverPrimitive.h"
 #include "input/joysticks/interfaces/IButtonMap.h"
 #include "input/joysticks/interfaces/IInputHandler.h"
-#include "input/joysticks/DriverPrimitive.h"
 #include "threads/SystemClock.h"
 #include "utils/log.h"
-#include "ServiceBroker.h"
 
 #include <vector>
 
 using namespace KODI;
 using namespace JOYSTICK;
 
-#define ANALOG_DIGITAL_THRESHOLD  0.5f
-#define DISCRETE_ANALOG_RAMPUP_TIME_MS  1500
-#define DISCRETE_ANALOG_START_VALUE     0.3f
+#define ANALOG_DIGITAL_THRESHOLD 0.5f
+#define DISCRETE_ANALOG_RAMPUP_TIME_MS 1500
+#define DISCRETE_ANALOG_START_VALUE 0.3f
 
 // --- CJoystickFeature --------------------------------------------------------
 
-CJoystickFeature::CJoystickFeature(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap) :
-  m_name(name),
-  m_handler(handler),
-  m_buttonMap(buttonMap),
-  m_bEnabled(m_handler->HasFeature(name))
+CJoystickFeature::CJoystickFeature(const FeatureName& name,
+                                   IInputHandler* handler,
+                                   IButtonMap* buttonMap)
+  : m_name(name),
+    m_handler(handler),
+    m_buttonMap(buttonMap),
+    m_bEnabled(m_handler->HasFeature(name))
 {
 }
 
@@ -73,14 +76,17 @@ unsigned int CJoystickFeature::MotionTimeMs() const
 
 // --- CScalarFeature ----------------------------------------------------------
 
-CScalarFeature::CScalarFeature(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap) :
-  CJoystickFeature(name, handler, buttonMap),
-  m_bDigitalState(false),
-  m_analogState(0.0f),
-  m_bActivated(false),
-  m_bDiscrete(true)
+CScalarFeature::CScalarFeature(const FeatureName& name,
+                               IInputHandler* handler,
+                               IButtonMap* buttonMap)
+  : CJoystickFeature(name, handler, buttonMap),
+    m_bDigitalState(false),
+    m_analogState(0.0f),
+    m_bActivated(false),
+    m_bDiscrete(true)
 {
-  GAME::ControllerPtr controller = CServiceBroker::GetGameControllerManager().GetController(handler->ControllerID());
+  GAME::ControllerPtr controller =
+      CServiceBroker::GetGameControllerManager().GetController(handler->ControllerID());
   if (controller)
     m_inputType = controller->GetInputType(name);
 }
@@ -141,10 +147,11 @@ bool CScalarFeature::OnDigitalMotion(bool bPressed)
     bHandled = m_bInitialPressHandled = m_handler->OnButtonPress(m_name, bPressed);
 
     if (m_bDigitalState)
-      CLog::Log(LOGDEBUG, "FEATURE [ %s ] on %s pressed (%s)", m_name.c_str(), m_handler->ControllerID().c_str(),
-        bHandled ? "handled" : "ignored");
+      CLog::Log(LOGDEBUG, "FEATURE [ %s ] on %s pressed (%s)", m_name.c_str(),
+                m_handler->ControllerID().c_str(), bHandled ? "handled" : "ignored");
     else
-      CLog::Log(LOGDEBUG, "FEATURE [ %s ] on %s released", m_name.c_str(), m_handler->ControllerID().c_str());
+      CLog::Log(LOGDEBUG, "FEATURE [ %s ] on %s released", m_name.c_str(),
+                m_handler->ControllerID().c_str());
   }
   else if (m_bDigitalState)
   {
@@ -171,8 +178,8 @@ bool CScalarFeature::OnAnalogMotion(float magnitude)
   if (m_bDigitalState != bActivated)
   {
     m_bDigitalState = bActivated;
-    CLog::Log(LOGDEBUG, "FEATURE [ %s ] on %s %s", m_name.c_str(), m_handler->ControllerID().c_str(),
-              bActivated ? "activated" : "deactivated");
+    CLog::Log(LOGDEBUG, "FEATURE [ %s ] on %s %s", m_name.c_str(),
+              m_handler->ControllerID().c_str(), bActivated ? "activated" : "deactivated");
   }
 
   return true;
@@ -217,9 +224,8 @@ void CScalarFeature::ProcessAnalogMotion()
 
 // --- CAxisFeature ------------------------------------------------------------
 
-CAxisFeature::CAxisFeature(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap) :
-  CJoystickFeature(name, handler, buttonMap),
-  m_state(0.0f)
+CAxisFeature::CAxisFeature(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap)
+  : CJoystickFeature(name, handler, buttonMap), m_state(0.0f)
 {
 }
 
@@ -244,8 +250,7 @@ void CAxisFeature::ProcessMotions(void)
   else if (bActivated && !bWasActivated)
   {
     CLog::Log(LOGDEBUG, "Feature [ %s ] on %s activated %s", m_name.c_str(),
-              m_handler->ControllerID().c_str(),
-              newState > 0.0f ? "positive" : "negative");
+              m_handler->ControllerID().c_str(), newState > 0.0f ? "positive" : "negative");
   }
 
   if (bActivated || bWasActivated)
@@ -280,8 +285,8 @@ void CAxisFeature::ProcessMotions(void)
 
 // --- CWheel ------------------------------------------------------------------
 
-CWheel::CWheel(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap) :
-  CAxisFeature(name, handler, buttonMap)
+CWheel::CWheel(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap)
+  : CAxisFeature(name, handler, buttonMap)
 {
 }
 
@@ -290,8 +295,8 @@ bool CWheel::OnAnalogMotion(const CDriverPrimitive& source, float magnitude)
   WHEEL_DIRECTION direction = WHEEL_DIRECTION::NONE;
 
   std::vector<WHEEL_DIRECTION> dirs = {
-    WHEEL_DIRECTION::RIGHT,
-    WHEEL_DIRECTION::LEFT,
+      WHEEL_DIRECTION::RIGHT,
+      WHEEL_DIRECTION::LEFT,
   };
 
   CDriverPrimitive primitive;
@@ -326,8 +331,8 @@ bool CWheel::OnAnalogMotion(const CDriverPrimitive& source, float magnitude)
 
 // --- CThrottle ---------------------------------------------------------------
 
-CThrottle::CThrottle(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap) :
-  CAxisFeature(name, handler, buttonMap)
+CThrottle::CThrottle(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap)
+  : CAxisFeature(name, handler, buttonMap)
 {
 }
 
@@ -336,8 +341,8 @@ bool CThrottle::OnAnalogMotion(const CDriverPrimitive& source, float magnitude)
   THROTTLE_DIRECTION direction = THROTTLE_DIRECTION::NONE;
 
   std::vector<THROTTLE_DIRECTION> dirs = {
-    THROTTLE_DIRECTION::UP,
-    THROTTLE_DIRECTION::DOWN,
+      THROTTLE_DIRECTION::UP,
+      THROTTLE_DIRECTION::DOWN,
   };
 
   CDriverPrimitive primitive;
@@ -372,10 +377,8 @@ bool CThrottle::OnAnalogMotion(const CDriverPrimitive& source, float magnitude)
 
 // --- CAnalogStick ------------------------------------------------------------
 
-CAnalogStick::CAnalogStick(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap) :
-  CJoystickFeature(name, handler, buttonMap),
-  m_vertState(0.0f),
-  m_horizState(0.0f)
+CAnalogStick::CAnalogStick(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap)
+  : CJoystickFeature(name, handler, buttonMap), m_vertState(0.0f), m_horizState(0.0f)
 {
 }
 
@@ -389,10 +392,10 @@ bool CAnalogStick::OnAnalogMotion(const CDriverPrimitive& source, float magnitud
   ANALOG_STICK_DIRECTION direction = ANALOG_STICK_DIRECTION::NONE;
 
   std::vector<ANALOG_STICK_DIRECTION> dirs = {
-    ANALOG_STICK_DIRECTION::UP,
-    ANALOG_STICK_DIRECTION::DOWN,
-    ANALOG_STICK_DIRECTION::RIGHT,
-    ANALOG_STICK_DIRECTION::LEFT,
+      ANALOG_STICK_DIRECTION::UP,
+      ANALOG_STICK_DIRECTION::DOWN,
+      ANALOG_STICK_DIRECTION::RIGHT,
+      ANALOG_STICK_DIRECTION::LEFT,
   };
 
   CDriverPrimitive primitive;
@@ -410,23 +413,23 @@ bool CAnalogStick::OnAnalogMotion(const CDriverPrimitive& source, float magnitud
 
   switch (direction)
   {
-  case ANALOG_STICK_DIRECTION::UP:
-    m_vertAxis.SetPositiveDistance(magnitude);
-    break;
-  case ANALOG_STICK_DIRECTION::DOWN:
-    m_vertAxis.SetNegativeDistance(magnitude);
-    break;
-  case ANALOG_STICK_DIRECTION::RIGHT:
-    m_horizAxis.SetPositiveDistance(magnitude);
-    break;
-  case ANALOG_STICK_DIRECTION::LEFT:
-    m_horizAxis.SetNegativeDistance(magnitude);
-    break;
-  default:
-    // Just in case, avoid sticking
-    m_vertAxis.Reset();
-    m_horizAxis.Reset();
-    break;
+    case ANALOG_STICK_DIRECTION::UP:
+      m_vertAxis.SetPositiveDistance(magnitude);
+      break;
+    case ANALOG_STICK_DIRECTION::DOWN:
+      m_vertAxis.SetNegativeDistance(magnitude);
+      break;
+    case ANALOG_STICK_DIRECTION::RIGHT:
+      m_horizAxis.SetPositiveDistance(magnitude);
+      break;
+    case ANALOG_STICK_DIRECTION::LEFT:
+      m_horizAxis.SetNegativeDistance(magnitude);
+      break;
+    default:
+      // Just in case, avoid sticking
+      m_vertAxis.Reset();
+      m_horizAxis.Reset();
+      break;
   }
 
   return bHandled;
@@ -446,8 +449,8 @@ void CAnalogStick::ProcessMotions(void)
 
   if (bActivated ^ bWasActivated)
   {
-    CLog::Log(LOGDEBUG, "Feature [ %s ] on %s %s", m_name.c_str(), m_handler->ControllerID().c_str(),
-              bActivated ? "activated" : "deactivated");
+    CLog::Log(LOGDEBUG, "Feature [ %s ] on %s %s", m_name.c_str(),
+              m_handler->ControllerID().c_str(), bActivated ? "activated" : "deactivated");
   }
 
   if (bActivated || bWasActivated)
@@ -475,11 +478,13 @@ void CAnalogStick::ProcessMotions(void)
 
 // --- CAccelerometer ----------------------------------------------------------
 
-CAccelerometer::CAccelerometer(const FeatureName& name, IInputHandler* handler, IButtonMap* buttonMap) :
-  CJoystickFeature(name, handler, buttonMap),
-  m_xAxisState(0.0f),
-  m_yAxisState(0.0f),
-  m_zAxisState(0.0f)
+CAccelerometer::CAccelerometer(const FeatureName& name,
+                               IInputHandler* handler,
+                               IButtonMap* buttonMap)
+  : CJoystickFeature(name, handler, buttonMap),
+    m_xAxisState(0.0f),
+    m_yAxisState(0.0f),
+    m_zAxisState(0.0f)
 {
 }
 

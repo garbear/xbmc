@@ -7,24 +7,27 @@
  */
 
 #include "WindowKeymap.h"
+
 #include "WindowTranslator.h"
 
 using namespace KODI;
 
-CWindowKeymap::CWindowKeymap(const std::string &controllerId) :
-  m_controllerId(controllerId)
+CWindowKeymap::CWindowKeymap(const std::string& controllerId) : m_controllerId(controllerId)
 {
 }
 
-void CWindowKeymap::MapAction(int windowId, const std::string &keyName, JOYSTICK::KeymapAction action)
+void CWindowKeymap::MapAction(int windowId,
+                              const std::string& keyName,
+                              JOYSTICK::KeymapAction action)
 {
-  auto &actionGroup = m_windowKeymap[windowId][keyName];
+  auto& actionGroup = m_windowKeymap[windowId][keyName];
 
   actionGroup.windowId = windowId;
   actionGroup.actions.insert(std::move(action));
 }
 
-const JOYSTICK::KeymapActionGroup &CWindowKeymap::GetActions(int windowId, const std::string& keyName) const
+const JOYSTICK::KeymapActionGroup& CWindowKeymap::GetActions(int windowId,
+                                                             const std::string& keyName) const
 {
   // handle virtual windows
   windowId = CWindowTranslator::GetVirtualWindow(windowId);

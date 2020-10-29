@@ -16,20 +16,20 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CRenderTranslator
-  {
-  public:
-    /*!
+class CRenderTranslator
+{
+public:
+  /*!
      * \brief Translate a pixel format to a string suitable for logging
      */
-    static const char *TranslatePixelFormat(AVPixelFormat format);
+  static const char* TranslatePixelFormat(AVPixelFormat format);
 
-    /*!
+  /*!
      * \brief Translate a scaling method to a string suitable for logging
      */
-    static const char *TranslateScalingMethod(SCALINGMETHOD scalingMethod);
+  static const char* TranslateScalingMethod(SCALINGMETHOD scalingMethod);
 
-    /*!
+  /*!
      * \brief Translate a width in pixels to a width in bytes
      *
      * \param width The width in pixels
@@ -37,7 +37,7 @@ namespace RETRO
      *
      * \return The width in bytes, or 0 if unknown
      */
-    static unsigned int TranslateWidthToBytes(unsigned int width, AVPixelFormat format);
-  };
-}
-}
+  static unsigned int TranslateWidthToBytes(unsigned int width, AVPixelFormat format);
+};
+} // namespace RETRO
+} // namespace KODI

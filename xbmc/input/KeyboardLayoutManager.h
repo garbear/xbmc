@@ -8,12 +8,12 @@
 
 #pragma once
 
+#include "input/KeyboardLayout.h"
+
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
-
-#include "input/KeyboardLayout.h"
 
 class CSetting;
 
@@ -32,7 +32,11 @@ public:
   const KeyboardLayouts& GetLayouts() const { return m_layouts; }
   bool GetLayout(const std::string& name, CKeyboardLayout& layout) const;
 
-  static void SettingOptionsKeyboardLayoutsFiller(std::shared_ptr<const CSetting> setting, std::vector< std::pair<std::string, std::string> > &list, std::string &current, void* data);
+  static void SettingOptionsKeyboardLayoutsFiller(
+      std::shared_ptr<const CSetting> setting,
+      std::vector<std::pair<std::string, std::string>>& list,
+      std::string& current,
+      void* data);
 
 private:
   CKeyboardLayoutManager() = default;

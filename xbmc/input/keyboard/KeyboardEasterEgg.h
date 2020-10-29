@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "input/keyboard/interfaces/IKeyboardDriverHandler.h"
 #include "input/XBMC_vkeys.h"
+#include "input/keyboard/interfaces/IKeyboardDriverHandler.h"
 
 #include <vector>
 
@@ -17,22 +17,22 @@ namespace KODI
 {
 namespace KEYBOARD
 {
-  /*!
+/*!
    * \brief Hush!!!
    */
-  class CKeyboardEasterEgg : public IKeyboardDriverHandler
-  {
-  public:
-    ~CKeyboardEasterEgg() override = default;
+class CKeyboardEasterEgg : public IKeyboardDriverHandler
+{
+public:
+  ~CKeyboardEasterEgg() override = default;
 
-    // implementation of IKeyboardDriverHandler
-    bool OnKeyPress(const CKey& key) override;
-    void OnKeyRelease(const CKey& key) override { }
+  // implementation of IKeyboardDriverHandler
+  bool OnKeyPress(const CKey& key) override;
+  void OnKeyRelease(const CKey& key) override {}
 
-  private:
-    static std::vector<XBMCVKey> m_sequence;
+private:
+  static std::vector<XBMCVKey> m_sequence;
 
-    unsigned int m_state = 0;
-  };
-}
-}
+  unsigned int m_state = 0;
+};
+} // namespace KEYBOARD
+} // namespace KODI

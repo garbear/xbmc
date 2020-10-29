@@ -8,14 +8,18 @@
 
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 class IInputCodingTable
 {
 public:
-  enum { TYPE_WORD_LIST, TYPE_CONVERT_STRING };
+  enum
+  {
+    TYPE_WORD_LIST,
+    TYPE_CONVERT_STRING
+  };
   virtual int GetType() { return TYPE_WORD_LIST; }
 
   virtual ~IInputCodingTable() = default;

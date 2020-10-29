@@ -6,16 +6,17 @@
  *  See LICENSES/README.md for more information.
  */
 
-#include <algorithm>
-#include <set>
-
 #include "KeyboardLayout.h"
+
+#include "InputCodingTableFactory.h"
 #include "guilib/LocalizeStrings.h"
 #include "utils/CharsetConverter.h"
-#include "utils/log.h"
 #include "utils/StringUtils.h"
 #include "utils/XBMCTinyXML.h"
-#include "InputCodingTableFactory.h"
+#include "utils/log.h"
+
+#include <algorithm>
+#include <set>
 
 CKeyboardLayout::CKeyboardLayout()
 {
@@ -54,9 +55,10 @@ bool CKeyboardLayout::Load(const TiXmlElement* element)
     return false;
   }
 
-  const TiXmlElement *keyboard = element->FirstChildElement("keyboard");
+  const TiXmlElement* keyboard = element->FirstChildElement("keyboard");
   if (element->Attribute("codingtable"))
-    m_codingtable = IInputCodingTablePtr(CInputCodingTableFactory::CreateCodingTable(element->Attribute("codingtable"), element));
+    m_codingtable = IInputCodingTablePtr(
+        CInputCodingTableFactory::CreateCodingTable(element->Attribute("codingtable"), element));
   else
     m_codingtable = NULL;
   while (keyboard != NULL)
@@ -71,7 +73,8 @@ bool CKeyboardLayout::Load(const TiXmlElement* element)
       StringUtils::ToLower(modifiers);
 
       std::vector<std::string> variants = StringUtils::Split(modifiers, ",");
-      for (std::vector<std::string>::const_iterator itv = variants.begin(); itv != variants.end(); ++itv)
+      for (std::vector<std::string>::const_iterator itv = variants.begin(); itv != variants.end();
+           ++itv)
       {
         unsigned int iKeys = ModifierKeyNone;
         std::vector<std::string> keys = StringUtils::Split(*itv, "+");
@@ -89,7 +92,7 @@ bool CKeyboardLayout::Load(const TiXmlElement* element)
     }
 
     // parse keyboard rows
-    const TiXmlNode *row = keyboard->FirstChild("row");
+    const TiXmlNode* row = keyboard->FirstChild("row");
     while (row != NULL)
     {
       if (!row->NoChildren())
@@ -98,7 +101,8 @@ bool CKeyboardLayout::Load(const TiXmlElement* element)
         std::vector<std::string> chars = BreakCharacters(strRow);
         if (!modifierKeysSet.empty())
         {
-          for (std::set<unsigned int>::const_iterator it = modifierKeysSet.begin(); it != modifierKeysSet.end(); ++it)
+          for (std::set<unsigned int>::const_iterator it = modifierKeysSet.begin();
+               it != modifierKeysSet.end(); ++it)
             m_keyboards[*it].push_back(chars);
         }
         else
@@ -127,10 +131,13 @@ std::string CKeyboardLayout::GetIdentifier() const
 
 std::string CKeyboardLayout::GetName() const
 {
-  return StringUtils::Format(g_localizeStrings.Get(311).c_str(), m_language.c_str(), m_layout.c_str());
+  return StringUtils::Format(g_localizeStrings.Get(311).c_str(), m_language.c_str(),
+                             m_layout.c_str());
 }
 
-std::string CKeyboardLayout::GetCharAt(unsigned int row, unsigned int column, unsigned int modifiers) const
+std::string CKeyboardLayout::GetCharAt(unsigned int row,
+                                       unsigned int column,
+                                       unsigned int modifiers) const
 {
   Keyboards::const_iterator mod = m_keyboards.find(modifiers);
   if (modifiers != ModifierKeyNone && mod != m_keyboards.end() && mod->second.empty())
@@ -152,7 +159,7 @@ std::string CKeyboardLayout::GetCharAt(unsigned int row, unsigned int column, un
   return "";
 }
 
-std::vector<std::string> CKeyboardLayout::BreakCharacters(const std::string &chars)
+std::vector<std::string> CKeyboardLayout::BreakCharacters(const std::string& chars)
 {
   std::vector<std::string> result;
   // break into utf8 characters

@@ -15,41 +15,43 @@ namespace KODI
 {
 namespace GAME
 {
-  class CDialogGameVideoFilter : public CDialogGameVideoSelect
+class CDialogGameVideoFilter : public CDialogGameVideoSelect
+{
+public:
+  CDialogGameVideoFilter();
+  ~CDialogGameVideoFilter() override = default;
+
+protected:
+  // implementation of CDialogGameVideoSelect
+  std::string GetHeading() override;
+  void PreInit() override;
+  void GetItems(CFileItemList& items) override;
+  void OnItemFocus(unsigned int index) override;
+  unsigned int GetFocusedItem() const override;
+  void PostExit() override;
+
+private:
+  void InitScalingMethods();
+  void InitVideoFilters();
+
+  static void GetProperties(const CFileItem& item,
+                            std::string& videoFilter,
+                            std::string& description);
+
+  CFileItemList m_items;
+
+  static std::string GetLocalizedString(uint32_t code);
+
+  struct VideoFilterProperties
   {
-  public:
-    CDialogGameVideoFilter();
-    ~CDialogGameVideoFilter() override = default;
-
-  protected:
-    // implementation of CDialogGameVideoSelect
-    std::string GetHeading() override;
-    void PreInit() override;
-    void GetItems(CFileItemList &items) override;
-    void OnItemFocus(unsigned int index) override;
-    unsigned int GetFocusedItem() const override;
-    void PostExit() override;
-
-  private:
-    void InitScalingMethods();
-    void InitVideoFilters();
-
-    static void GetProperties(const CFileItem &item, std::string &videoFilter, std::string &description);
-
-    CFileItemList m_items;
-
-    static std::string GetLocalizedString(uint32_t code);
-    
-    struct VideoFilterProperties
-    {
-      std::string path;
-      int nameIndex;
-      int categoryIndex;
-      int descriptionIndex;
-    };
-
-    //! \brief Set to true when a description has first been set
-    bool m_bHasDescription = false;
+    std::string path;
+    int nameIndex;
+    int categoryIndex;
+    int descriptionIndex;
   };
-}
-}
+
+  //! \brief Set to true when a description has first been set
+  bool m_bHasDescription = false;
+};
+} // namespace GAME
+} // namespace KODI

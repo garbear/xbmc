@@ -7,14 +7,14 @@
  */
 
 #include "GameClientHardware.h"
+
 #include "games/addons/GameClient.h"
 #include "utils/log.h"
 
 using namespace KODI;
 using namespace GAME;
 
-CGameClientHardware::CGameClientHardware(CGameClient &gameClient) :
-  m_gameClient(gameClient)
+CGameClientHardware::CGameClientHardware(CGameClient& gameClient) : m_gameClient(gameClient)
 {
 }
 

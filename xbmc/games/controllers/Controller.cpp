@@ -7,13 +7,14 @@
  */
 
 #include "Controller.h"
+
 #include "ControllerDefinitions.h"
 #include "ControllerLayout.h"
 #include "ControllerTopology.h"
-#include "utils/log.h"
+#include "URL.h"
 #include "utils/XBMCTinyXML.h"
 #include "utils/XMLUtils.h"
-#include "URL.h"
+#include "utils/log.h"
 
 #include <algorithm>
 
@@ -24,9 +25,8 @@ using namespace GAME;
 
 struct FeatureTypeEqual
 {
-  FeatureTypeEqual(FEATURE_TYPE type, JOYSTICK::INPUT_TYPE inputType) :
-    type(type),
-    inputType(inputType)
+  FeatureTypeEqual(FEATURE_TYPE type, JOYSTICK::INPUT_TYPE inputType)
+    : type(type), inputType(inputType)
   {
   }
 
@@ -54,26 +54,24 @@ struct FeatureTypeEqual
 
 const ControllerPtr CController::EmptyPtr;
 
-std::unique_ptr<CController> CController::FromExtension(ADDON::CAddonInfo addonInfo, const cp_extension_t* ext)
+std::unique_ptr<CController> CController::FromExtension(ADDON::CAddonInfo addonInfo,
+                                                        const cp_extension_t* ext)
 {
   return std::unique_ptr<CController>(new CController(std::move(addonInfo)));
 }
 
-CController::CController(ADDON::CAddonInfo addonInfo) :
-  CAddon(std::move(addonInfo)),
-  m_layout(new CControllerLayout)
+CController::CController(ADDON::CAddonInfo addonInfo)
+  : CAddon(std::move(addonInfo)), m_layout(new CControllerLayout)
 {
 }
 
 CController::~CController() = default;
 
-const CControllerFeature& CController::GetFeature(const std::string &name) const
+const CControllerFeature& CController::GetFeature(const std::string& name) const
 {
-  auto it = std::find_if(m_features.begin(), m_features.end(),
-    [&name](const CControllerFeature &feature)
-    {
-      return name == feature.Name();
-    });
+  auto it =
+      std::find_if(m_features.begin(), m_features.end(),
+                   [&name](const CControllerFeature& feature) { return name == feature.Name(); });
 
   if (it != m_features.end())
     return *it;
@@ -82,10 +80,12 @@ const CControllerFeature& CController::GetFeature(const std::string &name) const
   return invalid;
 }
 
-unsigned int CController::FeatureCount(FEATURE_TYPE type /* = FEATURE_TYPE::UNKNOWN */,
-                                       JOYSTICK::INPUT_TYPE inputType /* = JOYSTICK::INPUT_TYPE::UNKNOWN */) const
+unsigned int CController::FeatureCount(
+    FEATURE_TYPE type /* = FEATURE_TYPE::UNKNOWN */,
+    JOYSTICK::INPUT_TYPE inputType /* = JOYSTICK::INPUT_TYPE::UNKNOWN */) const
 {
-  auto featureCount = std::count_if(m_features.begin(), m_features.end(), FeatureTypeEqual(type, inputType));
+  auto featureCount =
+      std::count_if(m_features.begin(), m_features.end(), FeatureTypeEqual(type, inputType));
   return static_cast<unsigned int>(featureCount);
 }
 
@@ -99,7 +99,7 @@ void CController::GetFeatures(std::vector<std::string>& features,
   }
 }
 
-JOYSTICK::FEATURE_TYPE CController::FeatureType(const std::string &feature) const
+JOYSTICK::FEATURE_TYPE CController::FeatureType(const std::string& feature) const
 {
   for (auto it = m_features.begin(); it != m_features.end(); ++it)
   {
@@ -125,12 +125,14 @@ bool CController::LoadLayout(void)
   {
     std::string strLayoutXmlPath = LibPath();
 
-    CLog::Log(LOGINFO, "Loading controller layout: %s", CURL::GetRedacted(strLayoutXmlPath).c_str());
+    CLog::Log(LOGINFO, "Loading controller layout: %s",
+              CURL::GetRedacted(strLayoutXmlPath).c_str());
 
     CXBMCTinyXML xmlDoc;
     if (!xmlDoc.LoadFile(strLayoutXmlPath))
     {
-      CLog::Log(LOGDEBUG, "Unable to load file: %s at line %d", xmlDoc.ErrorDesc(), xmlDoc.ErrorRow());
+      CLog::Log(LOGDEBUG, "Unable to load file: %s at line %d", xmlDoc.ErrorDesc(),
+                xmlDoc.ErrorRow());
       return false;
     }
 

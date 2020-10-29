@@ -7,17 +7,18 @@
  */
 
 #include "JoystickMonitor.h"
+
 #include "Application.h"
+#include "ServiceBroker.h"
 #include "games/controllers/ControllerIDs.h"
 #include "input/InputManager.h"
-#include "ServiceBroker.h"
 
 #include <cmath>
 
 using namespace KODI;
 using namespace JOYSTICK;
 
-#define AXIS_DEADZONE  0.05f
+#define AXIS_DEADZONE 0.05f
 
 std::string CJoystickMonitor::ControllerID() const
 {
@@ -41,7 +42,9 @@ bool CJoystickMonitor::OnButtonPress(const FeatureName& feature, bool bPressed)
   return false;
 }
 
-bool CJoystickMonitor::OnButtonMotion(const FeatureName& feature, float magnitude, unsigned int motionTimeMs)
+bool CJoystickMonitor::OnButtonMotion(const FeatureName& feature,
+                                      float magnitude,
+                                      unsigned int motionTimeMs)
 {
   if (std::fabs(magnitude) > AXIS_DEADZONE)
   {
@@ -52,7 +55,10 @@ bool CJoystickMonitor::OnButtonMotion(const FeatureName& feature, float magnitud
   return false;
 }
 
-bool CJoystickMonitor::OnAnalogStickMotion(const FeatureName& feature, float x, float y, unsigned int motionTimeMs)
+bool CJoystickMonitor::OnAnalogStickMotion(const FeatureName& feature,
+                                           float x,
+                                           float y,
+                                           unsigned int motionTimeMs)
 {
   // Analog stick deadzone already processed
   if (x != 0.0f || y != 0.0f)
@@ -64,7 +70,9 @@ bool CJoystickMonitor::OnAnalogStickMotion(const FeatureName& feature, float x, 
   return false;
 }
 
-bool CJoystickMonitor::OnWheelMotion(const FeatureName& feature, float position, unsigned int motionTimeMs)
+bool CJoystickMonitor::OnWheelMotion(const FeatureName& feature,
+                                     float position,
+                                     unsigned int motionTimeMs)
 {
   if (std::fabs(position) > AXIS_DEADZONE)
   {
@@ -75,7 +83,9 @@ bool CJoystickMonitor::OnWheelMotion(const FeatureName& feature, float position,
   return false;
 }
 
-bool CJoystickMonitor::OnThrottleMotion(const FeatureName& feature, float position, unsigned int motionTimeMs)
+bool CJoystickMonitor::OnThrottleMotion(const FeatureName& feature,
+                                        float position,
+                                        unsigned int motionTimeMs)
 {
   if (std::fabs(position) > AXIS_DEADZONE)
   {

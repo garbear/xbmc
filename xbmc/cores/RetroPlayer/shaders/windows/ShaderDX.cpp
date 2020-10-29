@@ -7,23 +7,23 @@
  */
 
 #include "ShaderDX.h"
-#include "ShaderTextureDX.h"
+
 #include "Application.h"
+#include "ShaderTextureDX.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
-#include "cores/RetroPlayer/rendering/RenderContext.h"
-#include "cores/RetroPlayer/shaders/windows/ShaderTypesDX.h"
 #include "cores/RetroPlayer/shaders/IShaderLut.h"
 #include "cores/RetroPlayer/shaders/ShaderUtils.h"
+#include "cores/RetroPlayer/shaders/windows/ShaderTypesDX.h"
 #include "rendering/dx/RenderSystemDX.h"
-#include "utils/log.h"
 #include "utils/URIUtils.h"
+#include "utils/log.h"
+
 #include "system.h"
 
 using namespace KODI;
 using namespace SHADER;
 
-CShaderDX::CShaderDX(RETRO::CRenderContext &context) :
-  m_context(context)
+CShaderDX::CShaderDX(RETRO::CRenderContext& context) : m_context(context)
 {
 }
 
@@ -32,8 +32,13 @@ CShaderDX::~CShaderDX()
   SAFE_RELEASE(m_pInputBuffer);
 }
 
-bool CShaderDX::Create(const std::string& shaderSource, const std::string& shaderPath, ShaderParameterMap shaderParameters,
-  IShaderSampler* sampler, ShaderLutVec luts, float2 viewPortSize, unsigned frameCountMod)
+bool CShaderDX::Create(const std::string& shaderSource,
+                       const std::string& shaderPath,
+                       ShaderParameterMap shaderParameters,
+                       IShaderSampler* sampler,
+                       ShaderLutVec luts,
+                       float2 viewPortSize,
+                       unsigned frameCountMod)
 {
   if (shaderPath.empty())
   {
@@ -51,8 +56,8 @@ bool CShaderDX::Create(const std::string& shaderSource, const std::string& shade
 
   DefinesMap defines;
 
-  defines["HLSL_4"] = "";  // using Shader Model 4
-  defines["HLSL_FX"] = "";  // and the FX11 framework
+  defines["HLSL_4"] = ""; // using Shader Model 4
+  defines["HLSL_FX"] = ""; // and the FX11 framework
 
   // We implement runtime shader parameters ("#pragma parameter")
   // NOTICE: Runtime shader parameters allow convenient experimentation with real-time
@@ -83,14 +88,14 @@ void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
   renderingDx->Get3D11Context()->PSSetSamplers(2, 1, &m_pSampler);
   */
 
-  SetShaderParameters( *sourceDX->GetPointer() );
-  Execute({ targetDX->GetPointer() }, 4);
+  SetShaderParameters(*sourceDX->GetPointer());
+  Execute({targetDX->GetPointer()}, 4);
 }
 
 void CShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
 {
   m_effect.SetTechnique("TEQ");
-  m_effect.SetResources("decal", { sourceTexture.GetAddressOfSRV() }, 1);
+  m_effect.SetResources("decal", {sourceTexture.GetAddressOfSRV()}, 1);
   m_effect.SetMatrix("modelViewProj", reinterpret_cast<const float*>(&m_MVP));
   // TODO(optimization): Add frame_count to separate cbuffer
   m_effect.SetConstantBuffer("input", m_pInputBuffer);
@@ -126,7 +131,7 @@ void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
     v[3].x = -m_outputSize.x / 2;
     v[3].y = m_outputSize.y / 2;
   }
-  else  // last pass
+  else // last pass
   {
     // top left
     v[0].x = dest[0].x - m_outputSize.x / 2;
@@ -182,26 +187,23 @@ void CShaderDX::UpdateMVP()
   float yScale = -1.0f / m_outputSize.y * 2.0f;
 
   // Update projection matrix
-  m_MVP = XMFLOAT4X4(
-    xScale, 0, 0, 0,
-    0, yScale, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, 1
-  );
+  m_MVP = XMFLOAT4X4(xScale, 0, 0, 0, 0, yScale, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 }
 
 bool CShaderDX::CreateInputBuffer()
 {
-  CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
+  CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
 
   ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
   cbInput inputInitData = GetInputData();
   UINT inputBufSize = static_cast<UINT>((sizeof(cbInput) + 15) & ~15);
-  CD3D11_BUFFER_DESC cbInputDesc(inputBufSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-  D3D11_SUBRESOURCE_DATA initInputSubresource = { &inputInitData, 0, 0 };
+  CD3D11_BUFFER_DESC cbInputDesc(inputBufSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC,
+                                 D3D11_CPU_ACCESS_WRITE);
+  D3D11_SUBRESOURCE_DATA initInputSubresource = {&inputInitData, 0, 0};
   if (FAILED(pDevice->CreateBuffer(&cbInputDesc, &initInputSubresource, &m_pInputBuffer)))
   {
-    CLog::Log(LOGERROR, __FUNCTION__ " - Failed to create constant buffer for video shader input data.");
+    CLog::Log(LOGERROR,
+              __FUNCTION__ " - Failed to create constant buffer for video shader input data.");
     return false;
   }
 
@@ -210,7 +212,7 @@ bool CShaderDX::CreateInputBuffer()
 
 void CShaderDX::UpdateInputBuffer(uint64_t frameCount)
 {
-  ID3D11DeviceContext1 *pContext = DX::DeviceResources::Get()->GetD3DContext();
+  ID3D11DeviceContext1* pContext = DX::DeviceResources::Get()->GetD3DContext();
 
   cbInput input = GetInputData(frameCount);
   cbInput* pData;
@@ -232,18 +234,18 @@ CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
     frameCount %= m_frameCountMod;
 
   cbInput input = {
-    // Resution of texture passed to the shader
-    { m_inputSize.ToDXVector() },       // video_size
-    // Shaders don't (and shouldn't) know about _actual_ texture
-    // size, because D3D gives them correct texture coordinates
-    { m_inputSize.ToDXVector() },       // texture_size
-    // As per the spec, this is the viewport resolution (not the
-    // output res of each shader
-    { m_viewportSize.ToDXVector() },    // output_size
-    // Current frame count that can be modulo'ed
-    { static_cast<float>(frameCount) }, // frame_count
-    // Time always flows forward
-    { 1.0f }                            // frame_direction
+      // Resution of texture passed to the shader
+      {m_inputSize.ToDXVector()}, // video_size
+      // Shaders don't (and shouldn't) know about _actual_ texture
+      // size, because D3D gives them correct texture coordinates
+      {m_inputSize.ToDXVector()}, // texture_size
+      // As per the spec, this is the viewport resolution (not the
+      // output res of each shader
+      {m_viewportSize.ToDXVector()}, // output_size
+      // Current frame count that can be modulo'ed
+      {static_cast<float>(frameCount)}, // frame_count
+      // Time always flows forward
+      {1.0f} // frame_direction
   };
 
   return input;

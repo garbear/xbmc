@@ -7,13 +7,14 @@
  */
 
 #include "GUIGameSettingsHandle.h"
+
 #include "GUIGameRenderManager.h"
 
 using namespace KODI;
 using namespace RETRO;
 
-CGUIGameSettingsHandle::CGUIGameSettingsHandle(CGUIGameRenderManager &renderManager) :
-  m_renderManager(renderManager)
+CGUIGameSettingsHandle::CGUIGameSettingsHandle(CGUIGameRenderManager& renderManager)
+  : m_renderManager(renderManager)
 {
 }
 

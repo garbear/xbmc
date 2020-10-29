@@ -7,6 +7,7 @@
  */
 
 #include "RenderBufferPoolGBM.h"
+
 #include "RenderBufferGBM.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererGBM.h"
 
@@ -15,12 +16,11 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRenderBufferPoolGBM::CRenderBufferPoolGBM(CRenderContext &context)
-  : m_context(context)
+CRenderBufferPoolGBM::CRenderBufferPoolGBM(CRenderContext& context) : m_context(context)
 {
 }
 
-bool CRenderBufferPoolGBM::IsCompatible(const CRenderVideoSettings &renderSettings) const
+bool CRenderBufferPoolGBM::IsCompatible(const CRenderVideoSettings& renderSettings) const
 {
   if (!CRPRendererGBM::SupportsScalingMethod(renderSettings.GetScalingMethod()))
     return false;
@@ -29,10 +29,9 @@ bool CRenderBufferPoolGBM::IsCompatible(const CRenderVideoSettings &renderSettin
 }
 
 
-IRenderBuffer *CRenderBufferPoolGBM::CreateRenderBuffer(void *header /* = nullptr */)
+IRenderBuffer* CRenderBufferPoolGBM::CreateRenderBuffer(void* header /* = nullptr */)
 {
-  return new CRenderBufferGBM(m_context,
-                              m_fourcc);
+  return new CRenderBufferGBM(m_context, m_fourcc);
 }
 
 bool CRenderBufferPoolGBM::ConfigureInternal()

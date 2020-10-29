@@ -9,8 +9,8 @@
 #pragma once
 
 #include "input/actions/Action.h"
-#include "input/joysticks/interfaces/IKeyHandler.h"
 #include "input/joysticks/JoystickTypes.h"
+#include "input/joysticks/interfaces/IKeyHandler.h"
 
 #include <map>
 #include <string>
@@ -24,28 +24,31 @@ namespace KODI
 {
 namespace JOYSTICK
 {
-  class IKeymapHandler;
+class IKeymapHandler;
 
-  /*!
+/*!
    * \ingroup joystick
    * \brief
    */
-  class CKeyHandler : public IKeyHandler
-  {
-  public:
-    CKeyHandler(const std::string &keyName, IActionListener *actionHandler, const IKeymap *keymap, IKeymapHandler *keymapHandler);
+class CKeyHandler : public IKeyHandler
+{
+public:
+  CKeyHandler(const std::string& keyName,
+              IActionListener* actionHandler,
+              const IKeymap* keymap,
+              IKeymapHandler* keymapHandler);
 
-    virtual ~CKeyHandler() = default;
+  virtual ~CKeyHandler() = default;
 
-    // implementation of IKeyHandler
-    virtual bool IsPressed() const override { return m_bHeld; }
-    virtual bool OnDigitalMotion(bool bPressed, unsigned int holdTimeMs) override;
-    virtual bool OnAnalogMotion(float magnitude, unsigned int motionTimeMs) override;
+  // implementation of IKeyHandler
+  virtual bool IsPressed() const override { return m_bHeld; }
+  virtual bool OnDigitalMotion(bool bPressed, unsigned int holdTimeMs) override;
+  virtual bool OnAnalogMotion(float magnitude, unsigned int motionTimeMs) override;
 
-  private:
-    void Reset();
+private:
+  void Reset();
 
-    /*!
+  /*!
      * \brief Process actions to see if an action should be dispatched
      *
      * \param actions All actions from the keymap defined for the current window
@@ -55,9 +58,12 @@ namespace JOYSTICK
      *
      * \return The action to dispatch, or action with ID ACTION_NONE if no action should be dispatched
      */
-    CAction ProcessActions(std::vector<const KeymapAction*> actions, int windowId, float magnitude, unsigned int holdTimeMs);
+  CAction ProcessActions(std::vector<const KeymapAction*> actions,
+                         int windowId,
+                         float magnitude,
+                         unsigned int holdTimeMs);
 
-    /*!
+  /*!
      * \brief Process actions after release event to see if an action should be dispatched
      *
      * \param actions All actions from the keymap defined for the current window
@@ -65,9 +71,9 @@ namespace JOYSTICK
      *
      * \return The action to dispatch, or action with ID ACTION_NONE if no action should be dispatched
      */
-    CAction ProcessRelease(std::vector<const KeymapAction*> actions, int windowId);
+  CAction ProcessRelease(std::vector<const KeymapAction*> actions, int windowId);
 
-    /*!
+  /*!
      * \brief Process an action to see if it should be dispatched
      *
      * \param action The action chosen to be dispatched
@@ -77,29 +83,32 @@ namespace JOYSTICK
      *
      * \return The action to dispatch, or action with ID ACTION_NONE if no action should be dispatched
      */
-    CAction ProcessAction(const KeymapAction& action, int windowId, float magnitude, unsigned int holdTimeMs);
+  CAction ProcessAction(const KeymapAction& action,
+                        int windowId,
+                        float magnitude,
+                        unsigned int holdTimeMs);
 
-    // Check criteria for sending a repeat action
-    bool SendRepeatAction(unsigned int holdTimeMs);
+  // Check criteria for sending a repeat action
+  bool SendRepeatAction(unsigned int holdTimeMs);
 
-    // Helper function
-    static bool IsPressed(float magnitude);
+  // Helper function
+  static bool IsPressed(float magnitude);
 
-    // Construction parameters
-    const std::string m_keyName;
-    IActionListener *const m_actionHandler;
-    const IKeymap *const m_keymap;
-    IKeymapHandler *const m_keymapHandler;
+  // Construction parameters
+  const std::string m_keyName;
+  IActionListener* const m_actionHandler;
+  const IKeymap* const m_keymap;
+  IKeymapHandler* const m_keymapHandler;
 
-    // State variables
-    bool m_bHeld;
-    float m_magnitude;
-    unsigned int m_holdStartTimeMs;
-    unsigned int m_lastHoldTimeMs;
-    bool m_bActionSent;
-    unsigned int m_lastActionMs;
-    int m_activeWindowId = -1; // Window that activated the key
-    CAction m_lastAction;
-  };
-}
-}
+  // State variables
+  bool m_bHeld;
+  float m_magnitude;
+  unsigned int m_holdStartTimeMs;
+  unsigned int m_lastHoldTimeMs;
+  bool m_bActionSent;
+  unsigned int m_lastActionMs;
+  int m_activeWindowId = -1; // Window that activated the key
+  CAction m_lastAction;
+};
+} // namespace JOYSTICK
+} // namespace KODI

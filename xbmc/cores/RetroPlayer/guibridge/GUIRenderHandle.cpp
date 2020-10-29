@@ -7,6 +7,7 @@
  */
 
 #include "GUIRenderHandle.h"
+
 #include "GUIGameRenderManager.h"
 
 using namespace KODI;
@@ -14,9 +15,8 @@ using namespace RETRO;
 
 // --- CGUIRenderHandle --------------------------------------------------------
 
-CGUIRenderHandle::CGUIRenderHandle(CGUIGameRenderManager &renderManager, RENDER_HANDLE type) :
-  m_renderManager(renderManager),
-  m_type(type)
+CGUIRenderHandle::CGUIRenderHandle(CGUIGameRenderManager& renderManager, RENDER_HANDLE type)
+  : m_renderManager(renderManager), m_type(type)
 {
 }
 
@@ -47,16 +47,16 @@ void CGUIRenderHandle::ClearBackground()
 
 // --- CGUIRenderControlHandle -------------------------------------------------
 
-CGUIRenderControlHandle::CGUIRenderControlHandle(CGUIGameRenderManager &renderManager, CGUIGameControl &control) :
-  CGUIRenderHandle(renderManager, RENDER_HANDLE::CONTROL),
-  m_control(control)
+CGUIRenderControlHandle::CGUIRenderControlHandle(CGUIGameRenderManager& renderManager,
+                                                 CGUIGameControl& control)
+  : CGUIRenderHandle(renderManager, RENDER_HANDLE::CONTROL), m_control(control)
 {
 }
 
 // --- CGUIRenderFullScreenHandle ----------------------------------------------
 
-CGUIRenderFullScreenHandle::CGUIRenderFullScreenHandle(CGUIGameRenderManager &renderManager, CGameWindowFullScreen &window) :
-  CGUIRenderHandle(renderManager, RENDER_HANDLE::WINDOW),
-  m_window(window)
+CGUIRenderFullScreenHandle::CGUIRenderFullScreenHandle(CGUIGameRenderManager& renderManager,
+                                                       CGameWindowFullScreen& window)
+  : CGUIRenderHandle(renderManager, RENDER_HANDLE::WINDOW), m_window(window)
 {
 }

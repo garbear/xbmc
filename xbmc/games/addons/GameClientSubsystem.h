@@ -17,32 +17,32 @@ namespace KODI
 {
 namespace GAME
 {
-  class CGameClient;
-  class CGameClientInput;
-  class CGameClientProperties;
-  class CGameClientStreams;
+class CGameClient;
+class CGameClientInput;
+class CGameClientProperties;
+class CGameClientStreams;
 
-  struct GameClientSubsystems
-  {
-    std::unique_ptr<CGameClientInput> Input;
-    std::unique_ptr<CGameClientProperties> AddonProperties;
-    std::unique_ptr<CGameClientStreams> Streams;
-  };
+struct GameClientSubsystems
+{
+  std::unique_ptr<CGameClientInput> Input;
+  std::unique_ptr<CGameClientProperties> AddonProperties;
+  std::unique_ptr<CGameClientStreams> Streams;
+};
 
-  /*!
+/*!
    * \brief Base class for game client subsystems
    */
-  class CGameClientSubsystem
-  {
-  protected:
-    CGameClientSubsystem(CGameClient &gameClient,
-                         AddonInstance_Game &addonStruct,
-                         CCriticalSection &clientAccess);
+class CGameClientSubsystem
+{
+protected:
+  CGameClientSubsystem(CGameClient& gameClient,
+                       AddonInstance_Game& addonStruct,
+                       CCriticalSection& clientAccess);
 
-    virtual ~CGameClientSubsystem();
+  virtual ~CGameClientSubsystem();
 
-  public:
-    /*!
+public:
+  /*!
      * \brief Create a struct with the allocated subsystems
      *
      * \param gameClient The owner of the subsystems
@@ -51,26 +51,28 @@ namespace GAME
      *
      * \return A fully-allocated GameClientSubsystems struct
      */
-    static GameClientSubsystems CreateSubsystems(CGameClient &gameClient, AddonInstance_Game &gameStruct, CCriticalSection &clientAccess);
+  static GameClientSubsystems CreateSubsystems(CGameClient& gameClient,
+                                               AddonInstance_Game& gameStruct,
+                                               CCriticalSection& clientAccess);
 
-    /*!
+  /*!
      * \brief Deallocate subsystems
      *
      * \param subsystems The subsystems created by CreateSubsystems()
      */
-    static void DestroySubsystems(GameClientSubsystems &subsystems);
+  static void DestroySubsystems(GameClientSubsystems& subsystems);
 
-  protected:
-    // Subsystems
-    CGameClientInput &Input() const;
-    CGameClientProperties &AddonProperties() const;
-    CGameClientStreams &Streams() const;
+protected:
+  // Subsystems
+  CGameClientInput& Input() const;
+  CGameClientProperties& AddonProperties() const;
+  CGameClientStreams& Streams() const;
 
-    // Construction parameters
-    CGameClient &m_gameClient;
-    AddonInstance_Game &m_struct;
-    CCriticalSection &m_clientAccess;
-  };
+  // Construction parameters
+  CGameClient& m_gameClient;
+  AddonInstance_Game& m_struct;
+  CCriticalSection& m_clientAccess;
+};
 
-}
-}
+} // namespace GAME
+} // namespace KODI

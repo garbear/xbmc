@@ -7,14 +7,15 @@
  */
 
 #include "DialogGameOSDHelp.h"
+
 #include "DialogGameOSD.h"
-#include "games/controllers/guicontrols/GUIGameController.h"
+#include "ServiceBroker.h"
 #include "games/GameServices.h"
+#include "games/controllers/guicontrols/GUIGameController.h"
 #include "guilib/GUIMessage.h"
 #include "guilib/LocalizeStrings.h"
 #include "guilib/WindowIDs.h"
 #include "utils/StringUtils.h"
-#include "ServiceBroker.h"
 
 using namespace KODI;
 using namespace GAME;
@@ -22,8 +23,7 @@ using namespace GAME;
 const int CDialogGameOSDHelp::CONTROL_ID_HELP_TEXT = 1101;
 const int CDialogGameOSDHelp::CONTROL_ID_GAME_CONTROLLER = 1102;
 
-CDialogGameOSDHelp::CDialogGameOSDHelp(CDialogGameOSD &dialog) :
-  m_dialog(dialog)
+CDialogGameOSDHelp::CDialogGameOSDHelp(CDialogGameOSD& dialog) : m_dialog(dialog)
 {
 }
 
@@ -48,7 +48,8 @@ void CDialogGameOSDHelp::OnInitWindow()
     if (controller)
     {
       //! @todo Activate controller for all game controller controls
-      CGUIGameController* guiController = dynamic_cast<CGUIGameController*>(m_dialog.GetControl(CONTROL_ID_GAME_CONTROLLER));
+      CGUIGameController* guiController =
+          dynamic_cast<CGUIGameController*>(m_dialog.GetControl(CONTROL_ID_GAME_CONTROLLER));
       if (guiController != nullptr)
         guiController->ActivateController(controller);
     }
@@ -57,13 +58,12 @@ void CDialogGameOSDHelp::OnInitWindow()
 
 bool CDialogGameOSDHelp::IsVisible()
 {
-  return IsVisible(CONTROL_ID_HELP_TEXT) ||
-         IsVisible(CONTROL_ID_GAME_CONTROLLER);
+  return IsVisible(CONTROL_ID_HELP_TEXT) || IsVisible(CONTROL_ID_GAME_CONTROLLER);
 }
 
 bool CDialogGameOSDHelp::IsVisible(int windowId)
 {
-  CGUIControl *control = m_dialog.GetControl(windowId);
+  CGUIControl* control = m_dialog.GetControl(windowId);
   if (control != nullptr)
     return control->IsVisible();
 

@@ -16,34 +16,34 @@ namespace KODI
 {
 namespace JOYSTICK
 {
-  class IInputReceiver;
+class IInputReceiver;
 
-  /*!
+/*!
    * \ingroup joystick
    * \brief Interface for handling input events for game controllers
    */
-  class IInputHandler
-  {
-  public:
-    virtual ~IInputHandler() = default;
+class IInputHandler
+{
+public:
+  virtual ~IInputHandler() = default;
 
-    /*!
+  /*!
      * \brief The add-on ID of the game controller associated with this input handler
      *
      * \return The ID of the add-on extending kodi.game.controller
      */
-    virtual std::string ControllerID(void) const = 0;
+  virtual std::string ControllerID(void) const = 0;
 
-    /*!
+  /*!
      * \brief Return true if the input handler accepts the given feature
      *
      * \param feature A feature belonging to the controller specified by ControllerID()
      *
      * \return True if the feature is used for input, false otherwise
      */
-    virtual bool HasFeature(const FeatureName& feature) const = 0;
+  virtual bool HasFeature(const FeatureName& feature) const = 0;
 
-    /*!
+  /*!
      * \brief Return true if the input handler is currently accepting input for the
      *        given feature
      *
@@ -54,9 +54,9 @@ namespace JOYSTICK
      * This does not prevent the input events from being called, but can return
      * false to indicate that input wasn't handled for the specified feature.
      */
-    virtual bool AcceptsInput(const FeatureName &feature) const = 0;
+  virtual bool AcceptsInput(const FeatureName& feature) const = 0;
 
-    /*!
+  /*!
      * \brief A digital button has been pressed or released
      *
      * \param feature      The feature being pressed
@@ -64,9 +64,9 @@ namespace JOYSTICK
      *
      * \return True if the event was handled otherwise false
      */
-    virtual bool OnButtonPress(const FeatureName& feature, bool bPressed) = 0;
+  virtual bool OnButtonPress(const FeatureName& feature, bool bPressed) = 0;
 
-    /*!
+  /*!
      * \brief A digital button has been pressed for more than one event frame
      *
      * \param feature      The feature being held
@@ -75,9 +75,9 @@ namespace JOYSTICK
      * If OnButtonPress() returns true for the initial press, then this callback
      * is invoked on subsequent frames until the button is released.
      */
-    virtual void OnButtonHold(const FeatureName& feature, unsigned int holdTimeMs) = 0;
+  virtual void OnButtonHold(const FeatureName& feature, unsigned int holdTimeMs) = 0;
 
-    /*!
+  /*!
      * \brief An analog button (trigger or a pressure-sensitive button) has changed state
      *
      * \param feature      The feature changing state
@@ -87,9 +87,11 @@ namespace JOYSTICK
      *
      * \return True if the event was handled otherwise false
      */
-    virtual bool OnButtonMotion(const FeatureName& feature, float magnitude, unsigned int motionTimeMs) = 0;
+  virtual bool OnButtonMotion(const FeatureName& feature,
+                              float magnitude,
+                              unsigned int motionTimeMs) = 0;
 
-    /*!
+  /*!
      * \brief An analog stick has moved
      *
      * \param feature      The analog stick being moved
@@ -100,9 +102,12 @@ namespace JOYSTICK
      *
      * \return True if the event was handled otherwise false
      */
-    virtual bool OnAnalogStickMotion(const FeatureName& feature, float x, float y, unsigned int motionTimeMs) = 0;
+  virtual bool OnAnalogStickMotion(const FeatureName& feature,
+                                   float x,
+                                   float y,
+                                   unsigned int motionTimeMs) = 0;
 
-    /*!
+  /*!
      * \brief An accelerometer's state has changed
      *
      * \param feature      The accelerometer being accelerated
@@ -112,9 +117,12 @@ namespace JOYSTICK
      *
      * \return True if the event was handled otherwise false
      */
-    virtual bool OnAccelerometerMotion(const FeatureName& feature, float x, float y, float z) { return false; }
+  virtual bool OnAccelerometerMotion(const FeatureName& feature, float x, float y, float z)
+  {
+    return false;
+  }
 
-    /*!
+  /*!
      * \brief A wheel has changed state
      *
      * Left is negative position, right is positive position
@@ -125,9 +133,11 @@ namespace JOYSTICK
      *
      * \return True if the event was handled otherwise false
      */
-    virtual bool OnWheelMotion(const FeatureName& feature, float position, unsigned int motionTimeMs) = 0;
+  virtual bool OnWheelMotion(const FeatureName& feature,
+                             float position,
+                             unsigned int motionTimeMs) = 0;
 
-    /*!
+  /*!
      * \brief A throttle has changed state
      *
      * Up is positive position, down is negative position.
@@ -138,15 +148,17 @@ namespace JOYSTICK
      *
      * \return True if the event was handled otherwise false
      */
-    virtual bool OnThrottleMotion(const FeatureName& feature, float position, unsigned int motionTimeMs) = 0;
+  virtual bool OnThrottleMotion(const FeatureName& feature,
+                                float position,
+                                unsigned int motionTimeMs) = 0;
 
-    // Input receiver interface
-    void SetInputReceiver(IInputReceiver* receiver) { m_receiver = receiver; }
-    void ResetInputReceiver(void) { m_receiver = nullptr; }
-    IInputReceiver* InputReceiver(void) { return m_receiver; }
+  // Input receiver interface
+  void SetInputReceiver(IInputReceiver* receiver) { m_receiver = receiver; }
+  void ResetInputReceiver(void) { m_receiver = nullptr; }
+  IInputReceiver* InputReceiver(void) { return m_receiver; }
 
-  private:
-    IInputReceiver* m_receiver = nullptr;
-  };
-}
-}
+private:
+  IInputReceiver* m_receiver = nullptr;
+};
+} // namespace JOYSTICK
+} // namespace KODI

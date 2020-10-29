@@ -16,10 +16,10 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CRetroPlayerUtils
-  {
-  public:
-    /*!
+class CRetroPlayerUtils
+{
+public:
+  /*!
      * \brief Convert a stretch mode enum to a short string identifier
      *
      * \param stretchMode The stretch mode
@@ -27,9 +27,9 @@ namespace RETRO
      * \return A short string identifier specified by GameSettings.h, or an
      *         empty string if the stretch mode is invalid
      */
-    static const char* StretchModeToIdentifier(STRETCHMODE stretchMode);
+  static const char* StretchModeToIdentifier(STRETCHMODE stretchMode);
 
-    /*!
+  /*!
      * \brief Convert a stretch mode identifier to an enum
      *
      * \param stretchMode The short string identifier, from GameSettings.h,
@@ -38,7 +38,7 @@ namespace RETRO
      * \return The stretch mode enum, or STRETCHMODE::Normal if the identifier
      *         is invalid
      */
-    static STRETCHMODE IdentifierToStretchMode(const std::string &stretchMode);
-  };
-}
-}
+  static STRETCHMODE IdentifierToStretchMode(const std::string& stretchMode);
+};
+} // namespace RETRO
+} // namespace KODI

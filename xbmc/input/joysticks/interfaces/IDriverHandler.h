@@ -14,16 +14,16 @@ namespace KODI
 {
 namespace JOYSTICK
 {
-  /*!
+/*!
    * \brief Interface defining methods to handle joystick events for raw driver
    *        elements (buttons, hats, axes)
    */
-  class IDriverHandler
-  {
-  public:
-    virtual ~IDriverHandler() = default;
+class IDriverHandler
+{
+public:
+  virtual ~IDriverHandler() = default;
 
-    /*!
+  /*!
      * \brief Handle button motion
      *
      * \param buttonIndex The index of the button as reported by the driver
@@ -31,9 +31,9 @@ namespace JOYSTICK
      *
      * \return True if a press was handled, false otherwise
      */
-    virtual bool OnButtonMotion(unsigned int buttonIndex, bool bPressed) = 0;
+  virtual bool OnButtonMotion(unsigned int buttonIndex, bool bPressed) = 0;
 
-    /*!
+  /*!
      * \brief Handle hat motion
      *
      * \param hatIndex     The index of the hat as reported by the driver
@@ -41,9 +41,9 @@ namespace JOYSTICK
      *
      * \return True if the new direction was handled, false otherwise
      */
-    virtual bool OnHatMotion(unsigned int hatIndex, HAT_STATE state) = 0;
+  virtual bool OnHatMotion(unsigned int hatIndex, HAT_STATE state) = 0;
 
-    /*!
+  /*!
      * \brief Handle axis motion
      *
      * If a joystick feature requires multiple axes (analog sticks, accelerometers),
@@ -56,9 +56,12 @@ namespace JOYSTICK
      *
      * \return True if the motion was handled, false otherwise
      */
-    virtual bool OnAxisMotion(unsigned int axisIndex, float position, int center, unsigned int range) = 0;
+  virtual bool OnAxisMotion(unsigned int axisIndex,
+                            float position,
+                            int center,
+                            unsigned int range) = 0;
 
-    /*!
+  /*!
      * \brief Handle buffered axis positions for features that require multiple axes
      *
      * ProcessAxisMotions() is called at the end of the frame when all axis motions
@@ -68,7 +71,7 @@ namespace JOYSTICK
      *  - Imitating an analog feature with a digital button so that events can be
      *    dispatched every frame.
      */
-    virtual void ProcessAxisMotions(void) = 0;
-  };
-}
-}
+  virtual void ProcessAxisMotions(void) = 0;
+};
+} // namespace JOYSTICK
+} // namespace KODI

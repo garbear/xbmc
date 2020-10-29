@@ -9,8 +9,8 @@
 #pragma once
 
 #include "FeatureHandling.h"
-#include "input/joysticks/interfaces/IDriverHandler.h"
 #include "input/joysticks/JoystickTypes.h"
+#include "input/joysticks/interfaces/IDriverHandler.h"
 
 #include <map>
 
@@ -18,12 +18,12 @@ namespace KODI
 {
 namespace JOYSTICK
 {
-  class CDriverPrimitive;
-  class CGUIDialogNewJoystick;
-  class IInputHandler;
-  class IButtonMap;
+class CDriverPrimitive;
+class CGUIDialogNewJoystick;
+class IInputHandler;
+class IButtonMap;
 
-  /*!
+/*!
    * \ingroup joystick
    * \brief Class to translate input from the driver into higher-level features
    *
@@ -36,31 +36,34 @@ namespace JOYSTICK
    * The button map has been abstracted away behind the IButtonMap
    * interface so that it can be provided by an add-on.
    */
-  class CInputHandling : public IDriverHandler
-  {
-  public:
-    CInputHandling(IInputHandler* handler, IButtonMap* buttonMap);
+class CInputHandling : public IDriverHandler
+{
+public:
+  CInputHandling(IInputHandler* handler, IButtonMap* buttonMap);
 
-    virtual ~CInputHandling(void);
+  virtual ~CInputHandling(void);
 
-    // implementation of IDriverHandler
-    virtual bool OnButtonMotion(unsigned int buttonIndex, bool bPressed) override;
-    virtual bool OnHatMotion(unsigned int hatIndex, HAT_STATE state) override;
-    virtual bool OnAxisMotion(unsigned int axisIndex, float position, int center, unsigned int range) override;
-    virtual void ProcessAxisMotions(void) override;
+  // implementation of IDriverHandler
+  virtual bool OnButtonMotion(unsigned int buttonIndex, bool bPressed) override;
+  virtual bool OnHatMotion(unsigned int hatIndex, HAT_STATE state) override;
+  virtual bool OnAxisMotion(unsigned int axisIndex,
+                            float position,
+                            int center,
+                            unsigned int range) override;
+  virtual void ProcessAxisMotions(void) override;
 
-  private:
-    bool OnDigitalMotion(const CDriverPrimitive& source, bool bPressed);
-    bool OnAnalogMotion(const CDriverPrimitive& source, float magnitude);
+private:
+  bool OnDigitalMotion(const CDriverPrimitive& source, bool bPressed);
+  bool OnAnalogMotion(const CDriverPrimitive& source, float magnitude);
 
-    CJoystickFeature* CreateFeature(const FeatureName& featureName);
+  CJoystickFeature* CreateFeature(const FeatureName& featureName);
 
-    IInputHandler* const m_handler;
-    IButtonMap* const    m_buttonMap;
+  IInputHandler* const m_handler;
+  IButtonMap* const m_buttonMap;
 
-    std::map<FeatureName, FeaturePtr> m_features;
+  std::map<FeatureName, FeaturePtr> m_features;
 
-    static CGUIDialogNewJoystick* const m_dialog;
-  };
-}
-}
+  static CGUIDialogNewJoystick* const m_dialog;
+};
+} // namespace JOYSTICK
+} // namespace KODI

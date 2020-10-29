@@ -9,6 +9,7 @@
 #pragma once
 
 #include "InputCodingTable.h"
+
 #include <map>
 #include <string>
 #include <vector>
@@ -21,6 +22,7 @@ public:
 
   bool GetWordListPage(const std::string& strCode, bool isFirstPage) override;
   std::vector<std::wstring> GetResponse(int) override;
+
 private:
   std::vector<std::wstring> m_words;
 };

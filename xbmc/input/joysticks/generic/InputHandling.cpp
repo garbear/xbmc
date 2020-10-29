@@ -7,10 +7,11 @@
  */
 
 #include "InputHandling.h"
-#include "input/joysticks/dialogs/GUIDialogNewJoystick.h"
-#include "input/joysticks/interfaces/IButtonMap.h"
+
 #include "input/joysticks/DriverPrimitive.h"
 #include "input/joysticks/JoystickUtils.h"
+#include "input/joysticks/dialogs/GUIDialogNewJoystick.h"
+#include "input/joysticks/interfaces/IButtonMap.h"
 #include "utils/log.h"
 
 #include <array>
@@ -22,8 +23,7 @@ using namespace JOYSTICK;
 CGUIDialogNewJoystick* const CInputHandling::m_dialog = new CGUIDialogNewJoystick;
 
 CInputHandling::CInputHandling(IInputHandler* handler, IButtonMap* buttonMap)
- : m_handler(handler),
-   m_buttonMap(buttonMap)
+  : m_handler(handler), m_buttonMap(buttonMap)
 {
 }
 
@@ -38,15 +38,22 @@ bool CInputHandling::OnHatMotion(unsigned int hatIndex, HAT_STATE state)
 {
   bool bHandled = false;
 
-  bHandled |= OnDigitalMotion(CDriverPrimitive(hatIndex, HAT_DIRECTION::UP),    state & HAT_DIRECTION::UP);
-  bHandled |= OnDigitalMotion(CDriverPrimitive(hatIndex, HAT_DIRECTION::RIGHT), state & HAT_DIRECTION::RIGHT);
-  bHandled |= OnDigitalMotion(CDriverPrimitive(hatIndex, HAT_DIRECTION::DOWN),  state & HAT_DIRECTION::DOWN);
-  bHandled |= OnDigitalMotion(CDriverPrimitive(hatIndex, HAT_DIRECTION::LEFT),  state & HAT_DIRECTION::LEFT);
+  bHandled |=
+      OnDigitalMotion(CDriverPrimitive(hatIndex, HAT_DIRECTION::UP), state & HAT_DIRECTION::UP);
+  bHandled |= OnDigitalMotion(CDriverPrimitive(hatIndex, HAT_DIRECTION::RIGHT),
+                              state & HAT_DIRECTION::RIGHT);
+  bHandled |=
+      OnDigitalMotion(CDriverPrimitive(hatIndex, HAT_DIRECTION::DOWN), state & HAT_DIRECTION::DOWN);
+  bHandled |=
+      OnDigitalMotion(CDriverPrimitive(hatIndex, HAT_DIRECTION::LEFT), state & HAT_DIRECTION::LEFT);
 
   return bHandled;
 }
 
-bool CInputHandling::OnAxisMotion(unsigned int axisIndex, float position, int center, unsigned int range)
+bool CInputHandling::OnAxisMotion(unsigned int axisIndex,
+                                  float position,
+                                  int center,
+                                  unsigned int range)
 {
   bool bHandled = false;
 
@@ -79,7 +86,8 @@ bool CInputHandling::OnAxisMotion(unsigned int axisIndex, float position, int ce
 
 void CInputHandling::ProcessAxisMotions(void)
 {
-  for (std::map<FeatureName, FeaturePtr>::iterator it = m_features.begin(); it != m_features.end(); ++it)
+  for (std::map<FeatureName, FeaturePtr>::iterator it = m_features.begin(); it != m_features.end();
+       ++it)
     it->second->ProcessMotions();
 }
 

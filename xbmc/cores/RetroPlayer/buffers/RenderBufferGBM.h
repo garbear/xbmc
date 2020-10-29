@@ -10,9 +10,9 @@
 
 #include "cores/RetroPlayer/buffers/BaseRenderBuffer.h"
 
-#include "system_gl.h"
-
 #include <memory>
+
+#include "system_gl.h"
 
 class CEGLImage;
 class CGBMBufferObject;
@@ -21,40 +21,39 @@ namespace KODI
 {
 namespace RETRO
 {
-  class CRenderContext;
+class CRenderContext;
 
-  class CRenderBufferGBM : public CBaseRenderBuffer
-  {
-  public:
-    CRenderBufferGBM(CRenderContext &context,
-                     int fourcc);
-    ~CRenderBufferGBM() override;
+class CRenderBufferGBM : public CBaseRenderBuffer
+{
+public:
+  CRenderBufferGBM(CRenderContext& context, int fourcc);
+  ~CRenderBufferGBM() override;
 
-    // implementation of IRenderBuffer via CRenderBufferSysMem
-    bool Allocate(AVPixelFormat format, unsigned int width, unsigned int height) override;
-    size_t GetFrameSize() const override;
-    uint8_t *GetMemory() override;
-    void ReleaseMemory() override;
+  // implementation of IRenderBuffer via CRenderBufferSysMem
+  bool Allocate(AVPixelFormat format, unsigned int width, unsigned int height) override;
+  size_t GetFrameSize() const override;
+  uint8_t* GetMemory() override;
+  void ReleaseMemory() override;
 
-    // implementation of IRenderBuffer
-    bool UploadTexture() override;
+  // implementation of IRenderBuffer
+  bool UploadTexture() override;
 
-    GLuint TextureID() const { return m_textureId; }
+  GLuint TextureID() const { return m_textureId; }
 
-  protected:
-    // Construction parameters
-    CRenderContext &m_context;
-    const int m_fourcc = 0;
+protected:
+  // Construction parameters
+  CRenderContext& m_context;
+  const int m_fourcc = 0;
 
-    const GLenum m_textureTarget = GL_TEXTURE_EXTERNAL_OES;
-    GLuint m_textureId = 0;
+  const GLenum m_textureTarget = GL_TEXTURE_EXTERNAL_OES;
+  GLuint m_textureId = 0;
 
-  private:
-    void CreateTexture();
-    void DeleteTexture();
+private:
+  void CreateTexture();
+  void DeleteTexture();
 
-    std::unique_ptr<CEGLImage> m_egl;
-    std::unique_ptr<CGBMBufferObject> m_bo;
-  };
-}
-}
+  std::unique_ptr<CEGLImage> m_egl;
+  std::unique_ptr<CGBMBufferObject> m_bo;
+};
+} // namespace RETRO
+} // namespace KODI

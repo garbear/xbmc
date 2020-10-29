@@ -15,22 +15,23 @@
 #include "games/GameServices.h"
 #include "utils/Geometry.h"
 
-#include <d3d11.h>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include <d3d11.h>
+
 namespace ADDON
 {
-  class CShaderPreset;
-  class CShaderPresetAddon;
-}
+class CShaderPreset;
+class CShaderPresetAddon;
+} // namespace ADDON
 
 namespace KODI
 {
 namespace RETRO
 {
-  class CRenderContext;
+class CRenderContext;
 }
 
 namespace SHADER
@@ -42,7 +43,9 @@ class CShaderPresetDX : public IShaderPreset
 {
 public:
   // Instance of CShaderPreset
-  explicit CShaderPresetDX(RETRO::CRenderContext &context, unsigned videoWidth = 0, unsigned videoHeight = 0);
+  explicit CShaderPresetDX(RETRO::CRenderContext& context,
+                           unsigned videoWidth = 0,
+                           unsigned videoHeight = 0);
   ~CShaderPresetDX() override;
 
   // implementation of IShaderPreset
@@ -72,7 +75,7 @@ private:
   bool HasPathFailed(const std::string& path) const;
 
   // Construction parameters
-  RETRO::CRenderContext &m_context;
+  RETRO::CRenderContext& m_context;
 
   // Relative path of the currently loaded shader preset
   // If empty, it means that a preset is not currently loaded
@@ -119,10 +122,11 @@ private:
   // Playback speed
   double m_speed = 0.0;
 
-  ShaderParameterMap GetShaderParameters(const std::vector<ShaderParameter> &parameters, const std::string& sourceStr) const;
+  ShaderParameterMap GetShaderParameters(const std::vector<ShaderParameter>& parameters,
+                                         const std::string& sourceStr) const;
 
   ShaderPassVec m_passes;
 };
 
-}
-}
+} // namespace SHADER
+} // namespace KODI

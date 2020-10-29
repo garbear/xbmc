@@ -27,14 +27,17 @@ std::string CRendererFactoryGBM::RenderSystemName() const
   return "GBM";
 }
 
-CRPBaseRenderer *CRendererFactoryGBM::CreateRenderer(const CRenderSettings &settings, CRenderContext &context, std::shared_ptr<IRenderBufferPool> bufferPool)
+CRPBaseRenderer* CRendererFactoryGBM::CreateRenderer(const CRenderSettings& settings,
+                                                     CRenderContext& context,
+                                                     std::shared_ptr<IRenderBufferPool> bufferPool)
 {
   return new CRPRendererGBM(settings, context, std::move(bufferPool));
 }
 
-RenderBufferPoolVector CRendererFactoryGBM::CreateBufferPools(CRenderContext &context)
+RenderBufferPoolVector CRendererFactoryGBM::CreateBufferPools(CRenderContext& context)
 {
-  return {
+  return
+  {
 #if defined(HAS_GBM_BO_MAP)
     std::make_shared<CRenderBufferPoolGBM>(context)
 #endif
@@ -43,15 +46,17 @@ RenderBufferPoolVector CRendererFactoryGBM::CreateBufferPools(CRenderContext &co
 
 // --- CRPRendererGBM -----------------------------------------------------
 
-CRPRendererGBM::CRPRendererGBM(const CRenderSettings &renderSettings, CRenderContext &context, std::shared_ptr<IRenderBufferPool> bufferPool) :
-  CRPRendererOpenGLES(renderSettings, context, std::move(bufferPool))
+CRPRendererGBM::CRPRendererGBM(const CRenderSettings& renderSettings,
+                               CRenderContext& context,
+                               std::shared_ptr<IRenderBufferPool> bufferPool)
+  : CRPRendererOpenGLES(renderSettings, context, std::move(bufferPool))
 {
   m_textureTarget = GL_TEXTURE_EXTERNAL_OES;
 }
 
 void CRPRendererGBM::Render(uint8_t alpha)
 {
-  CRenderBufferGBM *renderBuffer = static_cast<CRenderBufferGBM*>(m_renderBuffer);
+  CRenderBufferGBM* renderBuffer = static_cast<CRenderBufferGBM*>(m_renderBuffer);
   assert(renderBuffer != nullptr);
 
   CRect rect = m_sourceRect;
@@ -108,18 +113,21 @@ void CRPRendererGBM::Render(uint8_t alpha)
   vertex[2].v1 = vertex[3].v1 = rect.y2;
 
   glBindBuffer(GL_ARRAY_BUFFER, m_mainVertexVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex)*4, &vertex[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_STATIC_DRAW);
 
-  glVertexAttribPointer(vertLoc, 3, GL_FLOAT, 0, sizeof(PackedVertex), reinterpret_cast<const GLuint*>(offsetof(PackedVertex, x)));
-  glVertexAttribPointer(loc, 2, GL_FLOAT, 0, sizeof(PackedVertex), reinterpret_cast<const GLuint*>(offsetof(PackedVertex, u1)));
+  glVertexAttribPointer(vertLoc, 3, GL_FLOAT, 0, sizeof(PackedVertex),
+                        reinterpret_cast<const GLuint*>(offsetof(PackedVertex, x)));
+  glVertexAttribPointer(loc, 2, GL_FLOAT, 0, sizeof(PackedVertex),
+                        reinterpret_cast<const GLuint*>(offsetof(PackedVertex, u1)));
 
   glEnableVertexAttribArray(vertLoc);
   glEnableVertexAttribArray(loc);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_mainIndexVBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte)*4, idx, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 4, idx, GL_STATIC_DRAW);
 
-  glUniform4f(uniColLoc,(colour[0] / 255.0f), (colour[1] / 255.0f), (colour[2] / 255.0f), (colour[3] / 255.0f));
+  glUniform4f(uniColLoc, (colour[0] / 255.0f), (colour[1] / 255.0f), (colour[2] / 255.0f),
+              (colour[3] / 255.0f));
   glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, 0);
 
   glDisableVertexAttribArray(vertLoc);

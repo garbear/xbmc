@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "guilib/GUILabelControl.h"
 #include "guilib/GUIImage.h"
+#include "guilib/GUILabelControl.h"
 
 #include <string>
 
@@ -17,20 +17,22 @@ namespace KODI
 {
 namespace GAME
 {
-  class CGUIFeatureGroupTitle : public CGUILabelControl
-  {
-  public:
-    CGUIFeatureGroupTitle(const CGUILabelControl& groupTitleTemplate, const std::string& groupName, unsigned int buttonIndex);
+class CGUIFeatureGroupTitle : public CGUILabelControl
+{
+public:
+  CGUIFeatureGroupTitle(const CGUILabelControl& groupTitleTemplate,
+                        const std::string& groupName,
+                        unsigned int buttonIndex);
 
-    virtual ~CGUIFeatureGroupTitle() = default;
-  };
+  virtual ~CGUIFeatureGroupTitle() = default;
+};
 
-  class CGUIFeatureSeparator : public CGUIImage
-  {
-  public:
-    CGUIFeatureSeparator(const CGUIImage& separatorTemplate, unsigned int buttonIndex);
+class CGUIFeatureSeparator : public CGUIImage
+{
+public:
+  CGUIFeatureSeparator(const CGUIImage& separatorTemplate, unsigned int buttonIndex);
 
-    virtual ~CGUIFeatureSeparator() = default;
-  };
-}
-}
+  virtual ~CGUIFeatureSeparator() = default;
+};
+} // namespace GAME
+} // namespace KODI

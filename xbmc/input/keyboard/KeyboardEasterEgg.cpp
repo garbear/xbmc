@@ -7,23 +7,16 @@
  */
 
 #include "input/keyboard/KeyboardEasterEgg.h"
-#include "input/joysticks/JoystickEasterEgg.h"
+
 #include "input/Key.h"
+#include "input/joysticks/JoystickEasterEgg.h"
 
 using namespace KODI;
 using namespace KEYBOARD;
 
 std::vector<XBMCVKey> CKeyboardEasterEgg::m_sequence = {
-  XBMCVK_UP,
-  XBMCVK_UP,
-  XBMCVK_DOWN,
-  XBMCVK_DOWN,
-  XBMCVK_LEFT,
-  XBMCVK_RIGHT,
-  XBMCVK_LEFT,
-  XBMCVK_RIGHT,
-  XBMCVK_B,
-  XBMCVK_A,
+    XBMCVK_UP,    XBMCVK_UP,   XBMCVK_DOWN,  XBMCVK_DOWN, XBMCVK_LEFT,
+    XBMCVK_RIGHT, XBMCVK_LEFT, XBMCVK_RIGHT, XBMCVK_B,    XBMCVK_A,
 };
 
 bool CKeyboardEasterEgg::OnKeyPress(const CKey& key)

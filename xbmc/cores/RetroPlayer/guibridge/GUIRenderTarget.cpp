@@ -7,6 +7,7 @@
  */
 
 #include "GUIRenderTarget.h"
+
 #include "cores/RetroPlayer/guicontrols/GUIGameControl.h"
 #include "cores/RetroPlayer/guiwindows/GameWindowFullScreen.h"
 #include "cores/RetroPlayer/rendering/IRenderManager.h"
@@ -16,22 +17,21 @@ using namespace RETRO;
 
 // --- CGUIRenderTarget --------------------------------------------------------
 
-CGUIRenderTarget::CGUIRenderTarget(IRenderManager *renderManager) :
-  m_renderManager(renderManager)
+CGUIRenderTarget::CGUIRenderTarget(IRenderManager* renderManager) : m_renderManager(renderManager)
 {
 }
 
 // --- CGUIRenderControl -------------------------------------------------------
 
-CGUIRenderControl::CGUIRenderControl(IRenderManager *renderManager, CGUIGameControl &gameControl) :
-  CGUIRenderTarget(renderManager),
-  m_gameControl(gameControl)
+CGUIRenderControl::CGUIRenderControl(IRenderManager* renderManager, CGUIGameControl& gameControl)
+  : CGUIRenderTarget(renderManager), m_gameControl(gameControl)
 {
 }
 
 void CGUIRenderControl::Render()
 {
-  m_renderManager->RenderControl(true, true, m_gameControl.GetRenderRegion(), m_gameControl.GetRenderSettings());
+  m_renderManager->RenderControl(true, true, m_gameControl.GetRenderRegion(),
+                                 m_gameControl.GetRenderSettings());
 }
 
 void CGUIRenderControl::RenderEx()
@@ -42,9 +42,9 @@ void CGUIRenderControl::RenderEx()
 
 // --- CGUIRenderFullScreen ----------------------------------------------------
 
-CGUIRenderFullScreen::CGUIRenderFullScreen(IRenderManager *renderManager, CGameWindowFullScreen &window) :
-  CGUIRenderTarget(renderManager),
-  m_window(window)
+CGUIRenderFullScreen::CGUIRenderFullScreen(IRenderManager* renderManager,
+                                           CGameWindowFullScreen& window)
+  : CGUIRenderTarget(renderManager), m_window(window)
 {
 }
 

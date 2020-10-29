@@ -7,18 +7,20 @@
  */
 
 #include "KeymapActionMap.h"
+
+#include "ServiceBroker.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h"
-#include "input/actions/Action.h"
 #include "input/InputManager.h"
 #include "input/Key.h"
-#include "ServiceBroker.h"
+#include "input/actions/Action.h"
 
 using namespace KODI;
 using namespace KEYBOARD;
 
 unsigned int CKeymapActionMap::GetActionID(const CKey& key)
 {
-  CAction action = CServiceBroker::GetInputManager().GetAction(CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindowOrDialog(), key);
+  CAction action = CServiceBroker::GetInputManager().GetAction(
+      CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindowOrDialog(), key);
   return action.GetID();
 }

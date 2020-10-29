@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "input/joysticks/interfaces/IInputReceiver.h"
 #include "input/joysticks/JoystickTypes.h"
+#include "input/joysticks/interfaces/IInputReceiver.h"
 
 #include <map>
 
@@ -17,10 +17,10 @@ namespace KODI
 {
 namespace JOYSTICK
 {
-  class IDriverReceiver;
-  class IButtonMap;
+class IDriverReceiver;
+class IButtonMap;
 
-  /*!
+/*!
    * \ingroup joystick
    * \brief Class to translate input events from higher-level features to driver primitives
    *
@@ -28,19 +28,19 @@ namespace JOYSTICK
    * The button map has been abstracted away behind the IButtonMap interface
    * so that it can be provided by an add-on.
    */
-  class CDriverReceiving : public IInputReceiver
-  {
-  public:
-    CDriverReceiving(IDriverReceiver* receiver, IButtonMap* buttonMap);
+class CDriverReceiving : public IInputReceiver
+{
+public:
+  CDriverReceiving(IDriverReceiver* receiver, IButtonMap* buttonMap);
 
-    virtual ~CDriverReceiving() = default;
+  virtual ~CDriverReceiving() = default;
 
-    // implementation of IInputReceiver
-    virtual bool SetRumbleState(const FeatureName& feature, float magnitude) override;
+  // implementation of IInputReceiver
+  virtual bool SetRumbleState(const FeatureName& feature, float magnitude) override;
 
-  private:
-    IDriverReceiver* const m_receiver;
-    IButtonMap*      const m_buttonMap;
-  };
-}
-}
+private:
+  IDriverReceiver* const m_receiver;
+  IButtonMap* const m_buttonMap;
+};
+} // namespace JOYSTICK
+} // namespace KODI

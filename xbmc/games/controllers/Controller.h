@@ -30,7 +30,8 @@ using JOYSTICK::FEATURE_TYPE;
 class CController : public ADDON::CAddon
 {
 public:
-  static std::unique_ptr<CController> FromExtension(ADDON::CAddonInfo addonInfo, const cp_extension_t* ext);
+  static std::unique_ptr<CController> FromExtension(ADDON::CAddonInfo addonInfo,
+                                                    const cp_extension_t* ext);
 
   explicit CController(ADDON::CAddonInfo addonInfo);
 
@@ -52,7 +53,7 @@ public:
    *
    * \return The feature, or a feature of type FEATURE_TYPE::UNKNOWN if the name is invalid
    */
-  const CControllerFeature& GetFeature(const std::string &name) const;
+  const CControllerFeature& GetFeature(const std::string& name) const;
 
   /*!
    * \brief Get the count of controller features matching the specified types
@@ -70,7 +71,8 @@ public:
    *
    * \param type The feature type, or FEATURE_TYPE::UNKNOWN to get all features
    */
-  void GetFeatures(std::vector<std::string>& features, FEATURE_TYPE type = FEATURE_TYPE::UNKNOWN) const;
+  void GetFeatures(std::vector<std::string>& features,
+                   FEATURE_TYPE type = FEATURE_TYPE::UNKNOWN) const;
 
   /*!
    * \brief Get the type of the specified feature
@@ -79,7 +81,7 @@ public:
    *
    * \return The feature type, or FEATURE_TYPE::UNKNOWN if an invalid feature was specified
    */
-  FEATURE_TYPE FeatureType(const std::string &feature) const;
+  FEATURE_TYPE FeatureType(const std::string& feature) const;
 
   /*!
    * \brief Get the input type of the specified feature
@@ -117,5 +119,5 @@ private:
   bool m_bLoaded = false;
 };
 
-}
-}
+} // namespace GAME
+} // namespace KODI

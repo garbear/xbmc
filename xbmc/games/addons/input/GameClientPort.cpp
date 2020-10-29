@@ -7,6 +7,7 @@
  */
 
 #include "GameClientPort.h"
+
 #include "GameClientDevice.h"
 #include "addons/kodi-addon-dev-kit/include/kodi/kodi_game_types.h"
 #include "games/addons/GameClientTranslator.h"
@@ -19,9 +20,9 @@
 using namespace KODI;
 using namespace GAME;
 
-CGameClientPort::CGameClientPort(const game_input_port &port) :
-  m_type(CGameClientTranslator::TranslatePortType(port.type)),
-  m_portId(port.port_id ? port.port_id : "")
+CGameClientPort::CGameClientPort(const game_input_port& port)
+  : m_type(CGameClientTranslator::TranslatePortType(port.type)),
+    m_portId(port.port_id ? port.port_id : "")
 {
   if (port.accepted_devices != nullptr)
   {
@@ -35,24 +36,23 @@ CGameClientPort::CGameClientPort(const game_input_port &port) :
   }
 }
 
-CGameClientPort::CGameClientPort(const ControllerVector &controllers) :
-  m_type(PORT_TYPE::CONTROLLER),
-  m_portId(DEFAULT_PORT_ID)
+CGameClientPort::CGameClientPort(const ControllerVector& controllers)
+  : m_type(PORT_TYPE::CONTROLLER), m_portId(DEFAULT_PORT_ID)
 {
-  for (const auto &controller : controllers)
+  for (const auto& controller : controllers)
     m_acceptedDevices.emplace_back(new CGameClientDevice(controller));
 }
 
-CGameClientPort::CGameClientPort(const game_input_port &logicalPort, const CControllerPort &physicalPort) :
-  m_type(PORT_TYPE::CONTROLLER),
-  m_portId(physicalPort.ID())
+CGameClientPort::CGameClientPort(const game_input_port& logicalPort,
+                                 const CControllerPort& physicalPort)
+  : m_type(PORT_TYPE::CONTROLLER), m_portId(physicalPort.ID())
 {
   if (logicalPort.accepted_devices != nullptr)
   {
     for (unsigned int i = 0; i < logicalPort.device_count; i++)
     {
       // Ensure device is physically compatible
-      const game_input_device &deviceStruct = logicalPort.accepted_devices[i];
+      const game_input_device& deviceStruct = logicalPort.accepted_devices[i];
       std::string controllerId = deviceStruct.controller_id ? deviceStruct.controller_id : "";
 
       if (physicalPort.IsCompatible(controllerId))

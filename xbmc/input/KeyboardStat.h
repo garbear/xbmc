@@ -22,10 +22,10 @@
 // but this allows for double/redundant or ambiguous mapping definition, e.g.
 // ASCII/unicode could be derived from scancodes, virtual keys, modifiers and/or other ASCII/unicode.
 
-#include <string>
-
 #include "input/Key.h"
 #include "input/XBMC_keyboard.h"
+
+#include <string>
 
 class CKeyboardStat
 {
@@ -43,9 +43,8 @@ public:
   std::string GetKeyName(int KeyID);
 
 private:
-  static bool LookupSymAndUnicodePeripherals(XBMC_keysym &keysym, uint8_t *key, char *unicode);
+  static bool LookupSymAndUnicodePeripherals(XBMC_keysym& keysym, uint8_t* key, char* unicode);
 
   XBMC_keysym m_lastKeysym;
   unsigned int m_lastKeyTime;
 };
-

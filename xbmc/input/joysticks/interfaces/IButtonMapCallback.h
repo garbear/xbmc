@@ -12,20 +12,20 @@ namespace KODI
 {
 namespace JOYSTICK
 {
-  /*!
+/*!
    * \brief Interface for handling button maps
    */
-  class IButtonMapCallback
-  {
-  public:
-    virtual ~IButtonMapCallback() = default;
+class IButtonMapCallback
+{
+public:
+  virtual ~IButtonMapCallback() = default;
 
-    /*!
+  /*!
      * \brief Save the button map
      */
-    virtual void SaveButtonMap() = 0;
+  virtual void SaveButtonMap() = 0;
 
-    /*!
+  /*!
      * \brief Clear the list of ignored driver primitives
      *
      * Called if the user begins capturing primitives to be ignored, and
@@ -35,13 +35,13 @@ namespace JOYSTICK
      * button map, so a callback is needed to indicate that no primitives were
      * captured and the user accepted this.
      */
-    virtual void ResetIgnoredPrimitives() = 0;
+  virtual void ResetIgnoredPrimitives() = 0;
 
-    /*!
+  /*!
      * \brief Revert changes to the button map since the last time it was loaded
      *        or committed to disk
      */
-    virtual void RevertButtonMap() = 0;
-  };
-}
-}
+  virtual void RevertButtonMap() = 0;
+};
+} // namespace JOYSTICK
+} // namespace KODI

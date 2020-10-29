@@ -16,23 +16,23 @@ namespace KODI
 {
 namespace MOUSE
 {
-  /*!
+/*!
    * \ingroup mouse
    * \brief Interface for handling mouse events
    */
-  class IMouseInputHandler
-  {
-  public:
-    virtual ~IMouseInputHandler(void) = default;
+class IMouseInputHandler
+{
+public:
+  virtual ~IMouseInputHandler(void) = default;
 
-    /*!
+  /*!
      * \brief The controller profile for this mouse input handler
      *
      * \return The ID of the add-on extending kodi.game.controller
      */
-    virtual std::string ControllerID(void) const = 0;
+  virtual std::string ControllerID(void) const = 0;
 
-    /*!
+  /*!
      * \brief A relative pointer has moved
      *
      * \param relpointer   The name of the relative pointer being moved
@@ -44,23 +44,23 @@ namespace MOUSE
      *
      * \return True if the event was handled, otherwise false
      */
-    virtual bool OnMotion(const PointerName& relpointer, int dx, int dy) = 0;
+  virtual bool OnMotion(const PointerName& relpointer, int dx, int dy) = 0;
 
-    /*!
+  /*!
      * \brief A mouse button has been pressed
      *
      * \param button      The name of the feature being pressed
      *
      * \return True if the event was handled, otherwise false
      */
-    virtual bool OnButtonPress(const ButtonName& button) = 0;
+  virtual bool OnButtonPress(const ButtonName& button) = 0;
 
-    /*!
+  /*!
      * \brief A mouse button has been released
      *
      * \param button      The name of the feature being released
      */
-    virtual void OnButtonRelease(const ButtonName& button) = 0;
-  };
-}
-}
+  virtual void OnButtonRelease(const ButtonName& button) = 0;
+};
+} // namespace MOUSE
+} // namespace KODI

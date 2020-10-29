@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include <minwindef.h>
 #include <memory>
 #include <vector>
+
+#include <minwindef.h>
 
 namespace KODI
 {
@@ -31,5 +32,5 @@ struct CUSTOMVERTEX
   FLOAT tv;
 };
 
-}
-}
+} // namespace SHADER
+} // namespace KODI

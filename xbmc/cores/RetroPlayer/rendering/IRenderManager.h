@@ -16,25 +16,25 @@ namespace KODI
 {
 namespace RETRO
 {
-  class IGUIRenderSettings;
+class IGUIRenderSettings;
 
-  /*!
+/*!
    * \brief Interface to expose rendering functions to GUI components
    */
-  class IRenderManager
-  {
-  public:
-    virtual ~IRenderManager() = default;
+class IRenderManager
+{
+public:
+  virtual ~IRenderManager() = default;
 
-    /*!
+  /*!
      * \brief Render a fullscreen window
      *
      * \param bClear Whether the render area should be cleared
      * \param coordsRes Resolution that the window coordinates are in
      */
-    virtual void RenderWindow(bool bClear, const RESOLUTION_INFO &coordsRes) = 0;
+  virtual void RenderWindow(bool bClear, const RESOLUTION_INFO& coordsRes) = 0;
 
-    /*!
+  /*!
      * \brief Render a game control
      *
      * \param bClear Whether the render area should be cleared
@@ -42,12 +42,15 @@ namespace RETRO
      * \param renderRegion The region of the control being rendered
      * \param renderSettings The settings used to render the control
      */
-    virtual void RenderControl(bool bClear, bool bUseAlpha, const CRect &renderRegion, const IGUIRenderSettings *renderSettings) = 0;
+  virtual void RenderControl(bool bClear,
+                             bool bUseAlpha,
+                             const CRect& renderRegion,
+                             const IGUIRenderSettings* renderSettings) = 0;
 
-    /*!
+  /*!
      * \brief Clear the background of a fullscreen window
      */
-    virtual void ClearBackground() = 0;
-  };
-}
-}
+  virtual void ClearBackground() = 0;
+};
+} // namespace RETRO
+} // namespace KODI

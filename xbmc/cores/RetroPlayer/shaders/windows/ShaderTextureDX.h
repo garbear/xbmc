@@ -37,7 +37,7 @@ public:
 
   void SetTexture(TextureType* newTexture) { m_texture = newTexture; }
 
-  ID3D11ShaderResourceView *GetShaderResource() const { return m_texture->GetShaderResource(); }
+  ID3D11ShaderResourceView* GetShaderResource() const { return m_texture->GetShaderResource(); }
 
   TextureType* GetPointer() { return m_texture; }
 
@@ -48,5 +48,5 @@ private:
 using CShaderTextureCD3D = CShaderTextureDX<CD3DTexture>;
 using CShaderTextureCDX = CShaderTextureDX<CDXTexture>;
 
-}
-}
+} // namespace SHADER
+} // namespace KODI

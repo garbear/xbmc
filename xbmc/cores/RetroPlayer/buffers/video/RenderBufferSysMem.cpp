@@ -7,6 +7,7 @@
  */
 
 #include "RenderBufferSysMem.h"
+
 #include "cores/RetroPlayer/rendering/RenderTranslator.h"
 
 using namespace KODI;
@@ -36,12 +37,14 @@ size_t CRenderBufferSysMem::GetFrameSize() const
   return m_data.size();
 }
 
-uint8_t *CRenderBufferSysMem::GetMemory()
+uint8_t* CRenderBufferSysMem::GetMemory()
 {
   return m_data.data();
 }
 
-size_t CRenderBufferSysMem::GetBufferSize(AVPixelFormat format, unsigned int width, unsigned int height)
+size_t CRenderBufferSysMem::GetBufferSize(AVPixelFormat format,
+                                          unsigned int width,
+                                          unsigned int height)
 {
   const size_t bufferStride = CRenderTranslator::TranslateWidthToBytes(width, format);
   const size_t bufferSize = bufferStride * height;

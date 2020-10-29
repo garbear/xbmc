@@ -12,16 +12,16 @@ namespace KODI
 {
 namespace JOYSTICK
 {
-  /*!
+/*!
    * \ingroup joystick
    * \brief Interface for sending input events to joystick drivers
    */
-  class IDriverReceiver
-  {
-  public:
-    virtual ~IDriverReceiver() = default;
+class IDriverReceiver
+{
+public:
+  virtual ~IDriverReceiver() = default;
 
-    /*!
+  /*!
      * \brief Set the value of a rumble motor
      *
      * \param motorIndex   The driver index of the motor to rumble
@@ -29,7 +29,7 @@ namespace JOYSTICK
      *
      * \return True if the event was handled otherwise false
      */
-    virtual bool SetMotorState(unsigned int motorIndex, float magnitude) = 0;
-  };
-}
-}
+  virtual bool SetMotorState(unsigned int motorIndex, float magnitude) = 0;
+};
+} // namespace JOYSTICK
+} // namespace KODI
