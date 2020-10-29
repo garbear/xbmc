@@ -12,6 +12,8 @@
 #include "cores/RetroPlayer/buffers/RenderBufferPoolOpenGLES.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
+#include "cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h"
+#include "cores/RetroPlayer/shaders/gles/ShaderTextureGLES.h"
 #include "utils/GLUtils.h"
 #include "utils/log.h"
 
@@ -48,6 +50,9 @@ CRPRendererOpenGLES::CRPRendererOpenGLES(const CRenderSettings& renderSettings,
                                          std::shared_ptr<IRenderBufferPool> bufferPool)
   : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
+  // Initialize CRPBaseRenderer
+  m_shaderPreset.reset(new SHADER::CShaderPresetGLES(m_context));
+
   glGenBuffers(1, &m_mainIndexVBO);
   glGenBuffers(1, &m_mainVertexVBO);
   glGenBuffers(1, &m_blackbarsVertexVBO);
@@ -238,6 +243,63 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
   if (renderBuffer == nullptr)
     return;
 
+  RenderBufferTextures* rbTextures;
+  const auto it = m_RBTexturesMap.find(renderBuffer);
+  if (it != m_RBTexturesMap.end())
+  {
+    rbTextures = it->second.get();
+  }
+  else
+  {
+    // We can't copy or move CGLESTexture, so construct source/target in-place
+    rbTextures = new RenderBufferTextures{
+        // Source texture
+        {
+            static_cast<unsigned int>(renderBuffer->GetWidth()),
+            static_cast<unsigned int>(renderBuffer->GetHeight()),
+            XB_FMT_RGB8,
+            renderBuffer->TextureID(),
+        },
+        // Target texture
+        {
+            static_cast<unsigned int>(m_context.GetScreenWidth()),
+            static_cast<unsigned int>(m_context.GetScreenHeight()),
+        },
+    };
+    m_RBTexturesMap.emplace(renderBuffer, rbTextures);
+  }
+
+  const auto sourceTexture = &rbTextures->source;
+  const auto targetTexture = &rbTextures->target;
+
+  Updateshaders();
+
+  if (m_bUseShaderPreset)
+  {
+    GLint filter = GL_NEAREST;
+    if (m_shaderPreset->GetPasses()[0].filter == SHADER::FILTER_TYPE_LINEAR)
+      filter = GL_LINEAR;
+
+    glBindTexture(m_textureTarget, sourceTexture->getMTexture());
+    glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, filter);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    const CPoint destPoints[4] = {m_rotatedDestCoords[0], m_rotatedDestCoords[1],
+                                  m_rotatedDestCoords[2], m_rotatedDestCoords[3]};
+
+    SHADER::CShaderTextureGLES source(*sourceTexture);
+    SHADER::CShaderTextureGLES target(*targetTexture);
+    if (!m_shaderPreset->RenderUpdate(destPoints, &source, &target))
+    {
+      m_bShadersNeedUpdate = false;
+      m_bUseShaderPreset = false;
+    }
+
+    return;
+  }
+
   CRect rect = m_sourceRect;
 
   rect.x1 /= renderBuffer->GetWidth();
@@ -247,11 +309,11 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
 
   const uint32_t color = (alpha << 24) | 0xFFFFFF;
 
-  glBindTexture(m_textureTarget, renderBuffer->TextureID());
-
   GLint filter = GL_NEAREST;
   if (GetRenderSettings().VideoSettings().GetScalingMethod() == SCALINGMETHOD::LINEAR)
     filter = GL_LINEAR;
+
+  glBindTexture(m_textureTarget, sourceTexture->getMTexture());
   glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, filter);
   glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, filter);
   glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
