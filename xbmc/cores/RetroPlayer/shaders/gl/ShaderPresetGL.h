@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2020 Team Kodi
+ *  Copyright (C) 2019 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -8,18 +8,19 @@
 
 #pragma once
 
-#include "ShaderDX.h"
-#include "ShaderTextureDX.h"
+#include "ShaderGL.h"
+#include "ShaderTextureGL.h"
 #include "cores/RetroPlayer/shaders/IShaderPreset.h"
 #include "cores/RetroPlayer/shaders/ShaderTypes.h"
 #include "games/GameServices.h"
 #include "utils/Geometry.h"
 
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
-#include <d3d11.h>
+#include "system_gl.h"
 
 namespace ADDON
 {
@@ -31,40 +32,38 @@ namespace KODI
 {
 namespace RETRO
 {
+
 class CRenderContext;
+
 }
 
 namespace SHADER
 {
 
 class IShaderTexture;
-
-class CShaderPresetDX : public IShaderPreset
+class CShaderPresetGL : public IShaderPreset
 {
 public:
   // Instance of CShaderPreset
-  explicit CShaderPresetDX(RETRO::CRenderContext& context,
+  explicit CShaderPresetGL(RETRO::CRenderContext& context,
                            unsigned videoWidth = 0,
                            unsigned videoHeight = 0);
-  ~CShaderPresetDX() override;
+
+  ~CShaderPresetGL() override;
 
   // implementation of IShaderPreset
   bool ReadPresetFile(const std::string& presetPath) override;
   bool RenderUpdate(const CPoint dest[], IShaderTexture* source, IShaderTexture* target) override;
-  void SetSpeed(double speed) override { m_speed = speed; }
+  void SetSpeed(double speed) override;
   void SetVideoSize(const unsigned videoWidth, const unsigned videoHeight) override;
   bool SetShaderPreset(const std::string& shaderPresetPath) override;
   const std::string& GetShaderPreset() const override;
-  ShaderPassVec& GetPasses() override { return m_passes; }
-
+  ShaderPassVec& GetPasses() override;
   bool Update();
-  // CShaderTextureDX* GetFirstTexture();
 
 private:
   bool CreateShaderTextures();
   bool CreateShaders();
-  bool CreateSamplers();
-  bool CreateLayouts();
   bool CreateBuffers();
   void UpdateViewPort();
   void UpdateViewPort(CRect viewPort);
@@ -82,13 +81,13 @@ private:
   std::string m_presetPath;
 
   // Video shaders for the shader passes
-  std::vector<std::unique_ptr<CShaderDX>> m_pShaders;
+  std::vector<std::unique_ptr<IShader>> m_pShaders;
 
   // Intermediate textures used for pixel shader passes
-  std::vector<std::unique_ptr<CShaderTextureCD3D>> m_pShaderTextures;
+  std::vector<std::unique_ptr<CShaderTextureGL>> m_pShaderTextures;
 
   // First texture (this won't be needed when we have RGB rendering
-  std::unique_ptr<CShaderTextureCD3D> firstTexture;
+  //std::unique_ptr<CShaderTextureCD3D> firstTexture;
 
   // Was the shader preset changed during the last frame?
   bool m_bPresetNeedsUpdate = true;
@@ -107,10 +106,10 @@ private:
   float m_frameCount = 0.0f;
 
   // Point/nearest neighbor sampler
-  ID3D11SamplerState* m_pSampNearest = nullptr;
+  //ID3D11SamplerState* m_pSampNearest = nullptr;
 
   // Linear sampler
-  ID3D11SamplerState* m_pSampLinear = nullptr;
+  //ID3D11SamplerState* m_pSampLinear = nullptr;
 
   // Set of paths of presets that are known to not load correctly
   // Should not contain "" (empty path) because this signifies that a preset is not loaded

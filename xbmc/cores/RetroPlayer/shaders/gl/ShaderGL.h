@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017-2020 Team Kodi
+ *  Copyright (C) 2019 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -8,31 +8,33 @@
 
 #pragma once
 
-#include "ShaderTextureDX.h"
+#include "ShaderTextureGL.h"
 #include "cores/RetroPlayer/shaders/IShader.h"
-#include "cores/VideoPlayer/VideoRenderers/VideoShaders/WinVideoFilter.h"
-#include "guilib/D3DResource.h"
+#include "cores/RetroPlayer/shaders/gl/ShaderTypesGL.h"
+#include "guilib/TextureGL.h"
+#include "rendering/gl/GLShader.h"
 
+#include <array>
 #include <stdint.h>
 
 namespace KODI
 {
 namespace RETRO
 {
+
 class CRenderContext;
+
 }
 
 namespace SHADER
 {
-
-// TODO: make renderer independent
-// libretro's "Common shaders"
-// Spec here: https://github.com/libretro/common-shaders/blob/master/docs/README
-class CShaderDX : public CWinShader, public IShader
+class CShaderGL : public IShader
 {
 public:
-  CShaderDX(RETRO::CRenderContext& context);
-  ~CShaderDX() override;
+  CShaderGL(RETRO::CRenderContext& context);
+  ~CShaderGL() override = default;
+
+  bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) override;
 
   // implementation of IShader
   bool Create(const std::string& shaderSource,
@@ -45,33 +47,22 @@ public:
   void Render(IShaderTexture* source, IShaderTexture* target) override;
   void SetSizes(const float2& prevSize, const float2& nextSize) override;
   void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) override;
-  CD3DEffect& GetEffect();
   void UpdateMVP() override;
   bool CreateInputBuffer() override;
   void UpdateInputBuffer(uint64_t frameCount);
-
-  // expose these from CWinShader
-  bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) override;
-
-  /*!
-   * \brief Creates the data layout of the input-assembler stage
-   * \param layout Description of the inputs to the vertex shader
-   * \param numElements Number of inputs to the vertex shader
-   * \return False if creating the input layout failed, true otherwise.
-   */
-  bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements);
+  void GetUniformLocs();
 
 protected:
-  void SetShaderParameters(CD3DTexture& sourceTexture);
+  void SetShaderParameters();
 
 private:
-  struct cbInput
+  struct uniformInputs
   {
-    XMFLOAT2 video_size;
-    XMFLOAT2 texture_size;
-    XMFLOAT2 output_size;
-    float frame_count;
-    float frame_direction;
+    float2 video_size;
+    float2 texture_size;
+    float2 output_size;
+    GLint frame_count;
+    GLfloat frame_direction;
   };
 
   // Currently loaded shader's source code
@@ -82,9 +73,6 @@ private:
 
   // Array of shader parameters
   ShaderParameterMap m_shaderParameters;
-
-  // Sampler state
-  ID3D11SamplerState* m_pSampler = nullptr;
 
   // Look-up textures that the shader uses
   ShaderLutVec m_luts; // todo: back to DX maybe
@@ -99,24 +87,38 @@ private:
   float2 m_viewportSize;
 
   // Resolution of the texture that holds the input
-  // float2 m_textureSize;
+  //float2 m_textureSize;
 
-  // Holds the data bount to the input cbuffer (cbInput here)
-  ID3D11Buffer* m_pInputBuffer = nullptr;
+  GLuint m_shaderProgram = 0;
 
   // Projection matrix
-  XMFLOAT4X4 m_MVP;
+  std::array<std::array<GLfloat, 4>, 4> m_MVP;
+
+  float m_VertexCoords[4][3];
+  float m_colors[4][3];
+  float m_TexCoords[4][2];
+  unsigned int m_indices[2][3];
 
   // Value to modulo (%) frame count with
   // Unused if 0
   unsigned m_frameCountMod = 0;
 
+  GLint m_FrameDirectionLoc = -1;
+  GLint m_FrameCountLoc = -1;
+  GLint m_OutputSizeLoc = -1;
+  GLint m_TextureSizeLoc = -1;
+  GLint m_InputSizeLoc = -1;
+  GLint m_MVPMatrixLoc = -1;
+
+  GLuint VAO = 0;
+  GLuint EBO = 0;
+  GLuint VBO[3] = {};
+
 private:
-  cbInput GetInputData(uint64_t frameCount = 0);
+  uniformInputs GetInputData(uint64_t frameCount = 0);
 
   // Construction parameters
   RETRO::CRenderContext& m_context;
 };
-
 } // namespace SHADER
 } // namespace KODI
