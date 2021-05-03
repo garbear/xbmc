@@ -399,7 +399,7 @@ case $host in
     platform_os="linux"
     meson_system="linux"
     ffmpeg_options_default="--enable-vaapi --enable-vdpau --cpu=$use_cpu"
-    target_platform="x11 wayland gbm"
+    target_platform="x11"
   ;;
   *darwin*)
     # darwin builds are always cross
