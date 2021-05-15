@@ -116,9 +116,6 @@ private:
 
 private:
   uniformInputs GetInputData(uint64_t frameCount = 0);
-
-  // Construction parameters
-  RETRO::CRenderContext& m_context;
 };
 } // namespace SHADER
 } // namespace KODI
