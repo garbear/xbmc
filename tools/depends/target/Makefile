@@ -30,14 +30,6 @@ DEPENDS += \
   sqlite-modern-cpp \
   yaml-cpp \
 
-# Filecoin dependencies
-DEPENDS += \
-  cppcodec \
-  filecoin \
-  leveldb \
-  libarchive \
-  tinycbor \
-
 ifeq ($(ENABLE_GPLV3),yes)
   DEPENDS+=samba-gplv3 libcdio-gplv3
 else
@@ -159,29 +151,6 @@ libp2p: \
   protobuf \
   soralog \
   sqlite-modern-cpp
-libarchive: \
-  bzip2 \
-  libiconv \
-  liblz4 \
-  liblzo2 \
-  libxml2 \
-  openssl \
-  pcre \
-  zlib # TODO: What dependency provides liblzma?
-filecoin: \
-  boost \
-  boost-di \
-  cppcodec \
-  curl \
-  gsl \
-  hat-trie \
-  leveldb \
-  libarchive \
-  libp2p \
-  libspdlog \
-  openssl \
-  protobuf \
-  tinycbor
 
 .installed-$(PLATFORM): $(DEPENDS)
 	touch $@
