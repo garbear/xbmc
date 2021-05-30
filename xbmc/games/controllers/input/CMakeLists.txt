@@ -1,9 +1,11 @@
-set(SOURCES InputSink.cpp
+set(SOURCES ControllerState.cpp
+            InputSink.cpp
             PhysicalFeature.cpp
             PhysicalTopology.cpp
 )
 
-set(HEADERS InputSink.h
+set(HEADERS ControllerState.h
+            InputSink.h
             PhysicalFeature.h
             PhysicalTopology.h
 )
