@@ -71,6 +71,11 @@ namespace RETRO_ENGINE
 {
 class CRetroEngineServices;
 }
+
+namespace SMART_HOME
+{
+class CSmartHomeServices;
+}
 } // namespace KODI
 
 namespace MEDIA_DETECT
@@ -154,6 +159,8 @@ public:
 
   KODI::RETRO_ENGINE::CRetroEngineServices& GetRetroEngineServices();
 
+  KODI::SMART_HOME::CSmartHomeServices& GetSmartHomeServices();
+
 protected:
   std::unique_ptr<ADDON::CAddonMgr> m_addonMgr;
   std::unique_ptr<ADDON::CBinaryAddonManager> m_binaryAddonManager;
@@ -190,4 +197,5 @@ protected:
   std::unique_ptr<MEDIA_DETECT::CDetectDVDMedia> m_DetectDVDType;
 #endif
   std::unique_ptr<KODI::RETRO_ENGINE::CRetroEngineServices> m_retroEngineServices;
+  std::unique_ptr<KODI::SMART_HOME::CSmartHomeServices> m_smartHomeServices;
 };
