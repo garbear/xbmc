@@ -108,6 +108,9 @@ option(ENABLE_AIRTUNES    "Enable AirTunes support?" ON)
 option(ENABLE_OPTICAL     "Enable optical support?" ON)
 option(ENABLE_PYTHON      "Enable python support?" ON)
 option(ENABLE_TESTING     "Enable testing support?" ON)
+set(ENABLE_ROS2 OFF CACHE STRING "Enable ROS 2 support (ON, OFF or AUTO)")
+set_property(CACHE ENABLE_ROS2 PROPERTY TYPE STRING)
+set_property(CACHE ENABLE_ROS2 PROPERTY STRINGS ON OFF AUTO)
 
 # Internal Depends - supported on all platforms
 
@@ -338,6 +341,15 @@ if(ENABLE_AIRTUNES)
   if(TARGET ${APP_NAME_LC}::Shairplay)
     core_require_dep(Shairplay)
   endif()
+endif()
+
+if(ENABLE_ROS2 STREQUAL "AUTO")
+  find_package(ROS2 MODULE)
+elseif(ENABLE_ROS2)
+  find_package(ROS2 REQUIRED MODULE)
+endif()
+if(ROS2_FOUND)
+  list(APPEND DEP_DEFINES "-DHAS_ROS2=1")
 endif()
 
 # We unset this after the bulk of our find calls are complete. Ideally we would want this enabled
