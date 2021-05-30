@@ -114,6 +114,11 @@ namespace RETRO
 {
 class CGUIGameRenderManager;
 }
+
+namespace SMART_HOME
+{
+class CSmartHomeServices;
+}
 } // namespace KODI
 
 namespace PERIPHERALS
@@ -245,6 +250,8 @@ public:
   static std::shared_ptr<XFILE::CBlurayDiscCache> GetBlurayDiscCache();
 
   static KODI::RETRO_ENGINE::CRetroEngineServices& GetRetroEngineServices();
+
+  static KODI::SMART_HOME::CSmartHomeServices& GetSmartHomeServices();
 
 private:
   std::shared_ptr<CAppParams> m_appParams;
