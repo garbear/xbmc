@@ -50,6 +50,7 @@
 #include "games/controllers/guicontrols/GUIGameController.h"
 #include "input/Key.h"
 #include "pvr/guilib/GUIEPGGridContainer.h"
+#include "smarthome/guicontrols/GUICameraControl.h"
 #include "utils/CharsetConverter.h"
 #include "utils/RssManager.h"
 #include "utils/StringUtils.h"
@@ -68,6 +69,7 @@ typedef struct
 
 static const ControlMapping controls[] = {
     {"button", CGUIControl::GUICONTROL_BUTTON},
+    {"cameraview", CGUIControl::GUICONTROL_CAMERA},
     {"colorbutton", CGUIControl::GUICONTROL_COLORBUTTON},
     {"edit", CGUIControl::GUICONTROL_EDIT},
     {"epggrid", CGUIControl::GUICONTAINER_EPGGRID},
@@ -1560,6 +1562,25 @@ CGUIControl* CGUIControlFactory::Create(int parentID, const CRect &rect, TiXmlEl
     rcontrol->SetClickActions(clickActions);
     rcontrol->SetFocusActions(focusActions);
     rcontrol->SetUnFocusActions(unfocusActions);
+  }
+  break;
+  case CGUIControl::GUICONTROL_CAMERA:
+  {
+    auto ccontrol = new SMART_HOME::CGUICameraControl(parentID, id, posX, posY, width, height);
+
+    GUIINFO::CGUIInfoLabel topic;
+    GetInfoLabel(pControlNode, "topic", topic, parentID);
+    ccontrol->SetPubSubTopic(topic);
+
+    GUIINFO::CGUIInfoLabel stretchMode;
+    GetInfoLabel(pControlNode, "stretchmode", stretchMode, parentID);
+    ccontrol->SetStretchMode(stretchMode);
+
+    GUIINFO::CGUIInfoLabel rotation;
+    GetInfoLabel(pControlNode, "rotation", rotation, parentID);
+    ccontrol->SetRotation(rotation);
+
+    control = ccontrol;
   }
   break;
   default:
