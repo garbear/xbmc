@@ -108,8 +108,11 @@ bool CRPRenderManager::GetVideoBuffer(
   // Get buffers from visible renderers
   for (IRenderBufferPool* bufferPool : m_processInfo.GetBufferManager().GetBufferPools())
   {
+    // TODO
+    /*
     if (!bufferPool->HasVisibleRenderer())
       continue;
+    */
 
     IRenderBuffer* renderBuffer = bufferPool->GetBuffer(width, height);
     if (renderBuffer != nullptr)

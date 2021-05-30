@@ -71,6 +71,11 @@ namespace RETRO
 {
   class CGUIGameRenderManager;
 }
+
+namespace SMART_HOME
+{
+  class CSmartHomeServices;
+}
 }
 
 namespace PERIPHERALS
@@ -146,6 +151,8 @@ public:
   static std::shared_ptr<CCPUInfo> GetCPUInfo();
   static void RegisterCPUInfo(std::shared_ptr<CCPUInfo> cpuInfo);
   static void UnregisterCPUInfo();
+
+  static KODI::SMART_HOME::CSmartHomeServices& GetSmartHomeServices();
 
 private:
   std::unique_ptr<CLog> m_logging;

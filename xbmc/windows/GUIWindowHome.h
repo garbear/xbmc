@@ -30,6 +30,7 @@ public:
 
   bool OnMessage(CGUIMessage& message) override;
   bool OnAction(const CAction &action) override;
+  void FrameMove() override; //! @todo
 
   void OnJobComplete(unsigned int jobID, bool success, CJob *job) override;
 private:
