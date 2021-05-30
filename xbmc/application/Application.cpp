@@ -55,6 +55,7 @@
 #include "platform/Environment.h"
 #include "playlists/PlayListFactory.h"
 #include "cores/RetroEngine/RetroEngineServices.h"
+#include "smarthome/SmartHomeServices.h"
 #include "threads/SystemClock.h"
 #include "utils/ContentUtils.h"
 #include "utils/JobManager.h"
@@ -1881,6 +1882,8 @@ void CApplication::FrameMove(bool processEvents, bool processGUI)
   }
 
   appPlayer->FrameMove();
+
+  CServiceBroker::GetSmartHomeServices().FrameMove();
 
   // this will go away when render systems gets its own thread
   CServiceBroker::GetWinSystem()->DriveRenderLoop();
