@@ -10,6 +10,7 @@
 
 #include "Application.h"
 #include "ServiceBroker.h"
+#include "cores/RetroPlayer/guicontrols/GUIGameControl.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h"
 #include "guilib/WindowIDs.h"
@@ -17,11 +18,14 @@
 #include "interfaces/AnnouncementManager.h"
 #include "settings/AdvancedSettings.h"
 #include "settings/SettingsComponent.h"
+#include "smarthome/SmartHomeServices.h"
 #include "utils/JobManager.h"
 #include "utils/RecentlyAddedJob.h"
 #include "utils/StringUtils.h"
 #include "utils/Variant.h"
 #include "utils/log.h"
+
+using namespace KODI;
 
 CGUIWindowHome::CGUIWindowHome(void) : CGUIWindow(WINDOW_HOME, "Home.xml")
 {
@@ -59,6 +63,19 @@ void CGUIWindowHome::OnInitWindow()
   AddRecentlyAddedJobs( m_updateRA );
 
   CGUIWindow::OnInitWindow();
+
+  // Register the gamewindow control (TODO: Move this)
+  RETRO::CGUIGameControl* gameWindow = dynamic_cast<RETRO::CGUIGameControl*>(GetControl(0));
+  if (gameWindow != nullptr)
+    CServiceBroker::GetSmartHomeServices().RegisterControl(*gameWindow);
+}
+
+void CGUIWindowHome::FrameMove()
+{
+  CGUIWindow::FrameMove();
+
+  // TODO: Move this
+  CServiceBroker::GetSmartHomeServices().FrameMove();
 }
 
 void CGUIWindowHome::Announce(ANNOUNCEMENT::AnnouncementFlag flag,

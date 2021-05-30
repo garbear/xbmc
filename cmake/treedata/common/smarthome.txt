@@ -1,0 +1,2 @@
+xbmc/smarthome smarthome
+xbmc/smarthome/streams smarthome/streams

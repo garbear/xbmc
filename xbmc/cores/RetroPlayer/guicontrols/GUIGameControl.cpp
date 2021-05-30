@@ -16,6 +16,7 @@
 #include "cores/RetroPlayer/guibridge/GUIRenderHandle.h"
 #include "settings/GameSettings.h"
 #include "settings/MediaSettings.h"
+#include "smarthome/SmartHomeServices.h" // TODO
 #include "utils/Geometry.h"
 #include "utils/StringUtils.h"
 
@@ -167,7 +168,8 @@ void CGUIGameControl::Reset()
 
 void CGUIGameControl::RegisterControl()
 {
-  m_renderHandle = CServiceBroker::GetGameRenderManager().RegisterControl(*this);
+  // TODO
+  m_renderHandle = CServiceBroker::GetSmartHomeServices().RegisterControl(*this);
 }
 
 void CGUIGameControl::UnregisterControl()
