@@ -443,3 +443,8 @@ RETRO_ENGINE::CRetroEngineServices& CServiceBroker::GetRetroEngineServices()
 {
   return g_application.m_ServiceManager->GetRetroEngineServices();
 }
+
+SMART_HOME::CSmartHomeServices& CServiceBroker::GetSmartHomeServices()
+{
+  return g_application.m_ServiceManager->GetSmartHomeServices();
+}
