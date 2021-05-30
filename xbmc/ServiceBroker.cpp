@@ -394,3 +394,8 @@ std::shared_ptr<CKeyboardLayoutManager> CServiceBroker::GetKeyboardLayoutManager
 {
   return g_serviceBroker.m_keyboardLayoutManager;
 }
+
+SMART_HOME::CSmartHomeServices& CServiceBroker::GetSmartHomeServices()
+{
+  return g_application.m_ServiceManager->GetSmartHomeServices();
+}

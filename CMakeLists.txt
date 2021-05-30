@@ -185,6 +185,17 @@ set(optional_deps Alsa
                   XSLT
                   ${PLATFORM_OPTIONAL_DEPS})
 
+# ROS dependencies. Keep in alphabetical order please
+list(APPEND required_deps
+  ament_cmake
+  image_transport
+  oasis_msgs
+  rcl_interfaces
+  rclcpp
+  rmw
+  sensor_msgs
+)
+
 # Check optional deps first, since their availability can influence required ones, e.g. ffmpeg
 core_optional_dep(${optional_deps})
 core_require_dep(${required_deps})

@@ -11,12 +11,17 @@
 #include "Application.h"
 #include "ServiceBroker.h"
 #include "guilib/GUIComponent.h"
+#include "guilib/GUIControlGroup.h" //! @todo
 #include "guilib/GUIWindowManager.h"
 #include "guilib/WindowIDs.h"
 #include "input/Key.h"
 #include "interfaces/AnnouncementManager.h"
 #include "settings/AdvancedSettings.h"
 #include "settings/SettingsComponent.h"
+#include "smarthome/SmartHomeServices.h" //! @todo
+#include "smarthome/guibridge/SmartHomeGuiBridge.h" //! @todo
+#include "smarthome/guicontrols/GUICameraControl.h" //! @todo
+#include "smarthome/ros2/Ros2.h" //! @todo
 #include "utils/JobManager.h"
 #include "utils/RecentlyAddedJob.h"
 #include "utils/StringUtils.h"
@@ -24,6 +29,8 @@
 #include "utils/log.h"
 
 #include <mutex>
+
+using namespace KODI;
 
 CGUIWindowHome::CGUIWindowHome(void) : CGUIWindow(WINDOW_HOME, "Home.xml")
 {
@@ -64,6 +71,35 @@ void CGUIWindowHome::OnInitWindow()
   AddRecentlyAddedJobs( m_updateRA );
 
   CGUIWindow::OnInitWindow();
+
+  //RegisterChildren(m_children);
+}
+/*
+void CGUIWindowHome::RegisterChildren(const std::vector<CGUIControl*> children)
+{
+  for (const CGUIControl* child : children)
+  {
+    // Register camera view controls (TODO: Move this)
+    SMART_HOME::CGUICameraControl* cameraView = dynamic_cast<SMART_HOME::CGUICameraControl*>(child);
+    if (cameraView != nullptr)
+      CServiceBroker::GetSmartHomeServices().GuiBridge(cameraView->GetRosTopic()).RegisterControl(*cameraView);
+
+    // Process children recursively
+    CGUIControlGroup* controlGroup = dynamic_cast<CGUIControlGroup*>(child);
+    if (controlGroup != nullptr)
+      RegisterChildren(controlGroup->m_children);
+  }
+}
+*/
+void CGUIWindowHome::FrameMove()
+{
+  //! @todo
+  CServiceBroker::GetSmartHomeServices().Ros2().FrameMove();
+
+  CGUIWindow::FrameMove();
+
+  // TODO: Move this
+  CServiceBroker::GetSmartHomeServices().FrameMove();
 }
 
 void CGUIWindowHome::Announce(ANNOUNCEMENT::AnnouncementFlag flag,

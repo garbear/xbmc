@@ -98,6 +98,11 @@ namespace RETRO
 {
   class CGUIGameRenderManager;
 }
+
+namespace SMART_HOME
+{
+  class CSmartHomeServices;
+}
 }
 
 namespace PERIPHERALS
@@ -195,6 +200,8 @@ public:
       const std::shared_ptr<CKeyboardLayoutManager>& keyboardLayoutManager);
   static void UnregisterKeyboardLayoutManager();
   static std::shared_ptr<CKeyboardLayoutManager> GetKeyboardLayoutManager();
+
+  static KODI::SMART_HOME::CSmartHomeServices& GetSmartHomeServices();
 
 private:
   std::unique_ptr<CLog> m_logging;

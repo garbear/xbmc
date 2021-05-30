@@ -51,6 +51,7 @@
 #include "games/controllers/guicontrols/GUIGameController.h"
 #include "input/Key.h"
 #include "pvr/guilib/GUIEPGGridContainer.h"
+#include "smarthome/guicontrols/GUICameraControl.h"
 #include "utils/CharsetConverter.h"
 #include "utils/RssManager.h"
 #include "utils/StringUtils.h"
@@ -101,7 +102,9 @@ static const ControlMapping controls[] = {
     {"epggrid", CGUIControl::GUICONTAINER_EPGGRID},
     {"panel", CGUIControl::GUICONTAINER_PANEL},
     {"ranges", CGUIControl::GUICONTROL_RANGES},
-    {"colorbutton", CGUIControl::GUICONTROL_COLORBUTTON}};
+    {"colorbutton", CGUIControl::GUICONTROL_COLORBUTTON},
+    {"cameraview",        CGUIControl::GUICONTROL_CAMERA},
+};
 
 CGUIControl::GUICONTROLTYPES CGUIControlFactory::TranslateControlType(const std::string &type)
 {
@@ -1509,6 +1512,17 @@ CGUIControl* CGUIControlFactory::Create(int parentID, const CRect &rect, TiXmlEl
     rcontrol->SetUnFocusActions(unfocusActions);
   }
   break;
+  case CGUIControl::GUICONTROL_CAMERA:
+    {
+      auto ccontrol = new SMART_HOME::CGUICameraControl(parentID, id, posX, posY, width, height);
+
+      std::string strTopic;
+      XMLUtils::GetString(pControlNode, "topic", strTopic);
+      ccontrol->SetPubSubTopic(strTopic);
+
+      control = ccontrol;
+    }
+    break;
   default:
     break;
   }

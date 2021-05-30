@@ -40,6 +40,7 @@
 #include "powermanagement/PowerManager.h"
 #include "profiles/ProfileManager.h"
 #include "pvr/PVRManager.h"
+#include "smarthome/SmartHomeServices.h"
 #if !defined(TARGET_WINDOWS) && defined(HAS_DVD_DRIVE)
 #include "storage/DetectDVDType.h"
 #endif
@@ -160,6 +161,8 @@ bool CServiceManager::InitStageTwo(const std::string& profilesUserDataFolder)
 
   m_gameRenderManager.reset(new RETRO::CGUIGameRenderManager);
 
+  m_smartHomeServices = std::make_unique<SMART_HOME::CSmartHomeServices>(*m_params, *m_peripherals);
+
   m_fileExtensionProvider.reset(new CFileExtensionProvider(*m_addonMgr));
 
   m_powerManager.reset(new CPowerManager());
@@ -211,6 +214,8 @@ bool CServiceManager::InitStageThree(const std::shared_ptr<CProfileManager>& pro
   if (!m_Platform->InitStageThree())
     return false;
 
+  m_smartHomeServices->Initialize(*m_gameServices);
+
   init_level = 3;
   return true;
 }
@@ -240,6 +245,8 @@ void CServiceManager::DeinitStageTwo()
   m_weatherManager.reset();
   m_powerManager.reset();
   m_fileExtensionProvider.reset();
+  m_smartHomeServices->Deinitialize();
+  m_smartHomeServices.reset();
   m_gameRenderManager.reset();
   m_peripherals.reset();
   m_inputManager.reset();
@@ -434,4 +441,9 @@ CDatabaseManager &CServiceManager::GetDatabaseManager()
 CMediaManager& CServiceManager::GetMediaManager()
 {
   return *m_mediaManager;
+}
+
+SMART_HOME::CSmartHomeServices& CServiceManager::GetSmartHomeServices()
+{
+  return *m_smartHomeServices;
 }
