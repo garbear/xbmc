@@ -67,6 +67,11 @@ namespace RETRO
 {
 class CGUIGameRenderManager;
 }
+
+namespace SMART_HOME
+{
+class CSmartHomeServices;
+} // namespace SMART_HOME
 } // namespace KODI
 
 namespace MEDIA_DETECT
@@ -216,6 +221,13 @@ public:
   MEDIA_DETECT::CDetectDVDMedia& GetDetectDVDMedia();
 #endif
 
+<<<<<<< HEAD
+=======
+  KODI::UTILS::I18N::CSubTagRegistryManager& GetSubTagRegistryManager();
+
+  KODI::SMART_HOME::CSmartHomeServices& GetSmartHomeServices();
+
+>>>>>>> b8fbbcf9aae (SmartHome: Camera, input, GUI info, and Now Playing)
 protected:
   std::unique_ptr<ADDON::CAddonMgr> m_addonMgr;
   std::unique_ptr<ADDON::CBinaryAddonManager> m_binaryAddonManager;
@@ -252,4 +264,9 @@ protected:
   std::unique_ptr<MEDIA_DETECT::CDetectDVDMedia> m_DetectDVDType;
 #endif
   std::unique_ptr<CSlideShowDelegator> m_slideShowDelegator;
+<<<<<<< HEAD
+=======
+  std::unique_ptr<KODI::UTILS::I18N::CSubTagRegistryManager> m_subTagRegistryManager;
+  std::unique_ptr<KODI::SMART_HOME::CSmartHomeServices> m_smartHomeServices;
+>>>>>>> b8fbbcf9aae (SmartHome: Camera, input, GUI info, and Now Playing)
 };
