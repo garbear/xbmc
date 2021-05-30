@@ -41,9 +41,11 @@
 #include "powermanagement/PowerManager.h"
 #include "profiles/ProfileManager.h"
 #include "pvr/PVRManager.h"
+#include "smarthome/SmartHomeServices.h"
 #if !defined(TARGET_WINDOWS) && defined(HAS_OPTICAL_DRIVE)
 #include "storage/DetectDVDType.h"
 #endif
+#include "ServiceBroker.h"
 #include "pictures/SlideShowDelegator.h"
 #include "storage/MediaManager.h"
 #include "utils/FileExtensionProvider.h"
@@ -165,6 +167,8 @@ bool CServiceManager::InitStageTwo(const std::string& profilesUserDataFolder)
 
   m_retroEngineServices = std::make_unique<RETRO_ENGINE::CRetroEngineServices>(*m_peripherals);
 
+  m_smartHomeServices = std::make_unique<SMART_HOME::CSmartHomeServices>(*m_peripherals);
+
   m_fileExtensionProvider.reset(new CFileExtensionProvider(*m_addonMgr));
   m_fileExtensionProvider = std::make_unique<CFileExtensionProvider>(*m_addonMgr);
 
@@ -221,6 +225,8 @@ bool CServiceManager::InitStageThree(const std::shared_ptr<CProfileManager>& pro
 
   m_retroEngineServices->Initialize(*m_gameServices);
 
+  m_smartHomeServices->Initialize(*m_gameServices);
+
   init_level = 3;
   return true;
 }
@@ -252,6 +258,8 @@ void CServiceManager::DeinitStageTwo()
   m_weatherManager.reset();
   m_powerManager.reset();
   m_fileExtensionProvider.reset();
+  m_smartHomeServices->Deinitialize();
+  m_smartHomeServices.reset();
   m_retroEngineServices->Deinitialize();
   m_retroEngineServices.reset();
   m_gameRenderManager.reset();
@@ -447,4 +455,9 @@ CSlideShowDelegator& CServiceManager::GetSlideShowDelegator()
 RETRO_ENGINE::CRetroEngineServices& CServiceManager::GetRetroEngineServices()
 {
   return *m_retroEngineServices;
+}
+
+SMART_HOME::CSmartHomeServices& CServiceManager::GetSmartHomeServices()
+{
+  return *m_smartHomeServices;
 }
