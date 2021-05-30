@@ -55,6 +55,7 @@
 #include "pvr/guilib/GUIEPGGridContainer.h"
 #include "resources/LocalizeStrings.h"
 #include "resources/ResourcesComponent.h"
+#include "smarthome/guicontrols/GUICameraControl.h"
 #include "utils/CharsetConverter.h"
 #include "utils/RssManager.h"
 #include "utils/StringUtils.h"
@@ -75,6 +76,7 @@ typedef struct
 
 static const ControlMapping controls[] = {
     {"button", CGUIControl::GUICONTROL_BUTTON},
+    {"cameraview", CGUIControl::GUICONTROL_CAMERA},
     {"colorbutton", CGUIControl::GUICONTROL_COLORBUTTON},
     {"edit", CGUIControl::GUICONTROL_EDIT},
     {"epggrid", CGUIControl::GUICONTAINER_EPGGRID},
@@ -1797,6 +1799,30 @@ CGUIControl* CGUIControlFactory::Create(int parentID,
       rcontrol->SetClickActions(clickActions);
       rcontrol->SetFocusActions(focusActions);
       rcontrol->SetUnFocusActions(unfocusActions);
+
+      break;
+    }
+    case CGUIControl::GUICONTROL_CAMERA:
+    {
+      auto ccontrol = new SMART_HOME::CGUICameraControl(parentID, id, posX, posY, width, height);
+
+      GUIINFO::CGUIInfoLabel topic;
+      GetInfoLabel(pControlNode, "topic", topic, parentID);
+
+      GUIINFO::CGUIInfoLabel imageTransport;
+      GetInfoLabel(pControlNode, "imagetransport", imageTransport, parentID);
+
+      ccontrol->SetCameraInfo(topic, imageTransport);
+
+      GUIINFO::CGUIInfoLabel stretchMode;
+      GetInfoLabel(pControlNode, "stretchmode", stretchMode, parentID);
+      ccontrol->SetStretchMode(stretchMode);
+
+      GUIINFO::CGUIInfoLabel rotation;
+      GetInfoLabel(pControlNode, "rotation", rotation, parentID);
+      ccontrol->SetRotation(rotation);
+
+      control = ccontrol;
 
       break;
     }
