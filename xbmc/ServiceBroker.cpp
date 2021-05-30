@@ -301,3 +301,8 @@ void CServiceBroker::UnregisterCPUInfo()
 {
   g_serviceBroker.m_cpuInfo.reset();
 }
+
+SMART_HOME::CSmartHomeServices& CServiceBroker::GetSmartHomeServices()
+{
+  return g_application.m_ServiceManager->GetSmartHomeServices();
+}

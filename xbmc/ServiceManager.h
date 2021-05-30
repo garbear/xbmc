@@ -57,6 +57,11 @@ namespace RETRO
 {
   class CGUIGameRenderManager;
 }
+
+namespace SMART_HOME
+{
+  class CSmartHomeServices;
+}
 }
 
 namespace PERIPHERALS
@@ -125,6 +130,8 @@ public:
 
   CMediaManager& GetMediaManager();
 
+  KODI::SMART_HOME::CSmartHomeServices& GetSmartHomeServices();
+
 protected:
   struct delete_dataCacheCore
   {
@@ -171,4 +178,5 @@ protected:
   std::unique_ptr<CPlayerCoreFactory> m_playerCoreFactory;
   std::unique_ptr<CDatabaseManager> m_databaseManager;
   std::unique_ptr<CMediaManager> m_mediaManager;
+  std::unique_ptr<KODI::SMART_HOME::CSmartHomeServices> m_smartHomeServices;
 };
