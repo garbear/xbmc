@@ -71,6 +71,11 @@ namespace UTILS::I18N
 {
 class CSubTagRegistryManager;
 } // namespace UTILS::I18N
+
+namespace SMART_HOME
+{
+class CSmartHomeServices;
+} // namespace SMART_HOME
 } // namespace KODI
 
 namespace MEDIA_DETECT
@@ -222,6 +227,8 @@ public:
 
   KODI::UTILS::I18N::CSubTagRegistryManager& GetSubTagRegistryManager();
 
+  KODI::SMART_HOME::CSmartHomeServices& GetSmartHomeServices();
+
 protected:
   std::unique_ptr<ADDON::CAddonMgr> m_addonMgr;
   std::unique_ptr<ADDON::CBinaryAddonManager> m_binaryAddonManager;
@@ -259,4 +266,5 @@ protected:
 #endif
   std::unique_ptr<CSlideShowDelegator> m_slideShowDelegator;
   std::unique_ptr<KODI::UTILS::I18N::CSubTagRegistryManager> m_subTagRegistryManager;
+  std::unique_ptr<KODI::SMART_HOME::CSmartHomeServices> m_smartHomeServices;
 };
