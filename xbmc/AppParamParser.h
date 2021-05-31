@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 class CAdvancedSettings;
 class CFileItemList;
@@ -18,10 +19,18 @@ class CAppParamParser
 {
 public:
   CAppParamParser();
+  CAppParamParser(const CAppParamParser& other);
   ~CAppParamParser();
+
+  CAppParamParser& operator=(const CAppParamParser& rhs);
 
   void Parse(const char* const* argv, int nArgs);
   void SetAdvancedSettings(CAdvancedSettings& advancedSettings) const;
+
+  /*!
+   * \brief Get an unmodified string of all command line arguments
+   */
+  const std::vector<std::string>& GetArgs() const { return m_args; }
 
   const CFileItemList& GetPlaylist() const;
 
@@ -37,6 +46,7 @@ private:
   void DisplayHelp();
   void DisplayVersion();
 
+  std::vector<std::string> m_args;
   std::string m_settingsFile;
   std::unique_ptr<CFileItemList> m_playlist;
 };
