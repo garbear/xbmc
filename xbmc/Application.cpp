@@ -364,7 +364,7 @@ bool CApplication::Create(const CAppParamParser &params)
 
   m_ServiceManager.reset(new CServiceManager());
 
-  if (!m_ServiceManager->InitStageOne())
+  if (!m_ServiceManager->InitStageOne(params))
   {
     return false;
   }
@@ -520,7 +520,7 @@ bool CApplication::Create(const CAppParamParser &params)
   m_pAppPort = std::make_shared<CAppInboundProtocol>(*this);
   CServiceBroker::RegisterAppPort(m_pAppPort);
 
-  if (!m_ServiceManager->InitStageTwo(params, m_pSettingsComponent->GetProfileManager()->GetProfileUserDataFolder()))
+  if (!m_ServiceManager->InitStageTwo(m_pSettingsComponent->GetProfileManager()->GetProfileUserDataFolder()))
   {
     return false;
   }

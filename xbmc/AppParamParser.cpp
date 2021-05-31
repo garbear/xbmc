@@ -34,15 +34,45 @@ CAppParamParser::CAppParamParser()
 {
 }
 
+CAppParamParser::CAppParamParser(const CAppParamParser& other)
+{
+  *this = other;
+}
+
 CAppParamParser::~CAppParamParser() = default;
 
+CAppParamParser& CAppParamParser::operator=(const CAppParamParser& rhs)
+{
+  if (this != &rhs)
+  {
+    m_logLevel = rhs.m_logLevel;
+    m_startFullScreen = rhs.m_startFullScreen;
+    m_platformDirectories = rhs.m_platformDirectories;
+    m_testmode = rhs.m_testmode;
+    m_standAlone = rhs.m_standAlone;
+    m_windowing = rhs.m_windowing;
+    m_args = rhs.m_args;
+    m_settingsFile = rhs.m_settingsFile;
+    m_playlist = std::make_unique<CFileItemList>();
+    for (int i = 0; i < rhs.m_playlist->Size(); i++)
+      m_playlist->Add(rhs.m_playlist->Get(i));
+  }
+
+  return *this;
+}
 void CAppParamParser::Parse(const char* const* argv, int nArgs)
 {
+  m_args.reserve(nArgs);
+
+  for (int i = 0; i < nArgs; i++)
+  {
+    m_args.emplace_back(argv[i]);
+    if (i > 0)
+      ParseArg(argv[i]);
+  }
+
   if (nArgs > 1)
   {
-    for (int i = 1; i < nArgs; i++)
-      ParseArg(argv[i]);
-
     // testmode is only valid if at least one item to play was given
     if (m_playlist->IsEmpty())
       m_testmode = false;
