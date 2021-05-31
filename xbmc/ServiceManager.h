@@ -79,8 +79,8 @@ public:
   ~CServiceManager();
 
   bool InitForTesting();
-  bool InitStageOne();
-  bool InitStageTwo(const CAppParamParser &params, const std::string& profilesUserDataFolder);
+  bool InitStageOne(const CAppParamParser &params);
+  bool InitStageTwo(const std::string& profilesUserDataFolder);
   bool InitStageThree(const std::shared_ptr<CProfileManager>& profileManager);
   void DeinitTesting();
   void DeinitStageThree();
@@ -140,6 +140,9 @@ protected:
   {
     void operator()(CFavouritesService *p) const;
   };
+
+  // Copy of command-line parameters
+  std::unique_ptr<CAppParamParser> m_params;
 
   std::unique_ptr<ADDON::CAddonMgr> m_addonMgr;
   std::unique_ptr<ADDON::CBinaryAddonManager> m_binaryAddonManager;

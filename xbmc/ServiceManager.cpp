@@ -8,6 +8,7 @@
 
 #include "ServiceManager.h"
 
+#include "AppParamParser.h"
 #include "ContextMenuManager.h"
 #include "DatabaseManager.h"
 #include "PlayListPlayer.h"
@@ -36,7 +37,10 @@
 
 using namespace KODI;
 
-CServiceManager::CServiceManager() = default;
+CServiceManager::CServiceManager() :
+  m_params(std::make_unique<CAppParamParser>())
+{
+}
 
 CServiceManager::~CServiceManager()
 {
@@ -78,8 +82,10 @@ void CServiceManager::DeinitTesting()
   m_network.reset();
 }
 
-bool CServiceManager::InitStageOne()
+bool CServiceManager::InitStageOne(const CAppParamParser &params)
 {
+  *m_params = params;
+
   m_Platform.reset(CPlatform::CreateInstance());
   if (!m_Platform->Init())
     return false;
@@ -97,7 +103,7 @@ bool CServiceManager::InitStageOne()
   return true;
 }
 
-bool CServiceManager::InitStageTwo(const CAppParamParser &params, const std::string& profilesUserDataFolder)
+bool CServiceManager::InitStageTwo(const std::string& profilesUserDataFolder)
 {
   // Initialize the addon database (must be before the addon manager is init'd)
   m_databaseManager.reset(new CDatabaseManager);
@@ -129,7 +135,7 @@ bool CServiceManager::InitStageTwo(const CAppParamParser &params, const std::str
   m_contextMenuManager.reset(new CContextMenuManager(*m_addonMgr));
 
   m_gameControllerManager.reset(new GAME::CControllerManager);
-  m_inputManager.reset(new CInputManager(params));
+  m_inputManager.reset(new CInputManager(*m_params));
   m_inputManager->InitializeInputs();
 
   m_peripherals.reset(new PERIPHERALS::CPeripherals(*m_inputManager,
