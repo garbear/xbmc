@@ -8,7 +8,7 @@
 
 #include "Ros2.h"
 
-#include "smarthome/Ros2VideoNode.h"
+#include "smarthome/ros2/Ros2VideoNode.h"
 #include "threads/Thread.h"
 #include "utils/StringUtils.h"
 #include "utils/log.h"
@@ -18,8 +18,8 @@
 using namespace KODI;
 using namespace SMART_HOME;
 
-CRos2::CRos2(std::vector<std::string> cmdLineArgs, CSmartHomeStreams& streams)
-  : m_cmdLineArgs(std::move(cmdLineArgs)), m_streams(streams)
+CRos2::CRos2(CSmartHomeStreams& streams, std::vector<std::string> cmdLineArgs)
+  : m_streams(streams), m_cmdLineArgs(std::move(cmdLineArgs))
 {
 }
 

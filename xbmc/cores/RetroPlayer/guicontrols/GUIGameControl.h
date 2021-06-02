@@ -15,6 +15,11 @@
 
 namespace KODI
 {
+namespace SMART_HOME
+{
+class CGUIRenderHandle;
+}
+
 namespace RETRO
 {
 class CGUIRenderSettings;
@@ -66,7 +71,7 @@ private:
   bool m_bHasStretchMode = false;
   bool m_bHasRotation = false;
   std::unique_ptr<CGUIRenderSettings> m_renderSettings;
-  std::shared_ptr<CGUIRenderHandle> m_renderHandle;
+  std::shared_ptr<SMART_HOME::CGUIRenderHandle> m_renderHandle;
 };
 
 } // namespace RETRO

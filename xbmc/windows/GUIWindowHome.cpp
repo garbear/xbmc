@@ -19,6 +19,8 @@
 #include "settings/AdvancedSettings.h"
 #include "settings/SettingsComponent.h"
 #include "smarthome/SmartHomeServices.h"
+#include "smarthome/guibridge/SmartHomeGuiBridge.h"
+#include "smarthome/rendering/SmartHomeRendering.h"
 #include "utils/JobManager.h"
 #include "utils/RecentlyAddedJob.h"
 #include "utils/StringUtils.h"
@@ -67,7 +69,7 @@ void CGUIWindowHome::OnInitWindow()
   // Register the gamewindow control (TODO: Move this)
   RETRO::CGUIGameControl* gameWindow = dynamic_cast<RETRO::CGUIGameControl*>(GetControl(0));
   if (gameWindow != nullptr)
-    CServiceBroker::GetSmartHomeServices().RegisterControl(*gameWindow);
+    CServiceBroker::GetSmartHomeServices().GuiBridge().RegisterControl(*gameWindow);
 }
 
 void CGUIWindowHome::FrameMove()
@@ -75,7 +77,7 @@ void CGUIWindowHome::FrameMove()
   CGUIWindow::FrameMove();
 
   // TODO: Move this
-  CServiceBroker::GetSmartHomeServices().FrameMove();
+  CServiceBroker::GetSmartHomeServices().Rendering().FrameMove();
 }
 
 void CGUIWindowHome::Announce(ANNOUNCEMENT::AnnouncementFlag flag,

@@ -8,27 +8,19 @@
 
 #pragma once
 
-#include "SmartHomeSubsystem.h"
-
 #include <memory>
 
 class CAppParamParser;
 
 namespace KODI
 {
-namespace RETRO
-{
-class CGUIGameControl;
-class CGUIGameRenderManager;
-class CGUIRenderHandle;
-class CRPProcessInfo;
-class CRPRenderManager;
-class CRPStreamManager;
-} // namespace RETRO
 
 namespace SMART_HOME
 {
 class CRos2;
+class CSmartHomeGuiBridge;
+class CSmartHomeRendering;
+class CSmartHomeStreams;
 
 class CSmartHomeServices
 {
@@ -40,27 +32,23 @@ public:
   void Deinitialize();
 
   // Smart home subsystems (const)
-  const CSmartHomeStreams& Streams() const { return *m_subsystems.Streams; }
+  const CSmartHomeGuiBridge& GuiBridge() const { return *m_guiBridge; }
+  const CSmartHomeStreams& Streams() const { return *m_streams; }
+  const CSmartHomeRendering& Rendering() const { return *m_rendering; }
+  const CRos2& Ros2() const { return *m_ros2; }
 
   // Smart home subsystems (mutable)
-  CSmartHomeStreams& Streams() { return *m_subsystems.Streams; }
-
-  // TODO: Move to gui component
-  void FrameMove();
-  std::shared_ptr<RETRO::CGUIRenderHandle> RegisterControl(RETRO::CGUIGameControl& control);
+  CSmartHomeGuiBridge& GuiBridge() { return *m_guiBridge; }
+  CSmartHomeStreams& Streams() { return *m_streams; }
+  CSmartHomeRendering& Rendering() { return *m_rendering; }
+  CRos2& Ros2() { return *m_ros2; }
 
 private:
-  // Smart home subsystems
-  SmartHomeSubsystems m_subsystems;
-
-  // Services
+  // Subsystems
+  std::unique_ptr<CSmartHomeGuiBridge> m_guiBridge;
+  std::unique_ptr<CSmartHomeStreams> m_streams;
+  std::unique_ptr<CSmartHomeRendering> m_rendering;
   std::unique_ptr<CRos2> m_ros2;
-
-  // RetroPlayer parameters
-  std::unique_ptr<RETRO::CRPProcessInfo> m_processInfo;
-  std::unique_ptr<RETRO::CRPRenderManager> m_renderManager;
-  std::unique_ptr<RETRO::CRPStreamManager> m_streamManager;
-  std::unique_ptr<RETRO::CGUIGameRenderManager> m_gameRenderManager;
 };
 
 } // namespace SMART_HOME

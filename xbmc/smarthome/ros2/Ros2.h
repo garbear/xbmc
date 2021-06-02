@@ -22,7 +22,7 @@ class CSmartHomeStreams;
 class CRos2
 {
 public:
-  CRos2(std::vector<std::string> cmdLineArgs, CSmartHomeStreams& streams);
+  CRos2(CSmartHomeStreams& streams, std::vector<std::string> cmdLineArgs);
   ~CRos2();
 
   /*!
@@ -43,8 +43,8 @@ private:
                           char const* const*& argv);
 
   // Construction parameters
-  std::vector<std::string> m_cmdLineArgs;
   CSmartHomeStreams& m_streams;
+  std::vector<std::string> m_cmdLineArgs;
 
   // ROS parameters
   std::vector<std::unique_ptr<CRos2Node>> m_nodes;

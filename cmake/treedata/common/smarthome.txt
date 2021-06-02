@@ -1,2 +1,5 @@
 xbmc/smarthome smarthome
+xbmc/smarthome/guibridge smarthome/guibridge
+xbmc/smarthome/rendering smarthome/rendering
+xbmc/smarthome/ros2 smarthome/ros2
 xbmc/smarthome/streams smarthome/streams

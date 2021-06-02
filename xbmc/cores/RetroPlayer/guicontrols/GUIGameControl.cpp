@@ -17,6 +17,8 @@
 #include "settings/GameSettings.h"
 #include "settings/MediaSettings.h"
 #include "smarthome/SmartHomeServices.h" // TODO
+#include "smarthome/guibridge/GUIRenderHandle.h" // TODO
+#include "smarthome/guibridge/SmartHomeGuiBridge.h" // TODO
 #include "utils/Geometry.h"
 #include "utils/StringUtils.h"
 
@@ -97,7 +99,7 @@ void CGUIGameControl::Render()
 
 void CGUIGameControl::RenderEx()
 {
-  m_renderHandle->RenderEx();
+  //m_renderHandle->RenderEx();
 
   CGUIControl::RenderEx();
 }
@@ -169,7 +171,7 @@ void CGUIGameControl::Reset()
 void CGUIGameControl::RegisterControl()
 {
   // TODO
-  m_renderHandle = CServiceBroker::GetSmartHomeServices().RegisterControl(*this);
+  m_renderHandle = CServiceBroker::GetSmartHomeServices().GuiBridge().RegisterControl(*this);
 }
 
 void CGUIGameControl::UnregisterControl()

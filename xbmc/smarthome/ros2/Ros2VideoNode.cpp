@@ -8,7 +8,7 @@
 
 #include "Ros2VideoNode.h"
 
-#include "smarthome/Ros2Translator.h"
+#include "smarthome/ros2/Ros2Translator.h"
 #include "smarthome/streams/SmartHomeStreamSwFramebuffer.h"
 #include "smarthome/streams/SmartHomeStreams.h"
 #include "utils/log.h"
@@ -29,15 +29,16 @@ using namespace SMART_HOME;
 
 namespace
 {
+
+// The ROS namespace
+constexpr const char* ROS_NAMESPACE = "oasis"; // TODO
+
 // Name of the ROS node
-constexpr const char* NODE_NAME = "kodi"; // TODO
+constexpr const char* NODE_NAME = "kodi"; // TODO: Hostname?
 
 // Name of the OS thread
 constexpr const char* THREAD_NAME = "ROS2"; // TODO
 
-// Image topic to subscribe to
-// TODO: Determine at runtime
-constexpr const char* IMAGE_TOPIC = "/foreground"; // TODO
 } // namespace
 
 CRos2VideoNode::CRos2VideoNode(CSmartHomeStreams& streams) : m_streams(streams)
@@ -59,12 +60,26 @@ void CRos2VideoNode::InitializeInternal(std::shared_ptr<rclcpp::Node> node)
   m_node = std::move(node);
 
   m_imgTransport = std::make_unique<image_transport::ImageTransport>(m_node);
-  m_imgSubscriber = std::make_unique<image_transport::Subscriber>();
 
-  const auto transportHints = image_transport::TransportHints(m_node.get(), "compressed");
+  const std::vector<std::string> machines = {"netbook", "lenovo"};
+  const std::vector<std::string> topics = {"image_raw"};
+  for (const auto& machine : machines)
+  {
+    for (const auto& topic : topics)
+    {
+      const std::string topicPath = StringUtils::Format("/{}/{}/{}", ROS_NAMESPACE, machine, topic);
+      const auto transportHints = image_transport::TransportHints(m_node.get(), "compressed");
 
-  *m_imgSubscriber = m_imgTransport->subscribe(IMAGE_TOPIC, 1, &CRos2VideoNode::ReceiveImage, this,
-                                               &transportHints);
+      CLog::Log(LOGDEBUG, "ROS2: Subscribing to {}", topicPath);
+
+      m_imgSubscriber = std::make_unique<image_transport::Subscriber>();
+      *m_imgSubscriber = m_imgTransport->subscribe(topicPath, 1, &CRos2VideoNode::ReceiveImage,
+                                                   this, &transportHints);
+
+      break; // TODO
+    }
+    break; // TODO
+  }
 }
 
 void CRos2VideoNode::DeinitializeInternal()
@@ -92,6 +107,8 @@ void CRos2VideoNode::ReceiveImage(const std::shared_ptr<const sensor_msgs::msg::
   const uint32_t stride = msg->step;
   const size_t size = msg->data.size();
   const uint8_t* const data = msg->data.data();
+
+  //CLog::Log(LOGDEBUG, "SMARTHOME: Got frame");
 
   if (format == AV_PIX_FMT_NONE)
   {

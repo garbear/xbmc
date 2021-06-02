@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Ros2Node.h"
+#include "smarthome/ros2/Ros2Node.h"
 #include "smarthome/streams/ISmartHomeStream.h" // TODO: Move to cpp
 
 #include <memory>

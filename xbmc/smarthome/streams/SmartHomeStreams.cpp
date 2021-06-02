@@ -11,7 +11,6 @@
 #include "cores/RetroPlayer/streams/IRetroPlayerStream.h"
 #include "cores/RetroPlayer/streams/IStreamManager.h"
 #include "cores/RetroPlayer/streams/RetroPlayerStreamTypes.h"
-#include "smarthome/SmartHomeServices.h"
 #include "smarthome/streams/SmartHomeStreamSwFramebuffer.h"
 #include "utils/log.h"
 
@@ -20,7 +19,7 @@
 using namespace KODI;
 using namespace SMART_HOME;
 
-CSmartHomeStreams::CSmartHomeStreams(CSmartHomeServices& smartHome) : m_smartHome(smartHome)
+CSmartHomeStreams::CSmartHomeStreams()
 {
 }
 
