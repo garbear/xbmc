@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window>
 	<controls>
-		<control type="gamewindow" id="0">
-			<include>FullScreenDimensions</include>
+		<control type="cameraview">
+			<left>0</left>
+			<top>0</top>
+			<width>50%</width>
+			<height>50%</height>
+			<topic>/oasis/netbook/image_raw</videofilter>
+			<videofilter>linear</videofilter>
+		</control>
+		<control type="cameraview">
+			<right>0</right>
+			<top>0</top>
+			<width>50%</width>
+			<height>50%</height>
+			<topic>/oasis/netbook/image_raw</videofilter>
+			<videofilter>linear</videofilter>
+		</control>
+		<control type="cameraview">
+			<left>0</left>
+			<bottom>0</bottom>
+			<width>50%</width>
+			<height>50%</height>
+			<topic>/oasis/netbook/image_raw</videofilter>
+			<videofilter>linear</videofilter>
+		</control>
+		<control type="cameraview">
+			<right>0</right>
+			<bottom>0</bottom>
+			<width>50%</width>
+			<height>50%</height>
+			<topic>/foreground</videofilter>
 			<videofilter>linear</videofilter>
 		</control>
 	</controls>
