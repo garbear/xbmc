@@ -459,6 +459,10 @@ void CWinSystemWayland::UpdateResolutions()
   auto const& modes = output->GetModes();
   auto const& currentMode = output->GetCurrentMode();
   auto physicalSize = output->GetPhysicalSize();
+
+  //! @todo
+  physicalSize.SetWidth(physicalSize.Width() * 2);
+
   CLog::LogF(LOGINFO,
              "User wanted output \"{}\", we now have \"{}\" size {}x{} mm with {} mode(s):",
              userOutput, outputName, physicalSize.Width(), physicalSize.Height(), modes.size());
