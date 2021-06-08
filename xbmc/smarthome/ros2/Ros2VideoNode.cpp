@@ -30,8 +30,14 @@ using namespace SMART_HOME;
 namespace
 {
 
+constexpr const char* ROS_NAMESPACE = "oasis"; // TODO
+
 // Name of the ROS node
-constexpr const char* NODE_NAME = "kodi"; // TODO: Hostname?
+constexpr const char* NODE_NAME = "kodi_lenovo"; // TODO: Hostname?
+
+constexpr const char* MACHINE_NAME = "netbook";
+
+constexpr const char* IMAGE_TOPIC = "foreground";
 
 // Name of the OS thread
 constexpr const char* THREAD_NAME = "ROS2"; // TODO
@@ -62,13 +68,13 @@ void CRos2VideoNode::InitializeInternal(std::shared_ptr<rclcpp::Node> node)
   //! @todo Multiple GUI bridges are needed to handle multiple feeds
   //const std::vector<std::string> machines = {"netbook", "lenovo"};
   //const std::vector<std::string> topics = {"image_raw", "foreground"};
-  const std::vector<std::string> machines = {"netbook"};
-  const std::vector<std::string> topics = {"image_raw"};
+  const std::vector<std::string> machines = {MACHINE_NAME};
+  const std::vector<std::string> topics = {IMAGE_TOPIC};
   for (const auto& machine : machines)
   {
     for (const auto& topic : topics)
     {
-      auto subscription = std::make_unique<CRos2VideoSubscription>(m_guiBridge, machine, topic);
+      auto subscription = std::make_unique<CRos2VideoSubscription>(m_guiBridge, ROS_NAMESPACE, machine, topic);
       subscription->Initialize(*m_node, *m_imgTransport);
       m_subscriptions.emplace_back(std::move(subscription));
     }

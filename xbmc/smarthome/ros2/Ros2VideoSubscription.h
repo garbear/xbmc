@@ -39,6 +39,7 @@ class CRos2VideoSubscription
 {
 public:
   CRos2VideoSubscription(CSmartHomeGuiBridge& guiBridge,
+                         const std::string& rosNamespace,
                          const std::string& machine,
                          const std::string& topic);
   ~CRos2VideoSubscription();
@@ -55,6 +56,7 @@ private:
 
   // Construction parameters
   CSmartHomeGuiBridge& m_guiBridge;
+  const std::string m_rosNamespace;
   const std::string m_machine;
   const std::string m_topic;
 

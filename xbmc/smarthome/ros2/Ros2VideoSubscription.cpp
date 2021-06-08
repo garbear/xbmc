@@ -30,18 +30,12 @@ extern "C"
 using namespace KODI;
 using namespace SMART_HOME;
 
-namespace
-{
-
-// The ROS namespace
-constexpr const char* ROS_NAMESPACE = "oasis"; // TODO
-
-} // namespace
-
 CRos2VideoSubscription::CRos2VideoSubscription(CSmartHomeGuiBridge& guiBridge,
+                                               const std::string& rosNamespace,
                                                const std::string& machine,
                                                const std::string& topic)
   : m_guiBridge(guiBridge),
+    m_rosNamespace(rosNamespace),
     m_machine(machine),
     m_topic(topic),
     m_streamManager(std::make_unique<CSmartHomeStreamManager>()),
@@ -58,7 +52,8 @@ void CRos2VideoSubscription::Initialize(rclcpp::Node& node,
   m_renderer->Initialize();
 
   // Initialize ROS
-  const std::string topicPath = StringUtils::Format("/{}/{}/{}", ROS_NAMESPACE, m_machine, m_topic);
+  //! @todo
+  const std::string topicPath = StringUtils::Format("/{}/{}/{}", m_rosNamespace, m_machine, m_topic);
   const auto transportHints = image_transport::TransportHints(&node, "compressed");
 
   CLog::Log(LOGDEBUG, "ROS2: Subscribing to {}", topicPath);
