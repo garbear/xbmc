@@ -8,6 +8,7 @@
 
 #include "Ros2VideoSubscription.h"
 
+#include "smarthome/guibridge/SmartHomeGuiBridge.h"
 #include "smarthome/rendering/SmartHomeRenderer.h"
 #include "smarthome/ros2/Ros2Translator.h"
 #include "smarthome/streams/ISmartHomeStream.h"
@@ -30,13 +31,11 @@ extern "C"
 using namespace KODI;
 using namespace SMART_HOME;
 
-CRos2VideoSubscription::CRos2VideoSubscription(CSmartHomeGuiBridge& guiBridge,
-                                               const std::string& rosNamespace,
-                                               const std::string& machine,
+CRos2VideoSubscription::CRos2VideoSubscription(std::shared_ptr<rclcpp::Node> node,
+                                               CSmartHomeGuiBridge& guiBridge,
                                                const std::string& topic)
-  : m_guiBridge(guiBridge),
-    m_rosNamespace(rosNamespace),
-    m_machine(machine),
+  : m_node(std::move(node)),
+    m_guiBridge(guiBridge),
     m_topic(topic),
     m_streamManager(std::make_unique<CSmartHomeStreamManager>()),
     m_renderer(std::make_unique<CSmartHomeRenderer>(m_guiBridge, *m_streamManager))
@@ -45,28 +44,28 @@ CRos2VideoSubscription::CRos2VideoSubscription(CSmartHomeGuiBridge& guiBridge,
 
 CRos2VideoSubscription::~CRos2VideoSubscription() = default;
 
-void CRos2VideoSubscription::Initialize(rclcpp::Node& node,
-                                        image_transport::ImageTransport& imgTransport)
+void CRos2VideoSubscription::Initialize()
 {
   // Initialize rendering
   m_renderer->Initialize();
 
   // Initialize ROS
-  //! @todo
-  const std::string topicPath = StringUtils::Format("/{}/{}/{}", m_rosNamespace, m_machine, m_topic);
-  const auto transportHints = image_transport::TransportHints(&node, "compressed");
-
-  CLog::Log(LOGDEBUG, "ROS2: Subscribing to {}", topicPath);
-
+  m_imgTransport = std::make_unique<image_transport::ImageTransport>(m_node);
   m_imgSubscriber = std::make_unique<image_transport::Subscriber>();
-  *m_imgSubscriber = imgTransport.subscribe(topicPath, 1, &CRos2VideoSubscription::ReceiveImage,
-                                            this, &transportHints);
+
+  const auto transportHints = image_transport::TransportHints(m_node.get(), "compressed");
+
+  CLog::Log(LOGDEBUG, "ROS2: Subscribing to {}", m_topic);
+
+  *m_imgSubscriber = m_imgTransport->subscribe(m_topic, 1, &CRos2VideoSubscription::ReceiveImage,
+                                               this, &transportHints);
 }
 
 void CRos2VideoSubscription::Deinitialize()
 {
   // Deinitialize ROS
   m_imgSubscriber.reset();
+  m_imgTransport.reset();
 
   // Deinitialize stream
   if (m_stream)

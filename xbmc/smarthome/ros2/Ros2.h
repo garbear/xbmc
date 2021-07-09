@@ -18,23 +18,26 @@ namespace SMART_HOME
 {
 
 class CRos2Node;
-class CSmartHomeGuiBridge;
+class CSmartHomeGuiManager;
 
 class CRos2
 {
 public:
-  CRos2(CSmartHomeGuiBridge& guiBridge, std::vector<std::string> cmdLineArgs);
+  CRos2(CSmartHomeGuiManager& guiManager, std::vector<std::string> cmdLineArgs);
   ~CRos2();
 
   /*!
-   * \brief Initialize ROS 2
+   * \brief Initialize ROS 2 lifecycle
    */
   void Initialize();
 
   /*!
-   * \brief Deinitialize ROS 2
+   * \brief Deinitialize ROS 2 lifecycle
    */
   void Deinitialize();
+
+  void RegisterImageTopic(const std::string& topic);
+  void UnregisterImageTopic(const std::string& topic);
 
   //! @todo Remove GUI dependency
   void FrameMove();
@@ -47,11 +50,11 @@ private:
                           char const* const*& argv);
 
   // Construction parameters
-  CSmartHomeGuiBridge& m_guiBridge;
+  CSmartHomeGuiManager& m_guiManager;
   std::vector<std::string> m_cmdLineArgs;
 
   // ROS parameters
-  std::vector<std::unique_ptr<CRos2Node>> m_nodes;
+  std::unique_ptr<CRos2Node> m_node;
 };
 } // namespace SMART_HOME
 } // namespace KODI

@@ -9,9 +9,10 @@
 #pragma once
 
 #include "threads/IRunnable.h"
-#include "threads/Thread.h" // TODO: Move to cpp
 
+#include <map>
 #include <memory>
+#include <string>
 
 class CThread;
 
@@ -24,40 +25,24 @@ namespace KODI
 {
 namespace SMART_HOME
 {
+class CRos2VideoSubscription;
+class CSmartHomeGuiBridge;
+
 class CRos2Node : public IRunnable
 {
 public:
-  CRos2Node() = default;
+  CRos2Node();
   virtual ~CRos2Node();
 
+  // Lifecycle functions
   void Initialize();
   void Deinitialize();
 
+  void RegisterImageTopic(CSmartHomeGuiBridge& guiBridge, const std::string& topic);
+  void UnregisterImageTopic(const std::string& topic);
+
   //! @todo Remove GUI dependency
-  virtual void FrameMove() {}
-
-protected:
-  /*!
-   * \brief Name of the ROS node in the ROS computation graph
-   */
-  virtual const char* NodeName() const = 0;
-
-  /*!
-   * \brief Name of the OS thread
-   */
-  virtual const char* ThreadName() const = 0;
-
-  /*!
-   * \brief Initialize the node
-   *
-   * \param node The ROS node handle
-   */
-  virtual void InitializeInternal(std::shared_ptr<rclcpp::Node> node) = 0;
-
-  /*!
-   * \brief Deinitialize the node
-   */
-  virtual void DeinitializeInternal() = 0;
+  void FrameMove();
 
 private:
   // Implementation of IRunnable
@@ -65,6 +50,7 @@ private:
 
   // ROS parameters
   std::shared_ptr<rclcpp::Node> m_node;
+  std::map<std::string, std::unique_ptr<CRos2VideoSubscription>> m_videoSubs; // Topic -> subscriber
 
   // Threading parameters
   std::unique_ptr<CThread> m_thread;

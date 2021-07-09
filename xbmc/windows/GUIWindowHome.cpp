@@ -21,6 +21,7 @@
 #include "smarthome/SmartHomeServices.h" //! @todo
 #include "smarthome/guibridge/SmartHomeGuiBridge.h" //! @todo
 #include "smarthome/guicontrols/GUICameraControl.h" //! @todo
+#include "smarthome/ros2/Ros2.h" //! @todo
 #include "utils/JobManager.h"
 #include "utils/RecentlyAddedJob.h"
 #include "utils/StringUtils.h"
@@ -87,6 +88,9 @@ void CGUIWindowHome::RegisterChildren(const std::vector<CGUIControl*> children)
 */
 void CGUIWindowHome::FrameMove()
 {
+  //! @todo
+  CServiceBroker::GetSmartHomeServices().Ros2().FrameMove();
+
   CGUIWindow::FrameMove();
 
   // TODO: Move this

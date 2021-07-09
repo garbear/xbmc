@@ -19,6 +19,7 @@ namespace SMART_HOME
 {
 class CRos2;
 class CSmartHomeGuiBridge;
+class CSmartHomeGuiManager;
 
 class CSmartHomeServices
 {
@@ -29,20 +30,16 @@ public:
   void Initialize();
   void Deinitialize();
 
-  // Smart home subsystems (const)
-  const CSmartHomeGuiBridge& GuiBridge(const std::string &rosTopic) const { return *m_guiBridge; } //! @todo: ROS topic
-  const CRos2& Ros2() const { return *m_ros2; }
-
-  // Smart home subsystems (mutable)
-  CSmartHomeGuiBridge& GuiBridge(const std::string &rosTopic) { return *m_guiBridge; } //! @todo: ROS topic
+  // Smart home subsystems
   CRos2& Ros2() { return *m_ros2; }
+  CSmartHomeGuiBridge& GuiBridge(const std::string &pubSubTopic);
 
   //! @todo Remove GUI dependency
   void FrameMove();
 
 private:
   // Subsystems
-  std::unique_ptr<CSmartHomeGuiBridge> m_guiBridge;
+  std::unique_ptr<CSmartHomeGuiManager> m_guiManager;
   std::unique_ptr<CRos2> m_ros2;
 };
 

@@ -191,7 +191,6 @@ void CServiceManager::DeinitStageThree()
 {
   init_level = 2;
 
-  m_smartHomeServices->Deinitialize();
   m_playerCoreFactory.reset();
   m_PVRManager->Deinit();
   m_contextMenuManager->Deinit();
@@ -206,6 +205,7 @@ void CServiceManager::DeinitStageTwo()
   m_weatherManager.reset();
   m_powerManager.reset();
   m_fileExtensionProvider.reset();
+  m_smartHomeServices->Deinitialize();
   m_smartHomeServices.reset();
   m_gameRenderManager.reset();
   m_peripherals.reset();
