@@ -8,8 +8,7 @@
 
 #include "Ros2.h"
 
-#include "smarthome/guibridge/SmartHomeGuiManager.h"
-#include "smarthome/ros2/Ros2Node.h"
+#include "smarthome/ros2/Ros2VideoNode.h"
 #include "smarthome/ros2/Ros2VideoSubscription.h" //! @todo Header needed?
 #include "threads/Thread.h"
 #include "utils/StringUtils.h"
@@ -20,10 +19,8 @@
 using namespace KODI;
 using namespace SMART_HOME;
 
-CRos2::CRos2(CSmartHomeGuiManager& guiManager, std::vector<std::string> cmdLineArgs) :
-  m_guiManager(guiManager),
-  m_cmdLineArgs(std::move(cmdLineArgs)),
-  m_node(std::make_unique<CRos2Node>())
+CRos2::CRos2(CSmartHomeGuiBridge& guiBridge, std::vector<std::string> cmdLineArgs)
+  : m_guiBridge(guiBridge), m_cmdLineArgs(std::move(cmdLineArgs))
 {
 }
 
@@ -42,38 +39,29 @@ void CRos2::Initialize()
   // Initialize ROS
   rclcpp::init(argc, argv);
 
-  // Initialize node
-  m_node->Initialize();
+  // Create nodes
+  std::unique_ptr<CRos2Node> videoNode = std::make_unique<CRos2VideoNode>(m_guiBridge);
+  videoNode->Initialize();
+  m_nodes.emplace_back(std::move(videoNode));
 }
 
 void CRos2::Deinitialize()
 {
-  if (m_node)
-  {
-    m_node->Deinitialize();
-    m_node.reset();
-  }
+  // Destroy nodes
+  for (const auto& node : m_nodes)
+    node->Deinitialize();
+  m_nodes.clear();
 
   // Deinitialize ROS
   CLog::Log(LOGDEBUG, "ROS2: Deinitializing ROS");
   rclcpp::shutdown();
 }
 
-void CRos2::RegisterImageTopic(const std::string& topic)
-{
-  CSmartHomeGuiBridge& guiBridge = m_guiManager.GetGuiBridge(topic);
-  m_node->RegisterImageTopic(guiBridge, topic);
-}
-
-void CRos2::UnregisterImageTopic(const std::string& topic)
-{
-  m_node->UnregisterImageTopic(topic);
-}
-
 void CRos2::FrameMove()
 {
   //! @todo Remove GUI dependency
-  m_node->FrameMove();
+  for (const auto& node : m_nodes)
+    node->FrameMove();
 }
 
 void CRos2::TranslateArguments(const std::vector<std::string>& cmdLineArgs,

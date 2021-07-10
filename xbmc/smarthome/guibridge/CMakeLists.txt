@@ -3,7 +3,6 @@ set(SOURCES GUIRenderHandle.cpp
             GUIRenderTarget.cpp
             GUIRenderTargetFactory.cpp
             SmartHomeGuiBridge.cpp
-            SmartHomeGuiManager.cpp
 )
 
 set(HEADERS GUIRenderHandle.h
@@ -11,7 +10,6 @@ set(HEADERS GUIRenderHandle.h
             GUIRenderTarget.h
             GUIRenderTargetFactory.h
             SmartHomeGuiBridge.h
-            SmartHomeGuiManager.h
 )
 
 core_add_library(smarthome_guibridge)

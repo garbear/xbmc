@@ -15,7 +15,6 @@
 #include "smarthome/guibridge/GUIRenderSettings.h"
 #include "smarthome/guibridge/SmartHomeGuiBridge.h"
 #include "smarthome/guicontrols/GUICameraConfig.h"
-#include "smarthome/ros2/Ros2.h"
 #include "utils/Geometry.h"
 
 #include <sstream>
@@ -124,11 +123,7 @@ void CGUICameraControl::SetHeight(float height)
 
 void CGUICameraControl::RegisterControl()
 {
-  const std::string& topic = GetPubSubTopic();
-
-  //! @todo
-  CServiceBroker::GetSmartHomeServices().Ros2().RegisterImageTopic(topic);
-  m_renderHandle = CServiceBroker::GetSmartHomeServices().GuiBridge(topic).RegisterControl(*this);
+  m_renderHandle = CServiceBroker::GetSmartHomeServices().GuiBridge(GetPubSubTopic()).RegisterControl(*this);
 }
 
 void CGUICameraControl::UnregisterControl()
