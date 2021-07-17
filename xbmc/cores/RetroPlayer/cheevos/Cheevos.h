@@ -12,6 +12,8 @@
 
 #include <map>
 #include <string>
+#include <vector>
+using std::vector;
 
 class CFileItem;
 
@@ -33,6 +35,7 @@ public:
            std::string loginToken);
   void ResetRuntime();
   void EnableRichPresence();
+  void ActivateAchievement();
   bool GetRichPresenceEvaluation(char* evaluation, size_t size);
 
 private:
@@ -49,6 +52,23 @@ private:
   std::string m_richPresenceScript;
   unsigned m_gameID = 0;
   bool m_richPresenceLoaded = false;
+  
+  vector<unsigned>cheevoid_list;
+  vector<const char*> cheevo_memaddr;
+  vector<const char*> cheevo_title;
+
+  typedef struct retro_achievement
+  {
+    const char* title;
+    const char* description;
+    const char* badge;
+    const char* memaddr;
+    unsigned id;
+    unsigned points;
+    
+  } retro_achievement;
+
+ // vector<retro_achievement> v1;
 
   const std::map<std::string, int> m_extensionToConsole = {{".a26", RC_CONSOLE_ATARI_2600},
                                                            {".a78", RC_CONSOLE_ATARI_7800},

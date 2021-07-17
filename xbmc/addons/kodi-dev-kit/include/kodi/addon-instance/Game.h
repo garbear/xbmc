@@ -988,7 +988,31 @@ public:
   {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
+  
+   virtual GAME_ERROR ActivateAchievement(unsigned cheevo_id, const char* memaddr)
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+  
+  virtual GAME_ERROR AwardAchievement(char* url,
+                                      size_t size,
+                                      const char* username,
+                                      const char* token,
+                                      unsigned cheevo_id,
+                                      int hardcore,
+                                      const char* game_hash)
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
 
+  virtual GAME_ERROR DeactivateTriggeredAchievement(unsigned cheevo_id)
+  {
+
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  virtual GAME_ERROR TestAchievementPerFrame() { return GAME_ERROR_NOT_IMPLEMENTED; }
+  
   virtual GAME_ERROR RCResetRuntime()
   { 
     return GAME_ERROR_NOT_IMPLEMENTED;
@@ -1044,6 +1068,11 @@ private:
     m_instanceData->toAddon->RCPostRichPresenceUrl = ADDON_RCPostRichPresenceUrl;
     m_instanceData->toAddon->EnableRichPresence = ADDON_EnableRichPresence;
     m_instanceData->toAddon->GetRichPresenceEvaluation = ADDON_GetRichPresenceEvaluation;
+    
+    m_instanceData->toAddon->ActivateAchievement = ADDON_ActivateAchievement; 
+    m_instanceData->toAddon->DeactivateTriggeredAchievement = ADDON_DeactivateTriggeredAchievement;
+    m_instanceData->toAddon->TestAchievementPerFrame = ADDON_TestAchievementPerFrame;
+    m_instanceData->toAddon->AwardAchievement = ADDON_AwardAchievement;
     m_instanceData->toAddon->RCResetRuntime = ADDON_RCResetRuntime;
   }
 
@@ -1294,7 +1323,42 @@ private:
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
         ->GetRichPresenceEvaluation(evaluation, size);
   }
+  
+  
+  inline static GAME_ERROR ADDON_ActivateAchievement(const AddonInstance_Game* instance,
+                                                     unsigned cheevo_id,
+                                                     const char* memaddr)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->ActivateAchievement(cheevo_id, memaddr);
+  }
+  
+  inline static GAME_ERROR ADDON_TestAchievementPerFrame(const AddonInstance_Game* instance)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->TestAchievementPerFrame();
+  }
 
+
+  inline static GAME_ERROR ADDON_AwardAchievement(const AddonInstance_Game* instance,
+                                                  char* url,
+                                                  size_t size,
+                                                  const char* username,
+                                                  const char* token,
+                                                  unsigned cheevo_id,
+                                                  int hardcore,
+                                                  const char* game_hash)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->AwardAchievement(url, size, username, token, cheevo_id, hardcore, game_hash);
+  }
+
+  inline static GAME_ERROR ADDON_DeactivateTriggeredAchievement(const AddonInstance_Game* instance,
+                                                                unsigned cheevo_id)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->DeactivateTriggeredAchievement(cheevo_id);
+  }
+  
   inline static GAME_ERROR ADDON_RCResetRuntime(const AddonInstance_Game* instance)
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->RCResetRuntime();

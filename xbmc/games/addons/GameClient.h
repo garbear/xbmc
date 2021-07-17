@@ -157,7 +157,18 @@ public:
                              unsigned gameID,
                              const char* richPresence);
   void EnableRichPresence(const char* script);
-  void GetRichPresenceEvaluation(char*& evaluation, size_t size);
+  void GetRichPresenceEvaluation(char*& evaluation, size_t size); 
+  
+  void ActivateAchievement(unsigned cheevo_id, const char* memaddr); 
+  bool AwardAchievement(char* url,
+                        size_t size,
+                        const char* username,
+                        const char* token,
+                        unsigned cheevo_id,
+                        int hardcore,
+                        const char* game_hash);
+  void DeactivateTriggeredAchievement(unsigned cheevo_id);
+  void TestAchievementPerFrame();
   // When the game is reset, the runtime should also be reset
   void RCResetRuntime();
 

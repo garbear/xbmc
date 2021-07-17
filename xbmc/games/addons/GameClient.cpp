@@ -672,6 +672,80 @@ void CGameClient::GetRichPresenceEvaluation(char*& evaluation, size_t size)
   }
 }
 
+
+void CGameClient::ActivateAchievement(unsigned cheevo_id, const char* memaddr)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->ActivateAchievement(&m_struct, cheevo_id, memaddr),
+             "ActivateAchievement()");
+  }
+  catch (...)
+  {
+    LogException("ActivateAchievement()");
+  }
+}
+
+
+bool CGameClient::AwardAchievement(char* url,
+                                   size_t size,
+                                   const char* username,
+                                   const char* token,
+                                   unsigned cheevo_id,
+                                   int hardcore,
+                                   const char* game_hash)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->AwardAchievement(&m_struct, url, size, username, token,
+                                                        cheevo_id, hardcore, game_hash),
+             "AwardAchievement()");
+  }
+  catch (...)
+  {
+    LogException("AwardAchievement()");
+  }
+
+  if (error != GAME_ERROR_NO_ERROR)
+    return false;
+
+  return true;
+}
+
+
+void CGameClient::DeactivateTriggeredAchievement(unsigned cheevo_id)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->DeactivateTriggeredAchievement(&m_struct, cheevo_id),
+             "DeactivateTriggeredAchievement()");
+  }
+  catch (...)
+  {
+    LogException("DeactivateTriggeredAchievement()");
+  }
+}
+
+void CGameClient::TestAchievementPerFrame()
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->TestAchievementPerFrame(&m_struct), "TestAchievementPerFrameAchievement()");
+  }
+  catch (...)
+  {
+    LogException("ActivateAchievement()");
+  }
+}
+
 void CGameClient::RCResetRuntime()
 {
   GAME_ERROR error = GAME_ERROR_NO_ERROR;
