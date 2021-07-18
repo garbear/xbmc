@@ -34,7 +34,14 @@ constexpr auto PUBLISHER = "Publisher";
 constexpr auto DEVELOPER = "Developer";
 constexpr auto GENRE = "Genre";
 constexpr auto CONSOLE_NAME = "ConsoleName";
-//constexpr auto RELEASED = "Released"; // TODO: Currently unused
+constexpr auto ACHIEVEMENTS = "Achievements";
+constexpr auto MEM_ADDR = "MemAddr";
+constexpr auto CHEEVO_ID = "ID";
+constexpr auto FLAGS = "Flags";
+constexpr auto CHEEVO_TITLE = "Title";
+//constexpr auto GAME_POINTS = "Points";
+constexpr auto BADGE_NAME = "BadgeName";
+    //constexpr auto RELEASED = "Released"; // TODO: Currently unused
 
 constexpr int HASH_SIZE = 33;
 constexpr int RESPORNSE_SIZE = 64;
@@ -109,20 +116,37 @@ bool CCheevos::LoadData()
   if (!m_gameClient->RCGetPatchFileUrl(requestURL, URL_SIZE, m_userName.c_str(),
                                        m_loginToken.c_str(), m_gameID))
     return false;
+ 
 
   CURL curl(requestURL);
   XUTILS::auto_buffer patchData;
   response.LoadFile(curl, patchData);
-
   std::string strResponse(patchData.get(), patchData.size());
   CJSONVariantParser::Parse(strResponse, data);
-
   if (!data[SUCCESS].asBoolean())
     return false;
 
   m_richPresenceScript = data[PATCH_DATA][RICH_PRESENCE].asString();
+  //CLog::Log(LOGDEBUG, "rich presence now");
+  //CLog::Log(LOGDEBUG, data[PATCH_DATA][RICH_PRESENCE].asString().c_str());
   m_richPresenceLoaded = true;
-
+  
+ // m_AchievementString = data[PATCH_DATA][ACHIEVEMENTS][1].asString();
+  //CLog::Log(LOGDEBUG, m_AchievementString.c_str());
+  //CLog::Log(LOGDEBUG, "flags now");
+  //m_gameClient->ActivateAchievement(data[PATCH_DATA][ACHIEVEMENTS][7][CHEEVO_ID].asUnsignedInteger(),
+                                   // data[PATCH_DATA][ACHIEVEMENTS][7][MEM_ADDR].asString().c_str());
+  int i;
+  for (i = 0; i < data[PATCH_DATA][ACHIEVEMENTS].size(); i++)
+  {
+    if (data[PATCH_DATA][ACHIEVEMENTS][i][FLAGS]==3)
+    {
+      cheevoid_list.push_back(data[PATCH_DATA][ACHIEVEMENTS][i][CHEEVO_ID].asUnsignedInteger());
+      cheevo_memaddr.push_back(data[PATCH_DATA][ACHIEVEMENTS][i][MEM_ADDR].asString().c_str());
+      cheevo_title.push_back(data[PATCH_DATA][ACHIEVEMENTS][i][CHEEVO_TITLE].asString().c_str());
+    }
+  }
+  
   GAME::CGameInfoTag& tag = *m_fileItem.GetGameInfoTag();
 
   tag.SetTitle(data[PATCH_DATA][GAME_TITLE].asString());
@@ -149,6 +173,22 @@ void CCheevos::EnableRichPresence()
   m_richPresenceScript.clear();
 }
 
+void CCheevos::ActivateAchievement()
+{
+  if (!m_richPresenceLoaded)
+  {
+    if (!LoadData())
+    {
+      CLog::Log(LOGERROR, "Cheevos: Couldn't load patch file");
+      return;
+    }
+  }
+  for (int i = 0; i < cheevoid_list.size(); i++)
+  {
+    m_gameClient->ActivateAchievement(cheevoid_list[i],cheevo_memaddr[i]);
+  }
+  
+}
 bool CCheevos::GetRichPresenceEvaluation(char* evaluation, size_t size)
 {
   if (!m_richPresenceLoaded)
@@ -180,3 +220,8 @@ bool CCheevos::GetRichPresenceEvaluation(char* evaluation, size_t size)
 
   return true;
 }
+/*
+void CCheevos::ActivateAchievement(unsigned id, const char* memaddr)
+{
+    
+}*/

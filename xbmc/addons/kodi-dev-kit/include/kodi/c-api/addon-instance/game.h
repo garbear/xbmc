@@ -1205,6 +1205,20 @@ extern "C"
      const char*);
     GAME_ERROR(__cdecl* EnableRichPresence)(const AddonInstance_Game*, const char*);
     GAME_ERROR(__cdecl* GetRichPresenceEvaluation)(const AddonInstance_Game*, char*, size_t);
+    
+    GAME_ERROR(__cdecl* ActivateAchievement)(const AddonInstance_Game*, unsigned, const char*);
+    
+    GAME_ERROR(__cdecl* AwardAchievement)
+    (const AddonInstance_Game*,
+     char* url,
+     size_t size,
+     const char* username,
+     const char* token,
+     unsigned cheevo_id,
+     int hardcore,
+     const char* game_hash);
+    GAME_ERROR(__cdecl* DeactivateTriggeredAchievement)(const AddonInstance_Game*, unsigned);
+    GAME_ERROR(__cdecl* TestAchievementPerFrame)(const AddonInstance_Game*);
     GAME_ERROR(__cdecl* RCResetRuntime)(const AddonInstance_Game*);
   } KodiToAddonFuncTable_Game;
 
