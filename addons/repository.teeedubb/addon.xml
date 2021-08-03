@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.teeedubb" name="teeedubb's repo" version="1.0.1" provider-name="teeedubb">
+        <extension point="xbmc.addon.repository" name="teeedubb's addons">
+                <info compressed="false">https://raw.github.com/teeedubb/teeedubb-xbmc-repo/master/addons.xml</info>
+                <checksum>https://raw.github.com/teeedubb/teeedubb-xbmc-repo/master/addons.xml.md5</checksum>
+                <datadir zip="true">https://raw.github.com/teeedubb/teeedubb-xbmc-repo/master</datadir>
+        </extension>
+        <extension point="xbmc.addon.metadata">
+                <summary>teeedubb's repo</summary>
+                <description>Addons by teeedubb.</description>
+                <disclaimer></disclaimer>
+                <platform>all</platform>
+        </extension>
+</addon>
+
+
