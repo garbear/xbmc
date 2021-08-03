@@ -59,4 +59,5 @@
   <addon optional="true">peripheral.joystick</addon>
   <addon optional="true">inputstream.adaptive</addon>
   <addon optional="true">repository.zachmorris</addon>
+  <addon optional="true">repository.teeedubb</addon>
 </addons>
