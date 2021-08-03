@@ -19,6 +19,7 @@ addons/xbmc.metadata/*
 addons/xbmc.pvr/*
 addons/xbmc.python/*
 addons/xbmc.webinterface/*
+addons/repository.teeedubb/*
 addons/repository.xbmc.org/*
 addons/repository.zachmorris/*
 addons/webinterface.default/*
