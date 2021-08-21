@@ -13,6 +13,8 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace KODI
 {
@@ -32,6 +34,12 @@ public:
   void ResetRuntime();
   void EnableRichPresence();
   std::string GetRichPresenceEvaluation();
+
+  void ActivateAchievement();
+  static void Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId);
+  void CheckTriggeredAchievement();
+
+  static std::unordered_map<unsigned, std::vector<std::string>> m_activatedCheevoMap;
 
 private:
   bool LoadData();
