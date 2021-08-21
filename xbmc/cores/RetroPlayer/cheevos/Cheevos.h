@@ -12,6 +12,9 @@
 
 #include <map>
 #include <string>
+#include <unordered_map>
+#include <vector>
+using std::vector;
 
 class CFileItem;
 
@@ -34,6 +37,12 @@ public:
   void ResetRuntime();
   void EnableRichPresence();
   bool GetRichPresenceEvaluation(char* evaluation, size_t size);
+
+  void ActivateAchievement();
+  static void Callback_URL_ID(const char* achievement_url, unsigned cheevo_id);
+  void CheckTriggeredAchievement();
+
+  static std::unordered_map<unsigned, vector<std::string>> activated_cheevo_map;
 
 private:
   bool LoadData();

@@ -194,6 +194,8 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
 
     m_cheevos->EnableRichPresence();
 
+    m_cheevos->ActivateAchievement();
+
     // Calls to external code could mutate file item, so make a copy
     CFileItem fileCopy(*m_fileItem);
 
