@@ -20,6 +20,10 @@
 #include "utils/Variant.h"
 #include "utils/auto_buffer.h"
 #include "utils/log.h"
+#include "xbmc/dialogs/GUIDialogKaiToast.h"
+
+#include <unordered_map>
+#include <vector>
 
 using namespace KODI;
 using namespace RETRO;
@@ -36,10 +40,19 @@ constexpr auto GENRE = "Genre";
 constexpr auto CONSOLE_NAME = "ConsoleName";
 //constexpr auto RELEASED = "Released"; // TODO: Currently unused
 
+constexpr auto ACHIEVEMENTS = "Achievements";
+constexpr auto MEM_ADDR = "MemAddr";
+constexpr auto CHEEVO_ID = "ID";
+constexpr auto FLAGS = "Flags";
+constexpr auto CHEEVO_TITLE = "Title";
+constexpr auto BADGE_NAME = "BadgeName";
+
 constexpr int HASH_SIZE = 33;
 constexpr int RESPORNSE_SIZE = 64;
 constexpr int URL_SIZE = 512;
 constexpr int POST_DATA_SIZE = 1024;
+
+std::unordered_map<unsigned, vector<std::string>> CCheevos::activated_cheevo_map;
 
 CCheevos::CCheevos(GAME::CGameClient* gameClient,
                    CFileItem& fileItem,
@@ -50,6 +63,7 @@ CCheevos::CCheevos(GAME::CGameClient* gameClient,
     m_userName(std::move(userName)),
     m_loginToken(std::move(loginToken))
 {
+  m_gameClient->SetRetroAchievementsCredentials(m_userName.c_str(), m_loginToken.c_str());
 }
 
 void CCheevos::ResetRuntime()
@@ -76,7 +90,6 @@ bool CCheevos::LoadData()
     {
       return false;
     }
-
     m_romHash = hash;
   }
 
@@ -96,10 +109,8 @@ bool CCheevos::LoadData()
 
   CVariant data(CVariant::VariantTypeObject);
   CJSONVariantParser::Parse(responseStr, data);
-
   if (!data[SUCCESS].asBoolean())
     return false;
-
   m_gameID = data[GAME_ID].asUnsignedInteger32();
 
   // For some reason RetroAchievements returns Success = true when the hash isn't found
@@ -123,6 +134,22 @@ bool CCheevos::LoadData()
   m_richPresenceScript = data[PATCH_DATA][RICH_PRESENCE].asString();
   m_richPresenceLoaded = true;
 
+  const CVariant& achievements = data[PATCH_DATA][ACHIEVEMENTS];
+  for (auto it = achievements.begin_array(); it != achievements.end_array(); it++)
+  {
+    const CVariant& achievement = *it;
+    if (achievement[FLAGS].asUnsignedInteger() == 3)
+    {
+      activated_cheevo_map[achievement[CHEEVO_ID].asUnsignedInteger()] = {
+          achievement[MEM_ADDR].asString(), achievement[CHEEVO_TITLE].asString(),
+          achievement[BADGE_NAME].asString()};
+    }
+    else
+    {
+      CLog::Log(LOGINFO, "We are not considering unofficial achievements");
+    }
+  }
+
   GAME::CGameInfoTag& tag = *m_fileItem.GetGameInfoTag();
 
   tag.SetTitle(data[PATCH_DATA][GAME_TITLE].asString());
@@ -144,9 +171,30 @@ void CCheevos::EnableRichPresence()
       return;
     }
   }
-
   m_gameClient->EnableRichPresence(m_richPresenceScript.c_str());
   m_richPresenceScript.clear();
+}
+
+void CCheevos::ActivateAchievement()
+{
+  if (activated_cheevo_map.size() == 0)
+  {
+    if (!LoadData())
+    {
+      CLog::Log(LOGERROR, "Cheevos: Couldn't load patch file");
+      return;
+    }
+    else
+    {
+      CLog::Log(LOGERROR, "No active core achievement for the game");
+    }
+  }
+  for (auto& it : activated_cheevo_map)
+  {
+    m_gameClient->ActivateAchievement(it.first, it.second[0].c_str());
+  }
+  //call for checking triggered achievement
+  CheckTriggeredAchievement();
 }
 
 bool CCheevos::GetRichPresenceEvaluation(char* evaluation, size_t size)
@@ -179,4 +227,21 @@ bool CCheevos::GetRichPresenceEvaluation(char* evaluation, size_t size)
   }
 
   return true;
+}
+
+void CCheevos::Callback_URL_ID(const char* achievement_url, unsigned cheevo_id)
+{
+  XFILE::CCurlFile curl;
+  std::string res;
+  curl.Get(achievement_url, res);
+  std::string description = activated_cheevo_map[cheevo_id][1];
+  std::string header = std::string("Congratulations, ") + std::string("Achievement Unlocked");
+
+  CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, header, description);
+}
+
+void CCheevos::CheckTriggeredAchievement()
+{
+  m_gameClient->GetAchievement_URL_ID(
+      Callback_URL_ID); // Callback for triggered achievement URL and id
 }
