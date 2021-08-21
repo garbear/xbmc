@@ -1193,6 +1193,8 @@ extern "C"
     GAME_ERROR(__cdecl* RCGetGameIDUrl)(const AddonInstance_Game*, char*, size_t, const char*);
     GAME_ERROR(__cdecl* RCGetPatchFileUrl)
     (const AddonInstance_Game*, char*, size_t, const char*, const char*, unsigned);
+    GAME_ERROR(__cdecl* SetRetroAchievementsCredentials)
+    (const AddonInstance_Game*, const char*, const char*);
     GAME_ERROR(__cdecl* RCPostRichPresenceUrl)
     (const AddonInstance_Game*,
      char*,
@@ -1205,6 +1207,10 @@ extern "C"
      const char*);
     GAME_ERROR(__cdecl* EnableRichPresence)(const AddonInstance_Game*, const char*);
     GAME_ERROR(__cdecl* GetRichPresenceEvaluation)(const AddonInstance_Game*, char*, size_t);
+
+    GAME_ERROR(__cdecl* ActivateAchievement)(const AddonInstance_Game*, unsigned, const char*);
+    GAME_ERROR(__cdecl* GetCheevo_URL_ID)
+    (const AddonInstance_Game*, void (*Callback)(const char* achievement_url, unsigned cheevo_id));
     GAME_ERROR(__cdecl* RCResetRuntime)(const AddonInstance_Game*);
   } KodiToAddonFuncTable_Game;
 

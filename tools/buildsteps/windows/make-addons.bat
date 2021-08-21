@@ -98,7 +98,7 @@ IF "%store%" NEQ "" (
 )
 
 rem execute cmake to generate makefiles processable by nmake
-cmake "%ADDONS_PATH%" -G "NMake Makefiles" ^
+cmake "%ADDONS_PATH%" -G "Visual Studio 16 2019" -A x64 ^
       -DCMAKE_BUILD_TYPE=Release ^
       -DCMAKE_USER_MAKE_RULES_OVERRIDE="%SCRIPTS_PATH%/CFlagOverrides.cmake" ^
       -DCMAKE_USER_MAKE_RULES_OVERRIDE_CXX="%SCRIPTS_PATH%/CXXFlagOverrides.cmake" ^

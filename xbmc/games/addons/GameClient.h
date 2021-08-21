@@ -146,8 +146,8 @@ public:
   // RCheevos
   bool RCGenerateHashFromFile(char* hash, int consoleID, const char* filePath);
   bool RCGetGameIDUrl(char* url, size_t size, const char* hash);
-  bool RCGetPatchFileUrl(
-      char* url, size_t size, const char* username, const char* token, unsigned gameID);
+  bool RCGetPatchFileUrl(char* url, size_t size, const char* username, const char* token, unsigned gameID);
+  void SetRetroAchievementsCredentials(const char* username, const char* token);
   bool RCPostRichPresenceUrl(char* url,
                              size_t urlSize,
                              char* postData,
@@ -159,6 +159,10 @@ public:
   void EnableRichPresence(const char* script);
   void GetRichPresenceEvaluation(char*& evaluation, size_t size);
   // When the game is reset, the runtime should also be reset
+
+  void ActivateAchievement(unsigned cheevo_id, const char* memaddr);
+  void GetAchievement_URL_ID(void (*Callback)(const char* achievement_url, unsigned cheevo_id));
+
   void RCResetRuntime();
 
   /*!
