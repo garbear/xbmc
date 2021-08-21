@@ -643,6 +643,20 @@ bool CGameClient::RCPostRichPresenceUrl(char* url,
   return true;
 }
 
+void CGameClient::SetRetroAchievementsCredentials(const char* username, const char* token)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+  try
+  {
+    LogError(error = m_struct.toAddon->SetRetroAchievementsCredentials(&m_struct, username, token),
+             "SetRetroAchievementsCredentials");
+  }
+  catch (...)
+  {
+    LogException("SetRetroAchievementsCredentials");
+  }
+}
+
 void CGameClient::EnableRichPresence(const char* script)
 {
   GAME_ERROR error = GAME_ERROR_NO_ERROR;
@@ -669,6 +683,36 @@ void CGameClient::GetRichPresenceEvaluation(char*& evaluation, size_t size)
   catch (...)
   {
     LogException("GetRichPresence()");
+  }
+}
+
+void CGameClient::ActivateAchievement(unsigned cheevo_id, const char* memaddr)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->ActivateAchievement(&m_struct, cheevo_id, memaddr),
+             "ActivateAchievement()");
+  }
+  catch (...)
+  {
+    LogException("ActivateAchievement()");
+  }
+}
+
+void CGameClient::GetAchievement_URL_ID(void (*Callback)(const char* achievement_url,
+                                                         unsigned cheevo_id))
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+
+  try
+  {
+    LogError(error = m_struct.toAddon->GetCheevo_URL_ID(&m_struct, Callback), "GetCheevo_ID_URL()");
+  }
+  catch (...)
+  {
+    LogException("GetCheevoID()");
   }
 }
 
