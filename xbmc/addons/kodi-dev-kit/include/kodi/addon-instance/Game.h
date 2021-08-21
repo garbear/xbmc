@@ -967,6 +967,12 @@ public:
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
 
+  virtual GAME_ERROR SetRetroAchievementsCredentials(const char* username,
+                                                     const char* token)
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
   virtual GAME_ERROR RCPostRichPresenceUrl(char* url,
                                            size_t urlSize,
                                            char* postData,
@@ -985,6 +991,16 @@ public:
   }
 
   virtual GAME_ERROR GetRichPresenceEvaluation(char* evaluation, size_t size)
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  virtual GAME_ERROR ActivateAchievement(unsigned cheevo_id, const char* memaddr)
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  virtual GAME_ERROR GetCheevo_URL_ID(void (*Callback)(const char* achievement_url, unsigned cheevo_id))
   {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
@@ -1041,9 +1057,12 @@ private:
     m_instanceData->toAddon->RCGenerateHashFromFile = ADDON_RCGenerateHashFromFile;
     m_instanceData->toAddon->RCGetGameIDUrl = ADDON_RCGetGameIDUrl;
     m_instanceData->toAddon->RCGetPatchFileUrl = ADDON_RCGetPatchFileUrl;
+    m_instanceData->toAddon->SetRetroAchievementsCredentials = ADDON_SetRetroAchievementsCredentials;
     m_instanceData->toAddon->RCPostRichPresenceUrl = ADDON_RCPostRichPresenceUrl;
     m_instanceData->toAddon->EnableRichPresence = ADDON_EnableRichPresence;
     m_instanceData->toAddon->GetRichPresenceEvaluation = ADDON_GetRichPresenceEvaluation;
+    m_instanceData->toAddon->ActivateAchievement = ADDON_ActivateAchievement;
+    m_instanceData->toAddon->GetCheevo_URL_ID = ADDON_GetCheevo_URL_ID;
     m_instanceData->toAddon->RCResetRuntime = ADDON_RCResetRuntime;
   }
 
@@ -1265,6 +1284,13 @@ private:
         ->RCGetPatchFileUrl(url, size, username, token, gameID);
   }
 
+  inline static GAME_ERROR ADDON_SetRetroAchievementsCredentials(
+      const AddonInstance_Game* instance, const char* username, const char* token)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->SetRetroAchievementsCredentials(username, token);
+  }
+
   inline static GAME_ERROR ADDON_RCPostRichPresenceUrl(const AddonInstance_Game* instance,
                                                        char* url,
                                                        size_t urlSize,
@@ -1293,6 +1319,21 @@ private:
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
         ->GetRichPresenceEvaluation(evaluation, size);
+  }
+
+   inline static GAME_ERROR ADDON_ActivateAchievement(const AddonInstance_Game* instance,
+                                                     unsigned cheevo_id,
+                                                     const char* memaddr)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->ActivateAchievement(cheevo_id, memaddr);
+  }
+
+  inline static GAME_ERROR ADDON_GetCheevo_URL_ID(const AddonInstance_Game* instance,
+                                                  void (*Callback)(const char* achievement_url,
+                                                  unsigned cheevo_id))
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->GetCheevo_URL_ID(Callback);
   }
 
   inline static GAME_ERROR ADDON_RCResetRuntime(const AddonInstance_Game* instance)
