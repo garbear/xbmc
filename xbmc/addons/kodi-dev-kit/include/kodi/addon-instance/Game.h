@@ -966,6 +966,20 @@ public:
   }
 
   //============================================================================
+  /// @brief Set the credentials of the RetroAchievements user
+  ///
+  /// @param[in] username The RetroAchievements username of the user
+  /// @param[in] token The login token to RetroAchievements of the user
+  ///
+  /// @return the error, or @ref GAME_ERROR_NO_ERROR if the call was successful
+  ///
+  virtual GAME_ERROR SetRetroAchievementsCredentials(const std::string& username,
+                                                     const std::string& token)
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  //============================================================================
   /// @brief Gets a URL to the endpoint that updates the rich presence
   ///        in the user's RetroAchievements profile
   ///
@@ -1022,6 +1036,32 @@ public:
   }
 
   //============================================================================
+  /// @brief Activate an achievement
+  ///
+  /// @param[in] cheevoId The achievement ID
+  /// @param[in] memaddr Pointer to game memory
+  ///
+  /// @return the error, or @ref GAME_ERROR_NO_ERROR if the call was successful
+  ///
+  virtual GAME_ERROR ActivateAchievement(unsigned cheevoId, const char* memaddr)
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  //============================================================================
+  /// @brief Get the achievement URL and ID
+  ///
+  /// @param[in] callback A callback that receives the URL and ID
+  ///
+  /// @return the error, or @ref GAME_ERROR_NO_ERROR if the call was successful
+  ///
+  virtual GAME_ERROR GetCheevo_URL_ID(void (*callback)(const char* achievementUrl,
+                                                       unsigned cheevoId))
+  {
+    return GAME_ERROR_NOT_IMPLEMENTED;
+  }
+
+  //============================================================================
   /// @brief Resets the runtime. Must be called each time a new rom is starting
   ///        and when the savestate is changed
   ///
@@ -1072,9 +1112,13 @@ private:
     instance->game->toAddon->RCGenerateHashFromFile = ADDON_RCGenerateHashFromFile;
     instance->game->toAddon->RCGetGameIDUrl = ADDON_RCGetGameIDUrl;
     instance->game->toAddon->RCGetPatchFileUrl = ADDON_RCGetPatchFileUrl;
+    instance->game->toAddon->SetRetroAchievementsCredentials =
+        ADDON_SetRetroAchievementsCredentials;
     instance->game->toAddon->RCPostRichPresenceUrl = ADDON_RCPostRichPresenceUrl;
     instance->game->toAddon->RCEnableRichPresence = ADDON_RCEnableRichPresence;
     instance->game->toAddon->RCGetRichPresenceEvaluation = ADDON_RCGetRichPresenceEvaluation;
+    instance->game->toAddon->ActivateAchievement = ADDON_ActivateAchievement;
+    instance->game->toAddon->GetCheevo_URL_ID = ADDON_GetCheevo_URL_ID;
     instance->game->toAddon->RCResetRuntime = ADDON_RCResetRuntime;
 
     instance->game->toAddon->FreeString = ADDON_FreeString;
@@ -1322,6 +1366,14 @@ private:
     return ret;
   }
 
+  inline static GAME_ERROR ADDON_SetRetroAchievementsCredentials(const AddonInstance_Game* instance,
+                                                                 const char* username,
+                                                                 const char* token)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->SetRetroAchievementsCredentials(username, token);
+  }
+
   inline static GAME_ERROR ADDON_RCPostRichPresenceUrl(const AddonInstance_Game* instance,
                                                        char** url,
                                                        char** postData,
@@ -1373,6 +1425,22 @@ private:
     }
 
     return ret;
+  }
+
+  inline static GAME_ERROR ADDON_ActivateAchievement(const AddonInstance_Game* instance,
+                                                     unsigned cheevoId,
+                                                     const char* memaddr)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->ActivateAchievement(cheevoId, memaddr);
+  }
+
+  inline static GAME_ERROR ADDON_GetCheevo_URL_ID(const AddonInstance_Game* instance,
+                                                  void (*callback)(const char* achievementUrl,
+                                                                   unsigned cheevoId))
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->GetCheevo_URL_ID(callback);
   }
 
   inline static GAME_ERROR ADDON_RCResetRuntime(const AddonInstance_Game* instance)
