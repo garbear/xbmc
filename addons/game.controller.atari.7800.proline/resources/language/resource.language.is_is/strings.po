@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
 
+msgctxt "Addon Summary"
+msgid "Atari 7800 Proline"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Atari 7800 ProSystem was released in 1986. It came bundled with the Atari Proline Joystick, but due to criticism over ergonimic issues Atari later released a gamepad with European 7800s."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Atari 7800 Proline"
 msgstr ""

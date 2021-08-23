@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Genesis controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The original controller for the Sega Genesis was released in 1988. It had three main face buttons. Sega released a six-button version in 1993."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Genesis"
 msgstr ""

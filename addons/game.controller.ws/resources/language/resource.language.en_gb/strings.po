@@ -16,6 +16,18 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "Addon Summary"
+msgid "WonderSwan"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The WonderSwan is a 16-bit handheld console released in 1999 by Bandai. It is playable both vertically and horizontally, and was praised for its long battery life and unique library of games."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "WonderSwan"
 msgstr ""

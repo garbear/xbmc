@@ -16,6 +16,14 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "Addon Summary"
+msgid "PC Joystick (4-Button)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The 4-button joystick was compatible with the Game Port, a device port found on IBM PCs throughout the 1980s and 1990s."
+msgstr ""
+
 msgctxt "#30000"
 msgid "PC Joystick (4-button)"
 msgstr ""

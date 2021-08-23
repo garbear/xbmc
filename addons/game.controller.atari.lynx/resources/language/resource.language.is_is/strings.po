@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
 
+msgctxt "Addon Summary"
+msgid "Atari Lynx"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Atari Lynx is a 16-bit handheld gaming console released in 1989.  It held notable accomplishments, including the first handheld with a color LCD, advanced graphics, and ambidextrous layout. However, it was a commercial failure and discontinued in 1995."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Atari Lynx"
 msgstr ""

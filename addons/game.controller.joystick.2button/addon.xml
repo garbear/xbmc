@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.joystick.2button"
         name="PC Joystick (2-Button)"
-        version="1.0.9"
+        version="1.0.10"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">PC Joystick (2-Button)</summary>
-        <description lang="en_GB">The 2-button joystick was compatible with the Game Port, a device port found on IBM PCs throughout the 1980s and 1990s.</description>
         <platform>all</platform>
         <assets>
             <icon>resources/icon.png</icon>
         </assets>
+        <summary lang="da_DK">PC joystick (2 knapper)</summary>
+        <summary lang="en_GB">PC Joystick (2-Button)</summary>
+        <summary lang="ru_RU">ПК джостик (2-кнопочный)</summary>
+        <description lang="da_DK">Joysticket med 2 knapper var kompatibelt med Game Port, en enhedsport, der blev fundet på IBM-pc'er gennem 1980'erne og 1990'erne.</description>
+        <description lang="en_GB">The 2-button joystick was compatible with the Game Port, a device port found on IBM PCs throughout the 1980s and 1990s.</description>
+        <description lang="ru_RU">2-кнопочный джойстик был совместим с Game Port - разъём ввода-вывода, найденный на компьютерах IBM в 1980-х и 1990-х годах.</description>
     </extension>
 </addon>

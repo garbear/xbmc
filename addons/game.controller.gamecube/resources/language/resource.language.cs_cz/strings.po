@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "Addon Summary"
+msgid "Nintendo GameCube controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Nintendo GameCube controller was released in 2001. The analog sticks and triggers were the target of a patent lawsuit, but Nintendo fought back and successfully won the case."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Nintendo GameCube"
 msgstr ""

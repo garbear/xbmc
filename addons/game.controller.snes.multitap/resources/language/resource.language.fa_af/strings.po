@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Super Multitap"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "A multitap increases the number of controller ports, similar to a USB hub. The Super Multitap was released by Hudson Soft in 1993 for use with the Bomberman games."
+msgstr ""
+
 msgctxt "#30000"
 msgid "Super Multitap"
 msgstr ""

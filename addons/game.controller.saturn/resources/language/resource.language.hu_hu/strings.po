@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Saturn controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The original controller for the Sega Saturn debuted in Japan in 1994. In North America and Europe, a different, much bulkier controller was released to supposedly accommodate for the \"bigger hands\" of western consumers."
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Saturn"
 msgstr ""

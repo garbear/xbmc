@@ -14,8 +14,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=(n==0) ? 0 : (n==1) ? 1 : (n==2) ? 2 : "
-"(n==3) ? 3 :(n==6) ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=(n==0) ? 0 : (n==1) ? 1 : (n==2) ? 2 : (n==3) ? 3 :(n==6) ? 4 : 5;\n"
+
+msgctxt "Addon Summary"
+msgid "PlayStation Gamepad"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The PlayStation controller was released by Sony Computer Entertainment in 1994. Sony briefly released the Dual Analog controller in 1997, followed by the rumble-enabled DualShock later that year."
+msgstr ""
 
 msgctxt "#30000"
 msgid "PlayStation Gamepad"

@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.3do"
         name="3DO Controller"
-        version="1.0.9"
+        version="1.0.10"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">3D0 controller</summary>
-        <description lang="en_GB">The 3DO Interactive Multiplayer is a game console developed by the 3DO Company. Panasonic produced the first models in 1993, and further models were released by Sanyo and GoldStar (now LG) in 1994.</description>
-        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>resources/icon.png</icon>
         </assets>
+        <summary lang="da_DK">3D0 controller</summary>
+        <summary lang="en_GB">3D0 controller</summary>
+        <summary lang="es_MX">Control 3D0</summary>
+        <summary lang="ru_RU">3D0 контроллер</summary>
+        <description lang="da_DK">3DO Interactive Multiplayer er en spilkonsol udviklet af 3DO Company. Panasonic producerede de første modeller i 1993, og yderligere modeller blev frigivet af Sanyo og GoldStar (nu LG) i 1994.</description>
+        <description lang="en_GB">The 3DO Interactive Multiplayer is a game console developed by the 3DO Company. Panasonic produced the first models in 1993, and further models were released by Sanyo and GoldStar (now LG) in 1994.</description>
+        <description lang="es_MX">La 3D0 Interactive Multiplayer es una consola de juegos desarrollada por la 3DO Company. Panasonic produjo los primeros modelos en 1993, y los modelos consecutivos fueron producidos por Sanyo y Goldstar (actualmente LG) en 1994.</description>
+        <description lang="ru_RU">3DO Interactive Multiplayer - игровая консоль, разработаная компанией 3DO. Panasonic выпустила первые модели в 1993, и дальнейшие модели Sanyo и GoldStar (LG) выпустили в 1994.</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
     </extension>
 </addon>

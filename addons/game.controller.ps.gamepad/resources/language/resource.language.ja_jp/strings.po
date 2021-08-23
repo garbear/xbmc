@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "PlayStation Gamepad"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The PlayStation controller was released by Sony Computer Entertainment in 1994. Sony briefly released the Dual Analog controller in 1997, followed by the rumble-enabled DualShock later that year."
+msgstr ""
+
 msgctxt "#30000"
 msgid "PlayStation Gamepad"
 msgstr ""

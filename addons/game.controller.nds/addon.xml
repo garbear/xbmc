@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.nds"
         name="Nintendo DS"
-        version="1.0.7"
+        version="1.0.8"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Nintendo DS</summary>
-        <description lang="en_GB">The Nintendo DS (short for "Dual Screen") is a 32-bit handheld video game console released in 2004. A DS Lite model was launched in 2006, followed by the DSi. Combined, these are the best selling handheld to date, and second best console (behind the PlayStation 2).</description>
-        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>resources/icon.png</icon>
         </assets>
+        <summary lang="en_GB">Nintendo DS</summary>
+        <summary lang="ru_RU">Nintendo DS</summary>
+        <description lang="en_GB">The Nintendo DS (short for &quot;Dual Screen&quot;) is a 32-bit handheld video game console released in 2004. A DS Lite model was launched in 2006, followed by the DSi. Combined, these are the best selling handheld to date, and second best console (behind the PlayStation 2).</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
     </extension>
 </addon>

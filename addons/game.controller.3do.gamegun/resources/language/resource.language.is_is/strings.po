@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
 
+msgctxt "Addon Summary"
+msgid "3DO Gamegun"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Gamegun was released for the 3DO in 1994 by American Laser Games."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "3DO Gamegun"
 msgstr ""

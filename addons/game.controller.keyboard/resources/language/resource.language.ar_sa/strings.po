@@ -14,8 +14,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+msgctxt "Addon Summary"
+msgid "IBM Model M keyboard"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The IBM Model M keyboard, introduced in 1984, is regarded as a timeless and durable piece of hardware."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
 
 msgctxt "#30000"
 msgid "Keyboard"

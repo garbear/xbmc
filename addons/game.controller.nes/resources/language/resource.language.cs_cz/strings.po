@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "Addon Summary"
+msgid "NES controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Nintendo Entertainment System, also known as the Famicom (for \"Family Computer\"), was released in 1983. The cross-shaped directional pad was designed for Game &amp; Watch systems, replacing the bulkier joysticks found on earlier controllers."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "NES"
 msgstr ""

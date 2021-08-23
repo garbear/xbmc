@@ -16,6 +16,14 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Dreamcast controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Dreamcast was released in 1998. The inclusion of an analog stick reflected the transition from 2D arcade games to 3D game environments. The Dreamcast had a short lifespan and marked the end of Sega's 18 years in the console market."
+msgstr ""
+
 msgctxt "#30000"
 msgid "Dreamcast"
 msgstr ""

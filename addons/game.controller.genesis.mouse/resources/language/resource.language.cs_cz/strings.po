@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Mouse"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Mouse is a ball mouse for the Sega Mega Drive/Genesis released in 1993. It was intended to be used for art creation software."
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Mouse"
 msgstr ""

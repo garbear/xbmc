@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Saturn 3D (Japan)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Saturn 3D Control Pad was released in 1996. It was Sega's answer to the revolutionary Nintendo 64 controller, which featured an analogue stick for greater precision in a 3D environment."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Saturn 3D (Japan)"
 msgstr ""

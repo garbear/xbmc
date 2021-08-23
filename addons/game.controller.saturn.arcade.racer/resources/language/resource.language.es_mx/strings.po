@@ -17,6 +17,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.5.3\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Saturn Arcade Racer"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Arcade Racer, released in 1995, is a racing wheel style controller for the Sega Saturn."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Arcade Racer"
 msgstr ""

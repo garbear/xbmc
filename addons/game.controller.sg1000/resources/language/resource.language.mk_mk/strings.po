@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n==1 || n%10==1 ? 0 : 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega SG-1000 controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The SG-1000, also known as the Computer Videogame SG-1000, was Sega's first entry into the console business in 1983. However, due to market saturation and the Video Game Crash of 1983, it was not commercially successful."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega SG-1000"
 msgstr ""

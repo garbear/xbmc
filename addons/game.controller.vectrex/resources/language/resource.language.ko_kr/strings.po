@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "Vectrex controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Vectrex was released in 1982 by General Consumer Electronics (later purchased by Milton Bradley). The console featured a built-in monochrome monitor capable of displaying vector graphics."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Vectrex"
 msgstr ""

@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "Odyssey² controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Odyssey², also known as the Videopac G7000, was released by Magnavox (now Philips) in 1978. All games produced by Magnavox/Philips ended with an exclamation point, such as K.C. Munchkin! and Kuller Bees!."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Odyssey²"
 msgstr ""

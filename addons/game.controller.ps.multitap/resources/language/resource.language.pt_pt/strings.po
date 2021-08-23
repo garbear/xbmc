@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 
+msgctxt "Addon Summary"
+msgid "PlayStation Multitap"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "A multitap increases the number of controller and memory card ports, similar to a USB hub. With a second PlayStation Multitap, up to eight controllers and memory cards can be plugged in at once."
+msgstr ""
+
 msgctxt "#30000"
 msgid "PlayStation Multitap"
 msgstr ""

@@ -17,6 +17,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.5.3\n"
 
+msgctxt "Addon Summary"
+msgid "Super Scope"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Super Scope is a light gun for the SNES. It was released in 1992 as a successor to the NES Zapper."
+msgstr ""
+
 msgctxt "#30000"
 msgid "Super Scope"
 msgstr ""

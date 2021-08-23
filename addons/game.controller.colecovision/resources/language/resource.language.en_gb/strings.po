@@ -16,6 +16,18 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "Addon Summary"
+msgid "ColecoVision controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The ColecoVision is Coleco Industries' second-generation game console, released in 1982. IGN named it the 12th-best console, citing its accuracy in bringing arcade games to the home."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "ColecoVision"
 msgstr ""

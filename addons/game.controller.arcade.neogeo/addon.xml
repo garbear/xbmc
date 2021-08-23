@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.arcade.neogeo"
         name="Neo Geo Controller"
-        version="1.0.8"
+        version="1.0.9"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Neo Geo Controller</summary>
-        <description lang="en_GB">The controller for the Neo Geo AES (Advanced Entertainment System), a video game console released in the US in 1991. The Neo Geo AES was a niche system marketed toward high-end consumers. The console was expensive, as were the games themselves, which could go for hundreds of dollars.</description>
         <platform>all</platform>
         <assets>
             <icon>resources/icon.png</icon>
         </assets>
+        <summary lang="da_DK">Neo Geo controller</summary>
+        <summary lang="en_GB">Neo Geo Controller</summary>
+        <description lang="da_DK">Controlleren til Neo Geo AES (Advanced Entertainment System); en videospilkonsol, der blev udgivet i USA i 1991. Neo Geo AES var et nichesystem, der blev markedsført mod avancerede forbrugere. Konsollen var dyr, ligesom selve spilene, som kunne sælges for hundreder af dollars.</description>
+        <description lang="en_GB">The controller for the Neo Geo AES (Advanced Entertainment System), a video game console released in the US in 1991. The Neo Geo AES was a niche system marketed toward high-end consumers. The console was expensive, as were the games themselves, which could go for hundreds of dollars.</description>
     </extension>
 </addon>

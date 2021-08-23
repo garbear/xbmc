@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.gba"
         name="Game Boy Advance"
-        version="1.0.8"
+        version="1.0.9"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Game Boy Advance</summary>
-        <description lang="en_GB">The Nintendo Game Boy Advance is a 32-bit handheld video game console released in 2001. Despite fierce competition, Nintendo maintained a majority market share with the device.</description>
-        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>resources/icon.png</icon>
         </assets>
+        <summary lang="da_DK">Game Boy Advance</summary>
+        <summary lang="en_GB">Game Boy Advance</summary>
+        <summary lang="ru_RU">Game Boy Advance</summary>
+        <description lang="da_DK">Nintendo Game Boy Advance er en 32-bit håndholdt videospilkonsol udgivet i 2001. På trods af hård konkurrence fastholdt Nintendo størstedelen af markedsandelen med enheden.</description>
+        <description lang="en_GB">The Nintendo Game Boy Advance is a 32-bit handheld video game console released in 2001. Despite fierce competition, Nintendo maintained a majority market share with the device.</description>
+        <description lang="ru_RU">Nintendo Game Boy Advance - 32-битная консоль, выпущенная в 2001. Несмотря на жесткую конкуренцию, Nintendo сохранила большую долю рынка с этим устройством.</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
     </extension>
 </addon>

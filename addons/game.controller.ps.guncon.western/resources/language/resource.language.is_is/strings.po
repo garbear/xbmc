@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
 
+msgctxt "Addon Summary"
+msgid "PlayStation Guncon (Western)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Guncon, known as G-Con in Europe, is a family of light guns designed by Namco for the PlayStation. The original model was released alongside the PlayStation in 1994."
+msgstr ""
+
 msgctxt "#30000"
 msgid "PlayStation Guncon (Western)"
 msgstr ""

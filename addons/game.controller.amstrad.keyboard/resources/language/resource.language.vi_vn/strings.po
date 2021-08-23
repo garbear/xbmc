@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "Amstrad Keyboard"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Amstrad CPC (short for Colour Personal Computer) is a series of 8-bit home computers produced by Amstrad between 1984 and 1990."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Amstrad CPC"
 msgstr ""

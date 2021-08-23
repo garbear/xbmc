@@ -16,6 +16,18 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "Addon Summary"
+msgid "3D0 controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The 3DO Interactive Multiplayer is a game console developed by the 3DO Company. Panasonic produced the first models in 1993, and further models were released by Sanyo and GoldStar (now LG) in 1994."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "3DO"
 msgstr ""

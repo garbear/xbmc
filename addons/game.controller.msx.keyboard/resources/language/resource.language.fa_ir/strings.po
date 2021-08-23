@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 
+msgctxt "Addon Summary"
+msgid "MSX Keyboard"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The MSX keyboard came in internal and external units. One troubleshooting hint when an MSX machine does not display an image is to press the CAPS key repeatedly to see if the LED toggles."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "MSX Keyboard"
 msgstr ""

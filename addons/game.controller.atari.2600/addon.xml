@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.atari.2600"
         name="Atari 2600 Joystick"
-        version="1.1.2"
+        version="1.1.3"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Atari 2600 joystick</summary>
-        <description lang="en_GB">The Atari CX40 joystick appeared on the Atari 2600 in 1977, and was considered such a great improvement over other controllers that it was the primary input device for most games.</description>
-        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>resources/icon.png</icon>
         </assets>
+        <summary lang="da_DK">Atari 2600 joystick</summary>
+        <summary lang="en_GB">Atari 2600 joystick</summary>
+        <summary lang="ru_RU">Джостик Atari 2600</summary>
+        <description lang="da_DK">Atari CX40-joysticket blev udgivet med Atari 2600 i 1977 og blev betragtet som en så stor forbedring i forhold til andre controllere, at det var den primære inputenhed til de fleste spil.</description>
+        <description lang="en_GB">The Atari CX40 joystick appeared on the Atari 2600 in 1977, and was considered such a great improvement over other controllers that it was the primary input device for most games.</description>
+        <description lang="ru_RU">Джостик Atari CX40 появился для Atari 2600 в 1977, и считался таким большим улучшением в сравнении с другими контроллерами, что он стал главным устройством для управления большинством игр.</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
     </extension>
 </addon>

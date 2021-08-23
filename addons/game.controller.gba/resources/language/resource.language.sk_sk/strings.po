@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "Addon Summary"
+msgid "Game Boy Advance"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Nintendo Game Boy Advance is a 32-bit handheld video game console released in 2001. Despite fierce competition, Nintendo maintained a majority market share with the device."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Game Boy Advance"
 msgstr ""

@@ -16,6 +16,18 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Game Gear"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Game Gear is an 8-bit handheld video game console released in 1990. While it had a full-color backlit screen and fast processor, the battery life and large size were often criticized."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Game Gear"
 msgstr ""

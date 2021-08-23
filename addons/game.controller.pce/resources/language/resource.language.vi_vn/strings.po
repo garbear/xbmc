@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "PC Engine controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The PC Engine, also known as the TurboGrafx-16, was released by Hudson Soft and NEC in 1987. It became the top-selling console in Japan, but trailed behind both Sega and Nintendo in the North American and Eurpoean markets."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "PC Engine"
 msgstr ""

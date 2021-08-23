@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Konami Justifier (SNES)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Justifer is a light gun released by Konami in 1992 for the Sega Mega Drive/Genesis, SNES and PlayStation. It resembles the Colt Python, a .357 Magnum revolver."
+msgstr ""
+
 msgctxt "#30000"
 msgid "Konami Justifier (SNES)"
 msgstr ""

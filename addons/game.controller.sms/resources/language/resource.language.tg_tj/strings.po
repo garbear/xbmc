@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Master System controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Master System, originally named the Mark III, was released by Sega in 1985. As of 2015, the Master System is the longest-lived game console due to its surging popularity in Brazil."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Master System"
 msgstr ""

@@ -16,6 +16,18 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "Addon Summary"
+msgid "IBM Model M keyboard"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The IBM Model M keyboard, introduced in 1984, is regarded as a timeless and durable piece of hardware."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Keyboard"
 msgstr ""

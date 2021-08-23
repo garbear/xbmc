@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n==1 || n%10==1 ? 0 : 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Gravis PC Gamepad"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Gravis gamepad is a controller produced by Advanced Gravis Computer Technology in 1991. It was the first gamepad for the IBM PC in a market dominated by joysticks."
+msgstr ""
+
 msgctxt "#30000"
 msgid "PC Gamepad"
 msgstr ""

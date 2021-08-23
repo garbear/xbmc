@@ -17,6 +17,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.5.3\n"
 
+msgctxt "Addon Summary"
+msgid "3DO Gamegun"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Gamegun was released for the 3DO in 1994 by American Laser Games."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "3DO Gamegun"
 msgstr "Pistola de juego 3DO"

@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "Pokémini Controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Pokémon Mini is a handheld game console that was designed and manufactured by Nintendo and themed around the Pokémon media franchise. It is the smallest game system with interchangeable cartridges ever produced by Nintendo, weighing just under two and a half ounces (71 grams)."
+msgstr ""
+
 msgctxt "#30000"
 msgid "Pokémon Mini"
 msgstr ""

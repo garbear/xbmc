@@ -17,6 +17,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.5.3\n"
 
+msgctxt "Addon Summary"
+msgid "Wii Remote controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Wii Remote, also known colloquially as the Wiimote, is the primary game controller for the Nintendo Wii home video game console."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) licensed under BSD License + Attribution"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Nintendo Wii"
 msgstr "Nintendo Wii"

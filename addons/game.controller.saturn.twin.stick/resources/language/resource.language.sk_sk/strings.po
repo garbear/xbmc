@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Twin Stick"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Twin Stick, released in 1996, features two joysticks at the expense of fewer buttons. It was designed for the game Cyber Troopers Virtual-On."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Twin Stick"
 msgstr ""

@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "Addon Summary"
+msgid "PC Joystick (2-Button)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The 2-button joystick was compatible with the Game Port, a device port found on IBM PCs throughout the 1980s and 1990s."
+msgstr ""
+
 msgctxt "#30000"
 msgid "PC Joystick (2-button)"
 msgstr ""

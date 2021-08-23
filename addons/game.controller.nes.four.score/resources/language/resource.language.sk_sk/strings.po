@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "Addon Summary"
+msgid "NES Four Score"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The NES Four Score is a multitap accessory created by Nintendo in 1990. It allows for four-player gameplay."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "NES Four Score"
 msgstr ""

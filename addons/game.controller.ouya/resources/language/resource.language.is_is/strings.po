@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
 
+msgctxt "Addon Summary"
+msgid "OUYA controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The OUYA is a crowd-funded Android-based microconsole released in 2013. The OUYA controller includes a single-touch touchpad in the center of the controller."
+msgstr ""
+
 msgctxt "#30000"
 msgid "OUYA"
 msgstr ""

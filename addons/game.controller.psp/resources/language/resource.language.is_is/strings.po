@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
 
+msgctxt "Addon Summary"
+msgid "PSP"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The PlayStation Portable (PSP) was released by Sony in 2004. It was praised for its high-end GPU and bright 4.3 inch screen. The PSP was succeeded by the PSP Go in 2009, and then the PlayStation Vita in 2011."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "PSP"
 msgstr ""

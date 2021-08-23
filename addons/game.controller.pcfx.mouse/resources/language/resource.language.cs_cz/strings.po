@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "Addon Summary"
+msgid "PC-FX mouse"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The PC-FX mouse is a two-button ball mouse released in 1994. It is supported by strategy games like Farland Story FX and Power DoLLS FX."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "PC-FX Mouse"
 msgstr ""

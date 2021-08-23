@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n==1 || n%10==1 ? 0 : 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Neo Geo Pocket"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Neo Geo Pocket was a handheld console with a monochrome screen released by SNK in 1998. It was generally unsuccessful and in 1999 was replaced by the Neo Geo Pocket Color to better compete with the Game Boy Color."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Neo Geo Pocket"
 msgstr ""

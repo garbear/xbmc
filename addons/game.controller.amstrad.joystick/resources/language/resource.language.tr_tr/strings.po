@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Amstrad Joystick"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The original Amstrad CPC models had only one joystick port. A Y-cable can be used to connect two joysticks."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Amstrad Joystick"
 msgstr ""

@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Virtua Gun"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Virtua Gun was released for the Sega Saturn in 1995. Bright colors were used for western models due to fears that it could be linked with gun crime."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Virtua Gun (Japan)"
 msgstr ""

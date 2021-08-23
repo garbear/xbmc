@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Saturn Arcade Racer"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Arcade Racer, released in 1995, is a racing wheel style controller for the Sega Saturn."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Arcade Racer"
 msgstr ""

@@ -16,6 +16,18 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "Addon Summary"
+msgid "Atari XG-1 lightgun"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Atari XG-1 is the light gun that came bundled with the Atari XEGS, a game console released in 1987. Many users complained of the horrible accuracy of the device."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Atari XG-1 Lightgun"
 msgstr ""

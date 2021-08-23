@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Neo Geo Controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The controller for the Neo Geo AES (Advanced Entertainment System), a video game console released in the US in 1991. The Neo Geo AES was a niche system marketed toward high-end consumers. The console was expensive, as were the games themselves, which could go for hundreds of dollars."
+msgstr ""
+
 msgctxt "#30000"
 msgid "Neo Geo"
 msgstr ""

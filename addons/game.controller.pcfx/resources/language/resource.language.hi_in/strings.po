@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 
+msgctxt "Addon Summary"
+msgid "PC-FX controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The PC-FX is a 32-bit console released by NEC in 1994. Due to the high cost, underpowered graphics and lack of developer support, it sold poorly and was discontinued in 1998."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "PC-FX"
 msgstr ""

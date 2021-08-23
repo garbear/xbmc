@@ -14,8 +14,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && "
-"n % 100 <= 19) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);\n"
+
+msgctxt "Addon Summary"
+msgid "Nintendo DS"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Nintendo DS (short for \"Dual Screen\") is a 32-bit handheld video game console released in 2004. A DS Lite model was launched in 2006, followed by the DSi. Combined, these are the best selling handheld to date, and second best console (behind the PlayStation 2)."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
 
 msgctxt "#30000"
 msgid "Nintendo DS"

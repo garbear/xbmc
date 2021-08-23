@@ -14,8 +14,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
-"19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
+
+msgctxt "Addon Summary"
+msgid "Wii Remote controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Wii Remote, also known colloquially as the Wiimote, is the primary game controller for the Nintendo Wii home video game console."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) licensed under BSD License + Attribution"
+msgstr ""
 
 msgctxt "#30000"
 msgid "Nintendo Wii"

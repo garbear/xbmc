@@ -16,6 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
+msgctxt "Addon Summary"
+msgid "Sega Dual Mission Sticks"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Mission Stick is a fight stick for the Sega Saturn released in 1995. A second stick could be connected to allow twin sticks in Panzer Dragoon Zwei."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr ""
+
 msgctxt "#30000"
 msgid "Sega Mission Sticks"
 msgstr ""

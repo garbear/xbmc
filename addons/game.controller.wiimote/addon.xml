@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.wiimote"
         name="Wii Remote Controller"
-        version="1.0.0"
+        version="1.0.1"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Wii Remote controller</summary>
-        <description lang="en_GB">The Wii Remote, also known colloquially as the Wiimote, is the primary game controller for the Nintendo Wii home video game console.</description>
-        <disclaimer lang="en_GB">Image credit: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) licensed under BSD License + Attribution</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>resources/icon.png</icon>
         </assets>
+        <summary lang="en_GB">Wii Remote controller</summary>
+        <summary lang="ru_RU">Wii Remote контроллер</summary>
+        <description lang="en_GB">The Wii Remote, also known colloquially as the Wiimote, is the primary game controller for the Nintendo Wii home video game console.</description>
+        <description lang="ru_RU">Wii Remote или Wiimote в просторечии, является основным контроллером для игровой консоли Nintendo Wii.</description>
+        <disclaimer lang="en_GB">Image credit: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) licensed under BSD License + Attribution</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) под лицензией BSD License + Attribution</disclaimer>
     </extension>
 </addon>
