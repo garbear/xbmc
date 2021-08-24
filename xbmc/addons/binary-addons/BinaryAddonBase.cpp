@@ -8,6 +8,8 @@
 
 #include "BinaryAddonBase.h"
 
+#include "addons/addoninfo/AddonInfo.h"
+
 #include "threads/SingleLock.h"
 #include "utils/log.h"
 

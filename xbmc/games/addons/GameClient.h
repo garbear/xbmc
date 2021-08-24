@@ -9,6 +9,7 @@
 #pragma once
 
 #include "GameClientSubsystem.h"
+#include "addons/addoninfo/AddonInfoTypes.h"
 #include "addons/binary-addons/AddonDll.h"
 #include "addons/kodi-dev-kit/include/kodi/addon-instance/Game.h"
 #include "threads/CriticalSection.h"
