@@ -9,7 +9,7 @@
 #pragma once
 
 #include "addons/AddonEvents.h"
-#include "addons/addoninfo/AddonInfo.h"
+#include "addons/addoninfo/AddonType.h"
 #include "settings/AdvancedSettings.h"
 
 namespace ADDON

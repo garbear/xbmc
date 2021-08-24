@@ -10,6 +10,7 @@
 
 #include "ServiceBroker.h"
 #include "addons/AddonManager.h"
+#include "addons/addoninfo/AddonInfo.h"
 #include "settings/AdvancedSettings.h"
 #include "settings/SettingsComponent.h"
 
