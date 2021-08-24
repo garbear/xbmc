@@ -57,4 +57,4 @@ WINRT_WARNING_PUSH
 /* empty */
 
 #include "FileItem.h" //63 seconds
-#include "addons/addoninfo/AddonInfo.h" // 62 seconds
+#include "addons/addoninfo/AddonInfoTypes.h" // 62 seconds

@@ -10,6 +10,7 @@
 
 #include "CompileInfo.h"
 #include "LangInfo.h"
+#include "addons/addoninfo/AddonInfo.h"
 #include "addons/addoninfo/AddonType.h"
 #include "filesystem/File.h"
 #include "filesystem/SpecialProtocol.h"
