@@ -9,7 +9,7 @@
 #pragma once
 
 #include "addons/Repository.h"
-#include "addons/addoninfo/AddonInfo.h"
+#include "addons/addoninfo/AddonInfoTypes.h"
 
 #include <utility>
 
