@@ -9,7 +9,7 @@
 #pragma once
 
 #include "AddonInstanceHandler.h"
-#include "addons/addoninfo/AddonInfo.h"
+#include "addons/addoninfo/AddonInfoTypes.h"
 #include "threads/CriticalSection.h"
 
 #include <memory>
