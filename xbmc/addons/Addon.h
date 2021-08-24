@@ -9,6 +9,7 @@
 #pragma once
 
 #include "addons/IAddon.h"
+#include "addons/addoninfo/AddonInfo.h"
 #include "utils/XBMCTinyXML.h"
 
 class TiXmlElement;

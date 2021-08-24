@@ -8,7 +8,9 @@
 
 #pragma once
 
-#include "addons/addoninfo/AddonInfo.h"
+#include "XBDateTime.h"
+#include "addons/addoninfo/AddonInfoTypes.h"
+#include "addons/addoninfo/AddonType.h"
 
 #include <memory>
 #include <set>
