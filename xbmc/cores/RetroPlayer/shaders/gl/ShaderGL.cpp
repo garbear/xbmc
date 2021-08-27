@@ -20,7 +20,7 @@
 using namespace KODI;
 using namespace SHADER;
 
-CShaderGL::CShaderGL(RETRO::CRenderContext& context)
+CShaderGL::CShaderGL(RETRO::CRenderContext& context) : m_context(context)
 {
 }
 
