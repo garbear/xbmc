@@ -1,0 +1,98 @@
+# Kodi Media Center language file
+# Addon Name: PlayStation DualShock
+# Addon id: game.controller.ps.dualshock
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.ps.dualshock\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-03-20 20:16+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ps-dualshock/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "PlayStation DualShock"
+msgstr "PlayStation DualShock"
+
+msgctxt "Addon Description"
+msgid "The PlayStation controller was released by Sony Computer Entertainment in 1994. Sony briefly released the Dual Analog controller in 1997, followed by the rumble-enabled DualShock later that year."
+msgstr "索尼电脑娱乐公司于1994年发布了 PlayStation 控制器。索尼在1997年短暂发布了 Dual Analog 控制器，随后在那年晚些时候发布了支持震动功能的 DualShock。"
+
+msgctxt "#30000"
+msgid "PlayStation DualShock"
+msgstr "PlayStation DualShock"
+
+msgctxt "#30001"
+msgid "Circle"
+msgstr "圆圈"
+
+msgctxt "#30002"
+msgid "Cross"
+msgstr "交叉"
+
+msgctxt "#30003"
+msgid "Triangle"
+msgstr "三角"
+
+msgctxt "#30004"
+msgid "Square"
+msgstr "四方"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "开始"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30007"
+msgid "Up"
+msgstr "上"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "右"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "下"
+
+msgctxt "#30010"
+msgid "Left"
+msgstr "左"
+
+msgctxt "#30011"
+msgid "Left Stick"
+msgstr "左摇杆"
+
+msgctxt "#30012"
+msgid "Right Stick"
+msgstr "右摇杆"
+
+msgctxt "#30013"
+msgid "L1"
+msgstr "L1"
+
+msgctxt "#30014"
+msgid "R1"
+msgstr "R1"
+
+msgctxt "#30015"
+msgid "L2"
+msgstr "L2"
+
+msgctxt "#30016"
+msgid "R2"
+msgstr "R2"
+
+msgctxt "#30017"
+msgid "Analog"
+msgstr "模拟"

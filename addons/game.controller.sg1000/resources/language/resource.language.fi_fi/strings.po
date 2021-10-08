@@ -1,0 +1,58 @@
+# Kodi Media Center language file
+# Addon Name: Sega SG-1000
+# Addon id: game.controller.sg1000
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.sg1000\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-08 17:11+0000\n"
+"Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
+"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-sg1000/fi_fi/>\n"
+"Language: fi_fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Sega SG-1000 controller"
+msgstr "Sega SG-1000 -ohjain"
+
+msgctxt "Addon Description"
+msgid "The SG-1000, also known as the Computer Videogame SG-1000, was Sega's first entry into the console business in 1983. However, due to market saturation and the Video Game Crash of 1983, it was not commercially successful."
+msgstr "SG-1000, joka tunnetaan myös nimellä Computer Videogame SG-1000, oli Segan ensiaskel konsolimarkkinoille vuonna 1983. Markkinoiden ahtauden ja vuoden 1983 videopelilaman vuoksi se ei kuitenkaan menestynyt kaupallisesti."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Kuvan lähde: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Sega SG-1000"
+msgstr "Sega SG-1000"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Painike 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Painike 2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Ylös"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Oikealle"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Alas"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Vasemmalle"

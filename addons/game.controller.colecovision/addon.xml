@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.colecovision"
+        name="ColecoVision Controller"
+        version="1.0.28"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">ColecoVision controller</summary>
+        <summary lang="de_DE">ColecoVision Controller</summary>
+        <summary lang="en_GB">ColecoVision controller</summary>
+        <summary lang="es_ES">Mando ColecoVision</summary>
+        <summary lang="fr_FR">Manette ColecoVision</summary>
+        <summary lang="it_IT">Controller ColecoVision</summary>
+        <summary lang="zh_CN">ColecoVision 控制器</summary>
+        <description lang="da_DK">ColecoVision er Coleco Industries&apos; anden generation af spilkonsol, der blev udgivet i 1982. IGN udnævnte den til den 12. bedste konsol med henvisning til dens nøjagtighed i at bringe arkadespil til hjemmet.</description>
+        <description lang="de_DE">Das ColecoVision ist die Spielkonsole der zweiten Generation von Coleco Industries, die 1982 auf den Markt kam. IGN kürte sie zur 12. besten Konsole, weil es Arcade-Spiele in die Haushalte brachte.</description>
+        <description lang="en_GB">The ColecoVision is Coleco Industries&apos; second-generation game console, released in 1982. IGN named it the 12th-best console, citing its accuracy in bringing arcade games to the home.</description>
+        <description lang="es_ES">La ColecoVision es la videoconsola de segunda generación de Coleco Industries, lanzada en 1982. IGN la nombró la 12ª mejor consola citando su acierto a la hora de llevar los juegos arcade al hogar.</description>
+        <description lang="fr_FR">La ColecoVision est la console de jeu de deuxième génération de Coleco Industries, sortie en 1982. IGN l&apos;a nommée 12e meilleure console, citant sa précision à apporter des jeux d&apos;arcade à la maison.</description>
+        <description lang="it_IT">ColecoVision è la console di gioco di seconda generazione di Coleco Industries, rilasciata nel 1982. IGN l&apos;ha definita la dodicesima migliore console, citando la sua precisione nel portare i giochi arcade a casa.</description>
+        <description lang="zh_CN">ColecoVision 是Coleco Industries 于1982年发布的第二代游戏机。IGN 将其评为最佳游戏机第12名，理由是它精确地将街机游戏带入家庭。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

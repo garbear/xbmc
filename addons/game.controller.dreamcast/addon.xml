@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.dreamcast"
+        name="Dreamcast Controller"
+        version="1.0.25"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Dreamcast controller</summary>
+        <summary lang="de_DE">Sega Dreamcast-Controller</summary>
+        <summary lang="en_GB">Sega Dreamcast controller</summary>
+        <summary lang="es_ES">Mando Sega Dreamcast</summary>
+        <summary lang="fi_FI">Sega Dreamcast -ohjain</summary>
+        <summary lang="fr_FR">Manette Sega Dreamcast</summary>
+        <summary lang="it_IT">Controller Sega Dreamcast</summary>
+        <summary lang="ru_RU">Контроллер Sega Dreamcast</summary>
+        <summary lang="zh_CN">世嘉 Dreamcast 控制器</summary>
+        <description lang="da_DK">Sega Dreamcast blev udgivet i 1998. Inkluderingen af en analog stick afspejlede overgangen fra 2D arkadespil til 3D spilmiljøer. Dreamcast havde en kort levetid og markerede afslutningen på Segas 18 år på konsolmarkedet.</description>
+        <description lang="de_DE">Die Sega Dreamcast wurde 1998 veröffentlicht. Die Integration eines Analogsticks spiegelte den Übergang von 2D-Arcade-Spielen zu 3D-Spielumgebungen wider. Die Dreamcast hatte eine kurze Lebensdauer und markierte das Ende von Segas 18-jähriger Präsenz auf dem Konsolenmarkt.</description>
+        <description lang="en_GB">The Sega Dreamcast was released in 1998. The inclusion of an analog stick reflected the transition from 2D arcade games to 3D game environments. The Dreamcast had a short lifespan and marked the end of Sega&apos;s 18 years in the console market.</description>
+        <description lang="es_ES">La Sega Dreamcast salió a la venta en 1998. La inclusión de un stick analógico reflejaba la transición de los juegos arcade en 2D a los entornos de juego en 3D. La Dreamcast tuvo una vida corta y marcó el final de los 18 años de Sega en el mercado de las videoconsolas.</description>
+        <description lang="fi_FI">Sega Dreamcast julkaistiin vuonna 1998. Analogisen sauvaohjaimen sisällyttäminen peilasi siirtymää 2D-pelihallipeleistä 3D-peliympäristöihin. Dreamcastin käyttöikä oli lyhyt, ja se merkitsi Segan 18 vuoden konsolimarkkinoiden loppua.</description>
+        <description lang="fr_FR">Le Sega Dreamcast est sorti en 1998. L&apos;introduction d&apos;un stick analogique reflétait la transition des jeux d&apos;arcade 2D vers les environnements de jeu 3D. La Dreamcast a eu une courte durée de vie et a marqué la fin des 18 années de Sega sur le marché des consoles.</description>
+        <description lang="it_IT">Il Sega Dreamcast è stato rilasciato nel 1998. L&apos;inclusione di una levetta analogica rifletteva il passaggio dai giochi arcade 2D agli ambienti di gioco 3D. Il Dreamcast ha avuto una vita breve e ha segnato la fine di Sega dopo 18 anni nel mercato delle console.</description>
+        <description lang="ru_RU">Sega Dreamcast была выпущена в 1998 году. Добавление аналогового джойстика отразило переход от 2D-аркад к 3D-окружениям в играх. Dreamcast прожила не долго и ознаменовала конец 18-летнего пребывания Sega на рынке консолей.</description>
+        <description lang="zh_CN">Sega Dreamcast 于 1998 年发布。模拟摇杆的加入反映了从 2D 街机游戏到 3D 游戏环境的过渡。 Dreamcast 的寿命很短，标志着世嘉在游戏机市场的 18 年结束。</description>
+    </extension>
+</addon>

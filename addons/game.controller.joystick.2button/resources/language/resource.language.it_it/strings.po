@@ -1,0 +1,42 @@
+# Kodi Media Center language file
+# Addon Name: PC Joystick (2-button)
+# Addon id: game.controller.joystick.2button
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.joystick.2button\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-09-22 10:15+0000\n"
+"Last-Translator: Massimo Pissarello <mapi68@gmail.com>\n"
+"Language-Team: Italian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-joystick-2button/it_it/>\n"
+"Language: it_it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+msgctxt "Addon Summary"
+msgid "PC Joystick (2-Button)"
+msgstr "Joystick per PC (2 pulsanti)"
+
+msgctxt "Addon Description"
+msgid "The 2-button joystick was compatible with the Game Port, a device port found on IBM PCs throughout the 1980s and 1990s."
+msgstr "Il joystick a 2 pulsanti era compatibile con Game Port, una porta del dispositivo che si trovava sui PC IBM negli anni '80 e '90."
+
+msgctxt "#30000"
+msgid "PC Joystick (2-button)"
+msgstr "Joystick per PC (2 pulsanti)"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Pulsante 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Pulsante 2"
+
+msgctxt "#30003"
+msgid "Analog Stick"
+msgstr "Levetta analogica"

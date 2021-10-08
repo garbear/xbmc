@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.atari.2600"
+        name="Atari 2600 Joystick"
+        version="1.1.26"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="ca_ES">Joystick Atari 2600</summary>
+        <summary lang="da_DK">Atari 2600 joystick</summary>
+        <summary lang="de_DE">Atari 2600 Joystick</summary>
+        <summary lang="en_GB">Atari 2600 joystick</summary>
+        <summary lang="es_ES">Joystick Atari 2600</summary>
+        <summary lang="fi_FI">Atari 2600 -ohjainsauva</summary>
+        <summary lang="fr_FR">Manette Atari 2600</summary>
+        <summary lang="it_IT">Joystick Atari 2600</summary>
+        <summary lang="ru_RU">Джостик Atari 2600</summary>
+        <summary lang="zh_CN">雅达利 2600 游戏杆</summary>
+        <description lang="ca_ES">El joystick Atari CX40 va aparèixer a l&apos;Atari 2600 el 1977 i es va considerar una millora tan gran respecte a altres controladors que era el dispositiu d&apos;entrada principal per a la majoria de jocs.</description>
+        <description lang="da_DK">Atari CX40-joysticket blev udgivet med Atari 2600 i 1977 og blev betragtet som en så stor forbedring i forhold til andre controllere, at det var den primære inputenhed til de fleste spil.</description>
+        <description lang="de_DE">Der Atari CX40-Joystick erschien 1977 für den Atari 2600 und wurde als so große Verbesserung gegenüber anderen Controllern angesehen, dass er das vorrangige Eingabegerät für die meisten Spiele wurde.</description>
+        <description lang="en_GB">The Atari CX40 joystick appeared on the Atari 2600 in 1977, and was considered such a great improvement over other controllers that it was the primary input device for most games.</description>
+        <description lang="es_ES">El joystick Atari CX40 se lanzó con la Atari 2600 en 1977 y se consideró una mejora tan grande con respecto a otros mandos que era el dispositivo de entrada principal para la mayoría de los juegos.</description>
+        <description lang="fi_FI">Atari CX40 -ohjainsauva ilmestyi Atari 2600:lle vuonna 1977 ja sitä pidettiin niin suurena parannuksena muihin ohjaimiin verrattuna, että se oli useimpien pelien ensisijainen syöttölaite.</description>
+        <description lang="fr_FR">Le joystick Atari CX40 est apparu sur l&apos;Atari 2600 en 1977 et était considéré comme une si grande amélioration par rapport aux autres contrôleurs qu&apos;il était le principal périphérique d&apos;entrée pour la plupart des jeux.</description>
+        <description lang="it_IT">Il joystick Atari CX40 è apparso sull&apos;Atari 2600 nel 1977 ed è stato considerato un così grande miglioramento rispetto ad altri controller da essere il dispositivo di input principale per la maggior parte dei giochi.</description>
+        <description lang="ru_RU">Джостик Atari CX40 появился для Atari 2600 в 1977, и считался таким большим улучшением в сравнении с другими контроллерами, что он стал главным устройством для управления большинством игр.</description>
+        <description lang="zh_CN">1977年，雅达利 CX40 游戏杆出现在雅达利 2600 上，作为大多数游戏的主要输入设备，与其他控制器相比，它被认为是一个巨大的改进。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

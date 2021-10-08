@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.sg1000"
+        name="Sega SG-1000 Controller"
+        version="1.0.25"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega SG-1000 controller</summary>
+        <summary lang="de_DE">Sega SG-1000 Controller</summary>
+        <summary lang="en_GB">Sega SG-1000 controller</summary>
+        <summary lang="es_ES">Mando Sega SG-1000</summary>
+        <summary lang="fi_FI">Sega SG-1000 -ohjain</summary>
+        <summary lang="fr_FR">Manette Sega SG-1000</summary>
+        <summary lang="it_IT">Controller Sega SG-1000</summary>
+        <summary lang="zh_CN">世嘉 SG-1000 控制器</summary>
+        <description lang="da_DK">SG-1000, også kendt som computervideospillet SG-1000, var Segas første indtræden i konsolbranchen i 1983. Men på grund af markedsmætning og videospilkrakket i 1983 var det ikke kommercielt succesfuldt.</description>
+        <description lang="de_DE">Das SG-1000, auch bekannt als Computer Videogame SG-1000, war 1983 Segas erster Einstieg in das Konsolengeschäft. Aufgrund der Marktsättigung und des Videospiele-Crashs von 1983 war es jedoch kein kommerzieller Erfolg.</description>
+        <description lang="en_GB">The SG-1000, also known as the Computer Videogame SG-1000, was Sega&apos;s first entry into the console business in 1983. However, due to market saturation and the Video Game Crash of 1983, it was not commercially successful.</description>
+        <description lang="es_ES">El SG-1000, también conocido como Computer Videogame SG-1000, fue la primera incursión de Sega en el negocio de las videoconsolas en 1983. Sin embargo, debido a la saturación del mercado y a la crisis de los videojuegos de 1983, no tuvo éxito comercial.</description>
+        <description lang="fi_FI">SG-1000, joka tunnetaan myös nimellä Computer Videogame SG-1000, oli Segan ensiaskel konsolimarkkinoille vuonna 1983. Markkinoiden ahtauden ja vuoden 1983 videopelilaman vuoksi se ei kuitenkaan menestynyt kaupallisesti.</description>
+        <description lang="fr_FR">Le SG-1000, également connu sous le nom de Computer Videogame SG-1000, a été la première entrée de Sega dans le secteur des consoles en 1983. Cependant, en raison de la saturation du marché et du crash du jeu vidéo de 1983, il n&apos;a pas connu de succès commercial.</description>
+        <description lang="it_IT">L&apos;SG-1000, noto anche come Computer Videogame SG-1000, è stato il primo ingresso di Sega nel settore delle console nel 1983. Tuttavia, a causa della saturazione del mercato e del Video Game Crash del 1983, non ha avuto successo commerciale.</description>
+        <description lang="zh_CN">SG-1000，也被称为计算机视频游戏 SG-1000，是世嘉在1983年第一次进入游戏主机业务。然而，由于市场饱和和1983年的电子游戏崩溃，它在商业上并不成功。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

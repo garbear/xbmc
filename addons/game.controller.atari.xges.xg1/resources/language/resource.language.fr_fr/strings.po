@@ -1,0 +1,42 @@
+# Kodi Media Center language file
+# Addon Name: Atari XG-1 Lightgun
+# Addon id: game.controller.atari.xges.xg1
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.xges.xg1\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-01-30 16:38+0000\n"
+"Last-Translator: skypichat <skypichat@hotmail.fr>\n"
+"Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-xges-xg1/fr_fr/>\n"
+"Language: fr_fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Atari XG-1 lightgun"
+msgstr "Pistolet léger Atari XG-1"
+
+msgctxt "Addon Description"
+msgid "The Atari XG-1 is the light gun that came bundled with the Atari XEGS, a game console released in 1987. Many users complained of the horrible accuracy of the device."
+msgstr "L'Atari XG-1 est le pistolet léger fourni avec l'Atari XEGS, une console de jeu sortie en 1987. De nombreux utilisateurs se sont plaints de l'horrible précision de l'appareil."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Crédit image : Wikipédia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Atari XG-1 Lightgun"
+msgstr "Pistolet léger Atari XG-1"
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "Déclencheur"
+
+msgctxt "#30002"
+msgid "Crosshair"
+msgstr "Réticule"

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.gamecube"
+        name="Nintendo GameCube Controller"
+        version="1.0.22"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Nintendo GameCube controller</summary>
+        <summary lang="de_DE">Nintendo GameCube Controller</summary>
+        <summary lang="en_GB">Nintendo GameCube controller</summary>
+        <summary lang="es_ES">Mando Nintendo GameCube</summary>
+        <summary lang="fi_FI">Nintendo GameCube -ohjain</summary>
+        <summary lang="fr_FR">Manette Nintendo GameCube</summary>
+        <summary lang="it_IT">Controller per Nintendo GameCube</summary>
+        <summary lang="ru_RU">Контроллер Nintendo GameCube</summary>
+        <summary lang="zh_CN">任天堂 GameCube 控制器</summary>
+        <description lang="da_DK">Nintendo GameCube-controlleren blev udgivet i 2001. De analoge sticks og triggere var målet for et patentsag, men Nintendo kæmpede tilbage og vandt sagen med succes.</description>
+        <description lang="de_DE">Der GameCube-Controller von Nintendo wurde im Jahr 2001 veröffentlicht. Die Analogsticks und Schalter waren das Ziel einer Patentklage, aber Nintendo wehrte sich und gewann den Fall erfolgreich.</description>
+        <description lang="en_GB">The Nintendo GameCube controller was released in 2001. The analog sticks and triggers were the target of a patent lawsuit, but Nintendo fought back and successfully won the case.</description>
+        <description lang="es_ES">El mando de la Nintendo GameCube salió a la venta en 2001. Los sticks analógicos y los gatillos fueron objeto de una demanda de patentes, pero Nintendo se defendió y ganó el caso.</description>
+        <description lang="fi_FI">Nintendo GameCube -ohjain julkaistiin vuonna 2001. Analogiset sauvaohjaimet ja liipaisimet olivat patenttioikeudenkäynnin kohteena, mutta Nintendo taisteli ja voitti haasteen.</description>
+        <description lang="fr_FR">Le contrôleur Nintendo GameCube est sorti en 2001. Les sticks analogiques et les gâchettes ont fait l&apos;objet d&apos;un procès en matière de brevet, mais Nintendo a riposté et a remporté l&apos;affaire avec succès.</description>
+        <description lang="it_IT">Il controller Nintendo GameCube è stato rilasciato nel 2001. Gli stick analogici e i grilletti erano l&apos;obiettivo di una causa sui brevetti, ma Nintendo ha reagito e ha vinto con successo la causa.</description>
+        <description lang="ru_RU">Контроллер Nintendo GameCube был выпущен в 2001 году. Аналоговые стики и триггеры стали предметом патентного иска, но Nintendo отбилась и успешно выиграла дело.</description>
+        <description lang="zh_CN">任天堂 GameCube 控制器于2001年发布。模拟控制杆和扳机被提起专利诉讼，但任天堂进行了反击，并成功地赢得了诉讼。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>
