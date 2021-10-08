@@ -1,0 +1,90 @@
+# Kodi Media Center language file
+# Addon Name: Sega Saturn 3D (Japan)
+# Addon id: game.controller.saturn.3d.japan
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.saturn.3d.japan\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-01 21:12+0000\n"
+"Last-Translator: Demian <Demian@gmx.co.uk>\n"
+"Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-3d-japan/de_de/>\n"
+"Language: de_de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Saturn 3D (Japan)"
+msgstr "Sega Saturn 3D (Japan)"
+
+msgctxt "Addon Description"
+msgid "The Sega Saturn 3D Control Pad was released in 1996. It was Sega's answer to the revolutionary Nintendo 64 controller, which featured an analogue stick for greater precision in a 3D environment."
+msgstr "Das Sega Saturn 3D Control Pad wurde 1996 veröffentlicht. Es war Segas Antwort auf den revolutionären Nintendo 64-Controller, der mit einem Analogstick für mehr Präzision in einer 3D-Umgebung ausgestattet war."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Bildverweis: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Sega Saturn 3D (Japan)"
+msgstr "Sega Saturn 3D (Japan)"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "C"
+msgstr "C"
+
+msgctxt "#30004"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30005"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30006"
+msgid "Z"
+msgstr "Z"
+
+msgctxt "#30007"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30008"
+msgid "Up"
+msgstr "Hoch"
+
+msgctxt "#30009"
+msgid "Right"
+msgstr "Rechts"
+
+msgctxt "#30010"
+msgid "Down"
+msgstr "Runter"
+
+msgctxt "#30011"
+msgid "Left"
+msgstr "Links"
+
+msgctxt "#30012"
+msgid "Left Trigger"
+msgstr "Linker Abzug"
+
+msgctxt "#30013"
+msgid "Right Trigger"
+msgstr "Rechter Abzug"
+
+msgctxt "#30014"
+msgid "Analog Stick"
+msgstr "Analogstick"
