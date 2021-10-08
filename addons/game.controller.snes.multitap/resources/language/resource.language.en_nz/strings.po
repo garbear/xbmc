@@ -1,0 +1,29 @@
+# Kodi Media Center language file
+# Addon Name: Super Multitap
+# Addon id: game.controller.snes.multitap
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.snes.multitap\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en_nz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Super Multitap"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "A multitap increases the number of controller ports, similar to a USB hub. The Super Multitap was released by Hudson Soft in 1993 for use with the Bomberman games."
+msgstr ""
+
+msgctxt "#30000"
+msgid "Super Multitap"
+msgstr ""
