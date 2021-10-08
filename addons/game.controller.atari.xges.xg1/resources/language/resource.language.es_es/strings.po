@@ -1,0 +1,42 @@
+# Kodi Media Center language file
+# Addon Name: Atari XG-1 Lightgun
+# Addon id: game.controller.atari.xges.xg1
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.xges.xg1\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-07 08:18+0000\n"
+"Last-Translator: José Antonio Alvarado <jalvarado0.eses@gmail.com>\n"
+"Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-xges-xg1/es_es/>\n"
+"Language: es_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Atari XG-1 lightgun"
+msgstr "Atari XG-1 Pistola de Luz"
+
+msgctxt "Addon Description"
+msgid "The Atari XG-1 is the light gun that came bundled with the Atari XEGS, a game console released in 1987. Many users complained of the horrible accuracy of the device."
+msgstr "La Atari XG-1 es la pistola de luz que venía incluida con la Atari XEGS, una videoconsola lanzada en 1987. Muchos usuarios se quejaron de la pésima precisión del dispositivo."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Créditos de la imagen: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Atari XG-1 Lightgun"
+msgstr "Atari XG-1 Pistola de Luz"
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "Gatillo"
+
+msgctxt "#30002"
+msgid "Crosshair"
+msgstr "Punto de Mira"

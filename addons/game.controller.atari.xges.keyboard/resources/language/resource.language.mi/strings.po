@@ -1,0 +1,33 @@
+# Kodi Media Center language file
+# Addon Name: Atari XGES Keyboard
+# Addon id: game.controller.atari.xges.keyboard
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.xges.keyboard\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: mi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Atari XGES keyboard"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Atari XGES keyboard was included in the Atari XGES deluxe set, which was released in 1987 by Atari Corporation. Because a keyboard was included, the XGES had home computer functionality."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Atari XGES Keyboard"
+msgstr ""

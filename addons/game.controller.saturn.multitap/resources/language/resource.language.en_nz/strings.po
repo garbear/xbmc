@@ -1,0 +1,33 @@
+# Kodi Media Center language file
+# Addon Name: Saturn 6 Player Adapter
+# Addon id: game.controller.saturn.multitap
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.saturn.multitap\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en_nz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Saturn 6 Player Adaptor"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "A multitap increases the number of controller ports, similar to a USB hub. Released in 1995, the Saturn 6 Player Adaptor allowed up to 10 players in some games, such as Saturn Bomberman."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Saturn 6 Player Adaptor"
+msgstr ""

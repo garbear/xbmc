@@ -1,0 +1,58 @@
+# Kodi Media Center language file
+# Addon Name: MSX Joystick
+# Addon id: game.controller.msx.joystick
+# Addon Provider: Team-Lima-Dev
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.msx.joystick\n"
+"Report-Msgid-Bugs-To: dylan@vossystems.nl\n"
+"POT-Creation-Date: 2017-06-18 20:00+1\n"
+"PO-Revision-Date: 2021-04-15 19:29+0000\n"
+"Last-Translator: Edson Armando <edsonarmando78@outlook.com>\n"
+"Language-Team: Spanish (Mexico) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-msx-joystick/es_mx/>\n"
+"Language: es_mx\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.5.3\n"
+
+msgctxt "Addon Summary"
+msgid "MSX Joystick"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The MSX joystick featured A and B buttons and four-way directional control."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Laurens Holst (www.grauw.nl)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "MSX Joystick"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Botón 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Botón 2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Arriba"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Derecha"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Abajo"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Izquierda"

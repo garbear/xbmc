@@ -1,0 +1,41 @@
+# Kodi Media Center language file
+# Addon Name: PlayStation Mouse
+# Addon id: game.controller.ps.mouse
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: SNES Mouse\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: mk_mk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n==1 || n%10==1 ? 0 : 1;\n"
+
+msgctxt "Addon Summary"
+msgid "PlayStation mouse"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The PlayStation Mouse is a two-button ball mouse. It was released alongside the PlayStation in 1994."
+msgstr ""
+
+msgctxt "#30000"
+msgid "PlayStation Mouse"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Left button"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Right button"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Pointer"
+msgstr ""

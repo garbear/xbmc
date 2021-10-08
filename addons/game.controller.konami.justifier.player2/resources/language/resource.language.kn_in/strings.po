@@ -1,0 +1,45 @@
+# Kodi Media Center language file
+# Addon Name: Konami Justifier (Player 2)
+# Addon id: game.controller.konami.justifier.player2
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.konami.justifier.player2\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: kn_in\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Konami Justifier (Player 2)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Justifer is a light gun released by Konami in 1992 for the Sega Mega Drive/Genesis, SNES and PlayStation. It resembles the Colt Python, a .357 Magnum revolver."
+msgstr ""
+
+msgctxt "#30000"
+msgid "Konami Justifier (Player 2)"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Start"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Offscreen"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Crosshair"
+msgstr ""
