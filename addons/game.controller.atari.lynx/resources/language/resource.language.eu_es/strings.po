@@ -1,0 +1,70 @@
+# Kodi Media Center language file
+# Addon Name: Atari Lynx
+# Addon id: game.controller.atari.lynx
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.lynx\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-01 20:55+0000\n"
+"Last-Translator: Aitor Salaberria <trslbrr@gmail.com>\n"
+"Language-Team: Basque (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-lynx/eu_es/>\n"
+"Language: eu_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Atari Lynx"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Atari Lynx is a 16-bit handheld gaming console released in 1989.  It held notable accomplishments, including the first handheld with a color LCD, advanced graphics, and ambidextrous layout. However, it was a commercial failure and discontinued in 1995."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Irudiaren kreditua: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Atari Lynx"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "Option 1"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Option 2"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Gora"
+
+msgctxt "#30006"
+msgid "Down"
+msgstr "Behera"
+
+msgctxt "#30007"
+msgid "Right"
+msgstr "Eskuina"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Ezkerra"
+
+msgctxt "#30009"
+msgid "Pause"
+msgstr ""
