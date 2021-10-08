@@ -1,0 +1,31 @@
+# Kodi Media Center language file
+# Addon Name: OSMC Remote
+# Addon id: game.controller.osmc.remote
+# Addon Provider: OSMC
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.osmc.remote\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2025-01-18 17:00+8\n"
+"PO-Revision-Date: 2025-04-06 19:03+0000\n"
+"Last-Translator: Daniel Nylander <daniel@danielnylander.se>\n"
+"Language-Team: Swedish <https://kodi.weblate.cloud/projects/"
+"kodi-add-ons-game/game-controller-osmc-remote/sv_se/>\n"
+"Language: sv_se\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.4\n"
+
+msgctxt "Addon Summary"
+msgid "OSMC Remote"
+msgstr "OSMC-fjärrkontroll"
+
+msgctxt "Addon Description"
+msgid "This remote is the perfect way to control OSMC. Visit osmc.tv to learn more!"
+msgstr "Den här fjärrkontrollen är det perfekta sättet att styra OSMC. Besök osmc.tv för att lära dig mer!"
+
+msgctxt "#30000"
+msgid "OSMC Remote"
+msgstr "OSMC-fjärrkontroll"
