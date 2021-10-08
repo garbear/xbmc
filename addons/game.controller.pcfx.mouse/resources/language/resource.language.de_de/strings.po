@@ -1,0 +1,46 @@
+# Kodi Media Center language file
+# Addon Name: PC-FX Mouse
+# Addon id: game.controller.pcfx.mouse
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: PC-FX Mouse\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-01 20:55+0000\n"
+"Last-Translator: matchuek <hansi77@yandex.com>\n"
+"Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-pcfx-mouse/de_de/>\n"
+"Language: de_de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "PC-FX mouse"
+msgstr "PC-FX Maus"
+
+msgctxt "Addon Description"
+msgid "The PC-FX mouse is a two-button ball mouse released in 1994. It is supported by strategy games like Farland Story FX and Power DoLLS FX."
+msgstr "Die PC-FX-Maus ist eine Zwei-Tasten-Kugelmaus, die 1994 auf den Markt kam. Sie wird von Strategiespielen wie Farland Story FX und Power DoLLS FX unterstützt."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Bildverweis: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "PC-FX Mouse"
+msgstr "PC-FX Maus"
+
+msgctxt "#30001"
+msgid "Left button"
+msgstr "Linke Taste"
+
+msgctxt "#30002"
+msgid "Right button"
+msgstr "Rechte Taste"
+
+msgctxt "#30003"
+msgid "Pointer"
+msgstr "Zeiger"
