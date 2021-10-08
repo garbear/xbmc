@@ -1,0 +1,98 @@
+# Kodi Media Center language file
+# Addon Name: Competition Pro Joystick
+# Addon id: game.controller.amiga.pro.joystick
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.amiga.pro.joystick\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2026-05-08 23:16+0000\n"
+"Last-Translator: Alfonso Cachero <alfonso.cachero@gmail.com>\n"
+"Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-amiga-pro-joystick/es_es/>\n"
+"Language: es_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.17.1\n"
+
+msgctxt "Addon Summary"
+msgid "Competition Pro Joystick"
+msgstr "Joystick Competition Pro"
+
+msgctxt "Addon Description"
+msgid "The Amiga Competition Pro is a classic joystick for the Amiga home computers of the '80s and '90s."
+msgstr "El Competition Pro es un joystick clásico para los ordenadores Amiga de los 80 y 90."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: www.amiga-shop.net"
+msgstr "Créditos de la imagen: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Competition Pro Joystick"
+msgstr "Joystick Competition Pro"
+
+msgctxt "#30001"
+msgid "Red / Fire"
+msgstr "Rojo"
+
+msgctxt "#30002"
+msgid "Blue / 2nd Fire"
+msgstr "Azul"
+
+msgctxt "#30003"
+msgid "Green"
+msgstr "Verde"
+
+msgctxt "#30004"
+msgid "Yellow"
+msgstr "Amarillo"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Arriba"
+
+msgctxt "#30006"
+msgid "Right"
+msgstr "Derecha"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "Abajo"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Izquierda"
+
+msgctxt "#30009"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30010"
+msgid "Play"
+msgstr "Jugar"
+
+msgctxt "#30011"
+msgid "Rewind"
+msgstr "Rebobinar"
+
+msgctxt "#30012"
+msgid "Forward"
+msgstr "Adelante"
+
+msgctxt "#30013"
+msgid "L2"
+msgstr "L2"
+
+msgctxt "#30014"
+msgid "R2"
+msgstr "R2"
+
+msgctxt "#30015"
+msgid "Left Stick"
+msgstr "Palanca Izquierda"
+
+msgctxt "#30016"
+msgid "Right Stick"
+msgstr "Palanca Derecha"

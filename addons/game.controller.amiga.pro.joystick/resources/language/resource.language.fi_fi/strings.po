@@ -1,0 +1,98 @@
+# Kodi Media Center language file
+# Addon Name: Competition Pro Joystick
+# Addon id: game.controller.amiga.pro.joystick
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.amiga.pro.joystick\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-08 17:12+0000\n"
+"Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
+"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-amiga-pro-joystick/fi_fi/>\n"
+"Language: fi_fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Competition Pro Joystick"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Amiga Competition Pro is a classic joystick for the Amiga home computers of the '80s and '90s."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: www.amiga-shop.net"
+msgstr "Kuvan lähde: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Competition Pro Joystick"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Red / Fire"
+msgstr "Punainen"
+
+msgctxt "#30002"
+msgid "Blue / 2nd Fire"
+msgstr "Sininen"
+
+msgctxt "#30003"
+msgid "Green"
+msgstr "Vihreä"
+
+msgctxt "#30004"
+msgid "Yellow"
+msgstr "Keltainen"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Ylös"
+
+msgctxt "#30006"
+msgid "Right"
+msgstr "Oikealle"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "Alas"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Vasemmalle"
+
+msgctxt "#30009"
+msgid "Select"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Play"
+msgstr "Toista"
+
+msgctxt "#30011"
+msgid "Rewind"
+msgstr "Taaksepäin"
+
+msgctxt "#30012"
+msgid "Forward"
+msgstr "Eteenpäin"
+
+msgctxt "#30013"
+msgid "L2"
+msgstr ""
+
+msgctxt "#30014"
+msgid "R2"
+msgstr ""
+
+msgctxt "#30015"
+msgid "Left Stick"
+msgstr ""
+
+msgctxt "#30016"
+msgid "Right Stick"
+msgstr ""
