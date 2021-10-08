@@ -1,0 +1,98 @@
+# Kodi Media Center language file
+# Addon Name: Nintendo DS
+# Addon id: game.controller.nds
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.nds\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-09-22 10:15+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
+"Language-Team: Russian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-nds/ru_ru/>\n"
+"Language: ru_ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+msgctxt "Addon Summary"
+msgid "Nintendo DS"
+msgstr "Nintendo DS"
+
+msgctxt "Addon Description"
+msgid "The Nintendo DS (short for \"Dual Screen\") is a 32-bit handheld video game console released in 2004. A DS Lite model was launched in 2006, followed by the DSi. Combined, these are the best selling handheld to date, and second best console (behind the PlayStation 2)."
+msgstr "Nintendo DS (сокращение от «Dual Screen») — это 32-битная портативная игровая консоль, выпущенная в 2004 году. В 2006 году была выпущена модель DS Lite, за которой последовала DSi. В совокупности это самый продаваемый карманный компьютер на сегодняшний день и вторая по популярности консоль (после PlayStation 2)."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Источник изображения: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Nintendo DS"
+msgstr "Nintendo DS"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30004"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30007"
+msgid "Up"
+msgstr "Вверх"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "Вправо"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "Вниз"
+
+msgctxt "#30010"
+msgid "Left"
+msgstr "Влево"
+
+msgctxt "#30011"
+msgid "Left Bumper"
+msgstr "Левый триггер"
+
+msgctxt "#30012"
+msgid "Right Bumper"
+msgstr "Правый триггер"
+
+msgctxt "#30013"
+msgid "Touch pointer"
+msgstr "Сенсорный указатель"
+
+msgctxt "#30014"
+msgid "Close Lid"
+msgstr "Закрыть крышку"
+
+msgctxt "#30015"
+msgid "Screen Layout"
+msgstr "Компоновка экрана"
+
+msgctxt "#30016"
+msgid "Microphone"
+msgstr "Микрофон"
