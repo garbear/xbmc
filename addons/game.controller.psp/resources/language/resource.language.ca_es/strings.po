@@ -1,0 +1,86 @@
+# Kodi Media Center language file
+# Addon Name: PSP
+# Addon id: game.controller.psp
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.psp\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-09-22 10:14+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Catalan (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-psp/ca_es/>\n"
+"Language: ca_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+msgctxt "Addon Summary"
+msgid "PSP"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The PlayStation Portable (PSP) was released by Sony in 2004. It was praised for its high-end GPU and bright 4.3 inch screen. The PSP was succeeded by the PSP Go in 2009, and then the PlayStation Vita in 2011."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "PSP"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Circle"
+msgstr "Cercle"
+
+msgctxt "#30002"
+msgid "Cross"
+msgstr "Creu"
+
+msgctxt "#30003"
+msgid "Triangle"
+msgstr "Triangle"
+
+msgctxt "#30004"
+msgid "Square"
+msgstr "Quadrat"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30007"
+msgid "Up"
+msgstr "Amunt"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "Dreta"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "A baix"
+
+msgctxt "#30010"
+msgid "Left"
+msgstr "Esquerra"
+
+msgctxt "#30011"
+msgid "L"
+msgstr ""
+
+msgctxt "#30012"
+msgid "R"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Analog Stick"
+msgstr "Stick analògic"
