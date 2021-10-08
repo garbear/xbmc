@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png" mask="mask.png">
+  <category name="face" label="35074">
+    <button name="button1" type="digital" label="30001"/>
+    <button name="button2" type="digital" label="30002"/>
+    <button name="button3" type="digital" label="30003"/>
+    <button name="button4" type="digital" label="30004"/>
+    <button name="up" type="digital" label="30005"/>
+    <button name="right" type="digital" label="30006"/>
+    <button name="down" type="digital" label="30007"/>
+    <button name="left" type="digital" label="30008"/>
+  </category>
+</layout>
