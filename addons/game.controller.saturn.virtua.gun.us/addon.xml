@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.virtua.gun.us"
+        name="Sega Virtua Gun (US)"
+        version="1.0.26"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Virtua Gun (US)</summary>
+        <summary lang="de_DE">Sega Virtua Gun (US)</summary>
+        <summary lang="en_GB">Sega Virtua Gun (US)</summary>
+        <summary lang="es_ES">Sega Virtua Gun (US)</summary>
+        <summary lang="es_MX">Sega Virtual Gun (Estados Unidos)</summary>
+        <summary lang="fi_FI">Sega Virtua Gun (Yhdysvallat)</summary>
+        <summary lang="fr_FR">Pistolet Sega Virtua (États-Unis)</summary>
+        <summary lang="it_IT">Sega Virtua Gun (Stati Uniti)</summary>
+        <summary lang="zh_CN">世嘉虚拟枪（美国）</summary>
+        <description lang="da_DK">Virtua Gun blev frigivet til Sega Saturn i 1995. Lyse farver blev brugt til vestlige modeller på grund af frygt for, at det kunne være forbundet med våbenkriminalitet.</description>
+        <description lang="de_DE">Die Virtua Gun wurde 1995 für Sega Saturn veröffentlicht. Für die westlichen Modelle wurden leuchtende Farben verwendet, da man befürchtete, dass sie mit Waffenkriminalität in Verbindung gebracht werden könnten.</description>
+        <description lang="en_GB">The Virtua Gun was released for the Sega Saturn in 1995. Bright colors were used for western models due to fears that it could be linked with gun crime.</description>
+        <description lang="es_ES">La Virtua Gun salió a la venta para la Sega Saturn en 1995. Se utilizaron colores brillantes para los modelos occidentales por temor a que pudiera relacionarse con delitos cometidos con armas de fuego.</description>
+        <description lang="es_MX">La Virtua Gun fue lanzada para la Sega Saturn en 1995. Se utilizaron colores brillantes para los modelos occidentales debido a temores de que pudiese relacionarse con crímenes de armas.</description>
+        <description lang="fi_FI">Virtua Gun julkaistiin Sega Saturnille vuonna 1995. Länsimalleissa käytettiin kirkkaita värejä, koska pelättiin, että se liitettäisiin aserikollisuuteen.</description>
+        <description lang="fr_FR">Le Virtua Gun est sorti pour la Sega Saturn en 1995. Des couleurs vives ont été utilisées pour les modèles occidentaux en raison des craintes qu&apos;il puisse être lié à la criminalité armée.</description>
+        <description lang="it_IT">Il Virtua Gun è stato rilasciato per Sega Saturn nel 1995. Sono stati usati dei colori vivaci per i modelli occidentali a causa dei timori che potesse essere collegato al crimine armato.</description>
+        <description lang="zh_CN">1995年，为世嘉土星发布了虚拟枪（Virtua Gun）。为防范枪支犯罪，欧洲款采用了鲜艳的颜色。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：Sega Retro（segaretro.org）</disclaimer>
+    </extension>
+</addon>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.elektronika.bk"
+        name="Elektronika BK"
+        version="1.0.18"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Elektronika BK</summary>
+        <summary lang="de_DE">Elektronika BK</summary>
+        <summary lang="en_GB">Elektronika BK</summary>
+        <summary lang="es_ES">Elektronika BK</summary>
+        <summary lang="fi_FI">Elektronika BK</summary>
+        <summary lang="fr_FR">Elektronika BK</summary>
+        <summary lang="it_IT">Elektronika BK</summary>
+        <summary lang="ru_RU">Электроника БК</summary>
+        <summary lang="zh_CN">Elektronika BK</summary>
+        <description lang="da_DK">Elektronika BK-0010 (Электроника БК-0010) var en PDP-11-kompatibel hjemmecomputer udgivet i 1984 i Sovjetunionen.</description>
+        <description lang="de_DE">Der Elektronika BK-0010 (Электроника БК-0010) war ein PDP-11-kompatibler Heimcomputer, der 1984 in der Sowjetunion erschien.</description>
+        <description lang="en_GB">The Elektronika BK-0010 (Электроника БК-0010) was a PDP-11-compatible home computer released in 1984 in the Soviet Union.</description>
+        <description lang="es_ES">El Elektronika BK-0010 (Электроника БК-0010) fue un ordenador doméstico compatible con el PDP-11 lanzado en 1984 en la Unión Soviética.</description>
+        <description lang="fi_FI">Elektronika BK-0010 (Электроника БК-0010) oli PDP-11-yhteensopiva kotitietokone, joka julkaistiin Neuvostoliitossa vuonna 1984.</description>
+        <description lang="fr_FR">L&apos;Elektronika BK-0010 (Электроника БК-0010) était un ordinateur domestique compatible PDP-11 sorti en 1984 en Union soviétique.</description>
+        <description lang="it_IT">L&apos;Elektronika BK-0010 era un home computer compatibile con PDP-11 rilasciato nel 1984 in Unione Sovietica.</description>
+        <description lang="ru_RU">Электроника БК-0010 — PDP-11-совместимый домашний компьютер, выпущенный в 1984 году в Советском Союзе.</description>
+        <description lang="zh_CN">Elektronika BK-0010（Электроника БК-0010）是1984年在苏联发布的与 PDP-11 兼容的家用计算机。</description>
+        <disclaimer lang="da_DK">Billedkreditering: retroordenadoresorty.blogspot.com</disclaimer>
+        <disclaimer lang="de_DE">Bildnachweis: retroordenadoresorty.blogspot.com</disclaimer>
+        <disclaimer lang="en_GB">Image credit: retroordenadoresorty.blogspot.com</disclaimer>
+        <disclaimer lang="es_ES">Crédito de la imagen: retroordenadoresorty.blogspot.com</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: retroordenadoresorty.blogspot.com</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : retroordenadoresorty.blogspot.com</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: retroordenadoresorty.blogspot.com</disclaimer>
+        <disclaimer lang="ru_RU">Изображение предоставлено: retroordenadoresorty.blogspot.com</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：retroordenadoresorty.blogspot.com</disclaimer>
+    </extension>
+</addon>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.gravis.gamepad"
+        name="Gravis PC Gamepad"
+        version="1.1.22"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Gravis PC Gamepad</summary>
+        <summary lang="de_DE">Gravis PC Gamepad</summary>
+        <summary lang="en_GB">Gravis PC Gamepad</summary>
+        <summary lang="es_ES">Gravis PC Gamepad</summary>
+        <summary lang="fi_FI">Gravis PC Gamepad</summary>
+        <summary lang="fr_FR">Manette de jeu PC Gravis</summary>
+        <summary lang="it_IT">Gamepad per PC Gravis</summary>
+        <summary lang="ru_RU">Геймпад ПК Gravis</summary>
+        <summary lang="zh_CN">Gravis PC 游戏手柄</summary>
+        <description lang="da_DK">Gravis gamepad er en controller produceret af Advanced Gravis Computer Technology i 1991. Det var den første gamepad til IBM PC på et marked domineret af joysticks.</description>
+        <description lang="de_DE">Das Gravis Gamepad ist ein Controller, der 1991 von Advanced Gravis Computer Technology hergestellt wurde. Es war das erste Gamepad für IBM-PCs in einem von Joysticks dominierten Markt.</description>
+        <description lang="en_GB">The Gravis gamepad is a controller produced by Advanced Gravis Computer Technology in 1991. It was the first gamepad for the IBM PC in a market dominated by joysticks.</description>
+        <description lang="es_ES">El Gravis Gamepad es un mando fabricado por Advanced Gravis Computer Technology en 1991. Fue el primer mando para IBM PC en un mercado dominado por los joysticks.</description>
+        <description lang="fi_FI">Gravis Gamepad -peliohjain on Advanced Gravis Computer Technologyn vuonna 1991 valmistama ohjain. Se oli ohjainsauvojen hallitsemien markkinoiden ensimmäinen peliohjain IBM PC -tietokoneille.</description>
+        <description lang="fr_FR">La manette de jeu Gravis est une manette produite par Advanced Gravis Computer Technology en 1991. C&apos;était la première manette de jeu pour IBM PC sur un marché dominé par les joysticks.</description>
+        <description lang="it_IT">Il gamepad Gravis è un controller prodotto da Advanced Gravis Computer Technology nel 1991. È stato il primo gamepad per PC IBM in un mercato dominato dai joystick.</description>
+        <description lang="ru_RU">Геймпад Gravis — это контроллер, выпущенный компанией Advanced Gravis Computer Technology в 1991 году. Это был первый геймпад для IBM PC на рынке, где доминировали джойстики.</description>
+        <description lang="zh_CN">Gravis 游戏手柄是由 Advanced Gravis Computer Technology 于1991年生产的控制器。这是 IBM PC 在游戏杆主导的市场上的第一款游戏手柄。</description>
+    </extension>
+</addon>
