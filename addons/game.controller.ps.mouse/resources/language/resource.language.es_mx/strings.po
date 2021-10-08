@@ -1,0 +1,42 @@
+# Kodi Media Center language file
+# Addon Name: PlayStation Mouse
+# Addon id: game.controller.ps.mouse
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: SNES Mouse\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-08-08 05:15+0000\n"
+"Last-Translator: Edson Armando <edsonarmando78@outlook.com>\n"
+"Language-Team: Spanish (Mexico) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ps-mouse/es_mx/>\n"
+"Language: es_mx\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "PlayStation mouse"
+msgstr "Ratón PlayStation"
+
+msgctxt "Addon Description"
+msgid "The PlayStation Mouse is a two-button ball mouse. It was released alongside the PlayStation in 1994."
+msgstr "El ratón PlayStation es un ratón de rueda de 2 botones. Fue lanzado en conjunto con el PlayStation en 1994."
+
+msgctxt "#30000"
+msgid "PlayStation Mouse"
+msgstr "Ratón PlayStation"
+
+msgctxt "#30001"
+msgid "Left button"
+msgstr "Botón izquierdo"
+
+msgctxt "#30002"
+msgid "Right button"
+msgstr "Botón derecho"
+
+msgctxt "#30003"
+msgid "Pointer"
+msgstr "Puntero"

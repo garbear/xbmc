@@ -1,0 +1,46 @@
+# Kodi Media Center language file
+# Addon Name: Konami Justifier (SNES)
+# Addon id: game.controller.konami.justifier.snes
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.konami.justifier.snes\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-02-27 09:59+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Belarusian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-konami-justifier-snes/be_by/>\n"
+"Language: be_by\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.11\n"
+
+msgctxt "Addon Summary"
+msgid "Konami Justifier (SNES)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Justifer is a light gun released by Konami in 1992 for the Sega Mega Drive/Genesis, SNES and PlayStation. It resembles the Colt Python, a .357 Magnum revolver."
+msgstr ""
+
+msgctxt "#30000"
+msgid "Konami Justifier (SNES)"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Start"
+msgstr "Пачаць"
+
+msgctxt "#30003"
+msgid "Offscreen"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Crosshair"
+msgstr ""
