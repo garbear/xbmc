@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ps.guncon.western"
+        name="PlayStation Guncon (Western)"
+        version="1.0.14"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PlayStation Guncon (Western)</summary>
+        <summary lang="en_GB">PlayStation Guncon (Western)</summary>
+        <summary lang="zh_CN">PlayStation Guncon（欧美）</summary>
+        <description lang="da_DK">Guncon, kendt som G-Con i Europa, er en familie af light guns designet af Namco til PlayStation. Den originale model blev udgivet sammen med PlayStation i 1994.</description>
+        <description lang="de_DE">Guncon, in Europa auch als &quot;G-Con&quot; bekannt, ist eine Lichtkanonen-Produktlinie der Firma Namco für die PlayStation. Das Originalmodell wurde 1994 veröffentlicht.</description>
+        <description lang="en_GB">The Guncon, known as G-Con in Europe, is a family of light guns designed by Namco for the PlayStation. The original model was released alongside the PlayStation in 1994.</description>
+        <description lang="zh_CN">Guncon，在欧洲被称为 G-Con，是 Namco 为 PlayStation 设计的一系列光线枪。首款型号于1994年与 PlayStation 一起发布。</description>
+    </extension>
+</addon>
