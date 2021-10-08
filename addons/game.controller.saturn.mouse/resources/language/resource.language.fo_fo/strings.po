@@ -1,0 +1,50 @@
+# Kodi Media Center language file
+# Addon Name: Sega Shuttle Mouse
+# Addon id: game.controller.saturn.mouse
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: Sega Shuttle Mouse\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-08-08 05:14+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Faroese <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-mouse/fo_fo/>\n"
+"Language: fo_fo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Shuttle Mouse"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Shuttle Mouse, released in 1994, is an official mouse peripheral for the Sega Saturn. It was designed to be used with simulation-oriented games"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Sega Shuttle Mouse"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Left button (A)"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Right button (B)"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Middle button (C)"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Start"
+msgstr "Byrja"
+
+msgctxt "#30005"
+msgid "Pointer"
+msgstr ""

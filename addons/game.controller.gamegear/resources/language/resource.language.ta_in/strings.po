@@ -1,0 +1,61 @@
+# Kodi Media Center language file
+# Addon Name: Game Gear
+# Addon id: game.controller.gamegear
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.gamegear\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ta_in\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Game Gear"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Game Gear is an 8-bit handheld video game console released in 1990. While it had a full-color backlit screen and fast processor, the battery life and large size were often criticized."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Sega Game Gear"
+msgstr ""
+
+msgctxt "#30001"
+msgid "1"
+msgstr ""
+
+msgctxt "#30002"
+msgid "2"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Start"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Left"
+msgstr ""
