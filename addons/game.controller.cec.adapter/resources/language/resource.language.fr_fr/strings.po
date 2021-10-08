@@ -1,0 +1,31 @@
+# Kodi Media Center language file
+# Addon Name: CEC Adapter
+# Addon id: game.controller.cec.adapter
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.cec.adapter\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2025-01-18 17:00+8\n"
+"PO-Revision-Date: 2025-09-14 05:58+0000\n"
+"Last-Translator: Cutter <CutterXYZ@users.noreply.github.com>\n"
+"Language-Team: French (France) <https://kodi.weblate.cloud/projects/"
+"kodi-add-ons-game/game-controller-cec-adapter/fr_fr/>\n"
+"Language: fr_fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.13.3\n"
+
+msgctxt "Addon Summary"
+msgid "CEC Adapter"
+msgstr "Adaptateur CEC"
+
+msgctxt "Addon Description"
+msgid "The Pulse-Eight USB-CEC Adapter communicates with other HDMI-CEC devices in your home theater system."
+msgstr "L'adaptateur USB-CEC Pulse-Eight communique avec d'autres appareils HDMI-CEC au sein de votre système home-cinema."
+
+msgctxt "#30000"
+msgid "CEC Adapter"
+msgstr "Adaptateur CEC"
