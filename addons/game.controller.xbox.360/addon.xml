@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.xbox.360"
+        name="Xbox 360 Controller"
+        version="1.0.6"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">Xbox 360 Controller</summary>
+        <summary lang="es_ES">Mando Xbox 360</summary>
+        <summary lang="ko_KR">Xbox 360 컨트롤러</summary>
+        <summary lang="pl_PL">Kontroler Xbox 360</summary>
+        <summary lang="sv_SE">Xbox 360-kontroller</summary>
+        <summary lang="zh_CN">Xbox 360 控制器</summary>
+        <description lang="en_GB">The Xbox 360 was introduced at E3 in 2005. The controller is known for its enduring comfort.</description>
+        <description lang="es_ES">La Xbox 360 se presentó en el E3 de 2005. Este mando es conocido por su gran comodidad.</description>
+        <description lang="ko_KR">Xbox 360은 2005년 E3에서 출시되었습니다. 이 컨트롤러는 오랫동안 편안하게 사용할 수 있는 것으로 유명합니다.</description>
+        <description lang="pl_PL">Konsolę Xbox 360 zaprezentowano na targach E3 w 2005 roku. Kontroler ten jest znany ze swojego trwałego komfortu.</description>
+        <description lang="sv_SE">Xbox 360 presenterades på E3-mässan 2005. Handkontrollen är känd för sin långvariga komfort.</description>
+        <description lang="zh_CN">Xbox 360 于 2005 年在 E3 上推出。控制器以其持久的舒适性而闻名。</description>
+    </extension>
+</addon>
