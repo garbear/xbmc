@@ -1,0 +1,78 @@
+# Kodi Media Center language file
+# Addon Name: WonderSwan
+# Addon id: game.controller.ws
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.ws\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-06-09 15:22+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Bulgarian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ws/bg_bg/>\n"
+"Language: bg_bg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.6.2\n"
+
+msgctxt "Addon Summary"
+msgid "WonderSwan"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The WonderSwan is a 16-bit handheld console released in 1999 by Bandai. It is playable both vertically and horizontally, and was praised for its long battery life and unique library of games."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "WonderSwan"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr ""
+
+msgctxt "#30002"
+msgid "B"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Start"
+msgstr "Старт"
+
+msgctxt "#30004"
+msgid "X-Cursor Up"
+msgstr ""
+
+msgctxt "#30005"
+msgid "X-Cursor Right"
+msgstr ""
+
+msgctxt "#30006"
+msgid "X-Cursor Down"
+msgstr ""
+
+msgctxt "#30007"
+msgid "X-Cursor Left"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Y-Cursor Up"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Y-Cursor Right"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Y-Cursor Down"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Y-Cursor Left"
+msgstr ""

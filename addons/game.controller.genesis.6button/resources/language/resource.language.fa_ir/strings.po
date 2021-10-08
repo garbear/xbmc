@@ -1,0 +1,81 @@
+# Kodi Media Center language file
+# Addon Name: Genesis Controller
+# Addon id: game.controller.genesis.6button
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.genesis.6button\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fa_ir\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Genesis controller (6-Button)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The original controller for the Sega Genesis was released in 1988. It had three main face buttons. Sega released a six-button version in 1993."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Sega Genesis"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr ""
+
+msgctxt "#30002"
+msgid "B"
+msgstr ""
+
+msgctxt "#30003"
+msgid "C"
+msgstr ""
+
+msgctxt "#30004"
+msgid "X"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Y"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Z"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Start"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Mode"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Left"
+msgstr ""
