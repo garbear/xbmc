@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png" mask="mask.png">
+  <category name="face" label="35074">
+    <button name="button1" type="digital" label="30001"/>
+    <button name="button2" type="digital" label="30002"/>
+    <button name="up" type="digital" label="30003"/>
+    <button name="right" type="digital" label="30004"/>
+    <button name="down" type="digital" label="30005"/>
+    <button name="left" type="digital" label="30006"/>
+  </category>
+  <category name="keypad" label="35109">
+    <button name="keypad1" type="digital" label="30007"/>
+    <button name="keypad2" type="digital" label="30008"/>
+    <button name="keypad3" type="digital" label="30009"/>
+    <button name="keypad4" type="digital" label="30010"/>
+    <button name="keypad5" type="digital" label="30011"/>
+    <button name="keypad6" type="digital" label="30012"/>
+    <button name="keypad7" type="digital" label="30013"/>
+    <button name="keypad8" type="digital" label="30014"/>
+    <button name="keypad9" type="digital" label="30015"/>
+    <button name="keypad0" type="digital" label="30016"/>
+    <button name="star" type="digital" label="30017"/>
+    <button name="pound" type="digital" label="30018"/>
+  </category>
+</layout>

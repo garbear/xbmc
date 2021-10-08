@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.3ds"
+        name="Nintendo 3DS"
+        version="1.0.0"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">Nintendo 3DS</summary>
+        <description lang="en_GB">The Nintendo 3DS was released in 2011, with a 3D screen that needs no glasses above a touchscreen. The New Nintendo 3DS added the C-Stick and the ZL and ZR buttons.</description>
+        <disclaimer lang="en_GB">Image credit: Evan-Amos, Wikimedia Commons</disclaimer>
+    </extension>
+</addon>
