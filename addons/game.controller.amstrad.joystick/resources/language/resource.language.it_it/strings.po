@@ -1,0 +1,90 @@
+# Kodi Media Center language file
+# Addon Name: Amstrad Joystick
+# Addon id: game.controller.amstrad.joystick
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.amstrad.joystick\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-12-25 22:31+0000\n"
+"Last-Translator: Massimo Pissarello <mapi68@gmail.com>\n"
+"Language-Team: Italian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-amstrad-joystick/it_it/>\n"
+"Language: it_it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15\n"
+
+msgctxt "Addon Summary"
+msgid "Amstrad Joystick"
+msgstr "Joystick Amstrad"
+
+msgctxt "Addon Description"
+msgid "The original Amstrad CPC models had only one joystick port. A Y-cable can be used to connect two joysticks."
+msgstr "I modelli originali Amstrad CPC avevano solo una porta joystick. È possibile utilizzare un cavo a Y per collegare due joystick."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Credito immagine: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Amstrad Joystick"
+msgstr "Joystick Amstrad"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Pulsante 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Pulsante 2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Su"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Destra"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Giù"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Sinistra"
+
+msgctxt "#30007"
+msgid "Run"
+msgstr "Avvia"
+
+msgctxt "#30008"
+msgid "Return"
+msgstr "Ritorna"
+
+msgctxt "#30009"
+msgid "VKBD Toggle"
+msgstr "Attiva/disattiva VKBD"
+
+msgctxt "#30010"
+msgid "Mouse toggle"
+msgstr "Attiva/disattiva mouse"
+
+msgctxt "#30011"
+msgid "Cat"
+msgstr "Cat"
+
+msgctxt "#30012"
+msgid "Stat"
+msgstr "Stat"
+
+msgctxt "#30013"
+msgid "Reset"
+msgstr "Ripristina"
+
+msgctxt "#30014"
+msgid "Tape"
+msgstr "Nastro"

@@ -1,0 +1,86 @@
+# Kodi Media Center language file
+# Addon Name: PSP
+# Addon id: game.controller.psp
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.psp\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-01 21:12+0000\n"
+"Last-Translator: Demian <Demian@gmx.co.uk>\n"
+"Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-psp/de_de/>\n"
+"Language: de_de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "PSP"
+msgstr "PSP"
+
+msgctxt "Addon Description"
+msgid "The PlayStation Portable (PSP) was released by Sony in 2004. It was praised for its high-end GPU and bright 4.3 inch screen. The PSP was succeeded by the PSP Go in 2009, and then the PlayStation Vita in 2011."
+msgstr "Die PlayStation Portable (PSP) wurde von Sony im Jahr 2004 veröffentlicht. Sie wurde für ihren High-End-Grafikprozessor und den hellen 4,3-Zoll-Bildschirm gelobt. Die PSP wurde 2009 von der PSP Go und 2011 von der PlayStation Vita abgelöst."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Bildverweis: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "PSP"
+msgstr "PSP"
+
+msgctxt "#30001"
+msgid "Circle"
+msgstr "Kreis"
+
+msgctxt "#30002"
+msgid "Cross"
+msgstr "Kreuz"
+
+msgctxt "#30003"
+msgid "Triangle"
+msgstr "Dreieck"
+
+msgctxt "#30004"
+msgid "Square"
+msgstr "Quadrat"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30007"
+msgid "Up"
+msgstr "Hoch"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "Rechts"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "Runter"
+
+msgctxt "#30010"
+msgid "Left"
+msgstr "Links"
+
+msgctxt "#30011"
+msgid "L"
+msgstr "L"
+
+msgctxt "#30012"
+msgid "R"
+msgstr "R"
+
+msgctxt "#30013"
+msgid "Analog Stick"
+msgstr "Analogstick"

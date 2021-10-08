@@ -1,0 +1,98 @@
+# Kodi Media Center language file
+# Addon Name: Atari 5200 Controller
+# Addon id: game.controller.atari.5200
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.5200\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-5200/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "Atari 5200 controller"
+msgstr "雅达利 5200 控制器"
+
+msgctxt "Addon Description"
+msgid "The Atari 5200 was released in 1982. The design of the joystick, which used a weak rubber boot instead of springs, proved to be ungainly and unreliable. It was rated the 10th worst video game controller by IGN."
+msgstr "雅达利 5200 于1982年发布。此游戏杆的设计，用一个脆弱的橡胶套代替弹簧，被证明是笨拙和不可靠的。它被 IGN 评为第十差的视频游戏控制器。"
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "图片来源：OpenEmu（openemu.org）"
+
+msgctxt "#30000"
+msgid "Atari 5200"
+msgstr "雅达利 5200"
+
+msgctxt "#30001"
+msgid "1"
+msgstr "1"
+
+msgctxt "#30002"
+msgid "2"
+msgstr "2"
+
+msgctxt "#30003"
+msgid "3"
+msgstr "3"
+
+msgctxt "#30004"
+msgid "4"
+msgstr "4"
+
+msgctxt "#30005"
+msgid "5"
+msgstr "5"
+
+msgctxt "#30006"
+msgid "6"
+msgstr "6"
+
+msgctxt "#30007"
+msgid "7"
+msgstr "7"
+
+msgctxt "#30008"
+msgid "8"
+msgstr "8"
+
+msgctxt "#30009"
+msgid "9"
+msgstr "9"
+
+msgctxt "#30010"
+msgid "0"
+msgstr "0"
+
+msgctxt "#30011"
+msgid "Star"
+msgstr "星号"
+
+msgctxt "#30012"
+msgid "Pound"
+msgstr "井号"
+
+msgctxt "#30013"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30014"
+msgid "Pause"
+msgstr "Pause"
+
+msgctxt "#30015"
+msgid "Reset"
+msgstr "Reset"
+
+msgctxt "#30016"
+msgid "Joystick"
+msgstr "游戏杆"
