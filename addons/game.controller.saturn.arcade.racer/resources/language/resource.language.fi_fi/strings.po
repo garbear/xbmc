@@ -1,0 +1,74 @@
+# Kodi Media Center language file
+# Addon Name: Sega Twin Stick
+# Addon id: game.controller.twin.stick
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.twin.stick\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-19 23:21+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-arcade-racer/fi_fi/>\n"
+"Language: fi_fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Saturn Arcade Racer"
+msgstr "Sega Saturn Arcade Racer"
+
+msgctxt "Addon Description"
+msgid "The Arcade Racer, released in 1995, is a racing wheel style controller for the Sega Saturn."
+msgstr "Vuonna 1995 julkaistu Arcade Racer on rattityylinen ohjain Sega Saturnille."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr "Kuvan lähde: Sega Retro (segaretro.org)"
+
+msgctxt "#30000"
+msgid "Sega Arcade Racer"
+msgstr "Sega Arcade Racer"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "C"
+msgstr "C"
+
+msgctxt "#30004"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30005"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30006"
+msgid "Z"
+msgstr "Z"
+
+msgctxt "#30007"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30008"
+msgid "Wheel"
+msgstr "Ratti"
+
+msgctxt "#30009"
+msgid "Left Shift"
+msgstr "Vasen Shift"
+
+msgctxt "#30010"
+msgid "Right Shift"
+msgstr "Oikea Shift"

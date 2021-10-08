@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+  <category name="mouse" label="35103">
+    <button name="left" type="digital" label="30001"/>
+    <button name="right" type="digital" label="30002"/>
+  </category>
+  <category name="pointer" label="35104">
+    <relpointer name="pointer" label="30003"/>
+  </category>
+</layout>

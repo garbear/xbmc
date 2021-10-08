@@ -1,0 +1,58 @@
+# Kodi Media Center language file
+# Addon Name: TV Remote
+# Addon id: game.controller.remote
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.remote\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-01-16 22:15+0000\n"
+"Last-Translator: José Antonio Alvarado <jalvarado0.eses@gmail.com>\n"
+"Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-remote/es_es/>\n"
+"Language: es_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15\n"
+
+msgctxt "Addon Summary"
+msgid "TV Remote"
+msgstr "Mando a distancia de TV"
+
+msgctxt "Addon Description"
+msgid "A TV remote with basic navigational capabilities."
+msgstr "Un mando a distancia de televisión con funciones básicas de navegación."
+
+msgctxt "#30000"
+msgid "TV Remote"
+msgstr "Mando a distancia de TV"
+
+msgctxt "#30001"
+msgid "Select"
+msgstr "Seleccionar"
+
+msgctxt "#30002"
+msgid "Back"
+msgstr "Atrás"
+
+msgctxt "#30003"
+msgid "Home"
+msgstr "Inicio"
+
+msgctxt "#30004"
+msgid "Up"
+msgstr "Arriba"
+
+msgctxt "#30005"
+msgid "Right"
+msgstr "Derecha"
+
+msgctxt "#30006"
+msgid "Down"
+msgstr "Abajo"
+
+msgctxt "#30007"
+msgid "Left"
+msgstr "Izquierda"

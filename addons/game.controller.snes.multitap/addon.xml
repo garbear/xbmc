@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.snes.multitap"
+        name="Super Multitap"
+        version="1.0.16"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Super Multitap</summary>
+        <summary lang="de_DE">Super Multitap</summary>
+        <summary lang="en_GB">Super Multitap</summary>
+        <summary lang="es_ES">Super Multitap</summary>
+        <summary lang="es_MX">Super Multitap</summary>
+        <summary lang="fi_FI">Super Multitap</summary>
+        <summary lang="fr_FR">Super Multitap</summary>
+        <summary lang="it_IT">Super Multitap</summary>
+        <summary lang="ru_RU">Несколько джойстиков</summary>
+        <summary lang="zh_CN">超级多插转换器</summary>
+        <description lang="da_DK">Et multitap øger antallet af controller-porte, svarende til en USB-hub. Super Multitap blev udgivet af Hudson Soft i 1993 til brug med Bomberman-spillene.</description>
+        <description lang="de_DE">Ähnlich wie ein USB-Hub erweitert ein &quot;multitap&quot; die Anzahl der verfügbaren Controller-Anschlüsse. Das Super Multitap wurde 1993 von Hudson Soft für die Nutzung in Bomberman Spielen veröffentlicht.</description>
+        <description lang="en_GB">A multitap increases the number of controller ports, similar to a USB hub. The Super Multitap was released by Hudson Soft in 1993 for use with the Bomberman games.</description>
+        <description lang="es_ES">Un multitap aumenta el número de puertos para mandos, de forma similar a un concentrador USB. El Super Multitap fue lanzado por Hudson Soft en 1993 para su uso con los juegos Bomberman.</description>
+        <description lang="es_MX">Un multitap incrementa el número de puertos de mando, similarmente a un hub USB. El Super Multitap fue lanzado por Hudson Soft en 1993 para su uso con los juegos de Bomberman.</description>
+        <description lang="fi_FI">Multitap lisää ohjainporttien määrää USB-keskittimen tapaan. Vuonna 1993 Hudson Soft julkaisi Super Multitap -ohjaimen käytettäväksi Bomberman-pelien kanssa.</description>
+        <description lang="fr_FR">Un multitap augmente le nombre de ports de contrôleur, similaire à un concentrateur USB. Le Super Multitap a été publié par Hudson Soft en 1993 pour être utilisé avec les jeux Bomberman.</description>
+        <description lang="it_IT">Un multitocco aumenta il numero di porte del controller, in modo simile a un hub USB. Il Super Multitap è stato rilasciato da Hudson Soft nel 1993 per essere utilizzato con i giochi Bomberman.</description>
+        <description lang="ru_RU">Режим нескольких джойстиков позволяет увеличить число портов для контроллеров, подобно USB-хабу. Super Multitap (устройство для подключения нескольких джойстиков) было выпущено компанией Hudson Soft в 1993 году для игр с Borberman.</description>
+        <description lang="zh_CN">多插转换器增加了游戏机控制器端口的数量，类似于USB集线器。1993年，Hudson Soft 发布了超级多插转换器，用于《炸弹人》游戏。</description>
+    </extension>
+</addon>
