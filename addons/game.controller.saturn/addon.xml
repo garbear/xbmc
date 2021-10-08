@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn"
+        name="Sega Saturn Controller"
+        version="1.0.17"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Saturn controller</summary>
+        <summary lang="en_GB">Sega Saturn controller</summary>
+        <summary lang="es_MX">Control de Sega Saturn</summary>
+        <summary lang="fi_FI">Sega Saturn -ohjain</summary>
+        <summary lang="zh_CN">世嘉土星控制器</summary>
+        <description lang="da_DK">Den originale controller til Sega Saturn debuterede i Japan i 1994. I Nordamerika og Europa blev der udgivet en anderledes, meget større controller for angiveligt at tage hensyn til vestlige forbrugeres &quot;større hænder&quot;.</description>
+        <description lang="en_GB">The original controller for the Sega Saturn debuted in Japan in 1994. In North America and Europe, a different, much bulkier controller was released to supposedly accommodate for the &quot;bigger hands&quot; of western consumers.</description>
+        <description lang="es_MX">El control original para la Sega Saturn debutó en Japón en 1994. En norteamérica y Europa, un control diferente y más tosco fue lanzado para supuestamente adaptarse a las &quot;manos grandes&quot; de los consumidores occidentales.</description>
+        <description lang="fi_FI">Sega Saturnin alkuperäinen ohjain esiteltiin Japanissa vuonna 1994. Pohjois-Amerikassa ja Euroopassa julkaistiin erilainen, paljon kookkaampi ohjain, jonka on tarkoitus sopia länsimaisten kuluttajien &quot;isompiin käsiin&quot;.</description>
+        <description lang="zh_CN">世嘉土星的原始控制器于1994年在日本首次亮相。在北美和欧洲，发布了一款不同的、体积更大的控制器，以适应西方消费者的“大手”。</description>
+    </extension>
+</addon>

@@ -1,0 +1,330 @@
+# Kodi Media Center language file
+# Addon Name: Amstrad Keyboard
+# Addon id: game.controller.amstrad.keyboard
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.amstrad.keyboard\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-08-22 07:30+0000\n"
+"Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
+"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-amstrad-keyboard/fi_fi/>\n"
+"Language: fi_fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Amstrad Keyboard"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Amstrad CPC (short for Colour Personal Computer) is a series of 8-bit home computers produced by Amstrad between 1984 and 1990."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Kuvan lähde: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Amstrad CPC"
+msgstr ""
+
+msgctxt "#30001"
+msgid "1"
+msgstr "1"
+
+msgctxt "#30002"
+msgid "2"
+msgstr "2"
+
+msgctxt "#30003"
+msgid "3"
+msgstr "3"
+
+msgctxt "#30004"
+msgid "4"
+msgstr "4"
+
+msgctxt "#30005"
+msgid "5"
+msgstr "5"
+
+msgctxt "#30006"
+msgid "6"
+msgstr "6"
+
+msgctxt "#30007"
+msgid "7"
+msgstr "7"
+
+msgctxt "#30008"
+msgid "8"
+msgstr "8"
+
+msgctxt "#30009"
+msgid "9"
+msgstr "9"
+
+msgctxt "#30010"
+msgid "0"
+msgstr "0"
+
+msgctxt "#30011"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30012"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30013"
+msgid "C"
+msgstr "C"
+
+msgctxt "#30014"
+msgid "D"
+msgstr "D"
+
+msgctxt "#30015"
+msgid "E"
+msgstr "E"
+
+msgctxt "#30016"
+msgid "F"
+msgstr "F"
+
+msgctxt "#30017"
+msgid "G"
+msgstr "G"
+
+msgctxt "#30018"
+msgid "H"
+msgstr "H"
+
+msgctxt "#30019"
+msgid "I"
+msgstr "I"
+
+msgctxt "#30020"
+msgid "J"
+msgstr "J"
+
+msgctxt "#30021"
+msgid "K"
+msgstr "K"
+
+msgctxt "#30022"
+msgid "L"
+msgstr "L"
+
+msgctxt "#30023"
+msgid "M"
+msgstr "M"
+
+msgctxt "#30024"
+msgid "N"
+msgstr "N"
+
+msgctxt "#30025"
+msgid "O"
+msgstr "O"
+
+msgctxt "#30026"
+msgid "P"
+msgstr "P"
+
+msgctxt "#30027"
+msgid "Q"
+msgstr "Q"
+
+msgctxt "#30028"
+msgid "R"
+msgstr "R"
+
+msgctxt "#30029"
+msgid "S"
+msgstr "S"
+
+msgctxt "#30030"
+msgid "T"
+msgstr "T"
+
+msgctxt "#30031"
+msgid "U"
+msgstr "U"
+
+msgctxt "#30032"
+msgid "V"
+msgstr "V"
+
+msgctxt "#30033"
+msgid "W"
+msgstr "W"
+
+msgctxt "#30034"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30035"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30036"
+msgid "Z"
+msgstr "Z"
+
+msgctxt "#30037"
+msgid "Space"
+msgstr "Space"
+
+msgctxt "#30038"
+msgid ","
+msgstr ","
+
+msgctxt "#30039"
+msgid "."
+msgstr "."
+
+msgctxt "#30040"
+msgid ";"
+msgstr ";"
+
+msgctxt "#30041"
+msgid "-"
+msgstr "-"
+
+msgctxt "#30042"
+msgid "="
+msgstr "="
+
+msgctxt "#30043"
+msgid "@"
+msgstr "@"
+
+msgctxt "#30044"
+msgid "["
+msgstr "["
+
+msgctxt "#30045"
+msgid "Tab"
+msgstr "Tab"
+
+msgctxt "#30046"
+msgid "Return"
+msgstr "Return"
+
+msgctxt "#30047"
+msgid "Backspace"
+msgstr "Askelpalautin"
+
+msgctxt "#30048"
+msgid "Escape"
+msgstr "Escape"
+
+msgctxt "#30049"
+msgid "Up"
+msgstr "Ylös"
+
+msgctxt "#30050"
+msgid "Right"
+msgstr "Oikealle"
+
+msgctxt "#30051"
+msgid "Down"
+msgstr "Alas"
+
+msgctxt "#30052"
+msgid "Left"
+msgstr "Vasemmalle"
+
+msgctxt "#30053"
+msgid "Num 0"
+msgstr "Num 0"
+
+msgctxt "#30054"
+msgid "Num 1"
+msgstr "Num 1"
+
+msgctxt "#30055"
+msgid "Num 2"
+msgstr "Num 2"
+
+msgctxt "#30056"
+msgid "Num 3"
+msgstr "Num 3"
+
+msgctxt "#30057"
+msgid "Num 4"
+msgstr "Num 4"
+
+msgctxt "#30058"
+msgid "Num 5"
+msgstr "Num 5"
+
+msgctxt "#30059"
+msgid "Num 6"
+msgstr "Num 6"
+
+msgctxt "#30060"
+msgid "Num 7"
+msgstr "Num 7"
+
+msgctxt "#30061"
+msgid "Num 8"
+msgstr "Num 8"
+
+msgctxt "#30062"
+msgid "Num 9"
+msgstr "Num 9"
+
+msgctxt "#30063"
+msgid "Num ."
+msgstr "Num ."
+
+msgctxt "#30064"
+msgid "Shift"
+msgstr "Shift"
+
+msgctxt "#30065"
+msgid "Ctrl"
+msgstr "Ctrl"
+
+msgctxt "#30066"
+msgid "Caps Lock"
+msgstr "Caps Lock"
+
+msgctxt "#30067"
+msgid "Num Enter"
+msgstr ""
+
+msgctxt "#30068"
+msgid "Delete"
+msgstr "Delete"
+
+msgctxt "#30069"
+msgid "End"
+msgstr "End"
+
+msgctxt "#30070"
+msgid "Page Up"
+msgstr "Page Up"
+
+msgctxt "#30071"
+msgid "Page Down"
+msgstr "Page Down"
+
+msgctxt "#30072"
+msgid "Insert"
+msgstr "Insert"
+
+msgctxt "#30073"
+msgid "Home"
+msgstr "Home"
+
+msgctxt "#30074"
+msgid "Copy"
+msgstr ""

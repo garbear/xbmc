@@ -1,0 +1,86 @@
+# Kodi Media Center language file
+# Addon Name: PSP
+# Addon id: game.controller.psp
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.psp\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-24 08:14+0000\n"
+"Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
+"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-psp/fi_fi/>\n"
+"Language: fi_fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "PSP"
+msgstr "PSP"
+
+msgctxt "Addon Description"
+msgid "The PlayStation Portable (PSP) was released by Sony in 2004. It was praised for its high-end GPU and bright 4.3 inch screen. The PSP was succeeded by the PSP Go in 2009, and then the PlayStation Vita in 2011."
+msgstr "Sony julkaisi PlayStation Portablen (PSP) vuonna 2004. Se sai kiitosta huipputason grafiikkaprosessorista ja kirkkaasta 4,3 tuuman näytöstä. PSP:tä seurasi PSP Go vuonna 2009 ja sen jälkeen PlayStation Vita vuonna 2011."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Kuvan lähde: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "PSP"
+msgstr "PSP"
+
+msgctxt "#30001"
+msgid "Circle"
+msgstr "Ympyrä"
+
+msgctxt "#30002"
+msgid "Cross"
+msgstr "Rasti"
+
+msgctxt "#30003"
+msgid "Triangle"
+msgstr "Kolmio"
+
+msgctxt "#30004"
+msgid "Square"
+msgstr "Neliö"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30007"
+msgid "Up"
+msgstr "Ylös"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "Oikealle"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "Alas"
+
+msgctxt "#30010"
+msgid "Left"
+msgstr "Vasemmalle"
+
+msgctxt "#30011"
+msgid "L"
+msgstr "L"
+
+msgctxt "#30012"
+msgid "R"
+msgstr "R"
+
+msgctxt "#30013"
+msgid "Analog Stick"
+msgstr "Analoginen sauva"

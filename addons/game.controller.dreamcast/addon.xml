@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.dreamcast"
+        name="Dreamcast Controller"
+        version="1.0.16"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Dreamcast controller</summary>
+        <summary lang="en_GB">Sega Dreamcast controller</summary>
+        <summary lang="fi_FI">Sega Dreamcast -ohjain</summary>
+        <summary lang="zh_CN">世嘉 Dreamcast 控制器</summary>
+        <description lang="da_DK">Sega Dreamcast blev udgivet i 1998. Inkluderingen af en analog stick afspejlede overgangen fra 2D arkadespil til 3D spilmiljøer. Dreamcast havde en kort levetid og markerede afslutningen på Segas 18 år på konsolmarkedet.</description>
+        <description lang="en_GB">The Sega Dreamcast was released in 1998. The inclusion of an analog stick reflected the transition from 2D arcade games to 3D game environments. The Dreamcast had a short lifespan and marked the end of Sega&apos;s 18 years in the console market.</description>
+        <description lang="fi_FI">Sega Dreamcast julkaistiin vuonna 1998. Analogisen sauvaohjaimen sisällyttäminen peilasi siirtymää 2D-pelihallipeleistä 3D-peliympäristöihin. Dreamcastin käyttöikä oli lyhyt, ja se merkitsi Segan 18 vuoden konsolimarkkinoiden loppua.</description>
+        <description lang="zh_CN">Sega Dreamcast 于 1998 年发布。模拟摇杆的加入反映了从 2D 街机游戏到 3D 游戏环境的过渡。 Dreamcast 的寿命很短，标志着世嘉在游戏机市场的 18 年结束。</description>
+    </extension>
+</addon>

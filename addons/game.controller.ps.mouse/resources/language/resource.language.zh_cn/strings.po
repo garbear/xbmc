@@ -1,0 +1,42 @@
+# Kodi Media Center language file
+# Addon Name: PlayStation Mouse
+# Addon id: game.controller.ps.mouse
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: SNES Mouse\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ps-mouse/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "PlayStation mouse"
+msgstr "PlayStation 鼠标"
+
+msgctxt "Addon Description"
+msgid "The PlayStation Mouse is a two-button ball mouse. It was released alongside the PlayStation in 1994."
+msgstr "PlayStation 鼠标是一种两个按钮的滚轮鼠标。它于1994年与 PlayStation 一起发行。"
+
+msgctxt "#30000"
+msgid "PlayStation Mouse"
+msgstr "PlayStation 鼠标"
+
+msgctxt "#30001"
+msgid "Left button"
+msgstr "左按钮"
+
+msgctxt "#30002"
+msgid "Right button"
+msgstr "右按钮"
+
+msgctxt "#30003"
+msgid "Pointer"
+msgstr "指针"

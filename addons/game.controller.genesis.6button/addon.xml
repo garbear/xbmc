@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.genesis.6button"
+        name="Sega Genesis Controller"
+        version="1.0.18"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Genesis controller</summary>
+        <summary lang="en_GB">Sega Genesis controller</summary>
+        <summary lang="fi_FI">Sega Genesis -ohjain</summary>
+        <summary lang="ru_RU">Контроллер Sega Genesis</summary>
+        <summary lang="zh_CN">世嘉 Genesis 控制器</summary>
+        <description lang="da_DK">Den originale controller til Sega Genesis blev udgivet i 1988. Den havde tre face hovedknapper. Sega udgav en version med seks knapper i 1993.</description>
+        <description lang="en_GB">The original controller for the Sega Genesis was released in 1988. It had three main face buttons. Sega released a six-button version in 1993.</description>
+        <description lang="fi_FI">Sega Genesiksen alkuperäinen ohjain julkaistiin vuonna 1988. Sen etupuolella oli kolme painiketta. Sega julkaisi kuuden painikkeen version vuonna 1993.</description>
+        <description lang="ru_RU">Оригинальный контроллер для Sega Genesis был выпущен в 1988 году. Он имел три основные лицевые кнопки. В 1993 году Sega выпустила версию с шестью кнопками.</description>
+        <description lang="zh_CN">世嘉 Genesis 最初的控制器于1988年发布。它有三个主要的正面按钮。世嘉在1993年发布了六按钮版本。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>
