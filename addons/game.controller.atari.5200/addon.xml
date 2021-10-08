@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.atari.5200"
+        name="Atari 5200 Controller"
+        version="1.0.12"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Atari 5200 controller</summary>
+        <summary lang="en_GB">Atari 5200 controller</summary>
+        <summary lang="ru_RU">Atari 5200 контроллер</summary>
+        <summary lang="zh_CN">雅达利 5200 控制器</summary>
+        <description lang="da_DK">Atari 5200 blev udgivet i 1982. Designet af joysticket, der brugte en svag gummistøvle i stedet for fjedre, viste sig at være klodset og upålidelig. Den blev bedømt som den 10. værste videospilcontroller af IGN.</description>
+        <description lang="en_GB">The Atari 5200 was released in 1982. The design of the joystick, which used a weak rubber boot instead of springs, proved to be ungainly and unreliable. It was rated the 10th worst video game controller by IGN.</description>
+        <description lang="ru_RU">Atari 5200 выпущена в 1982 году. Конструкция джойстика, в котором вместо пружин использовалась резина, оказалась неуклюжим и ненадежным. Он был оценен IGN как 10-й худший контроллер видеоигр.</description>
+        <description lang="zh_CN">雅达利 5200 于1982年发布。此游戏杆的设计，用一个脆弱的橡胶套代替弹簧，被证明是笨拙和不可靠的。它被 IGN 评为第十差的视频游戏控制器。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

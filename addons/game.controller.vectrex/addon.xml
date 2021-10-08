@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.vectrex"
+        name="Vectrex Controller"
+        version="1.0.11"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Vectrex controller</summary>
+        <summary lang="en_GB">Vectrex controller</summary>
+        <summary lang="zh_CN">Vectrex 控制器</summary>
+        <description lang="da_DK">Vectrex blev udgivet i 1982 af General Consumer Electronics (senere købt af Milton Bradley). Konsollen havde en indbygget monokrom skærm, der kunne vise vektorgrafik.</description>
+        <description lang="en_GB">The Vectrex was released in 1982 by General Consumer Electronics (later purchased by Milton Bradley). The console featured a built-in monochrome monitor capable of displaying vector graphics.</description>
+        <description lang="zh_CN">Vectrex 于1982年由通用消费电子公司（后被米尔顿·布拉德利收购）发布。游戏主机配有一个内置的单色显示器，能够显示矢量图形。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

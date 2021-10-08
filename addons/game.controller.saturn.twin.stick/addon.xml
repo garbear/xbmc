@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.twin.stick"
+        name="Sega Twin Stick"
+        version="1.0.13"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Twin Stick</summary>
+        <summary lang="de_DE">Sega Twin Stick</summary>
+        <summary lang="en_GB">Sega Twin Stick</summary>
+        <summary lang="zh_CN">世嘉 Twin Stick</summary>
+        <description lang="da_DK">Sega Twin Stick, udgivet i 1996, har to joysticks på bekostning af færre knapper. Det var designet til spillet Cyber Troopers Virtual-On.</description>
+        <description lang="de_DE">Der 1996 veröffentlichte Sega Twin Stick nimmt für 2 Joysticks den Verlust einiger Knöpfe in Kauf. Er wurde für das Spiel &quot;Cyber Troopers Virtual-On&quot; entwickelt.</description>
+        <description lang="en_GB">The Sega Twin Stick, released in 1996, features two joysticks at the expense of fewer buttons. It was designed for the game Cyber Troopers Virtual-On.</description>
+        <description lang="zh_CN">1996年发布的世嘉 Twin Stick 以较少的按钮为代价配备了两个游戏杆。它是为游戏《电脑战机（Cyber Troopers Virtual-On）》而设计的。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：Sega Retro（segaretro.org）</disclaimer>
+    </extension>
+</addon>

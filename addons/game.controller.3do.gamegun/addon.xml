@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.3do.gamegun"
+        name="3DO Gamegun"
+        version="1.0.12"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">3DO Gamegun</summary>
+        <summary lang="en_GB">3DO Gamegun</summary>
+        <summary lang="ru_RU">3DO пистолет</summary>
+        <summary lang="zh_CN">3DO 游戏枪</summary>
+        <description lang="da_DK">Gamegun blev udgivet til 3DO i 1994 af American Laser Games.</description>
+        <description lang="en_GB">The Gamegun was released for the 3DO in 1994 by American Laser Games.</description>
+        <description lang="ru_RU">Пистолет для 3DO выпущен в 1994 компанией American Laser Games.</description>
+        <description lang="zh_CN">游戏枪于1994年由美国激光游戏公司为 3DO 发布。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>

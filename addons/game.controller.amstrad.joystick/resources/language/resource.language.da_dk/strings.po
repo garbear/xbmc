@@ -1,0 +1,90 @@
+# Kodi Media Center language file
+# Addon Name: Amstrad Joystick
+# Addon id: game.controller.amstrad.joystick
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.amstrad.joystick\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-10-25 09:12+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-amstrad-joystick/da_dk/>\n"
+"Language: da_dk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "Amstrad Joystick"
+msgstr "Amstrad Joystick"
+
+msgctxt "Addon Description"
+msgid "The original Amstrad CPC models had only one joystick port. A Y-cable can be used to connect two joysticks."
+msgstr "De originale Amstrad CPC-modeller havde kun en joystickport. Et Y-kabel kan bruges til at forbinde to joysticks."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Kildeangivelse: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Amstrad Joystick"
+msgstr "Amstrad Joystick"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Knap 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Knap 2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Op"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Højre"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Ned"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Venstre"
+
+msgctxt "#30007"
+msgid "Run"
+msgstr "Kør"
+
+msgctxt "#30008"
+msgid "Return"
+msgstr "Return"
+
+msgctxt "#30009"
+msgid "VKBD Toggle"
+msgstr "VKBD skift"
+
+msgctxt "#30010"
+msgid "Mouse toggle"
+msgstr "Skift med musen"
+
+msgctxt "#30011"
+msgid "Cat"
+msgstr "Kategori"
+
+msgctxt "#30012"
+msgid "Stat"
+msgstr "Tilstand"
+
+msgctxt "#30013"
+msgid "Reset"
+msgstr "Nulstil"
+
+msgctxt "#30014"
+msgid "Tape"
+msgstr "Bånd"
