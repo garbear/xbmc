@@ -458,11 +458,11 @@ msgid "Right Meta"
 msgstr ""
 
 msgctxt "#30108"
-msgid "Left Super"
+msgid "Left Windows"
 msgstr ""
 
 msgctxt "#30109"
-msgid "Right Super"
+msgid "Right Windows"
 msgstr ""
 
 msgctxt "#30110"
@@ -546,7 +546,7 @@ msgid "~"
 msgstr ""
 
 msgctxt "#30130"
-msgid "Mode"
+msgid "Mode/Option/AltGr"
 msgstr ""
 
 msgctxt "#30131"
