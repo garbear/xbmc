@@ -1,0 +1,42 @@
+# Kodi Media Center language file
+# Addon Name: SNES Mouse
+# Addon id: game.controller.snes.mouse
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: SNES Mouse\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-snes-mouse/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "SNES mouse"
+msgstr "SNES 鼠标"
+
+msgctxt "Addon Description"
+msgid "The SNES mouse was first released in 1992. It was originally designed for use with the game Mario Paint."
+msgstr "SNES 鼠标于1992年首次发布。它最初针游戏《马里奥画板》而设计的。"
+
+msgctxt "#30000"
+msgid "SNES Mouse"
+msgstr "SNES 鼠标"
+
+msgctxt "#30001"
+msgid "Left button"
+msgstr "左按钮"
+
+msgctxt "#30002"
+msgid "Right button"
+msgstr "右按钮"
+
+msgctxt "#30003"
+msgid "Pointer"
+msgstr "指针"

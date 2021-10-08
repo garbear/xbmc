@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.odyssey2"
+        name="Odyssey2 Controller"
+        version="1.0.12"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Odyssey² controller</summary>
+        <summary lang="en_GB">Odyssey² controller</summary>
+        <summary lang="zh_CN">Odyssey² 控制器</summary>
+        <description lang="da_DK">Odyssey², også kendt som Videopac G7000, blev udgivet af Magnavox (nu Philips) i 1978. Alle spil produceret af Magnavox/Philips endte med et udråbstegn, såsom K.C. Munchkin! og Kuller Bees!.</description>
+        <description lang="en_GB">The Odyssey², also known as the Videopac G7000, was released by Magnavox (now Philips) in 1978. All games produced by Magnavox/Philips ended with an exclamation point, such as K.C. Munchkin! and Kuller Bees!.</description>
+        <description lang="zh_CN">Odyssey²，也称为 Videopac G7000，由 Magnavox（现在的飞利浦）于1978年发布。所有由 Magnavox/飞利浦制作的游戏都以感叹号结尾，例如《K.C. Munchkin!》和《Kuller Bees!》。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

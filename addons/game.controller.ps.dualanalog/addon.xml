@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ps.dualanalog"
+        name="PlayStation Dual Analog"
+        version="1.0.14"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PlayStation Dobbel Analog</summary>
+        <summary lang="en_GB">PlayStation Dual Analog</summary>
+        <summary lang="zh_CN">PlayStation Dual Analog</summary>
+        <description lang="da_DK">PlayStation-controlleren blev udgivet af Sony Computer Entertainment i 1994. Sony frigav kortvarigt Dobbel Analog-controlleren i 1997, efterfulgt af den rumble-aktiverede DualShock senere samme år.</description>
+        <description lang="de_DE">Der PlayStation Controller wurde 1994 von Sony Computer Entertainment veröffentlicht. Sony stellte 1997 kurzerhand den &quot;Dual Analog&quot;-Controller sowie im gleichen Jahr den Vibrations-aktiven &quot;DualShock&quot; vor.</description>
+        <description lang="en_GB">The PlayStation controller was released by Sony Computer Entertainment in 1994. Sony briefly released the Dual Analog controller in 1997, followed by the rumble-enabled DualShock later that year.</description>
+        <description lang="fi_FI">Sony Computer Entertainment julkaisi PlayStation ohjaimen vuonna 1994. Sony julkaisi Dual Analog -ohjaimen vuonna 1997, jota seurasi värinäominaisuudella oleva DualShock myöhemmin samana vuonna.</description>
+        <description lang="zh_CN">索尼电脑娱乐公司于1994年发布了 PlayStation 控制器。索尼在1997年短暂发布了 Dual Analog 控制器，随后在那年晚些时候发布了支持震动功能的 DualShock。</description>
+    </extension>
+</addon>
