@@ -1,0 +1,50 @@
+# Kodi Media Center language file
+# Addon Name: Konami Justifier (PS)
+# Addon id: game.controller.konami.justifier.ps
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.konami.justifier.ps\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-07-07 22:42+0000\n"
+"Last-Translator: Jose Riha <jose1711@gmail.com>\n"
+"Language-Team: Slovak <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-konami-justifier-ps/sk_sk/>\n"
+"Language: sk_sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 4.18.2\n"
+
+msgctxt "Addon Summary"
+msgid "Konami Justifier (PS)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Justifer is a light gun released by Konami in 1992 for the Sega Mega Drive/Genesis, SNES and PlayStation. It resembles the Colt Python, a .357 Magnum revolver."
+msgstr ""
+
+msgctxt "#30000"
+msgid "Konami Justifier (PS)"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "Spúšť"
+
+msgctxt "#30002"
+msgid "Start"
+msgstr "Štart"
+
+msgctxt "#30003"
+msgid "Aux"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Offscreen"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Crosshair"
+msgstr ""
