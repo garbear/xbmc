@@ -1,0 +1,74 @@
+# Kodi Media Center language file
+# Addon Name: Game Boy Advance
+# Addon id: game.controller.gba
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.gba\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-06-09 15:07+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Welsh (United Kingdom) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-gba/cy_gb/>\n"
+"Language: cy_gb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0) ? 0 : (n==1) ? 1 : (n==2) ? 2 : (n==3) ? 3 :(n==6) ? 4 : 5;\n"
+"X-Generator: Weblate 4.6.2\n"
+
+msgctxt "Addon Summary"
+msgid "Game Boy Advance"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Nintendo Game Boy Advance is a 32-bit handheld video game console released in 2001. Despite fierce competition, Nintendo maintained a majority market share with the device."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Game Boy Advance"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr ""
+
+msgctxt "#30002"
+msgid "B"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Start"
+msgstr "Cychwyn"
+
+msgctxt "#30004"
+msgid "Select"
+msgstr "Dewis"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Left"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Left Bumper"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Right Bumper"
+msgstr ""

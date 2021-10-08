@@ -1,0 +1,106 @@
+# Kodi Media Center language file
+# Addon Name: ColecoVision Controller
+# Addon id: game.controller.colecovision
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.colecovision\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-12-25 22:31+0000\n"
+"Last-Translator: Massimo Pissarello <mapi68@gmail.com>\n"
+"Language-Team: Italian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-wscolecovision/it_it/>\n"
+"Language: it_it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15\n"
+
+msgctxt "Addon Summary"
+msgid "ColecoVision controller"
+msgstr "Controller ColecoVision"
+
+msgctxt "Addon Description"
+msgid "The ColecoVision is Coleco Industries' second-generation game console, released in 1982. IGN named it the 12th-best console, citing its accuracy in bringing arcade games to the home."
+msgstr "ColecoVision è la console di gioco di seconda generazione di Coleco Industries, rilasciata nel 1982. IGN l'ha definita la dodicesima migliore console, citando la sua precisione nel portare i giochi arcade a casa."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Credito immagine: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "ColecoVision"
+msgstr "ColecoVision"
+
+msgctxt "#30001"
+msgid "Left Button"
+msgstr "Tasto sinistro"
+
+msgctxt "#30002"
+msgid "Right Button"
+msgstr "Tasto destro"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Su"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Destra"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Giù"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Sinistra"
+
+msgctxt "#30007"
+msgid "1"
+msgstr "1"
+
+msgctxt "#30008"
+msgid "2"
+msgstr "2"
+
+msgctxt "#30009"
+msgid "3"
+msgstr "3"
+
+msgctxt "#30010"
+msgid "4"
+msgstr "4"
+
+msgctxt "#30011"
+msgid "5"
+msgstr "5"
+
+msgctxt "#30012"
+msgid "6"
+msgstr "6"
+
+msgctxt "#30013"
+msgid "7"
+msgstr "7"
+
+msgctxt "#30014"
+msgid "8"
+msgstr "8"
+
+msgctxt "#30015"
+msgid "9"
+msgstr "9"
+
+msgctxt "#30016"
+msgid "0"
+msgstr "0"
+
+msgctxt "#30017"
+msgid "Star"
+msgstr "Stella"
+
+msgctxt "#30018"
+msgid "Pound"
+msgstr "Libbra"
