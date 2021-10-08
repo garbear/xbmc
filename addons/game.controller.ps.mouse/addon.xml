@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ps.mouse"
+        name="PlayStation Mouse"
+        version="1.0.14"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">SNES mus</summary>
+        <summary lang="de_DE">SNES Maus</summary>
+        <summary lang="en_GB">SNES mouse</summary>
+        <summary lang="zh_CN">SNES 鼠标</summary>
+        <description lang="da_DK">PlayStation Mus er en ball-mus med to knapper. Den blev udgivet sammen med PlayStation i 1994.</description>
+        <description lang="en_GB">The PlayStation Mouse is a two-button ball mouse. It was released alongside the PlayStation in 1994.</description>
+        <description lang="zh_CN">PlayStation 鼠标是一种两个按钮的滚轮鼠标。它于1994年与 PlayStation 一起发行。</description>
+    </extension>
+</addon>
