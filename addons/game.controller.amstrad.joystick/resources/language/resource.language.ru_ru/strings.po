@@ -1,0 +1,90 @@
+# Kodi Media Center language file
+# Addon Name: Amstrad Joystick
+# Addon id: game.controller.amstrad.joystick
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.amstrad.joystick\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-09-22 10:15+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
+"Language-Team: Russian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-amstrad-joystick/ru_ru/>\n"
+"Language: ru_ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+msgctxt "Addon Summary"
+msgid "Amstrad Joystick"
+msgstr "Джойстик Amstrad"
+
+msgctxt "Addon Description"
+msgid "The original Amstrad CPC models had only one joystick port. A Y-cable can be used to connect two joysticks."
+msgstr "Оригинальные модели Amstrad CPC оснащались только одним портом для джойстика. Для подключения двух джойстиков можно использовать Y-кабель."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Источник изображения: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Amstrad Joystick"
+msgstr "Джойстик Amstrad"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Кнопка 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Кнопка 2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Вверх"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Вправо"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Вниз"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Влево"
+
+msgctxt "#30007"
+msgid "Run"
+msgstr "Запустить"
+
+msgctxt "#30008"
+msgid "Return"
+msgstr "Возврат"
+
+msgctxt "#30009"
+msgid "VKBD Toggle"
+msgstr "Переключить виртуальную клавиатуру"
+
+msgctxt "#30010"
+msgid "Mouse toggle"
+msgstr "Переключение мыши"
+
+msgctxt "#30011"
+msgid "Cat"
+msgstr "Кат"
+
+msgctxt "#30012"
+msgid "Stat"
+msgstr "Сост"
+
+msgctxt "#30013"
+msgid "Reset"
+msgstr "Сброс"
+
+msgctxt "#30014"
+msgid "Tape"
+msgstr "Лента"

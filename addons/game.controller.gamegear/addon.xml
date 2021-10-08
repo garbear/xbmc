@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.gamegear"
+        name="Sega Game Gear"
+        version="1.0.22"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Game Gear</summary>
+        <summary lang="de_DE">Sega Game Gear</summary>
+        <summary lang="en_GB">Sega Game Gear</summary>
+        <summary lang="es_ES">Sega Game Gear</summary>
+        <summary lang="fr_FR">Sega Game Gear</summary>
+        <summary lang="it_IT">Sega Game Gear</summary>
+        <summary lang="ru_RU">Sega Game Gear</summary>
+        <summary lang="zh_CN">世嘉 Game Gear</summary>
+        <description lang="da_DK">Sega Game Gear er en 8-bit håndholdt videospilkonsol udgivet i 1990. Mens den havde en baggrundsbelyst skærm i fuld farve og hurtig processor, blev batteriets levetid og store størrelse ofte kritiseret.</description>
+        <description lang="de_DE">Sega Game Gear ist eine tragbare 8-Bit-Videospielkonsole aus dem Jahr 1990. Sie hatte zwar einen farbigen Bildschirm mit Hintergrundbeleuchtung und einen schnellen Prozessor, aber die Batterielaufzeit und die große Bauform wurden oft kritisiert.</description>
+        <description lang="en_GB">The Sega Game Gear is an 8-bit handheld video game console released in 1990. While it had a full-color backlit screen and fast processor, the battery life and large size were often criticized.</description>
+        <description lang="es_ES">La Sega Game Gear es una videoconsola portátil de 8 bits lanzada en 1990. Aunque tenía una pantalla retroiluminada a todo color y un procesador rápido, la duración de la batería y su gran tamaño fueron a menudo criticados.</description>
+        <description lang="fr_FR">La Sega Game Gear est une console de jeu vidéo portable 8 bits sortie en 1990. Bien qu&apos;elle ait un écran rétroéclairé en couleur et un processeur rapide, la durée de vie de la batterie et sa grande taille ont souvent été critiquées.</description>
+        <description lang="it_IT">Sega Game Gear è una console per videogiochi portatile a 8 bit rilasciata nel 1990. Sebbene avesse uno schermo retroilluminato a colori e un processore veloce, la durata della batteria e le grandi dimensioni sono state spesso criticate.</description>
+        <description lang="ru_RU">Sega Game Gear - это 8-битная портативная игровая консоль, выпущенная в 1990 году. Хотя она имела полноцветный экран с подсветкой и быстрый процессор, время автономной работы и большие размеры часто подвергались критике.</description>
+        <description lang="zh_CN">世嘉 Game Gear 是1990年发布的一款8位手持视频游戏机。虽然它有一个全彩背光屏幕和快速处理器，但电池寿命和大尺寸经常受到诟病。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

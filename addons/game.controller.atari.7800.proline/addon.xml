@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.atari.7800.proline"
+        name="Atari 7800 Proline"
+        version="1.0.27"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Atari 7800 Proline</summary>
+        <summary lang="de_DE">Atari 7800 Proline</summary>
+        <summary lang="en_GB">Atari 7800 Proline</summary>
+        <summary lang="es_ES">Atari 7800 Proline</summary>
+        <summary lang="fi_FI">Atari 7800 Proline</summary>
+        <summary lang="fr_FR">Atari 7800 Proline</summary>
+        <summary lang="it_IT">Atari 7800 Proline</summary>
+        <summary lang="ru_RU">Atari 7800 Proline</summary>
+        <summary lang="zh_CN">雅达利 7800 Proline</summary>
+        <description lang="da_DK">Atari 7800 ProSystem blev udgivet i 1986. Den fulgte med Atari Proline joystick, men på grund af kritik over ergonimiske problemer udgav Atari senere en gamepad med europæiske 7800&apos;ere.</description>
+        <description lang="de_DE">Das Atari 7800 ProSystem wurde 1986 veröffentlicht. Es wurde zusammen mit dem Atari Proline Joystick ausgeliefert, aber aufgrund von Kritik an der Ergonomie brachte Atari später ein Gamepad für europäische 7800er heraus.</description>
+        <description lang="en_GB">The Atari 7800 ProSystem was released in 1986. It came bundled with the Atari Proline Joystick, but due to criticism over ergonimic issues Atari later released a gamepad with European 7800s.</description>
+        <description lang="es_ES">La Atari 7800 ProSystem salió a la venta en 1986. Venía con el joystick Atari Proline, pero debido a las críticas por problemas de ergonomía, Atari lanzó más tarde un mando con las 7800 europeas.</description>
+        <description lang="fi_FI">Atari 7800 ProSystem julkaistiin vuonna 1986. Sen mukana toimitettiin Atari Proline -ohjainsauva, mutta ergonomiasta saadun kritiikin seurauksena Atari julkaisi myöhemmin pad-ohjaimen eurooppalaisten 7800 -mallien mukana.</description>
+        <description lang="fr_FR">L&apos;Atari 7800 ProSystem est sorti en 1986. Il était fourni avec le joystick Atari Proline, mais en raison de critiques sur des problèmes d&apos;ergonomie, Atari a ensuite publié une manette de jeu avec des 7800 européens.</description>
+        <description lang="it_IT">L&apos;Atari 7800 ProSystem è stato rilasciato nel 1986. È stato fornito in bundle con l&apos;Atari Proline Joystick, ma a causa di critiche su problemi ergonomici, Atari ha successivamente rilasciato un gamepad con 7800 europei.</description>
+        <description lang="ru_RU">Система Atari 7800 ProSystem была выпущена в 1986 году. Она поставлялась в комплекте с джойстиком Atari Proline, но из-за критики по поводу эргономических проблем Atari позже выпустила геймпад для европейских 7800.</description>
+        <description lang="zh_CN">雅达利 7800 ProSystem 于1986年发布。它与雅达利 Proline 游戏杆捆绑销售，因受到人体工程学问题的批评，雅达利后来随欧洲版 7800 发布了一款游戏手柄。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

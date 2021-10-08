@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.gameboy"
+        name="Game Boy"
+        version="1.0.28"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Game Boy</summary>
+        <summary lang="de_DE">Game Boy</summary>
+        <summary lang="en_GB">Game Boy</summary>
+        <summary lang="es_ES">Game Boy</summary>
+        <summary lang="es_MX">Game Boy</summary>
+        <summary lang="fi_FI">Game Boy</summary>
+        <summary lang="fr_FR">Game Boy</summary>
+        <summary lang="it_IT">Game Boy</summary>
+        <summary lang="ru_RU">Game Boy</summary>
+        <summary lang="zh_CN">Game Boy</summary>
+        <description lang="da_DK">Nintendo Game Boy er en 8-bit håndholdt videospilkonsol udgivet i 1989. Det blev en enorm succes og blev i 2009 optaget i National Toy Hall of Fame.</description>
+        <description lang="de_DE">Der Nintendo Game Boy ist eine tragbare 8-Bit-Videospielkonsole, die 1989 auf den Markt kam. Er wurde ein überwältigender Erfolg und 2009 in die National Toy Hall of Fame aufgenommen.</description>
+        <description lang="en_GB">The Nintendo Game Boy is an 8-bit handheld video game console released in 1989. It became a tremendous success, and in 2009 was inducted into the National Toy Hall of Fame.</description>
+        <description lang="es_ES">La Nintendo Game Boy es una videoconsola portátil de 8 bits lanzada en 1989. Fue un gran éxito y en 2009 entró a formar parte del National Toy Hall of Fame de los EE. UU.</description>
+        <description lang="es_MX">La Nintendo Game Boy es una consola de 8-bit portátil lanzada en 1989. Se volvió un tremendo éxito, y en 2009 fue inducida a la National Toy Hall of Fame de E.U.</description>
+        <description lang="fi_FI">Nintendo Game Boy on 8-bittinen käsikonsoli, joka julkaistiin vuonna 1989. Siitä tuli valtava menestys ja vuonna 2009 se valittiin National Toy Hall of Fameen.</description>
+        <description lang="fr_FR">La Nintendo Game Boy est une console de jeu vidéo portable 8 bits sortie en 1989. Elle est devenue un énorme succès et, en 2009, a été intronisée au National Toy Hall of Fame.</description>
+        <description lang="it_IT">Il Nintendo Game Boy è una console per videogiochi portatile a 8 bit rilasciata nel 1989. È diventata un enorme successo e nel 2009 è stata inserita nella National Toy Hall of Fame.</description>
+        <description lang="ru_RU">Nintendo Game Boy - 8-битная портативная консоль, выпущенная в 1989. Это привело к огромному успеху, и в 2009 внесена в Национальный зал славы игрушек.</description>
+        <description lang="zh_CN">任天堂 Game Boy 是1989年发布的一款8位手持视频游戏机。它获得了巨大的成功，并于2009年入选美国国家玩具名人堂。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>
