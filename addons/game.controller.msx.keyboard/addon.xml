@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.msx.keyboard"
+        name="MSX Keyboard"
+        version="1.0.29"
+        provider-name="Team Lima-Dev">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">MSX Tastatur</summary>
+        <summary lang="de_DE">MSX Tastatur</summary>
+        <summary lang="en_GB">MSX Keyboard</summary>
+        <summary lang="es_ES">Teclado MSX</summary>
+        <summary lang="fi_FI">MSX-näppäimistö</summary>
+        <summary lang="fr_FR">Clavier MSX</summary>
+        <summary lang="it_IT">Tastiera MSX</summary>
+        <summary lang="ru_RU">Клавиатура MSX</summary>
+        <summary lang="zh_CN">MSX 键盘</summary>
+        <description lang="da_DK">MSX-tastaturet blev lavet i interne og eksterne enheder. Et tip til fejlfinding, når en MSX-maskine ikke viser et billede, er at trykke gentagne gange på CAPS-tasten for at se om LED&apos;en skifter.</description>
+        <description lang="de_DE">Die MSX-Tastatur gab es als interne und externe Variante. Ein Tipp zur Fehlersuche, wenn ein MSX-Rechner kein Bild anzeigt, besteht darin, die Feststelltaste wiederholt zu drücken, um zu sehen, ob die LED umschaltet.</description>
+        <description lang="en_GB">The MSX keyboard came in internal and external units. One troubleshooting hint when an MSX machine does not display an image is to press the CAPS key repeatedly to see if the LED toggles.</description>
+        <description lang="es_ES">El teclado del MSX venía en unidades internas y externas. Un consejo para solucionar problemas cuando una máquina MSX no muestra una imagen es pulsar la tecla CAPS repetidamente para ver si el LED cambia.</description>
+        <description lang="fi_FI">MSX-näppäimistöä esiintyi sekä ulkoisena, että sisäisenä. Jos MSX-laite ei näytä kuvaa, on CAPS-näppäimen painaminen toistuvasti yksi vianselvitysvinkki, jolloin nähdään vaihtuuko painikkeen LED-merkkivalo.</description>
+        <description lang="fr_FR">Le clavier MSX est venu dans les unités internes et externes. Un conseil de dépannage lorsqu&apos;une machine MSX n&apos;affiche pas d&apos;image consiste à appuyer plusieurs fois sur la touche CAPS pour voir si la LED bascule.</description>
+        <description lang="it_IT">La tastiera MSX è disponibile in unità interne ed esterne. Un suggerimento per la risoluzione dei problemi quando una macchina MSX non visualizza un&apos;immagine consiste nel premere ripetutamente il tasto MAIUSC per vedere se il LED si alterna.</description>
+        <description lang="ru_RU">Клавиатура MSX выпускалась во внутреннем и внешнем блоках. Один из советов по устранению неполадки, когда устройство MSX не отображает изображение, заключается в том, чтобы несколько раз нажать клавишу CAPS и проверить, переключается ли индикатор.</description>
+        <description lang="zh_CN">MSX 键盘分为内部和外部两种。当 MSX 机器不显示图像时，一个故障排除提示是反复按 CAPS 键以查看 LED 是否切换。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="pl_PL">Pochodzenie obrazu: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>
