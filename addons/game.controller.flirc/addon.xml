@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.flirc"
+        name="Flirc USB Receiver"
+        version="1.0.4"
+        provider-name="Flirc.tv">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">Flirc USB Receiver</summary>
+        <summary lang="es_ES">Receptor USB Flirc</summary>
+        <summary lang="it_IT">Ricevitore USB Flirc</summary>
+        <summary lang="ru_RU">Приемник Flirc USB</summary>
+        <summary lang="sv_SE">Flirc USB-mottagare</summary>
+        <summary lang="zh_CN">Flirc USB 接收器</summary>
+        <description lang="en_GB">The Flirc USB receiver lets you use any remote control with Kodi. Find out more at flirc.tv!</description>
+        <description lang="es_ES">El receptor USB Flirc permite usar cualquier mando a distancia con Kodi. ¡Más información en flirc.tv!</description>
+        <description lang="it_IT">Il ricevitore USB Flirc ti permette di usare qualsiasi telecomando con Kodi. Scopri di più su flirc.tv!</description>
+        <description lang="ru_RU">Приемник Flirc USB позволяет использовать любой пульт дистанционного управления с Kodi. Узнайте больше на сайте flirc.tv!</description>
+        <description lang="sv_SE">Med Flirc USB-mottagare kan du använda vilken fjärrkontroll som helst med Kodi. Ta reda på mer på flirc.tv!</description>
+        <description lang="zh_CN">Flirc USB 接收器可让您在 Kodi 上使用任何遥控器。更多信息，请访问 flirc.tv！</description>
+    </extension>
+</addon>
