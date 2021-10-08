@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png" mask="mask.png">
+	<category name="face" label="35074">
+		<button name="i" type="digital" label="30001"/>
+		<button name="ii" type="digital" label="30002"/>
+		<button name="iii" type="digital" label="30003"/>
+		<button name="iv" type="digital" label="30004"/>
+		<button name="v" type="digital" label="30005"/>
+		<button name="vi" type="digital" label="30006"/>
+		<button name="select" type="digital" label="30007"/>
+		<button name="run" type="digital" label="30008"/>
+		<button name="mode1" type="digital" label="30009"/>
+		<button name="mode2" type="digital" label="30010"/>
+		<button name="up" type="digital" label="30011"/>
+		<button name="right" type="digital" label="30012"/>
+		<button name="down" type="digital" label="30013"/>
+		<button name="left" type="digital" label="30014"/>
+	</category>
+</layout>
