@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+	<physicaltopology providesinput="false">
+		<port id="1">
+			<accepts controller="game.controller.saturn"/>
+			<accepts controller="game.controller.saturn.3d"/>
+			<accepts controller="game.controller.saturn.arcade.racer"/>
+			<accepts controller="game.controller.saturn.mission.stick"/>
+			<accepts controller="game.controller.saturn.mission.sticks"/>
+			<accepts controller="game.controller.saturn.mouse"/>
+			<accepts controller="game.controller.saturn.multitap"/>
+			<accepts controller="game.controller.saturn.twin.stick"/>
+			<accepts controller="game.controller.saturn.virtua.gun"/>
+		</port>
+		<port id="2">
+			<accepts controller="game.controller.saturn"/>
+			<accepts controller="game.controller.saturn.3d"/>
+			<accepts controller="game.controller.saturn.arcade.racer"/>
+			<accepts controller="game.controller.saturn.mission.stick"/>
+			<accepts controller="game.controller.saturn.mission.sticks"/>
+			<accepts controller="game.controller.saturn.mouse"/>
+			<accepts controller="game.controller.saturn.multitap"/>
+			<accepts controller="game.controller.saturn.twin.stick"/>
+			<accepts controller="game.controller.saturn.virtua.gun"/>
+		</port>
+		<port id="3">
+			<accepts controller="game.controller.saturn"/>
+			<accepts controller="game.controller.saturn.3d"/>
+			<accepts controller="game.controller.saturn.arcade.racer"/>
+			<accepts controller="game.controller.saturn.mission.stick"/>
+			<accepts controller="game.controller.saturn.mission.sticks"/>
+			<accepts controller="game.controller.saturn.mouse"/>
+			<accepts controller="game.controller.saturn.multitap"/>
+			<accepts controller="game.controller.saturn.twin.stick"/>
+			<accepts controller="game.controller.saturn.virtua.gun"/>
+		</port>
+		<port id="4">
+			<accepts controller="game.controller.saturn"/>
+			<accepts controller="game.controller.saturn.3d"/>
+			<accepts controller="game.controller.saturn.arcade.racer"/>
+			<accepts controller="game.controller.saturn.mission.stick"/>
+			<accepts controller="game.controller.saturn.mission.sticks"/>
+			<accepts controller="game.controller.saturn.mouse"/>
+			<accepts controller="game.controller.saturn.multitap"/>
+			<accepts controller="game.controller.saturn.twin.stick"/>
+			<accepts controller="game.controller.saturn.virtua.gun"/>
+		</port>
+		<port id="5">
+			<accepts controller="game.controller.saturn"/>
+			<accepts controller="game.controller.saturn.3d"/>
+			<accepts controller="game.controller.saturn.arcade.racer"/>
+			<accepts controller="game.controller.saturn.mission.stick"/>
+			<accepts controller="game.controller.saturn.mission.sticks"/>
+			<accepts controller="game.controller.saturn.mouse"/>
+			<accepts controller="game.controller.saturn.multitap"/>
+			<accepts controller="game.controller.saturn.twin.stick"/>
+			<accepts controller="game.controller.saturn.virtua.gun"/>
+		</port>
+		<port id="6">
+			<accepts controller="game.controller.saturn"/>
+			<accepts controller="game.controller.saturn.3d"/>
+			<accepts controller="game.controller.saturn.arcade.racer"/>
+			<accepts controller="game.controller.saturn.mission.stick"/>
+			<accepts controller="game.controller.saturn.mission.sticks"/>
+			<accepts controller="game.controller.saturn.mouse"/>
+			<accepts controller="game.controller.saturn.multitap"/>
+			<accepts controller="game.controller.saturn.twin.stick"/>
+			<accepts controller="game.controller.saturn.virtua.gun"/>
+		</port>
+	</physicaltopology>
+</layout>

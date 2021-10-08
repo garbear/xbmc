@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+  <category name="face" label="35074">
+    <button name="red" type="digital" label="30001"/>
+    <button name="blue" type="digital" label="30002"/>
+    <button name="green" type="digital" label="30003"/>
+    <button name="yellow" type="digital" label="30004"/>
+    <button name="up" type="digital" label="30005"/>
+    <button name="right" type="digital" label="30006"/>
+    <button name="down" type="digital" label="30007"/>
+    <button name="left" type="digital" label="30008"/>
+    <button name="select" type="digital" label="30009"/>
+    <button name="play" type="digital" label="30010"/>
+  </category>
+  <category name="shoulder" label="35075">
+    <button name="rewind" type="digital" label="30011"/>
+    <button name="forward" type="digital" label="30012"/>
+  </category>
+  <category name="triggers" label="35076">
+    <button name="l2" type="analog" label="30013"/>
+    <button name="r2" type="analog" label="30014"/>
+  </category>
+  <category name="analogsticks" label="35077">
+    <analogstick name="leftstick" label="30015"/>
+    <button name="l3" type="digital" label="30015"/>
+    <analogstick name="rightstick" label="30016"/>
+    <button name="r3" type="digital" label="30016"/>
+  </category>
+</layout>

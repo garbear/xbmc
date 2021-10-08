@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+  <category name="joysticks" label="35073">
+    <button name="up" type="digital" label="30001"/>
+    <button name="right" type="digital" label="30002"/>
+    <button name="down" type="digital" label="30003"/>
+    <button name="left" type="digital" label="30004"/>
+    <button name="push" type="digital" label="30005"/>
+    <button name="pull" type="digital" label="30006"/>
+    <button name="rotateleft" type="digital" label="30007"/>
+    <button name="rotateright" type="digital" label="30008"/>
+  </category>
+  <category name="hardware" label="35107">
+    <button name="start" type="digital" label="30009"/>
+  </category>
+</layout>
