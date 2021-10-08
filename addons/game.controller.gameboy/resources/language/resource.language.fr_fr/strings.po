@@ -1,0 +1,66 @@
+# Kodi Media Center language file
+# Addon Name: Game Boy
+# Addon id: game.controller.gameboy
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.gameboy\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-21 03:45+0000\n"
+"Last-Translator: skypichat <skypichat@hotmail.fr>\n"
+"Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-gameboy/fr_fr/>\n"
+"Language: fr_fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Game Boy"
+msgstr "Game Boy"
+
+msgctxt "Addon Description"
+msgid "The Nintendo Game Boy is an 8-bit handheld video game console released in 1989. It became a tremendous success, and in 2009 was inducted into the National Toy Hall of Fame."
+msgstr "La Nintendo Game Boy est une console de jeu vidéo portable 8 bits sortie en 1989. Elle est devenue un énorme succès et, en 2009, a été intronisée au National Toy Hall of Fame."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Crédit image : OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Game Boy"
+msgstr "Game Boy"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "Start"
+msgstr "Démarrer"
+
+msgctxt "#30004"
+msgid "Select"
+msgstr "Sélectionner"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Haut"
+
+msgctxt "#30006"
+msgid "Down"
+msgstr "Bas"
+
+msgctxt "#30007"
+msgid "Right"
+msgstr "Droite"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Gauche"
