@@ -1,0 +1,54 @@
+# Kodi Media Center language file
+# Addon Name: Super Scope
+# Addon id: game.controller.snes.super.scope
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.snes.super.scope\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-04-24 05:16+0000\n"
+"Last-Translator: skypichat <skypichat@hotmail.fr>\n"
+"Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-snes-super-scope/fr_fr/>\n"
+"Language: fr_fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Super Scope"
+msgstr "Super Scope"
+
+msgctxt "Addon Description"
+msgid "The Super Scope is a light gun for the SNES. It was released in 1992 as a successor to the NES Zapper."
+msgstr "Le Super Scope est un pistolet léger pour la SNES. Il est sorti en 1992 en tant que successeur du NES Zapper."
+
+msgctxt "#30000"
+msgid "Super Scope"
+msgstr "Super Scope"
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "Déclencheur"
+
+msgctxt "#30002"
+msgid "Cursor"
+msgstr "Curseur"
+
+msgctxt "#30003"
+msgid "Turbo"
+msgstr "Turbo"
+
+msgctxt "#30004"
+msgid "Pause"
+msgstr "Pause"
+
+msgctxt "#30005"
+msgid "Offscreen"
+msgstr "Hors écran"
+
+msgctxt "#30006"
+msgid "Crosshair"
+msgstr "Réticule"
