@@ -1,0 +1,65 @@
+# Kodi Media Center language file
+# Addon Name: Pokemon Mini Controller
+# Addon id: game.controller.pokemini
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.pokemini\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: uz_uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Pokémini Controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Pokémon Mini is a handheld game console that was designed and manufactured by Nintendo and themed around the Pokémon media franchise. It is the smallest game system with interchangeable cartridges ever produced by Nintendo, weighing just under two and a half ounces (71 grams)."
+msgstr ""
+
+msgctxt "#30000"
+msgid "Pokémon Mini"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr ""
+
+msgctxt "#30002"
+msgid "B"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Power"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Left"
+msgstr ""
+
+msgctxt "#30008"
+msgid "C"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Shake"
+msgstr ""
