@@ -1,0 +1,77 @@
+# Kodi Media Center language file
+# Addon Name: Sega Mission Sticks
+# Addon id: game.controller.mission.sticks
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.mission.sticks\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ta_in\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Dual Mission Sticks"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Mission Stick is a fight stick for the Sega Saturn released in 1995. A second stick could be connected to allow twin sticks in Panzer Dragoon Zwei."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Sega Mission Sticks"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr ""
+
+msgctxt "#30002"
+msgid "B"
+msgstr ""
+
+msgctxt "#30003"
+msgid "C"
+msgstr ""
+
+msgctxt "#30004"
+msgid "X"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Y"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Z"
+msgstr ""
+
+msgctxt "#30007"
+msgid "L"
+msgstr ""
+
+msgctxt "#30008"
+msgid "R"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Start"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Left Joystick"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Right Joystick"
+msgstr ""
