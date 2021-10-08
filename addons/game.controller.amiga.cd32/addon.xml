@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.amiga.cd32"
+        name="Amiga CD³² Controller"
+        version="1.0.19"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Amiga CD³² controller</summary>
+        <summary lang="de_DE">Amiga CD³² Controller</summary>
+        <summary lang="en_GB">Amiga CD³² controller</summary>
+        <summary lang="es_ES">Mando Amiga CD³²</summary>
+        <summary lang="es_MX">Control Amiga CD³²</summary>
+        <summary lang="fi_FI">Amiga CD³² -ohjain</summary>
+        <summary lang="fr_FR">Contrôleur Amiga CD³²</summary>
+        <summary lang="it_IT">Controller Amiga CD³²</summary>
+        <summary lang="ru_RU">Контроллер Amiga CD³²</summary>
+        <summary lang="zh_CN">Amiga CD³² 控制器</summary>
+        <description lang="da_DK">Amiga CD³² er en 32-bit konsol udgivet af Commodore i 1993. Amiga CD³² er også kompatibel med de fleste controllere fra 80&apos;erne og 90&apos;erne.</description>
+        <description lang="de_DE">Amiga CD³² ist eine 32-Bit-Konsole, die 1993 von Commodore veröffentlicht wurde. Die Amiga CD³² ist zudem mit den meisten Controllern aus den 80er- und 90er-Jahren kompatibel.</description>
+        <description lang="en_GB">The Amiga CD³² is a 32-bit console released by Commodore in 1993. The Amiga CD³² is also compatible with most controllers from the &apos;80s and &apos;90s.</description>
+        <description lang="es_ES">La Amiga CD³² es una videoconsola de 32 bits lanzada por Commodore en 1993. La Amiga CD³² también es compatible con la mayoría de mandos de los años 80 y 90.</description>
+        <description lang="es_MX">La Amiga CD³² es una consola de 32 bits lanzada por Commodore en 1993. La Amiga CD³² es también compatible con la mayoría de controles de los &apos;80s y &apos;90s.</description>
+        <description lang="fi_FI">Amiga CD³² on 32-bittinen konsoli, jonka Commodore julkaisi vuonna 1993. Amiga CD³² on myös yhteensopiva useimpien 80- ja 90-lukujen ohjaimien kanssa.</description>
+        <description lang="fr_FR">L&apos;Amiga CD³² est une console 32 bits sortie par Commodore en 1993. L&apos;Amiga CD³² est également compatible avec la plupart des manettes des années 80 et 90.</description>
+        <description lang="it_IT">L&apos;Amiga CD³² è una console a 32 bit rilasciata da Commodore nel 1993. L&apos;Amiga CD³² è anche compatibile con la maggior parte dei controller degli anni &apos;80 e &apos;90.</description>
+        <description lang="ru_RU">Amiga CD³² это 32-битная консоль, выпущенная Commodore в 1993 году. Amiga CD³² также совместима с большинством контроллеров 80-х и 90-х годов.</description>
+        <description lang="zh_CN">Amiga CD³² 是 Commodore 于 1993 年发布的 32 位主机。Amiga CD³² 也与八、九十年代的大多数控制器兼容。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="pl_PL">Pochodzenie obrazu: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>

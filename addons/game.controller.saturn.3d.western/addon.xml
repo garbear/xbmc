@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.3d.western"
+        name="Sega Saturn 3D (Western)"
+        version="1.0.29"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Saturn 3D (Vestlig)</summary>
+        <summary lang="de_DE">Sega Saturn 3D (Westliche Welt)</summary>
+        <summary lang="en_GB">Sega Saturn 3D (Western)</summary>
+        <summary lang="es_ES">Sega Saturn 3D (Occidente)</summary>
+        <summary lang="es_MX">Sega Saturn 3D (Occidente)</summary>
+        <summary lang="fi_FI">Sega Saturn 3D (läntinen)</summary>
+        <summary lang="fr_FR">Sega Saturn 3D (Ouest)</summary>
+        <summary lang="it_IT">Sega Saturn 3D (occidentale)</summary>
+        <summary lang="zh_CN">世嘉土星3D（欧美）</summary>
+        <description lang="da_DK">Sega Saturn 3D Control Pad blev udgivet i 1996. Det var Segas svar på den revolutionerende Nintendo 64-controller, der havde en analog stick for større præcision i et 3D-miljø.</description>
+        <description lang="de_DE">Das Sega Saturn 3D Control Pad wurde 1996 veröffentlicht. Es war Segas Antwort auf den revolutionären Nintendo 64-Controller, der mit einem Analogstick für mehr Präzision in einer 3D-Umgebung ausgestattet war.</description>
+        <description lang="en_GB">The Sega Saturn 3D Control Pad was released in 1996. It was Sega&apos;s answer to the revolutionary Nintendo 64 controller, which featured an analogue stick for greater precision in a 3D environment.</description>
+        <description lang="es_ES">El mando Sega Saturn 3D salió a la venta en 1996. Fue la respuesta de Sega al revolucionario mando de la Nintendo 64, que incorporaba un stick analógico para una mayor precisión en un entorno 3D.</description>
+        <description lang="es_MX">El Control Pad de la Sega Saturn 3D fue lanzado en 1996. Fue la respuesta de Sega al revolucionario control de la Nintendo 64, el cual presentaba un stick análogo para mayor precisión en un entorno 3D.</description>
+        <description lang="fi_FI">Sega Saturn 3D Control Pad julkaistiin vuonna 1996. Se oli Segan vastaus vallankumoukselliselle Nintendo 64 -ohjaimelle, jossa oli analoginen sauvaohjain tarkkuuden parantamiseksi 3D-ympäristössä.</description>
+        <description lang="fr_FR">Le Sega Saturn 3D Control Pad est sorti en 1996. C&apos;était la réponse de Sega à la manette révolutionnaire Nintendo 64, qui comportait un stick analogique pour une plus grande précision dans un environnement 3D.</description>
+        <description lang="it_IT">Il Sega Saturn 3D Control Pad è stato rilasciato nel 1996. Era la risposta di Sega al rivoluzionario controller Nintendo 64, che presentava una levetta analogica per una maggiore precisione in un ambiente 3D.</description>
+        <description lang="zh_CN">世嘉土星3D游戏手柄于1996年发布。这是世嘉对革命性的任天堂64控制器的回应，该控制器采用模拟摇杆，在3D环境中可获得更高的精度。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="pl_PL">Pochodzenie obrazu: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>

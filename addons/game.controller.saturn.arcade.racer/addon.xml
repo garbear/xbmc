@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.arcade.racer"
+        name="Sega Arcade Racer"
+        version="1.0.29"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Saturn Arcade Racer</summary>
+        <summary lang="de_DE">Sega Saturn Arcade Racer</summary>
+        <summary lang="en_GB">Sega Saturn Arcade Racer</summary>
+        <summary lang="es_ES">Sega Saturn Arcade Racer</summary>
+        <summary lang="es_MX">Sega Saturn Arcade Racer</summary>
+        <summary lang="fi_FI">Sega Saturn Arcade Racer</summary>
+        <summary lang="fr_FR">Sega Saturn Arcade Racer</summary>
+        <summary lang="it_IT">Sega Saturn Arcade Racer</summary>
+        <summary lang="zh_CN">世嘉土星 Arcade Racer</summary>
+        <description lang="da_DK">Arcade Racer, udgivet i 1995, er en racerhjulstil controller til Sega Saturn.</description>
+        <description lang="de_DE">Der Arcade Racer, der 1995 veröffentlicht wurde, ist ein Lenkrad-Controller für den Sega Saturn.</description>
+        <description lang="en_GB">The Arcade Racer, released in 1995, is a racing wheel style controller for the Sega Saturn.</description>
+        <description lang="es_ES">El Arcade Racer, lanzado en 1995, es un volante de carreras para la Sega Saturn.</description>
+        <description lang="es_MX">El Arcade Racer, lanzado en 1995, es un control tipo volante de carreras para la Sega Saturn.</description>
+        <description lang="fi_FI">Vuonna 1995 julkaistu Arcade Racer on rattityylinen ohjain Sega Saturnille.</description>
+        <description lang="fr_FR">L&apos;Arcade Racer, sorti en 1995, est un contrôleur de style volant de course pour la Sega Saturn.</description>
+        <description lang="it_IT">L&apos;Arcade Racer, rilasciato nel 1995, è un controller in stile volante per Sega Saturn.</description>
+        <description lang="zh_CN">1995年发布的 Arcade Racer 是世嘉土星的赛车方向盘式控制器。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：Sega Retro（segaretro.org）</disclaimer>
+    </extension>
+</addon>
