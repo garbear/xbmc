@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.cec.adapter"
+        name="CEC Adapter"
+        version="1.0.4"
+        provider-name="Pulse-Eight">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">CEC Adapter</summary>
+        <summary lang="es_ES">Adaptador CEC</summary>
+        <summary lang="it_IT">Adattatore CEC</summary>
+        <summary lang="ru_RU">Адаптер CEC</summary>
+        <summary lang="sv_SE">CEC-adapter</summary>
+        <summary lang="zh_CN">CEC 适配器</summary>
+        <description lang="en_GB">The Pulse-Eight USB-CEC Adapter communicates with other HDMI-CEC devices in your home theater system.</description>
+        <description lang="es_ES">El Adaptardor USB-CEC Pulse-Eight comunica con otros dispositivos HDMI-CEC dentro del sistema de cine en casa.</description>
+        <description lang="it_IT">L&apos;adattatore Pulse-Eight USB-CEC comunica con altri dispositivi HDMI-CEC nel tuo sistema home theater.</description>
+        <description lang="ru_RU">Адаптер Pulse-Eight USB-CEC взаимодействует с другими устройствами HDMI-CEC в системе домашнего кинотеатра.</description>
+        <description lang="sv_SE">Pulse-Eight USB-CEC-adapter kommunicerar med andra HDMI-CEC-enheter i ditt hemmabiosystem.</description>
+        <description lang="zh_CN">Pulse-Eight USB-CEC 适配器可与家庭影院系统中的其他 HDMI-CEC 设备通信。</description>
+    </extension>
+</addon>
