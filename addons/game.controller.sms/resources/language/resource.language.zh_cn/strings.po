@@ -1,0 +1,58 @@
+# Kodi Media Center language file
+# Addon Name: Sega Master System Controller
+# Addon id: game.controller.sms
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.sms\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-sms/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Master System controller"
+msgstr "世嘉 Master System 控制器"
+
+msgctxt "Addon Description"
+msgid "The Master System, originally named the Mark III, was released by Sega in 1985. As of 2015, the Master System is the longest-lived game console due to its surging popularity in Brazil."
+msgstr "Master System 最初命名为Mark III，由世嘉于1985年发布。截至2015年，Master System 是寿命最长的游戏机，因为它在巴西极受欢迎。"
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "图片来源：OpenEmu（openemu.org）"
+
+msgctxt "#30000"
+msgid "Sega Master System"
+msgstr "世嘉 Master System"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "按钮1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "按钮2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "上"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "右"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "下"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "左"
