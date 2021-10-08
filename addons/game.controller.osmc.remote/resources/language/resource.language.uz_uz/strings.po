@@ -1,0 +1,29 @@
+# Kodi Media Center language file
+# Addon Name: OSMC Remote
+# Addon id: game.controller.osmc.remote
+# Addon Provider: OSMC
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.osmc.remote\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2025-01-18 17:00+8\n"
+"PO-Revision-Date: 2025-01-18 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: uz_uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgctxt "Addon Summary"
+msgid "OSMC Remote"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "This remote is the perfect way to control OSMC. Visit osmc.tv to learn more!"
+msgstr ""
+
+msgctxt "#30000"
+msgid "OSMC Remote"
+msgstr ""
