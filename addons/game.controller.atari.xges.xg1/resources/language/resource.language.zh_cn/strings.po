@@ -1,0 +1,42 @@
+# Kodi Media Center language file
+# Addon Name: Atari XG-1 Lightgun
+# Addon id: game.controller.atari.xges.xg1
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.xges.xg1\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-xges-xg1/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "Atari XG-1 lightgun"
+msgstr "雅达利 XG-1 光线枪"
+
+msgctxt "Addon Description"
+msgid "The Atari XG-1 is the light gun that came bundled with the Atari XEGS, a game console released in 1987. Many users complained of the horrible accuracy of the device."
+msgstr "雅达利 XG-1 是与1987年发布的游戏机雅达利 XEGS 捆绑销售的光线枪。许多用户抱怨该设备的准确性太差。"
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "图片来源：维基百科（Wikipedia.org）"
+
+msgctxt "#30000"
+msgid "Atari XG-1 Lightgun"
+msgstr "雅达利 XG-1 光线枪"
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "扳机"
+
+msgctxt "#30002"
+msgid "Crosshair"
+msgstr "准星"
