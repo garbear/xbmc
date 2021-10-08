@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.mission.sticks"
+        name="Sega Mission Sticks"
+        version="1.0.32"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Dobbelte Mission Sticks</summary>
+        <summary lang="de_DE">Sega Dual Mission Sticks</summary>
+        <summary lang="en_GB">Sega Dual Mission Sticks</summary>
+        <summary lang="es_ES">Sega Dual Mission Sticks</summary>
+        <summary lang="es_MX">Sega Dual Mission Sticks</summary>
+        <summary lang="fi_FI">Sega Dual Mission Sticks</summary>
+        <summary lang="fr_FR">Sega Dual Mission Sticks</summary>
+        <summary lang="it_IT">Missione doppio bastone Sega</summary>
+        <summary lang="zh_CN">世嘉双 Mission Sticks</summary>
+        <description lang="da_DK">Sega Mission Stick er en kamp-stick til Sega Saturn udgivet i 1995. En anden stick kunne tilsluttes for at tillade dobbeltsticks i Panzer Dragoon Zwei.</description>
+        <description lang="de_DE">Der Sega Mission Stick ist ein Kampfstick für den Sega Saturn aus dem Jahr 1995. Ein zweiter Stick konnte angeschlossen werden, um zwei Sticks in Panzer Dragoon Zwei zu verwenden.</description>
+        <description lang="en_GB">The Sega Mission Stick is a fight stick for the Sega Saturn released in 1995. A second stick could be connected to allow twin sticks in Panzer Dragoon Zwei.</description>
+        <description lang="es_ES">El Sega Mission Stick es un stick de lucha para la Sega Saturn lanzado en 1995. Un segundo stick podría conectarse para permitir sticks duales en Panzer Dragoon Zwei.</description>
+        <description lang="es_MX">El Sega Mission Stick es un stick de combate para la Sega Saturn lanzado en 1995. No podían conectarse dos sticks como sticks pares en Panzer Dragoon Zwei.</description>
+        <description lang="fi_FI">Sega Mission Stick on Sega Saturnille vuonna 1995 julkaistu ohjainsauva. Panzer Dragoon Zwei -peliä varten oli mahdollista kytkeä toinen sauva.</description>
+        <description lang="fr_FR">Le Sega Mission Stick est un stick de combat pour la Sega Saturn sorti en 1995. Un deuxième stick pourrait être connecté pour permettre des sticks jumeaux dans Panzer Dragoon Zwei.</description>
+        <description lang="it_IT">Il Missione bastone Sega è un bastone da combattimento per il Sega Saturn rilasciato nel 1995. Un secondo bastone potrebbe essere collegato per consentire i bastoni gemelli in Panzer Dragoon Zwei.</description>
+        <description lang="zh_CN">世嘉 Mission Stick 是1995年发布的世嘉土星的战斗游戏杆。可连接两个游戏杆支持双打《铁甲飞龙2》游戏。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Sega Retro (segaretro.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：Sega Retro（segaretro.org）</disclaimer>
+    </extension>
+</addon>

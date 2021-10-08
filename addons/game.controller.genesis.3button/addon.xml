@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.genesis.3button"
+        name="Genesis Controller (3-Button)"
+        version="1.0.10"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Genesis controller (3 knapper)</summary>
+        <summary lang="en_GB">Sega Genesis controller (3-Button)</summary>
+        <summary lang="es_ES">Mando Sega Genesis (3-Botones)</summary>
+        <summary lang="fr_FR">Manette Sega Genesis (3 boutons)</summary>
+        <summary lang="it_IT">Controller Sega Genesis (3 pulsanti)</summary>
+        <summary lang="pl_PL">Kontroler Sega Genesis (3-przyciskowy)</summary>
+        <summary lang="sk_SK">Ovládač Sega Genesis (3-tlačidlový)</summary>
+        <summary lang="zh_CN">世嘉 Genesis 控制器（3按钮）</summary>
+        <description lang="da_DK">Den originale controller til Sega Genesis blev udgivet i 1988. Den havde tre face hovedknapper. Sega udgav en version med seks knapper i 1993.</description>
+        <description lang="de_DE">Der ursprüngliche Controller für den Sega Genesis wurde 1988 veröffentlicht. Er hatte drei Haupttasten. Sega brachte 1993 eine Version mit sechs Tasten heraus.</description>
+        <description lang="en_GB">The original controller for the Sega Genesis was released in 1988. It had three main face buttons. Sega released a six-button version in 1993.</description>
+        <description lang="es_ES">El mando original de Sega Genesis fue lanzado en 1988. Tenía tres botones frontales principales. Sega lanzó una versión de seis botones en 1993.</description>
+        <description lang="fi_FI">Sega Genesiksen alkuperäinen ohjain julkaistiin vuonna 1988. Sen etupuolella oli kolme painiketta. Sega julkaisi kuuden painikkeen version vuonna 1993.</description>
+        <description lang="fr_FR">Le contrôleur original de la Sega Genesis est sorti en 1988. Il avait trois boutons principaux sur la face. Sega a sorti une version à six boutons en 1993.</description>
+        <description lang="it_IT">Il controller originale per Sega Genesis è stato rilasciato nel 1988. Aveva tre pulsanti frontali principali. Sega ha rilasciato una versione a sei pulsanti nel 1993.</description>
+        <description lang="pl_PL">Pierwotny kontroler do konsoli Sega Genesis został wydany w 1988 roku. Miał trzy główne przyciski. Sega wypuściła wersję z sześcioma przyciskami w 1993 roku.</description>
+        <description lang="ru_RU">Оригинальный контроллер для Sega Genesis был выпущен в 1988 году. Он имел три основные лицевые кнопки. В 1993 году Sega выпустила версию с шестью кнопками.</description>
+        <description lang="sk_SK">Pôvodný ovládač pre konzolu Sega Genesis bol vydaný v roku 1988. Mal tri hlavné tlačidlá. V roku 1993 spoločnosť Sega vydala verziu so šiestimi tlačidlami.</description>
+        <description lang="zh_CN">世嘉 Genesis 最初的控制器于1988年发布。它有三个主要的正面按钮。世嘉在1993年发布了六按钮版本。</description>
+    </extension>
+</addon>

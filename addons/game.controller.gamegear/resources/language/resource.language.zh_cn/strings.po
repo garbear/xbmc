@@ -1,0 +1,62 @@
+# Kodi Media Center language file
+# Addon Name: Game Gear
+# Addon id: game.controller.gamegear
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.gamegear\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-gamegear/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Game Gear"
+msgstr "世嘉 Game Gear"
+
+msgctxt "Addon Description"
+msgid "The Sega Game Gear is an 8-bit handheld video game console released in 1990. While it had a full-color backlit screen and fast processor, the battery life and large size were often criticized."
+msgstr "世嘉 Game Gear 是1990年发布的一款8位手持视频游戏机。虽然它有一个全彩背光屏幕和快速处理器，但电池寿命和大尺寸经常受到诟病。"
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "图片来源：OpenEmu（openemu.org）"
+
+msgctxt "#30000"
+msgid "Sega Game Gear"
+msgstr "世嘉 Game Gear"
+
+msgctxt "#30001"
+msgid "1"
+msgstr "1"
+
+msgctxt "#30002"
+msgid "2"
+msgstr "2"
+
+msgctxt "#30003"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30004"
+msgid "Up"
+msgstr "上"
+
+msgctxt "#30005"
+msgid "Right"
+msgstr "右"
+
+msgctxt "#30006"
+msgid "Down"
+msgstr "下"
+
+msgctxt "#30007"
+msgid "Left"
+msgstr "左"

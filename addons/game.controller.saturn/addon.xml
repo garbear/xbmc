@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn"
+        name="Sega Saturn Controller"
+        version="1.0.28"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Saturn controller</summary>
+        <summary lang="de_DE">Sega Saturn Controller</summary>
+        <summary lang="en_GB">Sega Saturn controller</summary>
+        <summary lang="es_ES">Mando Sega Saturn</summary>
+        <summary lang="es_MX">Control de Sega Saturn</summary>
+        <summary lang="fi_FI">Sega Saturn -ohjain</summary>
+        <summary lang="fr_FR">Manette Sega Saturn</summary>
+        <summary lang="it_IT">Controller Sega Saturn</summary>
+        <summary lang="zh_CN">世嘉土星控制器</summary>
+        <description lang="da_DK">Den originale controller til Sega Saturn debuterede i Japan i 1994. I Nordamerika og Europa blev der udgivet en anderledes, meget større controller for angiveligt at tage hensyn til vestlige forbrugeres &quot;større hænder&quot;.</description>
+        <description lang="de_DE">Der Originalcontroller für den Sega Saturn kam 1994 in Japan auf den Markt. In Nordamerika und Europa wurde ein anderer, viel sperrigerer Controller herausgebracht, der angeblich für die „größeren Hände“ der westlichen Verbraucher geeignet war.</description>
+        <description lang="en_GB">The original controller for the Sega Saturn debuted in Japan in 1994. In North America and Europe, a different, much bulkier controller was released to supposedly accommodate for the &quot;bigger hands&quot; of western consumers.</description>
+        <description lang="es_ES">El mando original para la Sega Saturn se presentó en Japón en 1994. En Norteamérica y Europa se lanzó un mando diferente, mucho más voluminoso, para supuestamente adaptarse a las &quot;manos más grandes&quot; de los consumidores occidentales.</description>
+        <description lang="es_MX">El control original para la Sega Saturn debutó en Japón en 1994. En norteamérica y Europa, un control diferente y más tosco fue lanzado para supuestamente adaptarse a las &quot;manos grandes&quot; de los consumidores occidentales.</description>
+        <description lang="fi_FI">Sega Saturnin alkuperäinen ohjain esiteltiin Japanissa vuonna 1994. Pohjois-Amerikassa ja Euroopassa julkaistiin erilainen, paljon kookkaampi ohjain, jonka on tarkoitus sopia länsimaisten kuluttajien &quot;isompiin käsiin&quot;.</description>
+        <description lang="fr_FR">La manette original de la Sega Saturn a fait ses débuts au Japon en 1994. En Amérique du Nord et en Europe, une manette différente et beaucoup plus volumineuse a été lancé pour soi-disant s&apos;adapter aux &quot;plus grandes mains&quot; des consommateurs occidentaux.</description>
+        <description lang="it_IT">Il controller originale per Sega Saturn ha debuttato in Giappone nel 1994. In Nord America e in Europa, è stato rilasciato un controller diverso e molto più ingombrante per adattarsi presumibilmente alle &quot;mani più grandi&quot; dei consumatori occidentali.</description>
+        <description lang="zh_CN">世嘉土星的原始控制器于1994年在日本首次亮相。在北美和欧洲，发布了一款不同的、体积更大的控制器，以适应西方消费者的“大手”。</description>
+    </extension>
+</addon>
