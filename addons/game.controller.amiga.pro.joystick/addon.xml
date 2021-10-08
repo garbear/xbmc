@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.amiga.pro.joystick"
+        name="Competition Pro Joystick"
+        version="1.0.0"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">Competition Pro Joystick</summary>
+        <description lang="en_GB">The Competition Pro is a classic joystick for the Amiga home computers of the '80s and '90s.</description>
+        <disclaimer lang="en_GB">Image credit: www.amiga-shop.net</disclaimer>
+    </extension>
+</addon>
