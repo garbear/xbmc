@@ -1,0 +1,86 @@
+# Kodi Media Center language file
+# Addon Name: Atari 2600 Joystick
+# Addon id: game.controller.atari.2600
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.2600\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-01-16 22:15+0000\n"
+"Last-Translator: José Antonio Alvarado <jalvarado0.eses@gmail.com>\n"
+"Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-2600/es_es/>\n"
+"Language: es_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15\n"
+
+msgctxt "Addon Summary"
+msgid "Atari 2600 joystick"
+msgstr "Joystick Atari 2600"
+
+msgctxt "Addon Description"
+msgid "The Atari CX40 joystick appeared on the Atari 2600 in 1977, and was considered such a great improvement over other controllers that it was the primary input device for most games."
+msgstr "El joystick Atari CX40 se lanzó con la Atari 2600 en 1977 y se consideró una mejora tan grande con respecto a otros mandos que era el dispositivo de entrada principal para la mayoría de los juegos."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Créditos de la imagen: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Atari 2600"
+msgstr "Atari 2600"
+
+msgctxt "#30001"
+msgid "Fire"
+msgstr "Disparo"
+
+msgctxt "#30002"
+msgid "Up"
+msgstr "Arriba"
+
+msgctxt "#30003"
+msgid "Right"
+msgstr "Derecha"
+
+msgctxt "#30004"
+msgid "Down"
+msgstr "Abajo"
+
+msgctxt "#30005"
+msgid "Left"
+msgstr "Izquierda"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30007"
+msgid "Reset"
+msgstr "Reiniciar"
+
+msgctxt "#30008"
+msgid "Color"
+msgstr "Color"
+
+msgctxt "#30009"
+msgid "Black/White"
+msgstr "Negro/Blanco"
+
+msgctxt "#30010"
+msgid "Left Difficulty A"
+msgstr "Dificultad Izquierda A"
+
+msgctxt "#30011"
+msgid "Left Difficulty B"
+msgstr "Dificultad Izquierda B"
+
+msgctxt "#30012"
+msgid "Right Difficulty A"
+msgstr "Dificultad Derecha A"
+
+msgctxt "#30013"
+msgid "Right Difficulty B"
+msgstr "Dificultad Derecha B"

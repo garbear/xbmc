@@ -1,0 +1,78 @@
+# Kodi Media Center language file
+# Addon Name: Dreamcast Controller
+# Addon id: game.controller.dreamcast
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.dreamcast\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-01-16 22:15+0000\n"
+"Last-Translator: José Antonio Alvarado <jalvarado0.eses@gmail.com>\n"
+"Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-dreamcast/es_es/>\n"
+"Language: es_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Dreamcast controller"
+msgstr "Mando Sega Dreamcast"
+
+msgctxt "Addon Description"
+msgid "The Sega Dreamcast was released in 1998. The inclusion of an analog stick reflected the transition from 2D arcade games to 3D game environments. The Dreamcast had a short lifespan and marked the end of Sega's 18 years in the console market."
+msgstr "La Sega Dreamcast salió a la venta en 1998. La inclusión de un stick analógico reflejaba la transición de los juegos arcade en 2D a los entornos de juego en 3D. La Dreamcast tuvo una vida corta y marcó el final de los 18 años de Sega en el mercado de las videoconsolas."
+
+msgctxt "#30000"
+msgid "Dreamcast"
+msgstr "Dreamcast"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30004"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30006"
+msgid "Up"
+msgstr "Arriba"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "Abajo"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "Derecha"
+
+msgctxt "#30009"
+msgid "Left"
+msgstr "Izquierda"
+
+msgctxt "#30010"
+msgid "Left Trigger"
+msgstr "Gatillo Izquierdo"
+
+msgctxt "#30011"
+msgid "Right Trigger"
+msgstr "Gatillo Derecho"
+
+msgctxt "#30012"
+msgid "Analog Stick"
+msgstr "Stick Analógico"
