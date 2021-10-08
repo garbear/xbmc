@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ps.multitap"
+        name="PlayStation Multitap"
+        version="1.0.12"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PlayStation Multitap</summary>
+        <summary lang="de_DE">PlayStation Multitap</summary>
+        <summary lang="en_GB">PlayStation Multitap</summary>
+        <summary lang="es_ES">PlayStation Multitap</summary>
+        <summary lang="zh_CN">PlayStation 多插转换器</summary>
+        <description lang="da_DK">Et multitap øger antallet af controller- og hukommelseskortporte, ligesom en USB-hub. Med yderligere en PlayStation Multitap kan der anvendes op til otte controllere og hukommelseskort på én gang.</description>
+        <description lang="de_DE">Ähnlich wie ein USB-Hub erweitert ein &quot;multitap&quot; die Anzahl der Controller- und Speicherkartenanschlüsse. Mit einem zweiten PlayStation Multitap konnten bis zu 8 Controller und Speicherkarten gleichzeitig angeschlossen werden.</description>
+        <description lang="en_GB">A multitap increases the number of controller and memory card ports, similar to a USB hub. With a second PlayStation Multitap, up to eight controllers and memory cards can be plugged in at once.</description>
+        <description lang="es_ES">Un multitap aumentaba el numero de mandos y puertos de memory card, parecido a un hub USB. Con dos PlayStation Multitap se pueden conectar hasta ocho mandos y memory cards a la vez.</description>
+        <description lang="zh_CN">多插转换器增加了控制器和存储卡端口的数量，类似于 USB 集线器。使用两个PlayStation 多插转换器，最多可以同时插入八个控制器和存储卡。</description>
+    </extension>
+</addon>
