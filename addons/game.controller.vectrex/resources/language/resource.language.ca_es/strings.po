@@ -1,0 +1,66 @@
+# Kodi Media Center language file
+# Addon Name: Vectrex Controller
+# Addon id: game.controller.vectrex
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.vectrex\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-08-30 07:20+0000\n"
+"Last-Translator: Xean <xeanhort007@gmail.com>\n"
+"Language-Team: Catalan (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-vectrex/ca_es/>\n"
+"Language: ca_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.14\n"
+
+msgctxt "Addon Summary"
+msgid "Vectrex controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Vectrex was released in 1982 by General Consumer Electronics (later purchased by Milton Bradley). The console featured a built-in monochrome monitor capable of displaying vector graphics."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Vectrex"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Botó 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Botó 2"
+
+msgctxt "#30003"
+msgid "Button 3"
+msgstr "Botó 3"
+
+msgctxt "#30004"
+msgid "Button 4"
+msgstr "Botó 4"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Amunt"
+
+msgctxt "#30006"
+msgid "Right"
+msgstr "Dreta"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "A baix"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Esquerra"
