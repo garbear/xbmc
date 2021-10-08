@@ -1,0 +1,62 @@
+# Kodi Media Center language file
+# Addon Name: Sega Twin Stick
+# Addon id: game.controller.twin.stick
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.twin.stick\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-08 17:11+0000\n"
+"Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
+"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-twin-stick/fi_fi/>\n"
+"Language: fi_fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Twin Stick"
+msgstr "Sega Twin Stick"
+
+msgctxt "Addon Description"
+msgid "The Sega Twin Stick, released in 1996, features two joysticks at the expense of fewer buttons. It was designed for the game Cyber Troopers Virtual-On."
+msgstr "Vuonna 1996 julkaistussa Sega Twin Stick -ohjaimessa on kaksi ohjainsauvaa, mutta vähemmän painikkeita. Se on suunniteltu Cyber Troopers Virtual-On -peliin."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr "Kuvan lähde: Sega Retro (segaretro.org)"
+
+msgctxt "#30000"
+msgid "Sega Twin Stick"
+msgstr "Sega Twin Stick"
+
+msgctxt "#30001"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30002"
+msgid "Left Joystick"
+msgstr "Vasen sauva"
+
+msgctxt "#30003"
+msgid "Left Trigger"
+msgstr "Vasen liipaisin"
+
+msgctxt "#30004"
+msgid "Left Button"
+msgstr "Vasen painike"
+
+msgctxt "#30005"
+msgid "Right Joystick"
+msgstr "Oikea sauva"
+
+msgctxt "#30006"
+msgid "Right Trigger"
+msgstr "Oikea liipaisin"
+
+msgctxt "#30007"
+msgid "Right Button"
+msgstr "Oikea painike"
