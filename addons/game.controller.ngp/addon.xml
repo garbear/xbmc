@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ngp"
+        name="Neo Geo Pocket"
+        version="1.0.26"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Neo Geo Pocket</summary>
+        <summary lang="de_DE">Neo Geo Pocket</summary>
+        <summary lang="en_GB">Neo Geo Pocket</summary>
+        <summary lang="es_ES">Neo Geo Pocket</summary>
+        <summary lang="fi_FI">Neo Geo Pocket</summary>
+        <summary lang="fr_FR">Neo Geo Pocket</summary>
+        <summary lang="it_IT">Neo Geo Pocket</summary>
+        <summary lang="ru_RU">Neo Geo Pocket</summary>
+        <summary lang="zh_CN">Neo Geo Pocket</summary>
+        <description lang="da_DK">Neo Geo Pocket var en håndholdt konsol med en monokrom skærm udgivet af SNK i 1998. Den var generelt ikke en succes og blev i 1999 erstattet af Neo Geo Pocket Color for bedre at kunne konkurrere med Game Boy Color.</description>
+        <description lang="de_DE">Neo Geo Pocket war eine tragbare Konsole mit einem Monochrombildschirm, die 1998 von SNK veröffentlicht wurde. Das Gerät war insgesamt erfolglos und wurde 1999 durch das Neo Geo Pocket Color ersetzt, um besser mit dem Game Boy Color konkurrieren zu können.</description>
+        <description lang="en_GB">The Neo Geo Pocket was a handheld console with a monochrome screen released by SNK in 1998. It was generally unsuccessful and in 1999 was replaced by the Neo Geo Pocket Color to better compete with the Game Boy Color.</description>
+        <description lang="es_ES">La Neo Geo Pocket fue una videoconsola portátil con pantalla monocromática lanzada por SNK en 1998. En general no tuvo éxito y fue sustituida en 1999 por la Neo Geo Pocket Color para competir mejor con la Game Boy Color.</description>
+        <description lang="fi_FI">Neo Geo Pocket oli SNK:n vuonna 1998 julkaisema käsikonsoli, jossa oli yhden värin näyttö. Se ei saavuttanut yleistä menestystä ja vuonna 1999 se korvattiin Neo Geo Pocket Colorilla, jolla pyrittiin kilpailemaan paremmin Game Boy Colorin kanssa.</description>
+        <description lang="fr_FR">La Neo Geo Pocket était une console portable à écran monochrome commercialisée par SNK en 1998. Elle échoua globalement et fut remplacée en 1999 par la Neo Geo Pocket Color pour mieux concurrencer la Game Boy Color.</description>
+        <description lang="it_IT">Il Neo Geo Pocket era una console portatile con uno schermo monocromatico rilasciata da SNK nel 1998. In genere non ebbe successo e nel 1999 fu sostituita dal Neo Geo Pocket Color per competere meglio con il Game Boy Color.</description>
+        <description lang="ru_RU">Neo Geo Pocket — портативная консоль с монохромным экраном, выпущенная SNK в 1998 году. В целом она оказался неудачной и в 1999 году была заменена Neo Geo Pocket Color, чтобы лучше конкурировать с Game Boy Color.</description>
+        <description lang="zh_CN">Neo Geo Pocket 是 SNK 于1998年发布的一款带有单色屏幕的便携式游戏机。为更好地与 Game Boy Color 竞争，这款不成功产品于1999年被 Neo Geo Pocket Color 取代。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

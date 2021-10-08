@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.genesis.mouse"
+        name="Genesis Mouse"
+        version="1.0.32"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega mus</summary>
+        <summary lang="de_DE">Sega Mouse</summary>
+        <summary lang="en_GB">Sega Genesis mouse</summary>
+        <summary lang="es_ES">Ratón Sega</summary>
+        <summary lang="fr_FR">Souris Sega Genesis</summary>
+        <summary lang="it_IT">Mouse Sega</summary>
+        <summary lang="ru_RU">Мышь Sega</summary>
+        <summary lang="zh_CN">世嘉鼠标</summary>
+        <description lang="da_DK">Sega mus er en kuglemus til Sega Mega Drive/Genesis udgivet i 1993. Den var beregnet til at blive brugt til software til kunstskabelse.</description>
+        <description lang="de_DE">Die Sega Mouse ist eine 1993 erschienene Kugelmaus für das Sega Mega Drive/Genesis. Sie war für die Verwendung von Software zur künstlerischen Gestaltung gedacht.</description>
+        <description lang="en_GB">The Sega Mouse is a ball mouse for the Sega Mega Drive/Genesis released in 1993. It was intended to be used for art creation software.</description>
+        <description lang="es_ES">El Sega Mouse es un ratón de bola para la Sega Mega Drive/Genesis lanzado en 1993. Estaba destinado a ser utilizado para el software de creación artística.</description>
+        <description lang="fr_FR">La souris Sega est une souris à boule pour la Sega Mega Drive/Genesis sortie en 1993. Elle était destinée à être utilisée pour les logiciels de création artistique.</description>
+        <description lang="it_IT">Il Mouse Sega è un mouse a sfera per Sega Mega Drive/Genesis rilasciato nel 1993. Doveva essere utilizzato per software di creazione artistica.</description>
+        <description lang="ru_RU">Мышь Sega - шариковая мышь для Sega Mega Drive/Genesis, выпущенная в 1993. Она предназначалась для использования в художественных программах.</description>
+        <description lang="zh_CN">世嘉鼠标是1993年发布的世嘉 Mega Drive/Genesis的滚轮鼠标。它的目的是用于艺术创作软件。</description>
+    </extension>
+</addon>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.pce"
+        name="PC Engine Controller"
+        version="1.0.27"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PC Engine controller</summary>
+        <summary lang="de_DE">PC Engine Controller</summary>
+        <summary lang="en_GB">PC Engine controller</summary>
+        <summary lang="es_ES">Mando PC Engine</summary>
+        <summary lang="fr_FR">Contrôleur PC Engine</summary>
+        <summary lang="it_IT">Controller PC Engine</summary>
+        <summary lang="zh_CN">PC Engine 控制器</summary>
+        <description lang="da_DK">PC Engine, også kendt som TurboGrafx-16, blev udgivet af Hudson Soft og NEC i 1987. Den blev den bedst sælgende konsol i Japan, men var bagefter både Sega og Nintendo på de nordamerikanske og europæiske markeder.</description>
+        <description lang="de_DE">Die PC Engine, auch bekannt als TurboGrafx-16, wurde 1987 von Hudson Soft und NEC herausgebracht. Sie wurde die meistverkaufte Konsole in Japan, lag aber auf dem nordamerikanischen und europäischen Markt hinter Sega und Nintendo zurück.</description>
+        <description lang="en_GB">The PC Engine, also known as the TurboGrafx-16, was released by Hudson Soft and NEC in 1987. It became the top-selling console in Japan, but trailed behind both Sega and Nintendo in the North American and Eurpoean markets.</description>
+        <description lang="es_ES">La PC Engine, también conocida como TurboGrafx-16, fue lanzada por Hudson Soft y NEC en 1987. Se convirtió en la videoconsola más vendida en Japón, pero quedó por detrás de Sega y Nintendo en los mercados norteamericano y europeo.</description>
+        <description lang="fr_FR">Le PC Engine, également connu sous le nom de TurboGrafx-16, a été lancé par Hudson Soft et NEC en 1987. Il est devenu la console la plus vendue au Japon, mais traînait derrière Sega et Nintendo sur les marchés nord-américain et européen.</description>
+        <description lang="it_IT">Il PC Engine, noto anche come TurboGrafx-16, è stato rilasciato da Hudson Soft e NEC nel 1987. È diventata la console più venduta in Giappone, ma è rimasta indietro rispetto a Sega e Nintendo nel mercato nordamericano ed europeo.</description>
+        <description lang="zh_CN">PC Engine，也称为 TurboGrafx-16，由哈德逊软件公司和 NEC 于1987年发布。它成为日本最畅销的游戏机，但在北美和欧洲市场，它的销量都落后于世嘉和任天堂。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

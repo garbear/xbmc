@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ps.mouse"
+        name="PlayStation Mouse"
+        version="1.0.25"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PlayStation mus</summary>
+        <summary lang="de_DE">PlayStation Maus</summary>
+        <summary lang="en_GB">PlayStation mouse</summary>
+        <summary lang="es_ES">Ratón PlayStation</summary>
+        <summary lang="es_MX">Ratón PlayStation</summary>
+        <summary lang="fi_FI">PlayStation-hiiri</summary>
+        <summary lang="fr_FR">Souris Playstation</summary>
+        <summary lang="it_IT">Mouse PlayStation</summary>
+        <summary lang="pl_PL">Mysz PlayStation</summary>
+        <summary lang="zh_CN">PlayStation 鼠标</summary>
+        <description lang="da_DK">PlayStation Mus er en ball-mus med to knapper. Den blev udgivet sammen med PlayStation i 1994.</description>
+        <description lang="de_DE">Die PlayStation Mouse ist eine Zwei-Tasten-Kugelmaus. Sie wurde zusammen mit der PlayStation im Jahr 1994 veröffentlicht.</description>
+        <description lang="en_GB">The PlayStation Mouse is a two-button ball mouse. It was released alongside the PlayStation in 1994.</description>
+        <description lang="es_ES">El PlayStation Mouse es un ratón de bola de dos botones. Salió a la venta junto con la PlayStation en 1994.</description>
+        <description lang="es_MX">El ratón PlayStation es un ratón de rueda de 2 botones. Fue lanzado en conjunto con el PlayStation en 1994.</description>
+        <description lang="fi_FI">PlayStation-hiiri on kahdella painikkeella varustettu pallohiiri. Se julkaistiin PlayStationin rinnalla vuonna 1994.</description>
+        <description lang="fr_FR">La souris PlayStation est une souris à boule à deux boutons. Elle est sortie aux côtés de la PlayStation en 1994.</description>
+        <description lang="it_IT">Il Mouse PlayStation è un mouse a sfera a due pulsanti. È stato rilasciato insieme alla PlayStation nel 1994.</description>
+        <description lang="pl_PL">Mysz PlayStation to dwuprzyciskowa mysz kulkowa. Została wydana wraz z PlayStation w 1994 roku.</description>
+        <description lang="zh_CN">PlayStation 鼠标是一种两个按钮的滚轮鼠标。它于1994年与 PlayStation 一起发行。</description>
+    </extension>
+</addon>

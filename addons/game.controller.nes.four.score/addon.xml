@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.nes.four.score"
+        name="NES Four Score"
+        version="1.0.18"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">NES Four Score</summary>
+        <summary lang="de_DE">NES Four Score</summary>
+        <summary lang="en_GB">NES Four Score</summary>
+        <summary lang="es_ES">NES Four Score</summary>
+        <summary lang="fi_FI">NES Four Score</summary>
+        <summary lang="fr_FR">NES Four Score</summary>
+        <summary lang="it_IT">NES Four Score</summary>
+        <summary lang="ru_RU">NES Four Score</summary>
+        <summary lang="zh_CN">NES Four Score</summary>
+        <description lang="da_DK">NES Four Score er et multitap-tilbehør, der blev skabt af Nintendo i 1990. Det giver mulighed for gameplay til fire spillere.</description>
+        <description lang="de_DE">NES Four Score ist ein Mehrspielerzubehör von Nintendo aus dem Jahr 1990. Es ermöglicht den Spielbetrieb mit vier Spielern.</description>
+        <description lang="en_GB">The NES Four Score is a multitap accessory created by Nintendo in 1990. It allows for four-player gameplay.</description>
+        <description lang="es_ES">El NES Four Score es un accesorio multitap creado por Nintendo en 1990. Permite jugar a cuatro jugadores.</description>
+        <description lang="fi_FI">NES Four Score on Nintendon vuonna 1990 luoma multitap-lisävaruste. Se mahdollistaa nelinpelin.</description>
+        <description lang="fr_FR">Le NES Four Score est un accessoire multitap créé par Nintendo en 1990. Il permet un gameplay à quatre joueurs.</description>
+        <description lang="it_IT">Il NES Four Score è un accessorio multitap creato da Nintendo nel 1990. Consente di giocare a quattro giocatori.</description>
+        <description lang="ru_RU">NES Four Score — это многопользовательский аксессуар, созданный Nintendo в 1990 году. Позволяет играть совместно четырём игрокам.</description>
+        <description lang="zh_CN">NES Four Score 是任天堂于1990年开发的手柄分插器配件。它能支持四人对战游戏。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="pl_PL">Pochodzenie obrazu: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>

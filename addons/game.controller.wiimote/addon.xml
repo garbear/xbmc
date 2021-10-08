@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.wiimote"
+        name="Wii Remote Controller"
+        version="1.0.24"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Wii fjernbetjening</summary>
+        <summary lang="de_DE">Wii Remote Controller</summary>
+        <summary lang="en_GB">Wii Remote controller</summary>
+        <summary lang="es_ES">Mando Wii Remote</summary>
+        <summary lang="fi_FI">Wii Remote -ohjain</summary>
+        <summary lang="fr_FR">Manette Wii Remote</summary>
+        <summary lang="it_IT">Telecomando Wii</summary>
+        <summary lang="ru_RU">Wii Remote контроллер</summary>
+        <summary lang="zh_CN">Wii 遥控器</summary>
+        <description lang="da_DK">Wii Remote, også kendt i daglig tale som Wiimote, er den primære spilcontroller til Nintendo Wii videospilkonsollen.</description>
+        <description lang="de_DE">Wii Remote, umgangssprachlich auch Wiimote genannt, ist der primäre Gamecontroller für die Nintendo Wii-Videospielkonsole.</description>
+        <description lang="en_GB">The Wii Remote, also known colloquially as the Wiimote, is the primary game controller for the Nintendo Wii home video game console.</description>
+        <description lang="es_ES">El Wii Remote, también conocido coloquialmente como Wiimote, es el principal mando de juego de la videoconsola Nintendo Wii.</description>
+        <description lang="fi_FI">Wii Remote, joka tunnetaan puhekielessä myös nimellä Wiimote (tai Wiikapula/Kapula), on Nintendo Wii -videopelikonsolin ensisijainen peliohjain.</description>
+        <description lang="fr_FR">La manette Wii, également connue familièrement sous le nom de Wiimote, est la principale manette de jeu de la console de jeu vidéo domestique Nintendo Wii.</description>
+        <description lang="it_IT">Il telecomando Wii, noto anche colloquialmente come Wiimote, è il controller di gioco principale per la console per videogiochi domestica Nintendo Wii.</description>
+        <description lang="ru_RU">Wii Remote или Wiimote в просторечии, является основным контроллером для игровой консоли Nintendo Wii.</description>
+        <description lang="zh_CN">Wii 遥控器，俗称 Wiimote，是任天堂 Wii 家用视频游戏机的主要游戏控制器。</description>
+        <disclaimer lang="da_DK">Billedkreditering: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) licenseret under BSD License + Attribution</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) lizenziert unter BSD License + Attribution</disclaimer>
+        <disclaimer lang="en_GB">Image credit: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) licensed under BSD License + Attribution</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) licensed under BSD License + Attribution</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) licensed under BSD License + Attribution</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) sous licence BSD + Attribution</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) concesso in licenza con licenza BSD + Attribution</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: open-joysick-display (https://github.com/RetroWeeb/open-joystick-display) под лицензией BSD License + Attribution</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：open-joysick-display（https://github.com/RetroWeeb/open-joystick-display）根据 BSD 许可证+ 获得授权</disclaimer>
+    </extension>
+</addon>
