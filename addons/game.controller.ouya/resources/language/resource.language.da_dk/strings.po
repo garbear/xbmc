@@ -1,0 +1,90 @@
+# Kodi Media Center language file
+# Addon Name: Ouya Controller
+# Addon id: game.controller.ouya
+# Addon Provider: Quihico
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.ouya\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-06-18 11:27+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ouya/da_dk/>\n"
+"Language: da_dk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "OUYA controller"
+msgstr "OUYA controller"
+
+msgctxt "Addon Description"
+msgid "The OUYA is a crowd-funded Android-based microconsole released in 2013. The OUYA controller includes a single-touch touchpad in the center of the controller."
+msgstr "OUYA er en crowd-funded Android-baseret mikrokonsol udgivet i 2013. OUYA-controlleren indeholder en enkelt berøringsplade i midten af controlleren."
+
+msgctxt "#30000"
+msgid "OUYA"
+msgstr "OUYA"
+
+msgctxt "#30001"
+msgid "O"
+msgstr "O"
+
+msgctxt "#30002"
+msgid "U"
+msgstr "U"
+
+msgctxt "#30003"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30004"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Op"
+
+msgctxt "#30006"
+msgid "Right"
+msgstr "Højre"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "Ned"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Venstre"
+
+msgctxt "#30009"
+msgid "Left Bumper"
+msgstr "Venstre bumper"
+
+msgctxt "#30010"
+msgid "Right Bumper"
+msgstr "Højre bumper"
+
+msgctxt "#30011"
+msgid "Left Trigger"
+msgstr "Venstre trigger"
+
+msgctxt "#30012"
+msgid "Right Trigger"
+msgstr "Højre trigger"
+
+msgctxt "#30013"
+msgid "Left Stick"
+msgstr "Venstre stick"
+
+msgctxt "#30014"
+msgid "Right Stick"
+msgstr "Højre stick"
+
+msgctxt "#30015"
+msgid "Touchpad"
+msgstr "Touchpad"
