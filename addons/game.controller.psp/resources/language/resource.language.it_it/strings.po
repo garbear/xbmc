@@ -1,0 +1,86 @@
+# Kodi Media Center language file
+# Addon Name: PSP
+# Addon id: game.controller.psp
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.psp\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-03-18 04:16+0000\n"
+"Last-Translator: Massimo Pissarello <mapi68@gmail.com>\n"
+"Language-Team: Italian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-psp/it_it/>\n"
+"Language: it_it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "PSP"
+msgstr "PSP"
+
+msgctxt "Addon Description"
+msgid "The PlayStation Portable (PSP) was released by Sony in 2004. It was praised for its high-end GPU and bright 4.3 inch screen. The PSP was succeeded by the PSP Go in 2009, and then the PlayStation Vita in 2011."
+msgstr "La PlayStation Portatile (PSP) è stata rilasciata da Sony nel 2004. È stata elogiata per la sua GPU di fascia alta e il luminoso schermo da 4,3 pollici. La PSP è stata sostituita dalla PSP Go nel 2009 e poi dalla PlayStation Vita nel 2011."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Credito immagine: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "PSP"
+msgstr "PSP"
+
+msgctxt "#30001"
+msgid "Circle"
+msgstr "Cerchio"
+
+msgctxt "#30002"
+msgid "Cross"
+msgstr "Croce"
+
+msgctxt "#30003"
+msgid "Triangle"
+msgstr "Triangolo"
+
+msgctxt "#30004"
+msgid "Square"
+msgstr "Quadrato"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "Avvia"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Seleziona"
+
+msgctxt "#30007"
+msgid "Up"
+msgstr "Su"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "Destra"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "Giù"
+
+msgctxt "#30010"
+msgid "Left"
+msgstr "Sinistra"
+
+msgctxt "#30011"
+msgid "L"
+msgstr "L"
+
+msgctxt "#30012"
+msgid "R"
+msgstr "R"
+
+msgctxt "#30013"
+msgid "Analog Stick"
+msgstr "Levetta analogica"

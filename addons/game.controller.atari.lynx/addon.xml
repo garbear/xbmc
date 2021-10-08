@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.atari.lynx"
+        name="Atari Lynx"
+        version="1.0.28"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Atari Lynx</summary>
+        <summary lang="de_DE">Atari Lynx Controller</summary>
+        <summary lang="en_GB">Atari Lynx</summary>
+        <summary lang="es_ES">Atari Lynx</summary>
+        <summary lang="fi_FI">Atari Lynx</summary>
+        <summary lang="fr_FR">Atari Lynx</summary>
+        <summary lang="it_IT">Atari Lynx</summary>
+        <summary lang="ru_RU">Atari Lynx</summary>
+        <summary lang="zh_CN">雅达利 Lynx</summary>
+        <description lang="da_DK">Atari Lynx er en 16-bit håndholdt spilkonsol, der blev udgivet i 1989. Den havde bemærkelsesværdige resultater, herunder den første håndholdte med en farve LCD-skærm, avanceret grafik og ambidekstrøs layout. Det var dog en kommerciel fiasko og ophørte i 1995.</description>
+        <description lang="de_DE">Der Atari Lynx ist eine tragbare 16-Bit-Spielkonsole aus dem Jahr 1989.  Es war das erste Handheld mit einem Farb-LCD, fortschrittlicher Grafik und beidhändigem Layout. Allerdings war er ein kommerzieller Misserfolg und wurde 1995 eingestellt.</description>
+        <description lang="en_GB">The Atari Lynx is a 16-bit handheld gaming console released in 1989.  It held notable accomplishments, including the first handheld with a color LCD, advanced graphics, and ambidextrous layout. However, it was a commercial failure and discontinued in 1995.</description>
+        <description lang="es_ES">La Atari Lynx es una videoconsola portátil de 16 bits lanzada en 1989. Entre sus notables logros, cabe destacar que fue la primera videoconsola portátil con pantalla LCD en color, gráficos avanzados y diseño ambidiestro. Sin embargo, fue un fracaso comercial y se dejó de fabricar en 1995.</description>
+        <description lang="fi_FI">Atari Lynx on 16-bittinen käsikonsoli, joka julkaistiin vuonna 1989. Sillä on merkittäviä saavutuksia: Se oli mm. ensimmäinen väri-LCD-näytöllä, edistyneellä grafiikalla ja kaksipuoleisella asettelulla varustettu käsikonsoli. Tästä huolimatta se epäonnistui kaupallisesti ja sen tuotanto lopetettiin vuonna 1995.</description>
+        <description lang="fr_FR">L&apos;Atari Lynx est une console de jeu portable 16 bits sortie en 1989. Elle a remporté des réalisations notables, notamment le premier ordinateur de poche avec un écran LCD couleur, des graphismes avancés et une disposition ambidextre. Cependant, ce fut un échec commercial et arrêté en 1995.</description>
+        <description lang="it_IT">L&apos;Atari Lynx è una console di gioco portatile a 16 bit rilasciata nel 1989. Ha ottenuto risultati notevoli, tra cui il primo palmare con LCD a colori, grafica avanzata e layout ambidestro. Tuttavia, è stato un fallimento commerciale e interrotto nel 1995.</description>
+        <description lang="ru_RU">Atari Lynx - это 16-битная портативная игровая консоль, выпущенная в 1989 году. Она имела значительные достижения, включая первый портативный компьютер с цветным ЖК-дисплеем, продвинутой графикой и амбидекстровой раскладкой. Однако консоль оказалась коммерчески неудачной и была снята с производства в 1995 году.</description>
+        <description lang="zh_CN">雅达利 Lynx 是1989年发布的一款16位手持游戏机。它具有很多亮点，是第一台配备彩色液晶显示器、先进图形和灵活布局的手持设备。但在商业上却失败了，并于1995年停产。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>
