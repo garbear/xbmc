@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+  <category name="lightgun" label="35105">
+    <button name="trigger" type="digital" label="30001"/>
+  </category>
+  <category name="pointer" label="35104">
+    <relpointer name="crosshair" label="30002"/>
+  </category>
+</layout>
