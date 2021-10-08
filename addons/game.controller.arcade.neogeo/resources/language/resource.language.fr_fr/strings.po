@@ -1,0 +1,70 @@
+# Kodi Media Center language file
+# Addon Name: Neo Geo Controller
+# Addon id: game.controller.arcade.neogeo
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.arcade.neogeo\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-21 03:45+0000\n"
+"Last-Translator: skypichat <skypichat@hotmail.fr>\n"
+"Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-arcade-neogeo/fr_fr/>\n"
+"Language: fr_fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Neo Geo Controller"
+msgstr "Contrôleur Neo Geo"
+
+msgctxt "Addon Description"
+msgid "The controller for the Neo Geo AES (Advanced Entertainment System), a video game console released in the US in 1991. The Neo Geo AES was a niche system marketed toward high-end consumers. The console was expensive, as were the games themselves, which could go for hundreds of dollars."
+msgstr "Le contrôleur pour Neo Geo AES (Advanced Entertainment System), une console de jeux vidéo sortie aux États-Unis en 1991. Le Neo Geo AES était un système de niche commercialisé auprès des consommateurs haut de gamme. La console était chère, tout comme les jeux eux-mêmes, qui pouvaient coûter des centaines de dollars."
+
+msgctxt "#30000"
+msgid "Neo Geo"
+msgstr "Neo Geo"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "C"
+msgstr "C"
+
+msgctxt "#30004"
+msgid "D"
+msgstr "D"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "Démarrer"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Sélectionner"
+
+msgctxt "#30007"
+msgid "Up"
+msgstr "Haut"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "Droite"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "Bas"
+
+msgctxt "#30010"
+msgid "Left"
+msgstr "Gauche"

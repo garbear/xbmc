@@ -1,0 +1,86 @@
+# Kodi Media Center language file
+# Addon Name: Atari 2600 Joystick
+# Addon id: game.controller.atari.2600
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.2600\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-09-22 10:15+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
+"Language-Team: Russian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-2600/ru_ru/>\n"
+"Language: ru_ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+msgctxt "Addon Summary"
+msgid "Atari 2600 joystick"
+msgstr "Джостик Atari 2600"
+
+msgctxt "Addon Description"
+msgid "The Atari CX40 joystick appeared on the Atari 2600 in 1977, and was considered such a great improvement over other controllers that it was the primary input device for most games."
+msgstr "Джостик Atari CX40 появился для Atari 2600 в 1977, и считался таким большим улучшением в сравнении с другими контроллерами, что он стал главным устройством для управления большинством игр."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Источник изображения: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Atari 2600"
+msgstr "Atari 2600"
+
+msgctxt "#30001"
+msgid "Fire"
+msgstr "Fire"
+
+msgctxt "#30002"
+msgid "Up"
+msgstr "Вверх"
+
+msgctxt "#30003"
+msgid "Right"
+msgstr "Вправо"
+
+msgctxt "#30004"
+msgid "Down"
+msgstr "Вниз"
+
+msgctxt "#30005"
+msgid "Left"
+msgstr "Влево"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30007"
+msgid "Reset"
+msgstr "Reset"
+
+msgctxt "#30008"
+msgid "Color"
+msgstr "Цвет"
+
+msgctxt "#30009"
+msgid "Black/White"
+msgstr "Black/White"
+
+msgctxt "#30010"
+msgid "Left Difficulty A"
+msgstr "Левый Difficulty A"
+
+msgctxt "#30011"
+msgid "Left Difficulty B"
+msgstr "Левый Difficulty B"
+
+msgctxt "#30012"
+msgid "Right Difficulty A"
+msgstr "Правый Difficulty A"
+
+msgctxt "#30013"
+msgid "Right Difficulty B"
+msgstr "Правый Difficulty B"
