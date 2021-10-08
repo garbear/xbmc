@@ -1,0 +1,106 @@
+# Kodi Media Center language file
+# Addon Name: ColecoVision Controller
+# Addon id: game.controller.colecovision
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.colecovision\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-24 08:16+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Portuguese (Portugal) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-wscolecovision/pt_pt/>\n"
+"Language: pt_pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "ColecoVision controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The ColecoVision is Coleco Industries' second-generation game console, released in 1982. IGN named it the 12th-best console, citing its accuracy in bringing arcade games to the home."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "ColecoVision"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Left Button"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Right Button"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Para cima"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Direita"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Para baixo"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Esquerda"
+
+msgctxt "#30007"
+msgid "1"
+msgstr ""
+
+msgctxt "#30008"
+msgid "2"
+msgstr ""
+
+msgctxt "#30009"
+msgid "3"
+msgstr ""
+
+msgctxt "#30010"
+msgid "4"
+msgstr ""
+
+msgctxt "#30011"
+msgid "5"
+msgstr ""
+
+msgctxt "#30012"
+msgid "6"
+msgstr ""
+
+msgctxt "#30013"
+msgid "7"
+msgstr ""
+
+msgctxt "#30014"
+msgid "8"
+msgstr ""
+
+msgctxt "#30015"
+msgid "9"
+msgstr ""
+
+msgctxt "#30016"
+msgid "0"
+msgstr ""
+
+msgctxt "#30017"
+msgid "Star"
+msgstr ""
+
+msgctxt "#30018"
+msgid "Pound"
+msgstr ""
