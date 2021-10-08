@@ -1,0 +1,54 @@
+# Kodi Media Center language file
+# Addon Name: Sega Virtua Gun (US)
+# Addon id: game.controller.saturn.virtua.gun.us
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.saturn.virtua.gun.us\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-03-18 04:16+0000\n"
+"Last-Translator: Massimo Pissarello <mapi68@gmail.com>\n"
+"Language-Team: Italian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-virtua-gun-us/it_it/>\n"
+"Language: it_it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Virtua Gun (US)"
+msgstr "Sega Virtua Gun (Stati Uniti)"
+
+msgctxt "Addon Description"
+msgid "The Virtua Gun was released for the Sega Saturn in 1995. Bright colors were used for western models due to fears that it could be linked with gun crime."
+msgstr "Il Virtua Gun è stato rilasciato per Sega Saturn nel 1995. Sono stati usati dei colori vivaci per i modelli occidentali a causa dei timori che potesse essere collegato al crimine armato."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr "Credito immagine: Sega Retro (segaretro.org)"
+
+msgctxt "#30000"
+msgid "Sega Virtua Gun (US)"
+msgstr "Sega Virtua Gun (US)"
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "Grilletto"
+
+msgctxt "#30002"
+msgid "Start"
+msgstr "Avvia"
+
+msgctxt "#30003"
+msgid "Reload"
+msgstr "Ricarica"
+
+msgctxt "#30004"
+msgid "Offscreen"
+msgstr "Fuori campo"
+
+msgctxt "#30005"
+msgid "Crosshair"
+msgstr "Mirino"

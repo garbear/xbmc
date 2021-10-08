@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.mouse"
+        name="Sega Shuttle Mouse"
+        version="1.0.23"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Shuttle Mus</summary>
+        <summary lang="de_DE">Sega Shuttle Maus</summary>
+        <summary lang="en_GB">Sega Shuttle Mouse</summary>
+        <summary lang="es_ES">Ratón Sega Shuttle</summary>
+        <summary lang="es_MX">Ratón Sega Shuttle</summary>
+        <summary lang="fi_FI">Sega Shuttle -hiiri</summary>
+        <summary lang="fr_FR">Souris Sega Shuttle</summary>
+        <summary lang="it_IT">Mouse Sega Shuttle</summary>
+        <summary lang="zh_CN">世嘉穿梭鼠标</summary>
+        <description lang="da_DK">Shuttle Mus, udgivet i 1994, er en officiel musemodel til Sega Saturn. Det var designet til at blive brugt med simuleringsorienterede spil</description>
+        <description lang="de_DE">Die 1994 veröffentlichte Shuttle Maus ist ein offizielles Peripheriegerät für die Sega Saturn. Sie wurde für die Nutzung in Simulationsspielen entworfen.</description>
+        <description lang="en_GB">The Shuttle Mouse, released in 1994, is an official mouse peripheral for the Sega Saturn. It was designed to be used with simulation-oriented games</description>
+        <description lang="es_ES">El Shuttle Mouse, lanzado en 1994, es un modelo oficial de ratón para la Sega Saturn. Se diseñó para utilizarse con juegos orientados a la simulación</description>
+        <description lang="es_MX">El Ratón Shuttle, lanzado en 1994, es un periférico de ratón oficial para la Sega saturn. Fue diseñado para utilizarse con juegos orientados a simulación</description>
+        <description lang="fi_FI">Vuonna 1994 julkaistu Shuttle-hiiri on virallinen hiiri Sega Saturnille. Se on suunniteltu käytettäväksi simulaatiopainotteisissa peleissä.</description>
+        <description lang="fr_FR">La souris Shuttle, sortie en 1994, est un périphérique de souris officiel pour la Sega Saturn. Il a été conçu pour être utilisé avec des jeux orientés simulation</description>
+        <description lang="it_IT">Lo Shuttle Mouse, rilasciato nel 1994, è una periferica mouse ufficiale per Sega Saturn. È stato progettato per essere utilizzato con giochi orientati alla simulazione</description>
+        <description lang="zh_CN">1994年发布的穿梭鼠标是世嘉土星的官方鼠标外围设备。它被设计用于模拟类的游戏</description>
+    </extension>
+</addon>
