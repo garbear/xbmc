@@ -1,0 +1,86 @@
+# Kodi Media Center language file
+# Addon Name: Atari 2600 Joystick
+# Addon id: game.controller.atari.2600
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.2600\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-08 17:12+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Croatian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-2600/hr_hr/>\n"
+"Language: hr_hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Atari 2600 joystick"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Atari CX40 joystick appeared on the Atari 2600 in 1977, and was considered such a great improvement over other controllers that it was the primary input device for most games."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Atari 2600"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Fire"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Up"
+msgstr "Gore"
+
+msgctxt "#30003"
+msgid "Right"
+msgstr "Desno"
+
+msgctxt "#30004"
+msgid "Down"
+msgstr "Dolje"
+
+msgctxt "#30005"
+msgid "Left"
+msgstr "Lijevo"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Reset"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Color"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Black/White"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Left Difficulty A"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Left Difficulty B"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Right Difficulty A"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Right Difficulty B"
+msgstr ""
