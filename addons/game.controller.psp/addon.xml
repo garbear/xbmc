@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.psp"
+        name="PSP"
+        version="1.0.19"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PSP</summary>
+        <summary lang="en_GB">PSP</summary>
+        <summary lang="zh_CN">PSP</summary>
+        <description lang="da_DK">PlayStation Portable (PSP) blev udgivet af Sony i 2004. Den blev rost for sin avancerede GPU og lyse 4,3 tommer skærm. PSP blev efterfulgt af PSP Go i 2009 og derefter PlayStation Vita i 2011.</description>
+        <description lang="en_GB">The PlayStation Portable (PSP) was released by Sony in 2004. It was praised for its high-end GPU and bright 4.3 inch screen. The PSP was succeeded by the PSP Go in 2009, and then the PlayStation Vita in 2011.</description>
+        <description lang="zh_CN">索尼于2004年发布了便携式游戏机 PlayStation Portable（PSP）。它因其高端 GPU 和明亮的4.3英寸屏幕而备受赞誉。PSP 在2009年被 PSP Go 取代，然后在2011年被 PSP Vita 取代。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

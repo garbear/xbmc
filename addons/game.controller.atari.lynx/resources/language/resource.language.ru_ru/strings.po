@@ -1,0 +1,70 @@
+# Kodi Media Center language file
+# Addon Name: Atari Lynx
+# Addon id: game.controller.atari.lynx
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.lynx\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-06 22:31+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Russian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-lynx/ru_ru/>\n"
+"Language: ru_ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "Atari Lynx"
+msgstr "Atari Lynx"
+
+msgctxt "Addon Description"
+msgid "The Atari Lynx is a 16-bit handheld gaming console released in 1989.  It held notable accomplishments, including the first handheld with a color LCD, advanced graphics, and ambidextrous layout. However, it was a commercial failure and discontinued in 1995."
+msgstr "Atari Lynx - это 16-битная портативная игровая консоль, выпущенная в 1989 году. Она имела значительные достижения, включая первый портативный компьютер с цветным ЖК-дисплеем, продвинутой графикой и амбидекстровой раскладкой. Однако консоль оказалась коммерчески неудачной и была снята с производства в 1995 году."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Источник изображения: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Atari Lynx"
+msgstr "Atari Lynx"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "Option 1"
+msgstr "Вариант 1"
+
+msgctxt "#30004"
+msgid "Option 2"
+msgstr "Вариант 2"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Вверх"
+
+msgctxt "#30006"
+msgid "Down"
+msgstr "Вниз"
+
+msgctxt "#30007"
+msgid "Right"
+msgstr "Вправо"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Влево"
+
+msgctxt "#30009"
+msgid "Pause"
+msgstr "Pause"
