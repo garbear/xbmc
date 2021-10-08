@@ -1,0 +1,82 @@
+# Kodi Media Center language file
+# Addon Name: Saturn Controller
+# Addon id: game.controller.saturn
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.saturn\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-01-16 22:15+0000\n"
+"Last-Translator: José Antonio Alvarado <jalvarado0.eses@gmail.com>\n"
+"Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn/es_es/>\n"
+"Language: es_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Saturn controller"
+msgstr "Mando Sega Saturn"
+
+msgctxt "Addon Description"
+msgid "The original controller for the Sega Saturn debuted in Japan in 1994. In North America and Europe, a different, much bulkier controller was released to supposedly accommodate for the \"bigger hands\" of western consumers."
+msgstr "El mando original para la Sega Saturn se presentó en Japón en 1994. En Norteamérica y Europa se lanzó un mando diferente, mucho más voluminoso, para supuestamente adaptarse a las \"manos más grandes\" de los consumidores occidentales."
+
+msgctxt "#30000"
+msgid "Sega Saturn"
+msgstr "Sega Saturn"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "C"
+msgstr "C"
+
+msgctxt "#30004"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30005"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30006"
+msgid "Z"
+msgstr "Z"
+
+msgctxt "#30007"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30008"
+msgid "Up"
+msgstr "Arriba"
+
+msgctxt "#30009"
+msgid "Right"
+msgstr "Derecha"
+
+msgctxt "#30010"
+msgid "Down"
+msgstr "Abajo"
+
+msgctxt "#30011"
+msgid "Left"
+msgstr "Izquierda"
+
+msgctxt "#30012"
+msgid "Left Shoulder"
+msgstr "Hombro Izquierdo"
+
+msgctxt "#30013"
+msgid "Right Shoulder"
+msgstr "Hombro Derecho"
