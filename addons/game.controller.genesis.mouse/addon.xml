@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.genesis.mouse"
+        name="Sega Mouse"
+        version="1.0.13"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega mus</summary>
+        <summary lang="en_GB">Sega Mouse</summary>
+        <summary lang="ru_RU">Мышь Sega</summary>
+        <summary lang="zh_CN">世嘉鼠标</summary>
+        <description lang="da_DK">Sega mus er en kuglemus til Sega Mega Drive/Genesis udgivet i 1993. Den var beregnet til at blive brugt til software til kunstskabelse.</description>
+        <description lang="en_GB">The Sega Mouse is a ball mouse for the Sega Mega Drive/Genesis released in 1993. It was intended to be used for art creation software.</description>
+        <description lang="ru_RU">Мышь Sega - шариковая мышь для Sega Mega Drive/Genesis, выпущенная в 1993. Она предназначалась для использования в художественных программах.</description>
+        <description lang="zh_CN">世嘉鼠标是1993年发布的世嘉 Mega Drive/Genesis的滚轮鼠标。它的目的是用于艺术创作软件。</description>
+    </extension>
+</addon>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.atari.lynx"
+        name="Atari Lynx"
+        version="1.0.12"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Atari Lynx</summary>
+        <summary lang="en_GB">Atari Lynx</summary>
+        <summary lang="ru_RU">Atari Lynx</summary>
+        <summary lang="zh_CN">雅达利 Lynx</summary>
+        <description lang="da_DK">Atari Lynx er en 16-bit håndholdt spilkonsol, der blev udgivet i 1989. Den havde bemærkelsesværdige resultater, herunder den første håndholdte med en farve LCD-skærm, avanceret grafik og ambidekstrøs layout. Det var dog en kommerciel fiasko og ophørte i 1995.</description>
+        <description lang="en_GB">The Atari Lynx is a 16-bit handheld gaming console released in 1989.  It held notable accomplishments, including the first handheld with a color LCD, advanced graphics, and ambidextrous layout. However, it was a commercial failure and discontinued in 1995.</description>
+        <description lang="ru_RU">Atari Lynx - это 16-битная портативная игровая консоль, выпущенная в 1989 году. Она имела значительные достижения, включая первый портативный компьютер с цветным ЖК-дисплеем, продвинутой графикой и амбидекстровой раскладкой. Однако консоль оказалась коммерчески неудачной и была снята с производства в 1995 году.</description>
+        <description lang="zh_CN">雅达利 Lynx 是1989年发布的一款16位手持游戏机。它具有很多亮点，是第一台配备彩色液晶显示器、先进图形和灵活布局的手持设备。但在商业上却失败了，并于1995年停产。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>
