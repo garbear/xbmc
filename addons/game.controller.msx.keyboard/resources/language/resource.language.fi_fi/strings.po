@@ -1,0 +1,394 @@
+# Kodi Media Center language file
+# Addon Name: MSX Keyboard
+# Addon id: game.controller.msx.keyboard
+# Addon Provider: Team-Lima-Dev
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.msx.keyboard\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2017-06-18 20:00+1\n"
+"PO-Revision-Date: 2022-07-24 08:15+0000\n"
+"Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
+"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-msx-keyboard/fi_fi/>\n"
+"Language: fi_fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "MSX Keyboard"
+msgstr "MSX-näppäimistö"
+
+msgctxt "Addon Description"
+msgid "The MSX keyboard came in internal and external units. One troubleshooting hint when an MSX machine does not display an image is to press the CAPS key repeatedly to see if the LED toggles."
+msgstr "MSX-näppäimistöä esiintyi sekä ulkoisena, että sisäisenä. Jos MSX-laite ei näytä kuvaa, on CAPS-näppäimen painaminen toistuvasti yksi vianselvitysvinkki, jolloin nähdään vaihtuuko painikkeen LED-merkkivalo."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Kuvan lähde: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "MSX Keyboard"
+msgstr "MSX-näppäimistö"
+
+msgctxt "#30001"
+msgid "F1"
+msgstr "F1"
+
+msgctxt "#30002"
+msgid "F2"
+msgstr "F2"
+
+msgctxt "#30003"
+msgid "F3"
+msgstr "F3"
+
+msgctxt "#30004"
+msgid "F4"
+msgstr "F4"
+
+msgctxt "#30005"
+msgid "F5"
+msgstr "F5"
+
+msgctxt "#30006"
+msgid "Home"
+msgstr "Home"
+
+msgctxt "#30007"
+msgid "Insert"
+msgstr "Insert"
+
+msgctxt "#30008"
+msgid "Delete"
+msgstr "Delete"
+
+msgctxt "#30009"
+msgid "Stop"
+msgstr "Stop"
+
+msgctxt "#30011"
+msgid "Escape"
+msgstr "Escape"
+
+msgctxt "#30012"
+msgid "1"
+msgstr "1"
+
+msgctxt "#30013"
+msgid "2"
+msgstr "2"
+
+msgctxt "#30014"
+msgid "3"
+msgstr "3"
+
+msgctxt "#30015"
+msgid "4"
+msgstr "4"
+
+msgctxt "#30016"
+msgid "5"
+msgstr "5"
+
+msgctxt "#30017"
+msgid "6"
+msgstr "6"
+
+msgctxt "#30018"
+msgid "7"
+msgstr "7"
+
+msgctxt "#30019"
+msgid "8"
+msgstr "8"
+
+msgctxt "#30020"
+msgid "9"
+msgstr "9"
+
+msgctxt "#30021"
+msgid "0"
+msgstr "0"
+
+msgctxt "#30022"
+msgid "-"
+msgstr "-"
+
+msgctxt "#30023"
+msgid "="
+msgstr "="
+
+msgctxt "#30024"
+msgid "\\"
+msgstr "\\"
+
+msgctxt "#30025"
+msgid "Backspace"
+msgstr "Askelpalautin"
+
+msgctxt "#30026"
+msgid "Tab"
+msgstr "Tab"
+
+msgctxt "#30027"
+msgid "Q"
+msgstr "Q"
+
+msgctxt "#30028"
+msgid "W"
+msgstr "W"
+
+msgctxt "#30029"
+msgid "E"
+msgstr "E"
+
+msgctxt "#30030"
+msgid "R"
+msgstr "R"
+
+msgctxt "#30031"
+msgid "T"
+msgstr "T"
+
+msgctxt "#30032"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30033"
+msgid "U"
+msgstr "U"
+
+msgctxt "#30034"
+msgid "I"
+msgstr "I"
+
+msgctxt "#30035"
+msgid "O"
+msgstr "O"
+
+msgctxt "#30036"
+msgid "P"
+msgstr "P"
+
+msgctxt "#30037"
+msgid "["
+msgstr "["
+
+msgctxt "#30038"
+msgid "]"
+msgstr "]"
+
+msgctxt "#30039"
+msgid "Return"
+msgstr "Return"
+
+msgctxt "#30040"
+msgid "Ctrl"
+msgstr "Ctrl"
+
+msgctxt "#30041"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30042"
+msgid "S"
+msgstr "S"
+
+msgctxt "#30043"
+msgid "D"
+msgstr "D"
+
+msgctxt "#30044"
+msgid "F"
+msgstr "F"
+
+msgctxt "#30045"
+msgid "G"
+msgstr "G"
+
+msgctxt "#30046"
+msgid "H"
+msgstr "H"
+
+msgctxt "#30047"
+msgid "J"
+msgstr "J"
+
+msgctxt "#30048"
+msgid "K"
+msgstr "K"
+
+msgctxt "#30049"
+msgid "L"
+msgstr "L"
+
+msgctxt "#30050"
+msgid "Ñ"
+msgstr "Ñ"
+
+msgctxt "#30051"
+msgid "'"
+msgstr "'"
+
+msgctxt "#30052"
+msgid ";"
+msgstr ";"
+
+msgctxt "#30053"
+msgid "Left Shift"
+msgstr "Vasen Shift"
+
+msgctxt "#30054"
+msgid "Z"
+msgstr "Z"
+
+msgctxt "#30055"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30056"
+msgid "C"
+msgstr "C"
+
+msgctxt "#30057"
+msgid "V"
+msgstr "V"
+
+msgctxt "#30058"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30059"
+msgid "N"
+msgstr "N"
+
+msgctxt "#30060"
+msgid "M"
+msgstr "M"
+
+msgctxt "#30061"
+msgid ","
+msgstr ","
+
+msgctxt "#30062"
+msgid "."
+msgstr "."
+
+msgctxt "#30063"
+msgid "/"
+msgstr "/"
+
+msgctxt "#30064"
+msgid "Right Shift"
+msgstr "Oikea Shift"
+
+msgctxt "#30065"
+msgid "`"
+msgstr "`"
+
+msgctxt "#30066"
+msgid "Caps Lock"
+msgstr "Caps Lock"
+
+msgctxt "#30067"
+msgid "Code"
+msgstr "Code"
+
+msgctxt "#30068"
+msgid "Space"
+msgstr "Space"
+
+msgctxt "#30069"
+msgid "Graph"
+msgstr "Graph"
+
+msgctxt "#30070"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30073"
+msgid "Up"
+msgstr "Ylös"
+
+msgctxt "#30074"
+msgid "Right"
+msgstr "Oikealle"
+
+msgctxt "#30075"
+msgid "Down"
+msgstr "Alas"
+
+msgctxt "#30076"
+msgid "Left"
+msgstr "Vasemmalle"
+
+msgctxt "#30077"
+msgid "Num 7"
+msgstr "Num 7"
+
+msgctxt "#30078"
+msgid "Num 8"
+msgstr "Num 8"
+
+msgctxt "#30079"
+msgid "Num 9"
+msgstr "Num 9"
+
+msgctxt "#30080"
+msgid "Num /"
+msgstr "Num /"
+
+msgctxt "#30081"
+msgid "Num 4"
+msgstr "Num 4"
+
+msgctxt "#30082"
+msgid "Num 5"
+msgstr "Num 5"
+
+msgctxt "#30083"
+msgid "Num 6"
+msgstr "Num 6"
+
+msgctxt "#30084"
+msgid "Num *"
+msgstr "Num *"
+
+msgctxt "#30085"
+msgid "Num 1"
+msgstr "Num 1"
+
+msgctxt "#30086"
+msgid "Num 2"
+msgstr "Num 2"
+
+msgctxt "#30087"
+msgid "Num 3"
+msgstr "Num 3"
+
+msgctxt "#30088"
+msgid "Num -"
+msgstr "Num -"
+
+msgctxt "#30089"
+msgid "Num 0"
+msgstr "Num 0"
+
+msgctxt "#30090"
+msgid "Num ."
+msgstr "Num ."
+
+msgctxt "#30091"
+msgid "Num ,"
+msgstr "Num ,"
+
+msgctxt "#30092"
+msgid "Num +"
+msgstr "Num +"
+
+msgctxt "#30093"
+msgid "Print"
+msgstr "Print"
