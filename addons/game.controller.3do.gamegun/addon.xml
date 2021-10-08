@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.3do.gamegun"
+        name="3DO Gamegun"
+        version="1.0.21"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">3DO Gamegun</summary>
+        <summary lang="de_DE">3DO Gamegun</summary>
+        <summary lang="en_GB">3DO Gamegun</summary>
+        <summary lang="es_ES">3DO Gamegun</summary>
+        <summary lang="es_MX">Gamegun 3DO</summary>
+        <summary lang="fi_FI">3DO Gamegun</summary>
+        <summary lang="fr_FR">Pistolet de jeu 3DO</summary>
+        <summary lang="it_IT">Mitragliatrice 3DO</summary>
+        <summary lang="ru_RU">3DO пистолет</summary>
+        <summary lang="zh_CN">3DO 游戏枪</summary>
+        <description lang="da_DK">Gamegun blev udgivet til 3DO i 1994 af American Laser Games.</description>
+        <description lang="de_DE">Die Gamegun wurde 1994 für 3DO durch American Laser Games veröffentlicht.</description>
+        <description lang="en_GB">The Gamegun was released for the 3DO in 1994 by American Laser Games.</description>
+        <description lang="es_ES">La Gamegun fue lanzada para la 3DO en 1994 por American Laser Games.</description>
+        <description lang="es_MX">La Gamegun fue lanzada para la 3DO en 1994 por American Laser Games.</description>
+        <description lang="fi_FI">American Laser Games julkaisi Gamegunin 3DO:lle vuonna 1994.</description>
+        <description lang="fr_FR">Le Gamegun est sorti pour le 3DO en 1994 par American Laser Games.</description>
+        <description lang="it_IT">Il Gamegun è stato rilasciato per 3DO nel 1994 da American Laser Games.</description>
+        <description lang="ru_RU">Пистолет для 3DO выпущен в 1994 компанией American Laser Games.</description>
+        <description lang="zh_CN">游戏枪于1994年由美国激光游戏公司为 3DO 发布。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="pl_PL">Pochodzenie obrazu: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>

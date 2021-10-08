@@ -1,0 +1,66 @@
+# Kodi Media Center language file
+# Addon Name: NES Controller
+# Addon id: game.controller.nes
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.nes\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-21 16:16+0000\n"
+"Last-Translator: Massimo Pissarello <mapi68@gmail.com>\n"
+"Language-Team: Italian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-nes/it_it/>\n"
+"Language: it_it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "NES controller"
+msgstr "Controller NES"
+
+msgctxt "Addon Description"
+msgid "The Nintendo Entertainment System, also known as the Famicom (for \"Family Computer\"), was released in 1983. The cross-shaped directional pad was designed for Game & Watch systems, replacing the bulkier joysticks found on earlier controllers."
+msgstr "Il Nintendo Entertainment System, noto anche come Famicom (per \"Family Computer\"), è stato rilasciato nel 1983. Il pad direzionale a forma di croce è stato progettato per i sistemi Game & Watch, sostituendo i joystick più ingombranti che si trovavano sui controller precedenti."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Credito immagine: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "NES"
+msgstr "NES"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "Start"
+msgstr "Avvia"
+
+msgctxt "#30004"
+msgid "Select"
+msgstr "Seleziona"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Su"
+
+msgctxt "#30006"
+msgid "Right"
+msgstr "Destra"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "Giù"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Sinistra"

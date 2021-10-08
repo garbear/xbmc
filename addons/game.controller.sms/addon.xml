@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.sms"
+        name="Sega Master System Controller"
+        version="1.0.25"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Master System controller</summary>
+        <summary lang="de_DE">Sega Master System Controller</summary>
+        <summary lang="en_GB">Sega Master System controller</summary>
+        <summary lang="es_ES">Mando Sega Master System</summary>
+        <summary lang="fi_FI">Sega Master System -ohjain</summary>
+        <summary lang="fr_FR">Sega Master System controller</summary>
+        <summary lang="it_IT">Controller Sega Master System</summary>
+        <summary lang="zh_CN">世嘉 Master System 控制器</summary>
+        <description lang="da_DK">Master System, der oprindeligt hed Mark III, blev udgivet af Sega i 1985. Fra 2015 er Master System den længstlevende spilkonsol på grund af dens stigende popularitet i Brasilien.</description>
+        <description lang="de_DE">Das Master System, ursprünglich Mark III genannt, wurde 1985 von Sega veröffentlicht. Seit 2015 ist das Master System die langlebigste Spielkonsole, da es sich in Brasilien großer Beliebtheit erfreut.</description>
+        <description lang="en_GB">The Master System, originally named the Mark III, was released by Sega in 1985. As of 2015, the Master System is the longest-lived game console due to its surging popularity in Brazil.</description>
+        <description lang="es_ES">La Master System, originalmente llamada Mark III, fue lanzada por Sega en 1985. En 2015, la Master System es la videoconsola más veterana gracias a su creciente popularidad en Brasil.</description>
+        <description lang="fi_FI">Sega julkaisi Master Systemin, alun perin nimeltään Mark III, vuonna 1985. Vuodesta 2015 lähtien Master System on sen Brasiliassa kasvaneen suosion johdosta pitkäikäisin pelikonsoli.</description>
+        <description lang="fr_FR">La Master System, initialement nommée Mark III, a été lancée par Sega en 1985. Depuis 2015, la Master System est la console de jeu la plus ancienne en raison de sa popularité croissante au Brésil.</description>
+        <description lang="it_IT">Il Master System, originariamente chiamato Mark III, è stato rilasciato da Sega nel 1985. A partire dal 2015, il Master System è la console di gioco più longeva grazie alla sua crescente popolarità in Brasile.</description>
+        <description lang="zh_CN">Master System 最初命名为Mark III，由世嘉于1985年发布。截至2015年，Master System 是寿命最长的游戏机，因为它在巴西极受欢迎。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.atari.xges.xg1"
+        name="Atari XG-1 Lightgun"
+        version="1.0.21"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Atari XG-1 lightgun</summary>
+        <summary lang="de_DE">Atari XG-1 Lichtkanone</summary>
+        <summary lang="en_GB">Atari XG-1 lightgun</summary>
+        <summary lang="es_ES">Atari XG-1 Pistola de Luz</summary>
+        <summary lang="fi_FI">Atari XG-1 -valoase</summary>
+        <summary lang="fr_FR">Pistolet léger Atari XG-1</summary>
+        <summary lang="it_IT">Pistola Atari XG-1</summary>
+        <summary lang="ru_RU">Световой пистолет Atari XG-1</summary>
+        <summary lang="zh_CN">雅达利 XG-1 光线枪</summary>
+        <description lang="da_DK">Atari XG-1 er den light gun, der fulgte med Atari XEGS, en spillekonsol udgivet i 1987. Mange brugere klagede over apparatets frygtelige nøjagtighed.</description>
+        <description lang="de_DE">Atari XG-1 ist die Lightgun, die der Atari XEGS, einer 1987 veröffentlichten Spielkonsole, beilag. Viele Anwender beschwerten sich über die schreckliche Genauigkeit des Geräts.</description>
+        <description lang="en_GB">The Atari XG-1 is the light gun that came bundled with the Atari XEGS, a game console released in 1987. Many users complained of the horrible accuracy of the device.</description>
+        <description lang="es_ES">La Atari XG-1 es la pistola de luz que venía incluida con la Atari XEGS, una videoconsola lanzada en 1987. Muchos usuarios se quejaron de la pésima precisión del dispositivo.</description>
+        <description lang="fi_FI">Atari XG-1 on valoase, joka toimitettiin vuonna 1987 julkaistun Atari XEGS -pelikonsolin mukana. Monet käyttäjät valittivat laitteen surkeasta tarkkuudesta.</description>
+        <description lang="fr_FR">L&apos;Atari XG-1 est le pistolet léger fourni avec l&apos;Atari XEGS, une console de jeu sortie en 1987. De nombreux utilisateurs se sont plaints de l&apos;horrible précision de l&apos;appareil.</description>
+        <description lang="it_IT">L&apos;Atari XG-1 è la pistola leggera fornita in bundle con l&apos;Atari XEGS, una console di gioco rilasciata nel 1987. Molti utenti si sono lamentati dell&apos;orribile precisione del dispositivo.</description>
+        <description lang="ru_RU">Atari XG-1 - это световой пистолет, который поставлялся в комплекте с игровой консолью Atari XEGS, выпущенной в 1987 году. Многие пользователи жаловались на ужасную точность устройства.</description>
+        <description lang="zh_CN">雅达利 XG-1 是与1987年发布的游戏机雅达利 XEGS 捆绑销售的光线枪。许多用户抱怨该设备的准确性太差。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="pl_PL">Pochodzenie obrazu: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>

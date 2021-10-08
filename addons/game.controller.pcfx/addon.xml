@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.pcfx"
+        name="PC-FX Controller"
+        version="1.0.26"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PC-FX controller</summary>
+        <summary lang="de_DE">PC-FX Controller</summary>
+        <summary lang="en_GB">PC-FX controller</summary>
+        <summary lang="es_ES">Mando PC-FX</summary>
+        <summary lang="fr_FR">Contrôleur PC-FX</summary>
+        <summary lang="it_IT">Controller PC-FX</summary>
+        <summary lang="zh_CN">PC-FX 控制器</summary>
+        <description lang="da_DK">PC-FX er en 32-bit konsol udgivet af NEC i 1994. På grund af de høje omkostninger, underdimensionerede grafik og manglende udviklersupport solgte den dårligt og blev taget af markedet i 1998.</description>
+        <description lang="de_DE">Der PC-FX ist eine 32-Bit-Konsole, die 1994 von NEC auf den Markt gebracht wurde. Aufgrund der hohen Kosten, der unzureichenden Grafikleistung und der fehlenden Entwicklerunterstützung verkaufte sie sich schlecht und wurde 1998 eingestellt.</description>
+        <description lang="en_GB">The PC-FX is a 32-bit console released by NEC in 1994. Due to the high cost, underpowered graphics and lack of developer support, it sold poorly and was discontinued in 1998.</description>
+        <description lang="es_ES">La PC-FX es una videoconsola de 32 bits lanzada por NEC en 1994. Debido a su elevado coste, a la escasa potencia de sus gráficos y a la falta de apoyo de los desarrolladores, se vendió mal y dejó de comercializarse en 1998.</description>
+        <description lang="fr_FR">La PC-FX est une console 32 bits publiée par NEC en 1994. En raison du coût élevé, des graphismes sous-alimentés et du manque de support des développeurs, elle s&apos;est mal vendue et a été abandonnée en 1998.</description>
+        <description lang="it_IT">La PC-FX è una console a 32 bit rilasciata da NEC nel 1994. A causa del costo elevato, della grafica poco potente e della mancanza di supporto per gli sviluppatori, ha venduto poco ed è stata interrotta nel 1998.</description>
+        <description lang="zh_CN">PC-FX 是 NEC 于1994年发布的32位游戏主机。由于价格高、图形能力弱和缺乏开发人员的支持，其销量不佳，并于1998年停产。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>
