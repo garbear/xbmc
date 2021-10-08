@@ -1,0 +1,97 @@
+# Kodi Media Center language file
+# Addon Name: Atari 5200 Controller
+# Addon id: game.controller.atari.5200
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.5200\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fa_ir\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Atari 5200 controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Atari 5200 was released in 1982. The design of the joystick, which used a weak rubber boot instead of springs, proved to be ungainly and unreliable. It was rated the 10th worst video game controller by IGN."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Atari 5200"
+msgstr ""
+
+msgctxt "#30001"
+msgid "1"
+msgstr ""
+
+msgctxt "#30002"
+msgid "2"
+msgstr ""
+
+msgctxt "#30003"
+msgid "3"
+msgstr ""
+
+msgctxt "#30004"
+msgid "4"
+msgstr ""
+
+msgctxt "#30005"
+msgid "5"
+msgstr ""
+
+msgctxt "#30006"
+msgid "6"
+msgstr ""
+
+msgctxt "#30007"
+msgid "7"
+msgstr ""
+
+msgctxt "#30008"
+msgid "8"
+msgstr ""
+
+msgctxt "#30009"
+msgid "9"
+msgstr ""
+
+msgctxt "#30010"
+msgid "0"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Star"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Pound"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Start"
+msgstr ""
+
+msgctxt "#30014"
+msgid "Pause"
+msgstr ""
+
+msgctxt "#30015"
+msgid "Reset"
+msgstr ""
+
+msgctxt "#30016"
+msgid "Joystick"
+msgstr ""

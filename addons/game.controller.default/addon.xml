@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.default"
         name="Default Controller"
-        version="1.0.35"
+        version="1.0.37"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
@@ -51,7 +51,7 @@
         <description lang="es_MX">El mando por defecto de Kodi se basa en el control de Xbox 360.</description>
         <description lang="fa_IR">دستهٔ پیش‌گزیدهٔ مرکز رسانه، بر پایهٔ دستهٔ اکس‌باکس ۳۶۰ است.</description>
         <description lang="fi_FI">Mediakeskuksen oletusohjain perustuu Xbox 360 -ohjaimeen.</description>
-        <description lang="fr_FR">La manette par défaut du centre multimedia est basée sur la manette de la Xbox 360.</description>
+        <description lang="fr_FR">La manette par défaut du centre multimédia est basée sur la manette de la Xbox 360.</description>
         <description lang="he_IL">בקר בררת המחדל של מרכז המדיה מבוסס על הבקר של Xbox 360.</description>
         <description lang="hr_HR">Zadani upravljač medijskog centra temelji se na Xbox 360 upravljačkom uređaju.</description>
         <description lang="hu_HU">Az alapértelmezett médiaközpont -vezérlő az Xbox 360 vezérlőn alapul.</description>
@@ -79,7 +79,7 @@
         <disclaimer lang="es_MX">Crédito de la imagen: Wikipedia (wikipedia.org)</disclaimer>
         <disclaimer lang="fa_IR">اعتبار تصویر: ویکی‌پدیا (wikipedia.org)</disclaimer>
         <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
-        <disclaimer lang="fr_FR">Crédit Image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit Image: Wikipédia (wikipedia.org)</disclaimer>
         <disclaimer lang="he_IL">זכויות על התמונה: ויקיפדיה (wikipedia.org)</disclaimer>
         <disclaimer lang="hr_HR">Izvor slike: Wikipedia (wikipedia.org)</disclaimer>
         <disclaimer lang="hu_HU">Kép credit: Wikipedia (wikipedia.org)</disclaimer>
