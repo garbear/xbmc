@@ -1,0 +1,90 @@
+# Kodi Media Center language file
+# Addon Name: Nintendo Virtual Boy Controller
+# Addon id: game.controller.vb
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.vb\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-vb/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "Nintendo Virtual Boy controller"
+msgstr "任天堂 Virtual Boy 控制器"
+
+msgctxt "Addon Description"
+msgid "The Virtual Boy is a 32-bit console released by Nintendo in 1995. While Nintendo promised a virtual reality experience, the red monochrome display and bulky table-mounted headset lead to a poor immersive experience."
+msgstr "Virtual Boy 是任天堂在1995年发布的一款32位游戏机。尽管任天堂承诺提供虚拟现实体验，但红色单色显示屏和笨重的桌上耳机导致了糟糕的沉浸体验。"
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "图片来源：OpenEmu（openemu.org）"
+
+msgctxt "#30000"
+msgid "Nintendo Virtual Boy"
+msgstr "任天堂 Virtual Boy"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30004"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30005"
+msgid "Left Up"
+msgstr "左上"
+
+msgctxt "#30006"
+msgid "Left Right"
+msgstr "左右"
+
+msgctxt "#30007"
+msgid "Left Down"
+msgstr "左下"
+
+msgctxt "#30008"
+msgid "Left Left"
+msgstr "左左"
+
+msgctxt "#30009"
+msgid "Right Up"
+msgstr "右上"
+
+msgctxt "#30010"
+msgid "Right Right"
+msgstr "右右"
+
+msgctxt "#30011"
+msgid "Right Down"
+msgstr "右下"
+
+msgctxt "#30012"
+msgid "Right Left"
+msgstr "右左"
+
+msgctxt "#30013"
+msgid "Left Bumper"
+msgstr "左保险"
+
+msgctxt "#30014"
+msgid "Right Bumper"
+msgstr "右保险"
