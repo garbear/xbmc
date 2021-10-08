@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ps.gamepad"
+        name="PlayStation Gamepad"
+        version="1.0.12"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PlayStation Gamepad</summary>
+        <summary lang="en_GB">PlayStation Gamepad</summary>
+        <summary lang="zh_CN">PlayStation 游戏手柄</summary>
+        <description lang="da_DK">PlayStation-controlleren blev udgivet af Sony Computer Entertainment i 1994. Sony frigav kortvarigt Dobbel Analog-controlleren i 1997, efterfulgt af den rumble-aktiverede DualShock senere samme år.</description>
+        <description lang="en_GB">The PlayStation controller was released by Sony Computer Entertainment in 1994. Sony briefly released the Dual Analog controller in 1997, followed by the rumble-enabled DualShock later that year.</description>
+        <description lang="zh_CN">索尼电脑娱乐公司于1994年发布了 PlayStation 控制器。索尼在1997年短暂发布了 Dual Analog 控制器，随后在那年晚些时候发布了支持震动功能的 DualShock。</description>
+    </extension>
+</addon>
