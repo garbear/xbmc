@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.snes.super.scope"
+        name="Super Scope"
+        version="1.0.24"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Super Scope</summary>
+        <summary lang="de_DE">Super Scope</summary>
+        <summary lang="en_GB">Super Scope</summary>
+        <summary lang="es_ES">Super Scope</summary>
+        <summary lang="fi_FI">Super Scope</summary>
+        <summary lang="fr_FR">Super Scope</summary>
+        <summary lang="it_IT">Super Scope</summary>
+        <summary lang="zh_CN">Super Scope</summary>
+        <description lang="da_DK">Super Scope er en light gun til SNES. Den blev udgivet i 1992 som en efterfølger til NES Zapper.</description>
+        <description lang="de_DE">Das Super Scope ist eine Lightgun für das SNES. Es wurde 1992 als Nachfolger des NES Zapper veröffentlicht.</description>
+        <description lang="en_GB">The Super Scope is a light gun for the SNES. It was released in 1992 as a successor to the NES Zapper.</description>
+        <description lang="es_ES">La Nintendo Super Scope es una pistola de luz para SNES. Salió a la venta en 1992 como sucesora de la NES Zapper.</description>
+        <description lang="fi_FI">Super Scope on valoase SNES-konsolille. Se julkaistiin vuonna 1992 NES Zapperin seuraajana.</description>
+        <description lang="fr_FR">Le Super Scope est un pistolet léger pour la SNES. Il est sorti en 1992 en tant que successeur du NES Zapper.</description>
+        <description lang="it_IT">Il Super Scope è una pistola leggera per SNES. È stato rilasciato nel 1992 come successore di NES Zapper.</description>
+        <description lang="zh_CN">Super Scope 是 SNES 的一种光线枪。1992年作为 NES Zapper 的继任者发布。</description>
+    </extension>
+</addon>
