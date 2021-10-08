@@ -1,0 +1,66 @@
+# Kodi Media Center language file
+# Addon Name: Genesis Controller (3-Button)
+# Addon id: game.controller.genesis.3button
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.genesis.3button\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2023-02-02 12:00+1\n"
+"PO-Revision-Date: 2023-02-19 23:21+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Esperanto <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-genesis-3button/eo/>\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Genesis controller (3-Button)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The original controller for the Sega Genesis was released in 1988. It had three main face buttons. Sega released a six-button version in 1993."
+msgstr ""
+
+msgctxt "#30000"
+msgid "Genesis (3-Button)"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr ""
+
+msgctxt "#30002"
+msgid "B"
+msgstr ""
+
+msgctxt "#30003"
+msgid "C"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Start"
+msgstr "Iniciati"
+
+msgctxt "#30005"
+msgid "Mode"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Left"
+msgstr ""
