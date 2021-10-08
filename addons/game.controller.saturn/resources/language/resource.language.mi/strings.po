@@ -1,0 +1,82 @@
+# Kodi Media Center language file
+# Addon Name: Saturn Controller
+# Addon id: game.controller.saturn
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.saturn\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-08-08 05:15+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Maori <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn/mi/>\n"
+"Language: mi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Saturn controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The original controller for the Sega Saturn debuted in Japan in 1994. In North America and Europe, a different, much bulkier controller was released to supposedly accommodate for the \"bigger hands\" of western consumers."
+msgstr ""
+
+msgctxt "#30000"
+msgid "Sega Saturn"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr ""
+
+msgctxt "#30002"
+msgid "B"
+msgstr ""
+
+msgctxt "#30003"
+msgid "C"
+msgstr ""
+
+msgctxt "#30004"
+msgid "X"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Y"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Z"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Start"
+msgstr "Ttīmata"
+
+msgctxt "#30008"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Left"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Left Shoulder"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Right Shoulder"
+msgstr ""
