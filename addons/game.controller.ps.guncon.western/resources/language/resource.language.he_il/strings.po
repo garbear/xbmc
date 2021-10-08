@@ -1,0 +1,50 @@
+# Kodi Media Center language file
+# Addon Name: PlayStation Guncon (Western)
+# Addon id: game.controller.ps.guncon.western
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.ps.guncon.western\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-08-08 05:14+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Hebrew (Israel) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ps-guncon-western/he_il/>\n"
+"Language: he_il\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "PlayStation Guncon (Western)"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Guncon, known as G-Con in Europe, is a family of light guns designed by Namco for the PlayStation. The original model was released alongside the PlayStation in 1994."
+msgstr ""
+
+msgctxt "#30000"
+msgid "PlayStation Guncon (Western)"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr ""
+
+msgctxt "#30002"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30003"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30004"
+msgid "Offscreen"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Crosshair"
+msgstr ""
