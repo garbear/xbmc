@@ -1,0 +1,50 @@
+# Kodi Media Center language file
+# Addon Name: Konami Justifier (PS)
+# Addon id: game.controller.konami.justifier.ps
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.konami.justifier.ps\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-09-22 10:15+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
+"Language-Team: Russian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-konami-justifier-ps/ru_ru/>\n"
+"Language: ru_ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+msgctxt "Addon Summary"
+msgid "Konami Justifier (PS)"
+msgstr "Konami Justifier (PS)"
+
+msgctxt "Addon Description"
+msgid "The Justifer is a light gun released by Konami in 1992 for the Sega Mega Drive/Genesis, SNES and PlayStation. It resembles the Colt Python, a .357 Magnum revolver."
+msgstr "The Justified — это световой пистолет, выпущенный Konami в 1992 году для Sega Mega Drive/Genesis, SNES и PlayStation. Он напоминает Colt Python, револьвер калибра .357 Magnum."
+
+msgctxt "#30000"
+msgid "Konami Justifier (PS)"
+msgstr "Konami Justifier (PS)"
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "Выстрел"
+
+msgctxt "#30002"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30003"
+msgid "Aux"
+msgstr "Выход Aux"
+
+msgctxt "#30004"
+msgid "Offscreen"
+msgstr "Вне экрана"
+
+msgctxt "#30005"
+msgid "Crosshair"
+msgstr "Прицел"

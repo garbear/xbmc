@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.snes.mouse"
+        name="SNES Mouse"
+        version="1.0.24"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">SNES mus</summary>
+        <summary lang="de_DE">SNES Maus</summary>
+        <summary lang="en_GB">SNES mouse</summary>
+        <summary lang="es_ES">Ratón SNES</summary>
+        <summary lang="es_MX">Ratón SNES</summary>
+        <summary lang="fi_FI">SNES-hiiri</summary>
+        <summary lang="fr_FR">Souris SNES</summary>
+        <summary lang="it_IT">Mouse SNES</summary>
+        <summary lang="zh_CN">SNES 鼠标</summary>
+        <description lang="da_DK">SNES-musen blev først udgivet i 1992. Den var oprindeligt designet til brug med spillet Mario Paint.</description>
+        <description lang="de_DE">Die SNES Maus wurde 1992 veröffentlicht. Sie wurde ursprünglich für das Spiel &quot;Mario Paint&quot; entworfen.</description>
+        <description lang="en_GB">The SNES mouse was first released in 1992. It was originally designed for use with the game Mario Paint.</description>
+        <description lang="es_ES">El ratón SNES salió a la venta por primera vez en 1992. Se diseñó originalmente para su uso con el juego Mario Paint.</description>
+        <description lang="fi_FI">SNES-hiiri julkaistiin ensimmäisen kerran vuonna 1992. Se oli alun perin suunniteltu käytettäväksi Mario Paint -pelin kanssa.</description>
+        <description lang="fr_FR">La souris SNES a été lancée pour la première fois en 1992. Elle a été conçue à l&apos;origine pour être utilisée avec le jeu Mario Paint.</description>
+        <description lang="it_IT">Il mouse SNES è stato rilasciato per la prima volta nel 1992. È stato originariamente progettato per l&apos;uso con il gioco Mario Paint.</description>
+        <description lang="zh_CN">SNES 鼠标于1992年首次发布。它最初针游戏《马里奥画板》而设计的。</description>
+    </extension>
+</addon>

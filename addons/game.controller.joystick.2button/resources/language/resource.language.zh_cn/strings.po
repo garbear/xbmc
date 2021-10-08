@@ -1,0 +1,42 @@
+# Kodi Media Center language file
+# Addon Name: PC Joystick (2-button)
+# Addon id: game.controller.joystick.2button
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.joystick.2button\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-joystick-2button/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "PC Joystick (2-Button)"
+msgstr "PC 游戏杆（2按钮）"
+
+msgctxt "Addon Description"
+msgid "The 2-button joystick was compatible with the Game Port, a device port found on IBM PCs throughout the 1980s and 1990s."
+msgstr "2按钮游戏杆与游戏端口兼容，游戏端口是20世纪80、90年代在 IBM PC 上配备的一种设备端口。"
+
+msgctxt "#30000"
+msgid "PC Joystick (2-button)"
+msgstr "PC 游戏杆（2按钮）"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "按钮1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "按钮2"
+
+msgctxt "#30003"
+msgid "Analog Stick"
+msgstr "模拟摇杆"

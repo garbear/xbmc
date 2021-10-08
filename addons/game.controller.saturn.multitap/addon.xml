@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.multitap"
+        name="Sega Saturn 6 Player Adaptor"
+        version="1.0.21"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Saturn 6 Player Adapter</summary>
+        <summary lang="de_DE">Sega Saturn 6 Spieler Adapter</summary>
+        <summary lang="en_GB">Sega Saturn 6 Player Adaptor</summary>
+        <summary lang="es_ES">Adaptador Sega Saturn 6 Jugadores</summary>
+        <summary lang="es_MX">Adaptador Sega Saturn 6 Player</summary>
+        <summary lang="fi_FI">Sega Saturn 6 pelaajan sovitin</summary>
+        <summary lang="fr_FR">Sega Saturn 6 Player Adaptor</summary>
+        <summary lang="it_IT">Adattatore per lettore Sega Saturn 6</summary>
+        <summary lang="zh_CN">世嘉土星6游戏机适配器</summary>
+        <description lang="da_DK">Et multitap øger antallet af controllerporte, ligesom en USB-hub. Udgivet i 1995, Saturn 6 Player Adapter tillod op til 10 spillere i nogle spil, såsom Saturn Bomberman.</description>
+        <description lang="de_DE">Ein Multitap erhöht die Anzahl der Controlleranschlüsse, ähnlich wie ein USB-Hub. Der 1995 erschienene Saturn 6 Player Adaptor ermöglichte bis zu 10 Spieler in einigen Spielen, wie beispielweise Saturn Bomberman.</description>
+        <description lang="en_GB">A multitap increases the number of controller ports, similar to a USB hub. Released in 1995, the Saturn 6 Player Adaptor allowed up to 10 players in some games, such as Saturn Bomberman.</description>
+        <description lang="es_ES">Un multitap aumenta el número de puertos para mandos, de forma similar a un concentrador USB. Lanzado en 1995, el adaptador para 6 jugadores de Saturn permitía hasta 10 jugadores en algunos juegos, como Saturn Bomberman.</description>
+        <description lang="es_MX">El multitap incrementa el numero de puertos de mando, similarmente a un hub USB. Lanzado en 1995, el Adaptador Saturn 6 Player permitía hasta 10 jugadores en algunos juegos como Saturn Bomberman.</description>
+        <description lang="fi_FI">Multitap lisää ohjainporttien määrää USB-keskittimen tapaan. Vuonna 1995 julkaistu Saturn 6 Player Adapter mahdollisti jopa 10 pelaajaa joissakin peleissä, kuten Saturn Bombermanissa.</description>
+        <description lang="fr_FR">Un multitap augmente le nombre de ports de contrôleur, similaire à un concentrateur USB. Sorti en 1995, l&apos;adaptateur Saturn 6 Player permettait jusqu&apos;à 10 joueurs dans certains jeux, tels que Saturn Bomberman.</description>
+        <description lang="it_IT">Un multitap aumenta il numero di porte del controller, in modo simile a un hub USB. Rilasciato nel 1995, il Saturn 6 Player Adapter consentiva fino a 10 giocatori in alcuni giochi, come Saturn Bomberman.</description>
+        <description lang="zh_CN">多插转换器增加了控制器端口的数量，类似于 USB 集线器。1995年发布的土星6游戏机适配器使一些游戏能支持最多10名玩家，例如《土星炸弹人》。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="pl_PL">Pochodzenie obrazu: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>

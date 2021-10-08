@@ -1,0 +1,94 @@
+# Kodi Media Center language file
+# Addon Name: N64 Controller
+# Addon id: game.controller.n64
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.n64\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-21 03:45+0000\n"
+"Last-Translator: skypichat <skypichat@hotmail.fr>\n"
+"Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-n64/fr_fr/>\n"
+"Language: fr_fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Nintendo 64 controller"
+msgstr "Manette Nintendo 64"
+
+msgctxt "Addon Description"
+msgid "The Nintendo 64 controller, released in 1996, featured a unique \"M\" shape design. Intense rotating of the analog stick during Mario Party reportedly caused burn injuries to some players."
+msgstr "La manette Nintendo 64, sortie en 1996, présentait un design unique en forme de \"M\". La rotation intense du stick analogique pendant Mario Party aurait causé des brûlures à certains joueurs."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Crédit image : OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Nintendo 64"
+msgstr "Nintendo 64"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "Start"
+msgstr "Démarrer"
+
+msgctxt "#30004"
+msgid "C-Up"
+msgstr "C-Haut"
+
+msgctxt "#30005"
+msgid "C-Down"
+msgstr "C-Bas"
+
+msgctxt "#30006"
+msgid "C-Right"
+msgstr "C-Droit"
+
+msgctxt "#30007"
+msgid "C-Left"
+msgstr "C-Gauche"
+
+msgctxt "#30008"
+msgid "Up"
+msgstr "Haut"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "Bas"
+
+msgctxt "#30010"
+msgid "Right"
+msgstr "Droite"
+
+msgctxt "#30011"
+msgid "Left"
+msgstr "Gauche"
+
+msgctxt "#30012"
+msgid "Left Bumper"
+msgstr "Bumper Gauche"
+
+msgctxt "#30013"
+msgid "Right Bumper"
+msgstr "Bumper Droit"
+
+msgctxt "#30014"
+msgid "Z"
+msgstr "Z"
+
+msgctxt "#30015"
+msgid "Analog Stick"
+msgstr "Stick Analogique"
