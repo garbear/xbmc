@@ -1,0 +1,58 @@
+# Kodi Media Center language file
+# Addon Name: Sega SG-1000
+# Addon id: game.controller.sg1000
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.sg1000\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-24 08:14+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Czech <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-sg1000/cs_cz/>\n"
+"Language: cs_cz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Sega SG-1000 controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The SG-1000, also known as the Computer Videogame SG-1000, was Sega's first entry into the console business in 1983. However, due to market saturation and the Video Game Crash of 1983, it was not commercially successful."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Sega SG-1000"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Nahoru"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Vpravo"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Dolů"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Vlevo"
