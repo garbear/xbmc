@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.joystick.2button"
+        name="PC Joystick (2-Button)"
+        version="1.0.18"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="ca_ES">Joystick de PC (2 botons)</summary>
+        <summary lang="da_DK">PC joystick (2 knapper)</summary>
+        <summary lang="de_DE">PC Joystick (2-Tasten)</summary>
+        <summary lang="en_GB">PC Joystick (2-Button)</summary>
+        <summary lang="es_ES">PC Joystick (2 Botones)</summary>
+        <summary lang="fi_FI">PC-ohjainsauva (2-painikkeinen)</summary>
+        <summary lang="fr_FR">Joystick PC (2 boutons)</summary>
+        <summary lang="it_IT">Joystick per PC (2 pulsanti)</summary>
+        <summary lang="ru_RU">ПК джостик (2-кнопочный)</summary>
+        <summary lang="zh_CN">PC 游戏杆（2按钮）</summary>
+        <description lang="ca_ES">El joystick de 2 botons era compatible amb el Game Port, un port de dispositiu que es trobava als ordinadors IBM durant les dècades de 1980 i 1990.</description>
+        <description lang="da_DK">Joysticket med 2 knapper var kompatibelt med Game Port, en enhedsport, der blev fundet på IBM-pc&apos;er gennem 1980&apos;erne og 1990&apos;erne.</description>
+        <description lang="de_DE">Der 2-Tasten-Joystick war mit dem Gameport kompatibel, einem Geräteanschluss, der in den 1980er und 1990er Jahren an IBM-PCs zu finden war.</description>
+        <description lang="en_GB">The 2-button joystick was compatible with the Game Port, a device port found on IBM PCs throughout the 1980s and 1990s.</description>
+        <description lang="es_ES">El joystick de 2 botones era compatible con el Game Port, un puerto para dispositivos presente en los IBM PC de las décadas de 1980 y 1990.</description>
+        <description lang="fi_FI">2-painikkeinen ohjainsauva (joystick) oli yhteensopiva Game Port -laiteportin (ns. peliohjainportti) kanssa, joka löytyi IBM PC -tietokoneista 1980- ja 1990-luvuilla.</description>
+        <description lang="fr_FR">Le joystick à 2 boutons était compatible avec le Game Port, un port de périphérique trouvé sur les PC IBM dans les années 1980 et 1990.</description>
+        <description lang="it_IT">Il joystick a 2 pulsanti era compatibile con Game Port, una porta del dispositivo che si trovava sui PC IBM negli anni &apos;80 e &apos;90.</description>
+        <description lang="ru_RU">2-кнопочный джойстик был совместим с Game Port - разъём ввода-вывода, найденный на компьютерах IBM в 1980-х и 1990-х годах.</description>
+        <description lang="zh_CN">2按钮游戏杆与游戏端口兼容，游戏端口是20世纪80、90年代在 IBM PC 上配备的一种设备端口。</description>
+    </extension>
+</addon>

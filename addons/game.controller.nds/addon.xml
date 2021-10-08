@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.nds"
+        name="Nintendo DS"
+        version="1.0.32"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Nintendo DS</summary>
+        <summary lang="de_DE">Nintendo DS</summary>
+        <summary lang="en_GB">Nintendo DS</summary>
+        <summary lang="es_ES">Nintendo DS</summary>
+        <summary lang="fi_FI">Nintendo DS</summary>
+        <summary lang="fr_FR">Nintendo DS</summary>
+        <summary lang="it_IT">Nintendo DS</summary>
+        <summary lang="ru_RU">Nintendo DS</summary>
+        <summary lang="zh_CN">任天堂 DS</summary>
+        <description lang="da_DK">Nintendo DS (forkortelse for &quot;Dual Screen&quot;) er en 32-bit håndholdt videospilkonsol udgivet i 2004. En DS Lite-model blev lanceret i 2006, efterfulgt af DSi. Tilsammen er disse de bedst sælgende håndholdte til dato og næstbedste konsol (bag PlayStation 2).</description>
+        <description lang="de_DE">Nintendo DS (kurz für „Dual Screen“) ist eine tragbare 32-Bit-Videospielkonsole, die 2004 veröffentlicht wurde. Ein DS Lite-Modell wurde 2006 auf den Markt gebracht, gefolgt von dem DSi. Zusammengenommen sind sie der bis heute meistverkaufte Handheld und die zweitbeste Konsole (nach der PlayStation 2).</description>
+        <description lang="en_GB">The Nintendo DS (short for &quot;Dual Screen&quot;) is a 32-bit handheld video game console released in 2004. A DS Lite model was launched in 2006, followed by the DSi. Combined, these are the best selling handheld to date, and second best console (behind the PlayStation 2).</description>
+        <description lang="es_ES">La Nintendo DS (abreviatura de &quot;Dual Screen&quot;) es una videoconsola portátil de 32 bits lanzada en 2004. En 2006 se lanzó un modelo DS Lite, al que siguió la DSi. Juntas, son los dispositivos portátiles más vendidos hasta la fecha y la segunda videoconsola más popular (por detrás de la PlayStation 2).</description>
+        <description lang="fi_FI">Nintendo DS (lyhenne sanoista &quot;Dual Screen&quot;) on 32-bittinen käsikonsoli, joka julkaistiin vuonna 2004. DS Lite -malli julkaistiin vuonna 2006 ja sitä seurasi DSi. Yhdessä nämä ovat toistaiseksi myydyin käsikonsoli ja toiseksi myydyin konsoli (PlayStation 2:n jälkeen).</description>
+        <description lang="fr_FR">La Nintendo DS (abréviation de &quot;Dual Screen&quot;) est une console de jeu vidéo portable 32 bits sortie en 2004. Un modèle DS Lite a été lancé en 2006, suivi par la DSi. Ensemble, ce sont les consoles portables les plus vendues à ce jour et la deuxième meilleure console (derrière la PlayStation 2).</description>
+        <description lang="it_IT">Il Nintendo DS (abbreviazione di &quot;Dual Screen&quot;) è una console per videogiochi portatile a 32 bit rilasciata nel 2004. Un modello DS Lite è stato lanciato nel 2006, seguito dal DSi. Insieme, questi sono i palmari più venduti fino ad oggi e la seconda migliore console (dietro alla PlayStation 2).</description>
+        <description lang="ru_RU">Nintendo DS (сокращение от «Dual Screen») — это 32-битная портативная игровая консоль, выпущенная в 2004 году. В 2006 году была выпущена модель DS Lite, за которой последовала DSi. В совокупности это самый продаваемый карманный компьютер на сегодняшний день и вторая по популярности консоль (после PlayStation 2).</description>
+        <description lang="zh_CN">任天堂 DS（Dual Screen 双屏）是2004年发布的一款32位手持视频游戏机。DS Lite 型号于2006年推出，随后是DSi。结合起来，这是迄今为止最畅销的手持设备，也是第二好的主机（仅次于 PlayStation 2）。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

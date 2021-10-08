@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.3do"
+        name="3DO Controller"
+        version="1.0.28"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">3D0 controller</summary>
+        <summary lang="de_DE">3D0 Controller</summary>
+        <summary lang="en_GB">3D0 controller</summary>
+        <summary lang="es_ES">Mando 3DO</summary>
+        <summary lang="es_MX">Control 3D0</summary>
+        <summary lang="eu_ES">3DO kontrolagailua</summary>
+        <summary lang="fi_FI">3D0-ohjain</summary>
+        <summary lang="fr_FR">Contrôleur 3D0</summary>
+        <summary lang="it_IT">Controller 3D0</summary>
+        <summary lang="ru_RU">3D0 контроллер</summary>
+        <summary lang="sv_SE">3D0-kontroll</summary>
+        <summary lang="zh_CN">3DO 控制器</summary>
+        <description lang="da_DK">3DO Interactive Multiplayer er en spilkonsol udviklet af 3DO Company. Panasonic producerede de første modeller i 1993, og yderligere modeller blev frigivet af Sanyo og GoldStar (nu LG) i 1994.</description>
+        <description lang="de_DE">Der 3DO Interactive Multiplayer ist eine Spielkonsole, die von der Firma 3DO entwickelt wurde. Panasonic produzierte die ersten Modelle im Jahre 1993, weitere Modelle wurden 1994 von Sanyo und GoldStar (jetzt LG) veröffentlicht.</description>
+        <description lang="en_GB">The 3DO Interactive Multiplayer is a game console developed by the 3DO Company. Panasonic produced the first models in 1993, and further models were released by Sanyo and GoldStar (now LG) in 1994.</description>
+        <description lang="es_ES">La 3DO Interactive Multiplayer es una videoconsola desarrollada por la empresa 3DO. Panasonic fabricó los primeros modelos en 1993, y Sanyo y GoldStar (ahora LG) lanzaron nuevos modelos en 1994.</description>
+        <description lang="es_MX">La 3D0 Interactive Multiplayer es una consola de juegos desarrollada por la 3DO Company. Panasonic produjo los primeros modelos en 1993, y los modelos consecutivos fueron producidos por Sanyo y Goldstar (actualmente LG) en 1994.</description>
+        <description lang="eu_ES">3DO Interactive Multiplayer 3DO konpainiak garatutako bideokontsola bat da. Panasonic-ek egin zituen lehen modeloak 1993. urtean, ondorengo modeloak Sanyo eta GoldStar (LG orain) konpainiek kaleratu zituzten 1994. urtean.</description>
+        <description lang="fi_FI">3DO Interactive Multiplayer on 3DO Companyn kehittämä pelikonsoli. Panasonic valmisti ensimmäiset mallit vuonna 1993, Sanyo ja GoldStar (nykyinen LG) julkaisivat lisää malleja vuonna 1994.</description>
+        <description lang="fr_FR">Le 3DO Interactive Multiplayer est une console de jeu développée par la société 3DO. Panasonic a produit les premiers modèles en 1993, et d&apos;autres modèles ont été lancés par Sanyo et GoldStar (maintenant LG) en 1994.</description>
+        <description lang="it_IT">Il 3DO Interactive Multiplayer è una console di gioco sviluppata dalla 3DO Company. Panasonic ha prodotto i primi modelli nel 1993 e altri modelli sono stati rilasciati da Sanyo e GoldStar (ora LG) nel 1994.</description>
+        <description lang="ru_RU">3DO Interactive Multiplayer - игровая консоль, разработаная компанией 3DO. Panasonic выпустила первые модели в 1993, и дальнейшие модели Sanyo и GoldStar (LG) выпустили в 1994.</description>
+        <description lang="zh_CN">3DO交互式多人游戏机是由3DO公司开发的游戏主机。松下在1993年生产首款型号，后续型号由三洋和金星（现在的LG）在1994年发布。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

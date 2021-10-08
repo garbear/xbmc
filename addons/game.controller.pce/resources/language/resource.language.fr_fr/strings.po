@@ -1,0 +1,86 @@
+# Kodi Media Center language file
+# Addon Name: PC Engine Controller
+# Addon id: game.controller.pce
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.pce\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-01 20:55+0000\n"
+"Last-Translator: skypichat <skypichat@hotmail.fr>\n"
+"Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-pce/fr_fr/>\n"
+"Language: fr_fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "PC Engine controller"
+msgstr "Contrôleur PC Engine"
+
+msgctxt "Addon Description"
+msgid "The PC Engine, also known as the TurboGrafx-16, was released by Hudson Soft and NEC in 1987. It became the top-selling console in Japan, but trailed behind both Sega and Nintendo in the North American and Eurpoean markets."
+msgstr "Le PC Engine, également connu sous le nom de TurboGrafx-16, a été lancé par Hudson Soft et NEC en 1987. Il est devenu la console la plus vendue au Japon, mais traînait derrière Sega et Nintendo sur les marchés nord-américain et européen."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Crédit image : OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "PC Engine"
+msgstr "PC Engine"
+
+msgctxt "#30001"
+msgid "I"
+msgstr "I"
+
+msgctxt "#30002"
+msgid "II"
+msgstr "II"
+
+msgctxt "#30003"
+msgid "III"
+msgstr "III"
+
+msgctxt "#30004"
+msgid "IV"
+msgstr "IV"
+
+msgctxt "#30005"
+msgid "V"
+msgstr "V"
+
+msgctxt "#30006"
+msgid "VI"
+msgstr "VI"
+
+msgctxt "#30007"
+msgid "Select"
+msgstr "Sélectionner"
+
+msgctxt "#30008"
+msgid "Run"
+msgstr "Lancer"
+
+msgctxt "#30009"
+msgid "Up"
+msgstr "Haut"
+
+msgctxt "#30010"
+msgid "Right"
+msgstr "Droite"
+
+msgctxt "#30011"
+msgid "Down"
+msgstr "Bas"
+
+msgctxt "#30012"
+msgid "Left"
+msgstr "Gauche"
+
+msgctxt "#30013"
+msgid "Mode Switch"
+msgstr "Changement de mode"
