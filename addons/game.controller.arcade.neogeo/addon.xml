@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.arcade.neogeo"
+        name="Neo Geo Controller"
+        version="1.0.29"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Neo Geo controller</summary>
+        <summary lang="de_DE">Neo Geo Controller</summary>
+        <summary lang="en_GB">Neo Geo Controller</summary>
+        <summary lang="es_ES">Mando Neo Geo</summary>
+        <summary lang="fr_FR">Contrôleur Neo Geo</summary>
+        <summary lang="it_IT">Controller Neo Geo</summary>
+        <summary lang="ru_RU">Контроллер Neo Geo</summary>
+        <summary lang="zh_CN">Neo Geo 控制器</summary>
+        <description lang="da_DK">Controlleren til Neo Geo AES (Advanced Entertainment System); en videospilkonsol, der blev udgivet i USA i 1991. Neo Geo AES var et nichesystem, der blev markedsført mod avancerede forbrugere. Konsollen var dyr, ligesom selve spilene, som kunne sælges for hundreder af dollars.</description>
+        <description lang="de_DE">Der Controller für das Neo Geo AES (Advanced Entertainment System), einer Videospielkonsole, die 1991 in den USA auf den Markt kam. Das Neo Geo AES war ein Nischensystem, das sich an anspruchsvolle Konsumenten richtete. Die Konsole war teuer, und das waren auch die Spiele selbst, die Hunderte von Dollars kosten konnten.</description>
+        <description lang="en_GB">The controller for the Neo Geo AES (Advanced Entertainment System), a video game console released in the US in 1991. The Neo Geo AES was a niche system marketed toward high-end consumers. The console was expensive, as were the games themselves, which could go for hundreds of dollars.</description>
+        <description lang="es_ES">El mando de la Neo Geo AES (Advanced Entertainment System), una videoconsola lanzada en EE.UU. en 1991. La Neo Geo AES era un sistema de nicho dirigido a consumidores de gama alta. La videoconsola era cara, al igual que los juegos, que podían llegar a costar cientos de dólares.</description>
+        <description lang="fr_FR">Le contrôleur pour Neo Geo AES (Advanced Entertainment System), une console de jeux vidéo sortie aux États-Unis en 1991. Le Neo Geo AES était un système de niche commercialisé auprès des consommateurs haut de gamme. La console était chère, tout comme les jeux eux-mêmes, qui pouvaient coûter des centaines de dollars.</description>
+        <description lang="it_IT">Il controller per Neo Geo AES (Advanced Entertainment System), una console per videogiochi rilasciata negli Stati Uniti nel 1991. Il Neo Geo AES era un sistema di nicchia commercializzato per i consumatori di fascia alta. La console era costosa, così come i giochi stessi, che potevano arrivare a centinaia di dollari.</description>
+        <description lang="ru_RU">Контроллер для Neo Geo AES (Advanced Entertainment System), игровой консоли, выпущенной в США в 1991 году. Neo Geo AES была нишевой системой, предназначенной для элитных потребителей. Консоль была дорогой, как и сами игры, которые могли стоить сотни долларов.</description>
+        <description lang="zh_CN">Neo Geo AES（Advanced Entertainment System 高级娱乐系统）控制器，1991年在美国发布的一款视频游戏机。Neo Geo AES 是面向高端消费者的定制系统。游戏机很贵，游戏也很贵，要几百美元。</description>
+    </extension>
+</addon>

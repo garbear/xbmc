@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.intellivision"
+        name="Intellivision Controller"
+        version="1.0.25"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Intellivision controller</summary>
+        <summary lang="de_DE">Intellivision Controller</summary>
+        <summary lang="en_GB">Intellivision controller</summary>
+        <summary lang="es_ES">Mando Intellivision</summary>
+        <summary lang="fi_FI">Intellivision-ohjain</summary>
+        <summary lang="fr_FR">Contrôleur Intelvision</summary>
+        <summary lang="it_IT">Controller per Intellivision</summary>
+        <summary lang="ru_RU">Контроллер Intellivision</summary>
+        <summary lang="zh_CN">Intellivision 控制器</summary>
+        <description lang="da_DK">Intellivision, et kombination af &quot;intelligent tv&quot;, blev udgivet af Mattel Electronics i 1979. I 2009 udnævnte IGN Intellivision til den 14. største konsol nogensinde.</description>
+        <description lang="de_DE">Die Intellivision, ein Kunstwort aus „intelligent television“, wurde 1979 von Mattel Electronics auf den Markt gebracht. Im Jahr 2009 kürte IGN die Intellivision zur 14. besten Konsole aller Zeiten.</description>
+        <description lang="en_GB">The Intellivision, a portmanteau of &quot;intelligent television&quot;, was released by Mattel Electronics in 1979. In 2009, IGN named the Intellivision the 14th greatest console of all time.</description>
+        <description lang="es_ES">La Intellivision, una combinación de las palabras &quot;intelligent television&quot;, fue lanzada por Mattel Electronics en 1979. En 2009, IGN nombró a la Intellivision la 14ª mejor videoconsola de todos los tiempos.</description>
+        <description lang="fi_FI">Mattel Electronics julkaisi Intellivisionin (yhdistelmä sanoista &quot;intelligent television&quot;) vuonna 1979. Vuonna 2009 IGN nimesi sen kaikkien aikojen 14. parhaaksi konsoliksi.</description>
+        <description lang="fr_FR">L&apos;Intellivision, un portemanteau de &quot;télévision intelligente&quot;, a été lancé par Mattel Electronics en 1979. En 2009, IGN a nommé l&apos;Intellivision la 14e plus grande console de tous les temps.</description>
+        <description lang="it_IT">L&apos;Intellivision, una combinazione di &quot;televisione intelligente&quot;, è stato rilasciato da Mattel Electronics nel 1979. Nel 2009, IGN ha nominato Intellivision la quattordicesima più grande console di tutti i tempi.</description>
+        <description lang="ru_RU">Intellivision, название образовано от «интеллектуального телевидения», была выпущена компанией Mattel Electronics в 1979 году. В 2009 году IGN назвал Intellivision 14-й величайшей консолью всех времен.</description>
+        <description lang="zh_CN">Intellivision 是美泰电子公司于1979年发布的“智能电视”产品。2009年，IGN 将 Intellivision 列有史以来主机排名第14位。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

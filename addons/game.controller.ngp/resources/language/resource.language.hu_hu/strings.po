@@ -1,0 +1,62 @@
+# Kodi Media Center language file
+# Addon Name: Neo Geo Pocket
+# Addon id: game.controller.ngp
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.ngp\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-24 08:15+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Hungarian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ngp/hu_hu/>\n"
+"Language: hu_hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Neo Geo Pocket"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Neo Geo Pocket was a handheld console with a monochrome screen released by SNK in 1998. It was generally unsuccessful and in 1999 was replaced by the Neo Geo Pocket Color to better compete with the Game Boy Color."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Neo Geo Pocket"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "Option"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Up"
+msgstr "Fel"
+
+msgctxt "#30005"
+msgid "Right"
+msgstr "Jobb"
+
+msgctxt "#30006"
+msgid "Down"
+msgstr "Le"
+
+msgctxt "#30007"
+msgid "Left"
+msgstr "Bal"
