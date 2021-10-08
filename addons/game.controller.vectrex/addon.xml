@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.vectrex"
+        name="Vectrex Controller"
+        version="1.0.23"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Vectrex controller</summary>
+        <summary lang="de_DE">Vectrex Controller</summary>
+        <summary lang="en_GB">Vectrex controller</summary>
+        <summary lang="es_ES">Mando Vectrex</summary>
+        <summary lang="fr_FR">Contrôleur Vectrex</summary>
+        <summary lang="it_IT">Controller Vectrex</summary>
+        <summary lang="zh_CN">Vectrex 控制器</summary>
+        <description lang="da_DK">Vectrex blev udgivet i 1982 af General Consumer Electronics (senere købt af Milton Bradley). Konsollen havde en indbygget monokrom skærm, der kunne vise vektorgrafik.</description>
+        <description lang="de_DE">Vectrex wurde 1982 von General Consumer Electronics (später von Milton Bradley aufgekauft) herausgebracht. Die Konsole verfügte über einen eingebauten Monochrom-Monitor, der Vektorgrafiken anzeigen konnte.</description>
+        <description lang="en_GB">The Vectrex was released in 1982 by General Consumer Electronics (later purchased by Milton Bradley). The console featured a built-in monochrome monitor capable of displaying vector graphics.</description>
+        <description lang="es_ES">La Vectrex fue lanzada en 1982 por General Consumer Electronics (posteriormente adquirida por Milton Bradley). La videoconsola llevaba incorporada una pantalla monocromática capaz de mostrar gráficos vectoriales.</description>
+        <description lang="fr_FR">Le Vectrex a été lancé en 1982 par General Consumer Electronics (plus tard acheté par Milton Bradley). La console comportait un moniteur monochrome intégré capable d&apos;afficher des graphiques vectoriels.</description>
+        <description lang="it_IT">Il Vectrex è stato rilasciato nel 1982 da General Consumer Electronics (successivamente acquistato da Milton Bradley). La console presentava un monitor monocromatico integrato in grado di visualizzare grafica vettoriale.</description>
+        <description lang="zh_CN">Vectrex 于1982年由通用消费电子公司（后被米尔顿·布拉德利收购）发布。游戏主机配有一个内置的单色显示器，能够显示矢量图形。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>
