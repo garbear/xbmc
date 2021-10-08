@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+  <category name="face" label="35074">
+    <button name="a" type="digital" label="30001"/>
+    <button name="b" type="digital" label="30002"/>
+    <button name="c" type="digital" label="30003"/>
+    <button name="x" type="digital" label="30004"/>
+    <button name="y" type="digital" label="30005"/>
+    <button name="z" type="digital" label="30006"/>
+    <button name="l" type="digital" label="30007"/>
+    <button name="r" type="digital" label="30008"/>
+    <button name="start" type="digital" label="30009"/>
+  </category>
+  <category name="joysticks" label="35073">
+    <analogstick name="joystick" label="30010"/>
+    <throttle name="throttle" label="30011"/>
+    <button name="throttlelatch" type="digital" label="30012"/>
+  </category>
+</layout>
