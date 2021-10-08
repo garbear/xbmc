@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.switch.pro"
+        name="Nintendo Switch Pro Controller"
+        version="1.0.0"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">Nintendo Switch Pro Controller</summary>
+        <description lang="en_GB">The Nintendo Switch Pro Controller was released alongside the Switch in 2017. It has the Joy-Con buttons in a conventional shape, with a Capture button for screenshots.</description>
+        <disclaimer lang="en_GB">Image credit: Evan-Amos, Wikimedia Commons</disclaimer>
+    </extension>
+</addon>
