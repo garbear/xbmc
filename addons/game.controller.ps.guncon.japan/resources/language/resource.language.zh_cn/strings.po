@@ -1,0 +1,50 @@
+# Kodi Media Center language file
+# Addon Name: PlayStation Guncon (Japan)
+# Addon id: game.controller.ps.guncon.japan
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.ps.guncon.japan\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ps-guncon-japan/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "PlayStation Guncon (Japan)"
+msgstr "PlayStation Guncon（日本）"
+
+msgctxt "Addon Description"
+msgid "The Guncon, known as G-Con in Europe, is a family of light guns designed by Namco for the PlayStation. The original model was released alongside the PlayStation in 1994."
+msgstr "Guncon，在欧洲被称为 G-Con，是 Namco 为 PlayStation 设计的一系列光线枪。首款型号于1994年与 PlayStation 一起发布。"
+
+msgctxt "#30000"
+msgid "PlayStation Guncon (Japan)"
+msgstr "PlayStation Guncon（日本）"
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "扳机"
+
+msgctxt "#30002"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30003"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30004"
+msgid "Offscreen"
+msgstr "屏外"
+
+msgctxt "#30005"
+msgid "Crosshair"
+msgstr "准星"
