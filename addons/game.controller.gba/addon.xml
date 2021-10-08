@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.gba"
+        name="Game Boy Advance"
+        version="1.0.27"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Game Boy Advance</summary>
+        <summary lang="de_DE">Game Boy Advance</summary>
+        <summary lang="en_GB">Game Boy Advance</summary>
+        <summary lang="es_ES">Game Boy Advance</summary>
+        <summary lang="es_MX">Game Boy Advance</summary>
+        <summary lang="fi_FI">Game Boy Advance</summary>
+        <summary lang="fr_FR">Game Boy Advance</summary>
+        <summary lang="it_IT">Game Boy Advance</summary>
+        <summary lang="ru_RU">Game Boy Advance</summary>
+        <summary lang="zh_CN">Game Boy Advance</summary>
+        <description lang="da_DK">Nintendo Game Boy Advance er en 32-bit håndholdt videospilkonsol udgivet i 2001. På trods af hård konkurrence fastholdt Nintendo størstedelen af markedsandelen med enheden.</description>
+        <description lang="de_DE">Der Nintendo Game Boy Advance ist eine tragbare 32-Bit-Videospielkonsole, die im Jahr 2001 auf den Markt kam. Trotz harter Konkurrenz konnte Nintendo mit dem Gerät die Mehrheit der Markanteile halten.</description>
+        <description lang="en_GB">The Nintendo Game Boy Advance is a 32-bit handheld video game console released in 2001. Despite fierce competition, Nintendo maintained a majority market share with the device.</description>
+        <description lang="es_ES">La Nintendo Game Boy Advance es una videoconsola portátil de 32 bits lanzada en 2001. A pesar de la feroz competencia, Nintendo mantuvo una cuota de mercado mayoritaria con este dispositivo.</description>
+        <description lang="fi_FI">Nintendo Game Boy Advance on 32-bittinen käsikonsoli, joka julkaistiin vuonna 2001. Kovasta kilpailusta huolimatta Nintendo säilytti sillä markkinajohtajan aseman.</description>
+        <description lang="fr_FR">La Nintendo Game Boy Advance est une console de jeu vidéo portable 32 bits sortie en 2001. Malgré une concurrence féroce, Nintendo a conservé une part de marché majoritaire avec l&apos;appareil.</description>
+        <description lang="it_IT">Il Nintendo Game Boy Advance è una console per videogiochi portatile a 32 bit rilasciata nel 2001. Nonostante la forte concorrenza, Nintendo ha mantenuto una quota di mercato maggioritaria con il dispositivo.</description>
+        <description lang="ru_RU">Nintendo Game Boy Advance - 32-битная консоль, выпущенная в 2001. Несмотря на жесткую конкуренцию, Nintendo сохранила большую долю рынка с этим устройством.</description>
+        <description lang="zh_CN">任天堂 Game Boy Advance 是2001年发布的一款32位手持视频游戏机。尽管竞争激烈，任天堂仍然保持着该设备的大部分市场份额。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

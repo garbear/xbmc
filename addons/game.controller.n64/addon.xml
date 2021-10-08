@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.n64"
+        name="Nintendo 64 Controller"
+        version="1.0.31"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Nintendo 64 controller</summary>
+        <summary lang="de_DE">Nintendo 64 Controller</summary>
+        <summary lang="en_GB">Nintendo 64 controller</summary>
+        <summary lang="es_ES">Mando Nintendo 64</summary>
+        <summary lang="fi_FI">Nintendo 64 -ohjain</summary>
+        <summary lang="fr_FR">Manette Nintendo 64</summary>
+        <summary lang="it_IT">Controller Nintendo 64</summary>
+        <summary lang="ru_RU">Контроллер Nintendo 64</summary>
+        <summary lang="zh_CN">任天堂 64 控制器</summary>
+        <description lang="da_DK">Nintendo 64-controlleren, der blev udgivet i 1996, havde et unik &quot;M&quot;-formet design. Intens rotation af den analoge stick under Mario Party forårsagede angiveligt forbrændingsskader på nogle spillere.</description>
+        <description lang="de_DE">Der Nintendo-64-Controller, der 1996 auf den Markt kam, hatte ein einzigartiges M-förmiges Design. Das intensive Drehen des Analogsticks während Mario Party soll bei einigen Spielern Verbrennungen verursacht haben.</description>
+        <description lang="en_GB">The Nintendo 64 controller, released in 1996, featured a unique &quot;M&quot; shape design. Intense rotating of the analog stick during Mario Party reportedly caused burn injuries to some players.</description>
+        <description lang="es_ES">El mando de la Nintendo 64, lanzado en 1996, tenía un diseño único en forma de &quot;M&quot;. Al parecer, la rotación intensa del stick analógico durante Mario Party causó quemaduras a algunos jugadores.</description>
+        <description lang="fi_FI">Vuonna 1996 julkaistu Nintendo 64 -ohjain esitteli ainutlaatuisen M-mallisen muotoilun. Analogisen sauvan voimakas pyöritys Mario Party -pelissä aiheutti joillekin pelaajile palovammoja.</description>
+        <description lang="fr_FR">La manette Nintendo 64, sortie en 1996, présentait un design unique en forme de &quot;M&quot;. La rotation intense du stick analogique pendant Mario Party aurait causé des brûlures à certains joueurs.</description>
+        <description lang="it_IT">Il controller Nintendo 64, rilasciato nel 1996, presentava un design unico a forma di &quot;M&quot;. Secondo quanto riferito, l&apos;intensa rotazione della levetta analogica durante Mario Party ha causato ustioni ad alcuni giocatori.</description>
+        <description lang="ru_RU">Контроллер Nintendo 64, выпущенный в 1996 году, отличался уникальным дизайном в форме буквы «М». Сообщается, что интенсивное вращение аналогового джойстика во время Mario Party привело к ожогам у некоторых игроков.</description>
+        <description lang="zh_CN">1996年发布的任天堂 64 控制器采用了独特的“M”形设计。据报道，在玩《马里奥派对》时，模拟摇杆的剧烈转动导致一些玩家烫伤。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

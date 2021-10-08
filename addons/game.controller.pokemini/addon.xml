@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.pokemini"
+        name="Pokémini Controller"
+        version="1.0.22"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Pokémini Controller</summary>
+        <summary lang="de_DE">Pokémini Controller</summary>
+        <summary lang="en_GB">Pokémini Controller</summary>
+        <summary lang="es_ES">Mando Pokémini</summary>
+        <summary lang="fi_FI">Pokémini-ohjain</summary>
+        <summary lang="fr_FR">Contrôleur Pokémon</summary>
+        <summary lang="it_IT">Controller Pokémon</summary>
+        <summary lang="zh_CN">Pokémini 控制器</summary>
+        <description lang="da_DK">Pokémon Mini er en håndholdt spilkonsol, der blev designet og fremstillet af Nintendo og havde et tema omkring Pokémon-serien. Det er det mindste spilsystem med udskiftelige patroner, der nogensinde er produceret af Nintendo og vejer 71 gram.</description>
+        <description lang="de_DE">Pokémon Mini ist eine tragbare Spielkonsole, die von Nintendo entwickelt und hergestellt wurde und sich an der Pokémon-Medienserie orientiert. Es ist es das kleinste jemals von Nintendo hergestellte Spielsystem mit austauschbaren Kassetten, bei einem Gewicht von nur knapp 71 Gramm.</description>
+        <description lang="en_GB">The Pokémon Mini is a handheld game console that was designed and manufactured by Nintendo and themed around the Pokémon media franchise. It is the smallest game system with interchangeable cartridges ever produced by Nintendo, weighing just under two and a half ounces (71 grams).</description>
+        <description lang="es_ES">La Pokémon Mini es una videoconsola portátil diseñada y fabricada por Nintendo en torno a la franquicia Pokémon. Es la consola de cartuchos intercambiables más pequeña jamás fabricada por Nintendo, con un peso de 71 gramos.</description>
+        <description lang="fi_FI">Pokémon Mini on käsikonsoli, jonka Nintendo on suunnitellut ja valmistanut ja jonka teemana on Pokémon-mediasarja. Se on pienin Nintendon koskaan valmistama vaihdettavilla kaseteilla varustettu pelijärjestelmä, joka painaa vajaat kaksi ja puoli unssia (71 grammaa).</description>
+        <description lang="fr_FR">Le Pokémon Mini est une console de jeu portable qui a été conçue et fabriquée par Nintendo et dont le thème est autour de la franchise médiatique Pokémon. Il s&apos;agit de la plus petite console de jeu à cartouches interchangeables jamais produite par Nintendo, pesant un peu moins de deux onces et demie (71 grammes).</description>
+        <description lang="it_IT">Il Pokémon Mini è una console di gioco portatile progettata e prodotta da Nintendo e ispirata al franchise multimediale Pokémon. È la più piccola console di gioco con cartucce intercambiabili mai prodotta da Nintendo, con un peso di poco meno di due once e mezzo (71 grammi).</description>
+        <description lang="zh_CN">Pokémon Mini 是一款由任天堂设计和制造，以神奇宝贝媒体专营权为主题的手持游戏机。这是任天堂有史以来生产的最小的带有可更换游戏卡的游戏机，重量不到2.5盎司（71克）。</description>
+    </extension>
+</addon>

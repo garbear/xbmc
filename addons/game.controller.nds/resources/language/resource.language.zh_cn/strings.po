@@ -1,0 +1,98 @@
+# Kodi Media Center language file
+# Addon Name: Nintendo DS
+# Addon id: game.controller.nds
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.nds\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-08 17:12+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-nds/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Nintendo DS"
+msgstr "任天堂 DS"
+
+msgctxt "Addon Description"
+msgid "The Nintendo DS (short for \"Dual Screen\") is a 32-bit handheld video game console released in 2004. A DS Lite model was launched in 2006, followed by the DSi. Combined, these are the best selling handheld to date, and second best console (behind the PlayStation 2)."
+msgstr "任天堂 DS（Dual Screen 双屏）是2004年发布的一款32位手持视频游戏机。DS Lite 型号于2006年推出，随后是DSi。结合起来，这是迄今为止最畅销的手持设备，也是第二好的主机（仅次于 PlayStation 2）。"
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "图片来源：OpenEmu（openemu.org）"
+
+msgctxt "#30000"
+msgid "Nintendo DS"
+msgstr "任天堂 DS"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30004"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "开始"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30007"
+msgid "Up"
+msgstr "上"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "右"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "下"
+
+msgctxt "#30010"
+msgid "Left"
+msgstr "左"
+
+msgctxt "#30011"
+msgid "Left Bumper"
+msgstr "左保险"
+
+msgctxt "#30012"
+msgid "Right Bumper"
+msgstr "右保险"
+
+msgctxt "#30013"
+msgid "Touch pointer"
+msgstr "触摸指针"
+
+msgctxt "#30014"
+msgid "Close Lid"
+msgstr "关闭盖子"
+
+msgctxt "#30015"
+msgid "Screen Layout"
+msgstr "屏幕布局"
+
+msgctxt "#30016"
+msgid "Microphone"
+msgstr "麦克风"
