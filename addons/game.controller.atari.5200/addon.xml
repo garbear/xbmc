@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.atari.5200"
+        name="Atari 5200 Controller"
+        version="1.0.25"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Atari 5200 controller</summary>
+        <summary lang="de_DE">Atari 5200 Controller</summary>
+        <summary lang="en_GB">Atari 5200 controller</summary>
+        <summary lang="es_ES">Mando Atari 5200</summary>
+        <summary lang="fi_FI">Atari 5200 -ohjain</summary>
+        <summary lang="fr_FR">Manette Atari 5200</summary>
+        <summary lang="it_IT">Controller Atari 5200</summary>
+        <summary lang="ru_RU">Atari 5200 контроллер</summary>
+        <summary lang="zh_CN">雅达利 5200 控制器</summary>
+        <description lang="da_DK">Atari 5200 blev udgivet i 1982. Designet af joysticket, der brugte en svag gummistøvle i stedet for fjedre, viste sig at være klodset og upålidelig. Den blev bedømt som den 10. værste videospilcontroller af IGN.</description>
+        <description lang="de_DE">Der Atari 5200 wurde 1982 auf den Markt gebracht. Die Konstruktion des Joysticks, der anstelle von Federn einen schwachen Gummipuffer verwendete, erwies sich als unhandlich und unzuverlässig. Er wurde von IGN als der zehntschlechteste Videospielcontroller eingestuft.</description>
+        <description lang="en_GB">The Atari 5200 was released in 1982. The design of the joystick, which used a weak rubber boot instead of springs, proved to be ungainly and unreliable. It was rated the 10th worst video game controller by IGN.</description>
+        <description lang="es_ES">La Atari 5200 salió al mercado en 1982. El diseño del joystick, que utilizaba una débil funda de goma en lugar de resortes, resultó ser poco práctico y confiable. Fue clasificado como el décimo peor mando de videojuegos por IGN.</description>
+        <description lang="fi_FI">Atari 5200 julkaistiin vuonna 1982. Jousien sijaan ohjainsauvan suunnittelussa päädyttiin käyttämään heikkoa kumijuurta, joka osoittautui epämiellyttäväksi ja epäluotettavaksi. IGN arvioi ohjaimen 10. huonoimmaksi videopeliohjaimeksi.</description>
+        <description lang="fr_FR">L&apos;Atari 5200 est sorti en 1982. La conception du joystick, qui utilisait une botte en caoutchouc faible au lieu de ressorts, s&apos;est avérée disgracieuse et peu fiable. Il a été classé 10e pire contrôleur de jeu vidéo par IGN.</description>
+        <description lang="it_IT">L&apos;Atari 5200 è stato rilasciato nel 1982. Il design del joystick, che utilizzava un debole manicotto di gomma invece delle molle, si è rivelato sgraziato e inaffidabile. È stato valutato da IGN come il decimo peggior controller per videogiochi.</description>
+        <description lang="ru_RU">Atari 5200 выпущена в 1982 году. Конструкция джойстика, в котором вместо пружин использовалась резина, оказалась неуклюжим и ненадежным. Он был оценен IGN как 10-й худший контроллер видеоигр.</description>
+        <description lang="zh_CN">雅达利 5200 于1982年发布。此游戏杆的设计，用一个脆弱的橡胶套代替弹簧，被证明是笨拙和不可靠的。它被 IGN 评为第十差的视频游戏控制器。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

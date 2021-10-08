@@ -1,0 +1,50 @@
+# Kodi Media Center language file
+# Addon Name: Sega Mouse
+# Addon id: game.controller.genesis.mouse
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.genesis.mouse\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-03-20 20:16+0000\n"
+"Last-Translator: skypichat <skypichat@hotmail.fr>\n"
+"Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-genesis-mouse/fr_fr/>\n"
+"Language: fr_fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Genesis mouse"
+msgstr "Souris Sega Genesis"
+
+msgctxt "Addon Description"
+msgid "The Sega Mouse is a ball mouse for the Sega Mega Drive/Genesis released in 1993. It was intended to be used for art creation software."
+msgstr "La souris Sega est une souris à boule pour la Sega Mega Drive/Genesis sortie en 1993. Elle était destinée à être utilisée pour les logiciels de création artistique."
+
+msgctxt "#30000"
+msgid "Sega Mouse"
+msgstr "Souris Sega"
+
+msgctxt "#30001"
+msgid "Left button"
+msgstr "Bouton gauche"
+
+msgctxt "#30002"
+msgid "Right button"
+msgstr "Bouton droit"
+
+msgctxt "#30003"
+msgid "Midle button"
+msgstr "Bouton du milieu"
+
+msgctxt "#30004"
+msgid "Start"
+msgstr "Démarrer"
+
+msgctxt "#30005"
+msgid "Pointer"
+msgstr "Pointeur"
