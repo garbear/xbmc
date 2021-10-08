@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.channelf"
+        name="Channel F Controller"
+        version="1.0.1"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">Channel F controller</summary>
+        <description lang="en_GB">The Fairchild Video Entertainment System, later renamed Channel F, was released in 1976. Its controller has a triangular cap that can be pushed down, pulled up, twisted either way, and moved in four directions.</description>
+        <disclaimer lang="en_GB">Image credit: Evan-Amos, Wikimedia Commons (commons.wikimedia.org)</disclaimer>
+    </extension>
+</addon>
