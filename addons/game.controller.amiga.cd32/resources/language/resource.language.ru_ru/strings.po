@@ -1,0 +1,78 @@
+# Kodi Media Center language file
+# Addon Name: Amiga CD32 Controller
+# Addon id: game.controller.amiga.cd32
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.amiga.cd32\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-09-22 10:15+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
+"Language-Team: Russian <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-amiga-cd32/ru_ru/>\n"
+"Language: ru_ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+msgctxt "Addon Summary"
+msgid "Amiga CD³² controller"
+msgstr "Контроллер Amiga CD³²"
+
+msgctxt "Addon Description"
+msgid "The Amiga CD³² is a 32-bit console released by Commodore in 1993. The Amiga CD³² is also compatible with most controllers from the '80s and '90s."
+msgstr "Amiga CD³² это 32-битная консоль, выпущенная Commodore в 1993 году. Amiga CD³² также совместима с большинством контроллеров 80-х и 90-х годов."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Источник изображения: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Amiga CD³² Controller"
+msgstr "Контроллер Amiga CD³²"
+
+msgctxt "#30001"
+msgid "Red"
+msgstr "Красный"
+
+msgctxt "#30002"
+msgid "Blue"
+msgstr "Синий"
+
+msgctxt "#30003"
+msgid "Green"
+msgstr "Зелёный"
+
+msgctxt "#30004"
+msgid "Yellow"
+msgstr "Желтый"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Вверх"
+
+msgctxt "#30006"
+msgid "Right"
+msgstr "Вправо"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "Вниз"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Влево"
+
+msgctxt "#30009"
+msgid "Play"
+msgstr "Играть"
+
+msgctxt "#30010"
+msgid "Rewind"
+msgstr "Перемотка назад"
+
+msgctxt "#30011"
+msgid "Forward"
+msgstr "Перемотка вперёд"
