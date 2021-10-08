@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ps.dualanalog"
+        name="PlayStation Dual Analog"
+        version="1.0.31"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PlayStation Dobbel Analog</summary>
+        <summary lang="de_DE">PlayStation Dual Analog</summary>
+        <summary lang="en_GB">PlayStation Dual Analog</summary>
+        <summary lang="es_ES">PlayStation Dual Analógico</summary>
+        <summary lang="es_MX">PlayStation Dual Analog</summary>
+        <summary lang="fi_FI">PlayStation Dual Analog -ohjain</summary>
+        <summary lang="fr_FR">PlayStation Dual Analog</summary>
+        <summary lang="it_IT">PlayStation Dual analogico</summary>
+        <summary lang="zh_CN">PlayStation Dual Analog</summary>
+        <description lang="ca_ES">El controlador de PlayStation va ser llançat per Sony Computer Entertainment l&apos;any 1994. Sony va llançar breument el controlador Dual Analog el 1997, seguit del DualShock amb vibració més tard aquell any.</description>
+        <description lang="da_DK">PlayStation-controlleren blev udgivet af Sony Computer Entertainment i 1994. Sony frigav kortvarigt Dobbel Analog-controlleren i 1997, efterfulgt af den rumble-aktiverede DualShock senere samme år.</description>
+        <description lang="de_DE">Der PlayStation Controller wurde 1994 von Sony Computer Entertainment veröffentlicht. Sony stellte 1997 kurzerhand den „Dual Analog“-Controller sowie im gleichen Jahr den vibrationsaktiven „DualShock“ vor.</description>
+        <description lang="en_GB">The PlayStation controller was released by Sony Computer Entertainment in 1994. Sony briefly released the Dual Analog controller in 1997, followed by the rumble-enabled DualShock later that year.</description>
+        <description lang="es_ES">Sony Computer Entertainment lanzó el mando de la PlayStation en 1994. Sony comercializó brevemente el mando Dual Analog en 1997, al que siguió el DualShock con vibración háptica ese mismo año.</description>
+        <description lang="es_MX">El control de PlayStation fue lanzado por Sony Computer Entertainment en 1994. Sony lanzó brevemente el control Dual Analog en 1997, seguido del DualShock con retroalimentación háptica posteriormente ese mismo año.</description>
+        <description lang="fi_FI">Sony Computer Entertainment julkaisi PlayStation-ohjaimen vuonna 1994. Sony julkaisi Dual Analog -ohjaimen vuonna 1997, jota seurasi myöhemmin samana vuonna värinäominaisuudella varustettu DualShock-ohjain.</description>
+        <description lang="fr_FR">Le contrôleur PlayStation a été lancé par Sony Computer Entertainment en 1994. Sony a brièvement sorti le contrôleur Dual Analog en 1997, suivi du DualShock avec vibration plus tard la même année.</description>
+        <description lang="it_IT">Il controller PlayStation è stato rilasciato da Sony Computer Entertainment nel 1994. Sony ha rilasciato brevemente il controller Dual Analog nel 1997, seguito dal DualShock abilitato alla vibrazione nello stesso anno.</description>
+        <description lang="zh_CN">索尼电脑娱乐公司于1994年发布了 PlayStation 控制器。索尼在1997年短暂发布了 Dual Analog 控制器，随后在那年晚些时候发布了支持震动功能的 DualShock。</description>
+    </extension>
+</addon>
