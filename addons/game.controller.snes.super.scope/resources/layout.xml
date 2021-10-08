@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+  <category name="lightgun" label="35105">
+    <button name="trigger" type="digital" label="30001"/>
+    <button name="cursor" type="digital" label="30002"/>
+    <button name="turbo" type="digital" label="30003"/>
+    <button name="pause" type="digital" label="30004"/>
+  </category>
+  <category name="offscreen" label="35106">
+    <button name="offscreen" type="digital" label="30005"/>
+  </category>
+  <category name="pointer" label="35104">
+    <relpointer name="crosshair" label="30006"/>
+  </category>
+</layout>
