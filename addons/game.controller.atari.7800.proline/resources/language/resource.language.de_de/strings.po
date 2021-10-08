@@ -1,0 +1,78 @@
+# Kodi Media Center language file
+# Addon Name: Atari 7800 Proline
+# Addon id: game.controller.atari.7800.proline
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.7800.proline\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-01 20:55+0000\n"
+"Last-Translator: Demian <Demian@gmx.co.uk>\n"
+"Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-7800-proline/de_de/>\n"
+"Language: de_de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Atari 7800 Proline"
+msgstr "Atari 7800 Proline"
+
+msgctxt "Addon Description"
+msgid "The Atari 7800 ProSystem was released in 1986. It came bundled with the Atari Proline Joystick, but due to criticism over ergonimic issues Atari later released a gamepad with European 7800s."
+msgstr "Das Atari 7800 ProSystem wurde 1986 veröffentlicht. Es wurde zusammen mit dem Atari Proline Joystick ausgeliefert, aber aufgrund von Kritik an der Ergonomie brachte Atari später ein Gamepad für europäische 7800er heraus."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Bildverweis: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Atari 7800 Proline"
+msgstr "Atari 7800 Proline"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Taste 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Taste 2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Hoch"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Rechts"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Runter"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Links"
+
+msgctxt "#30007"
+msgid "Reset"
+msgstr "Reset"
+
+msgctxt "#30008"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30009"
+msgid "Pause"
+msgstr "Pause"
+
+msgctxt "#30010"
+msgid "Left Difficulty"
+msgstr "Links Schwierigkeit"
+
+msgctxt "#30011"
+msgid "Right Difficulty"
+msgstr "Rechts Schwierigkeit"

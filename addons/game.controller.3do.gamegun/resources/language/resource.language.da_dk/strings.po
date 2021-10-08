@@ -1,0 +1,42 @@
+# Kodi Media Center language file
+# Addon Name: 3DO Gamegun
+# Addon id: game.controller.3do.gamegun
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.3do.gamegun\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-08-18 16:16+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-3do-gamegun/da_dk/>\n"
+"Language: da_dk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.7.2\n"
+
+msgctxt "Addon Summary"
+msgid "3DO Gamegun"
+msgstr "3DO Gamegun"
+
+msgctxt "Addon Description"
+msgid "The Gamegun was released for the 3DO in 1994 by American Laser Games."
+msgstr "Gamegun blev udgivet til 3DO i 1994 af American Laser Games."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Kildeangivelse: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "3DO Gamegun"
+msgstr "3DO Gamegun"
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "Trigger"
+
+msgctxt "#30002"
+msgid "Crosshair"
+msgstr "Crosshair"

@@ -1,0 +1,78 @@
+# Kodi Media Center language file
+# Addon Name: Amiga CD32 Controller
+# Addon id: game.controller.amiga.cd32
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.amiga.cd32\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-08-08 05:16+0000\n"
+"Last-Translator: Edson Armando <edsonarmando78@outlook.com>\n"
+"Language-Team: Spanish (Mexico) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-amiga-cd32/es_mx/>\n"
+"Language: es_mx\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Amiga CD³² controller"
+msgstr "Control Amiga CD³²"
+
+msgctxt "Addon Description"
+msgid "The Amiga CD³² is a 32-bit console released by Commodore in 1993. The Amiga CD³² is also compatible with most controllers from the '80s and '90s."
+msgstr "La Amiga CD³² es una consola de 32 bits lanzada por Commodore en 1993. La Amiga CD³² es también compatible con la mayoría de controles de los '80s y '90s."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Wikipedia (wikipedia.org)"
+msgstr "Créditos de imagen: Wikipedia (wikipedia.org)"
+
+msgctxt "#30000"
+msgid "Amiga CD³² Controller"
+msgstr "Control Amiga CD³²"
+
+msgctxt "#30001"
+msgid "Red"
+msgstr "Rojo"
+
+msgctxt "#30002"
+msgid "Blue"
+msgstr "Azul"
+
+msgctxt "#30003"
+msgid "Green"
+msgstr "Verde"
+
+msgctxt "#30004"
+msgid "Yellow"
+msgstr "Amarillo"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Arriba"
+
+msgctxt "#30006"
+msgid "Right"
+msgstr "Derecha"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "Abajo"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Izquierda"
+
+msgctxt "#30009"
+msgid "Play"
+msgstr "Jugar"
+
+msgctxt "#30010"
+msgid "Rewind"
+msgstr "Rebobinar"
+
+msgctxt "#30011"
+msgid "Forward"
+msgstr "Adelantar"

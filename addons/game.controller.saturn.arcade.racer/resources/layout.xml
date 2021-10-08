@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+  <category name="wheel" label="35071">
+    <button name="a" type="digital" label="30001"/>
+    <button name="b" type="digital" label="30002"/>
+    <button name="c" type="digital" label="30003"/>
+    <button name="x" type="digital" label="30004"/>
+    <button name="y" type="digital" label="30005"/>
+    <button name="z" type="digital" label="30006"/>
+    <button name="start" type="digital" label="30007"/>
+    <wheel name="wheel" label="30008"/>
+  </category>
+  <category name="paddles" label="35072">
+    <button name="leftshift" type="digital" label="30009"/>
+    <button name="rightshift" type="digital" label="30010"/>
+  </category>
+</layout>

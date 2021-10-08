@@ -1,0 +1,94 @@
+# Kodi Media Center language file
+# Addon Name: GameCube Controller
+# Addon id: game.controller.gamecube
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.gamecube\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-01 21:18+0000\n"
+"Last-Translator: Demian <Demian@gmx.co.uk>\n"
+"Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-gamecube/de_de/>\n"
+"Language: de_de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Nintendo GameCube controller"
+msgstr "Nintendo GameCube Controller"
+
+msgctxt "Addon Description"
+msgid "The Nintendo GameCube controller was released in 2001. The analog sticks and triggers were the target of a patent lawsuit, but Nintendo fought back and successfully won the case."
+msgstr "Der GameCube-Controller von Nintendo wurde im Jahr 2001 veröffentlicht. Die Analogsticks und Schalter waren das Ziel einer Patentklage, aber Nintendo wehrte sich und gewann den Fall erfolgreich."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Bildverweis: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Nintendo GameCube"
+msgstr "Nintendo GameCube"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30004"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30006"
+msgid "Up"
+msgstr "Hoch"
+
+msgctxt "#30007"
+msgid "Right"
+msgstr "Rechts"
+
+msgctxt "#30008"
+msgid "Down"
+msgstr "Runter"
+
+msgctxt "#30009"
+msgid "Left"
+msgstr "Links"
+
+msgctxt "#30010"
+msgid "Left Trigger"
+msgstr "Linker Schalter"
+
+msgctxt "#30011"
+msgid "Right Trigger"
+msgstr "Rechter Schalter"
+
+msgctxt "#30012"
+msgid "Z Trigger"
+msgstr "Z-Taste"
+
+msgctxt "#30013"
+msgid "Control Stick"
+msgstr "Steuerstick"
+
+msgctxt "#30014"
+msgid "C Stick"
+msgstr "C-Stick"
+
+msgctxt "#30015"
+msgid "Analog Stick"
+msgstr "Analogstick"
