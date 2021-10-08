@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.pcfx.mouse"
+        name="PC-FX Mouse"
+        version="1.0.23"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PC-FX mus</summary>
+        <summary lang="de_DE">PC-FX Maus</summary>
+        <summary lang="en_GB">PC-FX mouse</summary>
+        <summary lang="es_ES">Ratón PC-FX</summary>
+        <summary lang="fi_FI">PC-FX-hiiri</summary>
+        <summary lang="fr_FR">Souris PC-FX</summary>
+        <summary lang="it_IT">Mouse PC-FX</summary>
+        <summary lang="zh_CN">PC-FX 鼠标</summary>
+        <description lang="da_DK">PC-FX musen er en kuglemus med to knapper udgivet i 1994. Den understøttes af strategispil som Farland Story FX og Power DoLLS FX.</description>
+        <description lang="de_DE">Die PC-FX-Maus ist eine Zwei-Tasten-Kugelmaus, die 1994 auf den Markt kam. Sie wird von Strategiespielen wie Farland Story FX und Power DoLLS FX unterstützt.</description>
+        <description lang="en_GB">The PC-FX mouse is a two-button ball mouse released in 1994. It is supported by strategy games like Farland Story FX and Power DoLLS FX.</description>
+        <description lang="es_ES">El ratón PC-FX es un ratón de bola de dos botones lanzado en 1994. Es compatible con juegos de estrategia como Farland Story FX y Power DoLLS FX.</description>
+        <description lang="fi_FI">PC-FX-hiiri on kahdella painikkeella varustettu pallohiiri, joka julkaistiin vuonna 1994. Sitä tukevat strategiapelit, kuten Farland Story FX ja Power DoLLS FX.</description>
+        <description lang="fr_FR">La souris PC-FX est une souris à boule à deux boutons sortie en 1994. Elle est prise en charge par des jeux de stratégie comme Farland Story FX et Power DoLLS FX.</description>
+        <description lang="it_IT">Il mouse PC-FX è un mouse a sfera a due pulsanti rilasciato nel 1994. È supportato da giochi di strategia come Farland Story FX e Power DoLLS FX.</description>
+        <description lang="zh_CN">PC-FX 鼠标是1994年发布的一款双键滚轮鼠标。它由战略游戏如《古大陆物语 FX》和《特勤机甲队 FX》提供支持。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="pl_PL">Pochodzenie obrazu: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>

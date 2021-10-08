@@ -1,0 +1,78 @@
+# Kodi Media Center language file
+# Addon Name: Dreamcast Controller
+# Addon id: game.controller.dreamcast
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.dreamcast\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-06-22 09:43+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Korean <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-dreamcast/ko_kr/>\n"
+"Language: ko_kr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Dreamcast controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Dreamcast was released in 1998. The inclusion of an analog stick reflected the transition from 2D arcade games to 3D game environments. The Dreamcast had a short lifespan and marked the end of Sega's 18 years in the console market."
+msgstr ""
+
+msgctxt "#30000"
+msgid "Dreamcast"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30004"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "시작"
+
+msgctxt "#30006"
+msgid "Up"
+msgstr "위"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "아래"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "오른쪽"
+
+msgctxt "#30009"
+msgid "Left"
+msgstr "왼쪽"
+
+msgctxt "#30010"
+msgid "Left Trigger"
+msgstr "왼쪽 방아쇠"
+
+msgctxt "#30011"
+msgid "Right Trigger"
+msgstr "오른쪽 방아쇠"
+
+msgctxt "#30012"
+msgid "Analog Stick"
+msgstr ""
