@@ -1,0 +1,58 @@
+# Kodi Media Center language file
+# Addon Name: Sega SG-1000
+# Addon id: game.controller.sg1000
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.sg1000\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-09-27 02:31+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-sg1000/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+msgctxt "Addon Summary"
+msgid "Sega SG-1000 controller"
+msgstr "世嘉 SG-1000 控制器"
+
+msgctxt "Addon Description"
+msgid "The SG-1000, also known as the Computer Videogame SG-1000, was Sega's first entry into the console business in 1983. However, due to market saturation and the Video Game Crash of 1983, it was not commercially successful."
+msgstr "SG-1000，也被称为计算机视频游戏 SG-1000，是世嘉在1983年第一次进入游戏主机业务。然而，由于市场饱和和1983年的电子游戏崩溃，它在商业上并不成功。"
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "图片来源：OpenEmu（openemu.org）"
+
+msgctxt "#30000"
+msgid "Sega SG-1000"
+msgstr "世嘉 SG-1000"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "按钮1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "按钮2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "上"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "右"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "下"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "左"
