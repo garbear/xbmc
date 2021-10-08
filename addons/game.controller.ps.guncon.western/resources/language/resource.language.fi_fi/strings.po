@@ -1,0 +1,50 @@
+# Kodi Media Center language file
+# Addon Name: PlayStation Guncon (Western)
+# Addon id: game.controller.ps.guncon.western
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.ps.guncon.western\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-24 08:14+0000\n"
+"Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
+"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ps-guncon-western/fi_fi/>\n"
+"Language: fi_fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "PlayStation Guncon (Western)"
+msgstr "PlayStation Guncon (Länsimaat)"
+
+msgctxt "Addon Description"
+msgid "The Guncon, known as G-Con in Europe, is a family of light guns designed by Namco for the PlayStation. The original model was released alongside the PlayStation in 1994."
+msgstr "Guncon, joka tunnetaan Euroopassa nimellä G-Con, on Namcon PlayStationille suunnittelema valoaseiden perhe. Alkuperäinen malli julkaistiin PlayStationin rinnalla vuonna 1994."
+
+msgctxt "#30000"
+msgid "PlayStation Guncon (Western)"
+msgstr "PlayStation Guncon (Länsimaat)"
+
+msgctxt "#30001"
+msgid "Trigger"
+msgstr "Liipaisin"
+
+msgctxt "#30002"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30003"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30004"
+msgid "Offscreen"
+msgstr "Kuvaruudun ulkopuolella"
+
+msgctxt "#30005"
+msgid "Crosshair"
+msgstr "Tähtäin"
