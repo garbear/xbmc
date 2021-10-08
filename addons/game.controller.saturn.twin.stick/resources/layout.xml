@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png">
+  <category name="face" label="35074">
+    <button name="start" type="digital" label="30001"/>
+  </category>
+  <category name="analogsticks" label="35077">
+    <analogstick name="leftstick" label="30002"/>
+    <button name="lefttrigger" type="digital" label="30003"/>
+    <button name="leftbutton" type="digital" label="30004"/>
+    <analogstick name="rightstick" label="30005"/>
+    <button name="righttrigger" type="digital" label="30006"/>
+    <button name="rightbutton" type="digital" label="30007"/>
+  </category>
+</layout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.supervision"
+        name="Watara Supervision"
+        version="1.0.0"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">Watara Supervision</summary>
+        <description lang="en_GB">The Watara Supervision was released in 1992 as a cheaper rival to the Game Boy. It can be tilted toward the player with a flexible neck.</description>
+        <disclaimer lang="en_GB">Image credit: Evan-Amos, Wikimedia Commons</disclaimer>
+    </extension>
+</addon>

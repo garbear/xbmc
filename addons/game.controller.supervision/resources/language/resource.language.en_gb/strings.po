@@ -1,0 +1,65 @@
+# Kodi Media Center language file
+# Addon Name: Watara Supervision
+# Addon id: game.controller.supervision
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.supervision\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (United Kingdom) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-supervision/en_gb/>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_gb\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "Addon Summary"
+msgid "Watara Supervision"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Watara Supervision was released in 1992 as a cheaper rival to the Game Boy. It can be tilted toward the player with a flexible neck."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Evan-Amos, Wikimedia Commons"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Watara Supervision"
+msgstr ""
+
+msgctxt "#30001"
+msgid "A"
+msgstr ""
+
+msgctxt "#30002"
+msgid "B"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Select"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Start"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Left"
+msgstr ""

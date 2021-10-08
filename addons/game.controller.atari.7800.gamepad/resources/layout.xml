@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png" mask="mask.png">
+  <category name="face" label="35074">
+    <button name="button1" type="digital" label="30001"/>
+    <button name="button2" type="digital" label="30002"/>
+    <button name="up" type="digital" label="30003"/>
+    <button name="right" type="digital" label="30004"/>
+    <button name="down" type="digital" label="30005"/>
+    <button name="left" type="digital" label="30006"/>
+  </category>
+  <category name="hardware" label="35107">
+    <button name="reset" type="digital" label="30007"/>
+    <button name="select" type="digital" label="30008"/>
+    <button name="pause" type="digital" label="30009"/>
+    <button name="leftdifficulty" type="digital" label="30010"/>
+    <button name="rightdifficulty" type="digital" label="30011"/>
+  </category>
+</layout>
