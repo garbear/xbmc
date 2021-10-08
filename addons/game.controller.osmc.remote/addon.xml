@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.osmc.remote"
+        name="OSMC Remote"
+        version="1.0.3"
+        provider-name="OSMC">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">OSMC Remote</summary>
+        <summary lang="es_ES">Mando OSMC</summary>
+        <summary lang="ru_RU">OSMC Remote</summary>
+        <summary lang="sv_SE">OSMC-fjärrkontroll</summary>
+        <summary lang="zh_CN">OSMC 遥控器</summary>
+        <description lang="en_GB">This remote is the perfect way to control OSMC. Visit osmc.tv to learn more!</description>
+        <description lang="es_ES">Este mando es la manera perfecta de controlar OSMC. ¡Más información en osmc.tv!</description>
+        <description lang="ru_RU">Этот пульт - идеальный способ управления OSMC. Посетите сайт osmc.tv, чтобы узнать больше!</description>
+        <description lang="sv_SE">Den här fjärrkontrollen är det perfekta sättet att styra OSMC. Besök osmc.tv för att lära dig mer!</description>
+        <description lang="zh_CN">该遥控器是控制 OSMC 的完美方式。访问 osmc.tv 了解更多！</description>
+    </extension>
+</addon>
