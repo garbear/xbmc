@@ -1,0 +1,30 @@
+# Kodi Media Center language file
+# Addon Name: Genesis 4 Way Play
+# Addon id: game.controller.genesis.4wayplay
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.genesis.4wayplay\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2023-02-08 12:00+1\n"
+"PO-Revision-Date: 2023-03-20 20:16+0000\n"
+"Last-Translator: taxigps <taxigps@sina.com>\n"
+"Language-Team: Chinese (China) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-genesis-4wayplay/zh_cn/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Genesis 4 Way Play"
+msgstr "Genesis 4 路游戏"
+
+msgctxt "Addon Description"
+msgid "The 4 Way Play is a four-port peripheral for the Sega Genesis, released in 1993 by Electronic Arts. It was mainly supported by games released by EA itself."
+msgstr "Genesis 4 路游戏是世嘉 Genesis 的四端口外设，由 Electronic Arts 于1993年发布。它主要由 EA 自己发行的游戏支持。"
+
+msgctxt "#30000"
+msgid "Genesis 4 Way Play"
+msgstr "Genesis 4 路游戏"
