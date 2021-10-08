@@ -1,0 +1,98 @@
+# Kodi Media Center language file
+# Addon Name: Nintendo DS
+# Addon id: game.controller.nds
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.nds\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-01 21:18+0000\n"
+"Last-Translator: Demian <Demian@gmx.co.uk>\n"
+"Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-nds/de_de/>\n"
+"Language: de_de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Nintendo DS"
+msgstr "Nintendo DS"
+
+msgctxt "Addon Description"
+msgid "The Nintendo DS (short for \"Dual Screen\") is a 32-bit handheld video game console released in 2004. A DS Lite model was launched in 2006, followed by the DSi. Combined, these are the best selling handheld to date, and second best console (behind the PlayStation 2)."
+msgstr "Nintendo DS (kurz für „Dual Screen“) ist eine tragbare 32-Bit-Videospielkonsole, die 2004 veröffentlicht wurde. Ein DS Lite-Modell wurde 2006 auf den Markt gebracht, gefolgt von dem DSi. Zusammengenommen sind sie der bis heute meistverkaufte Handheld und die zweitbeste Konsole (nach der PlayStation 2)."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Bildverweis: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Nintendo DS"
+msgstr "Nintendo DS"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "X"
+msgstr "X"
+
+msgctxt "#30004"
+msgid "Y"
+msgstr "Y"
+
+msgctxt "#30005"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30006"
+msgid "Select"
+msgstr "Select"
+
+msgctxt "#30007"
+msgid "Up"
+msgstr "Hoch"
+
+msgctxt "#30008"
+msgid "Right"
+msgstr "Rechts"
+
+msgctxt "#30009"
+msgid "Down"
+msgstr "Runter"
+
+msgctxt "#30010"
+msgid "Left"
+msgstr "Links"
+
+msgctxt "#30011"
+msgid "Left Bumper"
+msgstr "Linke Schulter"
+
+msgctxt "#30012"
+msgid "Right Bumper"
+msgstr "Rechte Schulter"
+
+msgctxt "#30013"
+msgid "Touch pointer"
+msgstr "Touchzeiger"
+
+msgctxt "#30014"
+msgid "Close Lid"
+msgstr "Klappe schließen"
+
+msgctxt "#30015"
+msgid "Screen Layout"
+msgstr "Bildformat"
+
+msgctxt "#30016"
+msgid "Microphone"
+msgstr "Mikrofon"
