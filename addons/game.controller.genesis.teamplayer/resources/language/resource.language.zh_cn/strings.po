@@ -1,0 +1,30 @@
+# Kodi Media Center language file
+# Addon Name: Genesis Team Player
+# Addon id: game.controller.genesis.teamplayer
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.genesis.teamplayer\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2023-02-04 12:00+1\n"
+"PO-Revision-Date: 2025-05-29 02:54+0000\n"
+"Last-Translator: wabisabi926 <liwenliang926@163.com>\n"
+"Language-Team: Chinese (Simplified Han script) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-genesis-teamplayer/zh_Hans/>\n"
+"Language: zh_cn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11.4\n"
+
+msgctxt "Addon Summary"
+msgid "Genesis Team Player"
+msgstr "世嘉 Genesis Team Player 外设"
+
+msgctxt "Addon Description"
+msgid "The Team Player is a peripheral released in 1993 by Sega for the Sega Genesis. It allows up to four players to connect Genesis controllers."
+msgstr "Team Player 是世嘉公司于 1993 年为世嘉创世纪（Sega Genesis）推出的一款外设。它允许最多四名玩家连接 Genesis 控制器。"
+
+msgctxt "#30000"
+msgid "Genesis Team Player"
+msgstr "世嘉 Genesis Team Player 外设"
