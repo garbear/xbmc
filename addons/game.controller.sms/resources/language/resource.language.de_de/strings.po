@@ -1,0 +1,58 @@
+# Kodi Media Center language file
+# Addon Name: Sega Master System Controller
+# Addon id: game.controller.sms
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.sms\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-01 20:55+0000\n"
+"Last-Translator: Demian <Demian@gmx.co.uk>\n"
+"Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-sms/de_de/>\n"
+"Language: de_de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Master System controller"
+msgstr "Sega Master System Controller"
+
+msgctxt "Addon Description"
+msgid "The Master System, originally named the Mark III, was released by Sega in 1985. As of 2015, the Master System is the longest-lived game console due to its surging popularity in Brazil."
+msgstr "Das Master System, ursprünglich Mark III genannt, wurde 1985 von Sega veröffentlicht. Seit 2015 ist das Master System die langlebigste Spielkonsole, da es sich in Brasilien großer Beliebtheit erfreut."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Bildverweis: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Sega Master System"
+msgstr "Sega Master System"
+
+msgctxt "#30001"
+msgid "Button 1"
+msgstr "Taste 1"
+
+msgctxt "#30002"
+msgid "Button 2"
+msgstr "Taste 2"
+
+msgctxt "#30003"
+msgid "Up"
+msgstr "Hoch"
+
+msgctxt "#30004"
+msgid "Right"
+msgstr "Rechts"
+
+msgctxt "#30005"
+msgid "Down"
+msgstr "Runter"
+
+msgctxt "#30006"
+msgid "Left"
+msgstr "Links"

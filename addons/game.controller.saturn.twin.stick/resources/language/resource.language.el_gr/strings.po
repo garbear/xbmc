@@ -1,0 +1,62 @@
+# Kodi Media Center language file
+# Addon Name: Sega Twin Stick
+# Addon id: game.controller.twin.stick
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.twin.stick\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-24 08:15+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Greek <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-saturn-twin-stick/el_gr/>\n"
+"Language: el_gr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Sega Twin Stick"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Sega Twin Stick, released in 1996, features two joysticks at the expense of fewer buttons. It was designed for the game Cyber Troopers Virtual-On."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Sega Retro (segaretro.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Sega Twin Stick"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Start"
+msgstr "Έναρξη"
+
+msgctxt "#30002"
+msgid "Left Joystick"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Left Trigger"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Left Button"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Right Joystick"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Right Trigger"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Right Button"
+msgstr ""
