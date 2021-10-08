@@ -1,0 +1,69 @@
+# Kodi Media Center language file
+# Addon Name: Channel F Controller
+# Addon id: game.controller.channelf
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.channelf\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2014-05-30 17:00+8\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_mx\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgctxt "Addon Summary"
+msgid "Channel F controller"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Fairchild Video Entertainment System, later renamed Channel F, was released in 1976. Its controller has a triangular cap that can be pushed down, pulled up, twisted either way, and moved in four directions."
+msgstr ""
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: Evan-Amos, Wikimedia Commons (commons.wikimedia.org)"
+msgstr ""
+
+msgctxt "#30000"
+msgid "Channel F"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Up"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Right"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Down"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Left"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Push down"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Pull up"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Twist left"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Twist right"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Start"
+msgstr ""
