@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.saturn.multitap"
+        name="Sega Saturn 6 Player Adaptor"
+        version="1.0.11"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Sega Saturn 6 Player Adapter</summary>
+        <summary lang="en_GB">Sega Saturn 6 Player Adaptor</summary>
+        <summary lang="es_ES">Adaptador Sega Saturn 6 Player</summary>
+        <summary lang="zh_CN">世嘉土星6游戏机适配器</summary>
+        <description lang="da_DK">Et multitap øger antallet af controllerporte, ligesom en USB-hub. Udgivet i 1995, Saturn 6 Player Adapter tillod op til 10 spillere i nogle spil, såsom Saturn Bomberman.</description>
+        <description lang="en_GB">A multitap increases the number of controller ports, similar to a USB hub. Released in 1995, the Saturn 6 Player Adaptor allowed up to 10 players in some games, such as Saturn Bomberman.</description>
+        <description lang="es_ES">El multitap aumentaba el numero de puertos de mando, parecido a un hub USB. Lanzado en 1995, el Adaptador Saturn 6 Player permitía hasta 10 jugadores en algunos juegos como Saturn Bomberman.</description>
+        <description lang="zh_CN">多插转换器增加了控制器端口的数量，类似于 USB 集线器。1995年发布的土星6游戏机适配器使一些游戏能支持最多10名玩家，例如《土星炸弹人》。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>
