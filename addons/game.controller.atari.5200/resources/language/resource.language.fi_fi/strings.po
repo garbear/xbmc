@@ -1,0 +1,98 @@
+# Kodi Media Center language file
+# Addon Name: Atari 5200 Controller
+# Addon id: game.controller.atari.5200
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.atari.5200\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-07-24 08:15+0000\n"
+"Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
+"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-atari-5200/fi_fi/>\n"
+"Language: fi_fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Atari 5200 controller"
+msgstr "Atari 5200 -ohjain"
+
+msgctxt "Addon Description"
+msgid "The Atari 5200 was released in 1982. The design of the joystick, which used a weak rubber boot instead of springs, proved to be ungainly and unreliable. It was rated the 10th worst video game controller by IGN."
+msgstr "Atari 5200 julkaistiin vuonna 1982. Jousien sijaan ohjainsauvan suunnittelussa päädyttiin käyttämään heikkoa kumijuurta, joka osoittautui epämiellyttäväksi ja epäluotettavaksi. IGN arvioi ohjaimen 10. huonoimmaksi videopeliohjaimeksi."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Kuvan lähde: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Atari 5200"
+msgstr "Atari 5200 -ohjain"
+
+msgctxt "#30001"
+msgid "1"
+msgstr "1"
+
+msgctxt "#30002"
+msgid "2"
+msgstr "2"
+
+msgctxt "#30003"
+msgid "3"
+msgstr "3"
+
+msgctxt "#30004"
+msgid "4"
+msgstr "4"
+
+msgctxt "#30005"
+msgid "5"
+msgstr "5"
+
+msgctxt "#30006"
+msgid "6"
+msgstr "6"
+
+msgctxt "#30007"
+msgid "7"
+msgstr "7"
+
+msgctxt "#30008"
+msgid "8"
+msgstr "8"
+
+msgctxt "#30009"
+msgid "9"
+msgstr "9"
+
+msgctxt "#30010"
+msgid "0"
+msgstr "0"
+
+msgctxt "#30011"
+msgid "Star"
+msgstr "Tähti"
+
+msgctxt "#30012"
+msgid "Pound"
+msgstr "Pauna"
+
+msgctxt "#30013"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "#30014"
+msgid "Pause"
+msgstr "Pause"
+
+msgctxt "#30015"
+msgid "Reset"
+msgstr "Reset"
+
+msgctxt "#30016"
+msgid "Joystick"
+msgstr "Ohjainsauva"

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.nes"
+        name="NES Controller"
+        version="1.0.30"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">NES controller</summary>
+        <summary lang="de_DE">NES Controller</summary>
+        <summary lang="en_GB">NES controller</summary>
+        <summary lang="es_ES">Mando NES</summary>
+        <summary lang="fi_FI">NES-ohjain</summary>
+        <summary lang="fr_FR">Manette NES</summary>
+        <summary lang="it_IT">Controller NES</summary>
+        <summary lang="ru_RU">NES контроллер</summary>
+        <summary lang="zh_CN">NES 控制器</summary>
+        <description lang="da_DK">Nintendo Entertainment System, også kendt som Famicom (for &quot;Family Computer&quot;), blev udgivet i 1983. Den tværformede retningsbestemte pad er designet til Game &amp; Watch-systemer, og erstatter de større joysticks, der findes på tidligere controllere.</description>
+        <description lang="de_DE">Das Nintendo Entertainment System, auch bekannt als Famicom (für „Family Computer“), wurde 1983 veröffentlicht. Die kreuzförmige Richtungssteuerung wurde für „Game &amp; Watch“-Systeme entwickelt und ersetzte die sperrigen Joysticks der früheren Controller.</description>
+        <description lang="en_GB">The Nintendo Entertainment System, also known as the Famicom (for &quot;Family Computer&quot;), was released in 1983. The cross-shaped directional pad was designed for Game &amp; Watch systems, replacing the bulkier joysticks found on earlier controllers.</description>
+        <description lang="es_ES">La Nintendo Entertainment System, también conocida como Famicom (por &quot;Family Computer&quot;), salió a la venta en 1983. El pad direccional en forma de cruceta se diseñó para los sistemas Game &amp; Watch, sustituyendo a los joysticks más voluminosos de los mandos anteriores.</description>
+        <description lang="fi_FI">Nintendo Entertainment System, joka tunnetaan myös nimellä Famicom (&quot;Family Computer&quot;), julkaistiin vuonna 1983. Ristin muotoinen suuntaohjain suunniteltiin Game &amp; Watch -järjestelmille ja se korvasi aiemmista ohjaimista löytyneet kookkaammat ohjainsauvat.</description>
+        <description lang="fr_FR">Le Nintendo Entertainment System, également connu sous le nom de Famicom (pour &quot;Family Computer&quot;), est sorti en 1983. Le pavé directionnel en forme de croix a été conçu pour les systèmes Game &amp; Watch, remplaçant les joysticks plus volumineux trouvés sur les contrôleurs précédents.</description>
+        <description lang="it_IT">Il Nintendo Entertainment System, noto anche come Famicom (per &quot;Family Computer&quot;), è stato rilasciato nel 1983. Il pad direzionale a forma di croce è stato progettato per i sistemi Game &amp; Watch, sostituendo i joystick più ingombranti che si trovavano sui controller precedenti.</description>
+        <description lang="ru_RU">Nintendo Entertainment System также изветсная как Famicom или Денди, была выпущена в 1983 году. Крестовина была разработана для систем Game &amp; Watch, заменив громоздкие джойстики, существовавшие на более ранних контроллерах.</description>
+        <description lang="zh_CN">任天堂娱乐系统（NES），也称为 Famicom（家庭电脑），于1983年发布。十字形方向键是为 Game &amp; Watch 掌机设计的，取代了早期控制器上笨重的操纵杆。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="eu_ES">Irudiaren kreditua: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

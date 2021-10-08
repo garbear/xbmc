@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.amstrad.joystick"
+        name="Amstrad Joystick"
+        version="1.0.23"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="ca_ES">Joystick Amstrad</summary>
+        <summary lang="da_DK">Amstrad Joystick</summary>
+        <summary lang="de_DE">Amstrad Joystick</summary>
+        <summary lang="en_GB">Amstrad Joystick</summary>
+        <summary lang="es_ES">Joystick Amstrad</summary>
+        <summary lang="es_MX">Joystick Amstrad</summary>
+        <summary lang="fr_FR">Joystick Amstrad</summary>
+        <summary lang="it_IT">Joystick Amstrad</summary>
+        <summary lang="ru_RU">Джойстик Amstrad</summary>
+        <summary lang="zh_CN">Amstrad 游戏杆</summary>
+        <description lang="ca_ES">Els models originals d&apos;Amstrad CPC només tenien un port de joystick. Es pot utilitzar un cable Y per connectar dos joysticks.</description>
+        <description lang="da_DK">De originale Amstrad CPC-modeller havde kun en joystickport. Et Y-kabel kan bruges til at forbinde to joysticks.</description>
+        <description lang="de_DE">Die originalen CPC-Modelle von Amstrad hatten nur einen Joystick-Anschluss. Mithilfe eines Y-Kabels können zwei Joysticks angeschlossen werden.</description>
+        <description lang="en_GB">The original Amstrad CPC models had only one joystick port. A Y-cable can be used to connect two joysticks.</description>
+        <description lang="es_ES">Los modelos originales de Amstrad CPC sólo tenían un puerto para joystick. Se puede utilizar un cable en Y para conectar dos joysticks.</description>
+        <description lang="es_MX">Los modelos originales de la Amstrad CPC solo tenían un puerto de joystick. Un cable Y puede utilizarse para conectar 2 joysticks.</description>
+        <description lang="fr_FR">Les modèles Amstrad CPC d&apos;origine n&apos;avaient qu&apos;un seul port joystick. Un câble en Y peut être utilisé pour connecter deux joysticks.</description>
+        <description lang="it_IT">I modelli originali Amstrad CPC avevano solo una porta joystick. È possibile utilizzare un cavo a Y per collegare due joystick.</description>
+        <description lang="ru_RU">Оригинальные модели Amstrad CPC оснащались только одним портом для джойстика. Для подключения двух джойстиков можно использовать Y-кабель.</description>
+        <description lang="zh_CN">最初的 Amstrad CPC 型号只有一个游戏杆端口。Y-cable 可用于连接两个游戏杆。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildverweis: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_ES">Créditos de la imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de imagen: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : Wikipédia (wikipedia.org)</disclaimer>
+        <disclaimer lang="it_IT">Credito immagine: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="pl_PL">Pochodzenie obrazu: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：维基百科（Wikipedia.org）</disclaimer>
+    </extension>
+</addon>
