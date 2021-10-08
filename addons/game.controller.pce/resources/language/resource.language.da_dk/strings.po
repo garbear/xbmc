@@ -1,0 +1,86 @@
+# Kodi Media Center language file
+# Addon Name: PC Engine Controller
+# Addon id: game.controller.pce
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.pce\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-08-18 16:16+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-pce/da_dk/>\n"
+"Language: da_dk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.7.2\n"
+
+msgctxt "Addon Summary"
+msgid "PC Engine controller"
+msgstr "PC Engine controller"
+
+msgctxt "Addon Description"
+msgid "The PC Engine, also known as the TurboGrafx-16, was released by Hudson Soft and NEC in 1987. It became the top-selling console in Japan, but trailed behind both Sega and Nintendo in the North American and Eurpoean markets."
+msgstr "PC Engine, også kendt som TurboGrafx-16, blev udgivet af Hudson Soft og NEC i 1987. Den blev den bedst sælgende konsol i Japan, men var bagefter både Sega og Nintendo på de nordamerikanske og europæiske markeder."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Kildeangivelse: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "PC Engine"
+msgstr "PC Engine"
+
+msgctxt "#30001"
+msgid "I"
+msgstr "I"
+
+msgctxt "#30002"
+msgid "II"
+msgstr "II"
+
+msgctxt "#30003"
+msgid "III"
+msgstr "III"
+
+msgctxt "#30004"
+msgid "IV"
+msgstr "IV"
+
+msgctxt "#30005"
+msgid "V"
+msgstr "V"
+
+msgctxt "#30006"
+msgid "VI"
+msgstr "VI"
+
+msgctxt "#30007"
+msgid "Select"
+msgstr "Vælg"
+
+msgctxt "#30008"
+msgid "Run"
+msgstr "Kør"
+
+msgctxt "#30009"
+msgid "Up"
+msgstr "Op"
+
+msgctxt "#30010"
+msgid "Right"
+msgstr "Højre"
+
+msgctxt "#30011"
+msgid "Down"
+msgstr "Ned"
+
+msgctxt "#30012"
+msgid "Left"
+msgstr "Venstre"
+
+msgctxt "#30013"
+msgid "Mode Switch"
+msgstr "Skift af tilstand"
