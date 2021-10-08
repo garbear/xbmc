@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png" mask="mask.png">
+	<category name="face" label="35074">
+		<button name="action" type="digital" label="30001"/>
+		<button name="up" type="digital" label="30002"/>
+		<button name="right" type="digital" label="30003"/>
+		<button name="down" type="digital" label="30004"/>
+		<button name="left" type="digital" label="30005"/>
+	</category>
+</layout>
