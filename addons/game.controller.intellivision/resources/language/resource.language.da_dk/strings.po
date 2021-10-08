@@ -1,0 +1,114 @@
+# Kodi Media Center language file
+# Addon Name: Intellivision Controller
+# Addon id: game.controller.intellivision
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.intellivision\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2022-06-18 11:27+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-intellivision/da_dk/>\n"
+"Language: da_dk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
+
+msgctxt "Addon Summary"
+msgid "Intellivision controller"
+msgstr "Intellivision controller"
+
+msgctxt "Addon Description"
+msgid "The Intellivision, a portmanteau of \"intelligent television\", was released by Mattel Electronics in 1979. In 2009, IGN named the Intellivision the 14th greatest console of all time."
+msgstr "Intellivision, et kombination af \"intelligent tv\", blev udgivet af Mattel Electronics i 1979. I 2009 udnævnte IGN Intellivision til den 14. største konsol nogensinde."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Kildeangivelse: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "Intellivision"
+msgstr "Intellivision"
+
+msgctxt "#30001"
+msgid "Left 1"
+msgstr "Venstre 1"
+
+msgctxt "#30002"
+msgid "Left 2"
+msgstr "Venstre 2"
+
+msgctxt "#30003"
+msgid "Right 1"
+msgstr "Højre 1"
+
+msgctxt "#30004"
+msgid "Right 2"
+msgstr "Højre 2"
+
+msgctxt "#30005"
+msgid "Up"
+msgstr "Op"
+
+msgctxt "#30006"
+msgid "Right"
+msgstr "Højre"
+
+msgctxt "#30007"
+msgid "Down"
+msgstr "Ned"
+
+msgctxt "#30008"
+msgid "Left"
+msgstr "Venstre"
+
+msgctxt "#30009"
+msgid "1"
+msgstr "1"
+
+msgctxt "#30010"
+msgid "2"
+msgstr "2"
+
+msgctxt "#30011"
+msgid "3"
+msgstr "3"
+
+msgctxt "#30012"
+msgid "4"
+msgstr "4"
+
+msgctxt "#30013"
+msgid "5"
+msgstr "5"
+
+msgctxt "#30014"
+msgid "6"
+msgstr "6"
+
+msgctxt "#30015"
+msgid "7"
+msgstr "7"
+
+msgctxt "#30016"
+msgid "8"
+msgstr "8"
+
+msgctxt "#30017"
+msgid "9"
+msgstr "9"
+
+msgctxt "#30018"
+msgid "0"
+msgstr "0"
+
+msgctxt "#30019"
+msgid "Clear"
+msgstr "Ryd"
+
+msgctxt "#30020"
+msgid "Enter"
+msgstr "Enter"
