@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.konami.justifier.ps"
+        name="Konami Justifier (PS)"
+        version="1.0.23"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Konami Justifier (PS)</summary>
+        <summary lang="de_DE">Konami Justifier (PS)</summary>
+        <summary lang="en_GB">Konami Justifier (PS)</summary>
+        <summary lang="es_ES">Konami Justifier (PS)</summary>
+        <summary lang="fi_FI">Konami Justifier (PS)</summary>
+        <summary lang="fr_FR">Konami Justifier (PS)</summary>
+        <summary lang="it_IT">Konami Justifier (PS)</summary>
+        <summary lang="ru_RU">Konami Justifier (PS)</summary>
+        <summary lang="zh_CN">Konami Justifier（PS）</summary>
+        <description lang="da_DK">Justifer er en light gun udgivet af Konami i 1992 til Sega Mega Drive/Genesis, SNES og PlayStation. Det ligner Colt Python, en .357 Magnum-revolver.</description>
+        <description lang="de_DE">Die Justifer ist eine Lightgun, die 1992 von Konami für Sega Mega Drive/Genesis, SNES und PlayStation veröffentlicht wurde. Sie ähnelt dem Colt Python, einem .357-Magnum-Revolver.</description>
+        <description lang="en_GB">The Justifer is a light gun released by Konami in 1992 for the Sega Mega Drive/Genesis, SNES and PlayStation. It resembles the Colt Python, a .357 Magnum revolver.</description>
+        <description lang="es_ES">La Justifer es una pistola de luz lanzada por Konami en 1992 para Sega Mega Drive/Genesis, SNES y PlayStation. Es similar al Colt Python, un revólver Magnum .357.</description>
+        <description lang="fi_FI">Justifer on Konamin vuonna 1992 julkaisema valoase Sega Mega Drive-/Genesis-, SNES- ja PlayStation-konsoleille. Se muistuttaa .357 Magnum -revolveri Colt Pythonia.</description>
+        <description lang="fr_FR">Le Justifer est un pistolet léger sorti par Konami en 1992 pour Sega Mega Drive/Genesis, SNES et PlayStation. Il ressemble au Colt Python, un revolver .357 Magnum.</description>
+        <description lang="it_IT">Il Justifer è una pistola leggera rilasciata da Konami nel 1992 per Sega Mega Drive/Genesis, SNES e PlayStation. Assomiglia alla Colt Python, un revolver Magnum .357.</description>
+        <description lang="ru_RU">The Justified — это световой пистолет, выпущенный Konami в 1992 году для Sega Mega Drive/Genesis, SNES и PlayStation. Он напоминает Colt Python, револьвер калибра .357 Magnum.</description>
+        <description lang="zh_CN">Justifer 是 Konami 于1992年为世嘉 Mega Drive/Genesis、SNES 和 PlayStation 发布的一款光线枪。它类似于柯尔特蟒蛇，一种.357马格纳姆左轮手枪。</description>
+    </extension>
+</addon>

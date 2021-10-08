@@ -1,0 +1,78 @@
+# Kodi Media Center language file
+# Addon Name: 3DO Controller
+# Addon id: game.controller.3do
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.3do\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-02-19 23:21+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-3do/da_dk/>\n"
+"Language: da_dk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
+
+msgctxt "Addon Summary"
+msgid "3D0 controller"
+msgstr "3D0 controller"
+
+msgctxt "Addon Description"
+msgid "The 3DO Interactive Multiplayer is a game console developed by the 3DO Company. Panasonic produced the first models in 1993, and further models were released by Sanyo and GoldStar (now LG) in 1994."
+msgstr "3DO Interactive Multiplayer er en spilkonsol udviklet af 3DO Company. Panasonic producerede de første modeller i 1993, og yderligere modeller blev frigivet af Sanyo og GoldStar (nu LG) i 1994."
+
+msgctxt "Addon Disclaimer"
+msgid "Image credit: OpenEmu (openemu.org)"
+msgstr "Kildeangivelse: OpenEmu (openemu.org)"
+
+msgctxt "#30000"
+msgid "3DO"
+msgstr "3DO"
+
+msgctxt "#30001"
+msgid "A"
+msgstr "A"
+
+msgctxt "#30002"
+msgid "B"
+msgstr "B"
+
+msgctxt "#30003"
+msgid "C"
+msgstr "C"
+
+msgctxt "#30004"
+msgid "Up"
+msgstr "Op"
+
+msgctxt "#30005"
+msgid "Right"
+msgstr "Højre"
+
+msgctxt "#30006"
+msgid "Down"
+msgstr "Ned"
+
+msgctxt "#30007"
+msgid "Left"
+msgstr "Venstre"
+
+msgctxt "#30008"
+msgid "P (Play)"
+msgstr "P (Afspil)"
+
+msgctxt "#30009"
+msgid "X (Stop)"
+msgstr "X (Stop)"
+
+msgctxt "#30010"
+msgid "Left Shoulder"
+msgstr "Venstre shoulder"
+
+msgctxt "#30011"
+msgid "Right Shoulder"
+msgstr "Højre shoulder"

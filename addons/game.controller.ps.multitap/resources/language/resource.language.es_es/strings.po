@@ -1,0 +1,30 @@
+# Kodi Media Center language file
+# Addon Name: Super Multitap
+# Addon id: game.controller.snes.multitap
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.snes.multitap\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2023-01-16 22:15+0000\n"
+"Last-Translator: José Antonio Alvarado <jalvarado0.eses@gmail.com>\n"
+"Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-ps-multitap/es_es/>\n"
+"Language: es_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15\n"
+
+msgctxt "Addon Summary"
+msgid "PlayStation Multitap"
+msgstr "PlayStation Multitap"
+
+msgctxt "Addon Description"
+msgid "A multitap increases the number of controller and memory card ports, similar to a USB hub. With a second PlayStation Multitap, up to eight controllers and memory cards can be plugged in at once."
+msgstr "Un Multitap aumenta el número de puertos para mandos y tarjetas de memoria, de forma similar a un concentrador USB. Con una segunda PlayStation Multitap, se pueden conectar hasta ocho mandos y tarjetas de memoria a la vez."
+
+msgctxt "#30000"
+msgid "PlayStation Multitap"
+msgstr "PlayStation Multitap"
