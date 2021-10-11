@@ -47,6 +47,9 @@
   <addon>screensaver.xbmc.builtin.dim</addon>
   <addon>script.module.pil</addon>
   <addon>script.module.pycryptodome</addon>
+  <!-- TODO
+  <addon optional="true">service.games.discord.richpresence</addon>
+  -->
   <addon optional="true">service.xbmc.versioncheck</addon>
   <addon>skin.estuary</addon>
   <addon>skin.estouchy</addon>
