@@ -20,10 +20,12 @@
 #include "addons/AddonRepos.h"
 #include "addons/Repository.h"
 #include "dialogs/GUIDialogExtendedProgressBar.h"
+#include "dialogs/GUIDialogSelect.h"
 #include "events/AddonManagementEvent.h"
 #include "events/EventLog.h"
 #include "events/NotificationEvent.h"
 #include "favourites/FavouritesService.h"
+#include "filesystem/AddonsDirectory.h"
 #include "filesystem/Directory.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h" // for callback
@@ -42,6 +44,7 @@
 #include "utils/log.h"
 
 #include <functional>
+#include <set>
 
 using namespace XFILE;
 using namespace ADDON;
@@ -168,7 +171,10 @@ bool CAddonInstaller::InstallModal(const std::string& addonID,
   CAddonDatabase database;
   database.Open();
   if (!database.GetAddon(addonID, addon))
+  {
+    CLog::Log(LOGDEBUG, "Not installing add-on {}, not in the database", addonID);
     return false;
+  }
 
   // if specified ask the user if he wants it installed
   if (promptForInstall == InstallModalPrompt::PROMPT)
@@ -186,6 +192,95 @@ bool CAddonInstaller::InstallModal(const std::string& addonID,
   return CServiceBroker::GetAddonMgr().GetAddon(addonID, addon, ADDON_UNKNOWN, OnlyEnabled::YES);
 }
 
+bool CAddonInstaller::InstallModal(const std::vector<std::string>& addonIDs,
+                                   ADDON::VECADDONS& addons,
+                                   InstallModalPrompt promptForInstall)
+{
+  if (!g_passwordManager.CheckMenuLock(WINDOW_ADDON_BROWSER))
+    return false;
+
+  // Keep track of which add-ons to install
+  std::set<std::string> addonsToInstall;
+
+  // Turn the addons into items so we can sort by add-on name
+  CFileItemList items;
+
+  for (const auto& addonID : addonIDs)
+  {
+    if (addonsToInstall.find(addonID) != addonsToInstall.end())
+      continue;
+
+    AddonPtr addon;
+    if (CServiceBroker::GetAddonMgr().GetAddon(addonID, addon, ADDON_UNKNOWN, OnlyEnabled::YES))
+      continue; // Add-on is installed
+
+    // Check we have it available
+    CAddonDatabase database;
+    database.Open();
+    if (!database.GetAddon(addonID, addon))
+    {
+      CLog::Log(LOGDEBUG, "Not installing add-on {}, not in the database", addonID);
+      continue;
+    }
+
+    CFileItemPtr item(XFILE::CAddonsDirectory::FileItemFromAddon(addon, addonID));
+    items.Add(std::move(item));
+
+    // Mark this add-on as being installed
+    addonsToInstall.emplace(addonID);
+  }
+
+  if (items.IsEmpty())
+    return true;
+
+  items.Sort(SortByLabel, SortOrderAscending);
+
+  // If specified, ask the user if they want the add-ons installed
+  if (promptForInstall == InstallModalPrompt::PROMPT)
+  {
+    CGUIDialogSelect* dialog =
+        CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIDialogSelect>(
+            WINDOW_DIALOG_SELECT);
+    if (dialog == nullptr)
+      return false;
+
+    dialog->Reset();
+
+    // "Would you like to download this add-on?"
+    dialog->SetHeading(CVariant{g_localizeStrings.Get(24101)});
+    dialog->SetUseDetails(true);
+    dialog->EnableButton(true, 186); // "OK"
+
+    dialog->SetItems(items);
+
+    dialog->Open();
+
+    if (!dialog->IsConfirmed())
+      return false;
+  }
+
+  for (auto it = items.begin(); it != items.end(); ++it)
+  {
+    const std::string& addonID = (*it)->GetPath();
+
+    // Check if the add-on is installed but disabled
+    AddonPtr addon;
+    if (CServiceBroker::GetAddonMgr().GetAddon(addonID, addon, ADDON_UNKNOWN, OnlyEnabled::NO))
+    {
+      // TODO: Enable add-on
+    }
+    else
+    {
+      if (!InstallOrUpdate(addonID, BackgroundJob::NO, ModalJob::YES))
+        return false;
+    }
+
+    if (!CServiceBroker::GetAddonMgr().GetAddon(addonID, addon, ADDON_UNKNOWN, OnlyEnabled::YES))
+      return false;
+  }
+
+  return true;
+}
 
 bool CAddonInstaller::InstallOrUpdate(const std::string& addonID,
                                       BackgroundJob background,

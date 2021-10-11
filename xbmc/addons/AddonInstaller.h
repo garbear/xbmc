@@ -83,6 +83,17 @@ public:
                     ADDON::AddonPtr& addon,
                     InstallModalPrompt promptForInstall);
 
+  /*! \brief Installs a list of addons while showing a modal progress dialog
+   \param addonIDs the list of addon IDs to install.
+   \param addons [out] the installed addons for later use.
+   \param promptForInstall Whether or not to prompt the user before installing the addons.
+   \return true on successful install, false otherwise.
+   \sa Install
+   */
+  bool InstallModal(const std::vector<std::string>& addonID,
+                    ADDON::VECADDONS& addons,
+                    InstallModalPrompt promptForInstall);
+
   /*! \brief Install an addon if it is available in a repository
    \param addonID the addon ID of the item to install
    \param background whether to install in the background or not.

@@ -58,6 +58,20 @@ static int InstallAddon(const std::vector<std::string>& params)
   return 0;
 }
 
+/*! \brief Install multiple addons with a single input from the user
+ *  \param params The parameters
+ *  \details params[0] = comma-separated list of add-on IDs
+ */
+static int InstallAddons(const std::vector<std::string>& params)
+{
+  const std::vector<std::string>& addonIds = params;
+
+  VECADDONS addons;
+  CAddonInstaller::GetInstance().InstallModal(addonIds, addons, InstallModalPrompt::PROMPT);
+
+  return 0;
+}
+
 /*! \brief Enable an addon.
  *  \param params The parameters.
  *  \details params[0] = add-on id.
@@ -489,6 +503,7 @@ CBuiltins::CommandMap CAddonBuiltins::GetOperations() const
            {"addon.opensettings",         {"Open a settings dialog for the addon of the given id", 1, AddonSettings}},
            {"enableaddon",                {"Enables the specified plugin/script", 1, EnableAddon}},
            {"installaddon",               {"Install the specified plugin/script", 1, InstallAddon}},
+           {"installaddons",              {"Install multiple specified plugins/scripts", 1, InstallAddons}},
            {"installfromzip",             { "Open the install from zip dialog", 0, InstallFromZip}},
            {"runaddon",                   {"Run the specified plugin/script", 1, RunAddon}},
 #ifdef TARGET_DARWIN
