@@ -651,7 +651,7 @@ void CGameClient::SetRetroAchievementsCredentials(const char* username, const ch
     LogError(error = m_struct.toAddon->SetRetroAchievementsCredentials(&m_struct, username, token),
              "SetRetroAchievementsCredentials");
   }
-  catch(...)
+  catch (...)
   {
     LogException("SetRetroAchievementsCredentials");
   }
@@ -701,7 +701,8 @@ void CGameClient::ActivateAchievement(unsigned cheevo_id, const char* memaddr)
   }
 }
 
-void CGameClient::GetAchievement_URL_ID(void (*Callback)(const char* achievement_url, unsigned cheevo_id))
+void CGameClient::GetAchievement_URL_ID(void (*Callback)(const char* achievement_url,
+                                                         unsigned cheevo_id))
 {
   GAME_ERROR error = GAME_ERROR_NO_ERROR;
 

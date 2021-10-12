@@ -12,8 +12,8 @@
 
 #include <map>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 using std::vector;
 
 class CFileItem;
@@ -42,11 +42,11 @@ public:
   static void Callback_URL_ID(const char* achievement_url, unsigned cheevo_id);
   void CheckTriggeredAchievement();
 
-  static std::unordered_map<unsigned, vector<std::string> > activated_cheevo_map;
+  static std::unordered_map<unsigned, vector<std::string>> activated_cheevo_map;
 
 private:
   bool LoadData();
-  
+
   // Construction parameters
   GAME::CGameClient* const m_gameClient;
   CFileItem& m_fileItem;
@@ -58,7 +58,7 @@ private:
   std::string m_richPresenceScript;
   unsigned m_gameID = 0;
   bool m_richPresenceLoaded = false;
-  
+
 
   const std::map<std::string, int> m_extensionToConsole = {{".a26", RC_CONSOLE_ATARI_2600},
                                                            {".a78", RC_CONSOLE_ATARI_7800},

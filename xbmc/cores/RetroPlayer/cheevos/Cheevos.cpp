@@ -20,10 +20,10 @@
 #include "utils/Variant.h"
 #include "utils/auto_buffer.h"
 #include "utils/log.h"
-
 #include "xbmc/dialogs/GUIDialogKaiToast.h"
-#include<vector>
-#include<unordered_map>
+
+#include <unordered_map>
+#include <vector>
 
 using namespace KODI;
 using namespace RETRO;
@@ -118,9 +118,9 @@ bool CCheevos::LoadData()
     return false;
 
   if (!m_gameClient->RCGetPatchFileUrl(requestURL, URL_SIZE, m_userName.c_str(),
-      m_loginToken.c_str(), m_gameID))
-      return false;
-    
+                                       m_loginToken.c_str(), m_gameID))
+    return false;
+
   CURL curl(requestURL);
   XUTILS::auto_buffer patchData;
   response.LoadFile(curl, patchData);
@@ -189,7 +189,7 @@ void CCheevos::ActivateAchievement()
       CLog::Log(LOGERROR, "No active core achievement for the game");
     }
   }
-  for (auto &it:activated_cheevo_map)
+  for (auto& it : activated_cheevo_map)
   {
     m_gameClient->ActivateAchievement(it.first, it.second[0].c_str());
   }
@@ -231,17 +231,17 @@ bool CCheevos::GetRichPresenceEvaluation(char* evaluation, size_t size)
 
 void CCheevos::Callback_URL_ID(const char* achievement_url, unsigned cheevo_id)
 {
-    XFILE::CCurlFile curl;
-    std::string res;
-    curl.Get(achievement_url, res);
-    std::string description = activated_cheevo_map[cheevo_id][1];
-    std::string header =
-          std::string("Congratulations, ") + std::string("Achievement Unlocked");
+  XFILE::CCurlFile curl;
+  std::string res;
+  curl.Get(achievement_url, res);
+  std::string description = activated_cheevo_map[cheevo_id][1];
+  std::string header = std::string("Congratulations, ") + std::string("Achievement Unlocked");
 
-    CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, header, description);
+  CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, header, description);
 }
 
 void CCheevos::CheckTriggeredAchievement()
 {
-  m_gameClient->GetAchievement_URL_ID(Callback_URL_ID); // Callback for triggered achievement URL and id
+  m_gameClient->GetAchievement_URL_ID(
+      Callback_URL_ID); // Callback for triggered achievement URL and id
 }
