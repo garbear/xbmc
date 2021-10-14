@@ -19,6 +19,8 @@ addons/xbmc.metadata/*
 addons/xbmc.pvr/*
 addons/xbmc.python/*
 addons/xbmc.webinterface/*
+addons/repository.kodi_libretro_buildbot_game_addons_le_armhf/*
+addons/repository.kodi_libretro_buildbot_game_addons_le_generic/*
 addons/repository.teeedubb/*
 addons/repository.xbmc.org/*
 addons/repository.zachmorris/*
