@@ -173,7 +173,7 @@ if(NOT WIN32)
 endif()
 if(CORE_SYSTEM_NAME STREQUAL linux)
   option(ENABLE_EVENTCLIENTS    "Enable event clients support?" OFF)
-  option(ADDONS_CONFIGURE_AT_STARTUP "Configure binary addons at startup?" ON)
+  option(ADDONS_CONFIGURE_AT_STARTUP "Configure binary addons at startup?" OFF)
 endif()
 
 # Build static libraries per directory
