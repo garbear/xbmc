@@ -26,6 +26,8 @@ addons/metadata.themoviedb.org.python/*
 addons/metadata.themoviedb.org/*
 addons/metadata.tvshows.themoviedb.org.python/*
 addons/metadata.tvshows.themoviedb.org/*
+addons/repository.kodi_libretro_buildbot_game_addons_le_armhf/*
+addons/repository.kodi_libretro_buildbot_game_addons_le_generic/*
 addons/repository.teeedubb/*
 addons/repository.xbmc.org/*
 addons/repository.zachmorris/*
