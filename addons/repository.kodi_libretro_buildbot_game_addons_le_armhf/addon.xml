@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.kodi_libretro_buildbot_game_addons" name="Kodi Libretro Buildbot Game Addons LE ARMHF" version="1.0.1" provider-name="zachmorris">
+    <requires>
+        <import addon="xbmc.addon" version="12.0.0"/>
+    </requires>
+    <extension point="xbmc.addon.repository">
+        <dir minversion="18.0.0">
+            <info>https://github.com/zach-morris/kodi_libretro_buildbot_game_addons/raw/main/addons_le_armhf.xml</info>
+            <checksum>https://github.com/zach-morris/kodi_libretro_buildbot_game_addons/raw/main/addons_le_armhf.xml.md5</checksum>
+            <datadir>https://github.com/zach-morris/kodi_libretro_buildbot_game_addons/raw/main/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Kodi Libretro Buildbot Game Addons LE ARMHF</summary>
+        <description lang="en_GB">Kodi Libretro Buildbot Game Addons is a repository that builds kodi game binary addons directly from the libretro buildbot for LibreElec ARMHF (RPi/Amlogic) systems</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
