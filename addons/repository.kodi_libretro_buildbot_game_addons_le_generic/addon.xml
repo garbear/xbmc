@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.kodi_libretro_buildbot_game_addons_le_generic" name="Kodi Libretro Buildbot Game Addons LE Generic" version="1.0.0" provider-name="zachmorris">
+    <extension point="xbmc.addon.repository" name="Kodi Libretro Buildbot Game Addons LE Generic" >
+        <info compressed="true">https://github.com/zach-morris/kodi_libretro_buildbot_game_addons/raw/main/addons_le_generic.xml</info>
+        <checksum>https://github.com/zach-morris/kodi_libretro_buildbot_game_addons/raw/main/addons_le_generic.xml.md5</checksum>
+        <datadir zip="true">https://github.com/zach-morris/kodi_libretro_buildbot_game_addons/raw/main/</datadir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Kodi Libretro Buildbot Game Addons LE Generic</summary>
+        <description>Kodi Libretro Buildbot Game Addons is a repository that builds kodi game binary addons directly from the libretro buildbot for LibreElec Generic (x86_64) systems</description>
+        <platform>all</platform>
+    </extension>
+</addon>
