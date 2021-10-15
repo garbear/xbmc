@@ -6580,7 +6580,9 @@ msgctxt "#13297"
 msgid "Not connected. Check network settings."
 msgstr ""
 
-#empty string with id 13298
+msgctxt "#13298"
+msgid "Disconnected"
+msgstr ""
 
 msgctxt "#13299"
 msgid "Target temperature"
@@ -17694,7 +17696,34 @@ msgctxt "#35109"
 msgid "Keypad"
 msgstr ""
 
-#empty strings from id 35110 to 35149
+#. Label for button that allows the user to select which type of controllers are being used by a game. Used in the in-game OSD when the user selects "settings".
+msgctxt "#35110"
+msgid "Ports"
+msgstr ""
+
+#. Title of the window for setting up controller ports used by the game
+msgctxt "#35111"
+msgid "Port Setup"
+msgstr ""
+
+#. Label of a port with its identifier. {0:s} is the port ID, e.g. "1" for "Port 1"
+#. TODO: Remove this string
+msgctxt "#35112"
+msgid "Port {0:s}"
+msgstr ""
+
+#. Label of a port with a Multitap connected, e.g. "Multitap 1 Port 2". {0:s} - the Multitap ID. {1:s}  - the port ID
+#. TODO: Remove this string
+msgctxt "#35113"
+msgid "- Multitap {0:s} Port {1:s}"
+msgstr ""
+
+#. Title of the dialog for selecting a game controller
+msgctxt "#35114"
+msgid "Select a Controller"
+msgstr ""
+
+#empty strings from id 35113 to 35149
 
 #. Name of keyboard category in the settings category window
 #: system/settings/settings.xml
