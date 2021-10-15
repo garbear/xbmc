@@ -51,6 +51,7 @@ class CControllerGrid
 {
 public:
   CControllerGrid() = default;
+  CControllerGrid(const CControllerTree& controllerTree);
   CControllerGrid(const CControllerGrid& other) = default;
   ~CControllerGrid();
 
