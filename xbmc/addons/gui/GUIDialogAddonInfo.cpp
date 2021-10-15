@@ -528,6 +528,8 @@ bool CGUIDialogAddonInfo::PromptIfDependency(int heading, int line2)
 
   if (!deps.empty())
   {
+    //! @todo Remove non-localized concatenation and replace with a dialog
+    // showing add-ons in a list
     std::string line0 =
         StringUtils::Format(g_localizeStrings.Get(24046).c_str(), m_localAddon->Name().c_str());
     std::string line1 = StringUtils::Join(deps, ", ");
