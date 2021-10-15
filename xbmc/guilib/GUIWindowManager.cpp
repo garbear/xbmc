@@ -135,13 +135,14 @@
 /* Game related include files */
 #include "cores/RetroPlayer/guiwindows/GameWindowFullScreen.h"
 #include "games/controllers/windows/GUIControllerWindow.h"
-#include "games/windows/GUIWindowGames.h"
+#include "games/controllers/windows/GUIPortWindow.h"
 #include "games/dialogs/osd/DialogGameAdvancedSettings.h"
 #include "games/dialogs/osd/DialogGameOSD.h"
 #include "games/dialogs/osd/DialogGameStretchMode.h"
 #include "games/dialogs/osd/DialogGameVideoFilter.h"
 #include "games/dialogs/osd/DialogGameVideoRotation.h"
 #include "games/dialogs/osd/DialogGameVolume.h"
+#include "games/windows/GUIWindowGames.h"
 
 using namespace KODI;
 using namespace PVR;
@@ -291,6 +292,7 @@ void CGUIWindowManager::CreateWindows()
   Add(new CGUIWindowEventLog);
 
   Add(new GAME::CGUIControllerWindow);
+  Add(new GAME::CGUIPortWindow);
   Add(new GAME::CGUIWindowGames);
   Add(new GAME::CDialogGameOSD);
   Add(new GAME::CDialogGameVideoFilter);
@@ -404,6 +406,7 @@ bool CGUIWindowManager::DestroyWindows()
     DestroyWindow(WINDOW_PICTURES);
     DestroyWindow(WINDOW_WEATHER);
     DestroyWindow(WINDOW_DIALOG_GAME_CONTROLLERS);
+    DestroyWindow(WINDOW_DIALOG_GAME_PORTS);
     DestroyWindow(WINDOW_GAMES);
     DestroyWindow(WINDOW_DIALOG_GAME_OSD);
     DestroyWindow(WINDOW_DIALOG_GAME_VIDEO_FILTER);
