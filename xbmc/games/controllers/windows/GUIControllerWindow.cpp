@@ -34,7 +34,7 @@ using namespace GAME;
 using namespace KODI::MESSAGING;
 
 CGUIControllerWindow::CGUIControllerWindow(void)
-  : CGUIDialog(WINDOW_DIALOG_GAME_CONTROLLERS, "DialogGameControllers.xml"),
+  : CGUIDialog(WINDOW_DIALOG_GAME_CONTROLLERS, CONTROLLER_DIALOG_XML),
     m_installer(new CControllerInstaller)
 {
   // initialize CGUIWindow

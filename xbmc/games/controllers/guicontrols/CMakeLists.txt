@@ -1,5 +1,6 @@
 set(SOURCES GUICardinalFeatureButton.cpp
             GUIControllerButton.cpp
+            GUIPortButton.cpp
             GUIFeatureButton.cpp
             GUIFeatureControls.cpp
             GUIFeatureFactory.cpp
@@ -14,6 +15,7 @@ set(SOURCES GUICardinalFeatureButton.cpp
 set(HEADERS GUICardinalFeatureButton.h
             GUIControllerButton.h
             GUIControlTypes.h
+            GUIPortButton.h
             GUIFeatureButton.h
             GUIFeatureControls.h
             GUIFeatureFactory.h
