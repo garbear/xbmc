@@ -89,26 +89,38 @@ void CControllerHub::GetControllers(ControllerVector& controllers) const
 
 const CPortNode& CControllerHub::GetPort(const std::string& address) const
 {
-  return GetPort(m_ports, address);
+  // Check children
+  for (const CPortNode& port : m_ports)
+  {
+    const CPortNode& targetPort = GetPortInternal(port, address);
+    if (targetPort.Address() == address)
+      return targetPort;
+  }
+
+  // Not found
+  static const CPortNode empty;
+  return empty;
 }
 
-const CPortNode& CControllerHub::GetPort(const PortVec& ports, const std::string& address)
+const CPortNode& CControllerHub::GetPortInternal(const CPortNode& port, const std::string& address)
 {
-  for (const CPortNode& port : ports)
-  {
-    if (port.Address() == address)
-      return port;
+  // Base case
+  if (port.Address() == address)
+    return port;
 
-    for (const CControllerNode& controller : port.CompatibleControllers())
+  // Check children
+  for (const CControllerNode& controller : port.CompatibleControllers())
+  {
+    const PortVec& ports = controller.Hub().Ports();
+    for (const CPortNode& port : ports)
     {
-      for (const CPortNode& controllerPort : controller.Hub().Ports())
-      {
-        if (port.Address() == address)
-          return controllerPort;
-      }
+      const CPortNode& targetPort = GetPortInternal(port, address);
+      if (targetPort.Address() == address)
+        return targetPort;
     }
   }
 
+  // Not found
   static const CPortNode empty{};
   return empty;
 }
