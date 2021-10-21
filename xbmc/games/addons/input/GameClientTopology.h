@@ -21,7 +21,6 @@ class CGameClientTopology
 {
 public:
   CGameClientTopology() = default;
-  CGameClientTopology(const CGameClientTopology& other) = default;
   CGameClientTopology(GameClientPortVec ports, int playerLimit);
 
   void Clear();

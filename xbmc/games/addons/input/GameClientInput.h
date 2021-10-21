@@ -62,8 +62,6 @@ public:
   const CControllerTree& GetControllerTree() const;
   bool SupportsKeyboard() const;
   bool SupportsMouse() const;
-  bool ConnectController(const std::string& portAddress, ControllerPtr controller);
-  bool DisconnectController(const std::string& portAddress);
 
   // Agent functions
   bool HasAgent() const;

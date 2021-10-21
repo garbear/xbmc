@@ -39,7 +39,6 @@ const CWindowTranslator::WindowMapByName CWindowTranslator::WindowMappingByName 
     {"radiotimers", WINDOW_RADIO_TIMERS},
     {"radiosearch", WINDOW_RADIO_SEARCH},
     {"gamecontrollers", WINDOW_DIALOG_GAME_CONTROLLERS},
-    {"gameports", WINDOW_DIALOG_GAME_PORTS},
     {"games", WINDOW_GAMES},
     {"pvrguidecontrols", WINDOW_DIALOG_PVR_GUIDE_CONTROLS},
     {"pvrguideinfo", WINDOW_DIALOG_PVR_GUIDE_INFO},

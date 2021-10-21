@@ -17,11 +17,6 @@
 using namespace KODI;
 using namespace GAME;
 
-CControllerGrid::CControllerGrid(const CControllerTree& controllerTree)
-{
-  SetControllerTree(controllerTree);
-}
-
 CControllerGrid::~CControllerGrid() = default;
 
 void CControllerGrid::SetControllerTree(const CControllerTree& controllerTree)

@@ -288,64 +288,6 @@ bool CGameClientInput::SupportsMouse() const
   return it != controllers.Ports().end() && !it->CompatibleControllers().empty();
 }
 
-bool CGameClientInput::ConnectController(const std::string& portAddress, ControllerPtr controller)
-{
-  const CControllerTree& controllerTree = m_topology->ControllerTree();
-
-  // Validate controller
-  const CPortNode& port = controllerTree.GetPort(portAddress);
-  if (!port.IsControllerAccepted(portAddress, controller->ID()))
-  {
-    CLog::Log(LOGERROR, "Failed to open port: Invalid controller \"%s\" on port \"%s\"",
-              controller->ID().c_str(), portAddress.c_str());
-    return false;
-  }
-
-  bool bSuccess = false;
-
-  {
-    CSingleLock lock(m_clientAccess);
-
-    if (m_gameClient.Initialized())
-    {
-      try
-      {
-        bSuccess = m_struct.toAddon->ConnectController(&m_struct, true, portAddress.c_str(),
-                                                       controller->ID().c_str());
-      }
-      catch (...)
-      {
-        m_gameClient.LogException("ConnectController()");
-      }
-    }
-  }
-
-  return bSuccess;
-}
-
-bool CGameClientInput::DisconnectController(const std::string& portAddress)
-{
-  bool bSuccess = false;
-
-  {
-    CSingleLock lock(m_clientAccess);
-
-    if (m_gameClient.Initialized())
-    {
-      try
-      {
-        bSuccess = m_struct.toAddon->ConnectController(&m_struct, false, portAddress.c_str(), "");
-      }
-      catch (...)
-      {
-        m_gameClient.LogException("ConnectController()");
-      }
-    }
-  }
-
-  return bSuccess;
-}
-
 bool CGameClientInput::HasAgent() const
 {
   //! @todo We check m_portMap instead of m_joysticks because m_joysticks is
@@ -506,7 +448,34 @@ bool CGameClientInput::OpenJoystick(const std::string& portAddress, const Contro
     return false;
   }
 
-  bool bSuccess = ConnectController(portAddress, controller);
+  const CControllerTree& controllerTree = m_topology->ControllerTree();
+
+  const CPortNode port = controllerTree.GetPort(portAddress);
+  if (!port.IsControllerAccepted(portAddress, controller->ID()))
+  {
+    CLog::Log(LOGERROR, "Failed to open port: Invalid controller \"%s\" on port \"%s\"",
+              controller->ID().c_str(), portAddress.c_str());
+    return false;
+  }
+
+  bool bSuccess = false;
+
+  {
+    CSingleLock lock(m_clientAccess);
+
+    if (m_gameClient.Initialized())
+    {
+      try
+      {
+        bSuccess = m_struct.toAddon->ConnectController(&m_struct, true, portAddress.c_str(),
+                                                       controller->ID().c_str());
+      }
+      catch (...)
+      {
+        m_gameClient.LogException("ConnectController()");
+      }
+    }
+  }
 
   if (bSuccess)
   {
