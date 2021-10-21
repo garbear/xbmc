@@ -15,8 +15,16 @@
 
 //==============================================================================
 /// @ingroup cpp_kodi_addon_game_Defs
-/// @brief **Port ID used when topology is unknown**
+/// @brief **Port ID used when topology is unknown. Shown in the GUI**
 #define DEFAULT_PORT_ID "1"
+
+/// @ingroup cpp_kodi_addon_game_Defs
+/// @brief **Port ID used for keyboard input. Not shown in the GUI**
+#define KEYBOARD_PORT_ID "keyboard"
+
+/// @ingroup cpp_kodi_addon_game_Defs
+/// @brief **Port ID used for mouse input. Not shown in the GUI**
+#define MOUSE_PORT_ID "mouse"
 //------------------------------------------------------------------------------
 
 #ifdef __cplusplus
@@ -844,7 +852,7 @@ extern "C"
     /// @brief
     GAME_PORT_TYPE type;
 
-    /// @brief Required for GAME_PORT_CONTROLLER type
+    /// @brief
     const char* port_id;
 
     /// @brief
