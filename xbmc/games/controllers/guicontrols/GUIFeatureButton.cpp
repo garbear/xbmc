@@ -20,7 +20,7 @@ using namespace GAME;
 
 CGUIFeatureButton::CGUIFeatureButton(const CGUIButtonControl& buttonTemplate,
                                      IConfigurationWizard* wizard,
-                                     const CControllerFeature& feature,
+                                     const CPhysicalFeature& feature,
                                      unsigned int index)
   : CGUIButtonControl(buttonTemplate), m_feature(feature), m_wizard(wizard)
 {
