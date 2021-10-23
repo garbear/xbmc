@@ -23,6 +23,7 @@
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerLayout.h"
 #include "games/controllers/input/PhysicalTopology.h"
+#include "games/controllers/input/PortManager.h"
 #include "input/joysticks/JoystickTypes.h"
 #include "peripherals/EventLockHandle.h"
 #include "peripherals/Peripherals.h"
@@ -37,7 +38,9 @@ using namespace GAME;
 CGameClientInput::CGameClientInput(CGameClient& gameClient,
                                    AddonInstance_Game& addonStruct,
                                    CCriticalSection& clientAccess)
-  : CGameClientSubsystem(gameClient, addonStruct, clientAccess), m_topology(new CGameClientTopology)
+  : CGameClientSubsystem(gameClient, addonStruct, clientAccess),
+    m_topology(new CGameClientTopology),
+    m_portManager(std::make_unique<CPortManager>())
 {
 }
 
@@ -50,16 +53,23 @@ void CGameClientInput::Initialize()
 {
   LoadTopology();
 
+  // Send controller layouts to game client
+  SetControllerLayouts(m_topology->ControllerTree().GetControllers());
+
+  // Reset ports to default state (first accepted controller is connected)
   ActivateControllers(m_topology->ControllerTree());
 
-  SetControllerLayouts(m_topology->ControllerTree().GetControllers());
+  // Initialize the port manager
+  m_portManager->Initialize(m_gameClient.Profile());
+  m_portManager->SetControllerTree(m_topology->ControllerTree());
+  m_portManager->LoadXML();
 }
 
 void CGameClientInput::Start(IGameInputCallback* input)
 {
   m_inputCallback = input;
 
-  const CControllerTree& controllers = m_topology->ControllerTree();
+  const CControllerTree& controllers = GetActiveControllerTree();
 
   // Open keyboard
   //! @todo Move to player manager
@@ -106,6 +116,7 @@ void CGameClientInput::Deinitialize()
 
   m_topology->Clear();
   m_controllerLayouts.clear();
+  m_portManager->Clear();
 }
 
 void CGameClientInput::Stop()
@@ -229,9 +240,13 @@ void CGameClientInput::ActivateControllers(CControllerHub& hub)
 {
   for (auto& port : hub.Ports())
   {
+    if (port.CompatibleControllers().empty())
+      continue;
+
     port.SetConnected(true);
     port.SetActiveController(0);
-    ActivateControllers(port.ActiveController().Hub());
+    for (auto& controller : port.CompatibleControllers())
+      ActivateControllers(controller.Hub());
   }
 }
 
@@ -262,14 +277,19 @@ void CGameClientInput::SetControllerLayouts(const ControllerVector& controllers)
   }
 }
 
-const CControllerTree& CGameClientInput::GetControllerTree() const
+const CControllerTree& CGameClientInput::GetDefaultControllerTree() const
 {
   return m_topology->ControllerTree();
 }
 
+const CControllerTree& CGameClientInput::GetActiveControllerTree() const
+{
+  return m_portManager->ControllerTree();
+}
+
 bool CGameClientInput::SupportsKeyboard() const
 {
-  const CControllerTree& controllers = m_topology->ControllerTree();
+  const CControllerTree& controllers = GetDefaultControllerTree();
 
   auto it =
       std::find_if(controllers.Ports().begin(), controllers.Ports().end(),
@@ -280,7 +300,7 @@ bool CGameClientInput::SupportsKeyboard() const
 
 bool CGameClientInput::SupportsMouse() const
 {
-  const CControllerTree& controllers = m_topology->ControllerTree();
+  const CControllerTree& controllers = GetDefaultControllerTree();
 
   auto it = std::find_if(controllers.Ports().begin(), controllers.Ports().end(),
                          [](const CPortNode& port) { return port.PortType() == PORT_TYPE::MOUSE; });
@@ -290,7 +310,11 @@ bool CGameClientInput::SupportsMouse() const
 
 bool CGameClientInput::ConnectController(const std::string& portAddress, ControllerPtr controller)
 {
-  const CControllerTree& controllerTree = m_topology->ControllerTree();
+  // Validate parameters
+  if (portAddress.empty() || !controller)
+    return false;
+
+  const CControllerTree& controllerTree = GetDefaultControllerTree();
 
   // Validate controller
   const CPortNode& port = controllerTree.GetPort(portAddress);
@@ -302,7 +326,7 @@ bool CGameClientInput::ConnectController(const std::string& portAddress, Control
   }
 
   // Close current ports if any are open
-  const CPortNode& currentPort = m_topology->ControllerTree().GetPort(portAddress);
+  const CPortNode& currentPort = GetActiveControllerTree().GetPort(portAddress);
   CloseJoysticks(currentPort);
 
   bool bSuccess = false;
@@ -326,12 +350,17 @@ bool CGameClientInput::ConnectController(const std::string& portAddress, Control
 
   if (bSuccess)
   {
+    m_portManager->ConnectController(portAddress, true, controller->ID());
+
+    //! @todo Batch save
+    m_portManager->SaveXML();
+
     // Update player input
     if (controller->Layout().Topology().ProvidesInput())
       OpenJoystick(portAddress, controller);
 
     // If port is a multitap, we need to activate its children
-    const CPortNode& updatedPort = m_topology->ControllerTree().GetPort(portAddress);
+    const CPortNode& updatedPort = GetActiveControllerTree().GetPort(portAddress);
     const PortVec& childPorts = updatedPort.ActiveController().Hub().Ports();
     for (const CPortNode& childPort : childPorts)
     {
@@ -347,7 +376,7 @@ bool CGameClientInput::ConnectController(const std::string& portAddress, Control
 bool CGameClientInput::DisconnectController(const std::string& portAddress)
 {
   // If port is a multitap, we need to deactivate its children
-  const CPortNode& currentPort = m_topology->ControllerTree().GetPort(portAddress);
+  const CPortNode& currentPort = GetActiveControllerTree().GetPort(portAddress);
   CloseJoysticks(currentPort);
 
   bool bSuccess = false;
@@ -370,11 +399,23 @@ bool CGameClientInput::DisconnectController(const std::string& portAddress)
 
   if (bSuccess)
   {
+    m_portManager->ConnectController(portAddress, false);
+
+    //! @todo Batch save
+    m_portManager->SaveXML();
+
     // Update player input
     CloseJoystick(portAddress);
   }
 
   return bSuccess;
+}
+
+void CGameClientInput::ResetPorts()
+{
+  const CControllerTree& controllerTree = GetDefaultControllerTree();
+  for (const CPortNode& port : controllerTree.Ports())
+    ConnectController(port.Address(), port.ActiveController().Controller());
 }
 
 bool CGameClientInput::HasAgent() const

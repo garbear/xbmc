@@ -48,6 +48,7 @@ public:
   const CControllerNode& ActiveController() const;
   CControllerNode& ActiveController();
   void SetActiveController(unsigned int controllerIndex) { m_active = controllerIndex; }
+  bool SetActiveController(const std::string& controllerId);
 
   /*!
    * \brief The port type
@@ -85,6 +86,7 @@ public:
    *         any controller profiles
    */
   const ControllerNodeVec& CompatibleControllers() const { return m_controllers; }
+  ControllerNodeVec& CompatibleControllers() { return m_controllers; }
   void SetCompatibleControllers(ControllerNodeVec controllers);
 
   /*!
