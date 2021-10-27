@@ -83,6 +83,11 @@ public:
   const std::string& ID() const { return m_portId; }
 
   /*!
+   * \brief True if the user is allowed to disconnect the port, false otherwise
+   */
+  bool AllowDisconnect() const { return m_allowDisconnect; }
+
+  /*!
    * \brief Get the list of devices accepted by this port
    */
   const GameClientDeviceVec& Devices() const { return m_acceptedDevices; }
@@ -90,6 +95,7 @@ public:
 private:
   PORT_TYPE m_type;
   std::string m_portId;
+  bool m_allowDisconnect = true;
   GameClientDeviceVec m_acceptedDevices;
 };
 } // namespace GAME

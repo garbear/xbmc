@@ -73,6 +73,12 @@ public:
   void SetAddress(std::string address);
 
   /*!
+   * \brief True if a disconnection option can be shown for this port, false otherwise
+   */
+  bool AllowDisconnect() const { return m_allowDisconnect; }
+  void SetDisconnectAllowed(bool allowDisconnect) { m_allowDisconnect = allowDisconnect; }
+
+  /*!
    * \brief Return the controller profiles that are compatible with this port
    *
    * \return The controller profiles, or empty if this port doesn't support
@@ -108,6 +114,7 @@ private:
   PORT_TYPE m_portType = PORT_TYPE::UNKNOWN;
   std::string m_portId;
   std::string m_address;
+  bool m_allowDisconnect = true;
   ControllerNodeVec m_controllers;
 };
 

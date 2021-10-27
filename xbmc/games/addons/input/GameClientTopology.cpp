@@ -58,6 +58,7 @@ CPortNode CGameClientTopology::GetPortNode(const GameClientPortPtr& port,
   portNode.SetPortType(port->PortType());
   portNode.SetPortID(port->ID());
   portNode.SetAddress(portAddress);
+  portNode.SetDisconnectAllowed(port->AllowDisconnect());
 
   ControllerNodeVec nodes;
   for (const GameClientDevicePtr& device : port->Devices())
