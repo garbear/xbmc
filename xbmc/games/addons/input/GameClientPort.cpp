@@ -22,7 +22,8 @@ using namespace GAME;
 
 CGameClientPort::CGameClientPort(const game_input_port& port)
   : m_type(CGameClientTranslator::TranslatePortType(port.type)),
-    m_portId(port.port_id ? port.port_id : "")
+    m_portId(port.port_id ? port.port_id : ""),
+    m_allowDisconnect(port.allow_disconnect)
 {
   if (port.accepted_devices != nullptr)
   {
@@ -37,7 +38,7 @@ CGameClientPort::CGameClientPort(const game_input_port& port)
 }
 
 CGameClientPort::CGameClientPort(const ControllerVector& controllers)
-  : m_type(PORT_TYPE::CONTROLLER), m_portId(DEFAULT_PORT_ID)
+  : m_type(PORT_TYPE::CONTROLLER), m_portId(DEFAULT_PORT_ID), m_allowDisconnect(true)
 {
   for (const auto& controller : controllers)
     m_acceptedDevices.emplace_back(new CGameClientDevice(controller));
@@ -45,7 +46,9 @@ CGameClientPort::CGameClientPort(const ControllerVector& controllers)
 
 CGameClientPort::CGameClientPort(const game_input_port& logicalPort,
                                  const CPhysicalPort& physicalPort)
-  : m_type(PORT_TYPE::CONTROLLER), m_portId(physicalPort.ID())
+  : m_type(PORT_TYPE::CONTROLLER),
+    m_portId(physicalPort.ID()),
+    m_allowDisconnect(logicalPort.allow_disconnect)
 {
   if (logicalPort.accepted_devices != nullptr)
   {
