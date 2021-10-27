@@ -73,6 +73,13 @@ public:
   void SetAddress(std::string address);
 
   /*!
+   * \brief If true, prevents a disconnection option from being shown for this
+   * port
+   */
+  bool IsForceConnected() const { return m_forceConnected; }
+  void SetForceConnected(bool forceConnected) { m_forceConnected = forceConnected; }
+
+  /*!
    * \brief Return the controller profiles that are compatible with this port
    *
    * \return The controller profiles, or empty if this port doesn't support
@@ -108,6 +115,7 @@ private:
   PORT_TYPE m_portType = PORT_TYPE::UNKNOWN;
   std::string m_portId;
   std::string m_address;
+  bool m_forceConnected{true};
   ControllerNodeVec m_controllers;
 };
 
