@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.elektronika.bk"
+        name="Elektronika BK"
+        version="1.0.0"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">Elektronika BK</summary>
+        <description lang="en_GB">The Elektronika BK-0010 (Электроника БК-0010) was a PDP-11-compatible home computer released in 1984 in the Soviet Union.</description>
+        <disclaimer lang="en_GB">Image credit: retroordenadoresorty.blogspot.com</disclaimer>
+    </extension>
+</addon>
