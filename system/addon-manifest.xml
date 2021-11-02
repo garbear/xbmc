@@ -50,7 +50,6 @@
   <!-- TODO
   <addon optional="true">service.games.discord.richpresence</addon>
   -->
-  <addon optional="true">service.xbmc.versioncheck</addon>
   <addon>skin.estuary</addon>
   <addon>skin.estouchy</addon>
   <addon optional="true">vfs.libarchive</addon>
