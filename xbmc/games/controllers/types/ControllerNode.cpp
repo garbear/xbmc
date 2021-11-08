@@ -78,7 +78,7 @@ bool CControllerNode::IsControllerAccepted(const std::string& controllerId) cons
 {
   bool bAccepted = false;
 
-  for (const auto& port : m_hub->Ports())
+  for (const auto& port : m_hub->GetPorts())
   {
     if (port.IsControllerAccepted(controllerId))
     {
@@ -95,7 +95,7 @@ bool CControllerNode::IsControllerAccepted(const std::string& portAddress,
 {
   bool bAccepted = false;
 
-  for (const auto& port : m_hub->Ports())
+  for (const auto& port : m_hub->GetPorts())
   {
     if (port.IsControllerAccepted(portAddress, controllerId))
     {
