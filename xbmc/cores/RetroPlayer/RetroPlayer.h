@@ -14,6 +14,7 @@
 #include "cores/RetroPlayer/playback/IPlaybackControl.h"
 #include "games/GameTypes.h"
 #include "guilib/DispResource.h"
+#include "interfaces/IAnnouncer.h"
 #include "threads/CriticalSection.h"
 
 #include <memory>
@@ -27,6 +28,7 @@ class CGameServices;
 
 namespace RETRO
 {
+class CCheevos;
 class CRetroPlayerInput;
 class CRPProcessInfo;
 class CRPRenderManager;
@@ -37,7 +39,8 @@ class CRetroPlayer : public IPlayer,
                      public IRenderLoop,
                      public IGameCallback,
                      public IPlaybackCallback,
-                     public IAutoSaveCallback
+                     public IAutoSaveCallback,
+                     public ANNOUNCEMENT::IAnnouncer
 {
 public:
   explicit CRetroPlayer(IPlayerCallback& callback);
@@ -70,6 +73,10 @@ public:
 
   // Implementation of IGameCallback
   std::string GameClientID() const override;
+  std::string GetPlayingGame() const override;
+  std::string CreateSavestate(bool autosave) override;
+  bool LoadSavestate(const std::string& path) override;
+  void CloseOSDCallback() override;
 
   // Implementation of IPlaybackCallback
   void SetPlaybackSpeed(double speed) override;
@@ -77,7 +84,13 @@ public:
 
   // Implementation of IAutoSaveCallback
   bool IsAutoSaveEnabled() const override;
-  std::string CreateSavestate() override;
+  std::string CreateAutosave() override;
+
+  // Implementation of IAnnouncer
+  void Announce(ANNOUNCEMENT::AnnouncementFlag flag,
+                const std::string& sender,
+                const std::string& message,
+                const CVariant& data) override;
 
 private:
   void SetSpeedInternal(double speed);
@@ -89,7 +102,7 @@ private:
   void OnSpeedChange(double newSpeed);
 
   // Playback functions
-  void CreatePlayback(bool bRestoreState);
+  void CreatePlayback(bool bRestoreState, const std::string& savestatePath);
   void ResetPlayback();
 
   /*!
@@ -124,12 +137,16 @@ private:
   std::unique_ptr<IPlayback> m_playback;
   std::unique_ptr<IPlaybackControl> m_playbackControl;
   std::unique_ptr<CRetroPlayerAutoSave> m_autoSave;
+  std::shared_ptr<CCheevos> m_cheevos;
 
   // Game parameters
   GAME::GameClientPtr m_gameClient;
 
   // Synchronization parameters
   CCriticalSection m_mutex;
+
+  // File metadata
+  std::shared_ptr<CFileItem> m_fileItem;
 };
 } // namespace RETRO
 } // namespace KODI
