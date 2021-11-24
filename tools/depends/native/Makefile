@@ -4,15 +4,33 @@ ifneq ($(shell test -f $(NATIVEPREFIX)/share/config.site && echo 1),1)
   $(error Error: $(NATIVEPREFIX)/share/config.site  is missing. Please reconfigure depends to generate it)
 endif
 
-NATIVE= m4 gettext heimdal autoconf automake \
-        libtool pkg-config yasm nasm cmake \
-        gas-preprocessor libffi python3 zlib \
-        pcre swig \
-        libpng libjpeg-turbo liblzo2 giflib \
-        setuptools distutilscross JsonSchemaBuilder TexturePacker \
-        flatbuffers \
-        meson ninja
-
+NATIVE= \
+  autoconf \
+  automake \
+  cmake \
+  distutilscross \
+  flatbuffers \
+  gas-preprocessor \
+  gettext \
+  giflib \
+  heimdal \
+  JsonSchemaBuilder \
+  libffi \
+  libjpeg-turbo \
+  liblzo2 \
+  libpng \
+  libtool \
+  m4 \
+  meson \
+  nasm \
+  ninja \
+  pcre swig \
+  pkg-config \
+  python3 \
+  setuptools \
+  TexturePacker \
+  yasm \
+  zlib
 
 ifeq ($(OS),darwin_embedded)
   NATIVE += dpkg xz tar ldid
@@ -35,22 +53,22 @@ all: native
 # Dependency layout for parallel builds
 autoconf: m4
 automake: autoconf
+distutilscross: python3
 dpkg: automake gettext libtool pkg-config tar
 flatbuffers: cmake
 heimdal: libtool
-libtool: automake
 libjpeg-turbo: cmake yasm
 libpng: zlib automake
+libtool: automake
 meson: python3 setuptools
 ninja: meson
-swig: pcre
-distutilscross: python3
-tar: xz automake
+pugixml: cmake
 python3: $(EXPAT) libffi pkg-config zlib
 setuptools: python3
+swig: pcre
+tar: xz automake
 wayland-scanner: expat pkg-config
 waylandpp-scanner: cmake pugixml
-pugixml: cmake
 
 # python installs are not thread safe when using easy_install method.
 # MarkupSafe doesn't really depend on ninja but we need to make the
