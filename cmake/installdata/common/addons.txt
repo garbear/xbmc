@@ -24,6 +24,7 @@ addons/metadata.generic.artists/*
 addons/metadata.local/*
 addons/metadata.themoviedb.org.python/*
 addons/metadata.tvshows.themoviedb.org.python/*
+addons/repository.chrisism.dev/*
 addons/repository.kodi_libretro_buildbot_game_addons_le_armhf/*
 addons/repository.kodi_libretro_buildbot_game_addons_le_generic/*
 addons/repository.teeedubb/*
