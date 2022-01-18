@@ -1,0 +1,9 @@
+LIBNAME=libqrencode
+VERSION=4.1.1
+ARCHIVE=qrencode-$(VERSION).tar.gz
+SHA512=209bb656ae3f391b03c7b3ceb03e34f7320b0105babf48b619e7a299528b8828449e0e7696f0b5db0d99170a81709d0518e34835229a748701e7df784e58a9ce
+BYPRODUCT=libqrencode.a
+BYPRODUCT_WIN=qrencode.lib
+
+# TODO
+BASE_URL=https://fukuchi.org/works/qrencode
