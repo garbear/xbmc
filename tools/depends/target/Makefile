@@ -33,6 +33,7 @@ DEPENDS = \
   libmicrohttpd \
   libplist \
   libpng \
+  libqrencode \
   libshairplay \
   libusb \
   libxml2 \
@@ -148,6 +149,7 @@ libinput: mtdev libevdev meson-cross-file
 libmicrohttpd: gnutls libgcrypt libgpg-error
 libplist: $(ZLIB)
 libpng: $(ZLIB)
+libqrencode: $(ICONV) libpng
 spdlog: fmt
 libva: libdrm $(LIBVA_DEPS)
 libxml2: $(ZLIB)

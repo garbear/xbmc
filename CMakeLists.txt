@@ -66,6 +66,7 @@ cmake_dependent_option(ENABLE_INTERNAL_FLATBUFFERS "Enable internal flatbuffers?
 cmake_dependent_option(ENABLE_INTERNAL_NFS "Enable internal libnfs?" OFF "DEFINED USE_INTERNAL_LIBS;NOT USE_INTERNAL_LIBS" ON)
 cmake_dependent_option(ENABLE_INTERNAL_PCRE "Enable internal pcre?" OFF "DEFINED USE_INTERNAL_LIBS;NOT USE_INTERNAL_LIBS" ON)
 cmake_dependent_option(ENABLE_INTERNAL_TAGLIB "Enable internal taglib?" OFF "DEFINED USE_INTERNAL_LIBS;NOT USE_INTERNAL_LIBS" ON)
+option(ENABLE_INTERNAL_LIBQRENCODE "Enable internal libqrencode?" OFF)
 
 # Internal Depends - supported on UNIX platforms
 if(UNIX)
@@ -171,6 +172,7 @@ set(required_deps ASS
                   Iconv
                   KissFFT
                   LibDvd
+                  Libqrencode
                   Lzo2
                   OpenSSL>=1.1.0
                   PCRE
