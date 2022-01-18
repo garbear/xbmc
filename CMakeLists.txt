@@ -115,6 +115,7 @@ option(ENABLE_KADEMLIA    "Enable Kademlia support?" ON)
 option(ENABLE_INTERNAL_BOOST "Enable internal boost?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBDATACHANNEL "Enable internal libdatachannel?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBJUICE "Enable internal libjuice?" ON) # TODO: Change to OFF
+option(ENABLE_INTERNAL_LIBQRENCODE "Enable internal libqrencode?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBSRTP "Enable internal libsrtp?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBTORRENT "Enable internal libtorrent?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LMDB "Enable internal LMDB?" ON) # TODO: Change to OFF
@@ -262,6 +263,7 @@ set(required_deps ASS>=0.15.0
                   HarfBuzz
                   Iconv
                   LibDvd
+                  Libqrencode
                   LMDB
                   Lzo2
                   OpenSSL>=1.1.0

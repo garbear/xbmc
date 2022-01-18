@@ -1,0 +1,22 @@
+From 74f7c558ec39c087a1b2905e4980404f3df7f89c Mon Sep 17 00:00:00 2001
+From: Garrett Brown <garrett.brown@aclima.earth>
+Date: Tue, 17 Jun 2025 21:34:53 -0700
+Subject: [PATCH] Fix building with CMake 4.0
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 773e037..d8720e1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.1.0)
++cmake_minimum_required(VERSION 3.1.0...4.0)
+ 
+ project(QRencode VERSION 4.1.1 LANGUAGES C)
+ 
+-- 
+2.49.0
+
