@@ -34,6 +34,7 @@ DEPENDS = \
   libmicrohttpd \
   libplist \
   libpng \
+  libqrencode \
   libshairplay \
   libsrtp \
   libtorrent \
@@ -178,6 +179,7 @@ libinput: mtdev libevdev
 libmicrohttpd: gnutls libgcrypt libgpg-error
 libplist: $(ZLIB)
 libpng: $(ZLIB)
+libqrencode: $(ICONV) libpng $(ZLIB)
 libsrtp: openssl
 libtorrent: boost libdatachannel openssl try_signal $(ZLIB)
 libva: libdrm $(LIBVA_DEPS)
