@@ -39,6 +39,7 @@ set(SOURCES DDSImage.cpp
             GUIMultiImage.cpp
             GUIPanelContainer.cpp
             GUIProgressControl.cpp
+            GUIQRCode.cpp
             GUIRadioButtonControl.cpp
             GUIRangesControl.cpp
             GUIRenderingControl.cpp
@@ -123,6 +124,7 @@ set(HEADERS AspectRatio.h
             GUIMultiImage.h
             GUIPanelContainer.h
             GUIProgressControl.h
+            GUIQRCode.h
             GUIRadioButtonControl.h
             GUIRangesControl.h
             GUIRenderingControl.h
