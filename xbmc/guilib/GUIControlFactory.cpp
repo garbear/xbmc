@@ -29,6 +29,7 @@
 #include "GUIMultiImage.h"
 #include "GUIPanelContainer.h"
 #include "GUIProgressControl.h"
+#include "GUIQRCode.h"
 #include "GUIRSSControl.h"
 #include "GUIRadioButtonControl.h"
 #include "GUIRangesControl.h"
@@ -89,6 +90,7 @@ static const ControlMapping controls[] = {
     {"multiimage", CGUIControl::GUICONTROL_MULTI_IMAGE},
     {"panel", CGUIControl::GUICONTAINER_PANEL},
     {"progress", CGUIControl::GUICONTROL_PROGRESS},
+    {"qrcode", CGUIControl::GUICONTROL_QRCODE},
     {"radiobutton", CGUIControl::GUICONTROL_RADIO},
     {"ranges", CGUIControl::GUICONTROL_RANGES},
     {"renderaddon", CGUIControl::GUICONTROL_RENDERADDON},
@@ -1745,6 +1747,22 @@ CGUIControl* CGUIControlFactory::Create(int parentID,
       rcontrol->SetClickActions(clickActions);
       rcontrol->SetFocusActions(focusActions);
       rcontrol->SetUnFocusActions(unfocusActions);
+
+      break;
+    }
+    case CGUIControl::GUICONTROL_QRCODE:
+    {
+      control = new CGUIQRCode(parentID, id, posX, posY, width, height, texture);
+
+      CGUIQRCode* qrcontrol = static_cast<CGUIQRCode*>(control);
+
+      // Set content
+      static const GUIINFO::CGUIInfoLabel empty;
+      const GUIINFO::CGUIInfoLabel& content = !infoLabels.empty() ? infoLabels[0] : empty;
+      qrcontrol->SetContent(content);
+
+      // Set texture
+      qrcontrol->SetInfo(textureFile);
 
       break;
     }
