@@ -102,6 +102,11 @@
 #define ADDON_INSTANCE_VERSION_GAME_XML_ID            "kodi.binary.instance.game"
 #define ADDON_INSTANCE_VERSION_GAME_DEPENDS           "addon-instance/Game.h"
 
+#define ADDON_INSTANCE_VERSION_IDENTITY               "1.0.0"
+#define ADDON_INSTANCE_VERSION_IDENTITY_MIN           "1.0.0"
+#define ADDON_INSTANCE_VERSION_IDENTITY_XML_ID        "kodi.binary.instance.identity"
+#define ADDON_INSTANCE_VERSION_IDENTITY_DEPENDS       "addon-instance/Identity.h"
+
 #define ADDON_INSTANCE_VERSION_IMAGEDECODER           "3.0.1"
 #define ADDON_INSTANCE_VERSION_IMAGEDECODER_MIN       "3.0.0"
 #define ADDON_INSTANCE_VERSION_IMAGEDECODER_XML_ID    "kodi.binary.instance.imagedecoder"
@@ -162,6 +167,7 @@
 #define ADDON_INSTANCE_VERSION_SCREENSAVER_DEPENDS    "c-api/addon-instance/screensaver.h" \
                                                       "addon-instance/Screensaver.h"
 
+//! @todo Change VFS version to "4.0.0"
 #define ADDON_INSTANCE_VERSION_VFS                    "3.0.1"
 #define ADDON_INSTANCE_VERSION_VFS_MIN                "3.0.1"
 #define ADDON_INSTANCE_VERSION_VFS_XML_ID             "kodi.binary.instance.vfs"
@@ -227,6 +233,9 @@ typedef enum ADDON_TYPE
 
   /// Game instance, see @ref cpp_kodi_addon_game "kodi::addon::CInstanceGame"
   ADDON_INSTANCE_GAME = 104,
+
+  /// Identity provider, see @ref cpp_kodi_addon_game "kodi::addon::CInstanceIdentity"
+  ADDON_INSTANCE_IDENTITY = 114,
 
   /// Input stream instance, see @ref cpp_kodi_addon_inputstream "kodi::addon::CInstanceInputStream"
   ADDON_INSTANCE_INPUTSTREAM = 105,
