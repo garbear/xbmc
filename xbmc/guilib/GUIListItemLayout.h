@@ -50,6 +50,7 @@ public:
   bool CheckCondition();
 protected:
   void LoadControl(TiXmlElement *child, CGUIControlGroup *group);
+  void Update(CFileItem *item);
 
   CGUIListGroup m_group;
 
