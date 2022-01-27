@@ -8,11 +8,6 @@
 
 #include "GUIControlLookup.h"
 
-CGUIControlLookup::CGUIControlLookup(const CGUIControlLookup& from)
-  : CGUIControl(from)
-{
-}
-
 CGUIControl *CGUIControlLookup::GetControl(int iControl, std::vector<CGUIControl*> *idCollector)
 {
   if (idCollector)

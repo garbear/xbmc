@@ -26,13 +26,12 @@ class CGUIListContainer : public CGUIBaseContainer
 {
 public:
   CGUIListContainer(int parentID, int controlID, float posX, float posY, float width, float height, ORIENTATION orientation, const CScroller& scroller, int preloadItems);
-  explicit CGUIListContainer(const CGUIListContainer& other);
-  //#ifdef GUILIB_PYTHON_COMPATIBILITY
+//#ifdef GUILIB_PYTHON_COMPATIBILITY
   CGUIListContainer(int parentID, int controlID, float posX, float posY, float width, float height,
                          const CLabelInfo& labelInfo, const CLabelInfo& labelInfo2,
                          const CTextureInfo& textureButton, const CTextureInfo& textureButtonFocus,
                          float textureHeight, float itemWidth, float itemHeight, float spaceBetweenItems);
-  //#endif
+//#endif
   ~CGUIListContainer(void) override;
   CGUIListContainer *Clone() const override { return new CGUIListContainer(*this); };
 

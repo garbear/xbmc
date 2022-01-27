@@ -51,11 +51,8 @@ public:
   } UpdateState;
 
   CDirectoryProvider(const TiXmlElement *element, int parentID);
-  explicit CDirectoryProvider(const CDirectoryProvider& other);
   ~CDirectoryProvider() override;
 
-  // Implementation of IListProvider
-  std::unique_ptr<IListProvider> Clone() override;
   bool Update(bool forceRefresh) override;
   void Announce(ANNOUNCEMENT::AnnouncementFlag flag,
                 const std::string& sender,

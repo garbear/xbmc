@@ -18,23 +18,8 @@ CMultiProvider::CMultiProvider(const TiXmlNode *first, int parentID)
   {
     IListProviderPtr sub(IListProvider::CreateSingle(content, parentID));
     if (sub)
-      m_providers.push_back(std::move(sub));
+      m_providers.push_back(sub);
   }
-}
-
-CMultiProvider::CMultiProvider(const CMultiProvider& other) : IListProvider(other.m_parentID)
-{
-  for (const auto& provider : other.m_providers)
-  {
-    std::unique_ptr<IListProvider> newProvider = provider->Clone();
-    if (newProvider)
-      m_providers.emplace_back(std::move(newProvider));
-  }
-}
-
-std::unique_ptr<IListProvider> CMultiProvider::Clone()
-{
-  return std::make_unique<CMultiProvider>(*this);
 }
 
 bool CMultiProvider::Update(bool forceRefresh)
@@ -57,7 +42,7 @@ void CMultiProvider::Fetch(std::vector<CGUIListItemPtr> &items)
     for (auto& item : subItems)
     {
       auto key = GetItemKey(item);
-      m_itemMap[key] = provider.get();
+      m_itemMap[key] = provider;
       items.push_back(item);
     }
     subItems.clear();

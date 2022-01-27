@@ -27,23 +27,15 @@ CGUIListItemLayout::CGUIListItemLayout()
   m_group.SetPushUpdates(true);
 }
 
-CGUIListItemLayout::CGUIListItemLayout(const CGUIListItemLayout& from)
-  : CGUIListItemLayout(from, nullptr)
+CGUIListItemLayout::CGUIListItemLayout(const CGUIListItemLayout &from, CGUIControl *control)
+: m_group(from.m_group), m_isPlaying(from.m_isPlaying)
 {
-}
-
-CGUIListItemLayout::CGUIListItemLayout(const CGUIListItemLayout& from, CGUIControl* control)
-  : m_group(from.m_group),
-    m_width(from.m_width),
-    m_height(from.m_height),
-    m_focused(from.m_focused),
-    m_invalidated(from.m_invalidated),
-    m_condition(from.m_condition),
-    m_isPlaying(from.m_isPlaying),
-    m_infoUpdateMillis(from.m_infoUpdateMillis)
-{
+  m_width = from.m_width;
+  m_height = from.m_height;
+  m_focused = from.m_focused;
+  m_condition = from.m_condition;
+  m_invalidated = true;
   m_group.SetParentControl(control);
-  m_infoUpdateTimeout.Set(m_infoUpdateMillis);
 }
 
 bool CGUIListItemLayout::IsAnimating(ANIMATION_TYPE animType)

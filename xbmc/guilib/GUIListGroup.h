@@ -23,7 +23,7 @@ class CGUIListGroup final : public CGUIControlGroup
 {
 public:
   CGUIListGroup(int parentID, int controlID, float posX, float posY, float width, float height);
-  explicit CGUIListGroup(const CGUIListGroup& right);
+  CGUIListGroup(const CGUIListGroup &right);
   ~CGUIListGroup(void) override;
   CGUIListGroup *Clone() const override { return new CGUIListGroup(*this); };
 

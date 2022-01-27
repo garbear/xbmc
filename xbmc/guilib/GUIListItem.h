@@ -48,7 +48,7 @@ public:
   /// @}
 
   CGUIListItem(void);
-  explicit CGUIListItem(const CGUIListItem& item);
+  CGUIListItem(const CGUIListItem& item);
   explicit CGUIListItem(const std::string& strLabel);
   virtual ~CGUIListItem(void);
   virtual CGUIListItem *Clone() const { return new CGUIListItem(*this); };

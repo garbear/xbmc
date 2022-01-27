@@ -14,7 +14,7 @@
 #include <map>
 #include <vector>
 
-typedef std::unique_ptr<IListProvider> IListProviderPtr;
+typedef std::shared_ptr<IListProvider> IListProviderPtr;
 
 /*!
  \ingroup listproviders
@@ -24,10 +24,7 @@ class CMultiProvider : public IListProvider
 {
 public:
   CMultiProvider(const TiXmlNode *first, int parentID);
-  explicit CMultiProvider(const CMultiProvider& other);
 
-  // Implementation of IListProvider
-  std::unique_ptr<IListProvider> Clone() override;
   bool Update(bool forceRefresh) override;
   void Fetch(std::vector<CGUIListItemPtr> &items) override;
   bool IsUpdating() const override;
@@ -40,6 +37,6 @@ protected:
   typedef size_t item_key_type;
   static item_key_type GetItemKey(CGUIListItemPtr const &item);
   std::vector<IListProviderPtr> m_providers;
-  std::map<item_key_type, IListProvider*> m_itemMap;
+  std::map<item_key_type, IListProviderPtr> m_itemMap;
   CCriticalSection m_section; // protects m_itemMap
 };
