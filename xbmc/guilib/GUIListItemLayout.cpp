@@ -39,13 +39,11 @@ CGUIListItemLayout::CGUIListItemLayout(const CGUIListItemLayout& from, CGUIContr
     m_focused(from.m_focused),
     m_invalidated(from.m_invalidated),
     m_condition(from.m_condition),
-    m_isPlaying(from.m_isPlaying)
+    m_isPlaying(from.m_isPlaying),
+    m_infoUpdateMillis(from.m_infoUpdateMillis)
 {
   m_group.SetParentControl(control);
-
-  // m_group was just created, cloned controls with resources must be allocated
-  // before use
-  m_group.AllocResources();
+  m_infoUpdateTimeout.Set(m_infoUpdateMillis);
 }
 
 bool CGUIListItemLayout::IsAnimating(ANIMATION_TYPE animType)
