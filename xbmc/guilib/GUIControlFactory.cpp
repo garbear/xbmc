@@ -1107,8 +1107,7 @@ CGUIControl* CGUIControlFactory::Create(int parentID, const CRect &rect, TiXmlEl
     break;
   case CGUIControl::GUICONTROL_LABEL:
     {
-      static const GUIINFO::CGUIInfoLabel empty;
-      const GUIINFO::CGUIInfoLabel& content = (infoLabels.size()) ? infoLabels[0] : empty;
+      const GUIINFO::CGUIInfoLabel &content = (infoLabels.size()) ? infoLabels[0] : GUIINFO::CGUIInfoLabel("");
       if (insideContainer)
       { // inside lists we use CGUIListLabel
         control = new CGUIListLabel(parentID, id, posX, posY, width, height, labelInfo, content, scrollValue);
