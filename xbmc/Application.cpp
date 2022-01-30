@@ -4119,6 +4119,7 @@ void CApplication::Process()
 
   // handle any active scripts
 
+  if (!m_bStop)
   {
     // Allow processing of script threads to let them shut down properly.
     CSingleExit ex(CServiceBroker::GetWinSystem()->GetGfxContext());
