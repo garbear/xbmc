@@ -37,7 +37,7 @@ typedef struct
 } TypeMapping;
 
 // clang-format off
-static constexpr const std::array<TypeMapping, 41> types =
+static constexpr const std::array<TypeMapping, 42> types =
   {{
    {"unknown",                           "", AddonType::UNKNOWN,                 0, AddonInstanceSupport::SUPPORT_NONE,      "" },
    {"xbmc.metadata.scraper.albums",      "", AddonType::SCRAPER_ALBUMS,      24016, AddonInstanceSupport::SUPPORT_NONE,      "DefaultAddonAlbumInfo.png" },
@@ -63,6 +63,7 @@ static constexpr const std::array<TypeMapping, 41> types =
    {"kodi.pvrclient",      "xbmc.pvrclient", AddonType::PVRDLL,              24019, AddonInstanceSupport::SUPPORT_SETTINGS,  "DefaultAddonPVRClient.png" },
    {"kodi.gameclient",                   "", AddonType::GAMEDLL,             35049, AddonInstanceSupport::SUPPORT_OPTIONAL,  "DefaultAddonGame.png" },
    {"kodi.shader.presets",               "", AddonType::SHADERDLL,           35256, AddonInstanceSupport::SUPPORT_NONE,      "DefaultAddonGame.png" },
+   {"kodi.identity.did",                 "", AddonType::IDENTITYDLL,         35400, AddonInstanceSupport::SUPPORT_NONE,      "DefaultUser.png" },
    {"kodi.peripheral",                   "", AddonType::PERIPHERALDLL,       35010, AddonInstanceSupport::SUPPORT_MANDATORY, "DefaultAddonPeripheral.png" },
    {"xbmc.addon.video",                  "", AddonType::VIDEO,                1037, AddonInstanceSupport::SUPPORT_NONE,      "DefaultAddonVideo.png" },
    {"xbmc.addon.audio",                  "", AddonType::AUDIO,                1038, AddonInstanceSupport::SUPPORT_NONE,      "DefaultAddonMusic.png" },
