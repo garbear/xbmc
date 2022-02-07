@@ -16,6 +16,7 @@ xbmc/crypto/codecs                              crypto/codecs
 xbmc/crypto/cryptold                            crypto/cryptold
 xbmc/crypto/did                                 crypto/did
 xbmc/crypto/ed25519                             crypto/ed25519
+xbmc/crypto/identity                            crypto/identity
 xbmc/crypto/random                              crypto/random
 xbmc/datastore                                  datastore
 xbmc/dbwrappers                                 dbwrappers

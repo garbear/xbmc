@@ -18453,7 +18453,15 @@ msgctxt "#35270"
 msgid "Your account is not verified. Please check your email to complete your sign up."
 msgstr ""
 
-#empty strings from id 35271 to 35504
+#empty strings from id 35271 to 35399
+
+#. Name of add-ons that provide user identities
+#: xbmc/addons/addoninfo/AddonInfo.cpp
+msgctxt "#35400"
+msgid "Identity providers"
+msgstr ""
+
+#empty strings from id 35401 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/pvr/addons/PVRClients.cpp

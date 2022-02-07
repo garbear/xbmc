@@ -53,6 +53,7 @@ static const TypeMapping types[] =
    {"xbmc.addon.repository",             "", ADDON_REPOSITORY,          24011, "DefaultAddonRepository.png" },
    {"kodi.pvrclient",      "xbmc.pvrclient", ADDON_PVRDLL,              24019, "DefaultAddonPVRClient.png" },
    {"kodi.gameclient",                   "", ADDON_GAMEDLL,             35049, "DefaultAddonGame.png" },
+   {"kodi.identity.did",                 "", ADDON_IDENTITYDLL,         35400, "DefaultUser.png" },
    {"kodi.peripheral",                   "", ADDON_PERIPHERALDLL,       35010, "DefaultAddonPeripheral.png" },
    {"xbmc.addon.video",                  "", ADDON_VIDEO,                1037, "DefaultAddonVideo.png" },
    {"xbmc.addon.audio",                  "", ADDON_AUDIO,                1038, "DefaultAddonMusic.png" },
