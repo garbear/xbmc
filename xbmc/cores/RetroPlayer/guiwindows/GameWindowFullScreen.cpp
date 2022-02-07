@@ -15,8 +15,6 @@
 #include "ServiceBroker.h"
 #include "cores/RetroPlayer/guibridge/GUIGameRenderManager.h"
 #include "cores/RetroPlayer/guibridge/GUIRenderHandle.h"
-#include "games/GameServices.h"
-#include "games/GameSettings.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIControl.h"
 #include "guilib/GUIDialog.h"
@@ -180,22 +178,6 @@ void CGameWindowFullScreen::OnInitWindow()
   CServiceBroker::GetWinSystem()->GetGfxContext().SetFullScreenVideo(true); //! @todo
 
   CGUIWindow::OnInitWindow();
-
-  // Show OSD help
-  GAME::CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
-  if (gameSettings.ShowOSDHelp())
-    TriggerOSD();
-  else
-  {
-    //! @todo We need to route this check through the GUI bridge. By adding the
-    //        dependency to the application player here, we are prevented from
-    //        having multiple players.
-    if (!g_application.GetAppPlayer().HasGameAgent())
-    {
-      gameSettings.SetShowOSDHelp(true);
-      TriggerOSD();
-    }
-  }
 }
 
 void CGameWindowFullScreen::OnDeinitWindow(int nextWindowID)

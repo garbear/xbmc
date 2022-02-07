@@ -29,8 +29,6 @@ public:
 
   // General settings
   bool GamesEnabled();
-  bool ShowOSDHelp();
-  void SetShowOSDHelp(bool bShow);
   void ToggleGames();
   bool AutosaveEnabled();
   bool RewindEnabled();

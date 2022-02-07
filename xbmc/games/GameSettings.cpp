@@ -30,7 +30,6 @@ using namespace GAME;
 namespace
 {
 const std::string SETTING_GAMES_ENABLE = "gamesgeneral.enable";
-const std::string SETTING_GAMES_SHOW_OSD_HELP = "gamesgeneral.showosdhelp";
 const std::string SETTING_GAMES_ENABLEAUTOSAVE = "gamesgeneral.enableautosave";
 const std::string SETTING_GAMES_ENABLEREWIND = "gamesgeneral.enablerewind";
 const std::string SETTING_GAMES_REWINDTIME = "gamesgeneral.rewindtime";
@@ -65,22 +64,6 @@ CGameSettings::~CGameSettings()
 bool CGameSettings::GamesEnabled()
 {
   return m_settings->GetBool(SETTING_GAMES_ENABLE);
-}
-
-bool CGameSettings::ShowOSDHelp()
-{
-  return m_settings->GetBool(SETTING_GAMES_SHOW_OSD_HELP);
-}
-
-void CGameSettings::SetShowOSDHelp(bool bShow)
-{
-  if (m_settings->GetBool(SETTING_GAMES_SHOW_OSD_HELP) != bShow)
-  {
-    m_settings->SetBool(SETTING_GAMES_SHOW_OSD_HELP, bShow);
-
-    //! @todo Asynchronous save
-    m_settings->Save();
-  }
 }
 
 void CGameSettings::ToggleGames()

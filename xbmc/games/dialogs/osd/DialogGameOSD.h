@@ -16,20 +16,12 @@ namespace KODI
 {
 namespace GAME
 {
-class CDialogGameOSDHelp;
-
 class CDialogGameOSD : public CGUIDialog
 {
 public:
   CDialogGameOSD();
 
   ~CDialogGameOSD() override = default;
-
-  // Implementation of CGUIControl via CGUIDialog
-  bool OnAction(const CAction& action) override;
-
-  // Implementation of CGUIWindow via CGUIDialog
-  void OnDeinitWindow(int nextWindowID) override;
 
   /*!
    * \brief Decide if the game should play behind the given dialog
@@ -42,13 +34,6 @@ public:
    *         dialog, false otherwise
    */
   static bool PlayInBackground(int dialogId);
-
-protected:
-  // Implementation of CGUIWindow via CGUIDialog
-  void OnInitWindow() override;
-
-private:
-  std::unique_ptr<CDialogGameOSDHelp> m_helpDialog;
 };
 } // namespace GAME
 } // namespace KODI
