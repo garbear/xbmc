@@ -277,6 +277,7 @@ extern "C"
       struct AddonInstance_AudioEncoder* audioencoder;
       struct AddonInstance_ImageDecoder* imagedecoder;
       struct AddonInstance_Game* game;
+      struct AddonInstance_Identity* identity;
       struct AddonInstance_InputStream* inputstream;
       struct AddonInstance_Peripheral* peripheral;
       struct AddonInstance_PVR* pvr;

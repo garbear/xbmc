@@ -18845,7 +18845,15 @@ msgctxt "#35271"
 msgid "Playing with:"
 msgstr ""
 
-#empty strings from id 35272 to 35504
+#empty strings from id 35272 to 35399
+
+#. Name of add-ons that provide user identities
+#: xbmc/addons/addoninfo/AddonInfo.cpp
+msgctxt "#35400"
+msgid "Identity providers"
+msgstr ""
+
+#empty strings from id 35401 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/pvr/addons/PVRClients.cpp
