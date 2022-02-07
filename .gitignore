@@ -130,6 +130,7 @@ cmake_install.cmake
 /addons/kodi.binary.instance.audiodecoder/addon.xml
 /addons/kodi.binary.instance.audioencoder/addon.xml
 /addons/kodi.binary.instance.game/addon.xml
+/addons/kodi.binary.instance.identity/addon.xml
 /addons/kodi.binary.instance.imagedecoder/addon.xml
 /addons/kodi.binary.instance.inputstream/addon.xml
 /addons/kodi.binary.instance.peripheral/addon.xml

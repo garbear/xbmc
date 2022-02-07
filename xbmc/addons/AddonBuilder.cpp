@@ -114,6 +114,11 @@ AddonPtr CAddonBuilder::Generate(const AddonInfoPtr& info, AddonType type)
       return std::make_shared<CContextMenuAddon>(info);
     case AddonType::GAME_CONTROLLER:
       return std::make_shared<GAME::CController>(info);
+    case AddonType::IDENTITYDLL:
+    {
+      //! @todo
+      return std::make_shared<CAddon>(info, type);
+    }
     default:
       break;
   }

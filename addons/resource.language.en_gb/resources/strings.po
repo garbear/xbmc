@@ -18642,7 +18642,15 @@ msgctxt "#35270"
 msgid "Your account is not verified. Please check your email to complete your sign up."
 msgstr ""
 
-#empty strings from id 35271 to 35401
+#empty strings from id 35271 to 35399
+
+#. Name of add-ons that provide user identities
+#: xbmc/addons/addoninfo/AddonInfo.cpp
+msgctxt "#35400"
+msgid "Identity providers"
+msgstr ""
+
+#empty string with id 35401
 
 msgctxt "#35402"
 msgid "Replicates the 2.6-inch dot matrix screen of the Game Boy. Features the ghosting problems of the original handheld."
