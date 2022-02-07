@@ -5,6 +5,7 @@ set(HEADERS
   audiodecoder.h
   audioencoder.h
   game.h
+  identity.h
   imagedecoder.h
   inputstream.h
   peripheral.h
