@@ -11,6 +11,12 @@ xbmc/addons/interfaces/gui/dialogs              addons_interfaces_gui_dialogs
 xbmc/addons/settings                            addons_settings
 xbmc/application                                application
 xbmc/commons                                    commons
+xbmc/crypto                                     crypto
+xbmc/crypto/codecs                              crypto/codecs
+xbmc/crypto/cryptold                            crypto/cryptold
+xbmc/crypto/did                                 crypto/did
+xbmc/crypto/ed25519                             crypto/ed25519
+xbmc/crypto/random                              crypto/random
 xbmc/dbwrappers                                 dbwrappers
 xbmc/dialogs                                    dialogs
 xbmc/favourites                                 favourites
