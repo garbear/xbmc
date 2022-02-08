@@ -22,6 +22,8 @@
 #include "cores/RetroPlayer/guibridge/GUIGameRenderManager.h"
 #include "cores/playercorefactory/PlayerCoreFactory.h"
 #include "favourites/FavouritesService.h"
+#include "filesystem/Directory.h"
+#include "filesystem/ipfs/IPFSService.h"
 #include "games/GameServices.h"
 #include "games/controllers/ControllerManager.h"
 #include "input/InputManager.h"
@@ -46,16 +48,30 @@
 #include "pictures/SlideShowDelegator.h"
 #include "storage/MediaManager.h"
 #include "utils/FileExtensionProvider.h"
+#include "utils/URIUtils.h"
 #include "utils/i18n/Bcp47Registry/SubTagRegistryManager.h"
 #include "utils/log.h"
 #include "weather/WeatherManager.h"
 
+#include <chrono>
 #include <memory>
+#include <string>
 
 using namespace KODI;
 
+namespace
+{
+std::string CreateTestIPFSDataStorePath()
+{
+  const auto suffix = std::chrono::steady_clock::now().time_since_epoch().count();
+  return URIUtils::AddFileToFolder("special://temp/Datastore",
+                                   "ipfs-service-test-" + std::to_string(suffix));
+}
+} // namespace
+
 CServiceManager::CServiceManager()
-  : m_fileExtensionProvider(std::make_unique<CFileExtensionProvider>())
+  : m_fileExtensionProvider(std::make_unique<CFileExtensionProvider>()),
+    m_ipfsService(std::make_unique<XFILE::CIPFSService>())
 {
 }
 
@@ -90,6 +106,22 @@ bool CServiceManager::InitForTesting()
   m_subTagRegistryManager = std::make_unique<KODI::UTILS::I18N::CSubTagRegistryManager>();
   m_subTagRegistryManager->Initialize();
 
+  if (!XFILE::CDirectory::Exists("special://temp/Datastore", true) &&
+      !XFILE::CDirectory::Create("special://temp/Datastore"))
+  {
+    CLog::Log(LOGFATAL, "CServiceManager::{}: Unable to create test datastore root", __FUNCTION__);
+    return false;
+  }
+
+  m_testIPFSDataStorePath = CreateTestIPFSDataStorePath();
+  if (!m_ipfsService->Initialize(m_testIPFSDataStorePath))
+  {
+    CLog::Log(LOGFATAL, "CServiceManager::{}: Unable to start test IPFS service", __FUNCTION__);
+    XFILE::CDirectory::RemoveRecursive(m_testIPFSDataStorePath);
+    m_testIPFSDataStorePath.clear();
+    return false;
+  }
+
   init_level = 1;
   return true;
 }
@@ -97,6 +129,15 @@ bool CServiceManager::InitForTesting()
 void CServiceManager::DeinitTesting()
 {
   init_level = 0;
+
+  m_ipfsService->Deinitialize();
+
+  if (!m_testIPFSDataStorePath.empty())
+  {
+    XFILE::CDirectory::RemoveRecursive(m_testIPFSDataStorePath);
+    m_testIPFSDataStorePath.clear();
+  }
+
   m_subTagRegistryManager.reset();
   m_fileExtensionProvider->Deinitialize();
   m_extsMimeSupportList.reset();
@@ -212,6 +253,9 @@ bool CServiceManager::InitStageTwo(const std::string& profilesUserDataFolder)
 // stage 3 is called after successful initialization of WindowManager
 bool CServiceManager::InitStageThree(const std::shared_ptr<CProfileManager>& profileManager)
 {
+  if (!m_ipfsService->Initialize(*profileManager))
+    return false;
+
 #if !defined(TARGET_WINDOWS) && defined(HAS_OPTICAL_DRIVE)
   // Start Thread for DVD Mediatype detection
   CLog::Log(LOGINFO, "[Media Detection] starting service for optical media detection");
@@ -259,6 +303,8 @@ void CServiceManager::DeinitStageThree()
   m_peripherals->Clear();
 
   m_Platform->DeinitStageThree();
+
+  m_ipfsService->Deinitialize();
 }
 
 void CServiceManager::DeinitStageTwo()
@@ -463,6 +509,11 @@ CDatabaseManager& CServiceManager::GetDatabaseManager()
 CMediaManager& CServiceManager::GetMediaManager()
 {
   return *m_mediaManager;
+}
+
+XFILE::CIPFSService& CServiceManager::GetIPFSService()
+{
+  return *m_ipfsService;
 }
 
 CSlideShowDelegator& CServiceManager::GetSlideShowDelegator()
