@@ -496,6 +496,11 @@ std::shared_ptr<XFILE::CBlurayDiscCache> CServiceBroker::GetBlurayDiscCache()
   return g_serviceBroker.m_blurayDiscCache;
 }
 
+XFILE::CIPFSService& CServiceBroker::GetIPFSService()
+{
+  return g_application.m_ServiceManager->GetIPFSService();
+}
+
 CSubTagRegistryManager& CServiceBroker::GetSubTagRegistry()
 {
   return g_application.m_ServiceManager->GetSubTagRegistryManager();

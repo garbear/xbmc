@@ -1,0 +1,61 @@
+//
+//  Copyright (C) 2026 Team Kodi
+//  This file is part of Kodi - https://kodi.tv
+//
+//  SPDX-License-Identifier: MIT
+//  See LICENSES/README.md for more information.
+//
+
+// Kodi-local UnixFS metadata encoded with FlatBuffers
+namespace KODI.IPFS.UNIXFS;
+
+// Type of UnixFS node carried by this schema
+enum NodeType : byte {
+  File = 0,
+  Directory = 1,
+  Symlink = 2,
+}
+
+// Link to a child block in the DAG
+table Link {
+  // CID bytes (multibase-decoded) of the linked block
+  cid:[ubyte];
+
+  // Optional human-readable link name
+  name:string;
+
+  // Raw size of the linked block
+  block_size:ulong;
+
+  // Cumulative size of the linked target, including descendants
+  t_size:ulong;
+}
+
+// UnixFS node payload and metadata
+table Node {
+  // Node type
+  type:NodeType;
+
+  // Opaque UnixFS payload bytes
+  data:[ubyte];
+
+  // Total logical file size for file-like nodes
+  filesize:ulong;
+
+  // Per-child block sizes used for chunked file reconstruction
+  blocksizes:[ulong];
+
+  // DAG links to child nodes
+  links:[Link];
+
+  // POSIX mode bits
+  mode:uint;
+
+  // Modification time, seconds since Unix epoch
+  mtime_seconds:long;
+
+  // Additional nanoseconds component for mtime
+  mtime_nanos:uint;
+}
+
+root_type Node;
