@@ -133,7 +133,8 @@ class ISpeechRecognition;
 namespace XFILE
 {
 class CBlurayDiscCache;
-}
+class CIPFSService;
+} // namespace XFILE
 
 class CServiceBroker
 {
@@ -257,6 +258,7 @@ public:
   static void RegisterBlurayDiscCache(const std::shared_ptr<XFILE::CBlurayDiscCache>& cache);
   static void UnregisterBlurayDiscCache();
   static std::shared_ptr<XFILE::CBlurayDiscCache> GetBlurayDiscCache();
+  static XFILE::CIPFSService& GetIPFSService();
 
 private:
   std::shared_ptr<CAppParams> m_appParams;

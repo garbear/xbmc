@@ -11,6 +11,7 @@
 #include "platform/Platform.h"
 
 #include <memory>
+#include <string>
 
 namespace ADDON
 {
@@ -86,6 +87,11 @@ class CDatabaseManager;
 class CProfileManager;
 class CEventLog;
 class CMediaManager;
+
+namespace XFILE
+{
+class CIPFSService;
+}
 
 class CServiceManager
 {
@@ -211,6 +217,7 @@ public:
   CDatabaseManager& GetDatabaseManager();
 
   CMediaManager& GetMediaManager();
+  XFILE::CIPFSService& GetIPFSService();
 
 #if !defined(TARGET_WINDOWS) && defined(HAS_OPTICAL_DRIVE)
   MEDIA_DETECT::CDetectDVDMedia& GetDetectDVDMedia();
@@ -248,6 +255,8 @@ protected:
   std::unique_ptr<CPlayerCoreFactory> m_playerCoreFactory;
   std::unique_ptr<CDatabaseManager> m_databaseManager;
   std::unique_ptr<CMediaManager> m_mediaManager;
+  std::unique_ptr<XFILE::CIPFSService> m_ipfsService;
+  std::string m_testIPFSDataStorePath;
 #if !defined(TARGET_WINDOWS) && defined(HAS_OPTICAL_DRIVE)
   std::unique_ptr<MEDIA_DETECT::CDetectDVDMedia> m_DetectDVDType;
 #endif
