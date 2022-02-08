@@ -1,4 +1,9 @@
 xbmc/filesystem                         filesystem
 xbmc/filesystem/bluray                  filesystem/bluray
+xbmc/filesystem/ipfs                    filesystem/ipfs
+xbmc/filesystem/ipfs/block              filesystem/ipfs/block
+xbmc/filesystem/ipfs/ipid               filesystem/ipfs/ipid
+xbmc/filesystem/ipfs/ipld               filesystem/ipfs/ipld
+xbmc/filesystem/ipfs/unixfs             filesystem/ipfs/unixfs
 xbmc/filesystem/MusicDatabaseDirectory  filesystem/musicdatabase
 xbmc/filesystem/VideoDatabaseDirectory  filesystem/videodatabase
