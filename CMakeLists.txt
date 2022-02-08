@@ -274,6 +274,7 @@ set(required_deps ASS>=0.15.0
                   TinyXML
                   TinyXML2
                   ZLIB
+                  ZSTD
                   ${PLATFORM_REQUIRED_DEPS})
 
 # Optional dependencies. Keep in alphabetical order please
