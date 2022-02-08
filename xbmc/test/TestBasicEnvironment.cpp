@@ -107,9 +107,9 @@ void TestBasicEnvironment::SetUp()
 
 void TestBasicEnvironment::TearDown()
 {
-  XFILE::CDirectory::RemoveRecursive(m_tempPath);
-
   g_application.m_ServiceManager->DeinitTesting();
+
+  XFILE::CDirectory::RemoveRecursive(m_tempPath);
 
   CServiceBroker::UnregisterAppMessenger();
 

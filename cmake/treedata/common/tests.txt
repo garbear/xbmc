@@ -5,8 +5,17 @@ xbmc/cores/VideoPlayer/test       test/videoplayer
 xbmc/cores/VideoPlayer/DVDDemuxers/test test/dvddemuxers
 xbmc/cores/VideoPlayer/Edl/test   test/edl
 xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/test test/videoshaders
+xbmc/crypto/codecs/test test/crypto/codecs
+xbmc/crypto/test test/crypto
+xbmc/crypto/cryptold/test test/crypto/cryptold
+xbmc/crypto/did/test test/crypto/did
+xbmc/crypto/ed25519/test test/crypto/ed25519
+xbmc/crypto/multiformats/test test/crypto/multiformats
+xbmc/crypto/random/test test/crypto/random
+xbmc/datastore/test               test/datastore
 xbmc/dbwrappers/test              test/dbwrappers
 xbmc/filesystem/test              test/filesystem
+xbmc/filesystem/ipfs/test         test/filesystem/ipfs
 xbmc/filesystem/VideoDatabaseDirectory/test test/videodatabasedirectory
 xbmc/games/addons/disc/test       test/games/addons/disc
 xbmc/games/addons/input/test      test/games/addons/input
