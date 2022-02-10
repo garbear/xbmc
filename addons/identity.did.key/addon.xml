@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon
+  id="identity.did.key"
+  version="20.0.0"
+  name="Local Keystore"
+  provider-name="Team Kodi">
+  <requires></requires>
+  <extension
+    point="kodi.identity.did" />
+  <extension point="xbmc.addon.metadata">
+    <license>GPL-2.0-or-later</license>
+    <assets>
+      <icon>resources/icon.png</icon>
+    </assets>
+    <summary lang="en_GB">Local keystore</summary>
+    <description lang="en_GB">Securely store identity in a local keystore.</description>
+  </extension>
+</addon>
