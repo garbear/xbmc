@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="identity.did.github"
+       name="GitHub Decentralized ID"
+       version="1.0.0"
+       provider-name="Team Kodi">
+  <requires />
+  <extension point="kodi.identity.did" />
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <license>GPL-2.0-or-later</license>
+    <source>https://github.com/garbear/identity.did.github</source>
+    <assets>
+      <icon>resources/icon.png</icon>
+    </assets>
+    <summary lang="en_GB">GitHub Decentralized ID</summary>
+    <description lang="en_GB">Securely store identity in a GitHub repo.</description>
+  </extension>
+</addon>
