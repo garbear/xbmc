@@ -141,11 +141,11 @@
 #include "games/dialogs/osd/DialogGameAdvancedSettings.h"
 #include "games/dialogs/osd/DialogGameOSD.h"
 #include "games/dialogs/osd/DialogGameSaves.h"
-#include "games/dialogs/osd/DialogInGameSaves.h"
 #include "games/dialogs/osd/DialogGameStretchMode.h"
 #include "games/dialogs/osd/DialogGameVideoFilter.h"
 #include "games/dialogs/osd/DialogGameVideoRotation.h"
 #include "games/dialogs/osd/DialogGameVolume.h"
+#include "games/dialogs/osd/DialogInGameSaves.h"
 #include "games/windows/GUIWindowGames.h"
 
 using namespace KODI;
