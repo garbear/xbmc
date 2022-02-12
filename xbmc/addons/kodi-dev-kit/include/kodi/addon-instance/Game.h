@@ -950,11 +950,11 @@ public:
 
   //============================================================================
   /// @brief Generates a RetroAchievements hash for a given game that
-  ///        that can be used to identify the game by RetroAchievements
+  ///        can be used to identify the game by RetroAchievements
   ///
-  /// @param[out] hash The hash of the file. It's size must be >=33 characters
+  /// @param[out] hash The hash of the file. Its size must be >=33 characters
   /// @param[in] consoleID The console ID as it is defined by rcheevos for
-  ///                      the console the rom is made for
+  ///                      the console the ROM is made for
   /// @param[in] filePath The path of the rom
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the hash was generated
@@ -963,12 +963,12 @@ public:
   virtual GAME_ERROR RCGenerateHashFromFile(std::string& hash,
                                             unsigned int consoleID,
                                             const std::string& filePath)
-  { 
+  {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
 
   //============================================================================
-  /// @brief Gets a URL to the endpoint that returns the game ID 
+  /// @brief Gets a URL to the endpoint that returns the game ID
   ///
   /// @param[out] url The URL to GET the game ID
   /// @param[in] size The size of the URL char array
@@ -976,8 +976,8 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the URL was created
   ///
-  virtual GAME_ERROR RCGetGameIDUrl(std::string& url, const std::string& hash) 
-  { 
+  virtual GAME_ERROR RCGetGameIDUrl(std::string& url, const std::string& hash)
+  {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
 
@@ -996,7 +996,7 @@ public:
                                        const std::string& username,
                                        const std::string& token,
                                        unsigned int gameID)
-  { 
+  {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
 
@@ -1033,14 +1033,14 @@ public:
   ///
   /// @return the error, or GAME_ERROR_NO_ERROR if rich presence was enabled
   ///
-  virtual GAME_ERROR RCEnableRichPresence(const std::string& script) 
-  { 
+  virtual GAME_ERROR RCEnableRichPresence(const std::string& script)
+  {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
 
   //============================================================================
   /// @brief Gets the rich presence evaluation for the current frame.
-  ///        The rich presence must be enabled first or this will crash
+  ///        Rich presence must be enabled first or this will fail.
   ///
   /// @param[out] evaluation The evaluation of what the player is doing in
   ///                        the game this frame
@@ -1062,10 +1062,7 @@ public:
   /// @return the error, or GAME_ERROR_NO_ERROR if the runtim was reseted
   ///         successfully
   ///
-  virtual GAME_ERROR RCResetRuntime()
-  { 
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR RCResetRuntime() { return GAME_ERROR_NOT_IMPLEMENTED; }
 
   //----------------------------------------------------------------------------
 
