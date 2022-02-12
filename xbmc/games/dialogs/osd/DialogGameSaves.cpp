@@ -93,7 +93,10 @@ void CDialogGameSaves::FrameMove()
 
 std::string CDialogGameSaves::GetSelectedItemPath()
 {
-  return m_selectedItem->GetPath();
+  if (m_selectedItem != nullptr)
+    return m_selectedItem->GetPath();
+
+  return "";
 }
 
 void CDialogGameSaves::OnFocus(CFileItemPtr item)
