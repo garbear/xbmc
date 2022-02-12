@@ -25,7 +25,7 @@
 CGUIDialogSelect::CGUIDialogSelect() : CGUIDialogSelect(WINDOW_DIALOG_SELECT) {}
 
 CGUIDialogSelect::CGUIDialogSelect(int windowId)
-    : CGUIDialogBoxBase(windowId, "DialogSelect.xml"),
+  : CGUIDialogBoxBase(windowId, "DialogSelect.xml"),
     m_vecList(std::make_unique<CFileItemList>()),
     m_bButtonEnabled(false),
     m_bButton2Enabled(false),
