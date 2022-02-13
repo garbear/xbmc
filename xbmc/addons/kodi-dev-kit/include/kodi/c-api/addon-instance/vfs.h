@@ -75,6 +75,14 @@ extern "C"
                             VFS_FILE_HANDLE context,
                             const uint8_t* buffer,
                             size_t buf_size);
+    ssize_t(__cdecl* add_content)(const struct AddonInstance_VFSEntry* instance,
+                                  VFS_FILE_HANDLE context,
+                                  const uint8_t* buffer,
+                                  size_t buf_size,
+                                  char** content_id);
+    void(__cdecl* free_content_id)(const struct AddonInstance_VFSEntry* instance,
+                                   VFS_FILE_HANDLE context,
+                                   char* contentId);
     int64_t(__cdecl* seek)(const struct AddonInstance_VFSEntry* instance,
                            VFS_FILE_HANDLE context,
                            int64_t position,

@@ -827,6 +827,30 @@ ssize_t CFile::Write(const void* lpBuf, size_t uiBufSize)
   return -1;
 }
 
+ssize_t CFile::AddContent(const void* lpBuf, size_t uiBufSize, std::string& contentId)
+{
+  if (!m_pFile)
+    return -1;
+  if (lpBuf == NULL && uiBufSize != 0)
+    return -1;
+
+  try
+  {
+    if (uiBufSize == 0 && lpBuf == NULL)
+    { // "test" write with zero size
+      // some VFSs don't handle correctly null buffer pointer
+      // provide valid buffer pointer for them
+      const char dummyBuf = 0;
+      return m_pFile->AddContent(&dummyBuf, 0, contentId);
+    }
+
+    return m_pFile->AddContent(lpBuf, uiBufSize, contentId);
+  }
+  XBMCCOMMONS_HANDLE_UNCHECKED
+  catch (...) { CLog::Log(LOGERROR, "{} - Unhandled exception", __FUNCTION__); }
+  return -1;
+}
+
 bool CFile::Delete(const std::string& strFileName)
 {
   const CURL pathToUrl(strFileName);

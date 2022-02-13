@@ -328,6 +328,25 @@ ssize_t CVFSEntry::Write(void* ctx, const void* lpBuf, size_t uiBufSize)
   return m_ifc.vfs->toAddon->write(m_ifc.vfs, ctx, static_cast<const uint8_t*>(lpBuf), uiBufSize);
 }
 
+ssize_t CVFSEntry::AddContent(void* ctx, const void* lpBuf, size_t uiBufSize, std::string& contentId)
+{
+  if (!m_ifc.vfs->toAddon->add_content || !m_ifc.vfs->toAddon->free_content_id)
+    return 0;
+
+  char* tempContentId = nullptr;
+
+  ssize_t added = m_ifc.vfs->toAddon->add_content(
+      m_ifc.vfs, ctx, static_cast<const uint8_t*>(lpBuf), uiBufSize, &tempContentId);
+
+  if (tempContentId != nullptr)
+  {
+    contentId = tempContentId;
+    m_ifc.vfs->toAddon->free_content_id(m_ifc.vfs, ctx, tempContentId);
+  }
+
+  return added;
+}
+
 int64_t CVFSEntry::Seek(void* ctx, int64_t position, int whence)
 {
   if (!m_ifc.vfs->toAddon->seek)
