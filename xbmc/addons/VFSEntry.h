@@ -75,6 +75,7 @@ protected:
     int Stat(const CURL& url, struct __stat64* buffer);
     ssize_t Read(void* ctx, void* lpBuf, size_t uiBufSize);
     ssize_t Write(void* ctx, const void* lpBuf, size_t uiBufSize);
+    ssize_t AddContent(void* ctx, const void* lpBuf, size_t uiBufSize, std::string& contentId);
     int64_t Seek(void* ctx, int64_t iFilePosition, int iWhence = SEEK_SET);
     int Truncate(void* ctx, int64_t size);
     void Close(void* ctx);

@@ -2062,6 +2062,47 @@ public:
   }
   //--------------------------------------------------------------------------
 
+  /*! @todo
+  //==========================================================================
+  /// @ingroup cpp_kodi_vfs_CFile
+  /// @brief Add content to a file opened in write mode.
+  ///
+  /// @param[in] ptr Pointer to the data to add, converted to a <b>`const void*`</b>.
+  /// @param[in] size Size of the data to add.
+  /// @param[out] contentId Size to the content ID of the total content, if data was added
+  /// @return number of successfully added bytes if any bytes were added,
+  ///         zero if no bytes were added and no detectable error occur,-1
+  ///         in case of any explicit error
+  ///
+  ssize_t AddContent(const void* ptr, size_t size, char** contentId)
+  {
+    using namespace kodi::addon;
+
+    if (!m_file)
+      return -1;
+    return CPrivateBase::m_interface->toKodi->kodi_filesystem->add_content(
+        CPrivateBase::m_interface->toKodi->kodiBase, m_file, ptr, size, contentId);
+  }
+  //--------------------------------------------------------------------------
+
+  //==========================================================================
+  /// @ingroup cpp_kodi_vfs_CFile
+  /// @brief Free a content ID output by AddContent().
+  ///
+  /// @param[in] contentId The content ID to free
+  ///
+  void FreeContentID(char* contentId)
+  {
+    using namespace kodi::addon;
+
+    if (!m_file)
+      return;
+    CPrivateBase::m_interface->toKodi->kodi_filesystem->free_content_id(
+        CPrivateBase::m_interface->toKodi->kodiBase, m_file, contentId);
+  }
+  //--------------------------------------------------------------------------
+  */
+
   //==========================================================================
   /// @ingroup cpp_kodi_vfs_CFile
   /// @brief Flush buffered data.
