@@ -173,6 +173,7 @@
 #define ADDON_INSTANCE_VERSION_SHADERPRESET_XML_ID    "kodi.binary.instance.shaderpreset"
 #define ADDON_INSTANCE_VERSION_SHADERPRESET_DEPENDS   "addon-instance/ShaderPreset.h"
 
+//! @todo Change VFS version to "4.0.0"
 #define ADDON_INSTANCE_VERSION_VFS                    "3.0.1"
 #define ADDON_INSTANCE_VERSION_VFS_MIN                "3.0.1"
 #define ADDON_INSTANCE_VERSION_VFS_XML_ID             "kodi.binary.instance.vfs"
