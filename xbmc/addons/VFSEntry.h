@@ -73,6 +73,7 @@ private:
     int Stat(const CURL& url, struct __stat64* buffer) const;
     ssize_t Read(void* ctx, void* lpBuf, size_t uiBufSize) const;
     ssize_t Write(void* ctx, const void* lpBuf, size_t uiBufSize) const;
+    ssize_t AddContent(void* ctx, const void* lpBuf, size_t uiBufSize, std::string& contentId) const;
     int64_t Seek(void* ctx, int64_t iFilePosition, int iWhence = SEEK_SET) const;
     int Truncate(void* ctx, int64_t size) const;
     void Close(void* ctx) const;
