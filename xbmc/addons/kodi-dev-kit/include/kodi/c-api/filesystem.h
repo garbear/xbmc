@@ -286,6 +286,10 @@ extern "C"
     ssize_t (*read_file)(void* kodiBase, void* file, void* ptr, size_t size);
     bool (*read_file_string)(void* kodiBase, void* file, char* szLine, int iLineLength);
     ssize_t (*write_file)(void* kodiBase, void* file, const void* ptr, size_t size);
+    /* TODO
+    ssize_t (*add_content)(void* kodiBase, void* file, const void* ptr, size_t size, char** contentId);
+    void (*free_content_id)(void* kodiBase, void* file, char* contentId);
+    */
     void (*flush_file)(void* kodiBase, void* file);
     int64_t (*seek_file)(void* kodiBase, void* file, int64_t position, int whence);
     int (*truncate_file)(void* kodiBase, void* file, int64_t size);
