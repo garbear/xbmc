@@ -2259,6 +2259,16 @@
         </setting>
       </group>
     </category>
+    <category id="libp2p" label="20187" help="36322">
+      <requirement>HAS_LIBP2P</requirement>
+      <group id="1" label="16000">
+        <setting id="services.libp2p" type="boolean" label="21358" help="39017">
+          <level>0</level>
+          <default>true</default>
+          <control type="toggle" />
+        </setting>
+      </group>
+    </category>
     <category id="airplay" label="1273" help="36602">
       <requirement>HAS_AIRPLAY</requirement>
       <group id="1" label="16000">

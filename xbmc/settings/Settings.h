@@ -340,12 +340,13 @@ public:
   static constexpr auto SETTING_SERVICES_USEAIRPLAYPASSWORD = "services.useairplaypassword";
   static constexpr auto SETTING_SERVICES_AIRPLAYPASSWORD = "services.airplaypassword";
   static constexpr auto SETTING_SERVICES_AIRPLAYVIDEOSUPPORT = "services.airplayvideosupport";
+  static constexpr auto SETTING_SERVICES_WSDISCOVERY = "services.wsdiscovery";
+  static constexpr auto SETTING_SERVICES_LIBP2P = "services.libp2p";
   static constexpr auto SETTING_SMB_WINSSERVER = "smb.winsserver";
   static constexpr auto SETTING_SMB_WORKGROUP = "smb.workgroup";
   static constexpr auto SETTING_SMB_MINPROTOCOL = "smb.minprotocol";
   static constexpr auto SETTING_SMB_MAXPROTOCOL = "smb.maxprotocol";
   static constexpr auto SETTING_SMB_LEGACYSECURITY = "smb.legacysecurity";
-  static constexpr auto SETTING_SERVICES_WSDISCOVERY = "services.wsdiscovery";
   static constexpr auto SETTING_VIDEOSCREEN_MONITOR = "videoscreen.monitor";
   static constexpr auto SETTING_VIDEOSCREEN_SCREEN = "videoscreen.screen";
   static constexpr auto SETTING_VIDEOSCREEN_WHITELIST = "videoscreen.whitelist";

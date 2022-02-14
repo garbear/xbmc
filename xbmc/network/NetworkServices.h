@@ -10,6 +10,8 @@
 
 #include "settings/lib/ISettingCallback.h"
 
+#include <memory>
+
 class CSettings;
 #ifdef HAS_WEB_SERVER
 class CWebServer;
@@ -25,6 +27,14 @@ class CHTTPWebinterfaceHandler;
 class CHTTPWebinterfaceAddonsHandler;
 #endif // HAS_WEB_INTERFACE
 #endif // HAS_WEB_SERVER
+
+namespace KODI
+{
+namespace NETWORK
+{
+class ILibp2p;
+} // namespace NETWORK
+} // namespace KODI
 
 class CNetworkServices : public ISettingCallback
 {
@@ -51,6 +61,7 @@ public:
     ES_EVENTSERVER,
     ES_ZEROCONF,
     ES_WSDISCOVERY,
+    ES_LIBP2P,
   };
 
   bool StartServer(enum ESERVERS server, bool start);
@@ -102,6 +113,10 @@ public:
   bool IsWSDiscoveryRunning();
   bool StopWSDiscovery();
 
+  bool StartLibp2p();
+  bool IsLibp2pRunning() const;
+  bool StopLibp2p(bool bWait);
+
 private:
   CNetworkServices(const CNetworkServices&);
   CNetworkServices const& operator=(CNetworkServices const&);
@@ -127,4 +142,6 @@ private:
   CHTTPWebinterfaceAddonsHandler& m_httpWebinterfaceAddonsHandler;
 #endif
 #endif
+
+  std::unique_ptr<KODI::NETWORK::ILibp2p> m_libp2p;
 };
