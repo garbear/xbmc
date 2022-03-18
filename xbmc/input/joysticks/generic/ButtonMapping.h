@@ -331,7 +331,7 @@ public:
                     float position,
                     int center,
                     unsigned int range) override;
-  void ProcessAxisMotions() override;
+  void OnInputFrame() override;
 
   // implementation of IKeyboardDriverHandler
   bool OnKeyPress(const CKey& key) override;

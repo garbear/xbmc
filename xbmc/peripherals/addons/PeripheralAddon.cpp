@@ -466,7 +466,7 @@ bool CPeripheralAddon::ProcessEvents(void)
     for (const auto& it : m_peripherals)
     {
       if (it.second->Type() == PERIPHERAL_JOYSTICK)
-        std::static_pointer_cast<CPeripheralJoystick>(it.second)->ProcessAxisMotions();
+        std::static_pointer_cast<CPeripheralJoystick>(it.second)->OnInputFrame();
     }
 
     m_struct.toAddon->free_events(&m_struct, eventCount, pEvents);
