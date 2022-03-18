@@ -198,7 +198,7 @@ void PERIPHERALS::CPeripheralBusDarwinEmbedded::ProcessEvents()
     PeripheralPtr device = GetPeripheral(GetDeviceLocation(0));
 
     if (device && device->Type() == PERIPHERAL_JOYSTICK)
-      static_cast<CPeripheralJoystick*>(device.get())->ProcessAxisMotions();
+      static_cast<CPeripheralJoystick*>(device.get())->OnInputFrame();
   }
 }
 
