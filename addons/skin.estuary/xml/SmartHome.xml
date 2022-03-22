@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<controls>
+		<!-- Top row -->
+		<control type="cameraview">
+			<width>33%</width>
+			<height>33%</height>
+			<topic>/oasis/kinect2/hd/image_color</topic>
+		</control>
+		<control type="cameraview">
+			<left>33%</left>
+			<width>33%</width>
+			<height>33%</height>
+			<topic>/oasis/netbook/image_raw</topic>
+		</control>
+		<control type="cameraview">
+			<left>67%</left>
+			<width>33%</width>
+			<height>33%</height>
+			<topic>/oasis/lenovo/image_raw</topic>
+		</control>
+
+		<!-- Middle row -->
+		<control type="cameraview">
+			<top>33%</top>
+			<width>33%</width>
+			<height>33%</height>
+			<topic>/oasis/kinect2/sd/image_color_rect</topic>
+		</control>
+		<control type="cameraview">
+			<top>33%</top>
+			<left>33%</left>
+			<width>33%</width>
+			<height>33%</height>
+			<topic>/oasis/netbook/foreground</topic>
+		</control>
+		<control type="cameraview">
+			<top>33%</top>
+			<left>67%</left>
+			<width>33%</width>
+			<height>33%</height>
+			<topic>/oasis/lenovo/foreground</topic>
+		</control>
+
+		<!-- Bottom row -->
+		<control type="cameraview">
+			<top>67%</top>
+			<width>33%</width>
+			<height>33%</height>
+			<topic>/oasis/kinect2/foreground</topic>
+		</control>
+	</controls>
+</window>
