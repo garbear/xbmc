@@ -1117,6 +1117,8 @@ private:
     m_instanceData->toAddon->RCEnableRichPresence = ADDON_RCEnableRichPresence;
     m_instanceData->toAddon->RCGetRichPresenceEvaluation = ADDON_RCGetRichPresenceEvaluation;
     m_instanceData->toAddon->RCResetRuntime = ADDON_RCResetRuntime;
+
+    m_instanceData->toAddon->FreeString = ADDON_FreeString;
   }
 
   // --- Game operations ---------------------------------------------------------
@@ -1417,6 +1419,11 @@ private:
   inline static GAME_ERROR ADDON_RCResetRuntime(const AddonInstance_Game* instance)
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->RCResetRuntime();
+  }
+
+  inline static void ADDON_FreeString(const AddonInstance_Game* instance, char* str)
+  {
+    delete[] str;
   }
 
   AddonInstance_Game* m_instanceData;
