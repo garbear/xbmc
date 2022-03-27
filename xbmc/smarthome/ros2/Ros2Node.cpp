@@ -10,6 +10,7 @@
 
 #include "Ros2InputPublisher.h"
 #include "Ros2LabSubscriber.h"
+#include "Ros2StationSubscriber.h"
 #include "Ros2SystemHealthManager.h"
 #include "Ros2VideoSubscription.h"
 #include "ServiceBroker.h"
@@ -66,6 +67,8 @@ void CRos2Node::Initialize()
   // Subscribers
   m_labSubscriber = std::make_unique<CRos2LabSubscriber>(m_node);
   m_labSubscriber->Initialize();
+  m_stationSubscriber = std::make_unique<CRos2StationSubscriber>(m_node);
+  m_stationSubscriber->Initialize();
 
   // Create thread
   m_thread->Create(false);
@@ -98,6 +101,12 @@ void CRos2Node::Deinitialize()
     m_labSubscriber.reset();
   }
 
+  if (m_stationSubscriber)
+  {
+    m_stationSubscriber->Deinitialize();
+    m_stationSubscriber.reset();
+  }
+
   m_thread.reset();
   m_node.reset();
 }
@@ -127,6 +136,11 @@ ISystemHealthHUD* CRos2Node::GetSystemHealthHUD() const
 ILabHUD* CRos2Node::GetLabHUD() const
 {
   return m_labSubscriber.get();
+}
+
+IStationHUD* CRos2Node::GetStationHUD() const
+{
+  return m_stationSubscriber.get();
 }
 
 void CRos2Node::FrameMove()

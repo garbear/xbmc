@@ -13,6 +13,7 @@
 #include "guilib/guiinfo/GUIInfo.h"
 #include "guilib/guiinfo/GUIInfoLabels.h"
 #include "smarthome/guiinfo/ILabHUD.h"
+#include "smarthome/guiinfo/IStationHUD.h"
 #include "smarthome/guiinfo/ISystemHealthHUD.h"
 #include "utils/StringUtils.h"
 
@@ -23,8 +24,12 @@ using namespace SMART_HOME;
 
 CSmartHomeGuiInfo::CSmartHomeGuiInfo(CGUIInfoManager& infoManager,
                                      ISystemHealthHUD& systemHealthHud,
-                                     ILabHUD& labHud)
-  : m_infoManager(infoManager), m_systemHealthHud(systemHealthHud), m_labHud(labHud)
+                                     ILabHUD& labHud,
+                                     IStationHUD& stationHud)
+  : m_infoManager(infoManager),
+    m_systemHealthHud(systemHealthHud),
+    m_labHud(labHud),
+    m_stationHud(stationHud)
 {
 }
 
@@ -102,6 +107,31 @@ bool CSmartHomeGuiInfo::GetLabel(std::string& value,
       value = StringUtils::Format("{:0.2f} V", m_labHud.IRVoltage());
       return true;
     }
+    case SMARTHOME_STATION_SUPPLY:
+    {
+      value = StringUtils::Format("{:.1f} V", m_stationHud.SupplyVoltage());
+      return true;
+    }
+    case SMARTHOME_STATION_MOTOR:
+    {
+      value = StringUtils::Format("{:.1f} V", m_stationHud.MotorVoltage());
+      return true;
+    }
+    case SMARTHOME_STATION_CURRENT:
+    {
+      value = StringUtils::Format("{:.1f} A", m_stationHud.MotorCurrent());
+      return true;
+    }
+    case SMARTHOME_STATION_CPU:
+    {
+      value = StringUtils::Format("{} %", m_stationHud.CPUPercent());
+      return true;
+    }
+    case SMARTHOME_STATION_MESSAGE:
+    {
+      value = m_stationHud.Message();
+      return true;
+    }
     default:
       break;
   }
@@ -132,6 +162,11 @@ bool CSmartHomeGuiInfo::GetBool(bool& value,
     case SMARTHOME_HAS_LAB:
     {
       value = m_labHud.IsActive();
+      return true;
+    }
+    case SMARTHOME_HAS_STATION:
+    {
+      value = m_stationHud.IsActive();
       return true;
     }
     default:
