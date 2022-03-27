@@ -38,6 +38,7 @@ public:
   void UnregisterImageTopic(const std::string& topic) override;
   ISystemHealthHUD* GetSystemHealthHUD() const override;
   ILabHUD* GetLabHUD() const override;
+  IStationHUD* GetStationHUD() const override;
   void FrameMove() override;
 
 private:

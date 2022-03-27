@@ -4130,6 +4130,43 @@ const infomap retroplayer[] =
 ///     @return The output voltage of the IR reflectance sensor
 ///     <p>
 ///   }
+///   \table_row3{   <b>`SmartHome.HasStation`</b>,
+///                  \anchor SmartHome_HasStation
+///                  _boolean_,
+///     @return **True** if a LEGO train power station has been seen recently.
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.StationSupply`</b>,
+///                  \anchor SmartHome_StationSupply
+///                  _string_,
+///     @return The supply voltage being provided to a LEGO train power station.
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.StationMotor`</b>,
+///                  \anchor SmartHome_StationMotor
+///                  _string_,
+///     @return The voltage being applied to the 9V motors of a LEGO train.
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.StationCurrent`</b>,
+///                  \anchor SmartHome_StationCurrent
+///                  _string_,
+///     @return The current being provided to a LEGO train's 9V motors.
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.StationCPU`</b>,
+///                  \anchor SmartHome_StationCPU
+///                  _string_,
+///     @return The CPU utilization of the computer powering a LEGO train power station.
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.StationMessage`</b>,
+///                  \anchor SmartHome_StationMessage
+///                  _string_,
+///     @return The last string message logged by the LEGO train power station's
+///             microcontroller.
+///     <p>
+///   }
 /// \table_end
 ///
 /// -----------------------------------------------------------------------------
@@ -4147,6 +4184,12 @@ const infomap smarthome[] = {
     {"labmemory", SMARTHOME_LAB_MEMORY},
     {"labcurrent", SMARTHOME_LAB_CURRENT},
     {"labir", SMARTHOME_LAB_IR},
+    {"hasstation", SMARTHOME_HAS_STATION},
+    {"stationsupply", SMARTHOME_STATION_SUPPLY},
+    {"stationmotor", SMARTHOME_STATION_MOTOR},
+    {"stationcurrent", SMARTHOME_STATION_CURRENT},
+    {"stationcpu", SMARTHOME_STATION_CPU},
+    {"stationmessage", SMARTHOME_STATION_MESSAGE},
     // clang-format on
 };
 
