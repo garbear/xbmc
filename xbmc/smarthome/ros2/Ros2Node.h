@@ -32,11 +32,13 @@ namespace SMART_HOME
 class CRos2InputPublisher;
 class CRos2LabSubscriber;
 class CRos2NowPlayingPublisher;
+class CRos2StationSubscriber;
 class CRos2SystemHealthManager;
 class CRos2VideoSubscription;
 class CSmartHomeGuiBridge;
 class CSmartHomeInputManager;
 class ILabHUD;
+class IStationHUD;
 class ISystemHealthHUD;
 
 class CRos2Node : public IRunnable
@@ -54,6 +56,7 @@ public:
   void UnregisterImageTopic(const std::string& topic);
   ISystemHealthHUD* GetSystemHealthHUD() const;
   ILabHUD* GetLabHUD() const;
+  IStationHUD* GetStationHUD() const;
 
   //! @todo Remove GUI dependency
   void FrameMove();
@@ -73,6 +76,7 @@ private:
   std::unique_ptr<CRos2InputPublisher> m_peripheralPublisher;
   std::unique_ptr<CRos2NowPlayingPublisher> m_nowPlayingPublisher;
   std::unique_ptr<CRos2LabSubscriber> m_labSubscriber;
+  std::unique_ptr<CRos2StationSubscriber> m_stationSubscriber;
 
   // Threading parameters
   std::unique_ptr<CThread> m_thread;

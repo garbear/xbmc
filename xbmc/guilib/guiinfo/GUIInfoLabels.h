@@ -547,6 +547,13 @@ constexpr uint32_t SMARTHOME_LAB_MEMORY              = 862;
 constexpr uint32_t SMARTHOME_LAB_CURRENT             = 863;
 constexpr uint32_t SMARTHOME_LAB_IR                  = 864;
 
+constexpr uint32_t SMARTHOME_HAS_STATION             = 870;
+constexpr uint32_t SMARTHOME_STATION_SUPPLY          = 871;
+constexpr uint32_t SMARTHOME_STATION_MOTOR           = 872;
+constexpr uint32_t SMARTHOME_STATION_CURRENT         = 873;
+constexpr uint32_t SMARTHOME_STATION_CPU             = 874;
+constexpr uint32_t SMARTHOME_STATION_MESSAGE         = 875;
+
 constexpr int      SLIDESHOW_LABELS_START            = 900;
 constexpr uint32_t SLIDESHOW_FILE_NAME               = SLIDESHOW_LABELS_START;
 constexpr uint32_t SLIDESHOW_FILE_PATH               = SLIDESHOW_LABELS_START + 1;
