@@ -83,6 +83,11 @@ ILabHUD* CRos2::GetLabHUD() const
   return m_node->GetLabHUD();
 }
 
+IStationHUD* CRos2::GetStationHUD() const
+{
+  return m_node->GetStationHUD();
+}
+
 void CRos2::FrameMove()
 {
   //! @todo Remove GUI dependency
