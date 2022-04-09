@@ -10,6 +10,7 @@
 
 #include "AddonUtils.h"
 #include "Application.h"
+#include "FileItem.h"
 #include "GUIInfoManager.h"
 #include "GUIUserMessages.h"
 #include "ListItem.h"
@@ -336,6 +337,12 @@ namespace XBMCAddon
       return g_application.GetAppPlayer().IsPlayingRDS();
     }
 
+    bool Player::isPlayingGame()
+    {
+      XBMC_TRACE;
+      return g_application.GetAppPlayer().IsPlayingGame();
+    }
+
     bool Player::isExternalPlayer()
     {
       XBMC_TRACE;
@@ -395,6 +402,20 @@ namespace XBMCAddon
 
       CGUIMessage msg(GUI_MSG_NOTIFY_ALL, 0, 0, GUI_MSG_UPDATE_ITEM, 0, item->item);
       CServiceBroker::GetGUI()->GetWindowManager().SendMessage(msg);
+    }
+
+    InfoTagGame* Player::getGameInfoTag()
+    {
+      XBMC_TRACE;
+      if (!g_application.GetAppPlayer().IsPlayingGame())
+        throw PlayerException("XBMC is not playing any game file");
+
+      const KODI::GAME::CGameInfoTag* game =
+          CServiceBroker::GetGUI()->GetInfoManager().GetCurrentGameTag();
+      if (game)
+        return new InfoTagGame(game);
+
+      return new InfoTagGame();
     }
 
     InfoTagRadioRDS* Player::getRadioRDSInfoTag()
