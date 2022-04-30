@@ -39,6 +39,7 @@ addons/screensaver.xbmc.builtin.black/*
 addons/screensaver.xbmc.builtin.dim/*
 addons/script.module.pil/*
 addons/script.module.pycryptodome/*
+addons/service.games.discord.richpresence/*
 addons/service.xbmc.versioncheck/*
 addons/webinterface.default/*
 addons/xbmc.addon/metadata.xsd
