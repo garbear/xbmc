@@ -50,6 +50,7 @@ addons/script.module.pytz/*
 addons/script.module.requests/*
 addons/script.module.six/*
 addons/script.module.urllib3/*
+addons/service.games.discord.richpresence/*
 addons/service.manuals.regvaul/*
 addons/weather.openmeteo/*
 addons/webinterface.default/*
