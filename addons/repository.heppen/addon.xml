@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="repository.heppen" name="Heppen's Repository" version="5.0.0" provider-name="heppen-dev">
+    <requires>
+        <import addon="xbmc.addon" version="18.9.701"/>
+    </requires>
+    <extension point="xbmc.addon.repository" name="Heppen's Repository">
+        <dir minversion="19.0.0">
+            <info>https://raw.githubusercontent.com/heppen-dev/repository.heppen/main/zips/addons.xml</info>
+            <checksum>https://raw.githubusercontent.com/heppen-dev/repository.heppen/main/zips/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.github.com/heppen-dev/repository.heppen/main/zips/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Heppen's Kodi repository</summary>
+        <description lang="en">The 'Heppen' is the Repository of the polish Kodi Community. Most of the hosted Addons here are active developed and supported by the members of the Community. 'Heppen' is an unofficial Repository of the Kodi.</description>
+        <description lang="pl">Heppen jest repozytorium polskiej społeczności Kodi. Większość znajdujących się tu dodatków jest aktywnie rozwijana i wspierana przez członków społeczności. Heppen jest nieoficjalnym repozytorium oprogramowania Kodi.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.jpg</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
