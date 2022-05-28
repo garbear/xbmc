@@ -23,7 +23,6 @@ DEPENDS = \
   harfbuzz \
   libass \
   libbluray \
-  libcec \
   libffi \
   libgcrypt \
   libgpg-error \
@@ -40,7 +39,6 @@ DEPENDS = \
   nettle \
   nghttp2 \
   openssl \
-  p8-platform \
   python3 \
   pythonmodule-pil \
   pythonmodule-pycryptodome \
@@ -57,7 +55,7 @@ else
 endif
 
 ifeq ($(OS),darwin_embedded)
-  EXCLUDED_DEPENDS = libcec libusb gtest
+  EXCLUDED_DEPENDS = libusb gtest
   ifeq ($(TARGET_PLATFORM),appletvos)
     DEPENDS += boblight
     EXCLUDED_DEPENDS += libshairplay libplist
@@ -71,7 +69,7 @@ ifeq ($(OS),osx)
 endif
 
 ifeq ($(OS),android)
-  EXCLUDED_DEPENDS = libcec libusb gtest
+  EXCLUDED_DEPENDS = libusb gtest
   DEPENDS += dummy-libxbmc libdovi libuuid
   PYMODULE_DEPS = dummy-libxbmc
   LIBUUID = libuuid
@@ -165,7 +163,6 @@ libass: fontconfig fribidi harfbuzz libpng freetype2 expat $(ICONV)
 libbluray: fontconfig freetype2 $(ICONV) udfread libxml2
 libcdio-gplv3: $(ICONV)
 libcdio: $(ICONV)
-libcec: p8-platform
 libdisplay-info: hwdata
 libevdev: libudev
 libgcrypt: libgpg-error
