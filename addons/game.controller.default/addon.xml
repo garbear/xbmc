@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.default"
         name="Default Controller"
-        version="1.0.23"
+        version="1.0.32"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
@@ -12,6 +12,7 @@
         <summary lang="be_BY">Прадвызначаны кантролер</summary>
         <summary lang="bs_BA">Zadani Džojstik</summary>
         <summary lang="ca_ES">Comandament per defecte</summary>
+        <summary lang="cs_CZ">Výchozí ovladač</summary>
         <summary lang="da_DK">Standard controller</summary>
         <summary lang="de_DE">Standard-Controller</summary>
         <summary lang="en_GB">Default Controller</summary>
@@ -40,6 +41,7 @@
         <description lang="be_BY">Прадвызначаны кантролер на аснове кантролера Xbox 360.</description>
         <description lang="bs_BA">Zadani džojstik za medijski centar je baziran na Xbox 360 džojstik.</description>
         <description lang="ca_ES">El comandament predeterminat del centre multimèdia es basa en el comandament d&apos;Xbox 360.</description>
+        <description lang="cs_CZ">Výchozí ovladač multimediálního centra je založen na ovladači Xbox 360.</description>
         <description lang="da_DK">Mediecentrets standardcontroller er baseret på Xbox 360-controlleren.</description>
         <description lang="de_DE">Der Standard-Mediacenter-Controller basiert auf dem Xbox 360 Controller.</description>
         <description lang="en_GB">The default media center controller is based on the Xbox 360 controller.</description>
@@ -66,6 +68,7 @@
         <disclaimer lang="be_BY">Крыніца выяў: Wikipedia (wikipedia.org)</disclaimer>
         <disclaimer lang="bs_BA">Zasluga za sliku: Wikipedia (wikipedia.org)</disclaimer>
         <disclaimer lang="ca_ES">Crèdit de la imatge: Wikipedia (wikipedia.org)</disclaimer>
+        <disclaimer lang="cs_CZ">Zásluhy obrázku: Wikipedie (wikipedia.org)</disclaimer>
         <disclaimer lang="da_DK">Kildeangivelse: Wikipedia (wikipedia.org)</disclaimer>
         <disclaimer lang="de_DE">Bildnachweis: Wikipedia (wikipedia.org)</disclaimer>
         <disclaimer lang="en_GB">Image credit: Wikipedia (wikipedia.org)</disclaimer>
