@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="game.controller.gba"
         name="Game Boy Advance"
-        version="1.0.16"
+        version="1.0.18"
         provider-name="Team Kodi">
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
@@ -11,16 +11,21 @@
         </assets>
         <summary lang="da_DK">Game Boy Advance</summary>
         <summary lang="en_GB">Game Boy Advance</summary>
+        <summary lang="es_MX">Game Boy Advance</summary>
+        <summary lang="fi_FI">Game Boy Advance</summary>
         <summary lang="ru_RU">Game Boy Advance</summary>
         <summary lang="zh_CN">Game Boy Advance</summary>
         <description lang="da_DK">Nintendo Game Boy Advance er en 32-bit håndholdt videospilkonsol udgivet i 2001. På trods af hård konkurrence fastholdt Nintendo størstedelen af markedsandelen med enheden.</description>
         <description lang="en_GB">The Nintendo Game Boy Advance is a 32-bit handheld video game console released in 2001. Despite fierce competition, Nintendo maintained a majority market share with the device.</description>
+        <description lang="fi_FI">Nintendo Game Boy Advance on 32-bittinen käsikonsoli, joka julkaistiin vuonna 2001. Kovasta kilpailusta huolimatta Nintendo säilytti sillä markkinajohtajan aseman.</description>
         <description lang="ru_RU">Nintendo Game Boy Advance - 32-битная консоль, выпущенная в 2001. Несмотря на жесткую конкуренцию, Nintendo сохранила большую долю рынка с этим устройством.</description>
         <description lang="zh_CN">任天堂 Game Boy Advance 是2001年发布的一款32位手持视频游戏机。尽管竞争激烈，任天堂仍然保持着该设备的大部分市场份额。</description>
         <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
         <disclaimer lang="de_DE">Bildrechte: OpenEmu (openemu.org)</disclaimer>
         <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
         <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
         <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
         <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
         <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
