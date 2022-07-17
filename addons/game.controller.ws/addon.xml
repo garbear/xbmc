@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ws"
+        name="WonderSwan"
+        version="1.0.17"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">WonderSwan</summary>
+        <summary lang="de_DE">WonderSwan</summary>
+        <summary lang="en_GB">WonderSwan</summary>
+        <summary lang="zh_CN">WonderSwan</summary>
+        <description lang="da_DK">WonderSwan er en 16-bit håndholdt konsol udgivet i 1999 af Bandai. Den kan spilles både lodret og vandret og blev rost for sin lange batterilevetid og unikke bibliotek af spil.</description>
+        <description lang="de_DE">WonderSwan ist eine 1999 vorgestellte tragbare 16-bit Konsole von Bandai. Mit ihr kann sowohl in Hoch- wie auch Querformat gespielt werden. Angepriesen wurden die langlebige Batterie und einzigartige Spielauswahl.</description>
+        <description lang="en_GB">The WonderSwan is a 16-bit handheld console released in 1999 by Bandai. It is playable both vertically and horizontally, and was praised for its long battery life and unique library of games.</description>
+        <description lang="zh_CN">WonderSwan 是Bandai 于1999年发布的16位掌机。它可以垂直和水平两种方式游戏，并因其较长的电池寿命和独特的游戏库而受到赞誉。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.ouya"
+        name="OUYA Controller"
+        version="1.0.11"
+        provider-name="Quihico">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+        <summary lang="da_DK">OUYA controller</summary>
+        <summary lang="de_DE">OUYA Controller</summary>
+        <summary lang="en_GB">OUYA controller</summary>
+        <summary lang="zh_CN">OUYA 控制器</summary>
+        <description lang="da_DK">OUYA er en crowd-funded Android-baseret mikrokonsol udgivet i 2013. OUYA-controlleren indeholder en enkelt berøringsplade i midten af controlleren.</description>
+        <description lang="de_DE">Die OUYA, eine gemeinnützig finanzierte Android-basierte Kleinkonsole, wurde 2013 veröffentlicht. Der OUYA Controller beinhaltet ein mittig platziertes berührungsempfindliches Druckelement.</description>
+        <description lang="en_GB">The OUYA is a crowd-funded Android-based microconsole released in 2013. The OUYA controller includes a single-touch touchpad in the center of the controller.</description>
+        <description lang="zh_CN">OUYA 是2013年发布一款众筹生产的基于 Android 的微型游戏主机。OUYA 控制器中部有一个单触式触摸板。</description>
+    </extension>
+</addon>

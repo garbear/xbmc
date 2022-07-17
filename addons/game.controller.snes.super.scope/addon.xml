@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.snes.super.scope"
+        name="Super Scope"
+        version="1.0.15"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">Super Scope</summary>
+        <summary lang="en_GB">Super Scope</summary>
+        <summary lang="zh_CN">Super Scope</summary>
+        <description lang="da_DK">Super Scope er en light gun til SNES. Den blev udgivet i 1992 som en efterfølger til NES Zapper.</description>
+        <description lang="en_GB">The Super Scope is a light gun for the SNES. It was released in 1992 as a successor to the NES Zapper.</description>
+        <description lang="zh_CN">Super Scope 是 SNES 的一种光线枪。1992年作为 NES Zapper 的继任者发布。</description>
+    </extension>
+</addon>

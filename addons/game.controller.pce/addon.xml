@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.pce"
+        name="PC Engine Controller"
+        version="1.0.20"
+        provider-name="Team Kodi">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="da_DK">PC Engine controller</summary>
+        <summary lang="en_GB">PC Engine controller</summary>
+        <summary lang="zh_CN">PC Engine 控制器</summary>
+        <description lang="da_DK">PC Engine, også kendt som TurboGrafx-16, blev udgivet af Hudson Soft og NEC i 1987. Den blev den bedst sælgende konsol i Japan, men var bagefter både Sega og Nintendo på de nordamerikanske og europæiske markeder.</description>
+        <description lang="en_GB">The PC Engine, also known as the TurboGrafx-16, was released by Hudson Soft and NEC in 1987. It became the top-selling console in Japan, but trailed behind both Sega and Nintendo in the North American and Eurpoean markets.</description>
+        <description lang="zh_CN">PC Engine，也称为 TurboGrafx-16，由哈德逊软件公司和 NEC 于1987年发布。它成为日本最畅销的游戏机，但在北美和欧洲市场，它的销量都落后于世嘉和任天堂。</description>
+        <disclaimer lang="da_DK">Kildeangivelse: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="de_DE">Bildrechte: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="en_GB">Image credit: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="es_MX">Créditos de la imagen: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fi_FI">Kuvan lähde: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="fr_FR">Crédit image : OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="nl_NL">Bron afbeelding: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="ru_RU">Источник изображения: OpenEmu (openemu.org)</disclaimer>
+        <disclaimer lang="zh_CN">图片来源：OpenEmu（openemu.org）</disclaimer>
+    </extension>
+</addon>
