@@ -515,16 +515,16 @@ extern "C"
     /// @brief __0xF__ : User defined.
     EPG_EVENT_CONTENTSUBMASK_SPECIAL_USERDEFINED = 0xF
   } EPG_EVENT_CONTENTSUBMASK_SPECIAL;
-  //----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
-  ///@}
+///@}
 
-  //============================================================================
-  /// @ingroup cpp_kodi_addon_pvr_Defs_epg
-  /// @brief Separator to use in strings containing different tokens, for example
-  /// writers, directors, actors of an event.
-  ///
-  #define EPG_STRING_TOKEN_SEPARATOR ","
+//============================================================================
+/// @ingroup cpp_kodi_addon_pvr_Defs_epg
+/// @brief Separator to use in strings containing different tokens, for example
+/// writers, directors, actors of an event.
+///
+#define EPG_STRING_TOKEN_SEPARATOR ","
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -560,34 +560,34 @@ extern "C"
     /// @brief __0001 0000__ : This EPG entry will be flagged as live.
     EPG_TAG_FLAG_IS_LIVE = (1 << 4),
   } EPG_TAG_FLAG;
-  ///@}
-  //----------------------------------------------------------------------------
+///@}
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @ingroup cpp_kodi_addon_pvr_Defs_epg
-  /// @brief Special PVREPGTag::SetUniqueBroadcastId value
-  ///
-  /// Special @ref kodi::addon::PVREPGTag::SetUniqueBroadcastId() value to
-  /// indicate that a tag has not a valid EPG event uid.
-  ///
-  #define EPG_TAG_INVALID_UID 0
-  //----------------------------------------------------------------------------
+//============================================================================
+/// @ingroup cpp_kodi_addon_pvr_Defs_epg
+/// @brief Special PVREPGTag::SetUniqueBroadcastId value
+///
+/// Special @ref kodi::addon::PVREPGTag::SetUniqueBroadcastId() value to
+/// indicate that a tag has not a valid EPG event uid.
+///
+#define EPG_TAG_INVALID_UID 0
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @ingroup cpp_kodi_addon_pvr_Defs_epg
-  /// @brief Special @ref kodi::addon::PVREPGTag::SetSeriesNumber(), @ref kodi::addon::PVREPGTag::SetEpisodeNumber()
-  /// and @ref kodi::addon::PVREPGTag::SetEpisodePartNumber() value to indicate
-  /// it is not to be used.
-  ///
-  #define EPG_TAG_INVALID_SERIES_EPISODE -1
-  //----------------------------------------------------------------------------
+//============================================================================
+/// @ingroup cpp_kodi_addon_pvr_Defs_epg
+/// @brief Special @ref kodi::addon::PVREPGTag::SetSeriesNumber(), @ref kodi::addon::PVREPGTag::SetEpisodeNumber()
+/// and @ref kodi::addon::PVREPGTag::SetEpisodePartNumber() value to indicate
+/// it is not to be used.
+///
+#define EPG_TAG_INVALID_SERIES_EPISODE -1
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @ingroup cpp_kodi_addon_pvr_Defs_epg
-  /// @brief Timeframe value for use with @ref kodi::addon::CInstancePVRClient::SetEPGTimeFrame()
-  /// function to indicate "no timeframe".
-  ///
-  #define EPG_TIMEFRAME_UNLIMITED -1
+//============================================================================
+/// @ingroup cpp_kodi_addon_pvr_Defs_epg
+/// @brief Timeframe value for use with @ref kodi::addon::CInstancePVRClient::SetEPGTimeFrame()
+/// function to indicate "no timeframe".
+///
+#define EPG_TIMEFRAME_UNLIMITED -1
   //----------------------------------------------------------------------------
 
   //============================================================================

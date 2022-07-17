@@ -22,66 +22,65 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-  //============================================================================
-  /// @defgroup cpp_kodi_addon_pvr_Defs_Timer_PVR_TIMER_ definition PVR_TIMER (various)
-  /// @ingroup cpp_kodi_addon_pvr_Defs_Timer
-  /// @brief **PVR timer various different definitions**\n
-  /// This mostly used on @ref cpp_kodi_addon_pvr_Defs_Timer_PVRTimer "kodi::addon::PVRTimer"
-  /// to define default or not available.
-  ///
-  ///@{
+//============================================================================
+/// @defgroup cpp_kodi_addon_pvr_Defs_Timer_PVR_TIMER_ definition PVR_TIMER (various)
+/// @ingroup cpp_kodi_addon_pvr_Defs_Timer
+/// @brief **PVR timer various different definitions**\n
+/// This mostly used on @ref cpp_kodi_addon_pvr_Defs_Timer_PVRTimer "kodi::addon::PVRTimer"
+/// to define default or not available.
+///
+///@{
 
-  //============================================================================
-  /// @brief Numeric PVR timer type definitions (@ref kodi::addon::PVRTimer::SetTimerType()
-  /// values).
-  ///
-  /// "Null" value for a numeric timer type.
-  #define PVR_TIMER_TYPE_NONE 0
-  //----------------------------------------------------------------------------
+//============================================================================
+/// @brief Numeric PVR timer type definitions (@ref kodi::addon::PVRTimer::SetTimerType()
+/// values).
+///
+/// "Null" value for a numeric timer type.
+#define PVR_TIMER_TYPE_NONE 0
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @brief Special @ref kodi::addon::PVRTimer::SetClientIndex() value to indicate
-  /// that a timer has not (yet) a valid client index.
-  ///
-  /// Timer has not (yet) a valid client index.
-  #define PVR_TIMER_NO_CLIENT_INDEX 0
-  //----------------------------------------------------------------------------
+//============================================================================
+/// @brief Special @ref kodi::addon::PVRTimer::SetClientIndex() value to indicate
+/// that a timer has not (yet) a valid client index.
+///
+/// Timer has not (yet) a valid client index.
+#define PVR_TIMER_NO_CLIENT_INDEX 0
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @brief Special @ref kodi::addon::PVRTimer::SetParentClientIndex() value to
-  /// indicate that a timer has no parent.
-  ///
-  /// Timer has no parent; it was not scheduled by a repeating timer.
-  #define PVR_TIMER_NO_PARENT PVR_TIMER_NO_CLIENT_INDEX
-  //----------------------------------------------------------------------------
+//============================================================================
+/// @brief Special @ref kodi::addon::PVRTimer::SetParentClientIndex() value to
+/// indicate that a timer has no parent.
+///
+/// Timer has no parent; it was not scheduled by a repeating timer.
+#define PVR_TIMER_NO_PARENT PVR_TIMER_NO_CLIENT_INDEX
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @brief Special @ref kodi::addon::PVRTimer::SetEPGUid() value to indicate
-  /// that a timer has no EPG event uid.
-  ///
-  /// Timer has no EPG event unique identifier.
-  #define PVR_TIMER_NO_EPG_UID EPG_TAG_INVALID_UID
-  //----------------------------------------------------------------------------
+//============================================================================
+/// @brief Special @ref kodi::addon::PVRTimer::SetEPGUid() value to indicate
+/// that a timer has no EPG event uid.
+///
+/// Timer has no EPG event unique identifier.
+#define PVR_TIMER_NO_EPG_UID EPG_TAG_INVALID_UID
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @brief Special @ref kodi::addon::PVRTimer::SetClientChannelUid() value to
-  /// indicate "any channel". Useful for some repeating timer types.
-  ///
-  /// denotes "any channel", not a specific one.
-  ///
-  #define PVR_TIMER_ANY_CHANNEL -1
-  //----------------------------------------------------------------------------
+//============================================================================
+/// @brief Special @ref kodi::addon::PVRTimer::SetClientChannelUid() value to
+/// indicate "any channel". Useful for some repeating timer types.
+///
+/// denotes "any channel", not a specific one.
+///
+#define PVR_TIMER_ANY_CHANNEL -1
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @brief Value where set in background to inform that related part not used.
-  ///
-  /// Normally this related parts need not to set by this as it is default.
-  #define PVR_TIMER_VALUE_NOT_AVAILABLE -1
+//============================================================================
+/// @brief Value where set in background to inform that related part not used.
+///
+/// Normally this related parts need not to set by this as it is default.
+#define PVR_TIMER_VALUE_NOT_AVAILABLE -1
   //----------------------------------------------------------------------------
 
   ///@}
   //----------------------------------------------------------------------------
-
 
   //============================================================================
   /// @defgroup cpp_kodi_addon_pvr_Defs_Timer_PVR_TIMER_TYPES enum PVR_TIMER_TYPES
