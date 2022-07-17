@@ -163,10 +163,10 @@ extern "C"
     /// @brief no directions are pressed
     JOYSTICK_STATE_HAT_UNPRESSED = 0x0,
 
-     /// @brief only left is pressed
+    /// @brief only left is pressed
     JOYSTICK_STATE_HAT_LEFT = 0x1,
 
-     /// @brief only right is pressed
+    /// @brief only right is pressed
     JOYSTICK_STATE_HAT_RIGHT = 0x2,
 
     /// @brief only up is pressed
@@ -468,8 +468,7 @@ extern "C"
   typedef struct JOYSTICK_DRIVER_PRIMITIVE
   {
     JOYSTICK_DRIVER_PRIMITIVE_TYPE type;
-    union
-    {
+    union {
       struct JOYSTICK_DRIVER_BUTTON button;
       struct JOYSTICK_DRIVER_HAT hat;
       struct JOYSTICK_DRIVER_SEMIAXIS semiaxis;

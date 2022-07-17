@@ -55,26 +55,26 @@ extern "C"
     /// @brief __0001 0000__ : This recording will be flagged as live.
     PVR_RECORDING_FLAG_IS_LIVE = (1 << 4),
   } PVR_RECORDING_FLAG;
-  ///@}
-  //----------------------------------------------------------------------------
+///@}
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @ingroup cpp_kodi_addon_pvr_Defs_Recording_PVRRecording
-  /// @brief Special @ref kodi::addon::PVRRecording::SetSeriesNumber() and
-  /// @ref kodi::addon::PVRRecording::SetEpisodeNumber() value to indicate it is
-  /// not to be used.
-  ///
-  /// Used if recording has no valid season and/or episode info.
-  ///
-  #define PVR_RECORDING_INVALID_SERIES_EPISODE EPG_TAG_INVALID_SERIES_EPISODE
-  //----------------------------------------------------------------------------
+//============================================================================
+/// @ingroup cpp_kodi_addon_pvr_Defs_Recording_PVRRecording
+/// @brief Special @ref kodi::addon::PVRRecording::SetSeriesNumber() and
+/// @ref kodi::addon::PVRRecording::SetEpisodeNumber() value to indicate it is
+/// not to be used.
+///
+/// Used if recording has no valid season and/or episode info.
+///
+#define PVR_RECORDING_INVALID_SERIES_EPISODE EPG_TAG_INVALID_SERIES_EPISODE
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @ingroup cpp_kodi_addon_pvr_Defs_Recording_PVRRecording
-  /// @brief Value where set in background to inform that related part not used.
-  ///
-  /// Normally this related parts need not to set by this as it is default.
-  #define PVR_RECORDING_VALUE_NOT_AVAILABLE -1
+//============================================================================
+/// @ingroup cpp_kodi_addon_pvr_Defs_Recording_PVRRecording
+/// @brief Value where set in background to inform that related part not used.
+///
+/// Normally this related parts need not to set by this as it is default.
+#define PVR_RECORDING_VALUE_NOT_AVAILABLE -1
   //----------------------------------------------------------------------------
 
   //============================================================================

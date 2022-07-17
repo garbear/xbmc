@@ -483,8 +483,7 @@ extern "C"
   {
     /// @brief
     GAME_STREAM_TYPE type;
-    union
-    {
+    union {
       /// @brief
       game_stream_audio_properties audio;
 
@@ -507,8 +506,7 @@ extern "C"
   {
     /// @brief
     GAME_STREAM_TYPE type;
-    union
-    {
+    union {
       /// @brief
       game_stream_hw_framebuffer_buffer hw_framebuffer;
 
@@ -529,8 +527,7 @@ extern "C"
   {
     /// @brief
     GAME_STREAM_TYPE type;
-    union
-    {
+    union {
       /// @brief
       game_stream_audio_packet audio;
 
@@ -1009,8 +1006,7 @@ extern "C"
 
     /// @brief
     const char* feature_name;
-    union
-    {
+    union {
       /// @brief
       struct game_digital_button_event digital_button;
 
@@ -1064,7 +1060,6 @@ extern "C"
   //----------------------------------------------------------------------------
 
   ///@}
-
 
   //--==----==----==----==----==----==----==----==----==----==----==----==----==--
 
