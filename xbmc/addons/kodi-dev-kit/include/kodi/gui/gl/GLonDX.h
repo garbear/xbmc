@@ -389,7 +389,7 @@ using CRenderHelper = gl::CGLonDX;
 } /* namespace kodi */
 
 #else /* defined(WIN32) && defined(HAS_ANGLE) */
-#pragma message ( "WARNING: GLonDX.h only be available on Windows by use of Angle as depend!" )
+#pragma message("WARNING: GLonDX.h only be available on Windows by use of Angle as depend!")
 #endif /* defined(WIN32) && defined(HAS_ANGLE) */
 
 #endif /* __cplusplus */

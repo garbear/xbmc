@@ -278,7 +278,7 @@ public:
 
   ///@}
 
-//--==----==----==----==----==----==----==----==----==----==----==----==----==--
+  //--==----==----==----==----==----==----==----==----==----==----==----==----==--
 
   //============================================================================
   ///
@@ -307,10 +307,7 @@ public:
   /// @param[in] url The URL to load
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the game was loaded
   ///
-  virtual GAME_ERROR LoadGame(const std::string& url)
-  {
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR LoadGame(const std::string& url) { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -336,10 +333,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the game add-on was loaded
   ///
-  virtual GAME_ERROR LoadStandalone()
-  {
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR LoadStandalone() { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -349,10 +343,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the game was unloaded
   ///
-  virtual GAME_ERROR UnloadGame()
-  {
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR UnloadGame() { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -373,10 +364,7 @@ public:
   ///
   /// @return the region, or @ref GAME_REGION_UNKNOWN if unknown or no game is loaded
   ///
-  virtual GAME_REGION GetRegion()
-  {
-    return GAME_REGION_UNKNOWN;
-  }
+  virtual GAME_REGION GetRegion() { return GAME_REGION_UNKNOWN; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -387,10 +375,7 @@ public:
   ///
   /// @return true if the frontend should provide a game loop, false otherwise
   ///
-  virtual bool RequiresGameLoop()
-  {
-    return false;
-  }
+  virtual bool RequiresGameLoop() { return false; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -398,10 +383,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if there was no error
   ///
-  virtual GAME_ERROR RunFrame()
-  {
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR RunFrame() { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -409,10 +391,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the game was reset
   ///
-  virtual GAME_ERROR Reset()
-  {
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR Reset() { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
   //==========================================================================
@@ -441,15 +420,9 @@ public:
   public:
     CStream() = default;
 
-    CStream(const game_stream_properties& properties)
-    {
-      Open(properties);
-    }
+    CStream(const game_stream_properties& properties) { Open(properties); }
 
-    ~CStream()
-    {
-      Close();
-    }
+    ~CStream() { Close(); }
 
     //==========================================================================
     /// @ingroup cpp_kodi_addon_game_Operation_CStream
@@ -581,7 +554,7 @@ public:
 
   ///@}
 
-//--==----==----==----==----==----==----==----==----==----==----==----==----==--
+  //--==----==----==----==----==----==----==----==----==----==----==----==----==--
 
   //============================================================================
   ///
@@ -608,10 +581,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the HW context was reset
   ///
-  virtual GAME_ERROR HwContextReset()
-  {
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR HwContextReset() { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -621,10 +591,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the HW context was destroyed
   ///
-  virtual GAME_ERROR HwContextDestroy()
-  {
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR HwContextDestroy() { return GAME_ERROR_NOT_IMPLEMENTED; }
 
   //============================================================================
   /// @brief **Callback to Kodi Function**<br>Get a symbol from the hardware context
@@ -643,7 +610,7 @@ public:
 
   ///@}
 
-//--==----==----==----==----==----==----==----==----==----==----==----==----==--
+  //--==----==----==----==----==----==----==----==----==----==----==----==----==--
 
   //============================================================================
   /// @defgroup cpp_kodi_addon_game_InputOperations 4. Input operations
@@ -691,10 +658,7 @@ public:
   /// accept all controllers imported by addon.xml. The port ID is set to
   /// the @ref DEFAULT_PORT_ID constant.
   ///
-  virtual game_input_topology* GetTopology()
-  {
-    return nullptr;
-  }
+  virtual game_input_topology* GetTopology() { return nullptr; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -702,9 +666,7 @@ public:
   ///
   /// @param[in] topology The topology returned by GetTopology()
   ///
-  virtual void FreeTopology(game_input_topology* topology)
-  {
-  }
+  virtual void FreeTopology(game_input_topology* topology) {}
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -715,7 +677,8 @@ public:
   /// After loading the input topology, the frontend will call this with
   /// controller layouts for all controllers discovered in the topology.
   ///
-  virtual void SetControllerLayouts(const std::vector<kodi::addon::GameControllerLayout>& controllers)
+  virtual void SetControllerLayouts(
+      const std::vector<kodi::addon::GameControllerLayout>& controllers)
   {
   }
   //----------------------------------------------------------------------------
@@ -728,10 +691,7 @@ public:
   ///
   /// @return True if keyboard input was enabled, false otherwise
   ///
-  virtual bool EnableKeyboard(bool enable, const std::string& controller_id)
-  {
-    return false;
-  }
+  virtual bool EnableKeyboard(bool enable, const std::string& controller_id) { return false; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -742,10 +702,7 @@ public:
   ///
   /// @return True if mouse input was enabled, false otherwise
   ///
-  virtual bool EnableMouse(bool enable, const std::string& controller_id)
-  {
-    return false;
-  }
+  virtual bool EnableMouse(bool enable, const std::string& controller_id) { return false; }
   //--------------------------------------------------------------------------
 
   //==========================================================================
@@ -806,10 +763,7 @@ public:
   ///
   /// @return true if the event was handled, false otherwise
   ///
-  virtual bool InputEvent(const game_input_event& event)
-  {
-    return false;
-  }
+  virtual bool InputEvent(const game_input_event& event) { return false; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -831,7 +785,7 @@ public:
 
   ///@}
 
-//--==----==----==----==----==----==----==----==----==----==----==----==----==--
+  //--==----==----==----==----==----==----==----==----==----==----==----==----==--
 
   //============================================================================
   /// @defgroup cpp_kodi_addon_game_SerializationOperations 5. Serialization operations
@@ -855,10 +809,7 @@ public:
   ///
   /// @return the number of bytes, or 0 if serialization is not supported
   ///
-  virtual size_t SerializeSize()
-  {
-    return 0;
-  }
+  virtual size_t SerializeSize() { return 0; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -869,10 +820,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the game was serialized into the buffer
   ///
-  virtual GAME_ERROR Serialize(uint8_t* data, size_t size)
-  {
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR Serialize(uint8_t* data, size_t size) { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -891,7 +839,7 @@ public:
 
   ///@}
 
-//--==----==----==----==----==----==----==----==----==----==----==----==----==--
+  //--==----==----==----==----==----==----==----==----==----==----==----==----==--
 
   //============================================================================
   /// @defgroup cpp_kodi_addon_game_CheatOperations 6. Cheat operations
@@ -915,10 +863,7 @@ public:
   ///
   /// @return the error, or @ref GAME_ERROR_NO_ERROR if the cheat system was reset
   ///
-  virtual GAME_ERROR CheatReset()
-  {
-    return GAME_ERROR_NOT_IMPLEMENTED;
-  }
+  virtual GAME_ERROR CheatReset() { return GAME_ERROR_NOT_IMPLEMENTED; }
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -1179,7 +1124,6 @@ private:
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->Reset();
   }
 
-
   // --- Hardware rendering operations -------------------------------------------
 
   inline static GAME_ERROR ADDON_HwContextReset(const AddonInstance_Game* instance)
@@ -1191,7 +1135,6 @@ private:
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->HwContextDestroy();
   }
-
 
   // --- Input operations --------------------------------------------------------
 
@@ -1260,7 +1203,6 @@ private:
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->InputEvent(*event);
   }
 
-
   // --- Serialization operations ------------------------------------------------
 
   inline static size_t ADDON_SerializeSize(const AddonInstance_Game* instance)
@@ -1281,7 +1223,6 @@ private:
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->Deserialize(data, size);
   }
-
 
   // --- Cheat operations --------------------------------------------------------
 
