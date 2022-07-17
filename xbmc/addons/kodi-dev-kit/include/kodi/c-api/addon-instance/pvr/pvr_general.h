@@ -109,150 +109,150 @@ extern "C"
     /// @brief __7__ : Connecting to backend.
     PVR_CONNECTION_STATE_CONNECTING = 7,
   } PVR_CONNECTION_STATE;
-  ///@}
-  //----------------------------------------------------------------------------
+///@}
+//----------------------------------------------------------------------------
 
-  //============================================================================
-  /// @defgroup cpp_kodi_addon_pvr_Defs_General_PVR_STREAM_PROPERTY definition PVR_STREAM_PROPERTY
-  /// @ingroup cpp_kodi_addon_pvr_Defs_General_Inputstream
-  /// @brief **PVR related stream property values**\n
-  /// This is used to pass additional data to Kodi on a given PVR stream.
-  ///
-  /// Then transferred to livestream, recordings or EPG Tag stream using the
-  /// properties.
-  ///
-  /// This defines are used by:
-  /// - @ref kodi::addon::CInstancePVRClient::GetChannelStreamProperties()
-  /// - @ref kodi::addon::CInstancePVRClient::GetEPGTagStreamProperties()
-  /// - @ref kodi::addon::CInstancePVRClient::GetRecordingStreamProperties()
-  ///
-  ///
-  ///---------------------------------------------------------------------------
-  ///
-  /// **Example:**
-  /// ~~~~~~~~~~~~~{.cpp}
-  /// ...
-  ///
-  /// PVR_ERROR CMyPVRInstance::GetChannelStreamProperties(const kodi::addon::PVRChannel& channel,
-  ///                                                      std::vector<PVRStreamProperty>& properties)
-  /// {
-  ///   ...
-  ///   properties.emplace_back(PVR_STREAM_PROPERTY_INPUTSTREAM, "inputstream.adaptive");
-  ///   properties.emplace_back("inputstream.adaptive.manifest_type", "mpd");
-  ///   properties.emplace_back("inputstream.adaptive.manifest_update_parameter", "full");
-  ///   properties.emplace_back(PVR_STREAM_PROPERTY_MIMETYPE, "application/xml+dash");
-  ///   return PVR_ERROR_NO_ERROR;
-  /// }
-  ///
-  /// ...
-  /// ~~~~~~~~~~~~~
-  ///
-  ///@{
+//============================================================================
+/// @defgroup cpp_kodi_addon_pvr_Defs_General_PVR_STREAM_PROPERTY definition PVR_STREAM_PROPERTY
+/// @ingroup cpp_kodi_addon_pvr_Defs_General_Inputstream
+/// @brief **PVR related stream property values**\n
+/// This is used to pass additional data to Kodi on a given PVR stream.
+///
+/// Then transferred to livestream, recordings or EPG Tag stream using the
+/// properties.
+///
+/// This defines are used by:
+/// - @ref kodi::addon::CInstancePVRClient::GetChannelStreamProperties()
+/// - @ref kodi::addon::CInstancePVRClient::GetEPGTagStreamProperties()
+/// - @ref kodi::addon::CInstancePVRClient::GetRecordingStreamProperties()
+///
+///
+///---------------------------------------------------------------------------
+///
+/// **Example:**
+/// ~~~~~~~~~~~~~{.cpp}
+/// ...
+///
+/// PVR_ERROR CMyPVRInstance::GetChannelStreamProperties(const kodi::addon::PVRChannel& channel,
+///                                                      std::vector<PVRStreamProperty>& properties)
+/// {
+///   ...
+///   properties.emplace_back(PVR_STREAM_PROPERTY_INPUTSTREAM, "inputstream.adaptive");
+///   properties.emplace_back("inputstream.adaptive.manifest_type", "mpd");
+///   properties.emplace_back("inputstream.adaptive.manifest_update_parameter", "full");
+///   properties.emplace_back(PVR_STREAM_PROPERTY_MIMETYPE, "application/xml+dash");
+///   return PVR_ERROR_NO_ERROR;
+/// }
+///
+/// ...
+/// ~~~~~~~~~~~~~
+///
+///@{
 
-  /// @brief the URL of the stream that should be played.
-  ///
-  #define PVR_STREAM_PROPERTY_STREAMURL "streamurl"
+/// @brief the URL of the stream that should be played.
+///
+#define PVR_STREAM_PROPERTY_STREAMURL "streamurl"
 
-  /// @brief To define in stream properties the name of the inputstream add-on
-  /// that should be used.
-  ///
-  /// Leave blank to use Kodi's built-in playing capabilities or to allow ffmpeg
-  /// to handle directly set to @ref PVR_STREAM_PROPERTY_VALUE_INPUTSTREAMFFMPEG.
-  ///
-  #define PVR_STREAM_PROPERTY_INPUTSTREAM STREAM_PROPERTY_INPUTSTREAM
+/// @brief To define in stream properties the name of the inputstream add-on
+/// that should be used.
+///
+/// Leave blank to use Kodi's built-in playing capabilities or to allow ffmpeg
+/// to handle directly set to @ref PVR_STREAM_PROPERTY_VALUE_INPUTSTREAMFFMPEG.
+///
+#define PVR_STREAM_PROPERTY_INPUTSTREAM STREAM_PROPERTY_INPUTSTREAM
 
-  /// @brief To define in stream properties the player the inputstream add-on
-  /// should use.
-  ///
-  /// Leave blank to use Kodi's built-in player selection mechanism.
-  /// Permitted values are:
-  /// - "videodefaultplayer"
-  /// - "audiodefaultplayer"
-  ///
-  #define PVR_STREAM_PROPERTY_INPUTSTREAM_PLAYER STREAM_PROPERTY_INPUTSTREAM_PLAYER
+/// @brief To define in stream properties the player the inputstream add-on
+/// should use.
+///
+/// Leave blank to use Kodi's built-in player selection mechanism.
+/// Permitted values are:
+/// - "videodefaultplayer"
+/// - "audiodefaultplayer"
+///
+#define PVR_STREAM_PROPERTY_INPUTSTREAM_PLAYER STREAM_PROPERTY_INPUTSTREAM_PLAYER
 
-  /// @brief Identification string for an input stream.
-  ///
-  /// This value can be used in addition to @ref PVR_STREAM_PROPERTY_INPUTSTREAM.
-  /// It is used to provide the respective inpustream addon with additional
-  /// identification.
-  ///
-  /// The difference between this and other stream properties is that it is also
-  /// passed in the associated @ref kodi::addon::CAddonBase::CreateInstance()
-  /// call.
-  ///
-  /// This makes it possible to select different processing classes within the
-  /// associated add-on.
-  ///
-  ///
-  ///---------------------------------------------------------------------------
-  ///
-  /// **Example:**
-  /// ~~~~~~~~~~~~~{.cpp}
-  /// ...
-  ///
-  /// // On PVR instance of addon
-  /// PVR_ERROR CMyPVRInstance::GetChannelStreamProperties(const kodi::addon::PVRChannel& channel,
-  ///                                                      std::vector<PVRStreamProperty>& properties)
-  /// {
-  ///   ...
-  ///   // For here on example the inpustream is also inside the PVR addon
-  ///   properties.emplace_back(PVR_STREAM_PROPERTY_INPUTSTREAM, "pvr.my_one");
-  ///   properties.emplace_back(PVR_STREAM_PROPERTY_INPUTSTREAM_INSTANCE_ID, "my_special_id_1");
-  ///   return PVR_ERROR_NO_ERROR;
-  /// }
-  ///
-  /// ...
-  ///
-  /// // On CAddonBase part of addon
-  /// ADDON_STATUS CMyAddon::CreateInstanceEx(int instanceType,
-  ///                                         std::string instanceID,
-  ///                                         KODI_HANDLE instance,
-  ///                                         KODI_HANDLE& addonInstance
-  ///                                         const std::string& version)
-  /// {
-  ///   if (instanceType == ADDON_INSTANCE_INPUTSTREAM)
-  ///   {
-  ///     kodi::Log(ADDON_LOG_INFO, "Creating my special inputstream");
-  ///     if (instanceID == "my_special_id_1")
-  ///       addonInstance = new CMyPVRClientInstance_Type1(instance, version);
-  ///     else if (instanceID == "my_special_id_2")
-  ///       addonInstance = new CMyPVRClientInstance_Type2(instance, version);
-  ///     return ADDON_STATUS_OK;
-  ///   }
-  ///   else if (...)
-  ///   {
-  ///     ...
-  ///   }
-  ///   return ADDON_STATUS_UNKNOWN;
-  /// }
-  ///
-  /// ...
-  /// ~~~~~~~~~~~~~
-  ///
-  #define PVR_STREAM_PROPERTY_INPUTSTREAM_INSTANCE_ID STREAM_PROPERTY_INPUTSTREAM_INSTANCE_ID
+/// @brief Identification string for an input stream.
+///
+/// This value can be used in addition to @ref PVR_STREAM_PROPERTY_INPUTSTREAM.
+/// It is used to provide the respective inpustream addon with additional
+/// identification.
+///
+/// The difference between this and other stream properties is that it is also
+/// passed in the associated @ref kodi::addon::CAddonBase::CreateInstance()
+/// call.
+///
+/// This makes it possible to select different processing classes within the
+/// associated add-on.
+///
+///
+///---------------------------------------------------------------------------
+///
+/// **Example:**
+/// ~~~~~~~~~~~~~{.cpp}
+/// ...
+///
+/// // On PVR instance of addon
+/// PVR_ERROR CMyPVRInstance::GetChannelStreamProperties(const kodi::addon::PVRChannel& channel,
+///                                                      std::vector<PVRStreamProperty>& properties)
+/// {
+///   ...
+///   // For here on example the inpustream is also inside the PVR addon
+///   properties.emplace_back(PVR_STREAM_PROPERTY_INPUTSTREAM, "pvr.my_one");
+///   properties.emplace_back(PVR_STREAM_PROPERTY_INPUTSTREAM_INSTANCE_ID, "my_special_id_1");
+///   return PVR_ERROR_NO_ERROR;
+/// }
+///
+/// ...
+///
+/// // On CAddonBase part of addon
+/// ADDON_STATUS CMyAddon::CreateInstanceEx(int instanceType,
+///                                         std::string instanceID,
+///                                         KODI_HANDLE instance,
+///                                         KODI_HANDLE& addonInstance
+///                                         const std::string& version)
+/// {
+///   if (instanceType == ADDON_INSTANCE_INPUTSTREAM)
+///   {
+///     kodi::Log(ADDON_LOG_INFO, "Creating my special inputstream");
+///     if (instanceID == "my_special_id_1")
+///       addonInstance = new CMyPVRClientInstance_Type1(instance, version);
+///     else if (instanceID == "my_special_id_2")
+///       addonInstance = new CMyPVRClientInstance_Type2(instance, version);
+///     return ADDON_STATUS_OK;
+///   }
+///   else if (...)
+///   {
+///     ...
+///   }
+///   return ADDON_STATUS_UNKNOWN;
+/// }
+///
+/// ...
+/// ~~~~~~~~~~~~~
+///
+#define PVR_STREAM_PROPERTY_INPUTSTREAM_INSTANCE_ID STREAM_PROPERTY_INPUTSTREAM_INSTANCE_ID
 
-  /// @brief the MIME type of the stream that should be played.
-  ///
-  #define PVR_STREAM_PROPERTY_MIMETYPE "mimetype"
+/// @brief the MIME type of the stream that should be played.
+///
+#define PVR_STREAM_PROPERTY_MIMETYPE "mimetype"
 
-  /// @brief <b>"true"</b> to denote that the stream that should be played is a
-  /// realtime stream.
-  ///
-  /// Any other value indicates that this is no realtime stream.
-  ///
-  #define PVR_STREAM_PROPERTY_ISREALTIMESTREAM STREAM_PROPERTY_ISREALTIMESTREAM
+/// @brief <b>"true"</b> to denote that the stream that should be played is a
+/// realtime stream.
+///
+/// Any other value indicates that this is no realtime stream.
+///
+#define PVR_STREAM_PROPERTY_ISREALTIMESTREAM STREAM_PROPERTY_ISREALTIMESTREAM
 
-  /// @brief <b>"true"</b> to denote that if the stream is from an EPG tag.
-  ///
-  /// It should be played is a live stream. Otherwise if it's a EPG tag it will
-  /// play as normal video.
-  ///
-  #define PVR_STREAM_PROPERTY_EPGPLAYBACKASLIVE "epgplaybackaslive"
+/// @brief <b>"true"</b> to denote that if the stream is from an EPG tag.
+///
+/// It should be played is a live stream. Otherwise if it's a EPG tag it will
+/// play as normal video.
+///
+#define PVR_STREAM_PROPERTY_EPGPLAYBACKASLIVE "epgplaybackaslive"
 
-  /// @brief Special value for @ref PVR_STREAM_PROPERTY_INPUTSTREAM to use
-  /// ffmpeg to directly play a stream URL.
-  #define PVR_STREAM_PROPERTY_VALUE_INPUTSTREAMFFMPEG STREAM_PROPERTY_VALUE_INPUTSTREAMFFMPEG
+/// @brief Special value for @ref PVR_STREAM_PROPERTY_INPUTSTREAM to use
+/// ffmpeg to directly play a stream URL.
+#define PVR_STREAM_PROPERTY_VALUE_INPUTSTREAMFFMPEG STREAM_PROPERTY_VALUE_INPUTSTREAMFFMPEG
 
   ///@}
   //-----------------------------------------------------------------------------
