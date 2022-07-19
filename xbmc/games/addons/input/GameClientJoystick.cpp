@@ -169,6 +169,21 @@ bool CGameClientJoystick::OnThrottleMotion(const std::string& feature,
   return m_gameClient.Input().InputEvent(event);
 }
 
+std::string CGameClientJoystick::GetControllerAddress() const
+{
+  return CGameClientTopology::MakeAddress(m_portAddress, m_controller->ID());
+}
+
+void CGameClientJoystick::SetSource(PERIPHERALS::PeripheralPtr sourcePeripheral)
+{
+  m_sourcePeripheral = std::move(sourcePeripheral);
+}
+
+void CGameClientJoystick::ClearSource()
+{
+  m_sourcePeripheral.reset();
+}
+
 bool CGameClientJoystick::SetRumble(const std::string& feature, float magnitude)
 {
   bool bHandled = false;
