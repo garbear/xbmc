@@ -102,13 +102,19 @@ bool CInputHandling::OnDigitalMotion(const CDriverPrimitive& source, bool bPress
   FeatureName featureName;
   if (m_buttonMap->GetFeature(source, featureName))
   {
-    FeaturePtr& feature = m_features[featureName];
+    auto it = m_features.find(featureName);
+    if (it == m_features.end())
+    {
+      FeaturePtr feature(CreateFeature(featureName));
+      if (feature)
+      {
+        m_features.insert({featureName, std::move(feature)});
+        it = m_features.find(featureName);
+      }
+    }
 
-    if (!feature)
-      feature = FeaturePtr(CreateFeature(featureName));
-
-    if (feature)
-      bHandled = feature->OnDigitalMotion(source, bPressed);
+    if (it != m_features.end())
+      bHandled = it->second->OnDigitalMotion(source, bPressed);
   }
   else if (bPressed)
   {
@@ -131,13 +137,19 @@ bool CInputHandling::OnAnalogMotion(const CDriverPrimitive& source, float magnit
   FeatureName featureName;
   if (m_buttonMap->GetFeature(source, featureName))
   {
-    FeaturePtr& feature = m_features[featureName];
+    auto it = m_features.find(featureName);
+    if (it == m_features.end())
+    {
+      FeaturePtr feature(CreateFeature(featureName));
+      if (feature)
+      {
+        m_features.insert({featureName, std::move(feature)});
+        it = m_features.find(featureName);
+      }
+    }
 
-    if (!feature)
-      feature = FeaturePtr(CreateFeature(featureName));
-
-    if (feature)
-      bHandled = feature->OnAnalogMotion(source, magnitude);
+    if (it != m_features.end())
+      bHandled = it->second->OnAnalogMotion(source, magnitude);
   }
 
   return bHandled;
