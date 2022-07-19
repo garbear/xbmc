@@ -411,6 +411,18 @@ bool CGameClientInput::DisconnectController(const std::string& portAddress)
   return true;
 }
 
+std::vector<std::string> CGameClientInput::GetPortAddresses()
+{
+  std::vector<std::string> portAddresses;
+
+  std::lock_guard<std::recursive_mutex> lock(m_portMutex);
+
+  const CControllerTree& controllerTree = GetActiveControllerTree();
+  controllerTree.GetInputPorts(portAddresses);
+
+  return portAddresses;
+}
+
 void CGameClientInput::SavePorts()
 {
   {
