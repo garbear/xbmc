@@ -77,6 +77,11 @@ public:
   bool OnButtonPress(MOUSE::BUTTON_ID button) override;
   void OnButtonRelease(MOUSE::BUTTON_ID button) override {}
 
+  // Public interface
+  PERIPHERALS::PeripheralVector GetAgents() const;
+  const std::string& GetPortAddress(JOYSTICK::IInputProvider* inputProvider) const;
+  std::vector<std::string> GetInputPorts() const;
+
 private:
   //! @todo De-duplicate these types
   using PortAddress = std::string;
