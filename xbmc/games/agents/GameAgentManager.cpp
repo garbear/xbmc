@@ -315,6 +315,9 @@ CGameAgentManager::PortMap CGameAgentManager::MapJoysticks(
   unsigned int i = 0;
   for (const auto& [portAddress, gameClientJoystick] : gameClientjoysticks)
   {
+    // Clear game joystick's source peripheral
+    gameClientJoystick->ClearSource();
+
     // Break when we're out of joystick peripherals
     if (i >= peripheralJoysticks.size())
       break;
@@ -325,6 +328,9 @@ CGameAgentManager::PortMap CGameAgentManager::MapJoysticks(
 
     // Dereference iterator
     PERIPHERALS::PeripheralPtr peripheralJoystick = sortedJoysticks[i];
+
+    // Update game joystick's source peripheral
+    gameClientJoystick->SetSource(peripheralJoystick);
 
     // Map input provider to input handler
     result[peripheralJoystick.get()] = gameClientJoystick;
