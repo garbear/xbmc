@@ -72,6 +72,7 @@ public:
   int GetPlayerLimit() const;
   bool ConnectController(const std::string& portAddress, const ControllerPtr& controller);
   bool DisconnectController(const std::string& portAddress);
+  std::vector<std::string> GetPortAddresses();
   void SavePorts();
   void ResetPorts();
 
