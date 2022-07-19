@@ -134,6 +134,38 @@ bool CGameAgentManager::OnButtonPress(MOUSE::BUTTON_ID button)
   return false;
 }
 
+PERIPHERALS::PeripheralVector CGameAgentManager::GetAgents() const
+{
+  PERIPHERALS::PeripheralVector agents;
+
+  m_peripheralManager.GetPeripheralsWithFeature(agents, PERIPHERALS::FEATURE_JOYSTICK);
+
+  return agents;
+}
+
+const std::string& CGameAgentManager::GetPortAddress(JOYSTICK::IInputProvider* inputProvider) const
+{
+  auto it = m_portMap.find(inputProvider);
+  if (it != m_portMap.end())
+    return it->second->GetPortAddress();
+
+  static const std::string empty;
+  return empty;
+}
+
+std::vector<std::string> CGameAgentManager::GetInputPorts() const
+{
+  std::vector<std::string> inputPorts;
+
+  if (m_gameClient)
+  {
+    const CControllerTree& controllerTree = m_gameClient->Input().GetActiveControllerTree();
+    controllerTree.GetInputPorts(inputPorts);
+  }
+
+  return inputPorts;
+}
+
 void CGameAgentManager::ProcessJoysticks(PERIPHERALS::EventLockHandlePtr& inputHandlingLock)
 {
   // Get system joysticks.
