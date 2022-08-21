@@ -43,9 +43,11 @@ void CSmartHomeServices::Initialize(GAME::CGameServices& gameServices,
   if (m_ros2)
     m_ros2->Initialize();
 
-  if (guiInfoManager != nullptr && m_ros2->GetStationHUD() != nullptr)
+  if (guiInfoManager != nullptr && m_ros2->GetStationHUD() != nullptr &&
+      m_ros2->GetTrainHUD() != nullptr)
   {
-    m_guiInfo = std::make_unique<CSmartHomeGuiInfo>(*guiInfoManager, *m_ros2->GetStationHUD());
+    m_guiInfo = std::make_unique<CSmartHomeGuiInfo>(*guiInfoManager, *m_ros2->GetStationHUD(),
+                                                    *m_ros2->GetTrainHUD());
     m_guiInfo->Initialize();
   }
 }
