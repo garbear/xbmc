@@ -40,6 +40,7 @@
 #include "games/GameSettings.h"
 #include "games/addons/GameClient.h"
 #include "games/addons/cheevos/GameClientCheevos.h"
+#include "games/tags/GameInfoTag.h"
 #include "messaging/ApplicationMessenger.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
@@ -960,6 +961,16 @@ void CCheevos::RichPresencePingThread()
     const std::string evaluation = GetRichPresenceEvaluation();
     if (evaluation.empty())
       continue;
+
+    // Set caption of playing item
+    std::unique_ptr<CFileItem> file{std::make_unique<CFileItem>()};
+
+    GAME::CGameInfoTag& tag = *file->GetGameInfoTag();
+    tag.SetCaption(evaluation);
+
+    CServiceBroker::GetAppMessenger()->PostMsg(TMSG_UPDATE_PLAYER_ITEM, -1, -1,
+                                               static_cast<void*>(file.release()));
+
 
     CLog::Log(LOGDEBUG, "CCheevos::RichPresencePingThread -- posting: {}", evaluation);
 
