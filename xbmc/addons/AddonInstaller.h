@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "threads/CriticalSection.h"
 #include "threads/Event.h"
 #include "utils/Job.h"
 
