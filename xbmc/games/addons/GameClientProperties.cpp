@@ -11,6 +11,7 @@
 #include "FileItem.h"
 #include "GameClient.h"
 #include "ServiceBroker.h"
+#include "addons/AddonInstaller.h"
 #include "addons/AddonManager.h"
 #include "addons/GameResource.h"
 #include "addons/IAddon.h"
@@ -242,7 +243,12 @@ bool CGameClientProperties::GetProxyAddons(ADDON::VECADDONS& addons)
       else
       {
         CLog::Log(LOGERROR, "Missing mandatory dependency {}", dependency.id);
-        missingDependencies.emplace_back(dependency.id);
+
+        // Attempt to install if possible
+        ADDON::CAddonInstaller::GetInstance().InstallAddons({dependency.id}, true, ADDON::AllowCheckForUpdates::CHOICE_NO);
+
+        if (!CServiceBroker::GetAddonMgr().GetAddon(dependency.id, addon, ADDON_UNKNOWN, OnlyEnabled::CHOICE_YES))
+          missingDependencies.emplace_back(dependency.id);
       }
     }
   }
