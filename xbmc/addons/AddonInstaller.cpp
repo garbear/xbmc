@@ -590,11 +590,21 @@ void CAddonInstaller::InstallAddons(const VECADDONS& addons,
                                     bool wait,
                                     AllowCheckForUpdates allowCheckForUpdates)
 {
-  for (const auto& addon : addons)
+  std::vector<std::string> addonIds;
+  std::transform(addons.cbegin(), addons.cend(), std::back_inserter(addonIds),
+                 [](const AddonPtr& addon) { return addon->ID(); });
+  InstallAddons(addonIds, wait, allowCheckForUpdates);
+}
+
+void CAddonInstaller::InstallAddons(const std::vector<std::string>& addonIds,
+                                    bool wait,
+                                    AllowCheckForUpdates allowCheckForUpdates)
+{
+  for (const auto& addonId : addonIds)
   {
     AddonPtr toInstall;
     RepositoryPtr repo;
-    if (CAddonInstallJob::GetAddon(addon->ID(), repo, toInstall))
+    if (CAddonInstallJob::GetAddon(addonId, repo, toInstall))
       DoInstall(toInstall, repo, BackgroundJob::CHOICE_NO, ModalJob::CHOICE_NO,
                 AutoUpdateJob::CHOICE_YES, DependencyJob::CHOICE_NO, allowCheckForUpdates);
   }
