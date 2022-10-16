@@ -139,6 +139,17 @@ public:
                      bool wait,
                      AllowCheckForUpdates allowCheckForUpdates);
 
+  /*! \brief Installs a vector of addons by their addon ID
+   *  \param addons the list of addon IDs to install
+   *  \param wait if the method should wait for all the DoInstall jobs to finish or if it should return right away
+   *  \param allowCheckForUpdates indicates if content update checks are allowed
+   *         after installation of a repository addon from the vector
+   *  \sa DoInstall
+   */
+  void InstallAddons(const std::vector<std::string>& addonIds,
+                     bool wait,
+                     AllowCheckForUpdates allowCheckForUpdates);
+
   /*! \brief Install an addon from the given zip path
    \param path the zip file to install from
    \return true if successful, false otherwise
