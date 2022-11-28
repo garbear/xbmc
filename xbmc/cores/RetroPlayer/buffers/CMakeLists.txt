@@ -11,16 +11,20 @@ set(HEADERS BaseRenderBuffer.h
 )
 
 if(TARGET ${APP_NAME_LC}::OpenGl)
-  list(APPEND SOURCES RenderBufferOpenGL.cpp
+  list(APPEND SOURCES RenderBufferFBO.cpp
+                      RenderBufferOpenGL.cpp
                       RenderBufferPoolOpenGL.cpp)
-  list(APPEND HEADERS RenderBufferOpenGL.h
+  list(APPEND HEADERS RenderBufferFBO.h
+                      RenderBufferOpenGL.h
                       RenderBufferPoolOpenGL.h)
 endif()
 
 if(TARGET ${APP_NAME_LC}::OpenGLES)
-  list(APPEND SOURCES RenderBufferOpenGLES.cpp
+  list(APPEND SOURCES RenderBufferFBO.cpp
+                      RenderBufferOpenGLES.cpp
                       RenderBufferPoolOpenGLES.cpp)
-  list(APPEND HEADERS RenderBufferOpenGLES.h
+  list(APPEND HEADERS RenderBufferFBO.h
+                      RenderBufferOpenGLES.h
                       RenderBufferPoolOpenGLES.h)
 endif()
 
