@@ -13,9 +13,11 @@ set(HEADERS BaseRenderBuffer.h
 if(TARGET OpenGL::GL OR TARGET OpenGL::GLES)
   list(APPEND SOURCES RenderBufferFBO.cpp
                       RenderBufferOpenGLES.cpp
+                      RenderBufferPoolFBO.cpp
                       RenderBufferPoolOpenGLES.cpp)
   list(APPEND HEADERS RenderBufferFBO.h
                       RenderBufferOpenGLES.h
+                      RenderBufferPoolFBO.h
                       RenderBufferPoolOpenGLES.h)
 endif()
 
