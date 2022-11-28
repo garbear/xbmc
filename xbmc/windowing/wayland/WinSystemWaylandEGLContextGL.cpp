@@ -11,6 +11,7 @@
 #include "OptionalsReg.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererDMA.h"
+#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererFBO.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGL.h"
 #include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
 #include "rendering/gl/ScreenshotSurfaceGL.h"
@@ -43,6 +44,7 @@ bool CWinSystemWaylandEGLContextGL::InitWindowSystem()
 
   CLinuxRendererGL::Register();
   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryDMA);
+  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryFBO);
   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGL);
 
   bool general, deepColor;
