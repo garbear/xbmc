@@ -31,5 +31,7 @@ enum class DataAlignment
   DATA_UNALIGNED,
   DATA_ALIGNED,
 };
+
+using HwProcedureAddress = void (*)();
 } // namespace RETRO
 } // namespace KODI
