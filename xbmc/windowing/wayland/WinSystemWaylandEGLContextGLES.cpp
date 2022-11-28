@@ -11,6 +11,7 @@
 #include "OptionalsReg.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererDMAOpenGLES.h"
+#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererFBO.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGLES.h"
 #include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h"
 #include "cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.h"
@@ -48,6 +49,7 @@ bool CWinSystemWaylandEGLContextGLES::InitWindowSystem()
   CRendererDRMPRIMEGLES::Register();
 
   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryDMAOpenGLES);
+  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryFBO);
   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGLES);
 
   bool general, deepColor;
