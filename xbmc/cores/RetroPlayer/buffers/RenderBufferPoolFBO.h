@@ -44,6 +44,8 @@ public:
   // implementation of CBaseRenderBufferPool via CRenderBufferPoolSysMem
   IRenderBuffer* CreateRenderBuffer(void* header = nullptr) override;
 
+  void DestroyContext() override;
+
 protected:
   bool CreateContext();
 

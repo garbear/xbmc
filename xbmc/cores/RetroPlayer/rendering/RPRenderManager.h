@@ -134,6 +134,8 @@ public:
   void SaveVideoFrame(const std::string& savestatePath, ISavestate& savestate);
   void ClearVideoFrame(const std::string& savestatePath);
 
+  void DestroyContext();
+
 private:
   /*!
    * \brief Get or create a renderer compatible with the given render settings

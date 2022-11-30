@@ -162,3 +162,11 @@ bool CRenderBufferPoolFBO::CreateFramebuffer()
 
   return true;
 }
+
+void CRenderBufferPoolFBO::DestroyContext()
+{
+  CLog::Log(LOGDEBUG, "DestroyContext");
+
+  eglMakeCurrent(m_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+  eglDestroyContext(m_eglDisplay, m_eglContext);
+}

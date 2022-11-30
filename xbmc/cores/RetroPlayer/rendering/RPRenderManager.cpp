@@ -915,6 +915,17 @@ void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
   FreeVideoFrame(renderBuffer, std::move(cachedFrame));
 }
 
+void CRPRenderManager::DestroyContext()
+{
+  for (IRenderBufferPool* bufferPool : m_processInfo.GetBufferManager().GetBufferPools())
+  {
+    if (!bufferPool->HasVisibleRenderer())
+      continue;
+
+    bufferPool->DestroyContext();
+  }
+}
+
 void CRPRenderManager::CacheVideoFrame(const std::string& savestatePath)
 {
   std::unique_lock<CCriticalSection> lock(m_bufferMutex);

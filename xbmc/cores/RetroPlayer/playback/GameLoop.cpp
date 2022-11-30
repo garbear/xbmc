@@ -95,6 +95,8 @@ void CGameLoop::Process(void)
       }
     }
   }
+
+  m_callback->EndEvent();
 }
 
 double CGameLoop::FrameTimeMs() const
