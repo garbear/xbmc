@@ -61,11 +61,19 @@ CSlideShowPic::CSlideShowPic() : m_pImage(nullptr)
 
   m_bCanMoveHorizontally = false;
   m_bCanMoveVertically = false;
+
+#if defined(HAS_GL)
+  KODI::UTILS::GL::GLGenVertexArrays(1, &m_vao);
+#endif
 }
 
 CSlideShowPic::~CSlideShowPic()
 {
   Close();
+
+#if defined(HAS_GL)
+  KODI::UTILS::GL::GLDeleteVertexArrays(1, &m_vao);
+#endif
 }
 
 void CSlideShowPic::Close()
@@ -902,6 +910,8 @@ void CSlideShowPic::Render(float* x, float* y, CTexture* pTexture, UTILS::COLOR:
   GLint tex0Loc = renderSystem->ShaderGetCoord0();
   GLint uniColLoc= renderSystem->ShaderGetUniCol();
 
+  KODI::UTILS::GL::GLBindVertexArray(m_vao);
+
   glGenBuffers(1, &vertexVBO);
   glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex)*4, &vertex[0], GL_STATIC_DRAW);
@@ -936,6 +946,8 @@ void CSlideShowPic::Render(float* x, float* y, CTexture* pTexture, UTILS::COLOR:
   glDeleteBuffers(1, &vertexVBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glDeleteBuffers(1, &indexVBO);
+
+  KODI::UTILS::GL::GLBindVertexArray(0);
 
   renderSystem->DisableShader();
 
