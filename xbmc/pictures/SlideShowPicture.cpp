@@ -13,6 +13,7 @@
 #include "settings/AdvancedSettings.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
+#include "utils/GLUtils.h"
 #include "windowing/GraphicContext.h"
 #include "windowing/WinSystem.h"
 
@@ -44,11 +45,19 @@ CSlideShowPic::CSlideShowPic() : m_pImage(nullptr)
 
   m_bCanMoveHorizontally = false;
   m_bCanMoveVertically = false;
+
+#if defined(HAS_GL)
+  KODI::UTILS::GL::glGenVertexArrays(1, &m_vao);
+#endif
 }
 
 CSlideShowPic::~CSlideShowPic()
 {
   Close();
+
+#if defined(HAS_GL)
+  KODI::UTILS::GL::glDeleteVertexArrays(1, &m_vao);
+#endif
 }
 
 void CSlideShowPic::Close()

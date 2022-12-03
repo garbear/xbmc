@@ -303,3 +303,34 @@ uint8_t KODI::UTILS::GL::GetChannelFromARGB(const KODI::UTILS::GL::ColorChannel 
       throw std::runtime_error("KODI::UTILS::GL::GetChannelFromARGB: ColorChannel not handled");
   };
 }
+
+[[maybe_unused]] static bool supportsVAOs = false;
+
+void KODI::UTILS::GL::VAOsSupported(bool supported)
+{
+  supportsVAOs = supported;
+}
+
+void KODI::UTILS::GL::glGenVertexArrays(GLsizei size, GLuint* array)
+{
+#if defined(HAS_GL)
+  if (supportsVAOs)
+    ::glGenVertexArrays(size, array);
+#endif
+}
+
+void KODI::UTILS::GL::glBindVertexArray(GLuint array)
+{
+#if defined(HAS_GL)
+  if (supportsVAOs)
+    ::glBindVertexArray(array);
+#endif
+}
+
+void KODI::UTILS::GL::glDeleteVertexArrays(GLsizei size, GLuint* array)
+{
+#if defined(HAS_GL)
+  if (supportsVAOs)
+    ::glDeleteVertexArrays(size, array);
+#endif
+}

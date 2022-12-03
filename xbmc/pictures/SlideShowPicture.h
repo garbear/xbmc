@@ -133,4 +133,7 @@ private:
   bool m_bTransitionImmediately;
 
   CCriticalSection m_textureAccess;
+
+protected: //! @todo
+  uint32_t m_vao;
 };

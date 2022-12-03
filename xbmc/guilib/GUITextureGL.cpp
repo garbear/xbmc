@@ -36,6 +36,20 @@ CGUITextureGL::CGUITextureGL(
   : CGUITexture(posX, posY, width, height, texture)
 {
   m_renderSystem = dynamic_cast<CRenderSystemGL*>(CServiceBroker::GetRenderSystem());
+
+  KODI::UTILS::GL::glGenVertexArrays(1, &m_vao);
+}
+
+CGUITextureGL::CGUITextureGL(const CGUITextureGL& texture) : CGUITexture(texture)
+{
+  m_renderSystem = dynamic_cast<CRenderSystemGL*>(CServiceBroker::GetRenderSystem());
+
+  KODI::UTILS::GL::glGenVertexArrays(1, &m_vao);
+}
+
+CGUITextureGL::~CGUITextureGL()
+{
+  KODI::UTILS::GL::glDeleteVertexArrays(1, &m_vao);
 }
 
 CGUITextureGL* CGUITextureGL::Clone() const
@@ -45,6 +59,8 @@ CGUITextureGL* CGUITextureGL::Clone() const
 
 void CGUITextureGL::Begin(UTILS::COLOR::Color color)
 {
+  KODI::UTILS::GL::glBindVertexArray(m_vao);
+
   CTexture* texture = m_texture.m_textures[m_currentFrame].get();
   texture->LoadToGPU();
   if (m_diffuse.size())
@@ -158,6 +174,8 @@ void CGUITextureGL::End()
   glEnable(GL_BLEND);
 
   m_renderSystem->DisableShader();
+
+  KODI::UTILS::GL::glBindVertexArray(0);
 }
 
 void CGUITextureGL::Draw(float *x, float *y, float *z, const CRect &texture, const CRect &diffuse, int orientation)
@@ -257,6 +275,10 @@ void CGUITextureGL::DrawQuad(const CRect& rect,
                              CTexture* texture,
                              const CRect* texCoords)
 {
+  GLuint vao;
+  KODI::UTILS::GL::glGenVertexArrays(1, &vao);
+  KODI::UTILS::GL::glBindVertexArray(vao);
+
   CRenderSystemGL *renderSystem = dynamic_cast<CRenderSystemGL*>(CServiceBroker::GetRenderSystem());
   if (texture)
   {
@@ -357,5 +379,6 @@ void CGUITextureGL::DrawQuad(const CRect& rect,
   glDeleteBuffers(1, &indexVBO);
 
   renderSystem->DisableShader();
+  KODI::UTILS::GL::glBindVertexArray(0);
 }
 

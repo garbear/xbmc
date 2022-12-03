@@ -40,6 +40,12 @@ enum class ColorChannel
 };
 
 uint8_t GetChannelFromARGB(const ColorChannel colorChannel, const uint32_t argb);
+
+void VAOsSupported(bool supported);
+
+void glGenVertexArrays(GLsizei size, GLuint* array);
+void glBindVertexArray(GLuint array);
+void glDeleteVertexArrays(GLsizei size, GLuint* array);
 }
 }
 }

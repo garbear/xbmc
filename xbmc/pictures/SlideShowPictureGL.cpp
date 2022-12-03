@@ -82,6 +82,8 @@ void CSlideShowPicGL::Render(float* x, float* y, CTexture* pTexture, UTILS::COLO
   GLint tex0Loc = renderSystem->ShaderGetCoord0();
   GLint uniColLoc = renderSystem->ShaderGetUniCol();
 
+  KODI::UTILS::GL::glBindVertexArray(m_vao);
+
   glGenBuffers(1, &vertexVBO);
   glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_STATIC_DRAW);
@@ -116,6 +118,8 @@ void CSlideShowPicGL::Render(float* x, float* y, CTexture* pTexture, UTILS::COLO
   glDeleteBuffers(1, &vertexVBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glDeleteBuffers(1, &indexVBO);
+
+  KODI::UTILS::GL::glBindVertexArray(0);
 
   renderSystem->DisableShader();
 }
