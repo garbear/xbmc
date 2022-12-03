@@ -61,6 +61,8 @@ bool CRenderSystemGL::InitRenderSystem()
         m_RenderExtensions += " ";
       }
     }
+
+    KODI::UTILS::GL::SetVAOsSupported(true);
   }
   else
   {
@@ -69,6 +71,8 @@ bool CRenderSystemGL::InitRenderSystem()
     {
       m_RenderExtensions += extensions;
     }
+
+    KODI::UTILS::GL::SetVAOsSupported(false);
   }
   m_RenderExtensions += " ";
 
@@ -98,13 +102,6 @@ bool CRenderSystemGL::InitRenderSystem()
 
   m_bRenderCreated = true;
 
-  if (m_RenderVersionMajor > 3 ||
-      (m_RenderVersionMajor == 3 && m_RenderVersionMinor >= 2))
-  {
-    glGenVertexArrays(1, &m_vertexArray);
-    glBindVertexArray(m_vertexArray);
-  }
-
   InitialiseShaders();
 
   CGUITextureGL::Register();
@@ -119,15 +116,6 @@ bool CRenderSystemGL::ResetRenderSystem(int width, int height)
 
   m_width = width;
   m_height = height;
-
-  if (m_RenderVersionMajor > 3 ||
-      (m_RenderVersionMajor == 3 && m_RenderVersionMinor >= 2))
-  {
-    glBindVertexArray(0);
-    glDeleteVertexArrays(1, &m_vertexArray);
-    glGenVertexArrays(1, &m_vertexArray);
-    glBindVertexArray(m_vertexArray);
-  }
 
   ReleaseShaders();
   InitialiseShaders();
@@ -196,11 +184,6 @@ bool CRenderSystemGL::ResetRenderSystem(int width, int height)
 
 bool CRenderSystemGL::DestroyRenderSystem()
 {
-  if (m_vertexArray != GL_NONE)
-  {
-    glDeleteVertexArrays(1, &m_vertexArray);
-  }
-
   ReleaseShaders();
   m_bRenderCreated = false;
 
@@ -331,8 +314,6 @@ void CRenderSystemGL::ApplyStateBlock()
 {
   if (!m_bRenderCreated)
     return;
-
-  glBindVertexArray(m_vertexArray);
 
   glViewport(m_viewPort[0], m_viewPort[1], m_viewPort[2], m_viewPort[3]);
 
