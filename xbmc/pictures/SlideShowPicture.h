@@ -136,4 +136,6 @@ private:
   Microsoft::WRL::ComPtr<ID3D11Buffer> m_vb;
   bool UpdateVertexBuffer(Vertex *vertices);
 #endif
+
+  uint32_t m_vao;
 };
