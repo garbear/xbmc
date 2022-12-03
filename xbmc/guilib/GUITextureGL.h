@@ -32,7 +32,7 @@ public:
                        const bool blending = true);
 
   CGUITextureGL(float posX, float posY, float width, float height, const CTextureInfo& texture);
-  ~CGUITextureGL() override = default;
+  ~CGUITextureGL() override;
 
   CGUITextureGL* Clone() const override;
 
@@ -42,7 +42,7 @@ protected:
   void End() override;
 
 private:
-  CGUITextureGL(const CGUITextureGL& texture) = default;
+  explicit CGUITextureGL(const CGUITextureGL& texture);
 
   std::array<GLubyte, 4> m_col;
 
@@ -52,6 +52,8 @@ private:
     float u1, v1;
     float u2, v2;
   };
+
+  GLuint m_vao;
 
   std::vector<PackedVertex> m_packedVertices;
   std::vector<GLushort> m_idx;
