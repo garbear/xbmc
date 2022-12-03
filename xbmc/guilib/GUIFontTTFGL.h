@@ -54,6 +54,8 @@ private:
 
   TextureStatus m_textureStatus{TEXTURE_VOID};
 
+  GLuint m_vao;
+
   static bool m_staticVertexBufferCreated;
 
   bool m_scissorClip{false};
