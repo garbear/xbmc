@@ -76,6 +76,7 @@ elseif(CORE_SYSTEM_NAME STREQUAL android)
   list(APPEND ffmpeg_conf --target-os=android
                           --extra-libs=-liconv
                           --disable-linux-perf
+                          --disable-vulkan
               )
   if(CPU MATCHES arm64)
     set(CONFIGARCH --arch=aarch64)
