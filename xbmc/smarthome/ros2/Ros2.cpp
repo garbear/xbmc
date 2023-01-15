@@ -78,6 +78,11 @@ ISystemHealthHUD* CRos2::GetSystemHealthHUD() const
   return m_node->GetSystemHealthHUD();
 }
 
+ILabHUD* CRos2::GetLabHUD() const
+{
+  return m_node->GetLabHUD();
+}
+
 void CRos2::FrameMove()
 {
   //! @todo Remove GUI dependency
