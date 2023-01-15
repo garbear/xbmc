@@ -12,6 +12,7 @@
 #include "LangInfo.h"
 #include "guilib/guiinfo/GUIInfo.h"
 #include "guilib/guiinfo/GUIInfoLabels.h"
+#include "smarthome/guiinfo/ILabHUD.h"
 #include "smarthome/guiinfo/ISystemHealthHUD.h"
 #include "utils/StringUtils.h"
 
@@ -45,8 +46,9 @@ std::string FormatFrequency(double frequencyHz)
 } // namespace
 
 CSmartHomeGuiInfo::CSmartHomeGuiInfo(CGUIInfoManager& infoManager,
-                                     ISystemHealthHUD& systemHealthHud)
-  : m_infoManager(infoManager), m_systemHealthHud(systemHealthHud)
+                                     ISystemHealthHUD& systemHealthHud,
+                                     ILabHUD& labHud)
+  : m_infoManager(infoManager), m_systemHealthHud(systemHealthHud), m_labHud(labHud)
 {
 }
 
@@ -141,6 +143,27 @@ bool CSmartHomeGuiInfo::GetLabel(std::string& value,
       }
       break;
     }
+    case SMARTHOME_LAB_CPU:
+    {
+      value = StringUtils::Format("{} %", m_labHud.CPUUtilization());
+      return true;
+    }
+    case SMARTHOME_LAB_MEMORY:
+    {
+      value = StringUtils::Format("{} %", m_labHud.MemoryUtilization());
+      return true;
+    }
+    case SMARTHOME_LAB_CURRENT:
+    {
+      value = StringUtils::Format("{} mA",
+                                  static_cast<unsigned int>(m_labHud.ShuntCurrent() * 1000.0f));
+      return true;
+    }
+    case SMARTHOME_LAB_IR:
+    {
+      value = StringUtils::Format("{:0.2f} V", m_labHud.IRVoltage());
+      return true;
+    }
     default:
       break;
   }
@@ -171,6 +194,11 @@ bool CSmartHomeGuiInfo::GetBool(bool& value,
         return true;
       }
       break;
+    }
+    case SMARTHOME_HAS_LAB:
+    {
+      value = m_labHud.IsActive();
+      return true;
     }
     default:
       break;
