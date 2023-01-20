@@ -101,21 +101,9 @@ void CDialogGameVideoFilter::InitVideoFilters()
 {
   std::vector<VideoFilterProperties> videoFilters;
 
-  std::string xmlFilename;
-#ifdef TARGET_WINDOWS
-  xmlFilename = "ShaderPresetsHLSLP.xml";
-#else
-  xmlFilename = "ShaderPresetsGLSLP.xml";
-#endif
-
   // TODO: Have the add-on give us the xml as a string (or parse it)
   static const std::string addonPath = std::string("special://xbmcbinaddons/") + PRESETS_ADDON_NAME;
-#ifdef TARGET_WINDOWS
-  static const std::string xmlPath =
-      "special://xbmc/system/shaders/presets/shader-manifest.xml"; // TODO
-#else
-  static const std::string xmlPath = addonPath + "/resources/" + xmlFilename;
-#endif
+  static const std::string xmlPath = "special://xbmc/system/shaders/presets/shader-manifest.xml";
   std::string basePath = URIUtils::GetBasePath(xmlPath);
 
   CXBMCTinyXML xml = CXBMCTinyXML(xmlPath);
