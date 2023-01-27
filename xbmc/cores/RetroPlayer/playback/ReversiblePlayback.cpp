@@ -185,6 +185,9 @@ std::string CReversiblePlayback::CreateSavestate(bool autosave,
     m_savestateThreads.emplace_back(std::move(task));
   }
 
+  // Capture the current video frame
+  m_renderManager.CacheVideoFrame(savePath);
+
   return savePath;
 }
 
@@ -242,6 +245,8 @@ void CReversiblePlayback::CommitSavestate(bool autosave,
   savestate->SetTimestampWallClock(timestampWallClock);
   savestate->SetGameClientID(gameClientId);
   savestate->SetGameClientVersion(gameClientVersion);
+
+  m_renderManager.SaveVideoFrame(savePath, *savestate);
 
   savestate->Finalize();
 
