@@ -32,11 +32,13 @@ public:
   void SetVideoFilter(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& videoFilter);
   void SetStretchMode(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& stretchMode);
   void SetRotation(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& rotation);
+  void SetPixels(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& pixels);
 
   // Rendering functions
   bool HasVideoFilter() const { return m_bHasVideoFilter; }
   bool HasStretchMode() const { return m_bHasStretchMode; }
   bool HasRotation() const { return m_bHasRotation; }
+  bool HasPixels() const { return m_bHasPixels; }
   IGUIRenderSettings* GetRenderSettings() const;
 
   // implementation of CGUIControl
@@ -60,11 +62,13 @@ private:
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_videoFilterInfo;
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_stretchModeInfo;
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_rotationInfo;
+  KODI::GUILIB::GUIINFO::CGUIInfoLabel m_pixelInfo;
 
   // Rendering properties
   bool m_bHasVideoFilter = false;
   bool m_bHasStretchMode = false;
   bool m_bHasRotation = false;
+  bool m_bHasPixels = false;
   std::unique_ptr<CGUIRenderSettings> m_renderSettings;
   std::shared_ptr<CGUIRenderHandle> m_renderHandle;
 };

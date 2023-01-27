@@ -24,12 +24,14 @@ void CRenderVideoSettings::Reset()
   m_stretchMode = STRETCHMODE::Normal;
   m_rotationDegCCW = 0;
   m_shaderPreset.clear();
+  m_pixelPath.clear();
 }
 
 bool CRenderVideoSettings::operator==(const CRenderVideoSettings& rhs) const
 {
   return m_scalingMethod == rhs.m_scalingMethod && m_stretchMode == rhs.m_stretchMode &&
-         m_rotationDegCCW == rhs.m_rotationDegCCW && m_shaderPreset == rhs.m_shaderPreset;
+         m_rotationDegCCW == rhs.m_rotationDegCCW && m_shaderPreset == rhs.m_shaderPreset &&
+         m_pixelPath == rhs.m_pixelPath;
 }
 
 bool CRenderVideoSettings::operator<(const CRenderVideoSettings& rhs) const
@@ -52,6 +54,11 @@ bool CRenderVideoSettings::operator<(const CRenderVideoSettings& rhs) const
   if (m_rotationDegCCW < rhs.m_rotationDegCCW)
     return true;
   if (m_rotationDegCCW > rhs.m_rotationDegCCW)
+    return false;
+
+  if (m_pixelPath < rhs.m_pixelPath)
+    return true;
+  if (m_pixelPath > rhs.m_pixelPath)
     return false;
 
   return false;
@@ -104,6 +111,11 @@ void CRenderVideoSettings::SetVideoFilter(const std::string& videoFilter)
 void CRenderVideoSettings::ResetShaderPreset()
 {
   m_shaderPreset.clear();
+}
+
+void CRenderVideoSettings::ResetPixels()
+{
+  m_pixelPath.clear();
 }
 
 bool CRenderVideoSettings::UsesShaderPreset() const

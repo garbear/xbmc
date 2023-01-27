@@ -39,6 +39,11 @@ public:
   virtual bool HasRotation() const { return true; }
 
   /*!
+   * \brief Returns true if this render target has a path to pixel data to show
+   */
+  virtual bool HasPixels() const { return true; }
+
+  /*!
    * \brief Get the settings used to render this target
    *
    * \return The render settings

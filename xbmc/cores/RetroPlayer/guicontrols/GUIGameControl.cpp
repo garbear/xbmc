@@ -72,6 +72,11 @@ void CGUIGameControl::SetRotation(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& ro
   m_rotationInfo = rotation;
 }
 
+void CGUIGameControl::SetPixels(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& pixels)
+{
+  m_pixelInfo = pixels;
+}
+
 IGUIRenderSettings* CGUIGameControl::GetRenderSettings() const
 {
   return m_renderSettings.get();
@@ -153,6 +158,13 @@ void CGUIGameControl::UpdateInfo(const CGUIListItem* item /* = nullptr */)
       m_renderSettings->SetRotationDegCCW(rotation);
       m_bHasRotation = true;
     }
+
+    std::string strPixels = m_pixelInfo.GetItemLabel(item);
+    if (!strPixels.empty())
+    {
+      m_renderSettings->SetPixels(strPixels);
+      m_bHasPixels = true;
+    }
   }
 }
 
@@ -161,6 +173,7 @@ void CGUIGameControl::Reset()
   m_bHasVideoFilter = false;
   m_bHasStretchMode = false;
   m_bHasRotation = false;
+  m_bHasPixels = false;
   m_renderSettings->Reset();
 }
 
