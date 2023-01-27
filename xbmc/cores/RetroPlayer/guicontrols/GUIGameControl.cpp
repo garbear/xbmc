@@ -41,9 +41,11 @@ CGUIGameControl::CGUIGameControl(const CGUIGameControl& other)
     m_videoFilterInfo(other.m_videoFilterInfo),
     m_stretchModeInfo(other.m_stretchModeInfo),
     m_rotationInfo(other.m_rotationInfo),
+    m_pixelInfo(other.m_pixelInfo),
     m_bHasVideoFilter(other.m_bHasVideoFilter),
     m_bHasStretchMode(other.m_bHasStretchMode),
     m_bHasRotation(other.m_bHasRotation),
+    m_bHasPixels(other.m_bHasPixels),
     m_renderSettings(new CGUIRenderSettings(*this))
 {
   m_renderSettings->SetSettings(other.m_renderSettings->GetSettings());

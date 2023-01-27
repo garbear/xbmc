@@ -1,0 +1,23 @@
+//
+//  Copyright (C) 2023 Team Kodi
+//  This file is part of Kodi - https://kodi.tv
+//
+//  SPDX-License-Identifier: MIT
+//  See LICENSES/README.md for more information.
+//
+
+namespace KODI.RETRO;
+
+enum PixelFormat : uint8 {
+  Unknown,
+  RGB8888,
+  RGB565,
+  RGB1555,
+}
+
+enum VideoRotation : uint8 {
+  CCW_0,
+  CCW_90,
+  CCW_180,
+  CCW_270,
+}

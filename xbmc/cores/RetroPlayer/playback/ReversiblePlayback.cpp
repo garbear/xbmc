@@ -167,6 +167,8 @@ std::string CReversiblePlayback::CreateSavestate(bool autosave,
   savestate->SetGameClientID(gameClientId);
   savestate->SetGameClientVersion(gameClientVersion);
 
+  m_renderManager.SaveVideoFrame(savePath, *savestate);
+
   uint8_t* memoryData = savestate->GetMemoryBuffer(memorySize);
 
   {

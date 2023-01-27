@@ -39,6 +39,7 @@ class CRPProcessInfo;
 class IGUIRenderSettings;
 class IRenderBuffer;
 class IRenderBufferPool;
+class ISavestate;
 
 /*!
  * \brief Renders video frames provided by the game loop
@@ -75,12 +76,21 @@ public:
    */
   CGUIRenderTargetFactory* GetGUIRenderTargetFactory() { return m_renderControlFactory.get(); }
 
+  // Stream properties, set upon configuration
+  AVPixelFormat GetPixelFormat() const { return m_format; }
+  unsigned int GetNominalWidth() const { return m_nominalWidth; }
+  unsigned int GetNominalHeight() const { return m_nominalHeight; }
+  unsigned int GetMaxWidth() const{ return m_maxWidth; }
+  unsigned int GetMaxHeight() const{ return m_maxHeight; }
+  float GetPixelAspectRatio() const { return m_pixelAspectRatio; }
+
   // Functions called from game loop
   bool Configure(AVPixelFormat format,
                  unsigned int nominalWidth,
                  unsigned int nominalHeight,
                  unsigned int maxWidth,
-                 unsigned int maxHeight);
+                 unsigned int maxHeight,
+                 float pixelAspectRatio);
   bool GetVideoBuffer(
       unsigned int width, unsigned int height, AVPixelFormat& format, uint8_t*& data, size_t& size);
   void AddFrame(const uint8_t* data,
@@ -109,6 +119,10 @@ public:
   bool SupportsScalingMethod(SCALINGMETHOD method) const override;
 
   void SaveThumbnail(const std::string& path);
+
+  // Savestate functions
+  void SaveVideoFrame(const std::string& savestatePath, ISavestate& savestate);
+  void ClearVideoFrame(const std::string& savestatePath);
 
 private:
   /*!
@@ -198,8 +212,11 @@ private:
 
   // Stream properties
   AVPixelFormat m_format = AV_PIX_FMT_NONE;
+  unsigned int m_nominalWidth{0};
+  unsigned int m_nominalHeight{0};
   unsigned int m_maxWidth = 0;
   unsigned int m_maxHeight = 0;
+  float m_pixelAspectRatio{1.0f};
 
   // Render resources
   std::set<std::shared_ptr<CRPBaseRenderer>> m_renderers;
@@ -209,6 +226,7 @@ private:
   std::vector<uint8_t> m_cachedFrame;
   unsigned int m_cachedWidth = 0;
   unsigned int m_cachedHeight = 0;
+  std::map<std::string, std::vector<IRenderBuffer*>> m_savestateBuffers; // Render buffers for savestates
 
   // State parameters
   enum class RENDER_STATE

@@ -63,6 +63,13 @@ public:
   virtual bool LoadSavestate(const std::string& savestatePath) = 0;
 
   /*!
+   * \brief Frees resources allocated to the savestate, such as its video thumbnail
+   *
+   * \param path The path to the savestate
+   */
+  virtual void FreeSavestateResources(const std::string& savestatePath) = 0;
+
+  /*!
    * \brief Closes the OSD
    */
   virtual void CloseOSDCallback() = 0;
