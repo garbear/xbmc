@@ -11,6 +11,7 @@
 #include "ServiceBroker.h"
 #include "cores/RetroPlayer/guibridge/GUIGameRenderManager.h"
 #include "cores/RetroPlayer/guibridge/GUIGameSettingsHandle.h"
+#include "cores/RetroPlayer/guicontrols/GUIGameControl.h"
 #include "cores/RetroPlayer/playback/IPlayback.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
@@ -36,6 +37,8 @@ CFileItemPtr CreateNewSaveItem()
 {
   CFileItemPtr item = std::make_shared<CFileItem>(g_localizeStrings.Get(15314)); // "Save"
 
+  // A nonexistent path ensures a gamewindow control won't render any pixels
+  item->SetPath(NO_PIXEL_DATA);
   item->SetArt("icon", "DefaultAddSource.png");
   item->SetProperty(SAVESTATE_CAPTION,
                     g_localizeStrings.Get(15315)); // "Save progress to a new save file"
@@ -327,6 +330,9 @@ void CDialogInGameSaves::OnDelete(CFileItem& focusedItem)
       m_savestateItems.Remove(&focusedItem);
 
       RefreshList();
+
+      auto gameSettings = CServiceBroker::GetGameRenderManager().RegisterGameSettingsDialog();
+      gameSettings->FreeSavestateResources(focusedItem.GetPath());
     }
     else
     {
