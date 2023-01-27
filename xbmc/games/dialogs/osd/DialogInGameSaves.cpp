@@ -36,6 +36,7 @@ CFileItemPtr CreateNewSaveItem()
 {
   CFileItemPtr item = std::make_shared<CFileItem>(g_localizeStrings.Get(15314)); // "Save"
 
+  item->SetPath("-"); // A nonexistent path ensures a gamewindow control won't render any pixels
   item->SetArt("icon", "DefaultAddSource.png");
   item->SetProperty(SAVESTATE_CAPTION,
                     g_localizeStrings.Get(15315)); // "Save progress to a new save file"
@@ -317,6 +318,9 @@ void CDialogInGameSaves::OnDelete(CFileItem& focusedItem)
       m_savestateItems.Remove(&focusedItem);
 
       RefreshList();
+
+      auto gameSettings = CServiceBroker::GetGameRenderManager().RegisterGameSettingsDialog();
+      gameSettings->FreeSavestateResources(focusedItem.GetPath());
     }
     else
     {
