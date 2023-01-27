@@ -57,7 +57,7 @@ public:
    *
    * \return True if the savestate was loaded successfully, false otherwise
    */
-  bool LoadSavestate(const std::string& path);
+  bool LoadSavestate(const std::string& savestatePath);
 
   /*!
    * \brief Close the in-game OSD

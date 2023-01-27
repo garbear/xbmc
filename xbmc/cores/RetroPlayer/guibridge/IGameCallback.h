@@ -36,9 +36,11 @@ public:
   virtual std::string GetPlayingGame() const = 0;
 
   /*!
-   * \brief Creates a Savestate
+   * \brief Creates a savestate
    *
    * \param autosave Whether the save type is auto
+   *
+   * \return The path to the created savestate, or empty on error
    */
   virtual std::string CreateSavestate(bool autosave) = 0;
 
@@ -46,8 +48,10 @@ public:
    * \brief Loads a savestate
    *
    * \param path The path to the savestate
+   *
+   * \return True if the savestate was loaded, false on error
    */
-  virtual bool LoadSavestate(const std::string& path) = 0;
+  virtual bool LoadSavestate(const std::string& savestatePath) = 0;
 
   /*!
    * \brief Closes the OSD
