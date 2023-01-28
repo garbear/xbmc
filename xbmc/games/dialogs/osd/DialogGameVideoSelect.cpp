@@ -88,7 +88,7 @@ bool CDialogGameVideoSelect::OnMessage(CGUIMessage& message)
             return true;
         }
       }
-      else if (actionId == ACTION_CONTEXT_MENU)
+      else if (actionId == ACTION_CONTEXT_MENU || actionId == ACTION_MOUSE_RIGHT_CLICK)
       {
         const int controlId = message.GetSenderId();
         if (m_viewControl->HasControl(controlId))
