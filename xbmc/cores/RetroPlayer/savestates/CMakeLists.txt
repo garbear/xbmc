@@ -1,8 +1,10 @@
-set(SOURCES SavestateDatabase.cpp
+set(SOURCES CompressedSavestate.cpp
+            SavestateDatabase.cpp
             SavestateFlatBuffer.cpp
 )
 
-set(HEADERS ISavestate.h
+set(HEADERS CompressedSavestate.h
+            ISavestate.h
             SavestateDatabase.h
             SavestateFlatBuffer.h
             SavestateTypes.h

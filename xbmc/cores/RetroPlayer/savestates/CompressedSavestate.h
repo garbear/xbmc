@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018 Team Kodi
+ *  Copyright (C) 2023 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -13,25 +13,15 @@
 #include <memory>
 #include <vector>
 
-#include <flatbuffers/flatbuffers.h>
-
-namespace flatbuffers
-{
-class FlatBufferBuilder;
-}
-
 namespace KODI
 {
 namespace RETRO
 {
-struct Savestate;
-struct SavestateBuilder;
-
-class CSavestateFlatBuffer : public ISavestate
+class CCompressedSavestate : public ISavestate
 {
 public:
-  CSavestateFlatBuffer();
-  ~CSavestateFlatBuffer() override;
+  CCompressedSavestate();
+  ~CCompressedSavestate() override;
 
   // Implementation of ISavestate
   void Reset() override;
@@ -85,49 +75,16 @@ public:
 
 private:
   /*!
-   * \brief Helper class to hold data needed in creation of a FlatBuffer
-   *
-   * The builder is used when deserializing from individual fields.
-   */
-  std::unique_ptr<flatbuffers::FlatBufferBuilder> m_builder;
-
-  /*!
    * \brief System memory storage (for deserializing savestates)
    *
    * This memory is used when deserializing from a vector.
    */
-  std::vector<uint8_t> m_data;
+  std::vector<uint8_t> m_compressedData;
 
   /*!
-   * \brief FlatBuffer struct used for accessing data
+   * \brief Underlying savestate to store uncompressed data
    */
-  const Savestate* m_savestate = nullptr;
-
-  using StringOffset = flatbuffers::Offset<flatbuffers::String>;
-  using VectorOffset = flatbuffers::Offset<flatbuffers::Vector<uint8_t>>;
-
-  // Temporary deserialization variables
-  SAVE_TYPE m_type = SAVE_TYPE::UNKNOWN;
-  uint8_t m_slot = 0;
-  std::unique_ptr<StringOffset> m_labelOffset;
-  std::unique_ptr<StringOffset> m_captionOffset;
-  std::unique_ptr<StringOffset> m_createdOffset;
-  std::unique_ptr<StringOffset> m_gameFileNameOffset;
-  uint64_t m_timestampFrames = 0;
-  double m_timestampWallClock = 0.0;
-  std::unique_ptr<StringOffset> m_emulatorAddonIdOffset;
-  std::unique_ptr<StringOffset> m_emulatorVersionOffset;
-  AVPixelFormat m_pixelFormat{AV_PIX_FMT_NONE};
-  unsigned int m_nominalWidth{0};
-  unsigned int m_nominalHeight{0};
-  unsigned int m_maxWidth{0};
-  unsigned int m_maxHeight{0};
-  float m_pixelAspectRatio{0.0f};
-  std::unique_ptr<VectorOffset> m_videoDataOffset;
-  unsigned int m_videoWidth{0};
-  unsigned int m_videoHeight{0};
-  unsigned int m_rotationCCW{0};
-  std::unique_ptr<VectorOffset> m_memoryDataOffset;
+  std::unique_ptr<ISavestate> m_savestate;
 };
 } // namespace RETRO
 } // namespace KODI
