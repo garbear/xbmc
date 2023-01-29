@@ -481,7 +481,7 @@ std::shared_ptr<CRPBaseRenderer> CRPRenderManager::GetRenderer(
 
   if (!bufferPool->IsCompatible(renderSettings.VideoSettings()))
   {
-    CLog::Log(LOGERROR, "RetroPlayer[RENDER]: buffer pool is not compatible with renderer");
+    CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: buffer pool is not compatible with renderer");
     return renderer;
   }
 
@@ -501,7 +501,7 @@ std::shared_ptr<CRPBaseRenderer> CRPRenderManager::GetRenderer(
   // If buffer pool has no compatible renderers, create one now
   if (!renderer)
   {
-    CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Creating renderer for {}",
+    CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: Creating renderer for {}",
               m_processInfo.GetRenderSystemName(bufferPool));
 
     renderer.reset(m_processInfo.CreateRenderer(bufferPool, renderSettings));
@@ -593,7 +593,7 @@ IRenderBuffer* CRPRenderManager::CreateFromCache(std::vector<uint8_t>& cachedFra
 
   if (!ownedFrame.empty())
   {
-    CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Creating render buffer for renderer");
+    CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Creating render buffer for renderer from cache");
 
     IRenderBuffer* renderBuffer = bufferPool->GetBuffer(width, height);
     if (renderBuffer != nullptr)
@@ -725,8 +725,13 @@ void CRPRenderManager::SaveThumbnail(const std::string& path)
   const AVPixelFormat outFormat = AV_PIX_FMT_BGR0;
   const int scaleStride = CRenderTranslator::TranslateWidthToBytes(scaleWidth, outFormat);
 
-  if (CPicture::ScaleImage(copiedData.data(), width, height, stride, format, scaledImage.data(),
-                           scaleWidth, scaleHeight, scaleStride, outFormat))
+  if (!CPicture::ScaleImage(copiedData.data(), width, height, stride, format, scaledImage.data(),
+                            scaleWidth, scaleHeight, scaleStride, outFormat))
+  {
+    CLog::Log(LOGERROR, "Failed to scale image from size {}x{} to size {}x{}", width, height,
+              scaleWidth, scaleHeight);
+  }
+  else
   {
     CPicture::CreateThumbnailFromSurface(scaledImage.data(), scaleWidth, scaleHeight, scaleStride,
                                          path);
