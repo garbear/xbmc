@@ -9,4 +9,5 @@
 #pragma once
 
 // Name of list item property for savestate captions
+constexpr auto SAVESTATE_LABEL = "savestate.label";
 constexpr auto SAVESTATE_CAPTION = "savestate.caption";
