@@ -127,6 +127,17 @@ bool CDialogGameVideoSelect::OnMessage(CGUIMessage& message)
 
       break;
     }
+    case GUI_MSG_REFRESH_LIST:
+    {
+      // If a path was given, refresh that item specifically
+      const std::string itemPath = message.GetStringParam();
+      if (!itemPath.empty())
+        OnItemRefresh(itemPath);
+      else
+        RefreshList();
+
+      return true;
+    }
     default:
       break;
   }
@@ -222,7 +233,7 @@ void CDialogGameVideoSelect::RefreshList()
 
   // Refresh the panel container
   CGUIMessage message(GUI_MSG_REFRESH_THUMBS, GetID(), CONTROL_THUMBS);
-  CServiceBroker::GetGUI()->GetWindowManager().SendMessage(message, GetID());
+  CServiceBroker::GetGUI()->GetWindowManager().SendThreadMessage(message, GetID());
 }
 
 void CDialogGameVideoSelect::SaveSettings()

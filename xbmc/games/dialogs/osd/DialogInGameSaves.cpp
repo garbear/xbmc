@@ -90,6 +90,31 @@ unsigned int CDialogInGameSaves::GetFocusedItem() const
   return m_focusedControl;
 }
 
+void CDialogInGameSaves::OnItemRefresh(const std::string& itemPath)
+{
+  std::unique_ptr<RETRO::ISavestate> savestate = RETRO::CSavestateDatabase::AllocateSavestate();
+  RETRO::CSavestateDatabase db;
+  if (db.GetSavestate(itemPath, *savestate))
+  {
+    auto it =
+        std::find_if(m_savestateItems.cbegin(), m_savestateItems.cend(),
+                     [&itemPath](const CFileItemPtr& item) { return item->GetPath() == itemPath; });
+
+    if (it != m_savestateItems.cend())
+    {
+      RETRO::CSavestateDatabase::GetSavestateItem(*savestate, itemPath, **it);
+    }
+    else
+    {
+      CFileItemPtr newItem = std::make_unique<CFileItem>();
+      RETRO::CSavestateDatabase::GetSavestateItem(*savestate, itemPath, *newItem);
+      m_savestateItems.AddFront(std::move(newItem), 0);
+    }
+
+    RefreshList();
+  }
+}
+
 void CDialogInGameSaves::PostExit()
 {
   m_savestateItems.Clear();
@@ -201,22 +226,7 @@ void CDialogInGameSaves::OnNewSave()
   auto gameSettings = CServiceBroker::GetGameRenderManager().RegisterGameSettingsDialog();
 
   const std::string savestatePath = gameSettings->CreateSavestate(false);
-  if (!savestatePath.empty())
-  {
-    std::unique_ptr<RETRO::ISavestate> savestate = RETRO::CSavestateDatabase::AllocateSavestate();
-    RETRO::CSavestateDatabase db;
-    if (db.GetSavestate(savestatePath, *savestate))
-    {
-      CFileItemPtr item = std::make_unique<CFileItem>();
-      RETRO::CSavestateDatabase::GetSavestateItem(*savestate, savestatePath, *item);
-      item->SetPath(savestatePath);
-
-      m_savestateItems.AddFront(std::move(item), 0);
-
-      RefreshList();
-    }
-  }
-  else
+  if (savestatePath.empty())
   {
     // "Error"
     // "An unknown error has occurred."

@@ -30,6 +30,7 @@ protected:
   void GetItems(CFileItemList& items) override;
   void OnItemFocus(unsigned int index) override;
   unsigned int GetFocusedItem() const override;
+  void OnItemRefresh(const std::string& itemPath) override;
   void PostExit() override;
   bool OnClickAction() override;
   bool OnMenuAction() override;
