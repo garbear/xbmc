@@ -189,6 +189,9 @@ private:
 
   void CheckFlush();
 
+  void GetVideoFrame(IRenderBuffer*& readableBuffer, std::vector<uint8_t>& cachedFrame);
+  void FreeVideoFrame(IRenderBuffer* readableBuffer, std::vector<uint8_t> cachedFrame);
+
   // Construction parameters
   CRPProcessInfo& m_processInfo;
   CRenderContext& m_renderContext;
