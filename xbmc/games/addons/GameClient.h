@@ -141,6 +141,8 @@ public:
   const std::set<std::string>& GetExtensions() const { return m_extensions; }
   bool SupportsAllExtensions() const { return m_bSupportsAllExtensions; }
   bool IsExtensionValid(const std::string& strExtension) const;
+  const std::string& GetEmulatorName() const { return m_emulatorName; }
+  const std::string& GetPlatforms() const { return m_platforms; }
 
   // Start/stop gameplay
   bool Initialize(void);
@@ -212,6 +214,8 @@ private:
   static bool cb_input_event(KODI_HANDLE kodiInstance, const game_input_event* event);
   //@}
 
+  static void ParseLibretroName(const std::string& addonName, std::string& emulatorName, std::string& platforms);
+
   // Game subsystems
   GameClientSubsystems m_subsystems;
 
@@ -220,7 +224,8 @@ private:
   bool m_bSupportsStandalone;
   std::set<std::string> m_extensions;
   bool m_bSupportsAllExtensions;
-  // GamePlatforms         m_platforms;
+  std::string m_emulatorName;
+  std::string m_platforms;
 
   // Properties of the current playing file
   std::atomic_bool m_bIsPlaying; // True between OpenFile() and CloseFile()
