@@ -515,3 +515,8 @@ XFILE::CIPFSService& CServiceBroker::GetIPFSService()
 {
   return g_application.m_ServiceManager->GetIPFSService();
 }
+
+RETRO_ENGINE::CRetroEngineServices& CServiceBroker::GetRetroEngineServices()
+{
+  return g_application.m_ServiceManager->GetRetroEngineServices();
+}
