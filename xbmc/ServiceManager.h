@@ -67,6 +67,12 @@ namespace RETRO
 {
 class CGUIGameRenderManager;
 }
+
+namespace RETRO_ENGINE
+{
+class CRetroEngineServices;
+}
+
 namespace UTILS::I18N
 {
 class CSubTagRegistryManager;
@@ -222,6 +228,8 @@ public:
 
   KODI::UTILS::I18N::CSubTagRegistryManager& GetSubTagRegistryManager();
 
+  KODI::RETRO_ENGINE::CRetroEngineServices& GetRetroEngineServices();
+
 protected:
   std::unique_ptr<ADDON::CAddonMgr> m_addonMgr;
   std::unique_ptr<ADDON::CBinaryAddonManager> m_binaryAddonManager;
@@ -244,6 +252,7 @@ protected:
   std::unique_ptr<KODI::GAME::CControllerManager> m_gameControllerManager;
   std::unique_ptr<KODI::GAME::CGameServices> m_gameServices;
   std::unique_ptr<KODI::RETRO::CGUIGameRenderManager> m_gameRenderManager;
+  std::unique_ptr<KODI::RETRO_ENGINE::CRetroEngineServices> m_retroEngineServices;
   std::unique_ptr<PERIPHERALS::CPeripherals> m_peripherals;
   std::unique_ptr<CFavouritesService> m_favouritesService;
   std::unique_ptr<CInputManager> m_inputManager;
