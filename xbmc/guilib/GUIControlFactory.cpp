@@ -47,6 +47,7 @@
 #include "GUIWrappingListContainer.h"
 #include "LocalizeStrings.h"
 #include "addons/Skin.h"
+#include "cores/RetroEngine/guicontrols/GUIGameEngineControl.h"
 #include "cores/RetroPlayer/guicontrols/GUIGameControl.h"
 #include "games/controllers/guicontrols/GUIGameController.h"
 #include "games/controllers/guicontrols/GUIGameControllerList.h"
@@ -77,6 +78,7 @@ static const ControlMapping controls[] = {
     {"fixedlist", CGUIControl::GUICONTAINER_FIXEDLIST},
     {"gamecontroller", CGUIControl::GUICONTROL_GAMECONTROLLER},
     {"gamecontrollerlist", CGUIControl::GUICONTROL_GAMECONTROLLERLIST},
+    {"gameengine", CGUIControl::GUICONTROL_GAMEENGINE},
     {"gamewindow", CGUIControl::GUICONTROL_GAME},
     {"group", CGUIControl::GUICONTROL_GROUP},
     {"group", CGUIControl::GUICONTROL_LISTGROUP},
@@ -1732,6 +1734,30 @@ CGUIControl* CGUIControlFactory::Create(int parentID,
       lcontrol->SetFocusActions(focusActions);
       lcontrol->SetUnFocusActions(unfocusActions);
 
+      break;
+    }
+    case CGUIControl::GUICONTROL_GAMEENGINE:
+    {
+      auto gameEngineControl =
+          new RETRO_ENGINE::CGUIGameEngineControl(parentID, id, posX, posY, width, height);
+
+      GUIINFO::CGUIInfoLabel savestatePath;
+      GetInfoLabel(pControlNode, "savestate", savestatePath, parentID);
+      gameEngineControl->SetSavestate(savestatePath);
+
+      GUIINFO::CGUIInfoLabel videoFilter;
+      GetInfoLabel(pControlNode, "videofilter", videoFilter, parentID);
+      gameEngineControl->SetVideoFilter(videoFilter);
+
+      GUIINFO::CGUIInfoLabel stretchMode;
+      GetInfoLabel(pControlNode, "stretchmode", stretchMode, parentID);
+      gameEngineControl->SetStretchMode(stretchMode);
+
+      GUIINFO::CGUIInfoLabel rotation;
+      GetInfoLabel(pControlNode, "rotation", rotation, parentID);
+      gameEngineControl->SetRotation(rotation);
+
+      control = gameEngineControl;
       break;
     }
     case CGUIControl::GUICONTROL_COLORBUTTON:
