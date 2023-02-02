@@ -1,0 +1,6 @@
+xbmc/cores/RetroEngine cores/RetroEngine
+xbmc/cores/RetroEngine/guibridge cores/RetroEngine/guibridge
+xbmc/cores/RetroEngine/guicontrols cores/RetroEngine/guicontrols
+xbmc/cores/RetroEngine/input cores/RetroEngine/input
+xbmc/cores/RetroEngine/rendering cores/RetroEngine/rendering
+xbmc/cores/RetroEngine/streams cores/RetroEngine/streams
