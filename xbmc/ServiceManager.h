@@ -66,6 +66,11 @@ namespace RETRO
 {
 class CGUIGameRenderManager;
 }
+
+namespace RETRO_ENGINE
+{
+class CRetroEngineServices;
+}
 } // namespace KODI
 
 namespace MEDIA_DETECT
@@ -147,6 +152,8 @@ public:
   MEDIA_DETECT::CDetectDVDMedia& GetDetectDVDMedia();
 #endif
 
+  KODI::RETRO_ENGINE::CRetroEngineServices& GetRetroEngineServices();
+
 protected:
   struct delete_dataCacheCore
   {
@@ -197,4 +204,5 @@ protected:
 #if !defined(TARGET_WINDOWS) && defined(HAS_DVD_DRIVE)
   std::unique_ptr<MEDIA_DETECT::CDetectDVDMedia> m_DetectDVDType;
 #endif
+  std::unique_ptr<KODI::RETRO_ENGINE::CRetroEngineServices> m_retroEngineServices;
 };

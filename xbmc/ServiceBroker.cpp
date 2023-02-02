@@ -434,3 +434,8 @@ std::shared_ptr<speech::ISpeechRecognition> CServiceBroker::GetSpeechRecognition
 {
   return g_serviceBroker.m_speechRecognition;
 }
+
+RETRO_ENGINE::CRetroEngineServices& CServiceBroker::GetRetroEngineServices()
+{
+  return g_application.m_ServiceManager->GetRetroEngineServices();
+}

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2023 Team Kodi
+ *  Copyright (C) 2021-2023 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -11,48 +11,48 @@
 #include "cores/GameSettings.h"
 #include "cores/RetroPlayer/guibridge/IGUIRenderSettings.h"
 #include "cores/RetroPlayer/rendering/RenderSettings.h"
-#include "threads/CriticalSection.h"
 #include "utils/Geometry.h"
+
+#include <mutex>
 
 namespace KODI
 {
-namespace RETRO
+namespace RETRO_ENGINE
 {
-class CGUIGameControl;
+class CGUIGameEngineControl;
 
-class CGUIRenderSettings : public IGUIRenderSettings
+class CGUIRenderSettings : public RETRO::IGUIRenderSettings
 {
 public:
-  CGUIRenderSettings(CGUIGameControl& guiControl);
-  ~CGUIRenderSettings() override = default;
+  CGUIRenderSettings(CGUIGameEngineControl& guiControl);
+  CGUIRenderSettings(const CGUIRenderSettings& other);
+  ~CGUIRenderSettings() override;
 
-  // implementation of IGUIRenderSettings
+  // implementation of RETRO::IGUIRenderSettings
   bool HasVideoFilter() const override;
   bool HasStretchMode() const override;
   bool HasRotation() const override;
-  bool HasPixels() const override;
-  CRenderSettings GetSettings() const override;
+  RETRO::CRenderSettings GetSettings() const override { return m_renderSettings; }
   CRect GetDimensions() const override;
 
-  // Render functions
-  void Reset();
-  void SetSettings(CRenderSettings settings);
-  void SetDimensions(const CRect& dimensions);
+  // GUI functions
   void SetVideoFilter(const std::string& videoFilter);
-  void SetStretchMode(STRETCHMODE stretchMode);
+  void SetStretchMode(RETRO::STRETCHMODE stretchMode);
   void SetRotationDegCCW(unsigned int rotationDegCCW);
-  void SetPixels(const std::string& pixelPath);
+  void SetDimensions(const CRect& dimensions);
 
 private:
+  void InitializeRenderSettings();
+
   // Construction parameters
-  CGUIGameControl& m_guiControl;
+  CGUIGameEngineControl& m_guiControl;
 
   // Render parameters
-  CRenderSettings m_renderSettings;
+  RETRO::CRenderSettings m_renderSettings;
   CRect m_renderDimensions;
 
   // Synchronization parameters
-  mutable CCriticalSection m_mutex;
+  mutable std::mutex m_mutex;
 };
-} // namespace RETRO
+} // namespace RETRO_ENGINE
 } // namespace KODI

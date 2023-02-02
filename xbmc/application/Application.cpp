@@ -54,6 +54,7 @@
 #include "network/Network.h"
 #include "platform/Environment.h"
 #include "playlists/PlayListFactory.h"
+#include "cores/RetroEngine/RetroEngineServices.h"
 #include "threads/SystemClock.h"
 #include "utils/ContentUtils.h"
 #include "utils/JobManager.h"

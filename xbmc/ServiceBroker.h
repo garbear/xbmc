@@ -48,6 +48,11 @@ namespace MESSAGING
 {
 class CApplicationMessenger;
 }
+
+namespace RETRO_ENGINE
+{
+class CRetroEngineServices;
+}
 } // namespace KODI
 
 class CAppParams;
@@ -217,6 +222,8 @@ public:
       const std::shared_ptr<speech::ISpeechRecognition>& speechRecognition);
   static void UnregisterSpeechRecognition();
   static std::shared_ptr<speech::ISpeechRecognition> GetSpeechRecognition();
+
+  static KODI::RETRO_ENGINE::CRetroEngineServices& GetRetroEngineServices();
 
 private:
   std::shared_ptr<CAppParams> m_appParams;
