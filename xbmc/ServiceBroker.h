@@ -48,6 +48,11 @@ namespace MESSAGING
 {
 class CApplicationMessenger;
 }
+
+namespace RETRO_ENGINE
+{
+class CRetroEngineServices;
+}
 } // namespace KODI
 
 class CAppParams;
@@ -252,6 +257,8 @@ public:
   static void UnregisterBlurayDiscCache();
   static std::shared_ptr<XFILE::CBlurayDiscCache> GetBlurayDiscCache();
   static XFILE::CIPFSService& GetIPFSService();
+
+  static KODI::RETRO_ENGINE::CRetroEngineServices& GetRetroEngineServices();
 
 private:
   std::shared_ptr<CAppParams> m_appParams;
