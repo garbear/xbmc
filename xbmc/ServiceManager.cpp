@@ -19,6 +19,7 @@
 #include "addons/VFSEntry.h"
 #include "addons/binary-addons/BinaryAddonManager.h"
 #include "cores/DataCacheCore.h"
+#include "cores/RetroEngine/RetroEngineServices.h"
 #include "cores/RetroPlayer/guibridge/GUIGameRenderManager.h"
 #include "cores/playercorefactory/PlayerCoreFactory.h"
 #include "favourites/FavouritesService.h"
@@ -167,6 +168,8 @@ bool CServiceManager::InitStageTwo(const std::string& profilesUserDataFolder)
 
   m_gameRenderManager = std::make_unique<RETRO::CGUIGameRenderManager>();
 
+  m_retroEngineServices = std::make_unique<RETRO_ENGINE::CRetroEngineServices>(*m_peripherals);
+
   m_fileExtensionProvider = std::make_unique<CFileExtensionProvider>(*m_addonMgr);
 
   m_powerManager = std::make_unique<CPowerManager>();
@@ -223,6 +226,8 @@ bool CServiceManager::InitStageThree(const std::shared_ptr<CProfileManager>& pro
   if (!m_Platform->InitStageThree())
     return false;
 
+  m_retroEngineServices->Initialize(*m_gameServices);
+
   init_level = 3;
   return true;
 }
@@ -256,6 +261,8 @@ void CServiceManager::DeinitStageTwo()
   m_weatherManager.reset();
   m_powerManager.reset();
   m_fileExtensionProvider.reset();
+  m_retroEngineServices->Deinitialize();
+  m_retroEngineServices.reset();
   m_gameRenderManager.reset();
   m_peripherals.reset();
   m_inputManager.reset();
@@ -389,6 +396,11 @@ GAME::CGameServices& CServiceManager::GetGameServices()
 KODI::RETRO::CGUIGameRenderManager& CServiceManager::GetGameRenderManager()
 {
   return *m_gameRenderManager;
+}
+
+RETRO_ENGINE::CRetroEngineServices& CServiceManager::GetRetroEngineServices()
+{
+  return *m_retroEngineServices;
 }
 
 PERIPHERALS::CPeripherals& CServiceManager::GetPeripherals()
