@@ -10,6 +10,8 @@
 
 #include "LocalizeStrings.h"
 
+#include <utility>
+
 std::string CGUIMessage::empty_string;
 
 CGUIMessage::CGUIMessage(int msg, int senderID, int controlID, int64_t param1, int64_t param2)
@@ -116,9 +118,9 @@ void CGUIMessage::SetPointer(void* lpVoid)
   m_pointer = lpVoid;
 }
 
-void CGUIMessage::SetLabel(const std::string& strLabel)
+void CGUIMessage::SetLabel(std::string strLabel)
 {
-  m_strLabel = strLabel;
+  m_strLabel = std::move(strLabel);
 }
 
 const std::string& CGUIMessage::GetLabel() const
