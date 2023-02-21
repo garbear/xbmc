@@ -12,6 +12,9 @@
 #include "ServiceBroker.h"
 #include "addons/Addon.h"
 #include "addons/AddonManager.h"
+#include "addons/addoninfo/AddonType.h"
+#include "cores/RetroEngine/RetroEngine.h"
+#include "cores/RetroEngine/streams/RetroEngineStreamManager.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "dialogs/GUIDialogContextMenu.h"
@@ -29,8 +32,11 @@
 #include "input/Key.h"
 #include "utils/FileUtils.h"
 #include "utils/Variant.h"
+#include "utils/log.h"
 #include "view/GUIViewControl.h"
 #include "view/ViewState.h"
+
+#include <algorithm>
 
 using namespace KODI;
 using namespace GAME;
@@ -205,67 +211,126 @@ void CDialogGameSaves::FrameMove()
 
 void CDialogGameSaves::OnInitWindow()
 {
-  m_viewControl->SetItems(*m_vecList);
-  m_viewControl->SetCurrentView(CONTROL_SAVES_DETAILED_LIST);
-
   CGUIDialog::OnInitWindow();
+
+  // Initialize view control
+  m_viewControl->SetCurrentView(CONTROL_SAVES_DETAILED_LIST);
 
   // Select the first item
   m_viewControl->SetSelectedItem(0);
+
+  // Get game clients for all savestates
+  for (auto it = m_vecList->cbegin(); it != m_vecList->cend(); ++it)
+  {
+    const CFileItem& item = **it;
+    std::string gameClientId = item.GetProperty(SAVESTATE_GAME_CLIENT).asString();
+
+    if (!gameClientId.empty() && m_gameClients.find(gameClientId) == m_gameClients.end())
+    {
+      GameClientPtr gameClient;
+      bool enabled = false;
+
+      ADDON::AddonPtr addon;
+      ADDON::CAddonMgr& addonManager = CServiceBroker::GetAddonMgr();
+      if (addonManager.GetAddon(gameClientId, addon, ADDON::AddonType::GAMEDLL,
+                                ADDON::OnlyEnabled::CHOICE_YES))
+      {
+        gameClient = std::static_pointer_cast<CGameClient>(addon);
+        enabled = true;
+      }
+      else if (addonManager.GetAddon(gameClientId, addon, ADDON::AddonType::GAMEDLL,
+                                     ADDON::OnlyEnabled::CHOICE_NO))
+      {
+        gameClient = std::static_pointer_cast<CGameClient>(addon);
+        enabled = false;
+      }
+
+      if (gameClient)
+        CLog::Log(LOGDEBUG, "Game client {} ({}) found for savestate", gameClientId,
+                  enabled ? "enabled" : "disabled");
+      else
+        CLog::Log(LOGDEBUG, "Game client {} not found", gameClientId);
+
+      m_gameClients.emplace(
+          std::make_pair(std::move(gameClientId), std::make_pair(std::move(gameClient), enabled)));
+    }
+  }
 
   // There's a race condition where the item's focus sends the update message
   // before the window is fully initialized, so explicitly set the info now.
   if (!m_vecList->IsEmpty())
   {
-    CFileItemPtr item = m_vecList->Get(0);
-    if (item)
+    CFileItemPtr firstItem = m_vecList->Get(0);
+
+    // Get savestate properties
+    m_currentGameClientId = firstItem->GetProperty(SAVESTATE_GAME_CLIENT).asString();
+    m_currentCaption = firstItem->GetProperty(SAVESTATE_CAPTION).asString();
+
+    // Get game client properties
+    std::string emulatorName;
+    std::string emulatorIcon;
+    const auto it = m_gameClients.find(m_currentGameClientId);
+    if (it != m_gameClients.end())
     {
-      const std::string gameClientId = item->GetProperty(SAVESTATE_GAME_CLIENT).asString();
-      if (!gameClientId.empty())
+      const GameClientPtr& gameClient = it->second.first;
+      if (gameClient)
       {
-        std::string emulatorName;
-        std::string emulatorIcon;
-
-        using namespace ADDON;
-
-        AddonPtr addon;
-        CAddonMgr& addonManager = CServiceBroker::GetAddonMgr();
-        if (addonManager.GetAddon(m_currentGameClient, addon, OnlyEnabled::CHOICE_NO))
-        {
-          std::shared_ptr<CGameClient> gameClient = std::dynamic_pointer_cast<CGameClient>(addon);
-          if (gameClient)
-          {
-            m_currentGameClient = gameClient->ID();
-
-            emulatorName = gameClient->GetEmulatorName();
-            emulatorIcon = gameClient->Icon();
-          }
-        }
-
-        if (!emulatorName.empty())
-        {
-          CGUIMessage message(GUI_MSG_LABEL_SET, GetID(), CONTROL_SAVES_EMULATOR_NAME);
-          message.SetLabel(emulatorName);
-          OnMessage(message);
-        }
-        if (!emulatorIcon.empty())
-        {
-          CGUIMessage message(GUI_MSG_SET_FILENAME, GetID(), CONTROL_SAVES_EMULATOR_ICON);
-          message.SetLabel(emulatorIcon);
-          OnMessage(message);
-        }
-      }
-
-      const std::string caption = item->GetProperty(SAVESTATE_CAPTION).asString();
-      if (!caption.empty())
-      {
-        m_currentCaption = caption;
-
-        CGUIMessage message(GUI_MSG_LABEL_SET, GetID(), CONTROL_SAVES_DESCRIPTION);
-        message.SetLabel(m_currentCaption);
-        OnMessage(message);
+        emulatorName = gameClient->GetEmulatorName();
+        emulatorIcon = gameClient->Icon();
       }
     }
+
+    // Set GUI properties
+    if (!emulatorName.empty())
+    {
+      CGUIMessage message(GUI_MSG_LABEL_SET, GetID(), CONTROL_SAVES_EMULATOR_NAME);
+      message.SetLabel(std::move(emulatorName));
+      OnMessage(message);
+    }
+    if (!emulatorIcon.empty())
+    {
+      CGUIMessage message(GUI_MSG_SET_FILENAME, GetID(), CONTROL_SAVES_EMULATOR_ICON);
+      message.SetLabel(std::move(emulatorIcon));
+      OnMessage(message);
+    }
+    if (!m_currentCaption.empty())
+    {
+      CGUIMessage message(GUI_MSG_LABEL_SET, GetID(), CONTROL_SAVES_DESCRIPTION);
+      message.SetLabel(m_currentCaption);
+      OnMessage(message);
+    }
+  }
+
+  // Initialize game clients
+  for (auto& [gameClientId, gameClientPair] : m_gameClients)
+  {
+    GameClientPtr& gameClient = gameClientPair.first;
+    bool& enabled = gameClientPair.second;
+
+    if (!gameClient || !enabled)
+      continue;
+
+    if (!gameClient->Initialize())
+    {
+      enabled = false;
+      continue;
+    }
+
+    /*
+    auto m_streamManager = std::make_unique<RETRO_ENGINE::CRetroEngineStreamManager>();
+
+    // Initialize input
+    m_input = std::make_unique<CRetroPlayerInput>(CServiceBroker::GetPeripherals(),
+      *m_processInfo, m_gameClient);
+    m_input->StartAgentManager();
+
+    if (!bStandalone)
+    {
+      std::string redactedPath = CURL::GetRedacted(fileCopy.GetPath());
+      CLog::Log(LOGINFO, "RetroPlayer[PLAYER]: Opening: {}", redactedPath);
+      bSuccess = m_gameClient->OpenFile(fileCopy, *m_streamManager, m_input.get());
+    }
+    */
   }
 }
 
@@ -287,6 +352,27 @@ void CDialogGameSaves::OnDeinitWindow(int nextWindowID)
   }
 
   m_vecList->Clear();
+
+  // Deinitialize game clients
+  for (const auto& [gameClientId, gameClientPair] : m_gameClients)
+  {
+    const GameClientPtr& gameClient = gameClientPair.first;
+    bool enabled = gameClientPair.second;
+    if (gameClient)
+    {
+      if (enabled)
+      {
+        CLog::Log(LOGDEBUG, "Deinitializing game client {}", gameClient->ID());
+        gameClient->Unload();
+      }
+      else
+        CLog::Log(LOGDEBUG, "Game client {} was not enabled", gameClient->ID());
+    }
+  }
+
+  m_gameClients.clear();
+  m_currentCaption.clear();
+  m_currentGameClientId.clear();
 }
 
 void CDialogGameSaves::OnWindowLoaded()
@@ -327,6 +413,7 @@ bool CDialogGameSaves::Open(const std::string& gamePath)
   items.Sort(SortByDate, SortOrderDescending);
 
   SetItems(items);
+  m_gamePath = gamePath;
 
   CGUIDialog::Open();
 
@@ -463,42 +550,40 @@ void CDialogGameSaves::HandleCaption(const std::string& caption)
 
 void CDialogGameSaves::HandleGameClient(const std::string& gameClientId)
 {
-  if (gameClientId == m_currentGameClient)
+  // We don't want to clear the last viewed game client
+  if (gameClientId.empty())
     return;
 
-  m_currentGameClient = gameClientId;
-  if (m_currentGameClient.empty())
-    return;
-
-  // Get game client properties
-  std::shared_ptr<CGameClient> gameClient;
-  std::string emulatorName;
-  std::string iconPath;
-
-  using namespace ADDON;
-
-  AddonPtr addon;
-  CAddonMgr& addonManager = CServiceBroker::GetAddonMgr();
-  if (addonManager.GetAddon(m_currentGameClient, addon, OnlyEnabled::CHOICE_NO))
-    gameClient = std::dynamic_pointer_cast<CGameClient>(addon);
-
-  if (gameClient)
+  if (gameClientId != m_currentGameClientId)
   {
-    emulatorName = gameClient->GetEmulatorName();
-    iconPath = gameClient->Icon();
-  }
+    m_currentGameClientId = gameClientId;
 
-  // Update the GUI elements
-  if (!emulatorName.empty())
-  {
-    CGUIMessage message(GUI_MSG_LABEL_SET, GetID(), CONTROL_SAVES_EMULATOR_NAME);
-    message.SetLabel(emulatorName);
-    CServiceBroker::GetGUI()->GetWindowManager().SendThreadMessage(message, GetID());
-  }
-  if (!iconPath.empty())
-  {
-    CGUIMessage message(GUI_MSG_SET_FILENAME, GetID(), CONTROL_SAVES_EMULATOR_ICON);
-    message.SetLabel(iconPath);
-    CServiceBroker::GetGUI()->GetWindowManager().SendThreadMessage(message, GetID());
+    // Get game client properties
+    std::string emulatorName;
+    std::string emulatorIcon;
+    const auto it = m_gameClients.find(m_currentGameClientId);
+    if (it != m_gameClients.end())
+    {
+      const GameClientPtr& gameClient = it->second.first;
+      if (gameClient)
+      {
+        emulatorName = gameClient->GetEmulatorName();
+        emulatorIcon = gameClient->Icon();
+      }
+    }
+
+    // Update the GUI elements
+    if (!emulatorName.empty())
+    {
+      CGUIMessage message(GUI_MSG_LABEL_SET, GetID(), CONTROL_SAVES_EMULATOR_NAME);
+      message.SetLabel(std::move(emulatorName));
+      OnMessage(message);
+    }
+    if (!emulatorIcon.empty())
+    {
+      CGUIMessage message(GUI_MSG_SET_FILENAME, GetID(), CONTROL_SAVES_EMULATOR_ICON);
+      message.SetLabel(std::move(emulatorIcon));
+      OnMessage(message);
+    }
   }
 }

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "games/GameTypes.h"
 #include "guilib/GUIDialog.h"
 
 #include <memory>
@@ -106,8 +107,11 @@ private:
   bool m_bNewPressed{false};
 
   // State parameters
+  std::string m_gamePath;
+  std::map<std::string, std::pair<GameClientPtr, bool>>
+      m_gameClients; // ID -> (game client, enabled)
   std::string m_currentCaption;
-  std::string m_currentGameClient;
+  std::string m_currentGameClientId;
 };
 } // namespace GAME
 } // namespace KODI
