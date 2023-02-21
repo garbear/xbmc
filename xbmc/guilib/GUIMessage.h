@@ -390,7 +390,7 @@ public:
   void SetParam1(int64_t param1);
   void SetParam2(int64_t param2);
   void SetPointer(void* pointer);
-  void SetLabel(const std::string& strLabel);
+  void SetLabel(std::string strLabel);
   void SetLabel(int iString);               // for convenience - looks up in strings.po
   const std::string& GetLabel() const;
   void SetStringParam(const std::string &strParam);
