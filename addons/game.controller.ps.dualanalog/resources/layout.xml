@@ -7,6 +7,7 @@
 		<button name="square" type="digital" label="30004"/>
 		<button name="start" type="digital" label="30005"/>
 		<button name="select" type="digital" label="30006"/>
+		<button name="analog" type="digital" label="30017"/>
 		<button name="up" type="digital" label="30007"/>
 		<button name="right" type="digital" label="30008"/>
 		<button name="down" type="digital" label="30009"/>

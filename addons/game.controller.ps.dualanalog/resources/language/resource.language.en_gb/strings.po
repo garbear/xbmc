@@ -91,3 +91,7 @@ msgstr ""
 msgctxt "#30016"
 msgid "R2"
 msgstr ""
+
+msgctxt "#30017"
+msgid "Analog"
+msgstr ""
