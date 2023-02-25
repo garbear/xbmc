@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includes>
+    <variable name="SmartHomeSystemAirLabIsActive">
+        <value condition="SmartHome.System(AirLab).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemAirMonitorIsActive">
+        <value condition="SmartHome.System(AirMonitor).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemBarIsActive">
+        <value condition="SmartHome.System(bar).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemConductorIsActive">
+        <value condition="SmartHome.System(conductor).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemDoorIsActive">
+        <value condition="SmartHome.System(door).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemEngineerIsActive">
+        <value condition="SmartHome.System(engineer).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemFalconIsActive">
+        <value condition="SmartHome.System(falcon).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemFalconIsInactive">
+        <value condition="!SmartHome.System(falcon).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemGateIsActive">
+        <value condition="SmartHome.System(gate).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemHallwayIsActive">
+        <value condition="SmartHome.System(hallway).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemHomeAssistantIsActive">
+        <value condition="SmartHome.System(homeassistant).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemNasIsActive">
+        <value condition="SmartHome.System(nas).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemOceanPlatformIsActive">
+        <value condition="SmartHome.System(oceanplatform).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemPatioIsActive">
+        <value condition="SmartHome.System(patio).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemStationIsActive">
+        <value condition="SmartHome.System(station).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemVisionIsActive">
+        <value condition="SmartHome.System(vision).IsActive(2)">true</value>
+    </variable>
+</includes>

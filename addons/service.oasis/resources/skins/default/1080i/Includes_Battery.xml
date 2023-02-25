@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includes>
+    <include name="OasisBatteryRow">
+        <param name="font" default="font45" />
+        <definition>
+            <control type="group">
+                <height>64</height>
+                <control type="label">
+                    <right>375</right>
+                    <font>$PARAM[font]</font>
+                    <label>$PARAM[label]</label>
+                </control>
+                <control type="label">
+                    <right>170</right>
+                    <width>195</width>
+                    <align>right</align>
+                    <font>$PARAM[font]</font>
+                    <label>$PARAM[charge]</label>
+                </control>
+                <control type="label">
+                    <right>0</right>
+                    <width>160</width>
+                    <align>right</align>
+                    <font>$PARAM[font]</font>
+                    <label>$PARAM[load]</label>
+                </control>
+            </control>
+        </definition>
+    </include>
+</includes>

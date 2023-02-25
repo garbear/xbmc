@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<controls>
+		<include content="UnclickableVideoWindow" file="resource://service.oasis/skins/default/1080i/Includes_Video.xml" />
+		<control type="group">
+			<left>40</left>
+			<top>40</top>
+			<width>900</width>
+			<height>552</height>
+			<control type="image">
+				<texture border="40">buttons/dialogbutton-nofo.png</texture>
+			</control>
+			<control type="grouplist">
+				<left>32</left>
+				<right>32</right>
+				<top>20</top>
+				<bottom>20</bottom>
+				<orientation>vertical</orientation>
+				<include content="OasisBatteryRow" file="resource://service.oasis/skins/default/1080i/Includes_Battery.xml">
+					<param name="font" value="font45_title" />
+					<param name="label" value="Batteries" />
+					<param name="charge" value="Charge" />
+					<param name="load" value="Load" />
+				</include>
+				<!-- Computers -->
+				<include content="OasisBatteryRow">
+					<param name="label" value="LEGO Ocean Platform" />
+					<param name="load" value="$INFO[SmartHome.System(oceanplatform).SystemPower]" />
+				</include>
+				<include content="OasisBatteryRow">
+					<param name="label" value="MacBook VM" />
+					<param name="charge" value="$INFO[SmartHome.System(macbook_vm).BatteryCharge]" />
+					<param name="load" value="$INFO[SmartHome.System(macbook_vm).SystemPower]" />
+				</include>
+				<!-- UPSes -->
+				<include content="OasisBatteryRow">
+					<param name="label" value="Living Room" />
+					<param name="charge" value="$INFO[SmartHome.System(homeassistant).BatteryCharge]" />
+					<param name="load" value="$INFO[SmartHome.System(homeassistant).BatteryLoad]" />
+				</include>
+				<include content="OasisBatteryRow">
+					<param name="label" value="Bar" />
+					<param name="charge" value="$INFO[SmartHome.System(door).BatteryCharge]" />
+					<param name="load" value="$INFO[SmartHome.System(door).BatteryLoad]" />
+				</include>
+				<include content="OasisBatteryRow">
+					<param name="label" value="Hallway" />
+					<param name="charge" value="$INFO[SmartHome.System(hallway).BatteryCharge]" />
+					<param name="load" value="$INFO[SmartHome.System(hallway).BatteryLoad]" />
+				</include>
+				<include content="OasisBatteryRow">
+					<param name="label" value="LEGO Train" />
+					<param name="charge" value="$INFO[SmartHome.System(oceanplatform).BatteryCharge]" />
+					<param name="load" value="$INFO[SmartHome.System(oceanplatform).BatteryLoad]" />
+				</include>
+				<include content="OasisBatteryRow">
+					<param name="font" value="font45_title" />
+					<param name="label" value="Total" />
+					<param name="charge" value="$INFO[Window.Property(TotalUPSCharge)]" />
+					<param name="load" value="$INFO[Window.Property(TotalUPSLoad)]" />
+				</include>
+			</control>
+		</control>
+	</controls>
+</window>

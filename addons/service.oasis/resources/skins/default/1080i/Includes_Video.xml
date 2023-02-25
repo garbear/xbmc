@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includes>
+    <include name="UnclickableVideoWindow">
+        <control type="group">
+            <control type="videowindow">
+                <description>Video playback area</description>
+            </control>
+            <!-- Transparent overlay to absorb mouse clicks over the video -->
+            <control type="button">
+                <description>Mouse click blocker</description>
+
+                <!-- No visual appearance -->
+                <texturefocus>-</texturefocus>
+                <texturenofocus>-</texturenofocus>
+
+                <!-- Swallow mouse clicks -->
+                <onclick>noop</onclick>
+            </control>
+        </control>
+    </include>
+</includes>
