@@ -55,4 +55,5 @@
   <addon optional="true">inputstream.adaptive</addon>
   <addon optional="true">peripheral.joystick</addon>
   <addon optional="true">screensaver.matrixtrails</addon>
+  <addon optional="true">service.oasis</addon>
 </addons>
