@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "games/GameTypes.h"
+
 #include <memory>
 #include <string>
 
@@ -30,6 +32,7 @@ public:
   // Lifecycle functions
   void Initialize();
   void Deinitialize();
+  void AddGameClient(GAME::GameClientPtr gameClient);
 
 private:
   // Construction parameters
