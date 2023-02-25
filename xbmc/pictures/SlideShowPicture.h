@@ -137,5 +137,7 @@ private:
   bool UpdateVertexBuffer(Vertex *vertices);
 #endif
 
+#if defined(HAS_GL)
   uint32_t m_vao;
+#endif
 };
