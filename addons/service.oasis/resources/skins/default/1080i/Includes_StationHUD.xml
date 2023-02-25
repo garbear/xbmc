@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includes>
+    <variable name="OasisTrainSystemConductorIsActive">
+        <value condition="SmartHome.System(conductor).IsActive(2)">true</value>
+    </variable>
+    <variable name="OasisTrainSystemStationIsActive">
+        <value condition="SmartHome.System(station).IsActive(2)">true</value>
+    </variable>
+    <variable name="OasisTrainSystemOceanPlatformIsActive">
+        <value condition="SmartHome.System(oceanplatform).IsActive(2)">true</value>
+    </variable>
+    <include name="OasisTrainSystemListItem">
+        <control type="label">
+            <description>System name</description>
+            <left>30</left>
+            <label>$INFO[ListItem.Label]</label>
+            <font>font_MainMenu</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>left</align>
+            <aligny>center</aligny>
+        </control>
+        <control type="label">
+            <description>CPU Usage</description>
+            <right>1000</right>
+            <label>$INFO[ListItem.Property(smarthome.cpuutilization)]</label>
+            <font>font_MainMenu</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+        </control>
+        <control type="label">
+            <description>CPU Temperature</description>
+            <right>680</right>
+            <label>$INFO[ListItem.Property(smarthome.cputemperature)]</label>
+            <font>font_MainMenu</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+        </control>
+        <control type="label">
+            <description>RAM Usage</description>
+            <right>350</right>
+            <label>$INFO[ListItem.Property(smarthome.ramutilization)]</label>
+            <font>font_MainMenu</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+        </control>
+        <control type="label">
+            <description>Total RAM</description>
+            <right>30</right>
+            <label>$INFO[ListItem.Property(smarthome.ramtotal)]</label>
+            <font>font_MainMenu</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+        </control>
+    </include>
+    <include name="OasisTrainSystemContent">
+        <item>
+            <description>Dummy item with column headers</description>
+            <property name="smarthome.isactive">true</property>
+            <property name="smarthome.cpuutilization">CPU %</property>
+            <property name="smarthome.cputemperature">CPU °F</property>
+            <property name="smarthome.ramutilization">RAM %</property>
+            <property name="smarthome.ramtotal">Total</property>
+        </item>
+        <item>
+            <label>Little Brain</label>
+            <property name="smarthome.isactive">$VAR[OasisTrainSystemConductorIsActive]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(conductor).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">2048 B</property>
+        </item>
+        <item>
+            <label>Big Brain</label>
+            <property name="smarthome.isactive">$VAR[OasisTrainSystemStationIsActive]</property>
+            <property name="smarthome.cpuutilization">$INFO[SmartHome.System(station).CPUUtilization]</property>
+            <property name="smarthome.cputemperature">$INFO[SmartHome.System(station).CPUTemperature]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(station).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">8 GB</property>
+        </item>
+        <item>
+            <label>Mega Brain</label>
+            <property name="smarthome.isactive">$VAR[OasisTrainSystemOceanPlatformIsActive]</property>
+            <property name="smarthome.cpuutilization">$INFO[SmartHome.System(oceanplatform).CPUUtilization]</property>
+            <property name="smarthome.cputemperature">$INFO[SmartHome.System(oceanplatform).CPUTemperature]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(oceanplatform).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">32 GB</property>
+        </item>
+    </include>
+    <include name="OasisTrainSensorListItem">
+        <control type="label">
+            <left>30</left>
+            <label>$INFO[ListItem.Label]</label>
+            <font>WeatherTemp</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>left</align>
+            <aligny>center</aligny>
+        </control>
+        <control type="label">
+            <right>30</right>
+            <label>$INFO[ListItem.Label2]</label>
+            <font>WeatherTemp</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+        </control>
+    </include>
+    <include name="OasisTrainSensorContent">
+        <item>
+            <label>Supply</label>
+            <label2>$INFO[SmartHome.StationSupply]</label2> <!-- 12.0 V -->
+            <property name="smarthome.isactive">$VAR[OasisTrainSystemStationIsActive]</property>
+        </item>
+        <item>
+            <label>Motor</label>
+            <label2>$INFO[SmartHome.StationMotor]</label2> <!-- 7.8 V -->
+            <property name="smarthome.isactive">$VAR[OasisTrainSystemStationIsActive]</property>
+        </item>
+        <item>
+            <label>Current</label>
+            <label2>$INFO[SmartHome.StationCurrent]</label2> <!-- 0.1 A -->
+            <property name="smarthome.isactive">$VAR[OasisTrainSystemStationIsActive]</property>
+        </item>
+    </include>
+    <include name="OasisTrainCameraListItem">
+        <control type="group">
+            <description>Camera group box</description>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+            <control type="cameraview">
+                <topic>$INFO[ListItem.Property(smarthome.cameratopic1)]</topic>
+                <stretchmode>zoom</stretchmode>
+                <width>34%</width>
+            </control>
+            <control type="cameraview">
+                <topic>$INFO[ListItem.Property(smarthome.cameratopic2)]</topic>
+                <stretchmode>zoom</stretchmode>
+                <right>33%</right>
+                <width>34%</width>
+            </control>
+            <control type="cameraview">
+                <topic>$INFO[ListItem.Property(smarthome.cameratopic3)]</topic>
+                <stretchmode>zoom</stretchmode>
+                <right>0</right>
+                <width>34%</width>
+            </control>
+        </control>
+    </include>
+    <include name="OasisTrainCameraContent">
+        <item>
+            <label>Camera</label>
+            <property name="smarthome.isactive">$VAR[OasisTrainSystemStationIsActive]</property>
+            <property name="smarthome.cameratopic1">/oasis/livingroom/image_rect</property>
+            <property name="smarthome.cameratopic2">/oasis/livingroom/background</property>
+            <property name="smarthome.cameratopic3">/oasis/livingroom/foreground</property>
+        </item>
+    </include>
+</includes>

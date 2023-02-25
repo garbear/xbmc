@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<include file="../../service.oasis/resources/skins/default/1080i/Includes_StationHUD.xml" />
+	<controls>
+		<control type="videowindow">
+			<description>Video background</description>
+		</control>
+		<control type="group">
+			<description>Train system area</description>
+			<top>50</top>
+			<height>440</height>
+			<left>50</left>
+			<right>50</right>
+			<control type="image">
+				<description>Train system content area background</description>
+				<top>-20</top>
+				<bottom>-20</bottom>
+				<left>-20</left>
+				<right>-20</right>
+				<texture border="40">buttons/dialogbutton-nofo.png</texture>
+			</control>
+			<control type="list">
+				<description>System data list</description>
+				<orientation>vertical</orientation>
+				<itemlayout width="1820" height="110">
+					<include content="OasisTrainSystemListItem" />
+				</itemlayout>
+				<focusedlayout width="1820" height="110">
+					<include content="OasisTrainSystemListItem" />
+				</focusedlayout>
+				<content>
+					<include content="OasisTrainSystemContent" />
+				</content>
+			</control>
+		</control>
+		<control type="group">
+			<description>Train sensor area</description>
+			<bottom>50</bottom>
+			<height>480</height>
+			<left>50</left>
+			<width>900</width>
+			<control type="image">
+				<description>Train sensor content area background</description>
+				<top>-20</top>
+				<bottom>-20</bottom>
+				<left>-20</left>
+				<right>-20</right>
+				<texture border="40">buttons/dialogbutton-nofo.png</texture>
+			</control>
+			<control type="list">
+				<description>Sensor data list</description>
+				<orientation>vertical</orientation>
+				<itemlayout width="900" height="160">
+					<include content="OasisTrainSensorListItem" />
+				</itemlayout>
+				<focusedlayout width="900" height="160">
+					<include content="OasisTrainSensorListItem" />
+				</focusedlayout>
+				<content>
+					<include content="OasisTrainSensorContent" />
+				</content>
+			</control>
+		</control>
+		<control type="group">
+			<description>Train camera area</description>
+			<bottom>50</bottom>
+			<height>360</height>
+			<right>50</right>
+			<width>860</width>
+			<control type="image">
+				<description>Train camera content area background</description>
+				<top>-20</top>
+				<bottom>-20</bottom>
+				<left>-20</left>
+				<right>-20</right>
+				<texture border="40">buttons/dialogbutton-nofo.png</texture>
+			</control>
+			<control type="label">
+				<description>Camera area title</description>
+				<label>AI</label>
+				<top>10</top>
+				<height>100</height>
+				<font>font52_title</font>
+				<shadowcolor>text_shadow</shadowcolor>
+				<align>center</align>
+				<aligny>center</aligny>
+			</control>
+			<control type="list">
+				<description>Camera data list</description>
+				<top>120</top>
+				<orientation>vertical</orientation>
+				<itemlayout width="860" height="240">
+					<include content="OasisTrainCameraListItem" />
+				</itemlayout>
+				<focusedlayout width="860" height="240">
+					<include content="OasisTrainCameraListItem" />
+				</focusedlayout>
+				<content>
+					<include content="OasisTrainCameraContent" />
+				</content>
+			</control>
+		</control>
+	</controls>
+</window>
