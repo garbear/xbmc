@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includes>
+    <include name="OasisTrainSystemListItem">
+        <control type="label">
+            <description>System name</description>
+            <left>30</left>
+            <label>$INFO[ListItem.Label]</label>
+            <font>font60</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>left</align>
+            <aligny>center</aligny>
+        </control>
+        <control type="label">
+            <description>CPU Usage</description>
+            <right>950</right>
+            <label>$INFO[ListItem.Property(smarthome.cpuutilization)]</label>
+            <font>font60</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+        </control>
+        <control type="label">
+            <description>CPU Temperature</description>
+            <right>640</right>
+            <label>$INFO[ListItem.Property(smarthome.cputemperature)]</label>
+            <font>font60</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+        </control>
+        <control type="label">
+            <description>RAM Usage</description>
+            <right>330</right>
+            <label>$INFO[ListItem.Property(smarthome.ramutilization)]</label>
+            <font>font60</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+        </control>
+        <control type="label">
+            <description>Total RAM</description>
+            <right>20</right>
+            <label>$INFO[ListItem.Property(smarthome.ramtotal)]</label>
+            <font>font60</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+        </control>
+    </include>
+    <include name="OasisTrainSystemContent">
+        <item>
+            <description>Dummy item with column headers</description>
+            <property name="smarthome.isactive">true</property>
+            <property name="smarthome.cpuutilization">CPU %</property>
+            <property name="smarthome.cputemperature">CPU °F</property>
+            <property name="smarthome.ramutilization">RAM %</property>
+            <property name="smarthome.ramtotal">Total</property>
+        </item>
+        <!--
+        <item>
+            <label>Falcon [COLOR grey]-[/COLOR] Little Brain</label>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemEngineerIsActive]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(engineer).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">6,000 B</property>
+        </item>
+        -->
+        <item>
+            <label>Millenium Falcon</label>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemFalconIsActive]</property>
+            <property name="smarthome.cpuutilization">$INFO[SmartHome.System(falcon).CPUUtilization]</property>
+            <property name="smarthome.cputemperature">$INFO[SmartHome.System(falcon).CPUTemperature]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(falcon).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">8 GB</property>
+        </item>
+        <!--
+        <item>
+            <label>Station [COLOR grey]-[/COLOR] Little Brain</label>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemConductorIsActive]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(conductor).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">2,000 B</property>
+        </item>
+        -->
+        <item>
+            <label>Prefrontal Cortex</label>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemOceanPlatformIsActive]</property>
+            <property name="smarthome.cpuutilization">$INFO[SmartHome.System(oceanplatform).CPUUtilization]</property>
+            <property name="smarthome.cputemperature">$INFO[SmartHome.System(oceanplatform).CPUTemperature]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(oceanplatform).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">32 GB</property>
+        </item>
+        <item>
+            <label>Visual Cortex</label>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemVisionIsActive]</property>
+            <property name="smarthome.cpuutilization">$INFO[SmartHome.System(vision).CPUUtilization]</property>
+            <property name="smarthome.cputemperature">$INFO[SmartHome.System(vision).CPUTemperature]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(vision).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">128 GB</property>
+        </item>
+        <item>
+            <label>Motor Control</label>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemStationIsActive]</property>
+            <property name="smarthome.cpuutilization">$INFO[SmartHome.System(station).CPUUtilization]</property>
+            <property name="smarthome.cputemperature">$INFO[SmartHome.System(station).CPUTemperature]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(station).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">8 GB</property>
+            <property name="smarthome.cameratopic">/oasis/station/image_raw</property>
+        </item>
+    </include>
+    <include name="OasisTrainSensorListItemPower">
+        <control type="label">
+            <left>30</left>
+            <label>$INFO[ListItem.Label]</label>
+            <font>font_MainMenu</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>left</align>
+            <aligny>center</aligny>
+        </control>
+        <control type="label">
+            <right>30</right>
+            <label>$INFO[ListItem.Label2]</label>
+            <font>font_MainMenu</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+        </control>
+    </include>
+    <include name="OasisTrainSensorListItemSpeed">
+        <control type="label">
+            <left>30</left>
+            <label>$INFO[ListItem.Label]</label>
+            <font>font_MainMenu</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+        </control>
+    </include>
+    <include name="OasisTrainSensorListItemTilt">
+        <control type="label">
+            <left>30</left>
+            <label>$INFO[ListItem.Label]</label>
+            <font>font_MainMenu</font>
+            <shadowcolor>text_shadow</shadowcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+        </control>
+    </include>
+    <include name="OasisTrainSensorContentPower">
+        <item>
+            <label>Supply</label>
+            <label2>$INFO[SmartHome.StationSupply]</label2> <!-- 12.0 V -->
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemStationIsActive]</property>
+        </item>
+        <item>
+            <label>Motor</label>
+            <label2>$INFO[SmartHome.StationMotor]</label2> <!-- 7.8 V -->
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemStationIsActive]</property>
+        </item>
+        <item>
+            <label>Load</label>
+            <label2>$INFO[SmartHome.System(oceanplatform).BatteryLoad]</label2> <!-- 100 W -->
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemOceanPlatformIsActive]</property>
+        </item>
+    </include>
+    <include name="OasisTrainSensorContentSpeed">
+        <item>
+            <label>$INFO[SmartHome.Vehicle(falcon).ForwardSpeed]</label> <!-- 10mph -->
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemFalconIsActive]</property>
+        </item>
+        <item>
+            <label>±$INFO[SmartHome.Vehicle(falcon).ForwardSpeedStdDev]</label> <!-- ±1mph -->
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemFalconIsActive]</property>
+        </item>
+    </include>
+    <include name="OasisTrainSensorContentTilt">
+        <item>
+            <label>$INFO[SmartHome.Vehicle(falcon).Tilt]</label> <!-- 10° -->
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemFalconIsActive]</property>
+        </item>
+        <item>
+            <label>±$INFO[SmartHome.Vehicle(falcon).TiltStdDev]</label> <!-- ±1° -->
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemFalconIsActive]</property>
+        </item>
+    </include>
+    <include name="OasisTrainCameraListItem">
+        <control type="cameraview">
+            <topic>$INFO[ListItem.Property(smarthome.cameratopic)]</topic>
+            <stretchmode>zoom</stretchmode>
+            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
+            <animation effect="fade" time="1500">VisibleChange</animation>
+        </control>
+    </include>
+    <include name="OasisTrainCameraContent">
+        <item>
+            <label/>
+        </item>
+        <item>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemStationIsActive]</property>
+            <property name="smarthome.cameratopic">/oasis/station/sd/calibration_image</property>
+        </item>
+        <!--
+        <item>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemFalconIsActive]</property>
+            <property name="smarthome.cameratopic1">/oasis/falcon/image_rect</property>
+            <property name="smarthome.cameratopic2">/oasis/falcon/flow</property>
+            <property name="smarthome.cameratopic3">/oasis/falcon/pose_image</property>
+        </item>
+        -->
+    </include>
+</includes>
