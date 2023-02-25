@@ -11,8 +11,17 @@
 #include "FileItem.h"
 #include "FileItemList.h"
 #include "ServiceBroker.h"
+#include "URL.h"
 #include "addons/Addon.h"
 #include "addons/AddonManager.h"
+#include "addons/addoninfo/AddonType.h"
+#include "cores/RetroEngine/RetroEngine.h"
+#include "cores/RetroEngine/RetroEngineServices.h"
+#include "cores/RetroEngine/guibridge/RetroEngineGuiBridge.h"
+#include "cores/RetroEngine/input/RetroEngineInputManager.h"
+#include "cores/RetroEngine/rendering/RetroEngineRenderer.h"
+#include "cores/RetroEngine/streams/RetroEngineStreamManager.h"
+#include "cores/RetroPlayer/process/RPProcessInfo.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "dialogs/GUIDialogContextMenu.h"
@@ -274,7 +283,33 @@ void CDialogGameSaves::OnInitWindow()
         message.SetLabel(m_currentCaption);
         OnMessage(message);
       }
+
+    std::map<std::string, RETRO_ENGINE::CRetroEngineGuiBridge*> guiBridges;
+    std::map<std::string, std::unique_ptr<RETRO_ENGINE::CRetroEngineStreamManager>> streamManagers;
+
+    guiBridges[savestatePath] = &CServiceBroker::GetRetroEngineServices().GuiBridge(savestatePath);
+    streamManagers[savestatePath] = std::make_unique<RETRO_ENGINE::CRetroEngineStreamManager>();
+
+    // Initialize rendering
+    auto renderer = std::make_unique<RETRO_ENGINE::CRetroEngineRenderer>(
+        *guiBridges[savestatePath], *streamManagers[savestatePath]);
+    renderer->Initialize();
+
+    CLog::Log(LOGINFO, "Opening: {}", CURL::GetRedacted(m_gamePath));
+
+    CFileItem gameFile;
+    gameFile.SetPath(m_gamePath);
+    if (!gameClient->OpenFile(gameFile, *streamManagers[savestatePath], nullptr))
+    {
+      CLog::Log(LOGERROR, "Failed to open game for game client {}", gameClient->ID());
+      gameClient->Unload();
+      enabled = false;
+      continue;
     }
+
+    auto retroEngine =
+        std::make_unique<RETRO_ENGINE::CRetroEngine>(*guiBridges[savestatePath], savestatePath);
+    //retroEngine->AddGameClient(std::move(gameClient));
   }
 }
 
