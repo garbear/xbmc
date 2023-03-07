@@ -30,7 +30,11 @@ GLint CShaderUtilsGL::TranslateWrapType(WRAP_TYPE wrap)
       break;
     case WRAP_TYPE_BORDER:
     default:
+#ifdef HAS_GLES
+      glWrap = GL_CLAMP_TO_EDGE;
+#else
       glWrap = GL_CLAMP_TO_BORDER;
+#endif
       break;
   }
 
