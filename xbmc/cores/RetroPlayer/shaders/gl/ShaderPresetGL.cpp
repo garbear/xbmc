@@ -9,6 +9,7 @@
 #include "ShaderPresetGL.h"
 
 #include "ServiceBroker.h"
+#include "ShaderUtilsGL.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/ShaderPresetFactory.h"
 #include "cores/RetroPlayer/shaders/ShaderUtils.h"
@@ -304,17 +305,22 @@ bool CShaderPresetGL::CreateShaderTextures()
       return false;
     }
 
+    auto wrapType = CShaderUtilsGL::TranslateWrapType(WRAP_TYPE_BORDER);
+
     glBindTexture(GL_TEXTURE_2D, texture->getMTexture());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrapType);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NEVER);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, MAX_FLOAT);
+
+#ifndef HAS_GLES
     GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
+#endif
 
     m_pShaderTextures.emplace_back(new CShaderTextureGL(*texture));
     m_pShaders[shaderIdx]->SetSizes(prevSize, scaledSize);
