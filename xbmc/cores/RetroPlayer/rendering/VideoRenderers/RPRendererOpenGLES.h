@@ -13,8 +13,11 @@
 #include "cores/RetroPlayer/buffers/BaseRenderBufferPool.h"
 #include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
+#include "guilib/TextureGL.h"
 
 #include <atomic>
+#include <map>
+#include <memory>
 #include <stdint.h>
 #include <vector>
 
@@ -24,6 +27,8 @@ namespace KODI
 {
 namespace RETRO
 {
+class CRenderBufferOpenGLES;
+
 class CRendererFactoryOpenGLES : public IRendererFactory
 {
 public:
@@ -76,6 +81,14 @@ protected:
   GLuint m_blackbarsVertexVBO;
   GLenum m_textureTarget = GL_TEXTURE_2D;
   float m_clearColour = 0.0f;
+
+  struct RenderBufferTextures
+  {
+    CGLTexture source;
+    CGLTexture target;
+  };
+
+  std::map<CRenderBufferOpenGLES*, std::unique_ptr<RenderBufferTextures>> m_RBTexturesMap;
 };
 } // namespace RETRO
 } // namespace KODI
