@@ -12,6 +12,7 @@
 #include "cores/RetroPlayer/buffers/RenderBufferPoolOpenGLES.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
+#include "cores/RetroPlayer/shaders/gl/ShaderPresetGL.h"
 #include "utils/GLUtils.h"
 #include "utils/log.h"
 
@@ -48,6 +49,9 @@ CRPRendererOpenGLES::CRPRendererOpenGLES(const CRenderSettings& renderSettings,
                                          std::shared_ptr<IRenderBufferPool> bufferPool)
   : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
+  // Initialize CRPBaseRenderer
+  m_shaderPreset.reset(new SHADER::CShaderPresetGL(m_context));
+
   glGenBuffers(1, &m_mainIndexVBO);
   glGenBuffers(1, &m_mainVertexVBO);
   glGenBuffers(1, &m_blackbarsVertexVBO);
@@ -245,7 +249,29 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
 
   const uint32_t color = (alpha << 24) | 0xFFFFFF;
 
-  glBindTexture(m_textureTarget, renderBuffer->TextureID());
+  RenderBufferTextures* rbTextures;
+  const auto it = m_RBTexturesMap.find(renderBuffer);
+  if (it != m_RBTexturesMap.end())
+  {
+    rbTextures = it->second.get();
+  }
+  else
+  {
+    // We can't copy or move CGLTexture, so construct source/target in-place
+    rbTextures = new RenderBufferTextures{{// source texture
+                                           static_cast<unsigned int>(renderBuffer->GetWidth()),
+                                           static_cast<unsigned int>(renderBuffer->GetHeight()),
+                                           GL_RGB, renderBuffer->TextureID()},
+                                          {// target texture
+                                           static_cast<unsigned int>(m_context.GetScreenWidth()),
+                                           static_cast<unsigned int>(m_context.GetScreenHeight())}};
+    m_RBTexturesMap.emplace(renderBuffer, rbTextures);
+  }
+
+  const auto sourceTexture = &rbTextures->source;
+  const auto targetTexture = &rbTextures->target;
+
+  glBindTexture(m_textureTarget, sourceTexture->getMTexture());
 
   GLint filter = GL_NEAREST;
   if (GetRenderSettings().VideoSettings().GetScalingMethod() == SCALINGMETHOD::LINEAR)
@@ -255,63 +281,83 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
   glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-  m_context.EnableGUIShader(GL_SHADER_METHOD::TEXTURE_NOALPHA);
+  Updateshaders();
 
-  GLubyte colour[4];
-  GLubyte idx[4] = {0, 1, 3, 2}; // Determines order of triangle strip
-  struct PackedVertex
+  if (m_bUseShaderPreset)
   {
-    float x, y, z;
-    float u1, v1;
-  } vertex[4];
+    const CPoint destPoints[4] = {m_rotatedDestCoords[0], m_rotatedDestCoords[1],
+                                  m_rotatedDestCoords[2], m_rotatedDestCoords[3]};
 
-  GLint vertLoc = m_context.GUIShaderGetPos();
-  GLint loc = m_context.GUIShaderGetCoord0();
-  GLint uniColLoc = m_context.GUIShaderGetUniCol();
+    targetTexture->CreateTextureObject();
 
-  // Setup color values
-  colour[0] = UTILS::GL::GetChannelFromARGB(UTILS::GL::ColorChannel::R, color);
-  colour[1] = UTILS::GL::GetChannelFromARGB(UTILS::GL::ColorChannel::G, color);
-  colour[2] = UTILS::GL::GetChannelFromARGB(UTILS::GL::ColorChannel::B, color);
-  colour[3] = UTILS::GL::GetChannelFromARGB(UTILS::GL::ColorChannel::A, color);
-
-  for (unsigned int i = 0; i < 4; i++)
-  {
-    // Setup vertex position values
-    vertex[i].x = m_rotatedDestCoords[i].x;
-    vertex[i].y = m_rotatedDestCoords[i].y;
-    vertex[i].z = 0.0f;
+    SHADER::CShaderTextureGL source(*sourceTexture);
+    SHADER::CShaderTextureGL target(*targetTexture);
+    if (!m_shaderPreset->RenderUpdate(destPoints, &source, &target))
+    {
+      m_shadersNeedUpdate = false;
+      m_bUseShaderPreset = false;
+    }
   }
+  else
+  {
+    m_context.EnableGUIShader(GL_SHADER_METHOD::TEXTURE_NOALPHA);
 
-  // Setup texture coordinates
-  vertex[0].u1 = vertex[3].u1 = rect.x1;
-  vertex[0].v1 = vertex[1].v1 = rect.y1;
-  vertex[1].u1 = vertex[2].u1 = rect.x2;
-  vertex[2].v1 = vertex[3].v1 = rect.y2;
+    GLubyte colour[4];
+    GLubyte idx[4] = {0, 1, 3, 2}; // Determines order of triangle strip
+    struct PackedVertex
+    {
+      float x, y, z;
+      float u1, v1;
+    } vertex[4];
 
-  glBindBuffer(GL_ARRAY_BUFFER, m_mainVertexVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_STATIC_DRAW);
+    GLint vertLoc = m_context.GUIShaderGetPos();
+    GLint loc = m_context.GUIShaderGetCoord0();
+    GLint uniColLoc = m_context.GUIShaderGetUniCol();
 
-  glVertexAttribPointer(vertLoc, 3, GL_FLOAT, 0, sizeof(PackedVertex),
-                        reinterpret_cast<const GLvoid*>(offsetof(PackedVertex, x)));
-  glVertexAttribPointer(loc, 2, GL_FLOAT, 0, sizeof(PackedVertex),
-                        reinterpret_cast<const GLvoid*>(offsetof(PackedVertex, u1)));
+    // Setup color values
+    colour[0] = UTILS::GL::GetChannelFromARGB(UTILS::GL::ColorChannel::R, color);
+    colour[1] = UTILS::GL::GetChannelFromARGB(UTILS::GL::ColorChannel::G, color);
+    colour[2] = UTILS::GL::GetChannelFromARGB(UTILS::GL::ColorChannel::B, color);
+    colour[3] = UTILS::GL::GetChannelFromARGB(UTILS::GL::ColorChannel::A, color);
 
-  glEnableVertexAttribArray(vertLoc);
-  glEnableVertexAttribArray(loc);
+    for (unsigned int i = 0; i < 4; i++)
+    {
+      // Setup vertex position values
+      vertex[i].x = m_rotatedDestCoords[i].x;
+      vertex[i].y = m_rotatedDestCoords[i].y;
+      vertex[i].z = 0.0f;
+    }
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_mainIndexVBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 4, idx, GL_STATIC_DRAW);
+    // Setup texture coordinates
+    vertex[0].u1 = vertex[3].u1 = rect.x1;
+    vertex[0].v1 = vertex[1].v1 = rect.y1;
+    vertex[1].u1 = vertex[2].u1 = rect.x2;
+    vertex[2].v1 = vertex[3].v1 = rect.y2;
 
-  glUniform4f(uniColLoc, (colour[0] / 255.0f), (colour[1] / 255.0f), (colour[2] / 255.0f),
-              (colour[3] / 255.0f));
-  glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, m_mainVertexVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_STATIC_DRAW);
 
-  glDisableVertexAttribArray(vertLoc);
-  glDisableVertexAttribArray(loc);
+    glVertexAttribPointer(vertLoc, 3, GL_FLOAT, 0, sizeof(PackedVertex),
+                          reinterpret_cast<const GLvoid*>(offsetof(PackedVertex, x)));
+    glVertexAttribPointer(loc, 2, GL_FLOAT, 0, sizeof(PackedVertex),
+                          reinterpret_cast<const GLvoid*>(offsetof(PackedVertex, u1)));
 
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glEnableVertexAttribArray(vertLoc);
+    glEnableVertexAttribArray(loc);
 
-  m_context.DisableGUIShader();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_mainIndexVBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 4, idx, GL_STATIC_DRAW);
+
+    glUniform4f(uniColLoc, (colour[0] / 255.0f), (colour[1] / 255.0f), (colour[2] / 255.0f),
+                (colour[3] / 255.0f));
+    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, 0);
+
+    glDisableVertexAttribArray(vertLoc);
+    glDisableVertexAttribArray(loc);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    m_context.DisableGUIShader();
+  }
 }
