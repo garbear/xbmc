@@ -9,7 +9,11 @@
 #pragma once
 
 #include "ShaderGL.h"
+#ifndef HAS_GLES
 #include "ShaderTextureGL.h"
+#else
+#include "ShaderTextureGLES.h"
+#endif
 #include "cores/RetroPlayer/shaders/IShaderPreset.h"
 #include "cores/RetroPlayer/shaders/ShaderTypes.h"
 #include "games/GameServices.h"
@@ -84,7 +88,11 @@ private:
   std::vector<std::unique_ptr<IShader>> m_pShaders;
 
   // Intermediate textures used for pixel shader passes
+#ifndef HAS_GLES
   std::vector<std::unique_ptr<CShaderTextureGL>> m_pShaderTextures;
+#else
+  std::vector<std::unique_ptr<CShaderTextureGLES>> m_pShaderTextures;
+#endif
 
   // First texture (this won't be needed when we have RGB rendering
   //std::unique_ptr<CShaderTextureCD3D> firstTexture;
