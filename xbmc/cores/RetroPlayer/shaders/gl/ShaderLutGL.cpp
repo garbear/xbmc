@@ -8,7 +8,11 @@
 
 #include "ShaderLutGL.h"
 
+#ifndef HAS_GLES
 #include "ShaderTextureGL.h"
+#else
+#include "ShaderTextureGLES.h"
+#endif
 #include "ShaderUtilsGL.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/IShaderPreset.h"
@@ -45,7 +49,11 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
                                                                const KODI::SHADER::ShaderLut& lut)
 {
   std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
+#ifndef HAS_GLES
   CGLTexture* textureGL = static_cast<CGLTexture*>(texture.get());
+#else
+  CGLESTexture* textureGL = static_cast<CGLESTexture*>(texture.get());
+#endif
 
   if (textureGL == nullptr)
   {
@@ -70,9 +78,16 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, MAX_FLOAT);
 
+#ifndef HAS_GLES
   GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
   glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
+#endif
 
+#ifndef HAS_GLES
   return std::unique_ptr<IShaderTexture>(
       new CShaderTextureGL(static_cast<CGLTexture*>(texture.release())));
+#else
+  return std::unique_ptr<IShaderTexture>(
+      new CShaderTextureGLES(static_cast<CGLESTexture*>(texture.release())));
+#endif
 }
