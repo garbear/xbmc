@@ -8,7 +8,11 @@
 
 #include "ShaderGL.h"
 
+#ifndef HAS_GLES
 #include "ShaderTextureGL.h"
+#else
+#include "ShaderTextureGLES.h"
+#endif
 #include "ShaderUtilsGL.h"
 #include "application/Application.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
@@ -87,7 +91,9 @@ bool CShaderGL::Create(const std::string& shaderSource,
 
   SetShaderParameters();
 
+#ifndef HAS_GLES
   glGenVertexArrays(1, &VAO);
+#endif
   glGenBuffers(3, VBO);
   glGenBuffers(1, &EBO);
   return true;
@@ -95,13 +101,21 @@ bool CShaderGL::Create(const std::string& shaderSource,
 
 void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 {
+#ifndef HAS_GLES
   CShaderTextureGL* sourceGL = static_cast<CShaderTextureGL*>(source);
+#else
+  CShaderTextureGLES* sourceGL = static_cast<CShaderTextureGLES*>(source);
+#endif
   sourceGL->GetPointer()->BindToUnit(0);
   glUseProgram(m_shaderProgram);
 
   for (unsigned int i = 0; i < m_luts.size(); ++i)
   {
+#ifndef HAS_GLES
     auto* lutTexture = dynamic_cast<CShaderTextureGL*>(m_luts[i].get()->GetTexture());
+#else
+    auto* lutTexture = dynamic_cast<CShaderTextureGLES*>(m_luts[i].get()->GetTexture());
+#endif
     if (lutTexture)
     {
       GLint paramLoc = glGetUniformLocation(m_shaderProgram, m_luts[i]->GetID().c_str());
@@ -112,7 +126,9 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 
   glUniformMatrix4fv(m_MVPMatrixLoc, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&m_MVP));
 
+#ifndef HAS_GLES
   glBindVertexArray(VAO);
+#endif
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(m_VertexCoords), m_VertexCoords, GL_STATIC_DRAW);

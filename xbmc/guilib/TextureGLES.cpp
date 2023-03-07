@@ -170,12 +170,14 @@ static const std::map<KD_TEX_SWIZ, TextureSwizzle> SwizzleMapGLES
 // clang-format on
 } // namespace
 
+#ifdef HAS_GLES
 std::unique_ptr<CTexture> CTexture::CreateTexture(unsigned int width,
                                                   unsigned int height,
                                                   XB_FMT format)
 {
   return std::make_unique<CGLESTexture>(width, height, format);
 }
+#endif
 
 CGLESTexture::CGLESTexture(unsigned int width, unsigned int height, XB_FMT format, GLuint texture)
   : CTexture(width, height, format)
