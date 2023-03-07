@@ -9,24 +9,9 @@
 #pragma once
 
 #include "Texture.h"
+#include "TextureGLES.h"
 
 #include "system_gl.h"
-
-struct TextureFormat
-{
-  GLenum internalFormat{GL_FALSE};
-  GLenum internalFormatSRGB{GL_FALSE};
-  GLint format{GL_FALSE};
-  GLenum type{GL_UNSIGNED_BYTE};
-};
-
-struct Textureswizzle
-{
-  GLint r{GL_RED};
-  GLint g{GL_GREEN};
-  GLint b{GL_BLUE};
-  GLint a{GL_ALPHA};
-};
 
 /************************************************************************/
 /*    CGLTexture                                                       */
