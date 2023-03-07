@@ -124,7 +124,11 @@ void CShaderPresetGL::RenderShader(IShader* shader,
                                    IShaderTexture* source,
                                    IShaderTexture* target) const
 {
+#ifndef HAS_GLES
   if (static_cast<CShaderTextureGL*>(target)->BindFBO())
+#else
+  if (static_cast<CShaderTextureGLES*>(target)->BindFBO())
+#endif
   {
     CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
     glViewport((GLsizei) newViewPort.x1, (GLsizei) newViewPort.y1,
@@ -133,7 +137,11 @@ void CShaderPresetGL::RenderShader(IShader* shader,
               (GLsizei) newViewPort.x2, (GLsizei) newViewPort.y2);
 
     shader->Render(source, target);
+#ifndef HAS_GLES
     static_cast<CShaderTextureGL*>(target)->UnbindFBO();
+#else
+    static_cast<CShaderTextureGLES*>(target)->UnbindFBO();
+#endif
   }
 }
 
@@ -286,9 +294,15 @@ bool CShaderPresetGL::CreateShaderTextures()
 
     float2 textureSize = CShaderUtils::GetOptimalTextureSize(scaledSize);
 
+#ifndef HAS_GLES
     auto textureGL = new CGLTexture(static_cast<unsigned int>(textureSize.x),
                                     static_cast<unsigned int>(textureSize.y),
                                     XB_FMT_A8R8G8B8); // Format is not used
+#else
+    auto textureGL = new CGLESTexture(static_cast<unsigned int>(textureSize.x),
+                                      static_cast<unsigned int>(textureSize.y),
+                                      XB_FMT_A8R8G8B8); // Format is not used
+#endif
 
     textureGL->CreateTextureObject();
 
@@ -316,10 +330,16 @@ bool CShaderPresetGL::CreateShaderTextures()
     glTexImage2D(GL_TEXTURE_2D, 0, internalformat, textureSize.x, textureSize.y, 0, pixelformat,
                  internalformat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
 
+#ifndef HAS_GLES
     GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
+#endif
 
+#ifndef HAS_GLES
     m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL));
+#else
+    m_pShaderTextures.emplace_back(new CShaderTextureGLES(*textureGL));
+#endif
 
     // Notify shader of its source and dest size
     m_pShaders[shaderIdx]->SetSizes(prevSize, prevTextureSize, scaledSize);
