@@ -116,7 +116,7 @@ static const std::map<KD_TEX_FMT, TextureFormat> TextureMapping
 #endif
 };
 
-static const std::map<KD_TEX_SWIZ, Textureswizzle> SwizzleMap
+static const std::map<KD_TEX_SWIZ, TextureSwizzle> SwizzleMap
 {
   {KD_TEX_SWIZ_RGBA, {GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA}},
   {KD_TEX_SWIZ_RGB1, {GL_RED, GL_GREEN, GL_BLUE, GL_ONE}},
@@ -132,12 +132,14 @@ static const std::map<KD_TEX_SWIZ, Textureswizzle> SwizzleMap
 // clang-format on
 } // namespace
 
+#ifndef HAS_GLES
 std::unique_ptr<CTexture> CTexture::CreateTexture(unsigned int width,
                                                   unsigned int height,
                                                   XB_FMT format)
 {
   return std::make_unique<CGLTexture>(width, height, format);
 }
+#endif
 
 CGLTexture::CGLTexture(unsigned int width, unsigned int height, XB_FMT format, GLuint texture)
   : CTexture(width, height, format)
@@ -295,7 +297,7 @@ void CGLTexture::SetSwizzle()
   if (!SwizzleMap.contains(m_textureSwizzle))
     return;
 
-  Textureswizzle swiz = SwizzleMap.at(m_textureSwizzle);
+  TextureSwizzle swiz = SwizzleMap.at(m_textureSwizzle);
 
   // GL_TEXTURE_SWIZZLE_RGBA and GL_TEXTURE_SWIZZLE_RGBA_EXT should be the same
   // token, but just to be sure...
