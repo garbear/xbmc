@@ -87,7 +87,9 @@ bool CShaderGL::Create(const std::string& shaderSource,
 
   glUseProgram(m_shaderProgram);
 
+#ifndef HAS_GLES
   glGenVertexArrays(1, &VAO);
+#endif
   glGenBuffers(3, VBO);
   glGenBuffers(1, &EBO);
   return true;
@@ -112,7 +114,9 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
   //    }
   //  }
 
+#ifndef HAS_GLES
   glBindVertexArray(VAO);
+#endif
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
@@ -121,7 +125,9 @@ void CShaderGL::SetShaderParameters()
   glUseProgram(m_shaderProgram);
   glUniformMatrix4fv(m_MVPMatrixLoc, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&m_MVP));
 
+#ifndef HAS_GLES
   glBindVertexArray(VAO);
+#endif
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(m_VertexCoords), m_VertexCoords, GL_STATIC_DRAW);
