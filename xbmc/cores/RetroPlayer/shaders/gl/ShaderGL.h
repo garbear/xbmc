@@ -110,7 +110,9 @@ private:
   GLint m_InputSizeLoc = -1;
   GLint m_MVPMatrixLoc = -1;
 
+#ifndef HAS_GLES
   GLuint VAO = 0;
+#endif
   GLuint EBO = 0;
   GLuint VBO[3] = {};
 
