@@ -19,12 +19,14 @@
 
 #include <memory>
 
+#ifndef HAS_GLES
 std::unique_ptr<CTexture> CTexture::CreateTexture(unsigned int width,
                                                   unsigned int height,
                                                   XB_FMT format)
 {
   return std::make_unique<CGLTexture>(width, height, format);
 }
+#endif
 
 CGLTexture::CGLTexture(unsigned int width, unsigned int height, XB_FMT format, GLuint texture)
   : CTexture(width, height, format)
