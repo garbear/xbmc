@@ -1,12 +1,10 @@
 set(SOURCES CocoaInterface.mm
             CPUInfoOsx.cpp
-            HotKeyController.m
             PlatformDarwinOSX.cpp
             smc.c)
 
 set(HEADERS CocoaInterface.h
             CPUInfoOsx.h
-            HotKeyController.h
             PlatformDarwinOSX.h
             smc.h)
 
