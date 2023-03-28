@@ -16,6 +16,8 @@ namespace KODI
 {
 namespace RETRO
 {
+class CRenderBufferDMA;
+
 class CRendererFactoryDMA : public IRendererFactory
 {
 public:
@@ -48,6 +50,8 @@ public:
 protected:
   // implementation of CRPRendererOpenGLES
   void Render(uint8_t alpha) override;
+
+  std::map<CRenderBufferDMA*, std::unique_ptr<RenderBufferTextures>> m_RBTexturesMap;
 };
 } // namespace RETRO
 } // namespace KODI
