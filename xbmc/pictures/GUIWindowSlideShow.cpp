@@ -405,9 +405,12 @@ void CGUIWindowSlideShow::Process(unsigned int currentTime, CDirtyRegionList &re
 
   // if we haven't processed yet, we should mark the whole screen
   if (!HasProcessed())
+  {
     regions.emplace_back(CRect(
         0.0f, 0.0f, static_cast<float>(CServiceBroker::GetWinSystem()->GetGfxContext().GetWidth()),
         static_cast<float>(CServiceBroker::GetWinSystem()->GetGfxContext().GetHeight())));
+    MarkDirtyRegion();
+  }
 
   if (m_iCurrentSlide < 0 || m_iCurrentSlide >= static_cast<int>(m_slides.size()))
     m_iCurrentSlide = 0;
@@ -493,6 +496,7 @@ void CGUIWindowSlideShow::Process(unsigned int currentTime, CDirtyRegionList &re
     regions.emplace_back(CRect(
         0.0f, 0.0f, static_cast<float>(CServiceBroker::GetWinSystem()->GetGfxContext().GetWidth()),
         static_cast<float>(CServiceBroker::GetWinSystem()->GetGfxContext().GetHeight())));
+    MarkDirtyRegion();
     return;
   }
 
@@ -555,6 +559,9 @@ void CGUIWindowSlideShow::Process(unsigned int currentTime, CDirtyRegionList &re
   // render the current image
   if (m_Image[m_iCurrentPic]->IsLoaded())
   {
+    if (m_Image[m_iCurrentPic]->IsAnimating())
+      MarkDirtyRegion();
+
     m_Image[m_iCurrentPic]->SetInSlideshow(bSlideShow);
     m_Image[m_iCurrentPic]->Pause(!bSlideShow);
     m_Image[m_iCurrentPic]->Process(currentTime, regions);
@@ -569,6 +576,7 @@ void CGUIWindowSlideShow::Process(unsigned int currentTime, CDirtyRegionList &re
     {
       m_Image[m_iCurrentPic]->SetTransitionTime(1, IMMEDIATE_TRANSITION_TIME);
       m_bLoadNextPic = false;
+      MarkDirtyRegion();
     }
   }
 
@@ -595,6 +603,10 @@ void CGUIWindowSlideShow::Process(unsigned int currentTime, CDirtyRegionList &re
         if (m_Image[1 - m_iCurrentPic]->DisplayEffectNeedChange(effect))
           m_Image[1 - m_iCurrentPic]->Reset(effect);
       }
+
+      if (m_Image[1 - m_iCurrentPic]->IsAnimating())
+        MarkDirtyRegion();
+
       // set the appropriate transition time
       m_Image[1 - m_iCurrentPic]->SetTransitionTime(0,
                                                     m_Image[m_iCurrentPic]->GetTransitionTime(1));
@@ -977,6 +989,7 @@ bool CGUIWindowSlideShow::OnAction(const CAction &action)
   default:
     return CGUIDialog::OnAction(action);
   }
+  MarkDirtyRegion();
   return true;
 }
 
