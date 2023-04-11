@@ -1220,7 +1220,7 @@ void CWinSystemOSX::EnableVSync(bool enable)
                                forParameter:NSOpenGLContextParameterSwapInterval];
 }
 
-std::unique_ptr<CVideoSync> CWinSystemOSX::GetVideoSync(void* clock)
+std::unique_ptr<CVideoSync> CWinSystemOSX::GetVideoSync(CVideoReferenceClock* clock)
 {
   return std::make_unique<CVideoSyncOsx>(clock);
 }

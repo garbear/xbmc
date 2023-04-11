@@ -38,6 +38,7 @@ class CDPMSSupport;
 class CGraphicContext;
 class CRenderSystemBase;
 class IRenderLoop;
+class CVideoReferenceClock;
 
 struct VideoPicture;
 
@@ -104,7 +105,7 @@ public:
   virtual bool Show(bool raise = true) { return false; }
 
   // videosync
-  virtual std::unique_ptr<CVideoSync> GetVideoSync(void *clock) { return nullptr; }
+  virtual std::unique_ptr<CVideoSync> GetVideoSync(CVideoReferenceClock* clock) { return nullptr; }
 
   // notifications
   virtual void OnMove(int x, int y) {}
