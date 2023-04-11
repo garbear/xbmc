@@ -1824,7 +1824,7 @@ std::string CWinSystemOSX::GetClipboardText(void)
   return utf8_text;
 }
 
-std::unique_ptr<CVideoSync> CWinSystemOSX::GetVideoSync(void *clock)
+std::unique_ptr<CVideoSync> CWinSystemOSX::GetVideoSync(CVideoReferenceClock* clock)
 {
   std::unique_ptr<CVideoSync> pVSync(new CVideoSyncOsx(clock));
   return pVSync;
