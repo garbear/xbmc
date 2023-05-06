@@ -35,7 +35,8 @@ DEPENDS = \
   pythonmodule-setuptools \
   sqlite3 \
   tinyxml \
-  xz
+  xz \
+  zstd
 
 ifeq ($(ENABLE_GPLV3),yes)
   DEPENDS+=samba-gplv3 libcdio-gplv3
