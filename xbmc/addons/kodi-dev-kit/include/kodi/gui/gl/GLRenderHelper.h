@@ -11,7 +11,6 @@
 #ifdef __cplusplus
 
 #include "GL.h"
-#include "kodi/gui/renderHelper.h"
 
 #if defined(HAS_GL)
 
