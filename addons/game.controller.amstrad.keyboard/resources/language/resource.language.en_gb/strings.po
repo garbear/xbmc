@@ -197,7 +197,7 @@ msgid "-"
 msgstr ""
 
 msgctxt "#30042"
-msgid "="
+msgid "↑"
 msgstr ""
 
 msgctxt "#30043"
@@ -217,7 +217,7 @@ msgid "Return"
 msgstr ""
 
 msgctxt "#30047"
-msgid "Backspace"
+msgid "Clear"
 msgstr ""
 
 msgctxt "#30048"
@@ -297,7 +297,7 @@ msgid "Caps Lock"
 msgstr ""
 
 msgctxt "#30067"
-msgid "Num Enter"
+msgid "Num Intro"
 msgstr ""
 
 msgctxt "#30068"
@@ -305,25 +305,47 @@ msgid "Delete"
 msgstr ""
 
 msgctxt "#30069"
-msgid "End"
+msgid "Stop tape"
 msgstr ""
 
 msgctxt "#30070"
-msgid "Page Up"
+msgid "Rewind tape"
 msgstr ""
 
-msgctxt "#30071"
-msgid "Page Down"
-msgstr ""
+#empty string with id 30071
 
 msgctxt "#30072"
-msgid "Insert"
+msgid "Switch cursor"
 msgstr ""
 
 msgctxt "#30073"
-msgid "Home"
+msgid "Play tape"
 msgstr ""
 
 msgctxt "#30074"
 msgid "Copy"
+msgstr ""
+
+msgctxt "#30075"
+msgid "Virtual keyboard"
+msgstr ""
+
+msgctxt "#30076"
+msgid "Main GUI"
+msgstr ""
+
+msgctxt "#30077"
+msgid ":"
+msgstr ""
+
+msgctxt "#30078"
+msgid "/"
+msgstr ""
+
+msgctxt "#30079"
+msgid "\\"
+msgstr ""
+
+msgctxt "#30080"
+msgid "]"
 msgstr ""
