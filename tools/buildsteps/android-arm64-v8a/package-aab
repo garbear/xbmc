@@ -1,0 +1,13 @@
+WORKSPACE=${WORKSPACE:-$( cd $(dirname $0)/../../.. ; pwd -P )}
+XBMC_PLATFORM_DIR=android
+. $WORKSPACE/tools/buildsteps/defaultenv
+
+TARGET=aab
+
+cd $WORKSPACE/build;make -j$BUILDTHREADS $TARGET
+
+cd $WORKSPACE
+
+#rename for upload
+UPLOAD_FILENAME="kodi-$(getBuildRevDateStr)"
+mv kodiapp-*.aab $UPLOAD_FILENAME.aab
