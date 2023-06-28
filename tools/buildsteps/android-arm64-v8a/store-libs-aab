@@ -1,0 +1,11 @@
+WORKSPACE=${WORKSPACE:-$( cd $(dirname $0)/../../.. ; pwd -P )}
+XBMC_PLATFORM_DIR=android
+. $WORKSPACE/tools/buildsteps/defaultenv
+
+TARGET=interim-aab-libs
+
+cd $WORKSPACE/build;make -j$BUILDTHREADS $TARGET
+
+#clean except temporary aab storage folder
+cd $WORKSPACE;git clean -xffd -e "aab"
+cd $WORKSPACE/tools/depends/;./bootstrap
