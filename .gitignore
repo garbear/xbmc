@@ -109,6 +109,9 @@ cmake_install.cmake
 /kodi-build*/
 /gtestresults.xml
 
+# Android interim package location for AAB bundles
+/aab/
+
 # /addons/
 /addons/packages
 /addons/skin.estuary/media/Makefile
