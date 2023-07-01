@@ -131,7 +131,7 @@ static void AddResolution(std::vector<RESOLUTION_WHR> &resolutions, unsigned int
   resolutions.push_back(res);
 }
 
-static bool resSortPredicate(RESOLUTION_WHR i, RESOLUTION_WHR j)
+static bool resSortPredicate(const RESOLUTION_WHR& i, const RESOLUTION_WHR& j)
 {
   // note: this comparison must obey "strict weak ordering"
   // a "!=" on the flags comparison resulted in memory corruption
