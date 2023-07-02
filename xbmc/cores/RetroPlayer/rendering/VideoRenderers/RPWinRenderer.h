@@ -59,10 +59,14 @@ private:
   bool ReleaseTexture();
 
   bool CreateScalingContext();
-  void ScalePixels(uint8_t* source,
+  void ScalePixels(const uint8_t* source,
                    unsigned int sourceStride,
                    uint8_t* target,
                    unsigned int targetStride);
+  void ScalePixelsR10G10B10A2(const uint8_t* source,
+                              unsigned int sourceStride,
+                              uint8_t* target,
+                              unsigned int targetStride);
 
   static AVPixelFormat GetPixFormat(DXGI_FORMAT dxFormat);
 

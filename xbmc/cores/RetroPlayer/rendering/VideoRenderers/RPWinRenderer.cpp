@@ -143,17 +143,178 @@ bool CWinRenderBuffer::CreateScalingContext()
   return true;
 }
 
-void CWinRenderBuffer::ScalePixels(uint8_t* source,
+void CWinRenderBuffer::ScalePixels(const uint8_t* source,
                                    unsigned int sourceStride,
                                    uint8_t* target,
                                    unsigned int targetStride)
 {
-  uint8_t* src[] = {source, nullptr, nullptr, nullptr};
-  int srcStride[] = {static_cast<int>(sourceStride), 0, 0, 0};
-  uint8_t* dst[] = {target, nullptr, nullptr, nullptr};
-  int dstStride[] = {static_cast<int>(targetStride), 0, 0, 0};
 
-  sws_scale(m_swsContext, src, srcStride, 0, m_height, dst, dstStride);
+  // libav doesn't provide a pixel format for R10G10B10A2, so we have to do
+  // it ourselves.
+  if (m_targetDxFormat == DXGI_FORMAT_R10G10B10A2_UNORM)
+  {
+    ScalePixelsR10G10B10A2(source, sourceStride, target, targetStride);
+  }
+  else
+  {
+    uint8_t* src[] = {const_cast<uint8_t*>(source), nullptr, nullptr, nullptr};
+    int srcStride[] = {static_cast<int>(sourceStride), 0, 0, 0};
+    uint8_t* dst[] = {target, nullptr, nullptr, nullptr};
+    int dstStride[] = {static_cast<int>(targetStride), 0, 0, 0};
+
+    sws_scale(m_swsContext, src, srcStride, 0, m_height, dst, dstStride);
+  }
+}
+
+void CWinRenderBuffer::ScalePixelsR10G10B10A2(const uint8_t* source,
+                                              unsigned int sourceStride,
+                                              uint8_t* target,
+                                              unsigned int targetStride)
+{
+  // Set the alpha bits to fully opaque
+  const uint64_t alpha = 0x1;
+
+  switch (m_pixFormat)
+  {
+    case AV_PIX_FMT_0RGB32: // 0RGB32 is XRGBXRGB
+    {
+      for (unsigned int y = 0; y < m_height; ++y)
+      {
+        for (unsigned int x = 0; x < m_width; ++x)
+        {
+          const uint32_t sourcePixel =
+              reinterpret_cast<const uint32_t*>(source + y * sourceStride)[x];
+          uint32_t& targetPixel = reinterpret_cast<uint32_t*>(target + y * targetStride)[x];
+
+          // Get the 8-bit R value from 0RGB32
+          uint64_t r = (sourcePixel & 0x00ff0000) >> 16;
+
+          // Get the 8-bit G value from 0RGB32
+          uint64_t g = (sourcePixel & 0x0000ff00) >> 8;
+
+          // Get the 8-bit B value from 0RGB32
+          uint64_t b = (sourcePixel & 0x000000ff);
+
+          // Scale the R value from 8-bit to 10-bit
+          r = r * (1ULL << 10) / (1ULL << 8);
+
+          // Scale the G value from 8-bit to 10-bit
+          g = g * (1ULL << 10) / (1ULL << 8);
+
+          // Scale the B value from 8-bit to 10-bit
+          b = b * (1ULL << 10) / (1ULL << 8);
+
+          // Combine the RGBA bits into R10G10B10A2
+          targetPixel = (r << 0) | (g << 10) | (b << 20) | (alpha << 30);
+        }
+      }
+      break;
+    }
+    case AV_PIX_FMT_RGBA: // RGBA is RGBARGBA
+    {
+      for (unsigned int y = 0; y < m_height; ++y)
+      {
+        for (unsigned int x = 0; x < m_width; ++x)
+        {
+          const uint32_t sourcePixel =
+              reinterpret_cast<const uint32_t*>(source + y * sourceStride)[x];
+          uint32_t& targetPixel = reinterpret_cast<uint32_t*>(target + y * targetStride)[x];
+
+          // Get the 8-bit R value from RGBA
+          uint64_t r = (sourcePixel & 0xff000000) >> 24;
+
+          // Get the 8-bit G value from RGBA
+          uint64_t g = (sourcePixel & 0x00ff0000) >> 16;
+
+          // Get the 8-bit B value from RGBA
+          uint64_t b = (sourcePixel & 0x0000ff00) >> 8;
+
+          // Scale the R value from 8-bit to 10-bit
+          r = r * (1ULL << 10) / (1ULL << 8);
+
+          // Scale the G value from 8-bit to 10-bit
+          g = g * (1ULL << 10) / (1ULL << 8);
+
+          // Scale the B value from 8-bit to 10-bit
+          b = b * (1ULL << 10) / (1ULL << 8);
+
+          // Combine the RGBA bits into R10G10B10A2
+          targetPixel = (r << 0) | (g << 10) | (b << 20) | (alpha << 30);
+        }
+      }
+      break;
+    }
+    case AV_PIX_FMT_RGB565: // RGB565 is (msb)5R 6G 5B(lsb)
+    {
+      for (unsigned int y = 0; y < m_height; ++y)
+      {
+        for (unsigned int x = 0; x < m_width; ++x)
+        {
+          const uint16_t sourcePixel =
+              reinterpret_cast<const uint16_t*>(source + y * sourceStride)[x];
+          uint32_t& targetPixel = reinterpret_cast<uint32_t*>(target + y * targetStride)[x];
+
+          // Get the 5-bit R value from RGB565
+          uint64_t r = (sourcePixel & 0b1111100000000000) >> 11;
+
+          // Get the 6-bit G value from RGB565
+          uint64_t g = (sourcePixel & 0b0000011111100000) >> 5;
+
+          // Get the 5-bit B value from RGB565
+          uint64_t b = (sourcePixel & 0b0000000000011111);
+
+          // Scale the R value from 5-bit to 10-bit
+          r = r * (1ULL << 10) / (1ULL << 5);
+
+          // Scale the G value from 6-bit to 10-bit
+          g = g * (1ULL << 10) / (1ULL << 6);
+
+          // Scale the B value from 5-bit to 10-bit
+          b = b * (1ULL << 10) / (1ULL << 5);
+
+          // Combine the RGBA bits into R10G10B10A2
+          targetPixel = (r << 0) | (g << 10) | (b << 20) | (alpha << 30);
+        }
+      }
+      break;
+    }
+    case AV_PIX_FMT_RGB555: // RGB555 is (msb)1X 5R 5G 5B(lsb)
+    {
+      for (unsigned int y = 0; y < m_height; ++y)
+      {
+        for (unsigned int x = 0; x < m_width; ++x)
+        {
+          const uint16_t sourcePixel =
+              reinterpret_cast<const uint16_t*>(source + y * sourceStride)[x];
+          uint32_t& targetPixel = reinterpret_cast<uint32_t*>(target + y * targetStride)[x];
+
+          // Get the 5-bit R value from RGB555
+          uint64_t r = (sourcePixel & 0b0111110000000000) >> 10;
+
+          // Get the 5-bit G value from RGB555
+          uint64_t g = (sourcePixel & 0b0000001111100000) >> 5;
+
+          // Get the 5-bit B value from RGB555
+          uint64_t b = (sourcePixel & 0b0000000000011111);
+
+          // Scale the R value from 5-bit to 10-bit
+          r = r * (1ULL << 10) / (1ULL << 5);
+
+          // Scale the G value from 5-bit to 10-bit
+          g = g * (1ULL << 10) / (1ULL << 5);
+
+          // Scale the B value from 5-bit to 10-bit
+          b = b * (1ULL << 10) / (1ULL << 5);
+
+          // Combine the RGBA bits into R10G10B10A2
+          targetPixel = (r << 0) | (g << 10) | (b << 20) | (alpha << 30);
+        }
+      }
+      break;
+    }
+    default:
+      break;
+  }
 }
 
 AVPixelFormat CWinRenderBuffer::GetPixFormat(DXGI_FORMAT dxFormat)
