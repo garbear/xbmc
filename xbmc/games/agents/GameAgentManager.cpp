@@ -306,7 +306,7 @@ CGameAgentManager::PortMap CGameAgentManager::MapJoysticks(
               PERIPHERALS::CPeripheralJoystick* lhsJoystick =
                   dynamic_cast<PERIPHERALS::CPeripheralJoystick*>(lhs.get());
               PERIPHERALS::CPeripheralJoystick* rhsJoystick =
-                  dynamic_cast<PERIPHERALS::CPeripheralJoystick*>(lhs.get());
+                  dynamic_cast<PERIPHERALS::CPeripheralJoystick*>(rhs.get());
 
               // Sort joysticks before other peripheral types
               if (lhsJoystick && !rhsJoystick)
