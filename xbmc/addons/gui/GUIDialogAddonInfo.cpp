@@ -900,9 +900,17 @@ void CGUIDialogAddonInfo::BuildDependencyList()
               const std::shared_ptr<IAddon>& depA = a.m_installed ? a.m_installed : a.m_available;
               const std::shared_ptr<IAddon>& depB = b.m_installed ? b.m_installed : b.m_available;
 
-              if (depA && depB && depA->MainType() != depB->MainType())
+              if (depA && depB)
               {
-                return depA->MainType() != AddonType::SCRIPT_MODULE;
+                const AddonType typeA = depA->MainType();
+                const AddonType typeB = depB->MainType();
+                if (typeA != typeB)
+                {
+                  if ((typeA == AddonType::SCRIPT_MODULE) == (typeB == AddonType::SCRIPT_MODULE))
+                    return typeA < typeB;
+                  else
+                    return typeA != AddonType::SCRIPT_MODULE;
+                }
               }
 
               // 4. finally order by addon-id
