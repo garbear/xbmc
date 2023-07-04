@@ -40,6 +40,8 @@ public:
   void BindToUnit(unsigned int unit) override;
   bool SupportsFormat(KD_TEX_FMT textureFormat, KD_TEX_SWIZ textureSwizzle) override;
 
+  GLuint getMTexture() const;
+
 protected:
   void SetSwizzle(bool swapRB);
   void SwapBlueRedSwizzle(GLint& component);
