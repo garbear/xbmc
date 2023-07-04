@@ -23,6 +23,8 @@ public:
   void LoadToGPU() override;
   void BindToUnit(unsigned int unit) override;
 
+  GLuint getMTexture() const;
+
 protected:
   GLuint m_texture = 0;
   bool m_isGLESVersion30orNewer{false};
