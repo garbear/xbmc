@@ -48,6 +48,8 @@ public:
     return true;
   }
 
+  GLuint getMTexture() const;
+
 protected:
   void SetSwizzle();
   TextureFormat GetFormatGL(KD_TEX_FMT textureFormat);
