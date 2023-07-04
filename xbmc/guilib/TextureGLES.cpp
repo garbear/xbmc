@@ -196,3 +196,8 @@ void CGLESTexture::BindToUnit(unsigned int unit)
   glActiveTexture(GL_TEXTURE0 + unit);
   glBindTexture(GL_TEXTURE_2D, m_texture);
 }
+
+GLuint CGLESTexture::getMTexture() const
+{
+  return m_texture;
+}
