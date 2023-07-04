@@ -224,3 +224,8 @@ void CGLTexture::BindToUnit(unsigned int unit)
   glBindTexture(GL_TEXTURE_2D, m_texture);
 }
 
+GLuint CGLTexture::getMTexture() const
+{
+  return m_texture;
+}
+
