@@ -21,7 +21,6 @@ class CInputManager;
 
 namespace PERIPHERALS
 {
-class CPeripheral;
 class CPeripherals;
 } // namespace PERIPHERALS
 
@@ -34,7 +33,6 @@ class IInputProvider;
 
 namespace GAME
 {
-class CGameAgent;
 class CGameClient;
 class CGameClientJoystick;
 
@@ -78,7 +76,7 @@ public:
   void OnButtonRelease(MOUSE::BUTTON_ID button) override {}
 
   // Public interface
-  PERIPHERALS::PeripheralVector GetAgents() const;
+  GameAgentVec GetAgents() const;
   const std::string& GetPortAddress(JOYSTICK::IInputProvider* inputProvider) const;
   std::vector<std::string> GetInputPorts() const;
 
