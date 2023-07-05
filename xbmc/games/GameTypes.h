@@ -28,5 +28,9 @@ class CGameClientDevice;
 using GameClientDevicePtr = std::unique_ptr<CGameClientDevice>;
 using GameClientDeviceVec = std::vector<GameClientDevicePtr>;
 
+class CGameAgent;
+using GameAgentPtr = std::unique_ptr<CGameAgent>;
+using GameAgentVec = std::vector<GameAgentPtr>;
+
 } // namespace GAME
 } // namespace KODI
