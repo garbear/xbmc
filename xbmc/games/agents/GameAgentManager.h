@@ -22,7 +22,6 @@ class CInputManager;
 
 namespace PERIPHERALS
 {
-class CPeripheral;
 class CPeripherals;
 } // namespace PERIPHERALS
 
@@ -35,7 +34,6 @@ class IInputProvider;
 
 namespace GAME
 {
-class CGameAgent;
 class CGameClient;
 class CGameClientJoystick;
 
@@ -79,7 +77,11 @@ public:
   void OnButtonRelease(MOUSE::BUTTON_ID button) override {}
 
   // Public interface
+  GameAgentVec GetAgents() const;
+  const std::string& GetPortAddress(JOYSTICK::IInputProvider* inputProvider) const;
+  std::vector<std::string> GetInputPorts() const;
   float GetPortActivation(const std::string& address) const;
+  float GetPeripheralActivation(const std::string& peripheralLocation) const;
 
 private:
   //! @todo De-duplicate these types
@@ -127,6 +129,10 @@ private:
   GameClientPtr m_gameClient;
   bool m_bHasKeyboard = false;
   bool m_bHasMouse = false;
+  GameAgentVec m_agents;
+
+  // Synchronization parameters
+  mutable std::mutex m_agentMutex;
 
   /*!
    * \brief Map of input provider to joystick handler
