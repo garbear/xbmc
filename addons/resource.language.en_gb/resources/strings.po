@@ -18294,7 +18294,8 @@ msgstr ""
 #: addons/skin.estuary/xml/GameOSD.xml
 #: addons/skin.estuary/xml/Includes_Games.xml
 msgctxt "#35172"
-msgid "Players"
+#msgid "Players"
+msgid "View Players"
 msgstr ""
 
 #empty strings from id 35173 to 35199
