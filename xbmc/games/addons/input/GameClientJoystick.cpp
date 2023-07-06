@@ -9,6 +9,7 @@
 #include "GameClientJoystick.h"
 
 #include "GameClientInput.h"
+#include "GameClientTopology.h"
 #include "games/addons/GameClient.h"
 #include "games/controllers/Controller.h"
 #include "games/ports/input/PortInput.h"
@@ -167,6 +168,11 @@ bool CGameClientJoystick::OnThrottleMotion(const std::string& feature,
   event.axis.position = position;
 
   return m_gameClient.Input().InputEvent(event);
+}
+
+std::string CGameClientJoystick::GetControllerAddress() const
+{
+  return CGameClientTopology::MakeAddress(m_portAddress, m_controller->ID());
 }
 
 void CGameClientJoystick::SetSource(PERIPHERALS::PeripheralPtr sourcePeripheral)
