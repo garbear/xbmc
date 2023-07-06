@@ -83,6 +83,9 @@ private:
   using JoystickMap = std::map<PortAddress, std::shared_ptr<CGameClientJoystick>>;
   using PortMap = std::map<JOYSTICK::IInputProvider*, std::shared_ptr<CGameClientJoystick>>;
 
+  using ControllerAddress = std::string;
+  using PeripheralMap = std::map<ControllerAddress, PERIPHERALS::PeripheralPtr>;
+
   // Internal interface
   void ProcessJoysticks(PERIPHERALS::EventLockHandlePtr& inputHandlingLock);
   void ProcessKeyboard();
@@ -99,6 +102,7 @@ private:
   static PortMap MapJoysticks(const PERIPHERALS::PeripheralVector& peripheralJoysticks,
                               const JoystickMap& gameClientjoysticks,
                               int playerLimit);
+  static void LogPeripheralMap(const PeripheralMap& peripheralMap);
 
   // Construction parameters
   PERIPHERALS::CPeripherals& m_peripheralManager;
@@ -122,6 +126,13 @@ private:
    * Not exposed to the game.
    */
   PortMap m_portMap;
+
+  /*!
+   * Map of controller address to source peripheral
+   *
+   * Not exposed to the game.
+   */
+  PeripheralMap m_peripheralMap;
 };
 } // namespace GAME
 } // namespace KODI

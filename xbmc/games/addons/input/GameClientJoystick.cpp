@@ -9,6 +9,7 @@
 #include "GameClientJoystick.h"
 
 #include "GameClientInput.h"
+#include "GameClientTopology.h"
 #include "games/addons/GameClient.h"
 #include "games/controllers/Controller.h"
 #include "games/ports/input/PortInput.h"

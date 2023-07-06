@@ -17,6 +17,7 @@
 #include "peripherals/Peripherals.h"
 #include "peripherals/devices/Peripheral.h"
 #include "peripherals/devices/PeripheralJoystick.h"
+#include "utils/log.h"
 
 using namespace KODI;
 using namespace GAME;
@@ -70,6 +71,7 @@ void CGameAgentManager::Stop()
     }
 
     m_portMap.clear();
+    m_peripheralMap.clear();
   }
 
   // Notify observers if anything changed
@@ -153,6 +155,18 @@ void CGameAgentManager::ProcessJoysticks(PERIPHERALS::EventLockHandlePtr& inputH
 
   // Update connected joysticks
   UpdateConnectedJoysticks(joysticks, newPortMap, inputHandlingLock);
+
+  // Rebuild peripheral map
+  PeripheralMap peripheralMap;
+  for (const auto& [inputProvider, joystick] : m_portMap)
+    peripheralMap[joystick->GetControllerAddress()] = joystick->GetSource();
+
+  // Log peripheral map if there were any changes
+  if (peripheralMap != m_peripheralMap)
+  {
+    m_peripheralMap = std::move(peripheralMap);
+    LogPeripheralMap(m_peripheralMap);
+  }
 }
 
 void CGameAgentManager::ProcessKeyboard()
@@ -339,4 +353,26 @@ CGameAgentManager::PortMap CGameAgentManager::MapJoysticks(
   }
 
   return result;
+}
+
+void CGameAgentManager::LogPeripheralMap(const PeripheralMap& peripheralMap)
+{
+  if (peripheralMap.empty())
+    return;
+
+  unsigned int line = 0;
+  for (const auto& [controllerAddress, peripheral] : peripheralMap)
+  {
+    if (line == 0)
+      CLog::Log(LOGDEBUG, "===== Peripheral Map =====");
+    else
+      CLog::Log(LOGDEBUG, "");
+
+    CLog::Log(LOGDEBUG, "{}:", controllerAddress);
+    CLog::Log(LOGDEBUG, "    {} [{}]", peripheral->Location(), peripheral->DeviceName());
+
+    ++line;
+  }
+
+  CLog::Log(LOGDEBUG, "==========================");
 }
