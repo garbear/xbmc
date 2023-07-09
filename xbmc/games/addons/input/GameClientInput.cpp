@@ -61,6 +61,8 @@ void CGameClientInput::Initialize()
   // Send controller layouts to game client
   SetControllerLayouts(m_topology->GetControllerTree().GetControllers());
 
+  std::lock_guard<std::recursive_mutex> lock(m_portMutex);
+
   // Reset ports to default state (first accepted controller is connected)
   ActivateControllers(m_topology->GetControllerTree());
 
@@ -312,6 +314,8 @@ bool CGameClientInput::ConnectController(const std::string& portAddress,
     return false;
   }
 
+  std::lock_guard<std::recursive_mutex> lock(m_portMutex);
+
   const CPortNode& currentPort = GetActiveControllerTree().GetPort(portAddress);
 
   // Close current ports if any are open
@@ -367,6 +371,8 @@ bool CGameClientInput::DisconnectController(const std::string& portAddress)
 {
   PERIPHERALS::EventLockHandlePtr inputHandlingLock;
 
+  std::lock_guard<std::recursive_mutex> lock(m_portMutex);
+
   // If port is a multitap, we need to deactivate its children
   const CPortNode& currentPort = GetActiveControllerTree().GetPort(portAddress);
   CloseJoysticks(currentPort, inputHandlingLock);
@@ -407,15 +413,21 @@ bool CGameClientInput::DisconnectController(const std::string& portAddress)
 
 void CGameClientInput::SavePorts()
 {
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_portMutex);
+
+    // Save port state
+    m_portManager->SaveXML();
+  }
+
   // Let the observers know that ports have changed
   NotifyObservers(ObservableMessageGamePortsChanged);
-
-  // Save port state
-  m_portManager->SaveXML();
 }
 
 void CGameClientInput::ResetPorts()
 {
+  std::lock_guard<std::recursive_mutex> lock(m_portMutex);
+
   const CControllerTree& controllerTree = GetDefaultControllerTree();
   for (const CPortNode& port : controllerTree.GetPorts())
     ConnectController(port.GetAddress(), port.GetActiveController().GetController());
