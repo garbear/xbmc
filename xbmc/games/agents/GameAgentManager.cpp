@@ -8,7 +8,6 @@
 
 #include "GameAgentManager.h"
 
-#include "ServiceBroker.h"
 #include "games/addons/GameClient.h"
 #include "games/addons/input/GameClientInput.h"
 #include "games/addons/input/GameClientJoystick.h"
@@ -65,7 +64,7 @@ void CGameAgentManager::Stop()
     for (const auto& [inputProvider, joystick] : m_portMap)
     {
       if (!inputHandlingLock)
-        inputHandlingLock = CServiceBroker::GetPeripherals().RegisterEventLock();
+        inputHandlingLock = m_peripheralManager.RegisterEventLock();
 
       joystick->UnregisterInput(inputProvider);
 
@@ -237,8 +236,7 @@ void CGameAgentManager::ProcessKeyboard()
       !m_gameClient->Input().IsKeyboardOpen())
   {
     PERIPHERALS::PeripheralVector keyboards;
-    CServiceBroker::GetPeripherals().GetPeripheralsWithFeature(keyboards,
-                                                               PERIPHERALS::FEATURE_KEYBOARD);
+    m_peripheralManager.GetPeripheralsWithFeature(keyboards, PERIPHERALS::FEATURE_KEYBOARD);
     if (!keyboards.empty())
     {
       const CControllerTree& controllers = m_gameClient->Input().GetActiveControllerTree();
@@ -260,7 +258,7 @@ void CGameAgentManager::ProcessMouse()
   if (m_bHasMouse && m_gameClient->Input().SupportsMouse() && !m_gameClient->Input().IsMouseOpen())
   {
     PERIPHERALS::PeripheralVector mice;
-    CServiceBroker::GetPeripherals().GetPeripheralsWithFeature(mice, PERIPHERALS::FEATURE_MOUSE);
+    m_peripheralManager.GetPeripheralsWithFeature(mice, PERIPHERALS::FEATURE_MOUSE);
     if (!mice.empty())
     {
       const CControllerTree& controllers = m_gameClient->Input().GetActiveControllerTree();
@@ -309,7 +307,7 @@ void CGameAgentManager::UpdateExpiredJoysticks(const PERIPHERALS::PeripheralVect
       joystick->UnregisterInput(nullptr);
 
       if (!inputHandlingLock)
-        inputHandlingLock = CServiceBroker::GetPeripherals().RegisterEventLock();
+        inputHandlingLock = m_peripheralManager.RegisterEventLock();
       m_portMap.erase(inputProvider);
 
       SetChanged(true);
@@ -351,7 +349,7 @@ void CGameAgentManager::UpdateConnectedJoysticks(
         oldJoystick->UnregisterInput(inputProvider);
 
         if (!inputHandlingLock)
-          inputHandlingLock = CServiceBroker::GetPeripherals().RegisterEventLock();
+          inputHandlingLock = m_peripheralManager.RegisterEventLock();
         m_portMap.erase(itDisconnectedPort);
 
         SetChanged(true);
