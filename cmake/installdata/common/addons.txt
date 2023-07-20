@@ -34,6 +34,7 @@ addons/repository.osmcskin/*
 addons/repository.teeedubb/*
 addons/repository.xbmc.org/*
 addons/repository.zachmorris/*
+addons/resource.avatar.opengameart/*
 addons/resource.images.weathericons.default/*
 addons/resource.language.en_gb/*
 addons/resource.uisounds.kodi/*
