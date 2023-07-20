@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<avatars>
+	<avatar name="Neko" nameid="30000">
+		<author>Umz</author>
+		<source>https://opengameart.org/content/neko-cat-fighter-animated-jason-em-style</source>
+		<license>Creative Commons 3.0 Attribution License</license>
+		<actions>
+			<action name="idle">avatars\Neko\idle\idle.gif</action>
+			<action name="surprised">avatars\Neko\surprised\surprised.gif</action>
+			<action name="run">avatars\Neko\run\run.gif</action>
+			<action name="jump">avatars\Neko\jump\jump.gif</action>
+			<action name="land">avatars\Neko\land\land.gif</action>
+			<action name="kick">avatars\Neko\kick\kick.gif</action>
+			<action name="victory">avatars\Neko\victory\victory.gif</action>
+			<action name="swim">avatars\Neko\swim\swim.gif</action>
+			<action name="punch">avatars\Neko\punch\punch.gif</action>
+		</actions>
+	</avatar>
+	<avatar name="Gum Bot" nameid="30001">
+		<author>GrafxKid</author>
+		<source>https://opengameart.org/content/gum-bot-sprites</source>
+		<license>Creative Commons 3.0 Attribution License</license>
+		<actions>
+			<action name="spin">avatars\Gum_Bot\spin\spin.gif</action>
+			<action name="surprise">avatars\Gum_Bot\surprise\surprise.gif</action>
+			<action name="run">avatars\Gum_Bot\run\run.gif</action>
+			<action name="blink">avatars\Gum_Bot\blink\blink.gif</action>
+			<action name="flicker">avatars\Gum_Bot\flicker\flicker.gif</action>
+			<action name="powerdown">avatars\Gum_Bot\powerdown\powerdown.gif</action>
+		</actions>
+	</avatar>
+	<avatar name="Green Hero" nameid="30002">
+		<author>GrafxKid</author>
+		<source>https://opengameart.org/content/classic-hero-and-baddies-pack</source>
+		<license>Creative Commons 3.0 Attribution License</license>
+		<actions>
+			<action name="idle">avatars\Green_Hero\idle\idle.gif</action>
+			<action name="surprise">avatars\Green_Hero\surprise\surprise.gif</action>
+			<action name="run">avatars\Green_Hero\run\run.gif</action>
+			<action name="unknown">avatars\Green_Hero\unknown\unknown.gif</action>
+			<action name="punch">avatars\Green_Hero\punch\punch.gif</action>
+			<action name="kick">avatars\Green_Hero\kick\kick.gif</action>
+			<action name="crouch">avatars\Green_Hero\crouch\crouch.gif</action>
+			<action name="push">avatars\Green_Hero\push\push.gif</action>
+		</actions>
+	</avatar>
+	<avatar name="Red Enemy" nameid="30003">
+		<author>GrafxKid</author>
+		<source>https://opengameart.org/content/classic-hero-and-baddies-pack</source>
+		<license>Creative Commons 3.0 Attribution License</license>
+		<actions>
+			<action name="blink">avatars\Red_Enemy\blink\blink.gif</action>
+			<action name="flatten">avatars\Red_Enemy\flatten\flatten.gif</action>
+			<action name="jump">avatars\Red_Enemy\jump\jump.gif</action>
+			<action name="land">avatars\Red_Enemy\land\land.gif</action>
+			<action name="run">avatars\Red_Enemy\run\run.gif</action>
+		</actions>
+	</avatar>
+	<avatar name="Blue Enemy" nameid="30004">
+		<author>GrafxKid</author>
+		<source>https://opengameart.org/content/classic-hero-and-baddies-pack</source>
+		<license>Creative Commons 3.0 Attribution License</license>
+		<actions>
+			<action name="blink">avatars\Blue_Enemy\blink\blink.gif</action>
+			<action name="squint">avatars\Blue_Enemy\squint\squint.gif</action>
+			<action name="damage">avatars\Blue_Enemy\damage\damage.gif</action>
+			<action name="jump">avatars\Blue_Enemy\jump\jump.gif</action>
+			<action name="land">avatars\Blue_Enemy\land\land.gif</action>
+			<action name="run">avatars\Blue_Enemy\run\run.gif</action>
+		</actions>
+	</avatar>
+	<avatar name="Mechanic" nameid="30005">
+		<author>DezrasDragons</author>
+		<source>https://opengameart.org/content/mechanic-animated</source>
+		<license>Creative Commons 3.0 Attribution License</license>
+		<actions>
+			<action name="idle">avatars\Mechanic\idle\idle.gif</action>
+			<action name="run">avatars\Mechanic\run\run.gif</action>
+			<action name="jump">avatars\Mechanic\jump\jump.gif</action>
+			<action name="land">avatars\Mechanic\land\land.gif</action>
+			<action name="damage">avatars\Mechanic\damage\damage.gif</action>
+			<action name="punch">avatars\Mechanic\punch\punch.gif</action>
+			<action name="swim">avatars\Mechanic\swim\swim.gif</action>
+			<action name="surprise">avatars\Mechanic\surprise\surprise.gif</action>
+			<action name="victory">avatars\Mechanic\victory\victory.gif</action>
+			<action name="crouch">avatars\Mechanic\crouch\crouch.gif</action>
+			<action name="slide">avatars\Mechanic\slide\slide.gif</action>
+		</actions>
+	</avatar>
+	<avatar name="Mr. Man" nameid="30006">
+		<author>GrafxKid</author>
+		<source>https://opengameart.org/content/classic-hero</source>
+		<license>Creative Commons 3.0 Attribution License</license>
+		<actions>
+			<action name="idle">avatars\Mr._Man\idle\idle.gif</action>
+			<action name="surprised">avatars\Mr._Man\surprised\surprised.gif</action>
+			<action name="run">avatars\Mr._Man\run\run.gif</action>
+			<action name="jump">avatars\Mr._Man\jump\jump.gif</action>
+			<action name="land">avatars\Mr._Man\land\land.gif</action>
+			<action name="kick">avatars\Mr._Man\kick\kick.gif</action>
+			<action name="victory">avatars\Mr._Man\victory\victory.gif</action>
+			<action name="swim">avatars\Mr._Man\swim\swim.gif</action>
+			<action name="punch">avatars\Mr._Man\punch\punch.gif</action>
+		</actions>
+	</avatar>
+	<avatar name="PegLeg" nameid="30007">
+		<author>DezrasDragons</author>
+		<source>https://opengameart.org/content/classic-pirate-captain-animated</source>
+		<license>Creative Commons 3.0 Attribution License</license>
+		<actions>
+			<action name="idle">avatars\PegLeg\idle\idle.gif</action>
+			<action name="run">avatars\PegLeg\run\run.gif</action>
+			<action name="jump">avatars\PegLeg\jump\jump.gif</action>
+			<action name="land">avatars\PegLeg\land\land.gif</action>
+			<action name="fall">avatars\PegLeg\fall\fall.gif</action>
+			<action name="unknown">avatars\PegLeg\unknown\unknown.gif</action>
+			<action name="shoot">avatars\PegLeg\shoot\shoot.gif</action>
+			<action name="attack">avatars\PegLeg\attack\attack.gif</action>
+			<action name="damaged">avatars\PegLeg\damaged\damaged.gif</action>
+			<action name="victory">avatars\PegLeg\victory\victory.gif</action>
+			<action name="crouch">avatars\PegLeg\crouch\crouch.gif</action>
+		</actions>
+	</avatar>
+	<avatar name="Samurai" nameid="30008">
+		<author>DezrasDragons</author>
+		<source>https://opengameart.org/content/samurai-animated</source>
+		<license>Creative Commons 3.0 Attribution License</license>
+		<actions>
+			<action name="idle">avatars\Samurai\idle\idle.gif</action>
+			<action name="run">avatars\Samurai\run\run.gif</action>
+			<action name="jump">avatars\Samurai\jump\jump.gif</action>
+			<action name="land">avatars\Samurai\land\land.gif</action>
+			<action name="fall">avatars\Samurai\fall\fall.gif</action>
+			<action name="punch">avatars\Samurai\punch\punch.gif</action>
+			<action name="attack">avatars\Samurai\attack\attack.gif</action>
+			<action name="swim">avatars\Samurai\swim\swim.gif</action>
+			<action name="surprise">avatars\Samurai\surprise\surprise.gif</action>
+			<action name="victory">avatars\Samurai\victory\victory.gif</action>
+			<action name="crouch">avatars\Samurai\crouch\crouch.gif</action>
+		</actions>
+	</avatar>
+</avatars>

@@ -61,6 +61,7 @@
   <addon optional="true">repository.jurialmunkey</addon>
   <addon optional="true">repository.teeedubb</addon>
   <addon optional="true">repository.zachmorris</addon>
+  <addon optional="true">resource.avatar.opengameart</addon>
   <addon optional="true">screensaver.matrixtrails</addon>
   <addon optional="true">service.xbmc.versioncheck</addon>
   <addon optional="true">vfs.libarchive</addon>
