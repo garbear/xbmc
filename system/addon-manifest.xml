@@ -62,6 +62,7 @@
   <addon optional="true">repository.osmcskin</addon>
   <addon optional="true">repository.teeedubb</addon>
   <addon optional="true">repository.zachmorris</addon>
+  <addon optional="true">resource.avatar.opengameart</addon>
   <addon optional="true">screensaver.matrixtrails</addon>
   <addon optional="true">script.module.certifi</addon>
   <addon optional="true">script.module.chardet</addon>

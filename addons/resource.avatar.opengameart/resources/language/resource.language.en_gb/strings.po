@@ -1,0 +1,53 @@
+# resource.avatar.opengameart language file
+# Addon Name: OpenGameArt.org Avatars
+# Addon id: resource.avatar.opengameart
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: resource.avatar.opengameart\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2017-12-01 04:20i\n"
+"PO-Revision-Date: 2017-12-01 04:20i\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "Neko"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Gum Bot"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Green Hero"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Red Enemy"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Blue Enemy"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Mechanic"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Mr. Man"
+msgstr ""
+
+msgctxt "#30007"
+msgid "PegLeg"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Samurai"
+msgstr ""
