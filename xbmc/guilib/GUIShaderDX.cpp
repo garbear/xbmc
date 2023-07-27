@@ -21,7 +21,9 @@
 #include "guishader_interlaced_left.h"
 #include "guishader_interlaced_right.h"
 #include "guishader_multi_texture_blend.h"
+#include "guishader_multi_texture_blend_nearest.h"
 #include "guishader_texture.h"
+#include "guishader_texture_nearest.h"
 #include "guishader_texture_noblend.h"
 #include "guishader_vert.h"
 
@@ -38,7 +40,9 @@ static const D3D_SHADER_DATA cbPSShaderCode[SHADER_METHOD_RENDER_COUNT] =
   { guishader_texture_noblend, sizeof(guishader_texture_noblend) }, // SHADER_METHOD_RENDER_TEXTURE_NOBLEND
   { guishader_fonts, sizeof(guishader_fonts) }, // SHADER_METHOD_RENDER_FONT
   { guishader_texture, sizeof(guishader_texture) }, // SHADER_METHOD_RENDER_TEXTURE_BLEND
+  { guishader_texture_nearest, sizeof(guishader_texture_nearest) }, // SHADER_METHOD_RENDER_TEXTURE_BLEND_NEAREST
   { guishader_multi_texture_blend, sizeof(guishader_multi_texture_blend) }, // SHADER_METHOD_RENDER_MULTI_TEXTURE_BLEND
+  { guishader_multi_texture_blend_nearest, sizeof(guishader_multi_texture_blend_nearest) }, // SHADER_METHOD_RENDER_MULTI_TEXTURE_BLEND_NEAREST
   { guishader_interlaced_left, sizeof(guishader_interlaced_left) }, // SHADER_METHOD_RENDER_STEREO_INTERLACED_LEFT
   { guishader_interlaced_right, sizeof(guishader_interlaced_right) }, // SHADER_METHOD_RENDER_STEREO_INTERLACED_RIGHT
   { guishader_checkerboard_left, sizeof(guishader_checkerboard_left) }, // SHADER_METHOD_RENDER_STEREO_CHECKERBOARD_LEFT

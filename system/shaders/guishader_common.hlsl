@@ -42,6 +42,14 @@ SamplerState LinearSampler : register(s0)
   Comparison = NEVER;
 };
 
+SamplerState NearestSampler : register(s1)
+{
+  Filter = MIN_MAG_MIP_POINT;
+  AddressU = CLAMP;
+  AddressV = CLAMP;
+  Comparison = NEVER;
+};
+
 cbuffer cbWorld : register(b0)
 {
   float4x4 worldViewProj;

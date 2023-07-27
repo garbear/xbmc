@@ -78,6 +78,7 @@ public:
                            bool setConstant = false,
                            const bool useCache = true);
   virtual void SetAspectRatio(const CAspectRatio& aspect);
+  virtual void SetScalingMethod(TEXTURE_SCALING scalingMethod);
   void SetWidth(float width) override;
   void SetHeight(float height) override;
   void SetPosition(float posX, float posY) override;
