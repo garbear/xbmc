@@ -64,6 +64,7 @@ option(ENABLE_PYTHON      "Enable python support?" ON)
 option(ENABLE_TESTING     "Enable testing support?" ON)
 
 # Internal Depends - supported on all platforms
+option(ENABLE_INTERNAL_LIBDATACHANNEL "Enable internal libdatachannel?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBQRENCODE "Enable internal libqrencode?" ON) # TODO: Change to OFF
 
 # These are required enabled for all CI platforms, and recommended for all builds
@@ -180,6 +181,7 @@ set(required_deps ASS
                   HarfBuzz
                   Iconv
                   KissFFT
+                  LibDataChannel
                   LibDvd
                   Libqrencode
                   Lzo2
