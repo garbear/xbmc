@@ -1122,6 +1122,9 @@
 					<texture>special://xbmc/media/vendor_logo.png</texture>
 				</control>
 			</control>
+			<control type="qrcode">
+				<texture>qrcode.png</texture>
+			</control>
 		</control>
 	</controls>
 </window>
