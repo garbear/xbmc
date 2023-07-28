@@ -1,0 +1,8 @@
+LIBNAME=boost
+VERSION=1.82.0
+ARCHIVE=$(LIBNAME)_$(shell echo $(VERSION) | tr "." "_").tar.gz
+SHA512=c28f711fa040cdfa663997a89d3122624c5270ef324e08ea93db8ffbae9f243910f10ead8fbe2f793e3963fda4279845dbb6867afb1d65143a1d3ff6fe40f8fe
+BYPRODUCT=stage/lib/libboost_system.a
+
+# TODO
+BASE_URL=https://boostorg.jfrog.io/artifactory/main/release/$(VERSION)/source

@@ -1,0 +1,1355 @@
+From 9d6fbcae1a5995a70b4c271a5fcf0215b0edd7c8 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Fri, 28 Jul 2023 16:49:18 -0700
+Subject: [PATCH 2/2] Import try_signal sources
+
+This removes the submodule and imports try_signal at commit
+105cce59972f925a33aa6b1c3109e4cd3caf583d.
+---
+ .gitmodules                                |   3 -
+ deps/try_signal/.github/workflows/test.yml |  88 +++++++++
+ deps/try_signal/.gitignore                 |  34 ++++
+ deps/try_signal/.travis.yml                |  44 +++++
+ deps/try_signal/CMakeLists.txt             |   6 +
+ deps/try_signal/Jamfile                    |  18 ++
+ deps/try_signal/LICENSE                    |  29 +++
+ deps/try_signal/README.rst                 |  53 ++++++
+ deps/try_signal/appveyor.yml               |  50 +++++
+ deps/try_signal/example.cpp                |  31 +++
+ deps/try_signal/project-root.jam           |   0
+ deps/try_signal/signal_error_code.cpp      | 209 +++++++++++++++++++++
+ deps/try_signal/signal_error_code.hpp      | 162 ++++++++++++++++
+ deps/try_signal/test.cpp                   |  47 +++++
+ deps/try_signal/try_signal.cpp             | 144 ++++++++++++++
+ deps/try_signal/try_signal.hpp             |  49 +++++
+ deps/try_signal/try_signal_mingw.hpp       |  78 ++++++++
+ deps/try_signal/try_signal_msvc.hpp        |  61 ++++++
+ deps/try_signal/try_signal_posix.hpp       |  82 ++++++++
+ 20 files changed, 1185 insertions(+), 4 deletions(-)
+ delete mode 160000 deps/try_signal
+ create mode 100644 deps/try_signal/.github/workflows/test.yml
+ create mode 100644 deps/try_signal/.gitignore
+ create mode 100644 deps/try_signal/.travis.yml
+ create mode 100644 deps/try_signal/CMakeLists.txt
+ create mode 100644 deps/try_signal/Jamfile
+ create mode 100644 deps/try_signal/LICENSE
+ create mode 100644 deps/try_signal/README.rst
+ create mode 100644 deps/try_signal/appveyor.yml
+ create mode 100644 deps/try_signal/example.cpp
+ create mode 100644 deps/try_signal/project-root.jam
+ create mode 100644 deps/try_signal/signal_error_code.cpp
+ create mode 100644 deps/try_signal/signal_error_code.hpp
+ create mode 100644 deps/try_signal/test.cpp
+ create mode 100644 deps/try_signal/try_signal.cpp
+ create mode 100644 deps/try_signal/try_signal.hpp
+ create mode 100644 deps/try_signal/try_signal_mingw.hpp
+ create mode 100644 deps/try_signal/try_signal_msvc.hpp
+ create mode 100644 deps/try_signal/try_signal_posix.hpp
+
+diff --git a/.gitmodules b/.gitmodules
+index e2ddd3c4b..aeecf3598 100644
+--- a/.gitmodules
++++ b/.gitmodules
+@@ -1,9 +1,6 @@
+ [submodule "simulation/libsimulator"]
+ 	path = simulation/libsimulator
+ 	url = https://github.com/arvidn/libsimulator.git
+-[submodule "deps/try_signal"]
+-	path = deps/try_signal
+-	url = https://github.com/arvidn/try_signal.git
+ [submodule "deps/asio-gnutls"]
+ 	path = deps/asio-gnutls
+ 	url = https://github.com/paullouisageneau/boost-asio-gnutls.git
+diff --git a/deps/try_signal/.github/workflows/test.yml b/deps/try_signal/.github/workflows/test.yml
+new file mode 100644
+index 000000000..f4e89b89e
+--- /dev/null
++++ b/deps/try_signal/.github/workflows/test.yml
+@@ -0,0 +1,88 @@
++name: Tests
++
++on:
++   push:
++      branches: master
++   pull_request:
++
++concurrency:
++   group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}
++   cancel-in-progress: true
++
++jobs:
++
++  build:
++    name: build
++    runs-on: ${{ matrix.os }}
++    continue-on-error: true
++
++    strategy:
++       matrix:
++          os: [ ubuntu-latest, macos-latest, windows-latest ]
++          model: [ 32, 64 ]
++
++    steps:
++    - name: checkout
++      uses: actions/checkout@v2
++      with:
++         submodules: true
++
++    - name: Set up MinGW
++      if: runner.os == 'Windows'
++      uses: egor-tensin/setup-mingw@v2
++      with:
++        platform: x64
++
++    - name: update package lists (Linux)
++      if: runner.os == 'Linux'
++      continue-on-error: true
++      run: |
++        sudo apt update
++
++    - name: update package lists (MacOS)
++      if: runner.os == 'macOS'
++      continue-on-error: true
++      run: |
++        brew update
++
++    - name: dependencies (linux)
++      if: runner.os == 'Linux'
++      run: |
++        sudo apt install libboost-tools-dev
++
++    - name: dependencies (windows)
++      if: runner.os == 'Windows'
++      shell: cmd
++      run: |
++        git clone --depth=1 --branch=boost-1.78.0 https://github.com/boostorg/boost.git
++        cd boost
++        git submodule update --init tools/build
++        bootstrap.bat
++
++    - name: dependencies (MacOS)
++      if: runner.os == 'macOS'
++      run: |
++        brew install boost-build
++
++    - name: build and test
++      if: runner.os == 'Windows'
++      shell: cmd
++      run: |
++        set BOOST_BUILD_PATH=boost\tools\build
++        set BOOST_ROOT=boost
++        .\boost\b2.exe cxxstd=11 address-model=${{ matrix.model }} warnings=all warnings-as-errors=on stage_test
++        .\test.exe
++
++    - name: build and test
++      if: runner.os != 'Windows'
++      run: |
++        b2 cxxstd=11 address-model=${{ matrix.model }} warnings=all warnings-as-errors=on stage_test
++        ./test
++
++    - name: build and test (mingw)
++      if: runner.os == 'Windows'
++      run: |
++        set BOOST_BUILD_PATH=boost\tools\build
++        set BOOST_ROOT=boost
++        .\boost\b2.exe cxxstd=11 toolset=gcc address-model=${{ matrix.model }} warnings=all warnings-as-errors=on stage_test
++        .\test
+diff --git a/deps/try_signal/.gitignore b/deps/try_signal/.gitignore
+new file mode 100644
+index 000000000..a82c6b9ea
+--- /dev/null
++++ b/deps/try_signal/.gitignore
+@@ -0,0 +1,34 @@
++# Compiled Object files
++*.slo
++*.lo
++*.o
++*.obj
++test_file
++test
++test.dSYM/
++bin/
++
++# Precompiled Headers
++*.gch
++*.pch
++*.swp
++
++# Compiled Dynamic libraries
++*.so
++*.dylib
++*.dll
++
++# Fortran module files
++*.mod
++*.smod
++
++# Compiled Static libraries
++*.lai
++*.la
++*.a
++*.lib
++
++# Executables
++*.exe
++*.out
++*.app
+diff --git a/deps/try_signal/.travis.yml b/deps/try_signal/.travis.yml
+new file mode 100644
+index 000000000..778d067b3
+--- /dev/null
++++ b/deps/try_signal/.travis.yml
+@@ -0,0 +1,44 @@
++language: cpp
++matrix:
++  include:
++    - env: toolset=gcc
++    - os: osx
++      osx_image: xcode11.2
++      env: toolset=darwin
++
++branches:
++  only:
++    - master
++
++git:
++  submodules: false
++  depth: 1
++
++addons:
++  apt:
++    sources:
++    - ubuntu-toolchain-r-test
++    packages:
++    - libboost-tools-dev
++    - g++-9
++
++install:
++
++  - 'if [[ $TRAVIS_OS_NAME == "osx" ]]; then brew update > /dev/null && brew install boost-build; fi'
++  - 'if [[ $TRAVIS_OS_NAME != "osx" ]]; then
++      export B2=bjam;
++    else
++      export B2=b2;
++    fi'
++  - touch ~/user-config.jam
++  - 'if [[ $toolset == "gcc" ]]; then
++      g++-5 --version;
++      echo "using gcc : : g++-5 : <cxxflags>-std=c++11 ;" >> ~/user-config.jam;
++    fi'
++  - 'echo "using darwin : : clang++ : <cxxflags>-std=c++11 ;" >> ~/user-config.jam'
++
++script:
++
++  - ${B2} link=static stage_test
++  - ./test
++
+diff --git a/deps/try_signal/CMakeLists.txt b/deps/try_signal/CMakeLists.txt
+new file mode 100644
+index 000000000..945cd6c8a
+--- /dev/null
++++ b/deps/try_signal/CMakeLists.txt
+@@ -0,0 +1,6 @@
++cmake_minimum_required(VERSION 2.8.12)
++project(try_signal)
++
++add_library(try_signal signal_error_code try_signal)
++target_include_directories(try_signal PUBLIC .)
++
+diff --git a/deps/try_signal/Jamfile b/deps/try_signal/Jamfile
+new file mode 100644
+index 000000000..ec001a898
+--- /dev/null
++++ b/deps/try_signal/Jamfile
+@@ -0,0 +1,18 @@
++lib try_signal
++	: # sources
++	signal_error_code.cpp try_signal.cpp
++	: # requirements
++	: # default build
++	<link>static
++	: # usage requirements
++	<include>.
++	;
++
++exe test : test.cpp : <library>try_signal <link>static ;
++explicit test ;
++
++exe example : example.cpp : <library>try_signal <link>static ;
++explicit example ;
++
++install stage_test : test : <location>. ;
++
+diff --git a/deps/try_signal/LICENSE b/deps/try_signal/LICENSE
+new file mode 100644
+index 000000000..152302662
+--- /dev/null
++++ b/deps/try_signal/LICENSE
+@@ -0,0 +1,29 @@
++BSD 3-Clause License
++
++Copyright (c) 2016, Arvid Norberg
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are met:
++
++* Redistributions of source code must retain the above copyright notice, this
++  list of conditions and the following disclaimer.
++
++* Redistributions in binary form must reproduce the above copyright notice,
++  this list of conditions and the following disclaimer in the documentation
++  and/or other materials provided with the distribution.
++
++* Neither the name of the copyright holder nor the names of its
++  contributors may be used to endorse or promote products derived from
++  this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
++FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
++CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
++OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+diff --git a/deps/try_signal/README.rst b/deps/try_signal/README.rst
+new file mode 100644
+index 000000000..22cbe1841
+--- /dev/null
++++ b/deps/try_signal/README.rst
+@@ -0,0 +1,53 @@
++try_signal
++==========
++
++.. image:: https://travis-ci.org/arvidn/try_signal.svg?branch=master
++    :target: https://travis-ci.org/arvidn/try_signal
++
++.. image:: https://ci.appveyor.com/api/projects/status/le8jjroaai8081f1?svg=true
++	:target: https://ci.appveyor.com/project/arvidn/try-signal/branch/master
++
++The ``try_signal`` library provide a way to turn signals into C++ exceptions.
++This is especially useful when performing disk I/O via memory mapped files,
++where I/O errors are reported as ``SIGBUS`` and ``SIGSEGV`` or as structured
++exceptions on windows.
++
++The function ``try_signal`` takes a function object that will be executed once.
++If the function causes a signal (or structured exception) to be raised, it will
++throw a C++ exception. Note that RAII may not be relied upon within this function.
++It may not rely on destructors being called. Stick to simple operations like
++memcopy.
++
++Example::
++
++	#include <stdexcept>
++	#include <vector>
++	#include <numeric>
++	#include "try_signal.hpp"
++	#include <fcntl.h>
++	#include <unistd.h>
++	#include <sys/mman.h>
++
++	int main() try
++	{
++		int fd = open("test_file", O_RDWR);
++		void* map = mmap(nullptr, 1024, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++
++		std::vector<char> buf(1024);
++		std::iota(buf.begin(), buf.end(), 0);
++
++		// disk full or access after EOF are reported as exceptions
++		sig::try_signal([&]{
++			std::memcpy(map, buf.data(), buf.size());
++		});
++
++		munmap(map, 1024);
++		close(fd);
++		return 0;
++	}
++	catch (std::exception const& e)
++	{
++		fprintf(stderr, "exited with exception: %s\n", e.what());
++		return 1;
++	}
++
+diff --git a/deps/try_signal/appveyor.yml b/deps/try_signal/appveyor.yml
+new file mode 100644
+index 000000000..a185535aa
+--- /dev/null
++++ b/deps/try_signal/appveyor.yml
+@@ -0,0 +1,50 @@
++version: "{build}"
++branches:
++  only:
++  - master
++os: Visual Studio 2015
++clone_depth: 1
++environment:
++  matrix:
++  - variant: debug
++    compiler: msvc-14.0
++    model: 64
++  - variant: debug
++    compiler: msvc-14.0
++    model: 32
++  - variant: release
++    compiler: msvc-14.0
++    model: 64
++  - variant: debug
++    compiler: gcc
++    model: 32
++  - variant: debug
++    compiler: gcc
++    model: 64
++  - variant: release
++    compiler: gcc
++    model: 32
++
++install:
++- set ROOT_DIRECTORY=%CD%
++- set BOOST_ROOT=c:\Libraries\boost_1_67_0
++- set BOOST_BUILD_PATH=%BOOST_ROOT%\tools\build
++- echo %BOOST_ROOT%
++- echo %BOOST_BUILD_PATH%
++- set PATH=%PATH%;%BOOST_BUILD_PATH%\src\engine\bin.ntx86
++- ps: '"using msvc : 14.0 ;`nusing gcc : : : <cxxflags>-std=c++11 ;" | Set-Content $env:HOMEDRIVE\$env:HOMEPATH\user-config.jam'
++- type %HOMEDRIVE%%HOMEPATH%\user-config.jam
++- set PATH=c:\msys64\mingw32\bin;%PATH%
++- g++ --version
++- python --version
++- echo %ROOT_DIRECTORY%
++- cd %BOOST_BUILD_PATH%\src\engine
++- build.bat >nul
++- cd %ROOT_DIRECTORY%
++
++build_script:
++# examples
++- b2.exe warnings=all warnings-as-errors=on -j2 %compiler% address-model=%model% variant=%variant% stage_test
++
++test_script:
++- test
+diff --git a/deps/try_signal/example.cpp b/deps/try_signal/example.cpp
+new file mode 100644
+index 000000000..703b8178a
+--- /dev/null
++++ b/deps/try_signal/example.cpp
+@@ -0,0 +1,31 @@
++#include <stdexcept>
++#include <vector>
++#include <numeric>
++#include "try_signal.hpp"
++#include <fcntl.h>
++#include <unistd.h>
++#include <sys/mman.h>
++
++int main() try
++{
++	int fd = open("test_file", O_RDWR);
++	void* map = mmap(nullptr, 1024, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++
++	std::vector<char> buf(1024);
++	std::iota(buf.begin(), buf.end(), 0);
++
++	// disk full or access after EOF are reported as exceptions
++	sig::try_signal([&]{
++		std::memcpy(map, buf.data(), buf.size());
++	});
++
++	munmap(map, 1024);
++	close(fd);
++	return 0;
++}
++catch (std::exception const& e)
++{
++	fprintf(stderr, "exited with exception: %s\n", e.what());
++	return 1;
++}
++
+diff --git a/deps/try_signal/project-root.jam b/deps/try_signal/project-root.jam
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/deps/try_signal/signal_error_code.cpp b/deps/try_signal/signal_error_code.cpp
+new file mode 100644
+index 000000000..ae016cf8d
+--- /dev/null
++++ b/deps/try_signal/signal_error_code.cpp
+@@ -0,0 +1,209 @@
++/*
++
++Copyright (c) 2016, Arvid Norberg
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions
++are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the distribution.
++    * Neither the name of the author nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++#include <system_error>
++#include <string>
++
++#include "signal_error_code.hpp"
++
++namespace {
++
++	struct signal_error_category : std::error_category
++	{
++		const char* name() const noexcept override
++		{ return "signal"; }
++		std::string message(int ev) const noexcept override
++		{
++#define SIGNAL_CASE(x) case sig::errors::error_code_enum:: x: return #x;
++			switch (ev)
++			{
++			SIGNAL_CASE(abort)
++			SIGNAL_CASE(alarm)
++			SIGNAL_CASE(arithmetic_exception)
++			SIGNAL_CASE(hangup)
++			SIGNAL_CASE(illegal)
++			SIGNAL_CASE(interrupt)
++			SIGNAL_CASE(kill)
++			SIGNAL_CASE(pipe)
++			SIGNAL_CASE(quit)
++			case sig::errors::error_code_enum::segmentation: return "segmentation fault";
++			SIGNAL_CASE(terminate)
++			SIGNAL_CASE(user1)
++			SIGNAL_CASE(user2)
++			SIGNAL_CASE(child)
++			SIGNAL_CASE(cont)
++			SIGNAL_CASE(stop)
++			SIGNAL_CASE(terminal_stop)
++			SIGNAL_CASE(terminal_in)
++			SIGNAL_CASE(terminal_out)
++			SIGNAL_CASE(bus)
++#ifdef SIGPOLL
++			SIGNAL_CASE(poll)
++#endif
++			SIGNAL_CASE(profiler)
++			SIGNAL_CASE(system_call)
++			SIGNAL_CASE(trap)
++			SIGNAL_CASE(urgent_data)
++			SIGNAL_CASE(virtual_timer)
++			SIGNAL_CASE(cpu_limit)
++			SIGNAL_CASE(file_size_limit)
++			default: return "unknown";
++			}
++#undef SIGNAL_CASE
++		}
++		std::error_condition default_error_condition(int ev) const noexcept override
++		{ return {ev, *this}; }
++	};
++} // anonymous namespace
++
++namespace sig {
++namespace errors {
++
++	std::error_code make_error_code(error_code_enum e)
++	{
++		return {e, sig_category()};
++	}
++
++	std::error_condition make_error_condition(error_code_enum e)
++	{
++		return {e, sig_category()};
++	}
++
++} // namespace errors
++
++std::error_category& sig_category()
++{
++	static signal_error_category signal_category;
++	return signal_category;
++}
++
++#ifdef _WIN32
++
++namespace {
++	sig::errors::error_code_enum map_exception_code(int const ev)
++	{
++		switch (ev)
++		{
++			case seh_errors::error_code_enum::access_violation:
++			case seh_errors::error_code_enum::array_bounds_exceeded:
++			case seh_errors::error_code_enum::guard_page:
++			case seh_errors::error_code_enum::stack_overflow:
++			case seh_errors::error_code_enum::flt_stack_check:
++			case seh_errors::error_code_enum::in_page_error:
++				return sig::errors::segmentation;
++			case seh_errors::error_code_enum::breakpoint:
++			case seh_errors::error_code_enum::single_step:
++				return sig::errors::trap;
++			case seh_errors::error_code_enum::datatype_misalignment:
++				return sig::errors::bus;
++			case seh_errors::error_code_enum::flt_denormal_operand:
++			case seh_errors::error_code_enum::flt_divide_by_zero:
++			case seh_errors::error_code_enum::flt_inexact_result:
++			case seh_errors::error_code_enum::flt_invalid_operation:
++			case seh_errors::error_code_enum::flt_overflow:
++			case seh_errors::error_code_enum::flt_underflow:
++			case seh_errors::error_code_enum::int_divide_by_zero:
++			case seh_errors::error_code_enum::int_overflow:
++				return sig::errors::arithmetic_exception;
++			case seh_errors::error_code_enum::illegal_instruction:
++			case seh_errors::error_code_enum::invalid_disposition:
++			case seh_errors::error_code_enum::priv_instruction:
++			case seh_errors::error_code_enum::noncontinuable_exception:
++			case seh_errors::error_code_enum::status_unwind_consolidate:
++				return sig::errors::illegal;
++			case seh_errors::error_code_enum::invalid_handle:
++				return sig::errors::pipe;
++			default:
++				return sig::errors::illegal;
++		}
++	}
++
++	struct seh_error_category : std::error_category
++	{
++		const char* name() const noexcept override
++		{ return "SEH"; }
++		std::string message(int ev) const noexcept override
++		{
++#define SIGNAL_CASE(x) case sig::seh_errors::error_code_enum:: x: return #x;
++			switch (ev)
++			{
++			SIGNAL_CASE(access_violation)
++			SIGNAL_CASE(array_bounds_exceeded)
++			SIGNAL_CASE(guard_page)
++			SIGNAL_CASE(stack_overflow)
++			SIGNAL_CASE(flt_stack_check)
++			SIGNAL_CASE(in_page_error)
++			SIGNAL_CASE(breakpoint)
++			SIGNAL_CASE(single_step)
++			SIGNAL_CASE(datatype_misalignment)
++			SIGNAL_CASE(flt_denormal_operand)
++			SIGNAL_CASE(flt_divide_by_zero)
++			SIGNAL_CASE(flt_inexact_result)
++			SIGNAL_CASE(flt_invalid_operation)
++			SIGNAL_CASE(flt_overflow)
++			SIGNAL_CASE(flt_underflow)
++			SIGNAL_CASE(int_divide_by_zero)
++			SIGNAL_CASE(int_overflow)
++			SIGNAL_CASE(illegal_instruction)
++			SIGNAL_CASE(invalid_disposition)
++			SIGNAL_CASE(priv_instruction)
++			SIGNAL_CASE(noncontinuable_exception)
++			SIGNAL_CASE(status_unwind_consolidate)
++			SIGNAL_CASE(invalid_handle)
++			default: return "unknown";
++			}
++#undef SIGNAL_CASE
++		}
++		std::error_condition default_error_condition(int ev) const noexcept override
++		{ return std::error_condition(map_exception_code(ev), sig_category()); }
++	};
++} // anonymous namespace
++
++namespace seh_errors {
++
++	std::error_code make_error_code(error_code_enum e)
++	{
++		return {static_cast<int>(e), seh_category()};
++	}
++
++} // namespace errors
++
++std::error_category& seh_category()
++{
++	static seh_error_category seh_category;
++	return seh_category;
++}
++
++#endif
++
++} // namespace sig
++
+diff --git a/deps/try_signal/signal_error_code.hpp b/deps/try_signal/signal_error_code.hpp
+new file mode 100644
+index 000000000..91ea9478c
+--- /dev/null
++++ b/deps/try_signal/signal_error_code.hpp
+@@ -0,0 +1,162 @@
++/*
++
++Copyright (c) 2016, Arvid Norberg
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions
++are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the distribution.
++    * Neither the name of the author nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++#ifndef SIGNAL_ERROR_CODE_HPP_INCLUDED
++#define SIGNAL_ERROR_CODE_HPP_INCLUDED
++
++#include <signal.h>
++#include <system_error>
++
++#ifdef _WIN32
++#ifndef WIN32_LEAN_AND_MEAN
++#define WIN32_LEAN_AND_MEAN
++#endif
++#include <windows.h>
++
++#ifdef __GNUC__
++#include <excpt.h>
++#else
++#include <eh.h>
++#endif
++#endif
++
++namespace sig {
++namespace errors {
++
++#ifdef _WIN32
++#define SIG_ENUM(name, sig) name,
++#else
++#define SIG_ENUM(name, sig) name = sig,
++#endif
++
++	enum error_code_enum: int
++	{
++		SIG_ENUM(abort, SIGABRT)
++		SIG_ENUM(alarm, SIGALRM)
++		SIG_ENUM(arithmetic_exception, SIGFPE)
++		SIG_ENUM(hangup, SIGHUP)
++		SIG_ENUM(illegal, SIGILL)
++		SIG_ENUM(interrupt, SIGINT)
++		SIG_ENUM(kill, SIGKILL)
++		SIG_ENUM(pipe, SIGPIPE)
++		SIG_ENUM(quit, SIGQUIT)
++		SIG_ENUM(segmentation, SIGSEGV)
++		SIG_ENUM(terminate, SIGTERM)
++		SIG_ENUM(user1, SIGUSR1)
++		SIG_ENUM(user2, SIGUSR2)
++		SIG_ENUM(child, SIGCHLD)
++		SIG_ENUM(cont, SIGCONT)
++		SIG_ENUM(stop, SIGSTOP)
++		SIG_ENUM(terminal_stop, SIGTSTP)
++		SIG_ENUM(terminal_in, SIGTTIN)
++		SIG_ENUM(terminal_out, SIGTTOU)
++		SIG_ENUM(bus, SIGBUS)
++#ifdef SIGPOLL
++		SIG_ENUM(poll, SIGPOLL)
++#endif
++		SIG_ENUM(profiler, SIGPROF)
++		SIG_ENUM(system_call, SIGSYS)
++		SIG_ENUM(trap, SIGTRAP)
++		SIG_ENUM(urgent_data, SIGURG)
++		SIG_ENUM(virtual_timer, SIGVTALRM)
++		SIG_ENUM(cpu_limit, SIGXCPU)
++		SIG_ENUM(file_size_limit, SIGXFSZ)
++	};
++
++#undef SIG_ENUM
++
++	std::error_code make_error_code(error_code_enum e);
++	std::error_condition make_error_condition(error_code_enum e);
++
++} // namespace errors
++
++std::error_category& sig_category();
++
++#ifdef _WIN32
++namespace seh_errors {
++
++	// standard error codes are "int", the win32 exceptions are DWORD (i.e.
++	// unsigned int). We coerce them into int here for compatibility, and we're
++	// not concerned about their arithmetic
++	enum error_code_enum: int
++	{
++		access_violation = int(EXCEPTION_ACCESS_VIOLATION),
++		array_bounds_exceeded = int(EXCEPTION_ARRAY_BOUNDS_EXCEEDED),
++		guard_page = int(EXCEPTION_GUARD_PAGE),
++		stack_overflow = int(EXCEPTION_STACK_OVERFLOW),
++		flt_stack_check = int(EXCEPTION_FLT_STACK_CHECK),
++		in_page_error = int(EXCEPTION_IN_PAGE_ERROR),
++		breakpoint = int(EXCEPTION_BREAKPOINT),
++		single_step = int(EXCEPTION_SINGLE_STEP),
++		datatype_misalignment = int(EXCEPTION_DATATYPE_MISALIGNMENT),
++		flt_denormal_operand = int(EXCEPTION_FLT_DENORMAL_OPERAND),
++		flt_divide_by_zero = int(EXCEPTION_FLT_DIVIDE_BY_ZERO),
++		flt_inexact_result = int(EXCEPTION_FLT_INEXACT_RESULT),
++		flt_invalid_operation = int(EXCEPTION_FLT_INVALID_OPERATION),
++		flt_overflow = int(EXCEPTION_FLT_OVERFLOW),
++		flt_underflow = int(EXCEPTION_FLT_UNDERFLOW),
++		int_divide_by_zero = int(EXCEPTION_INT_DIVIDE_BY_ZERO),
++		int_overflow = int(EXCEPTION_INT_OVERFLOW),
++		illegal_instruction = int(EXCEPTION_ILLEGAL_INSTRUCTION),
++		invalid_disposition = int(EXCEPTION_INVALID_DISPOSITION),
++		priv_instruction = int(EXCEPTION_PRIV_INSTRUCTION),
++		noncontinuable_exception = int(EXCEPTION_NONCONTINUABLE_EXCEPTION),
++		status_unwind_consolidate = int(STATUS_UNWIND_CONSOLIDATE),
++		invalid_handle = int(EXCEPTION_INVALID_HANDLE),
++	};
++
++	std::error_code make_error_code(error_code_enum e);
++}
++
++std::error_category& seh_category();
++
++#endif // _WIN32
++
++} // namespace sig
++
++namespace std
++{
++template<>
++struct is_error_code_enum<sig::errors::error_code_enum> : std::true_type {};
++
++template<>
++struct is_error_condition_enum<sig::errors::error_code_enum> : std::true_type {};
++
++#ifdef _WIN32
++template<>
++struct is_error_code_enum<sig::seh_errors::error_code_enum> : std::true_type {};
++#endif
++
++} // namespace std
++
++#endif
++
+diff --git a/deps/try_signal/test.cpp b/deps/try_signal/test.cpp
+new file mode 100644
+index 000000000..b8c67c8ee
+--- /dev/null
++++ b/deps/try_signal/test.cpp
+@@ -0,0 +1,47 @@
++#include <stdexcept>
++#include <array>
++#include <cstring> // for memcpy
++
++#include "try_signal.hpp"
++
++int main()
++{
++	char const buf[] = "test...test";
++	char dest[sizeof(buf)];
++
++	{
++		sig::try_signal([&]{
++			std::memcpy(dest, buf, sizeof(buf));
++		});
++		if (!std::equal(buf, buf + sizeof(buf), dest)) {
++			fprintf(stderr, "ERROR: buffer not copied correctly\n");
++			return 1;
++		}
++	}
++
++	try {
++		void* invalid_pointer = nullptr;
++		sig::try_signal([&]{
++			std::memcpy(dest, buf, sizeof(buf));
++			std::memcpy(dest, invalid_pointer, sizeof(buf));
++		});
++	}
++	catch (std::system_error const& e)
++	{
++		if (e.code() != std::error_condition(sig::errors::segmentation)) {
++			fprintf(stderr, "ERROR: expected segmentaiton violation error\n");
++		}
++		else {
++			fprintf(stderr, "OK\n");
++		}
++		fprintf(stderr, "exited with expected system_error exception: %s\n", e.what());
++
++		// we expect this to happen, so return 0
++		return e.code() == std::error_condition(sig::errors::segmentation) ? 0 : 1;
++	}
++
++	// return non-zero here because we don't expect this
++	fprintf(stderr, "ERROR: expected exit through exception\n");
++	return 1;
++}
++
+diff --git a/deps/try_signal/try_signal.cpp b/deps/try_signal/try_signal.cpp
+new file mode 100644
+index 000000000..be5cd8d2b
+--- /dev/null
++++ b/deps/try_signal/try_signal.cpp
+@@ -0,0 +1,144 @@
++/*
++
++Copyright (c) 2016, Arvid Norberg
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions
++are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the distribution.
++    * Neither the name of the author nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++#include <cassert>
++#include <system_error>
++#include <atomic>
++#include <csetjmp>
++#include <csignal>
++
++#include "try_signal.hpp"
++
++#if !defined _WIN32
++// linux
++
++namespace sig {
++namespace detail {
++
++namespace {
++thread_local sigjmp_buf* jmpbuf = nullptr;
++}
++
++std::atomic_flag once = ATOMIC_FLAG_INIT;
++
++scoped_jmpbuf::scoped_jmpbuf(sigjmp_buf* ptr)
++{
++	_previous_ptr = jmpbuf;
++	jmpbuf = ptr;
++	std::atomic_signal_fence(std::memory_order_release);
++}
++
++scoped_jmpbuf::~scoped_jmpbuf() { jmpbuf = _previous_ptr; }
++
++void handler(int const signo, siginfo_t*, void*)
++{
++	std::atomic_signal_fence(std::memory_order_acquire);
++	if (jmpbuf)
++		siglongjmp(*jmpbuf, signo);
++
++	// this signal was not caused within the scope of a try_signal object,
++	// invoke the default handler
++	signal(signo, SIG_DFL);
++	raise(signo);
++}
++
++void setup_handler()
++{
++	struct sigaction sa;
++	sa.sa_sigaction = &sig::detail::handler;
++	sigemptyset(&sa.sa_mask);
++	sa.sa_flags = SA_SIGINFO;
++	sigaction(SIGSEGV, &sa, nullptr);
++	sigaction(SIGBUS, &sa, nullptr);
++}
++
++} // detail namespace
++} // sig namespace
++
++#elif __GNUC__
++// mingw
++
++#ifndef WIN32_LEAN_AND_MEAN
++#define WIN32_LEAN_AND_MEAN
++#endif
++#include <windows.h>
++
++namespace sig {
++namespace detail {
++
++thread_local jmp_buf* jmpbuf = nullptr;
++
++long CALLBACK handler(EXCEPTION_POINTERS* pointers)
++{
++	std::atomic_signal_fence(std::memory_order_acquire);
++	if (jmpbuf)
++		longjmp(*jmpbuf, pointers->ExceptionRecord->ExceptionCode);
++	return EXCEPTION_CONTINUE_SEARCH;
++}
++
++scoped_handler::scoped_handler(jmp_buf* ptr)
++{
++	_previous_ptr = jmpbuf;
++	jmpbuf = ptr;
++	std::atomic_signal_fence(std::memory_order_release);
++	_handle = AddVectoredExceptionHandler(1, sig::detail::handler);
++}
++scoped_handler::~scoped_handler()
++{
++	RemoveVectoredExceptionHandler(_handle);
++	jmpbuf = _previous_ptr;
++}
++
++} // detail namespace
++} // sig namespace
++
++#else
++// windows
++
++#include <winnt.h> // for EXCEPTION_*
++
++namespace sig {
++namespace detail {
++
++	// these are the kinds of SEH exceptions we'll translate into C++ exceptions
++	bool catch_error(int const code)
++	{
++		return code == EXCEPTION_IN_PAGE_ERROR
++			|| code == EXCEPTION_ACCESS_VIOLATION
++			|| code == EXCEPTION_ARRAY_BOUNDS_EXCEEDED;
++	}
++} // detail namespace
++} // namespace sig
++
++#endif // _WIN32
++
++
+diff --git a/deps/try_signal/try_signal.hpp b/deps/try_signal/try_signal.hpp
+new file mode 100644
+index 000000000..557d92bb6
+--- /dev/null
++++ b/deps/try_signal/try_signal.hpp
+@@ -0,0 +1,49 @@
++/*
++
++Copyright (c) 2017, Arvid Norberg
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions
++are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the distribution.
++    * Neither the name of the author nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++#ifndef TRY_SIGNAL_HPP_INCLUDED
++#define TRY_SIGNAL_HPP_INCLUDED
++
++#if !defined _WIN32
++// linux
++#include "try_signal_posix.hpp"
++#elif __GNUC__
++// mingw
++#include "try_signal_mingw.hpp"
++#else
++// windows
++#include "try_signal_msvc.hpp"
++#endif
++
++
++#endif // TRY_SIGNAL_HPP_INCLUDED
++
+diff --git a/deps/try_signal/try_signal_mingw.hpp b/deps/try_signal/try_signal_mingw.hpp
+new file mode 100644
+index 000000000..e4db043e2
+--- /dev/null
++++ b/deps/try_signal/try_signal_mingw.hpp
+@@ -0,0 +1,78 @@
++/*
++
++Copyright (c) 2017, Arvid Norberg
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions
++are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the distribution.
++    * Neither the name of the author nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++#ifndef TRY_SIGNAL_MINGW_HPP_INCLUDED
++#define TRY_SIGNAL_MINGW_HPP_INCLUDED
++
++#include "signal_error_code.hpp"
++
++#include <setjmp.h> // for jmp_buf
++
++#ifndef WIN32_LEAN_AND_MEAN
++#define WIN32_LEAN_AND_MEAN
++#endif
++#include <windows.h>
++
++namespace sig {
++namespace detail {
++
++struct scoped_handler
++{
++	scoped_handler(jmp_buf* ptr);
++	~scoped_handler();
++	scoped_handler(scoped_handler const&) = delete;
++	scoped_handler& operator=(scoped_handler const&) = delete;
++private:
++	void* _handle;
++	jmp_buf* _previous_ptr;
++};
++
++} // detail namespace
++
++template <typename Fun>
++void try_signal(Fun&& f)
++{
++	jmp_buf buf;
++	int const code = setjmp(buf);
++	// set the thread local jmpbuf pointer, and make sure it's cleared when we
++	// leave the scope
++	sig::detail::scoped_handler scope(&buf);
++	if (code != 0)
++		throw std::system_error(std::error_code(code, seh_category()));
++
++	f();
++}
++
++} // sig namespace
++
++#endif
++
+diff --git a/deps/try_signal/try_signal_msvc.hpp b/deps/try_signal/try_signal_msvc.hpp
+new file mode 100644
+index 000000000..04cc62df5
+--- /dev/null
++++ b/deps/try_signal/try_signal_msvc.hpp
+@@ -0,0 +1,61 @@
++/*
++
++Copyright (c) 2017, Arvid Norberg
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions
++are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the distribution.
++    * Neither the name of the author nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++#ifndef TRY_SIGNAL_MSVC_HPP_INCLUDED
++#define TRY_SIGNAL_MSVC_HPP_INCLUDED
++
++#include "signal_error_code.hpp"
++
++namespace sig {
++namespace detail {
++
++bool catch_error(int const code);
++
++} // detail namespace
++
++template <typename Fun>
++void try_signal(Fun&& f)
++{
++	__try
++	{
++		f();
++	}
++	__except (detail::catch_error(GetExceptionCode()))
++	{
++		throw std::system_error(std::error_code(GetExceptionCode(), seh_category()));
++	}
++}
++
++} // sig namespace
++
++#endif
++
+diff --git a/deps/try_signal/try_signal_posix.hpp b/deps/try_signal/try_signal_posix.hpp
+new file mode 100644
+index 000000000..2c4615de4
+--- /dev/null
++++ b/deps/try_signal/try_signal_posix.hpp
+@@ -0,0 +1,82 @@
++/*
++
++Copyright (c) 2017, Arvid Norberg
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions
++are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the distribution.
++    * Neither the name of the author nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++#ifndef TRY_SIGNAL_POSIX_HPP_INCLUDED
++#define TRY_SIGNAL_POSIX_HPP_INCLUDED
++
++#include "signal_error_code.hpp"
++#include <setjmp.h> // for sigjmp_buf
++#include <atomic>
++
++namespace sig {
++
++namespace detail {
++
++extern std::atomic_flag once;
++
++struct scoped_jmpbuf
++{
++	explicit scoped_jmpbuf(sigjmp_buf* ptr);
++	~scoped_jmpbuf();
++	scoped_jmpbuf(scoped_jmpbuf const&) = delete;
++	scoped_jmpbuf& operator=(scoped_jmpbuf const&) = delete;
++private:
++	sigjmp_buf* _previous_ptr;
++};
++
++void handler(int const signo, siginfo_t* si, void*);
++void setup_handler();
++
++} // detail namespace
++
++template <typename Fun>
++void try_signal(Fun&& f)
++{
++	if (sig::detail::once.test_and_set() == false) {
++		sig::detail::setup_handler();
++	}
++
++	sigjmp_buf buf;
++	int const sig = sigsetjmp(buf, 1);
++	// set the thread local jmpbuf pointer, and make sure it's cleared when we
++	// leave the scope
++	sig::detail::scoped_jmpbuf scope(&buf);
++	if (sig != 0)
++		throw std::system_error(static_cast<sig::errors::error_code_enum>(sig));
++
++	f();
++}
++
++}
++
++#endif
++
+-- 
+2.34.1
+

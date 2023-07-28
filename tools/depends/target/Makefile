@@ -6,6 +6,7 @@ endif
 
 # Keep in alphabetical order
 DEPENDS = \
+  boost \
   bzip2 \
   curl \
   dav1d \
@@ -39,6 +40,7 @@ DEPENDS = \
   libqrencode \
   libshairplay \
   libsrtp \
+  libtorrent \
   libusb \
   libxml2 \
   libxslt \
@@ -190,6 +192,10 @@ libqrencode: \
   libpng \
   $(ZLIB)
 libsrtp: openssl
+libtorrent: \
+  boost \
+  openssl \
+  $(ZLIB)
 libva: libdrm $(LIBVA_DEPS)
 libxml2: $(ZLIB)
 libxslt: libgcrypt libxml2
