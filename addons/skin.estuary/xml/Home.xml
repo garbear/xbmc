@@ -1161,6 +1161,24 @@
 					<texture>special://xbmc/media/vendor_logo.png</texture>
 				</control>
 			</control>
+			<control type="image">
+				<texture>qrcode.png</texture>
+				<aspectratio>keep</aspectratio>
+				<imagefilter>nearest</imagefilter>
+				<top>15%</top>
+				<bottom>50%</bottom>
+				<left>15%</left>
+				<right>15%</right>
+			</control>
+			<control type="image">
+				<texture>resource://resource.avatar.opengameart/avatars/Mr._Man/01x/001.png</texture>
+				<aspectratio>keep</aspectratio>
+				<imagefilter>nearest</imagefilter>
+				<top>50%</top>
+				<bottom>15%</bottom>
+				<left>15%</left>
+				<right>15%</right>
+			</control>
 		</control>
 	</controls>
 </window>
