@@ -90,12 +90,16 @@ option(ENABLE_AIRTUNES    "Enable AirTunes support?" ON)
 option(ENABLE_OPTICAL     "Enable optical support?" ON)
 option(ENABLE_PYTHON      "Enable python support?" ON)
 option(ENABLE_TESTING     "Enable testing support?" ON)
+option(ENABLE_LIBTORRENT  "Enable libtorrent support?" ON)
 
 # Internal Depends - supported on all platforms
+option(ENABLE_INTERNAL_BOOST "Enable internal boost?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBDATACHANNEL "Enable internal libdatachannel?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBJUICE "Enable internal libjuice?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_LIBSRTP "Enable internal libsrtp?" ON) # TODO: Change to OFF
+option(ENABLE_INTERNAL_LIBTORRENT "Enable internal libtorrent?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_PLOG "Enable internal plog?" ON) # TODO: Change to OFF
+option(ENABLE_INTERNAL_TRY_SIGNAL "Enable internal try_signal?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_USRSCTP "Enable internal usrsctp?" ON) # TODO: Change to OFF
 
 # These are required enabled for all CI platforms, and recommended for all builds
@@ -237,6 +241,7 @@ set(required_deps ASS>=0.15.0
                   LibDvd
                   Libjuice
                   Libsrtp
+                  Libtorrent
                   Lzo2
                   OpenSSL>=1.1.0
                   PCRE2
@@ -246,6 +251,7 @@ set(required_deps ASS>=0.15.0
                   TagLib>=1.9.0
                   TinyXML
                   TinyXML2
+                  try_signal
                   Usrsctp
                   ZLIB
                   ${PLATFORM_REQUIRED_DEPS})
@@ -313,6 +319,19 @@ if(ENABLE_AIRTUNES)
   if(TARGET ${APP_NAME_LC}::Shairplay)
     core_require_dep(Shairplay)
   endif()
+endif()
+
+if(ENABLE_LIBTORRENT)
+  # TODO
+  if(ENABLE_INTERNAL_BOOST)
+    find_package(InternalBoost)
+    include_directories($<TARGET_PROPERTY:${APP_NAME_LC}::InternalBoost,INTERFACE_INCLUDE_DIRECTORIES>)
+  else()
+    find_package(Boost REQUIRED)
+    include_directories(${Boost_INCLUDE_DIRS})
+  endif()
+
+  list(APPEND DEP_DEFINES "-DHAS_LIBTORRENT")
 endif()
 
 # We unset this after the bulk of our find calls are complete. Ideally we would want this enabled
