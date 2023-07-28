@@ -22,7 +22,8 @@ CGUIMessage::CGUIMessage(int msg, int senderID, int controlID, int param1, int p
   m_pointer = NULL;
 }
 
-CGUIMessage::CGUIMessage(int msg, int senderID, int controlID, int param1, int param2, CFileItemList *item)
+CGUIMessage::CGUIMessage(
+    int msg, int senderID, int controlID, int param1, int param2, CFileItemList* item)
 {
   m_message = msg;
   m_senderID = senderID;
@@ -47,7 +48,6 @@ CGUIMessage::CGUIMessage(
 CGUIMessage::CGUIMessage(const CGUIMessage& msg) = default;
 
 CGUIMessage::~CGUIMessage(void) = default;
-
 
 int CGUIMessage::GetControlId() const
 {
@@ -84,7 +84,7 @@ int CGUIMessage::GetSenderId() const
   return m_senderID;
 }
 
-CGUIMessage& CGUIMessage::operator = (const CGUIMessage& msg) = default;
+CGUIMessage& CGUIMessage::operator=(const CGUIMessage& msg) = default;
 
 void CGUIMessage::SetParam1(int param1)
 {
@@ -123,7 +123,7 @@ void CGUIMessage::SetStringParam(const std::string& strParam)
     m_params.push_back(strParam);
 }
 
-void CGUIMessage::SetStringParams(const std::vector<std::string> &params)
+void CGUIMessage::SetStringParams(const std::vector<std::string>& params)
 {
   m_params = params;
 }

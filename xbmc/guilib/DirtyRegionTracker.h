@@ -22,14 +22,14 @@ public:
   explicit CDirtyRegionTracker(int buffering = DEFAULT_BUFFERING);
   ~CDirtyRegionTracker();
   void SelectAlgorithm();
-  void MarkDirtyRegion(const CDirtyRegion &region);
+  void MarkDirtyRegion(const CDirtyRegion& region);
 
-  const CDirtyRegionList &GetMarkedRegions() const;
+  const CDirtyRegionList& GetMarkedRegions() const;
   CDirtyRegionList GetDirtyRegions();
   void CleanMarkedRegions();
 
 private:
   CDirtyRegionList m_markedRegions;
   int m_buffering;
-  IDirtyRegionSolver *m_solver;
+  IDirtyRegionSolver* m_solver;
 };

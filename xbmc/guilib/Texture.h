@@ -16,9 +16,11 @@
 
 class IImage;
 
-
 #pragma pack(1)
-struct COLOR {unsigned char b,g,r,x;};	// Windows GDI expects 4bytes per color
+struct COLOR
+{
+  unsigned char b, g, r, x;
+}; // Windows GDI expects 4bytes per color
 #pragma pack()
 
 enum class TEXTURE_SCALING
@@ -126,17 +128,32 @@ public:
   void ClampToEdge();
 
   static unsigned int PadPow2(unsigned int x);
-  static bool SwapBlueRed(unsigned char *pixels, unsigned int height, unsigned int pitch, unsigned int elements = 4, unsigned int offset=0);
+  static bool SwapBlueRed(unsigned char* pixels,
+                          unsigned int height,
+                          unsigned int pitch,
+                          unsigned int elements = 4,
+                          unsigned int offset = 0);
 
 private:
   // no copy constructor
   CTexture(const CTexture& copy) = delete;
 
 protected:
-  bool LoadFromFileInMem(unsigned char* buffer, size_t size, const std::string& mimeType,
-                         unsigned int maxWidth, unsigned int maxHeight);
-  bool LoadFromFileInternal(const std::string& texturePath, unsigned int maxWidth, unsigned int maxHeight, bool requirePixels, const std::string& strMimeType = "");
-  bool LoadIImage(IImage* pImage, unsigned char* buffer, unsigned int bufSize, unsigned int width, unsigned int height);
+  bool LoadFromFileInMem(unsigned char* buffer,
+                         size_t size,
+                         const std::string& mimeType,
+                         unsigned int maxWidth,
+                         unsigned int maxHeight);
+  bool LoadFromFileInternal(const std::string& texturePath,
+                            unsigned int maxWidth,
+                            unsigned int maxHeight,
+                            bool requirePixels,
+                            const std::string& strMimeType = "");
+  bool LoadIImage(IImage* pImage,
+                  unsigned char* buffer,
+                  unsigned int bufSize,
+                  unsigned int width,
+                  unsigned int height);
   // helpers for computation of texture parameters for compressed textures
   unsigned int GetPitch(unsigned int width) const;
   unsigned int GetRows(unsigned int height) const;
@@ -146,15 +163,15 @@ protected:
   unsigned int m_imageHeight;
   unsigned int m_textureWidth;
   unsigned int m_textureHeight;
-  unsigned int m_originalWidth;   ///< original image width before scaling or cropping
-  unsigned int m_originalHeight;  ///< original image height before scaling or cropping
+  unsigned int m_originalWidth; ///< original image width before scaling or cropping
+  unsigned int m_originalHeight; ///< original image height before scaling or cropping
 
   unsigned char* m_pixels;
   bool m_loadedToGPU;
   XB_FMT m_format;
   int m_orientation;
-  bool m_hasAlpha =  true ;
-  bool m_mipmapping =  false ;
+  bool m_hasAlpha = true;
+  bool m_mipmapping = false;
   TEXTURE_SCALING m_scalingMethod = TEXTURE_SCALING::LINEAR;
   bool m_bCacheMemory = false;
 };

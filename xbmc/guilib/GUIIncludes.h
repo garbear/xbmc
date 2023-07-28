@@ -20,7 +20,7 @@
 class TiXmlElement;
 namespace INFO
 {
-  class CSkinVariableString;
+class CSkinVariableString;
 }
 
 class CGUIIncludes
@@ -41,7 +41,7 @@ public:
 
    \param file the file to load
   */
-  void Load(const std::string &file);
+  void Load(const std::string& file);
 
   /*!
    \brief Resolve all include components (defaults, constants, variables, expressions and includes)
@@ -50,7 +50,7 @@ public:
    \param node the node from where we start to resolve the include components
    \param includeConditions a map that holds the conditions for resolved includes
    */
-  void Resolve(TiXmlElement *node, std::map<INFO::InfoPtr, bool>* includeConditions = NULL);
+  void Resolve(TiXmlElement* node, std::map<INFO::InfoPtr, bool>* includeConditions = NULL);
 
   /*!
    \brief Create a skin variable for the given \code{name} within the given \code{context}.
@@ -76,15 +76,15 @@ private:
    \param file the file to load
    \return true if the file was loaded otherwise false
   */
-  bool Load_Internal(const std::string &file);
+  bool Load_Internal(const std::string& file);
 
-  bool HasLoaded(const std::string &file) const;
+  bool HasLoaded(const std::string& file) const;
 
-  void LoadDefaults(const TiXmlElement *node);
-  void LoadIncludes(const TiXmlElement *node);
-  void LoadVariables(const TiXmlElement *node);
-  void LoadConstants(const TiXmlElement *node);
-  void LoadExpressions(const TiXmlElement *node);
+  void LoadDefaults(const TiXmlElement* node);
+  void LoadIncludes(const TiXmlElement* node);
+  void LoadVariables(const TiXmlElement* node);
+  void LoadConstants(const TiXmlElement* node);
+  void LoadExpressions(const TiXmlElement* node);
 
   /*!
    \brief Resolve all expressions containing other expressions to a single evaluatable expression.
@@ -97,26 +97,31 @@ private:
    \param expression the expression to flatten
    \param resolved list of already evaluated expression names, to avoid expanding circular references
   */
-  void FlattenExpression(std::string &expression, const std::vector<std::string> &resolved);
+  void FlattenExpression(std::string& expression, const std::vector<std::string>& resolved);
 
   /*!
    \brief Resolve all variable conditions containing expressions to a single evaluatable condition.
   */
   void FlattenSkinVariableConditions();
 
-  void SetDefaults(TiXmlElement *node);
-  void ResolveIncludes(TiXmlElement *node, std::map<INFO::InfoPtr, bool>* xmlIncludeConditions = NULL);
-  void ResolveConstants(TiXmlElement *node);
-  void ResolveExpressions(TiXmlElement *node);
+  void SetDefaults(TiXmlElement* node);
+  void ResolveIncludes(TiXmlElement* node,
+                       std::map<INFO::InfoPtr, bool>* xmlIncludeConditions = NULL);
+  void ResolveConstants(TiXmlElement* node);
+  void ResolveExpressions(TiXmlElement* node);
 
   typedef std::map<std::string, std::string> Params;
   static void InsertNested(TiXmlElement* controls, TiXmlElement* include, TiXmlElement* node);
-  static bool GetParameters(const TiXmlElement *include, const char *valueAttribute, Params& params);
-  static void ResolveParametersForNode(TiXmlElement *node, const Params& params);
-  static ResolveParamsResult ResolveParameters(const std::string& strInput, std::string& strOutput, const Params& params);
+  static bool GetParameters(const TiXmlElement* include,
+                            const char* valueAttribute,
+                            Params& params);
+  static void ResolveParametersForNode(TiXmlElement* node, const Params& params);
+  static ResolveParamsResult ResolveParameters(const std::string& strInput,
+                                               std::string& strOutput,
+                                               const Params& params);
 
-  std::string ResolveConstant(const std::string &constant) const;
-  std::string ResolveExpressions(const std::string &expression) const;
+  std::string ResolveConstant(const std::string& constant) const;
+  std::string ResolveExpressions(const std::string& expression) const;
 
   std::vector<std::string> m_files;
   std::map<std::string, std::pair<TiXmlElement, Params>> m_includes;

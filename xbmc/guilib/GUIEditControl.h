@@ -26,34 +26,42 @@
 class CGUIEditControl : public CGUIButtonControl
 {
 public:
-  enum INPUT_TYPE {
-                    INPUT_TYPE_READONLY = -1,
-                    INPUT_TYPE_TEXT = 0,
-                    INPUT_TYPE_NUMBER,
-                    INPUT_TYPE_SECONDS,
-                    INPUT_TYPE_TIME,
-                    INPUT_TYPE_DATE,
-                    INPUT_TYPE_IPADDRESS,
-                    INPUT_TYPE_PASSWORD,
-                    INPUT_TYPE_PASSWORD_MD5,
-                    INPUT_TYPE_SEARCH,
-                    INPUT_TYPE_FILTER,
-                    INPUT_TYPE_PASSWORD_NUMBER_VERIFY_NEW
-                  };
+  enum INPUT_TYPE
+  {
+    INPUT_TYPE_READONLY = -1,
+    INPUT_TYPE_TEXT = 0,
+    INPUT_TYPE_NUMBER,
+    INPUT_TYPE_SECONDS,
+    INPUT_TYPE_TIME,
+    INPUT_TYPE_DATE,
+    INPUT_TYPE_IPADDRESS,
+    INPUT_TYPE_PASSWORD,
+    INPUT_TYPE_PASSWORD_MD5,
+    INPUT_TYPE_SEARCH,
+    INPUT_TYPE_FILTER,
+    INPUT_TYPE_PASSWORD_NUMBER_VERIFY_NEW
+  };
 
-  CGUIEditControl(int parentID, int controlID, float posX, float posY,
-                  float width, float height, const CTextureInfo &textureFocus, const CTextureInfo &textureNoFocus,
-                  const CLabelInfo& labelInfo, const std::string &text);
-  explicit CGUIEditControl(const CGUIButtonControl &button);
+  CGUIEditControl(int parentID,
+                  int controlID,
+                  float posX,
+                  float posY,
+                  float width,
+                  float height,
+                  const CTextureInfo& textureFocus,
+                  const CTextureInfo& textureNoFocus,
+                  const CLabelInfo& labelInfo,
+                  const std::string& text);
+  explicit CGUIEditControl(const CGUIButtonControl& button);
   ~CGUIEditControl(void) override;
   CGUIEditControl* Clone() const override { return new CGUIEditControl(*this); }
 
-  bool OnMessage(CGUIMessage &message) override;
-  bool OnAction(const CAction &action) override;
+  bool OnMessage(CGUIMessage& message) override;
+  bool OnAction(const CAction& action) override;
   void OnClick() override;
 
-  void SetLabel(const std::string &text) override;
-  void SetLabel2(const std::string &text) override;
+  void SetLabel(const std::string& text) override;
+  void SetLabel2(const std::string& text) override;
   void SetHint(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& hint);
 
   std::string GetLabel2() const override;
@@ -71,7 +79,7 @@ public:
   bool HasTextChangeActions() const { return m_textChangeActions.HasActionsMeetingCondition(); }
 
   virtual bool HasInvalidInput() const { return m_invalidInput; }
-  virtual void SetInputValidation(StringValidation::Validator inputValidator, void *data = NULL);
+  virtual void SetInputValidation(StringValidation::Validator inputValidator, void* data = NULL);
 
 protected:
   void SetFocus(bool focus) override;
@@ -80,7 +88,7 @@ protected:
   CGUILabel::COLOR GetTextColor() const override;
   std::wstring GetDisplayedText() const;
   std::string GetDescriptionByIndex(int index) const override;
-  bool SetStyledText(const std::wstring &text);
+  bool SetStyledText(const std::wstring& text);
 
   /*!
    * \brief Recalculate the text offset position for the right label
@@ -94,7 +102,7 @@ protected:
   void OnSMSCharacter(unsigned int key);
   void DefaultConstructor();
 
-  virtual bool ValidateInput(const std::wstring &data) const;
+  virtual bool ValidateInput(const std::wstring& data) const;
   void ValidateInput();
 
   /*! \brief Clear out the current text input if it's an MD5 password.
@@ -103,7 +111,7 @@ protected:
   bool ClearMD5();
 
   std::wstring m_text2;
-  std::string  m_text;
+  std::string m_text;
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_hintInfo;
   float m_textOffset;
   CRect m_clipRect; ///< clipping rect for the second label
@@ -119,13 +127,13 @@ protected:
 
   bool m_invalidInput;
   StringValidation::Validator m_inputValidator;
-  void *m_inputValidatorData;
+  void* m_inputValidatorData;
 
   unsigned int m_smsKeyIndex;
   unsigned int m_smsLastKey;
-  CStopWatch   m_smsTimer;
+  CStopWatch m_smsTimer;
 
   std::wstring m_edit;
-  int          m_editOffset;
-  int          m_editLength;
+  int m_editOffset;
+  int m_editLength;
 };

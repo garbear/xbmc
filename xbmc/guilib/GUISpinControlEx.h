@@ -23,11 +23,29 @@
 class CGUISpinControlEx : public CGUISpinControl
 {
 public:
-  CGUISpinControlEx(int parentID, int controlID, float posX, float posY, float width, float height, float spinWidth, float spinHeight, const CLabelInfo& spinInfo, const CTextureInfo &textureFocus, const CTextureInfo &textureNoFocus, const CTextureInfo& textureUp, const CTextureInfo& textureDown, const CTextureInfo& textureUpFocus, const CTextureInfo& textureDownFocus, const CTextureInfo& textureUpDisabled, const CTextureInfo& textureDownDisabled, const CLabelInfo& labelInfo, int iType);
+  CGUISpinControlEx(int parentID,
+                    int controlID,
+                    float posX,
+                    float posY,
+                    float width,
+                    float height,
+                    float spinWidth,
+                    float spinHeight,
+                    const CLabelInfo& spinInfo,
+                    const CTextureInfo& textureFocus,
+                    const CTextureInfo& textureNoFocus,
+                    const CTextureInfo& textureUp,
+                    const CTextureInfo& textureDown,
+                    const CTextureInfo& textureUpFocus,
+                    const CTextureInfo& textureDownFocus,
+                    const CTextureInfo& textureUpDisabled,
+                    const CTextureInfo& textureDownDisabled,
+                    const CLabelInfo& labelInfo,
+                    int iType);
   ~CGUISpinControlEx(void) override;
   CGUISpinControlEx* Clone() const override { return new CGUISpinControlEx(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
   void SetPosition(float posX, float posY) override;
   float GetWidth() const override { return m_buttonControl.GetWidth(); }
@@ -48,10 +66,10 @@ public:
   void SetSpinPosition(float spinPosX);
 
   void SetItemInvalid(bool invalid);
+
 protected:
   void RenderText(float posX, float posY, float width, float height) override;
   bool UpdateColors(const CGUIListItem* item) override;
   CGUIButtonControl m_buttonControl;
   float m_spinPosX;
 };
-

@@ -32,12 +32,12 @@
 
 #include <mutex>
 
-bool CGUIWindow::icompare::operator()(const std::string &s1, const std::string &s2) const
+bool CGUIWindow::icompare::operator()(const std::string& s1, const std::string& s2) const
 {
   return StringUtils::CompareNoCase(s1, s2) < 0;
 }
 
-CGUIWindow::CGUIWindow(int id, const std::string &xmlFile)
+CGUIWindow::CGUIWindow(int id, const std::string& xmlFile)
 {
   CGUIWindow::SetID(id);
   SetProperty("xmlfile", xmlFile);
@@ -66,7 +66,7 @@ CGUIWindow::~CGUIWindow()
 bool CGUIWindow::Load(const std::string& strFileName, bool bContainsPath)
 {
   if (m_windowLoaded || !g_SkinInfo)
-    return true;      // no point loading if it's already there
+    return true; // no point loading if it's already there
 
 #ifdef _DEBUG
   const auto start = std::chrono::steady_clock::now();
@@ -75,16 +75,16 @@ bool CGUIWindow::Load(const std::string& strFileName, bool bContainsPath)
   const char* strLoadType;
   switch (m_loadType)
   {
-  case LOAD_ON_GUI_INIT:
-    strLoadType = "LOAD_ON_GUI_INIT";
-    break;
-  case KEEP_IN_MEMORY:
-    strLoadType = "KEEP_IN_MEMORY";
-    break;
-  case LOAD_EVERY_TIME:
-  default:
-    strLoadType = "LOAD_EVERY_TIME";
-    break;
+    case LOAD_ON_GUI_INIT:
+      strLoadType = "LOAD_ON_GUI_INIT";
+      break;
+    case KEEP_IN_MEMORY:
+      strLoadType = "KEEP_IN_MEMORY";
+      break;
+    case LOAD_EVERY_TIME:
+    default:
+      strLoadType = "LOAD_EVERY_TIME";
+      break;
   }
   CLog::Log(LOGINFO, "Loading skin file: {}, load type: {}", strFileName, strLoadType);
 
@@ -98,7 +98,7 @@ bool CGUIWindow::Load(const std::string& strFileName, bool bContainsPath)
     // FIXME: strLowerPath needs to eventually go since resToUse can get incorrectly overridden
     std::string strFileNameLower = strFileName;
     StringUtils::ToLower(strFileNameLower);
-    strLowerPath =  g_SkinInfo->GetSkinPath(strFileNameLower, &m_coordsRes);
+    strLowerPath = g_SkinInfo->GetSkinPath(strFileNameLower, &m_coordsRes);
     strPath = g_SkinInfo->GetSkinPath(strFileName, &m_coordsRes);
   }
 
@@ -118,7 +118,7 @@ bool CGUIWindow::Load(const std::string& strFileName, bool bContainsPath)
   return ret;
 }
 
-bool CGUIWindow::LoadXML(const std::string &strPath, const std::string &strLowerPath)
+bool CGUIWindow::LoadXML(const std::string& strPath, const std::string& strLowerPath)
 {
   // load window xml if we don't have it stored yet
   if (!m_windowXMLRootElement)
@@ -126,7 +126,8 @@ bool CGUIWindow::LoadXML(const std::string &strPath, const std::string &strLower
     CXBMCTinyXML xmlDoc;
     std::string strPathLower = strPath;
     StringUtils::ToLower(strPathLower);
-    if (!xmlDoc.LoadFile(strPath) && !xmlDoc.LoadFile(strPathLower) && !xmlDoc.LoadFile(strLowerPath))
+    if (!xmlDoc.LoadFile(strPath) && !xmlDoc.LoadFile(strPathLower) &&
+        !xmlDoc.LoadFile(strLowerPath))
     {
       CLog::Log(LOGERROR, "Unable to load window XML: {}. Line {}\n{}", strPath, xmlDoc.ErrorRow(),
                 xmlDoc.ErrorDesc());
@@ -166,7 +167,7 @@ std::unique_ptr<TiXmlElement> CGUIWindow::Prepare(const std::unique_ptr<TiXmlEle
   return preparedRoot;
 }
 
-bool CGUIWindow::Load(TiXmlElement *pRootElement)
+bool CGUIWindow::Load(TiXmlElement* pRootElement)
 {
   if (!pRootElement)
     return false;
@@ -181,10 +182,11 @@ bool CGUIWindow::Load(TiXmlElement *pRootElement)
   CGUIControlFactory::GetInfoColor(pRootElement, "backgroundcolor", m_clearBackground, GetID());
   CGUIControlFactory::GetActions(pRootElement, "onload", m_loadActions);
   CGUIControlFactory::GetActions(pRootElement, "onunload", m_unloadActions);
-  CRect parentRect(0, 0, static_cast<float>(m_coordsRes.iWidth), static_cast<float>(m_coordsRes.iHeight));
+  CRect parentRect(0, 0, static_cast<float>(m_coordsRes.iWidth),
+                   static_cast<float>(m_coordsRes.iHeight));
   CGUIControlFactory::GetHitRect(pRootElement, m_hitRect, parentRect);
 
-  TiXmlElement *pChild = pRootElement->FirstChildElement();
+  TiXmlElement* pChild = pRootElement->FirstChildElement();
   while (pChild)
   {
     std::string strValue = pChild->Value();
@@ -194,12 +196,12 @@ bool CGUIWindow::Load(TiXmlElement *pRootElement)
     }
     else if (strValue == "defaultcontrol" && pChild->FirstChild())
     {
-      const char *always = pChild->Attribute("always");
+      const char* always = pChild->Attribute("always");
       if (always && StringUtils::EqualsNoCase(always, "true"))
         m_defaultAlways = true;
       m_defaultControl = atoi(pChild->FirstChild()->Value());
     }
-    else if(strValue == "menucontrol" && pChild->FirstChild())
+    else if (strValue == "menucontrol" && pChild->FirstChild())
     {
       m_menuControlID = atoi(pChild->FirstChild()->Value());
     }
@@ -211,7 +213,8 @@ bool CGUIWindow::Load(TiXmlElement *pRootElement)
     }
     else if (strValue == "animation" && pChild->FirstChild())
     {
-      CRect rect(0, 0, static_cast<float>(m_coordsRes.iWidth), static_cast<float>(m_coordsRes.iHeight));
+      CRect rect(0, 0, static_cast<float>(m_coordsRes.iWidth),
+                 static_cast<float>(m_coordsRes.iHeight));
       CAnimation anim;
       anim.Create(pChild, rect, GetID());
       m_animations.push_back(anim);
@@ -227,22 +230,27 @@ bool CGUIWindow::Load(TiXmlElement *pRootElement)
       XMLUtils::GetFloat(pChild, "left", m_posX);
       XMLUtils::GetFloat(pChild, "top", m_posY);
 
-      TiXmlElement *originElement = pChild->FirstChildElement("origin");
+      TiXmlElement* originElement = pChild->FirstChildElement("origin");
       while (originElement)
       {
         COrigin origin;
-        origin.x = CGUIControlFactory::ParsePosition(originElement->Attribute("x"), static_cast<float>(m_coordsRes.iWidth));
-        origin.y = CGUIControlFactory::ParsePosition(originElement->Attribute("y"), static_cast<float>(m_coordsRes.iHeight));
+        origin.x = CGUIControlFactory::ParsePosition(originElement->Attribute("x"),
+                                                     static_cast<float>(m_coordsRes.iWidth));
+        origin.y = CGUIControlFactory::ParsePosition(originElement->Attribute("y"),
+                                                     static_cast<float>(m_coordsRes.iHeight));
         if (originElement->FirstChild())
-          origin.condition = CServiceBroker::GetGUI()->GetInfoManager().Register(originElement->FirstChild()->Value(), GetID());
+          origin.condition = CServiceBroker::GetGUI()->GetInfoManager().Register(
+              originElement->FirstChild()->Value(), GetID());
         m_origins.push_back(origin);
         originElement = originElement->NextSiblingElement("origin");
       }
     }
     else if (strValue == "camera")
     { // z is fixed
-      m_camera.x = CGUIControlFactory::ParsePosition(pChild->Attribute("x"), static_cast<float>(m_coordsRes.iWidth));
-      m_camera.y = CGUIControlFactory::ParsePosition(pChild->Attribute("y"), static_cast<float>(m_coordsRes.iHeight));
+      m_camera.x = CGUIControlFactory::ParsePosition(pChild->Attribute("x"),
+                                                     static_cast<float>(m_coordsRes.iWidth));
+      m_camera.y = CGUIControlFactory::ParsePosition(pChild->Attribute("y"),
+                                                     static_cast<float>(m_coordsRes.iHeight));
       m_hasCamera = true;
     }
     else if (strValue == "depth" && pChild->FirstChild())
@@ -252,12 +260,14 @@ bool CGUIWindow::Load(TiXmlElement *pRootElement)
     }
     else if (strValue == "controls")
     {
-      TiXmlElement *pControl = pChild->FirstChildElement();
+      TiXmlElement* pControl = pChild->FirstChildElement();
       while (pControl)
       {
         if (StringUtils::EqualsNoCase(pControl->Value(), "control"))
         {
-          LoadControl(pControl, nullptr, CRect(0, 0, static_cast<float>(m_coordsRes.iWidth), static_cast<float>(m_coordsRes.iHeight)));
+          LoadControl(pControl, nullptr,
+                      CRect(0, 0, static_cast<float>(m_coordsRes.iWidth),
+                            static_cast<float>(m_coordsRes.iHeight)));
         }
         pControl = pControl->NextSiblingElement();
       }
@@ -269,7 +279,7 @@ bool CGUIWindow::Load(TiXmlElement *pRootElement)
   return true;
 }
 
-void CGUIWindow::LoadControl(TiXmlElement* pControl, CGUIControlGroup *pGroup, const CRect &rect)
+void CGUIWindow::LoadControl(TiXmlElement* pControl, CGUIControlGroup* pGroup, const CRect& rect)
 {
   // get control type
   CGUIControlFactory factory;
@@ -296,10 +306,10 @@ void CGUIWindow::LoadControl(TiXmlElement* pControl, CGUIControlGroup *pGroup, c
     // if the new control is a group, then add it's controls
     if (pGUIControl->IsGroup())
     {
-      CGUIControlGroup *grp = static_cast<CGUIControlGroup*>(pGUIControl);
-      TiXmlElement *pSubControl = pControl->FirstChildElement("control");
-      CRect grpRect(grp->GetXPosition(), grp->GetYPosition(),
-                    grp->GetXPosition() + grp->GetWidth(), grp->GetYPosition() + grp->GetHeight());
+      CGUIControlGroup* grp = static_cast<CGUIControlGroup*>(pGUIControl);
+      TiXmlElement* pSubControl = pControl->FirstChildElement("control");
+      CRect grpRect(grp->GetXPosition(), grp->GetYPosition(), grp->GetXPosition() + grp->GetWidth(),
+                    grp->GetYPosition() + grp->GetHeight());
       while (pSubControl)
       {
         LoadControl(pSubControl, grp, grpRect);
@@ -320,12 +330,14 @@ void CGUIWindow::CenterWindow()
   m_posY = (m_coordsRes.iHeight - GetHeight()) / 2;
 }
 
-void CGUIWindow::DoProcess(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIWindow::DoProcess(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
-  if (!IsControlDirty() && CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_guiSmartRedraw)
+  if (!IsControlDirty() &&
+      CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_guiSmartRedraw)
     return;
 
-  CServiceBroker::GetWinSystem()->GetGfxContext().SetRenderingResolution(m_coordsRes, m_needsScaling);
+  CServiceBroker::GetWinSystem()->GetGfxContext().SetRenderingResolution(m_coordsRes,
+                                                                         m_needsScaling);
   CServiceBroker::GetWinSystem()->GetGfxContext().AddGUITransform();
   CGUIControlGroup::DoProcess(currentTime, dirtyregions);
   CServiceBroker::GetWinSystem()->GetGfxContext().RemoveTransform();
@@ -343,15 +355,18 @@ void CGUIWindow::DoRender()
   // app thread to finish AllocResources(), as dynamic resources (images in particular)
   // will try and be allocated from 2 different threads, which causes nasty things
   // to occur.
-  if (!m_bAllocated) return;
+  if (!m_bAllocated)
+    return;
 
-  CServiceBroker::GetWinSystem()->GetGfxContext().SetRenderingResolution(m_coordsRes, m_needsScaling);
+  CServiceBroker::GetWinSystem()->GetGfxContext().SetRenderingResolution(m_coordsRes,
+                                                                         m_needsScaling);
 
   CServiceBroker::GetWinSystem()->GetGfxContext().AddGUITransform();
   CGUIControlGroup::DoRender();
   CServiceBroker::GetWinSystem()->GetGfxContext().RemoveTransform();
 
-  if (CGUIControlProfiler::IsRunning()) CGUIControlProfiler::Instance().EndFrame();
+  if (CGUIControlProfiler::IsRunning())
+    CGUIControlProfiler::Instance().EndFrame();
 }
 
 void CGUIWindow::AfterRender()
@@ -362,18 +377,18 @@ void CGUIWindow::AfterRender()
   // we call the base class instead of this class so that we can find the change
   if (m_closing && !CGUIControlGroup::IsAnimating(ANIM_TYPE_WINDOW_CLOSE))
     Close(true);
-
 }
 
-void CGUIWindow::Close_Internal(bool forceClose /*= false*/, int nextWindowID /*= 0*/, bool enableSound /*= true*/)
+void CGUIWindow::Close_Internal(bool forceClose /*= false*/,
+                                int nextWindowID /*= 0*/,
+                                bool enableSound /*= true*/)
 {
   std::unique_lock<CCriticalSection> lock(CServiceBroker::GetWinSystem()->GetGfxContext());
 
   if (!m_active)
     return;
 
-  forceClose |= (nextWindowID == WINDOW_FULLSCREEN_VIDEO ||
-                 nextWindowID == WINDOW_FULLSCREEN_GAME);
+  forceClose |= (nextWindowID == WINDOW_FULLSCREEN_VIDEO || nextWindowID == WINDOW_FULLSCREEN_GAME);
 
   if (!forceClose && HasAnimation(ANIM_TYPE_WINDOW_CLOSE))
   {
@@ -394,7 +409,10 @@ void CGUIWindow::Close_Internal(bool forceClose /*= false*/, int nextWindowID /*
   OnMessage(msg);
 }
 
-void CGUIWindow::Close(bool forceClose /*= false*/, int nextWindowID /*= 0*/, bool enableSound /*= true*/, bool bWait /* = true */)
+void CGUIWindow::Close(bool forceClose /*= false*/,
+                       int nextWindowID /*= 0*/,
+                       bool enableSound /*= true*/,
+                       bool bWait /* = true */)
 {
   if (!CServiceBroker::GetAppMessenger()->IsProcessThread())
   {
@@ -412,12 +430,12 @@ void CGUIWindow::Close(bool forceClose /*= false*/, int nextWindowID /*= 0*/, bo
     Close_Internal(forceClose, nextWindowID, enableSound);
 }
 
-bool CGUIWindow::OnAction(const CAction &action)
+bool CGUIWindow::OnAction(const CAction& action)
 {
   if (action.IsMouse() || action.IsGesture())
     return EVENT_RESULT_UNHANDLED != OnMouseAction(action);
 
-  CGUIControl *focusedControl = GetFocusedControl();
+  CGUIControl* focusedControl = GetFocusedControl();
   if (focusedControl)
   {
     while (focusedControl && focusedControl != this)
@@ -436,7 +454,7 @@ bool CGUIWindow::OnAction(const CAction &action)
   }
 
   // default implementations
-  switch(action.GetID())
+  switch (action.GetID())
   {
     case ACTION_NAV_BACK:
     case ACTION_PREVIOUS_MENU:
@@ -446,7 +464,7 @@ bool CGUIWindow::OnAction(const CAction &action)
     case ACTION_MENU:
       if (m_menuControlID > 0)
       {
-        CGUIControl *menu = GetControl(m_menuControlID);
+        CGUIControl* menu = GetControl(m_menuControlID);
         if (menu)
         {
           int focusControlId;
@@ -462,7 +480,8 @@ bool CGUIWindow::OnAction(const CAction &action)
           else
           {
             // restore the last focused control or if not exists use the default control
-            focusControlId = m_menuLastFocusedControlID > 0 ? m_menuLastFocusedControlID : m_defaultControl;
+            focusControlId =
+                m_menuLastFocusedControlID > 0 ? m_menuLastFocusedControlID : m_defaultControl;
           }
 
           CGUIMessage msg = CGUIMessage(GUI_MSG_SETFOCUS, GetID(), focusControlId);
@@ -489,7 +508,7 @@ CPoint CGUIWindow::GetPosition() const
 }
 
 // OnMouseAction - called by OnAction()
-EVENT_RESULT CGUIWindow::OnMouseAction(const CAction &action)
+EVENT_RESULT CGUIWindow::OnMouseAction(const CAction& action)
 {
   CServiceBroker::GetWinSystem()->GetGfxContext().SetScalingResolution(m_coordsRes, m_needsScaling);
   CPoint mousePoint(action.GetAmount(0), action.GetAmount(1));
@@ -499,10 +518,11 @@ EVENT_RESULT CGUIWindow::OnMouseAction(const CAction &action)
   CMouseEvent event(action.GetID(), action.GetHoldTime(), action.GetAmount(2), action.GetAmount(3));
   if (m_exclusiveMouseControl)
   {
-    CGUIControl *child = GetControl(m_exclusiveMouseControl);
+    CGUIControl* child = GetControl(m_exclusiveMouseControl);
     if (child)
     {
-      CPoint renderPos = child->GetRenderPosition() - CPoint(child->GetXPosition(), child->GetYPosition());
+      CPoint renderPos =
+          child->GetRenderPosition() - CPoint(child->GetXPosition(), child->GetYPosition());
       return child->OnMouseEvent(mousePoint - renderPos, event);
     }
   }
@@ -512,7 +532,7 @@ EVENT_RESULT CGUIWindow::OnMouseAction(const CAction &action)
   return SendMouseEvent(mousePoint, event);
 }
 
-EVENT_RESULT CGUIWindow::OnMouseEvent(const CPoint &point, const CMouseEvent &event)
+EVENT_RESULT CGUIWindow::OnMouseEvent(const CPoint& point, const CMouseEvent& event)
 {
   if (event.m_id == ACTION_MOUSE_RIGHT_CLICK)
   { // no control found to absorb this click - go to previous menu
@@ -539,9 +559,9 @@ void CGUIWindow::OnInitWindow()
   m_hasProcessed = false;
   m_closing = false;
   m_active = true;
-  ResetAnimations();  // we need to reset our animations as those windows that don't dynamically allocate
-                      // need their anims reset. An alternative solution is turning off all non-dynamic
-                      // allocation (which in some respects may be nicer, but it kills hdd spindown and the like)
+  ResetAnimations(); // we need to reset our animations as those windows that don't dynamically allocate
+      // need their anims reset. An alternative solution is turning off all non-dynamic
+      // allocation (which in some respects may be nicer, but it kills hdd spindown and the like)
 
   // set our initial control visibility before restoring control state and
   // focusing the default control, and again afterward to make sure that
@@ -574,39 +594,41 @@ void CGUIWindow::OnDeinitWindow(int nextWindowID)
 
 bool CGUIWindow::OnMessage(CGUIMessage& message)
 {
-  switch ( message.GetMessage() )
+  switch (message.GetMessage())
   {
-  case GUI_MSG_WINDOW_LOAD:
+    case GUI_MSG_WINDOW_LOAD:
     {
       Initialize();
       return true;
     }
     break;
 
-  case GUI_MSG_WINDOW_INIT:
+    case GUI_MSG_WINDOW_INIT:
     {
       CLog::Log(LOGDEBUG, "------ Window Init ({}) ------", GetProperty("xmlfile").asString());
-      if (m_dynamicResourceAlloc || !m_bAllocated) AllocResources(false);
+      if (m_dynamicResourceAlloc || !m_bAllocated)
+        AllocResources(false);
       OnInitWindow();
       return true;
     }
     break;
 
-  case GUI_MSG_WINDOW_DEINIT:
+    case GUI_MSG_WINDOW_DEINIT:
     {
       CLog::Log(LOGDEBUG, "------ Window Deinit ({}) ------", GetProperty("xmlfile").asString());
       OnDeinitWindow(message.GetParam1());
       // now free the window
-      if (m_dynamicResourceAlloc) FreeResources();
+      if (m_dynamicResourceAlloc)
+        FreeResources();
       return true;
     }
     break;
 
-  case GUI_MSG_UNFOCUS_ALL:
+    case GUI_MSG_UNFOCUS_ALL:
     {
       //unfocus the current focused control in this window
-      CGUIControl *control = GetFocusedControl();
-      if(control)
+      CGUIControl* control = GetFocusedControl();
+      if (control)
       {
         //tell focused control that it has lost the focus
         CGUIMessage msgLostFocus(GUI_MSG_LOSTFOCUS, GetID(), control->GetID(), control->GetID());
@@ -616,7 +638,7 @@ bool CGUIWindow::OnMessage(CGUIMessage& message)
       return true;
     }
 
-  case GUI_MSG_FOCUSED:
+    case GUI_MSG_FOCUSED:
     { // a control has been focused
       if (HasID(message.GetSenderId()))
       {
@@ -634,33 +656,35 @@ bool CGUIWindow::OnMessage(CGUIMessage& message)
       }
       break;
     }
-  case GUI_MSG_LOSTFOCUS:
+    case GUI_MSG_LOSTFOCUS:
     {
       // nothing to do at the window level when we lose focus
       return true;
     }
-  case GUI_MSG_MOVE:
+    case GUI_MSG_MOVE:
     {
       if (HasID(message.GetSenderId()))
         return OnMove(message.GetControlId(), message.GetParam1());
       break;
     }
-  case GUI_MSG_SETFOCUS:
+    case GUI_MSG_SETFOCUS:
     {
       //      CLog::Log(LOGDEBUG,"set focus to control:{} window:{} ({})", message.GetControlId(),message.GetSenderId(), GetID());
-      if ( message.GetControlId() )
+      if (message.GetControlId())
       {
         // first unfocus the current control
-        CGUIControl *control = GetFocusedControl();
+        CGUIControl* control = GetFocusedControl();
         if (control)
         {
-          CGUIMessage msgLostFocus(GUI_MSG_LOSTFOCUS, GetID(), control->GetID(), message.GetControlId());
+          CGUIMessage msgLostFocus(GUI_MSG_LOSTFOCUS, GetID(), control->GetID(),
+                                   message.GetControlId());
           control->OnMessage(msgLostFocus);
         }
 
         // get the control to focus
         CGUIControl* pFocusedControl = GetFirstFocusableControl(message.GetControlId());
-        if (!pFocusedControl) pFocusedControl = GetControl(message.GetControlId());
+        if (!pFocusedControl)
+          pFocusedControl = GetControl(message.GetControlId());
 
         // and focus it
         if (pFocusedControl)
@@ -669,60 +693,63 @@ bool CGUIWindow::OnMessage(CGUIMessage& message)
       return true;
     }
     break;
-  case GUI_MSG_EXCLUSIVE_MOUSE:
+    case GUI_MSG_EXCLUSIVE_MOUSE:
     {
       m_exclusiveMouseControl = message.GetSenderId();
       return true;
     }
     break;
-  case GUI_MSG_GESTURE_NOTIFY:
+    case GUI_MSG_GESTURE_NOTIFY:
     {
-      CAction action(ACTION_GESTURE_NOTIFY, 0, static_cast<float>(message.GetParam1()), static_cast<float>(message.GetParam2()), 0, 0);
+      CAction action(ACTION_GESTURE_NOTIFY, 0, static_cast<float>(message.GetParam1()),
+                     static_cast<float>(message.GetParam2()), 0, 0);
       EVENT_RESULT result = OnMouseAction(action);
       auto res = new int(result);
       message.SetPointer(static_cast<void*>(res));
       return result != EVENT_RESULT_UNHANDLED;
     }
-  case GUI_MSG_ADD_CONTROL:
+    case GUI_MSG_ADD_CONTROL:
     {
       if (message.GetPointer())
       {
-        CGUIControl *control = static_cast<CGUIControl*>(message.GetPointer());
+        CGUIControl* control = static_cast<CGUIControl*>(message.GetPointer());
         control->AllocResources();
         AddControl(control);
       }
       return true;
     }
-  case GUI_MSG_REMOVE_CONTROL:
+    case GUI_MSG_REMOVE_CONTROL:
     {
       if (message.GetPointer())
       {
-        CGUIControl *control = static_cast<CGUIControl*>(message.GetPointer());
+        CGUIControl* control = static_cast<CGUIControl*>(message.GetPointer());
         RemoveControl(control);
         control->FreeResources(true);
         delete control;
       }
       return true;
     }
-  case GUI_MSG_NOTIFY_ALL:
+    case GUI_MSG_NOTIFY_ALL:
     {
       // only process those notifications that come from this window, or those intended for every window
       if (HasID(message.GetSenderId()) || !message.GetSenderId())
       {
         if (message.GetParam1() == GUI_MSG_PAGE_CHANGE ||
-          message.GetParam1() == GUI_MSG_REFRESH_THUMBS ||
-          message.GetParam1() == GUI_MSG_REFRESH_LIST ||
-          message.GetParam1() == GUI_MSG_WINDOW_RESIZE)
+            message.GetParam1() == GUI_MSG_REFRESH_THUMBS ||
+            message.GetParam1() == GUI_MSG_REFRESH_LIST ||
+            message.GetParam1() == GUI_MSG_WINDOW_RESIZE)
         { // alter the message accordingly, and send to all controls
           for (iControls it = m_children.begin(); it != m_children.end(); ++it)
           {
-            CGUIControl *control = *it;
-            CGUIMessage msg(message.GetParam1(), message.GetControlId(), control->GetID(), message.GetParam2());
+            CGUIControl* control = *it;
+            CGUIMessage msg(message.GetParam1(), message.GetControlId(), control->GetID(),
+                            message.GetParam2());
             control->OnMessage(msg);
           }
         }
         else if (message.GetParam1() == GUI_MSG_STATE_CHANGED)
-          MarkDirtyRegion(DIRTY_STATE_CHILD); //Don't force an dirtyRect, we don't know if / what has changed.
+          MarkDirtyRegion(
+              DIRTY_STATE_CHILD); //Don't force an dirtyRect, we don't know if / what has changed.
       }
     }
     break;
@@ -733,7 +760,8 @@ bool CGUIWindow::OnMessage(CGUIMessage& message)
 
 bool CGUIWindow::NeedLoad() const
 {
-  return !m_windowLoaded || CServiceBroker::GetGUI()->GetInfoManager().ConditionsChangedValues(m_xmlIncludeConditions);
+  return !m_windowLoaded ||
+         CServiceBroker::GetGUI()->GetInfoManager().ConditionsChangedValues(m_xmlIncludeConditions);
 }
 
 void CGUIWindow::AllocResources(bool forceLoad /*= false */)
@@ -791,7 +819,8 @@ void CGUIWindow::FreeResources(bool forceUnload /*= false */)
   CGUIControlGroup::FreeResources();
   //CServiceBroker::GetGUI()->GetTextureManager().Dump();
   // unload the skin
-  if (m_loadType == LOAD_EVERY_TIME || forceUnload) ClearAll();
+  if (m_loadType == LOAD_EVERY_TIME || forceUnload)
+    ClearAll();
   if (forceUnload)
   {
     m_windowXMLRootElement.reset();
@@ -851,7 +880,8 @@ bool CGUIWindow::CheckAnimation(ANIMATION_TYPE animType)
   // special cases first
   if (animType == ANIM_TYPE_WINDOW_CLOSE)
   {
-    if (!m_bAllocated || !HasProcessed()) // can't process an animation if we aren't allocated or haven't processed
+    if (!m_bAllocated ||
+        !HasProcessed()) // can't process an animation if we aren't allocated or haven't processed
       return false;
     // make sure we update our visibility prior to queuing the window close anim
     for (unsigned int i = 0; i < m_children.size(); i++)
@@ -891,8 +921,9 @@ bool CGUIWindow::ControlGroupHasFocus(int groupID, int controlID)
 {
   // 1.  Run through and get control with groupID (assume unique)
   // 2.  Get it's selected item.
-  CGUIControl *group = GetFirstFocusableControl(groupID);
-  if (!group) group = GetControl(groupID);
+  CGUIControl* group = GetFirstFocusableControl(groupID);
+  if (!group)
+    group = GetControl(groupID);
 
   if (group && group->IsGroup())
   {
@@ -945,8 +976,9 @@ bool CGUIWindow::OnBack(int actionID)
 
 bool CGUIWindow::OnMove(int fromControl, int moveAction)
 {
-  const CGUIControl *control = GetFirstFocusableControl(fromControl);
-  if (!control) control = GetControl(fromControl);
+  const CGUIControl* control = GetFirstFocusableControl(fromControl);
+  if (!control)
+    control = GetControl(fromControl);
   if (!control)
   { // no current control??
     CLog::Log(LOGERROR, "Unable to find control {} in window {}", fromControl, GetID());
@@ -970,11 +1002,11 @@ bool CGUIWindow::OnMove(int fromControl, int moveAction)
     }
     control = GetFirstFocusableControl(nextControl);
     if (control)
-      break;  // found a focusable control
+      break; // found a focusable control
     control = GetControl(nextControl); // grab the next control and try again
   }
   if (!control)
-    return false;   // no control to focus
+    return false; // no control to focus
   // if we get here we have our new control so focus it (and unfocus the current control)
   SET_CONTROL_FOCUS(nextControl, 0);
   return true;
@@ -993,7 +1025,8 @@ void CGUIWindow::SetDefaults()
   m_stereo = 0.f;
   m_animationsEnabled = true;
   m_clearBackground = 0xff000000; // opaque black -> clear
-  m_hitRect.SetRect(0, 0, static_cast<float>(m_coordsRes.iWidth), static_cast<float>(m_coordsRes.iHeight));
+  m_hitRect.SetRect(0, 0, static_cast<float>(m_coordsRes.iWidth),
+                    static_cast<float>(m_coordsRes.iHeight));
   m_menuControlID = 0;
   m_menuLastFocusedControlID = 0;
 }
@@ -1010,7 +1043,7 @@ CRect CGUIWindow::GetScaledBounds() const
   return rect;
 }
 
-void CGUIWindow::OnEditChanged(int id, std::string &text)
+void CGUIWindow::OnEditChanged(int id, std::string& text)
 {
   CGUIMessage msg(GUI_MSG_ITEM_SELECTED, GetID(), id);
   OnMessage(msg);
@@ -1030,13 +1063,13 @@ void CGUIWindow::DumpTextureUse()
 }
 #endif
 
-void CGUIWindow::SetProperty(const std::string &strKey, const CVariant &value)
+void CGUIWindow::SetProperty(const std::string& strKey, const CVariant& value)
 {
   std::unique_lock<CCriticalSection> lock(*this);
   m_mapProperties[strKey] = value;
 }
 
-CVariant CGUIWindow::GetProperty(const std::string &strKey) const
+CVariant CGUIWindow::GetProperty(const std::string& strKey) const
 {
   std::unique_lock<CCriticalSection> lock(const_cast<CGUIWindow&>(*this));
   std::map<std::string, CVariant, icompare>::const_iterator iter = m_mapProperties.find(strKey);

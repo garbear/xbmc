@@ -20,19 +20,25 @@
  \ingroup controls
  \brief
  */
-class CGUIProgressControl :
-      public CGUIControl
+class CGUIProgressControl : public CGUIControl
 {
 public:
-  CGUIProgressControl(int parentID, int controlID, float posX, float posY,
-                      float width, float height, const CTextureInfo& backGroundTexture,
-                      const CTextureInfo& leftTexture, const CTextureInfo& midTexture,
-                      const CTextureInfo& rightTexture, const CTextureInfo& overlayTexture,
-                      bool reveal=false);
+  CGUIProgressControl(int parentID,
+                      int controlID,
+                      float posX,
+                      float posY,
+                      float width,
+                      float height,
+                      const CTextureInfo& backGroundTexture,
+                      const CTextureInfo& leftTexture,
+                      const CTextureInfo& midTexture,
+                      const CTextureInfo& rightTexture,
+                      const CTextureInfo& overlayTexture,
+                      bool reveal = false);
   ~CGUIProgressControl() override = default;
   CGUIProgressControl* Clone() const override { return new CGUIProgressControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
   bool CanFocus() const override;
   void AllocResources() override;
@@ -47,8 +53,9 @@ public:
 
   float GetPercentage() const;
   std::string GetDescription() const override;
-  void UpdateInfo(const CGUIListItem *item = NULL) override;
+  void UpdateInfo(const CGUIListItem* item = NULL) override;
   bool UpdateLayout(void);
+
 protected:
   bool UpdateColors(const CGUIListItem* item) override;
   std::unique_ptr<CGUITexture> m_guiBackground;
@@ -68,4 +75,3 @@ protected:
 private:
   CGUIProgressControl(const CGUIProgressControl& control);
 };
-

@@ -20,22 +20,28 @@
  \ingroup controls
  \brief
  */
-class GUIScrollBarControl :
-      public CGUIControl
+class GUIScrollBarControl : public CGUIControl
 {
 public:
-  GUIScrollBarControl(int parentID, int controlID, float posX, float posY,
-                       float width, float height,
-                       const CTextureInfo& backGroundTexture,
-                       const CTextureInfo& barTexture, const CTextureInfo& barTextureFocus,
-                       const CTextureInfo& nibTexture, const CTextureInfo& nibTextureFocus,
-                       ORIENTATION orientation, bool showOnePage);
+  GUIScrollBarControl(int parentID,
+                      int controlID,
+                      float posX,
+                      float posY,
+                      float width,
+                      float height,
+                      const CTextureInfo& backGroundTexture,
+                      const CTextureInfo& barTexture,
+                      const CTextureInfo& barTextureFocus,
+                      const CTextureInfo& nibTexture,
+                      const CTextureInfo& nibTextureFocus,
+                      ORIENTATION orientation,
+                      bool showOnePage);
   ~GUIScrollBarControl() override = default;
   GUIScrollBarControl* Clone() const override { return new GUIScrollBarControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   void AllocResources() override;
   void FreeResources(bool immediately = false) override;
   void DynamicResourceAlloc(bool bOnOff) override;
@@ -46,12 +52,13 @@ public:
   int GetValue() const;
   std::string GetDescription() const override;
   bool IsVisible() const override;
+
 protected:
-  EVENT_RESULT OnMouseEvent(const CPoint &point, const CMouseEvent &event) override;
+  EVENT_RESULT OnMouseEvent(const CPoint& point, const CMouseEvent& event) override;
   bool UpdateColors(const CGUIListItem* item) override;
   bool UpdateBarSize();
   bool Move(int iNumSteps);
-  virtual void SetFromPosition(const CPoint &point);
+  virtual void SetFromPosition(const CPoint& point);
 
   std::unique_ptr<CGUITexture> m_guiBackground;
   std::unique_ptr<CGUITexture> m_guiBarNoFocus;
@@ -69,4 +76,3 @@ protected:
 private:
   GUIScrollBarControl(const GUIScrollBarControl& control);
 };
-

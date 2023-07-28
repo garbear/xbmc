@@ -10,9 +10,41 @@
 
 #include "utils/StringUtils.h"
 
-CGUISpinControlEx::CGUISpinControlEx(int parentID, int controlID, float posX, float posY, float width, float height, float spinWidth, float spinHeight, const CLabelInfo& spinInfo, const CTextureInfo &textureFocus, const CTextureInfo &textureNoFocus, const CTextureInfo& textureUp, const CTextureInfo& textureDown, const CTextureInfo& textureUpFocus, const CTextureInfo& textureDownFocus, const CTextureInfo& textureUpDisabled, const CTextureInfo& textureDownDisabled, const CLabelInfo& labelInfo, int iType)
-    : CGUISpinControl(parentID, controlID, posX, posY, spinWidth, spinHeight, textureUp, textureDown, textureUpFocus, textureDownFocus, textureUpDisabled, textureDownDisabled, spinInfo, iType)
-    , m_buttonControl(parentID, controlID, posX, posY, width, height, textureFocus, textureNoFocus, labelInfo)
+CGUISpinControlEx::CGUISpinControlEx(int parentID,
+                                     int controlID,
+                                     float posX,
+                                     float posY,
+                                     float width,
+                                     float height,
+                                     float spinWidth,
+                                     float spinHeight,
+                                     const CLabelInfo& spinInfo,
+                                     const CTextureInfo& textureFocus,
+                                     const CTextureInfo& textureNoFocus,
+                                     const CTextureInfo& textureUp,
+                                     const CTextureInfo& textureDown,
+                                     const CTextureInfo& textureUpFocus,
+                                     const CTextureInfo& textureDownFocus,
+                                     const CTextureInfo& textureUpDisabled,
+                                     const CTextureInfo& textureDownDisabled,
+                                     const CLabelInfo& labelInfo,
+                                     int iType)
+  : CGUISpinControl(parentID,
+                    controlID,
+                    posX,
+                    posY,
+                    spinWidth,
+                    spinHeight,
+                    textureUp,
+                    textureDown,
+                    textureUpFocus,
+                    textureDownFocus,
+                    textureUpDisabled,
+                    textureDownDisabled,
+                    spinInfo,
+                    iType),
+    m_buttonControl(
+        parentID, controlID, posX, posY, width, height, textureFocus, textureNoFocus, labelInfo)
 {
   ControlType = GUICONTROL_SPINEX;
   m_spinPosX = 0;
@@ -42,14 +74,13 @@ void CGUISpinControlEx::DynamicResourceAlloc(bool bOnOff)
   m_buttonControl.DynamicResourceAlloc(bOnOff);
 }
 
-
 void CGUISpinControlEx::SetInvalid()
 {
   CGUISpinControl::SetInvalid();
   m_buttonControl.SetInvalid();
 }
 
-void CGUISpinControlEx::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUISpinControlEx::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   // make sure the button has focus if it should have...
   m_buttonControl.SetFocus(HasFocus());
@@ -57,8 +88,11 @@ void CGUISpinControlEx::Process(unsigned int currentTime, CDirtyRegionList &dirt
   m_buttonControl.SetEnabled(m_enabled);
   if (m_bInvalidated)
   {
-    float spinPosX = m_buttonControl.GetXPosition() + m_buttonControl.GetWidth() - GetSpinWidth() * 2 - (m_spinPosX ? m_spinPosX : m_buttonControl.GetLabelInfo().offsetX);
-    float spinPosY = m_buttonControl.GetYPosition() + (m_buttonControl.GetHeight() - GetSpinHeight()) * 0.5f;
+    float spinPosX = m_buttonControl.GetXPosition() + m_buttonControl.GetWidth() -
+                     GetSpinWidth() * 2 -
+                     (m_spinPosX ? m_spinPosX : m_buttonControl.GetLabelInfo().offsetX);
+    float spinPosY =
+        m_buttonControl.GetYPosition() + (m_buttonControl.GetHeight() - GetSpinHeight()) * 0.5f;
     CGUISpinControl::SetPosition(spinPosX, spinPosY);
   }
   m_buttonControl.DoProcess(currentTime, dirtyregions);

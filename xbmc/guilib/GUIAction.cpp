@@ -59,7 +59,9 @@ bool CGUIAction::ExecuteActions() const
   return ExecuteActions(DEFAULT_CONTROL_ID, DEFAULT_CONTROL_ID);
 }
 
-bool CGUIAction::ExecuteActions(int controlID, int parentID, const CGUIListItemPtr &item /* = NULL */) const
+bool CGUIAction::ExecuteActions(int controlID,
+                                int parentID,
+                                const CGUIListItemPtr& item /* = NULL */) const
 {
   if (m_actions.empty())
     return false;
@@ -67,7 +69,7 @@ bool CGUIAction::ExecuteActions(int controlID, int parentID, const CGUIListItemP
   CGUIInfoManager& infoMgr = CServiceBroker::GetGUI()->GetInfoManager();
   // take a copy of actions that satisfy our conditions
   std::vector<std::string> actions;
-  for (const auto &i : m_actions)
+  for (const auto& i : m_actions)
   {
     if (!i.HasCondition() || infoMgr.EvaluateBool(i.GetCondition(), 0, item))
     {
@@ -77,7 +79,7 @@ bool CGUIAction::ExecuteActions(int controlID, int parentID, const CGUIListItemP
   }
   // execute them
   bool retval = false;
-  for (const auto &i : actions)
+  for (const auto& i : actions)
   {
     CGUIMessage msg(GUI_MSG_EXECUTE, controlID, parentID, 0, 0, item);
     msg.SetStringParam(i);
@@ -93,7 +95,7 @@ bool CGUIAction::ExecuteActions(int controlID, int parentID, const CGUIListItemP
 int CGUIAction::GetNavigation() const
 {
   CGUIInfoManager& infoMgr = CServiceBroker::GetGUI()->GetInfoManager();
-  for (const auto &i : m_actions)
+  for (const auto& i : m_actions)
   {
     if (StringUtils::IsInteger(i.GetAction()))
     {
@@ -110,7 +112,7 @@ void CGUIAction::SetNavigation(int id)
     return;
 
   std::string strId = std::to_string(id);
-  for (auto &i : m_actions)
+  for (auto& i : m_actions)
   {
     if (StringUtils::IsInteger(i.GetAction()) && !i.HasCondition())
     {
@@ -124,7 +126,7 @@ void CGUIAction::SetNavigation(int id)
 bool CGUIAction::HasActionsMeetingCondition() const
 {
   CGUIInfoManager& infoMgr = CServiceBroker::GetGUI()->GetInfoManager();
-  for (const auto &i : m_actions)
+  for (const auto& i : m_actions)
   {
     if (!i.HasCondition() || infoMgr.EvaluateBool(i.GetCondition(), INFO::DEFAULT_CONTEXT))
       return true;

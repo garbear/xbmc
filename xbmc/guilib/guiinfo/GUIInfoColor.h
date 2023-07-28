@@ -35,7 +35,7 @@ public:
   constexpr operator UTILS::COLOR::Color() const { return m_color; }
 
   bool Update(const CGUIListItem* item = nullptr);
-  void Parse(const std::string &label, int context);
+  void Parse(const std::string& label, int context);
 
   /*!
    * @brief Check if the infocolor has an info condition bound to its color definition (or otherwise, if it's constant color)

@@ -35,7 +35,8 @@ public:
   operator bool() const { return m_value; }
 
   void Update(int contextWindow, const CGUIListItem* item = nullptr);
-  void Parse(const std::string &expression, int context);
+  void Parse(const std::string& expression, int context);
+
 private:
   INFO::InfoPtr m_info;
   bool m_value;

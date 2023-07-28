@@ -24,24 +24,24 @@ void XPhysicalFree(LPVOID lpAddress)
 DWORD GetD3DFormat(XB_D3DFORMAT format)
 {
 #ifndef MAKEFOURCC
-#define MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
-                ((DWORD)(BYTE)(ch0) | ((DWORD)(BYTE)(ch1) << 8) |   \
-                ((DWORD)(BYTE)(ch2) << 16) | ((DWORD)(BYTE)(ch3) << 24 ))
+#define MAKEFOURCC(ch0, ch1, ch2, ch3) \
+  ((DWORD)(BYTE)(ch0) | ((DWORD)(BYTE)(ch1) << 8) | ((DWORD)(BYTE)(ch2) << 16) | \
+   ((DWORD)(BYTE)(ch3) << 24))
 #endif
   switch (format)
   {
-  case XB_D3DFMT_A8R8G8B8:
-  case XB_D3DFMT_LIN_A8R8G8B8:
-  case XB_D3DFMT_P8:
-    return 21;
-  case XB_D3DFMT_DXT1:
-    return MAKEFOURCC('D', 'X', 'T', '1');
-  case XB_D3DFMT_DXT2:
-    return MAKEFOURCC('D', 'X', 'T', '2');
-  case XB_D3DFMT_DXT4:
-    return MAKEFOURCC('D', 'X', 'T', '4');
-  default:
-    return 0;
+    case XB_D3DFMT_A8R8G8B8:
+    case XB_D3DFMT_LIN_A8R8G8B8:
+    case XB_D3DFMT_P8:
+      return 21;
+    case XB_D3DFMT_DXT1:
+      return MAKEFOURCC('D', 'X', 'T', '1');
+    case XB_D3DFMT_DXT2:
+      return MAKEFOURCC('D', 'X', 'T', '2');
+    case XB_D3DFMT_DXT4:
+      return MAKEFOURCC('D', 'X', 'T', '4');
+    default:
+      return 0;
   }
 }
 
@@ -49,16 +49,16 @@ DWORD BytesPerPixelFromFormat(XB_D3DFORMAT format)
 {
   switch (format)
   {
-  case XB_D3DFMT_A8R8G8B8:
-  case XB_D3DFMT_LIN_A8R8G8B8:
-  case XB_D3DFMT_DXT4:
-    return 4;
-  case XB_D3DFMT_P8:
-  case XB_D3DFMT_DXT1:
-  case XB_D3DFMT_DXT2:
-    return 1;
-  default:
-    return 0;
+    case XB_D3DFMT_A8R8G8B8:
+    case XB_D3DFMT_LIN_A8R8G8B8:
+    case XB_D3DFMT_DXT4:
+      return 4;
+    case XB_D3DFMT_P8:
+    case XB_D3DFMT_DXT1:
+    case XB_D3DFMT_DXT2:
+      return 1;
+    default:
+      return 0;
   }
 }
 
@@ -69,7 +69,8 @@ bool IsPalettedFormat(XB_D3DFORMAT format)
   return false;
 }
 
-void ParseTextureHeader(D3DTexture *tex, XB_D3DFORMAT &fmt, DWORD &width, DWORD &height, DWORD &pitch, DWORD &offset)
+void ParseTextureHeader(
+    D3DTexture* tex, XB_D3DFORMAT& fmt, DWORD& width, DWORD& height, DWORD& pitch, DWORD& offset)
 {
   fmt = (XB_D3DFORMAT)((tex->Format & 0xff00) >> 8);
   offset = tex->Data;
@@ -91,11 +92,11 @@ bool IsSwizzledFormat(XB_D3DFORMAT format)
 {
   switch (format)
   {
-  case XB_D3DFMT_A8R8G8B8:
-  case XB_D3DFMT_P8:
-    return true;
-  default:
-    return false;
+    case XB_D3DFMT_A8R8G8B8:
+    case XB_D3DFMT_P8:
+      return true;
+    default:
+      return false;
   }
 }
 
@@ -108,7 +109,8 @@ bool IsSwizzledFormat(XB_D3DFORMAT format)
 // 10 11 14 15 ...
 
 // Currently only works for 32bit and 8bit textures, with power of 2 width and height
-void Unswizzle(const void *src, unsigned int depth, unsigned int width, unsigned int height, void *dest)
+void Unswizzle(
+    const void* src, unsigned int depth, unsigned int width, unsigned int height, void* dest)
 {
   if (height == 0 || width == 0)
     return;
@@ -119,43 +121,43 @@ void Unswizzle(const void *src, unsigned int depth, unsigned int width, unsigned
     if (y < width)
     {
       for (int bit = 0; bit < 16; bit++)
-        sy |= ((y >> bit) & 1) << (2*bit);
+        sy |= ((y >> bit) & 1) << (2 * bit);
       sy <<= 1; // y counts twice
     }
     else
     {
       UINT y_mask = y % width;
       for (int bit = 0; bit < 16; bit++)
-        sy |= ((y_mask >> bit) & 1) << (2*bit);
+        sy |= ((y_mask >> bit) & 1) << (2 * bit);
       sy <<= 1; // y counts twice
       sy += (y / width) * width * width;
     }
-    BYTE *d = (BYTE *)dest + y * width * depth;
+    BYTE* d = (BYTE*)dest + y * width * depth;
     for (UINT x = 0; x < width; x++)
     {
       UINT sx = 0;
       if (x < height * 2)
       {
         for (int bit = 0; bit < 16; bit++)
-          sx |= ((x >> bit) & 1) << (2*bit);
+          sx |= ((x >> bit) & 1) << (2 * bit);
       }
       else
       {
-        int x_mask = x % (2*height);
+        int x_mask = x % (2 * height);
         for (int bit = 0; bit < 16; bit++)
-          sx |= ((x_mask >> bit) & 1) << (2*bit);
+          sx |= ((x_mask >> bit) & 1) << (2 * bit);
         sx += (x / (2 * height)) * 2 * height * height;
       }
-      BYTE *s = (BYTE *)src + (sx + sy)*depth;
+      BYTE* s = (BYTE*)src + (sx + sy) * depth;
       for (unsigned int i = 0; i < depth; ++i)
         *d++ = *s++;
     }
   }
 }
 
-void DXT1toARGB(const void *src, void *dest, unsigned int destWidth)
+void DXT1toARGB(const void* src, void* dest, unsigned int destWidth)
 {
-  const BYTE *b = (const BYTE *)src;
+  const BYTE* b = (const BYTE*)src;
   // colour is in R5G6B5 format, convert to R8G8B8
   DWORD colour[4];
   BYTE red[4];
@@ -163,9 +165,9 @@ void DXT1toARGB(const void *src, void *dest, unsigned int destWidth)
   BYTE blue[4];
   for (int i = 0; i < 2; i++)
   {
-    red[i] = b[2*i+1] & 0xf8;
-    green[i] = ((b[2*i+1] & 0x7) << 5) | ((b[2*i] & 0xe0) >> 3);
-    blue[i] = (b[2*i] & 0x1f) << 3;
+    red[i] = b[2 * i + 1] & 0xf8;
+    green[i] = ((b[2 * i + 1] & 0x7) << 5) | ((b[2 * i] & 0xe0) >> 3);
+    blue[i] = (b[2 * i] & 0x1f) << 3;
     colour[i] = (red[i] << 16) | (green[i] << 8) | blue[i];
   }
   if (colour[0] > colour[1])
@@ -186,12 +188,12 @@ void DXT1toARGB(const void *src, void *dest, unsigned int destWidth)
     blue[2] = (blue[0] + blue[1]) / 2;
     for (int i = 0; i < 3; i++)
       colour[i] = (red[i] << 16) | (green[i] << 8) | blue[i] | 0xFF000000;
-    colour[3] = 0;  // transparent
+    colour[3] = 0; // transparent
   }
   // ok, now grab the bits
   for (int y = 0; y < 4; y++)
   {
-    DWORD *d = (DWORD *)dest + destWidth * y;
+    DWORD* d = (DWORD*)dest + destWidth * y;
     *d++ = colour[(b[4 + y] & 0x03)];
     *d++ = colour[(b[4 + y] & 0x0c) >> 2];
     *d++ = colour[(b[4 + y] & 0x30) >> 4];
@@ -199,29 +201,29 @@ void DXT1toARGB(const void *src, void *dest, unsigned int destWidth)
   }
 }
 
-void DXT4toARGB(const void *src, void *dest, unsigned int destWidth)
+void DXT4toARGB(const void* src, void* dest, unsigned int destWidth)
 {
-  const BYTE *b = (const BYTE *)src;
+  const BYTE* b = (const BYTE*)src;
   BYTE alpha[8];
   alpha[0] = b[0];
   alpha[1] = b[1];
   if (alpha[0] > alpha[1])
   {
-    alpha[2] = (6 * alpha[0] + 1 * alpha[1]+ 3) / 7;
-    alpha[3] = (5 * alpha[0] + 2 * alpha[1] + 3) / 7;    // bit code 011
-    alpha[4] = (4 * alpha[0] + 3 * alpha[1] + 3) / 7;    // bit code 100
-    alpha[5] = (3 * alpha[0] + 4 * alpha[1] + 3) / 7;    // bit code 101
-    alpha[6] = (2 * alpha[0] + 5 * alpha[1] + 3) / 7;    // bit code 110
-    alpha[7] = (1 * alpha[0] + 6 * alpha[1] + 3) / 7;    // bit code 111
+    alpha[2] = (6 * alpha[0] + 1 * alpha[1] + 3) / 7;
+    alpha[3] = (5 * alpha[0] + 2 * alpha[1] + 3) / 7; // bit code 011
+    alpha[4] = (4 * alpha[0] + 3 * alpha[1] + 3) / 7; // bit code 100
+    alpha[5] = (3 * alpha[0] + 4 * alpha[1] + 3) / 7; // bit code 101
+    alpha[6] = (2 * alpha[0] + 5 * alpha[1] + 3) / 7; // bit code 110
+    alpha[7] = (1 * alpha[0] + 6 * alpha[1] + 3) / 7; // bit code 111
   }
   else
   {
-    alpha[2] = (4 * alpha[0] + 1 * alpha[1] + 2) / 5;    // Bit code 010
-    alpha[3] = (3 * alpha[0] + 2 * alpha[1] + 2) / 5;    // Bit code 011
-    alpha[4] = (2 * alpha[0] + 3 * alpha[1] + 2) / 5;    // Bit code 100
-    alpha[5] = (1 * alpha[0] + 4 * alpha[1] + 2) / 5;    // Bit code 101
-    alpha[6] = 0;                                      // Bit code 110
-    alpha[7] = 255;                                    // Bit code 111
+    alpha[2] = (4 * alpha[0] + 1 * alpha[1] + 2) / 5; // Bit code 010
+    alpha[3] = (3 * alpha[0] + 2 * alpha[1] + 2) / 5; // Bit code 011
+    alpha[4] = (2 * alpha[0] + 3 * alpha[1] + 2) / 5; // Bit code 100
+    alpha[5] = (1 * alpha[0] + 4 * alpha[1] + 2) / 5; // Bit code 101
+    alpha[6] = 0; // Bit code 110
+    alpha[7] = 255; // Bit code 111
   }
   // ok, now grab the bits
   BYTE a[4][4];
@@ -242,7 +244,7 @@ void DXT4toARGB(const void *src, void *dest, unsigned int destWidth)
   a[3][2] = alpha[(b[7] & 0x38) >> 3];
   a[3][3] = alpha[(b[7] & 0x07)];
 
-  b = (BYTE *)src + 8;
+  b = (BYTE*)src + 8;
   // colour is in R5G6B5 format, convert to R8G8B8
   DWORD colour[4];
   BYTE red[4];
@@ -250,9 +252,9 @@ void DXT4toARGB(const void *src, void *dest, unsigned int destWidth)
   BYTE blue[4];
   for (int i = 0; i < 2; i++)
   {
-    red[i] = b[2*i+1] & 0xf8;
-    green[i] = ((b[2*i+1] & 0x7) << 5) | ((b[2*i] & 0xe0) >> 3);
-    blue[i] = (b[2*i] & 0x1f) << 3;
+    red[i] = b[2 * i + 1] & 0xf8;
+    green[i] = ((b[2 * i + 1] & 0x7) << 5) | ((b[2 * i] & 0xe0) >> 3);
+    blue[i] = (b[2 * i] & 0x1f) << 3;
   }
   red[2] = (2 * red[0] + red[1] + 1) / 3;
   green[2] = (2 * green[0] + green[1] + 1) / 3;
@@ -265,29 +267,28 @@ void DXT4toARGB(const void *src, void *dest, unsigned int destWidth)
   // and assign them to our texture
   for (int y = 0; y < 4; y++)
   {
-    DWORD *d = (DWORD *)dest + destWidth * y;
+    DWORD* d = (DWORD*)dest + destWidth * y;
     *d++ = colour[(b[4 + y] & 0x03)] | (a[y][0] << 24);
     *d++ = colour[(b[4 + y] & 0x0e) >> 2] | (a[y][1] << 24);
     *d++ = colour[(b[4 + y] & 0x30) >> 4] | (a[y][2] << 24);
     *d++ = colour[(b[4 + y] & 0xe0) >> 6] | (a[y][3] << 24);
   }
-
 }
 
-void ConvertDXT1(const void *src, unsigned int width, unsigned int height, void *dest)
+void ConvertDXT1(const void* src, unsigned int width, unsigned int height, void* dest)
 {
   for (unsigned int y = 0; y < height; y += 4)
   {
     for (unsigned int x = 0; x < width; x += 4)
     {
-      const BYTE *s = (const BYTE *)src + y * width / 2 + x * 2;
-      DWORD *d = (DWORD *)dest + y * width + x;
+      const BYTE* s = (const BYTE*)src + y * width / 2 + x * 2;
+      DWORD* d = (DWORD*)dest + y * width + x;
       DXT1toARGB(s, d, width);
     }
   }
 }
 
-void ConvertDXT4(const void *src, unsigned int width, unsigned int height, void *dest)
+void ConvertDXT4(const void* src, unsigned int width, unsigned int height, void* dest)
 {
   // [4 4 4 4][4 4 4 4]
   //
@@ -297,8 +298,8 @@ void ConvertDXT4(const void *src, unsigned int width, unsigned int height, void 
   {
     for (unsigned int x = 0; x < width; x += 4)
     {
-      const BYTE *s = (const BYTE *)src + y * width + x * 4;
-      DWORD *d = (DWORD *)dest + y * width + x;
+      const BYTE* s = (const BYTE*)src + y * width + x * 4;
+      DWORD* d = (DWORD*)dest + y * width + x;
       DXT4toARGB(s, d, width);
     }
   }
@@ -314,10 +315,10 @@ void GetTextureFromData(D3DTexture* pTex, void* texData, std::unique_ptr<CTextur
 
   if (*ppTexture)
   {
-    BYTE *texDataStart = (BYTE *)texData;
-    COLOR *color = (COLOR *)texData;
+    BYTE* texDataStart = (BYTE*)texData;
+    COLOR* color = (COLOR*)texData;
     texDataStart += offset;
-/* DXMERGE - We should really support DXT1,DXT2 and DXT4 in both renderers
+    /* DXMERGE - We should really support DXT1,DXT2 and DXT4 in both renderers
              Perhaps we should extend CTexture::Update() to support a bunch of different texture types
              Rather than assuming linear 32bits
              We could just override, as at least then all the loading code from various texture formats
@@ -343,20 +344,20 @@ void GetTextureFromData(D3DTexture* pTex, void* texData, std::unique_ptr<CTextur
     if (fmt == XB_D3DFMT_DXT1)
     {
       pitch = width * 4;
-      BYTE *decoded = new BYTE[pitch * height];
+      BYTE* decoded = new BYTE[pitch * height];
       ConvertDXT1(texDataStart, width, height, decoded);
       texDataStart = decoded;
     }
     else if (fmt == XB_D3DFMT_DXT2 || fmt == XB_D3DFMT_DXT4)
     {
       pitch = width * 4;
-      BYTE *decoded = new BYTE[pitch * height];
+      BYTE* decoded = new BYTE[pitch * height];
       ConvertDXT4(texDataStart, width, height, decoded);
       texDataStart = decoded;
     }
     if (IsSwizzledFormat(fmt))
     { // first we unswizzle
-      BYTE *unswizzled = new BYTE[pitch * height];
+      BYTE* unswizzled = new BYTE[pitch * height];
       Unswizzle(texDataStart, BytesPerPixelFromFormat(fmt), width, height, unswizzled);
       texDataStart = unswizzled;
     }
@@ -366,7 +367,8 @@ void GetTextureFromData(D3DTexture* pTex, void* texData, std::unique_ptr<CTextur
     else
       (*ppTexture)->LoadFromMemory(width, height, pitch, XB_FMT_A8R8G8B8, true, texDataStart);
 
-    if (IsSwizzledFormat(fmt) || fmt == XB_D3DFMT_DXT1 || fmt == XB_D3DFMT_DXT2 || fmt == XB_D3DFMT_DXT4)
+    if (IsSwizzledFormat(fmt) || fmt == XB_D3DFMT_DXT1 || fmt == XB_D3DFMT_DXT2 ||
+        fmt == XB_D3DFMT_DXT4)
     {
       delete[] texDataStart;
     }

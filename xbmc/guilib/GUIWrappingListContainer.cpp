@@ -13,8 +13,18 @@
 #include "GUIMessage.h"
 #include "input/Key.h"
 
-CGUIWrappingListContainer::CGUIWrappingListContainer(int parentID, int controlID, float posX, float posY, float width, float height, ORIENTATION orientation, const CScroller& scroller, int preloadItems, int fixedPosition)
-    : CGUIBaseContainer(parentID, controlID, posX, posY, width, height, orientation, scroller, preloadItems)
+CGUIWrappingListContainer::CGUIWrappingListContainer(int parentID,
+                                                     int controlID,
+                                                     float posX,
+                                                     float posY,
+                                                     float width,
+                                                     float height,
+                                                     ORIENTATION orientation,
+                                                     const CScroller& scroller,
+                                                     int preloadItems,
+                                                     int fixedPosition)
+  : CGUIBaseContainer(
+        parentID, controlID, posX, posY, width, height, orientation, scroller, preloadItems)
 {
   SetCursor(fixedPosition);
   ControlType = GUICONTAINER_WRAPLIST;
@@ -28,23 +38,24 @@ void CGUIWrappingListContainer::UpdatePageControl(int offset)
 {
   if (m_pageControl)
   { // tell our pagecontrol (scrollbar or whatever) to update (offset it by our cursor position)
-    CGUIMessage msg(GUI_MSG_ITEM_SELECT, GetID(), m_pageControl, GetNumItems() ? CorrectOffset(offset, GetCursor()) % GetNumItems() : 0);
+    CGUIMessage msg(GUI_MSG_ITEM_SELECT, GetID(), m_pageControl,
+                    GetNumItems() ? CorrectOffset(offset, GetCursor()) % GetNumItems() : 0);
     SendWindowMessage(msg);
   }
 }
 
-bool CGUIWrappingListContainer::OnAction(const CAction &action)
+bool CGUIWrappingListContainer::OnAction(const CAction& action)
 {
   switch (action.GetID())
   {
-  case ACTION_PAGE_UP:
-    Scroll(-m_itemsPerPage);
-    return true;
-  case ACTION_PAGE_DOWN:
-    Scroll(m_itemsPerPage);
-    return true;
-    // smooth scrolling (for analog controls)
-  case ACTION_SCROLL_UP:
+    case ACTION_PAGE_UP:
+      Scroll(-m_itemsPerPage);
+      return true;
+    case ACTION_PAGE_DOWN:
+      Scroll(m_itemsPerPage);
+      return true;
+      // smooth scrolling (for analog controls)
+    case ACTION_SCROLL_UP:
     {
       m_analogScrollCount += action.GetAmount() * action.GetAmount();
       bool handled = false;
@@ -57,7 +68,7 @@ bool CGUIWrappingListContainer::OnAction(const CAction &action)
       return handled;
     }
     break;
-  case ACTION_SCROLL_DOWN:
+    case ACTION_SCROLL_DOWN:
     {
       m_analogScrollCount += action.GetAmount() * action.GetAmount();
       bool handled = false;
@@ -76,7 +87,7 @@ bool CGUIWrappingListContainer::OnAction(const CAction &action)
 
 bool CGUIWrappingListContainer::OnMessage(CGUIMessage& message)
 {
-  if (message.GetControlId() == GetID() )
+  if (message.GetControlId() == GetID())
   {
     if (message.GetMessage() == GUI_MSG_PAGE_CHANGE)
     {
@@ -107,7 +118,7 @@ void CGUIWrappingListContainer::Scroll(int amount)
   ScrollToOffset(GetOffset() + amount);
 }
 
-bool CGUIWrappingListContainer::GetOffsetRange(int &minOffset, int &maxOffset) const
+bool CGUIWrappingListContainer::GetOffsetRange(int& minOffset, int& maxOffset) const
 {
   return false;
 }
@@ -115,7 +126,8 @@ bool CGUIWrappingListContainer::GetOffsetRange(int &minOffset, int &maxOffset) c
 void CGUIWrappingListContainer::ValidateOffset()
 {
   // our minimal amount of items - we need to take into account extra items to display wrapped items when scrolling
-  unsigned int minItems = (unsigned int)m_itemsPerPage + ScrollCorrectionRange() + GetCacheCount() / 2;
+  unsigned int minItems =
+      (unsigned int)m_itemsPerPage + ScrollCorrectionRange() + GetCacheCount() / 2;
   if (minItems <= m_items.size())
     return;
 
@@ -142,7 +154,8 @@ int CGUIWrappingListContainer::CorrectOffset(int offset, int cursor) const
   if (m_items.size())
   {
     int correctOffset = (offset + cursor) % (int)m_items.size();
-    if (correctOffset < 0) correctOffset += m_items.size();
+    if (correctOffset < 0)
+      correctOffset += m_items.size();
     return correctOffset;
   }
   return 0;
@@ -154,19 +167,20 @@ int CGUIWrappingListContainer::GetSelectedItem() const
   {
     int numItems = (int)(m_items.size() - m_extraItems);
     int correctOffset = (GetOffset() + GetCursor()) % numItems;
-    if (correctOffset < 0) correctOffset += numItems;
+    if (correctOffset < 0)
+      correctOffset += numItems;
     return correctOffset;
   }
   return 0;
 }
 
-bool CGUIWrappingListContainer::SelectItemFromPoint(const CPoint &point)
+bool CGUIWrappingListContainer::SelectItemFromPoint(const CPoint& point)
 {
   if (!m_focusedLayout || !m_layout)
     return false;
 
   const float mouse_scroll_speed = 0.05f;
-  const float mouse_max_amount = 1.0f;   // max speed: 1 item per frame
+  const float mouse_max_amount = 1.0f; // max speed: 1 item per frame
   float sizeOfItem = m_layout->Size(m_orientation);
   // see if the point is either side of our focused item
   float start = GetCursor() * sizeOfItem;
@@ -181,7 +195,7 @@ bool CGUIWrappingListContainer::SelectItemFromPoint(const CPoint &point)
     if (m_analogScrollCount > 1)
     {
       Scroll(-1);
-      m_analogScrollCount-=1.0f;
+      m_analogScrollCount -= 1.0f;
     }
     return true;
   }
@@ -195,7 +209,7 @@ bool CGUIWrappingListContainer::SelectItemFromPoint(const CPoint &point)
     if (m_analogScrollCount > 1)
     {
       Scroll(1);
-      m_analogScrollCount-=1.0f;
+      m_analogScrollCount -= 1.0f;
     }
     return true;
   }
@@ -225,7 +239,7 @@ void CGUIWrappingListContainer::Reset()
 int CGUIWrappingListContainer::GetCurrentPage() const
 {
   int offset = CorrectOffset(GetOffset(), GetCursor());
-  if (offset + m_itemsPerPage - GetCursor() >= (int)GetRows())  // last page
+  if (offset + m_itemsPerPage - GetCursor() >= (int)GetRows()) // last page
     return (GetRows() + m_itemsPerPage - 1) / m_itemsPerPage;
   return offset / m_itemsPerPage + 1;
 }

@@ -17,7 +17,7 @@
 
 using namespace KODI::GUILIB;
 
-CGUIStaticItem::CGUIStaticItem(const TiXmlElement *item, int parentID) : CFileItem()
+CGUIStaticItem::CGUIStaticItem(const TiXmlElement* item, int parentID) : CFileItem()
 {
   m_visState = false;
 
@@ -28,7 +28,7 @@ CGUIStaticItem::CGUIStaticItem(const TiXmlElement *item, int parentID) : CFileIt
   CGUIControlFactory::GetInfoLabel(item, "label2", label2, parentID);
   CGUIControlFactory::GetInfoLabel(item, "thumb", thumb, parentID);
   CGUIControlFactory::GetInfoLabel(item, "icon", icon, parentID);
-  const char *id = item->Attribute("id");
+  const char* id = item->Attribute("id");
   std::string condition;
   CGUIControlFactory::GetConditionalVisibility(item, condition);
   SetVisibleCondition(condition, parentID);
@@ -37,13 +37,17 @@ CGUIStaticItem::CGUIStaticItem(const TiXmlElement *item, int parentID) : CFileIt
   SetLabel2(label2.GetLabel(parentID));
   SetArt("thumb", thumb.GetLabel(parentID, true));
   SetArt("icon", icon.GetLabel(parentID, true));
-  if (!label.IsConstant())  m_info.push_back(std::make_pair(label, "label"));
-  if (!label2.IsConstant()) m_info.push_back(std::make_pair(label2, "label2"));
-  if (!thumb.IsConstant())  m_info.push_back(std::make_pair(thumb, "thumb"));
-  if (!icon.IsConstant())   m_info.push_back(std::make_pair(icon, "icon"));
+  if (!label.IsConstant())
+    m_info.push_back(std::make_pair(label, "label"));
+  if (!label2.IsConstant())
+    m_info.push_back(std::make_pair(label2, "label2"));
+  if (!thumb.IsConstant())
+    m_info.push_back(std::make_pair(thumb, "thumb"));
+  if (!icon.IsConstant())
+    m_info.push_back(std::make_pair(icon, "icon"));
   m_iprogramCount = id ? atoi(id) : 0;
   // add any properties
-  const TiXmlElement *property = item->FirstChildElement("property");
+  const TiXmlElement* property = item->FirstChildElement("property");
   while (property)
   {
     std::string name = XMLUtils::GetAttribute(property, "name");
@@ -58,8 +62,7 @@ CGUIStaticItem::CGUIStaticItem(const TiXmlElement *item, int parentID) : CFileIt
   }
 }
 
-CGUIStaticItem::CGUIStaticItem(const CFileItem &item)
-: CFileItem(item)
+CGUIStaticItem::CGUIStaticItem(const CFileItem& item) : CFileItem(item)
 {
   m_visState = false;
 }
@@ -114,7 +117,7 @@ bool CGUIStaticItem::IsVisible() const
   return true;
 }
 
-void CGUIStaticItem::SetVisibleCondition(const std::string &condition, int context)
+void CGUIStaticItem::SetVisibleCondition(const std::string& condition, int context)
 {
   m_visCondition = CServiceBroker::GetGUI()->GetInfoManager().Register(condition, context);
   m_visState = false;

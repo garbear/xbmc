@@ -13,26 +13,42 @@
 
 using namespace KODI::GUILIB;
 
-CGUIFadeLabelControl::CGUIFadeLabelControl(int parentID, int controlID, float posX, float posY, float width, float height, const CLabelInfo& labelInfo, bool scrollOut, unsigned int timeToDelayAtEnd, bool resetOnLabelChange, bool randomized)
-    : CGUIControl(parentID, controlID, posX, posY, width, height), m_label(labelInfo), m_scrollInfo(50, labelInfo.offsetX, labelInfo.scrollSpeed)
-    , m_textLayout(labelInfo.font, false)
-    , m_fadeAnim(CAnimation::CreateFader(100, 0, timeToDelayAtEnd, 200))
+CGUIFadeLabelControl::CGUIFadeLabelControl(int parentID,
+                                           int controlID,
+                                           float posX,
+                                           float posY,
+                                           float width,
+                                           float height,
+                                           const CLabelInfo& labelInfo,
+                                           bool scrollOut,
+                                           unsigned int timeToDelayAtEnd,
+                                           bool resetOnLabelChange,
+                                           bool randomized)
+  : CGUIControl(parentID, controlID, posX, posY, width, height),
+    m_label(labelInfo),
+    m_scrollInfo(50, labelInfo.offsetX, labelInfo.scrollSpeed),
+    m_textLayout(labelInfo.font, false),
+    m_fadeAnim(CAnimation::CreateFader(100, 0, timeToDelayAtEnd, 200))
 {
   m_currentLabel = 0;
   ControlType = GUICONTROL_FADELABEL;
   m_scrollOut = scrollOut;
   m_fadeAnim.ApplyAnimation();
   m_lastLabel = -1;
-  m_scrollSpeed = labelInfo.scrollSpeed;  // save it for later
+  m_scrollSpeed = labelInfo.scrollSpeed; // save it for later
   m_resetOnLabelChange = resetOnLabelChange;
   m_shortText = true;
   m_scroll = true;
   m_randomized = randomized;
 }
 
-CGUIFadeLabelControl::CGUIFadeLabelControl(const CGUIFadeLabelControl &from)
-: CGUIControl(from), m_infoLabels(from.m_infoLabels), m_label(from.m_label), m_scrollInfo(from.m_scrollInfo), m_textLayout(from.m_textLayout),
-  m_fadeAnim(from.m_fadeAnim)
+CGUIFadeLabelControl::CGUIFadeLabelControl(const CGUIFadeLabelControl& from)
+  : CGUIControl(from),
+    m_infoLabels(from.m_infoLabels),
+    m_label(from.m_label),
+    m_scrollInfo(from.m_scrollInfo),
+    m_textLayout(from.m_textLayout),
+    m_fadeAnim(from.m_fadeAnim)
 {
   m_scrollOut = from.m_scrollOut;
   m_scrollSpeed = from.m_scrollSpeed;
@@ -50,7 +66,7 @@ CGUIFadeLabelControl::CGUIFadeLabelControl(const CGUIFadeLabelControl &from)
 
 CGUIFadeLabelControl::~CGUIFadeLabelControl(void) = default;
 
-void CGUIFadeLabelControl::SetInfo(const std::vector<GUIINFO::CGUIInfoLabel> &infoLabels)
+void CGUIFadeLabelControl::SetInfo(const std::vector<GUIINFO::CGUIInfoLabel>& infoLabels)
 {
   m_lastLabel = -1;
   m_infoLabels = infoLabels;
@@ -59,13 +75,13 @@ void CGUIFadeLabelControl::SetInfo(const std::vector<GUIINFO::CGUIInfoLabel> &in
     KODI::UTILS::RandomShuffle(m_infoLabels.begin(), m_infoLabels.end());
 }
 
-void CGUIFadeLabelControl::AddLabel(const std::string &label)
+void CGUIFadeLabelControl::AddLabel(const std::string& label)
 {
   m_infoLabels.emplace_back(label, "", GetParentID());
   m_allLabelsShown = false;
 }
 
-void CGUIFadeLabelControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIFadeLabelControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   if (m_infoLabels.empty() || !m_label.font)
   {
@@ -73,7 +89,7 @@ void CGUIFadeLabelControl::Process(unsigned int currentTime, CDirtyRegionList &d
     return;
   }
 
-  if (m_currentLabel >= m_infoLabels.size() )
+  if (m_currentLabel >= m_infoLabels.size())
     m_currentLabel = 0;
 
   if (m_textLayout.Update(GetLabel()))
@@ -173,7 +189,7 @@ void CGUIFadeLabelControl::Render()
   if (!m_label.font)
   { // nothing to render
     CGUIControl::Render();
-    return ;
+    return;
   }
 
   float posY = m_posY;
@@ -186,7 +202,8 @@ void CGUIFadeLabelControl::Render()
       posX = m_posX + m_width * 0.5f;
     else if (m_label.align & XBFONT_RIGHT)
       posX = m_posX + m_width;
-    m_textLayout.Render(posX, posY, m_label.angle, m_label.textColor, m_label.shadowColor, m_label.align, m_width - m_label.offsetX);
+    m_textLayout.Render(posX, posY, m_label.angle, m_label.textColor, m_label.shadowColor,
+                        m_label.align, m_width - m_label.offsetX);
     CGUIControl::Render();
     return;
   }
@@ -200,24 +217,24 @@ void CGUIFadeLabelControl::Render()
       posX = m_posX + m_width * 0.5f;
     else if (m_label.align & XBFONT_RIGHT)
       posX = m_posX + m_width;
-    m_textLayout.Render(posX, posY, 0, m_label.textColor, m_label.shadowColor, m_label.align, m_width);
+    m_textLayout.Render(posX, posY, 0, m_label.textColor, m_label.shadowColor, m_label.align,
+                        m_width);
   }
   else
-    m_textLayout.RenderScrolling(m_posX, posY, 0, m_label.textColor, m_label.shadowColor, (m_label.align & ~3), m_width, m_scrollInfo);
+    m_textLayout.RenderScrolling(m_posX, posY, 0, m_label.textColor, m_label.shadowColor,
+                                 (m_label.align & ~3), m_width, m_scrollInfo);
   CServiceBroker::GetWinSystem()->GetGfxContext().RemoveTransform();
   CGUIControl::Render();
 }
-
 
 bool CGUIFadeLabelControl::CanFocus() const
 {
   return false;
 }
 
-
 bool CGUIFadeLabelControl::OnMessage(CGUIMessage& message)
 {
-  if ( message.GetControlId() == GetID() )
+  if (message.GetControlId() == GetID())
   {
     if (message.GetMessage() == GUI_MSG_LABEL_ADD)
     {
@@ -247,7 +264,8 @@ bool CGUIFadeLabelControl::OnMessage(CGUIMessage& message)
 
 std::string CGUIFadeLabelControl::GetDescription() const
 {
-  return (m_currentLabel < m_infoLabels.size()) ?  m_infoLabels[m_currentLabel].GetLabel(m_parentID) : "";
+  return (m_currentLabel < m_infoLabels.size()) ? m_infoLabels[m_currentLabel].GetLabel(m_parentID)
+                                                : "";
 }
 
 std::string CGUIFadeLabelControl::GetLabel()

@@ -18,27 +18,27 @@
 
 #include <array>
 
-#define SLIDER_CONTROL_TYPE_INT         1
-#define SLIDER_CONTROL_TYPE_FLOAT       2
-#define SLIDER_CONTROL_TYPE_PERCENTAGE  3
+#define SLIDER_CONTROL_TYPE_INT 1
+#define SLIDER_CONTROL_TYPE_FLOAT 2
+#define SLIDER_CONTROL_TYPE_PERCENTAGE 3
 
 typedef struct
 {
-  const char *action;
-  const char *formatString;
-  int         infoCode;
-  bool        fireOnDrag;
+  const char* action;
+  const char* formatString;
+  int infoCode;
+  bool fireOnDrag;
 } SliderAction;
 
 /*!
  \ingroup controls
  \brief
  */
-class CGUISliderControl :
-      public CGUIControl
+class CGUISliderControl : public CGUIControl
 {
 public:
-  typedef enum {
+  typedef enum
+  {
     RangeSelectorLower = 0,
     RangeSelectorUpper = 1
   } RangeSelector;
@@ -59,9 +59,9 @@ public:
   ~CGUISliderControl() override = default;
   CGUISliderControl* Clone() const override { return new CGUISliderControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   virtual bool IsActive() const { return true; }
   void AllocResources() override;
   void FreeResources(bool immediately = false) override;
@@ -80,11 +80,17 @@ public:
   void SetRangeSelector(RangeSelector selector);
   void SwitchRangeSelector();
   void SetInfo(int iInfo);
-  void SetPercentage(float iPercent, RangeSelector selector = RangeSelectorLower, bool updateCurrent = false);
+  void SetPercentage(float iPercent,
+                     RangeSelector selector = RangeSelectorLower,
+                     bool updateCurrent = false);
   float GetPercentage(RangeSelector selector = RangeSelectorLower) const;
-  void SetIntValue(int iValue, RangeSelector selector = RangeSelectorLower, bool updateCurrent = false);
+  void SetIntValue(int iValue,
+                   RangeSelector selector = RangeSelectorLower,
+                   bool updateCurrent = false);
   int GetIntValue(RangeSelector selector = RangeSelectorLower) const;
-  void SetFloatValue(float fValue, RangeSelector selector = RangeSelectorLower, bool updateCurrent = false);
+  void SetFloatValue(float fValue,
+                     RangeSelector selector = RangeSelectorLower,
+                     bool updateCurrent = false);
   float GetFloatValue(RangeSelector selector = RangeSelectorLower) const;
   void SetIntInterval(int iInterval);
   void SetFloatInterval(float fInterval);
@@ -92,16 +98,16 @@ public:
   int GetType() const { return m_iType; }
   std::string GetDescription() const override;
   void SetTextValue(const std::string& textValue) { m_textValue = textValue; }
-  void SetAction(const std::string &action);
+  void SetAction(const std::string& action);
 
 protected:
   CGUISliderControl(const CGUISliderControl& control);
 
-  bool HitTest(const CPoint &point) const override;
-  EVENT_RESULT OnMouseEvent(const CPoint &point, const CMouseEvent &event) override;
+  bool HitTest(const CPoint& point) const override;
+  EVENT_RESULT OnMouseEvent(const CPoint& point, const CMouseEvent& event) override;
   bool UpdateColors(const CGUIListItem* item) override;
   virtual void Move(int iNumSteps);
-  virtual void SetFromPosition(const CPoint &point, bool guessSelector = false);
+  virtual void SetFromPosition(const CPoint& point, bool guessSelector = false);
   /*! \brief Get the current position of the slider as a proportion
    \return slider position in the range [0,1]
    */
@@ -137,9 +143,11 @@ protected:
   float m_fEnd;
 
   int m_iInfoCode;
-  std::string m_textValue; ///< Allows overriding of the text value to be displayed (parent must update when the slider updates)
-  const SliderAction *m_action; ///< Allows the skin to configure the action of a click on the slider \sa SendClick
-  bool m_dragging; ///< Whether we're in a (mouse/touch) drag operation or not - some actions are sent only on release.
+  std::string
+      m_textValue; ///< Allows overriding of the text value to be displayed (parent must update when the slider updates)
+  const SliderAction*
+      m_action; ///< Allows the skin to configure the action of a click on the slider \sa SendClick
+  bool
+      m_dragging; ///< Whether we're in a (mouse/touch) drag operation or not - some actions are sent only on release.
   ORIENTATION m_orientation;
 };
-

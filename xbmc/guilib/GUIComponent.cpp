@@ -66,22 +66,22 @@ CGUILargeTextureManager& CGUIComponent::GetLargeTextureManager()
   return *m_pLargeTextureManager;
 }
 
-CStereoscopicsManager &CGUIComponent::GetStereoscopicsManager()
+CStereoscopicsManager& CGUIComponent::GetStereoscopicsManager()
 {
   return *m_stereoscopicsManager;
 }
 
-CGUIInfoManager &CGUIComponent::GetInfoManager()
+CGUIInfoManager& CGUIComponent::GetInfoManager()
 {
   return *m_guiInfoManager;
 }
 
-CGUIColorManager &CGUIComponent::GetColorManager()
+CGUIColorManager& CGUIComponent::GetColorManager()
 {
   return *m_guiColorManager;
 }
 
-CGUIAudioManager &CGUIComponent::GetAudioManager()
+CGUIAudioManager& CGUIComponent::GetAudioManager()
 {
   return *m_guiAudioManager;
 }

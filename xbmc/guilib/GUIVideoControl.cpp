@@ -17,15 +17,16 @@
 #include "input/Key.h"
 #include "utils/ColorUtils.h"
 
-CGUIVideoControl::CGUIVideoControl(int parentID, int controlID, float posX, float posY, float width, float height)
-    : CGUIControl(parentID, controlID, posX, posY, width, height)
+CGUIVideoControl::CGUIVideoControl(
+    int parentID, int controlID, float posX, float posY, float width, float height)
+  : CGUIControl(parentID, controlID, posX, posY, width, height)
 {
   ControlType = GUICONTROL_VIDEO;
 }
 
 CGUIVideoControl::~CGUIVideoControl(void) = default;
 
-void CGUIVideoControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIVideoControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   //! @todo Proper processing which marks when its actually changed. Just mark always for now.
   const auto& components = CServiceBroker::GetAppComponents();
@@ -49,7 +50,8 @@ void CGUIVideoControl::Render()
       appPower->ResetScreenSaver();
     }
 
-    CServiceBroker::GetWinSystem()->GetGfxContext().SetViewWindow(m_posX, m_posY, m_posX + m_width, m_posY + m_height);
+    CServiceBroker::GetWinSystem()->GetGfxContext().SetViewWindow(m_posX, m_posY, m_posX + m_width,
+                                                                  m_posY + m_height);
     TransformMatrix mat;
     CServiceBroker::GetWinSystem()->GetGfxContext().SetTransform(mat, 1.0, 1.0);
 
@@ -82,7 +84,7 @@ void CGUIVideoControl::RenderEx()
   CGUIControl::RenderEx();
 }
 
-EVENT_RESULT CGUIVideoControl::OnMouseEvent(const CPoint &point, const CMouseEvent &event)
+EVENT_RESULT CGUIVideoControl::OnMouseEvent(const CPoint& point, const CMouseEvent& event)
 {
   const auto& components = CServiceBroker::GetAppComponents();
   const auto appPlayer = components.GetComponent<CApplicationPlayer>();
@@ -102,7 +104,7 @@ bool CGUIVideoControl::CanFocus() const
   return false;
 }
 
-bool CGUIVideoControl::CanFocusFromPoint(const CPoint &point) const
+bool CGUIVideoControl::CanFocusFromPoint(const CPoint& point) const
 { // mouse is allowed to focus this control, but it doesn't actually receive focus
   return IsVisible() && HitTest(point);
 }

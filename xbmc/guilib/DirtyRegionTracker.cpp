@@ -55,13 +55,13 @@ void CDirtyRegionTracker::SelectAlgorithm()
   }
 }
 
-void CDirtyRegionTracker::MarkDirtyRegion(const CDirtyRegion &region)
+void CDirtyRegionTracker::MarkDirtyRegion(const CDirtyRegion& region)
 {
   if (!region.IsEmpty())
     m_markedRegions.push_back(region);
 }
 
-const CDirtyRegionList &CDirtyRegionTracker::GetMarkedRegions() const
+const CDirtyRegionList& CDirtyRegionTracker::GetMarkedRegions() const
 {
   return m_markedRegions;
 }
@@ -78,7 +78,10 @@ CDirtyRegionList CDirtyRegionTracker::GetDirtyRegions()
 
 void CDirtyRegionTracker::CleanMarkedRegions()
 {
-  int buffering = CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_guiVisualizeDirtyRegions ? 20 : m_buffering;
+  int buffering =
+      CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_guiVisualizeDirtyRegions
+          ? 20
+          : m_buffering;
   m_markedRegions.erase(
       std::remove_if(m_markedRegions.begin(), m_markedRegions.end(),
                      [buffering](CDirtyRegion& r) { return r.UpdateAge() >= buffering; }),

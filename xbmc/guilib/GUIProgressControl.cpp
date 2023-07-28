@@ -63,7 +63,7 @@ void CGUIProgressControl::SetPosition(float posX, float posY)
   m_guiBackground->SetPosition(posX, posY);
 }
 
-void CGUIProgressControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIProgressControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   bool changed = false;
 
@@ -91,7 +91,9 @@ void CGUIProgressControl::Render()
     {
       if (m_bReveal && !m_guiMidClipRect.IsEmpty())
       {
-        bool restore = CServiceBroker::GetWinSystem()->GetGfxContext().SetClipRegion(m_guiMidClipRect.x1, m_guiMidClipRect.y1, m_guiMidClipRect.Width(), m_guiMidClipRect.Height());
+        bool restore = CServiceBroker::GetWinSystem()->GetGfxContext().SetClipRegion(
+            m_guiMidClipRect.x1, m_guiMidClipRect.y1, m_guiMidClipRect.Width(),
+            m_guiMidClipRect.Height());
         m_guiMid->Render();
         if (restore)
           CServiceBroker::GetWinSystem()->GetGfxContext().RestoreClipRegion();
@@ -105,7 +107,9 @@ void CGUIProgressControl::Render()
 
       if (m_bReveal && !m_guiMidClipRect.IsEmpty())
       {
-        bool restore = CServiceBroker::GetWinSystem()->GetGfxContext().SetClipRegion(m_guiMidClipRect.x1, m_guiMidClipRect.y1, m_guiMidClipRect.Width(), m_guiMidClipRect.Height());
+        bool restore = CServiceBroker::GetWinSystem()->GetGfxContext().SetClipRegion(
+            m_guiMidClipRect.x1, m_guiMidClipRect.y1, m_guiMidClipRect.Width(),
+            m_guiMidClipRect.Height());
         m_guiMid->Render();
         if (restore)
           CServiceBroker::GetWinSystem()->GetGfxContext().RestoreClipRegion();
@@ -122,12 +126,10 @@ void CGUIProgressControl::Render()
   CGUIControl::Render();
 }
 
-
 bool CGUIProgressControl::CanFocus() const
 {
   return false;
 }
-
 
 bool CGUIProgressControl::OnMessage(CGUIMessage& message)
 {
@@ -244,7 +246,8 @@ bool CGUIProgressControl::UpdateLayout(void)
   if (m_guiLeft->GetFileName().empty() && m_guiRight->GetFileName().empty())
   { // rendering without left and right image - fill the mid image completely
     float width = (m_fPercent - m_fPercent2) * m_width * 0.01f;
-    float offsetX = m_fPercent2 * m_width * 0.01f;;
+    float offsetX = m_fPercent2 * m_width * 0.01f;
+    ;
     float offsetY =
         fabs(fScaleY * 0.5f * (m_guiMid->GetTextureHeight() - m_guiBackground->GetTextureHeight()));
     bChanged |= m_guiMid->SetPosition(posX + (offsetX > 0 ? offsetX : 0),
@@ -283,7 +286,8 @@ bool CGUIProgressControl::UpdateLayout(void)
     bChanged |= m_guiLeft->SetWidth(fScaleX * m_guiLeft->GetTextureWidth());
 
     posX += fScaleX * m_guiLeft->GetTextureWidth();
-    float offsetX = m_fPercent2 * fWidth * 0.01f;;
+    float offsetX = m_fPercent2 * fWidth * 0.01f;
+    ;
     offsetY =
         fabs(fScaleY * 0.5f * (m_guiMid->GetTextureHeight() - m_guiBackground->GetTextureHeight()));
     bChanged |= m_guiMid->SetPosition(posX + offsetX, posY + (offsetY > 0 ? offsetY : 0));
@@ -316,7 +320,7 @@ bool CGUIProgressControl::UpdateLayout(void)
   }
   float offset = fabs(fScaleY * 0.5f *
                       (m_guiOverlay->GetTextureHeight() - m_guiBackground->GetTextureHeight()));
-  if (offset > 0)  //  Center texture to the background if necessary
+  if (offset > 0) //  Center texture to the background if necessary
     bChanged |= m_guiOverlay->SetPosition(m_guiBackground->GetXPosition(),
                                           m_guiBackground->GetYPosition() + offset);
   else
@@ -328,7 +332,7 @@ bool CGUIProgressControl::UpdateLayout(void)
   return bChanged;
 }
 
-void CGUIProgressControl::UpdateInfo(const CGUIListItem *item)
+void CGUIProgressControl::UpdateInfo(const CGUIListItem* item)
 {
   if (!IsDisabled())
   {

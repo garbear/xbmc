@@ -41,23 +41,27 @@ DXGI_FORMAT CDXTexture::GetFormat()
 
   switch (m_format)
   {
-  case XB_FMT_DXT1:
-    format = DXGI_FORMAT_BC1_UNORM; // D3DFMT_DXT1 -> DXGI_FORMAT_BC1_UNORM & DXGI_FORMAT_BC1_UNORM_SRGB
-    break;
-  case XB_FMT_DXT3:
-    format = DXGI_FORMAT_BC2_UNORM; // D3DFMT_DXT3 -> DXGI_FORMAT_BC2_UNORM & DXGI_FORMAT_BC2_UNORM_SRGB
-    break;
-  case XB_FMT_DXT5:
-  case XB_FMT_DXT5_YCoCg:
-    format = DXGI_FORMAT_BC3_UNORM; // XB_FMT_DXT5 -> DXGI_FORMAT_BC3_UNORM & DXGI_FORMAT_BC3_UNORM_SRGB
-    break;
-  case XB_FMT_RGB8:
-  case XB_FMT_A8R8G8B8:
-    format = DXGI_FORMAT_B8G8R8A8_UNORM; // D3DFMT_A8R8G8B8 -> DXGI_FORMAT_B8G8R8A8_UNORM | DXGI_FORMAT_B8G8R8A8_UNORM_SRGB
-    break;
-  case XB_FMT_A8:
-    format = DXGI_FORMAT_R8_UNORM; // XB_FMT_A8 -> DXGI_FORMAT_A8_UNORM
-    break;
+    case XB_FMT_DXT1:
+      format =
+          DXGI_FORMAT_BC1_UNORM; // D3DFMT_DXT1 -> DXGI_FORMAT_BC1_UNORM & DXGI_FORMAT_BC1_UNORM_SRGB
+      break;
+    case XB_FMT_DXT3:
+      format =
+          DXGI_FORMAT_BC2_UNORM; // D3DFMT_DXT3 -> DXGI_FORMAT_BC2_UNORM & DXGI_FORMAT_BC2_UNORM_SRGB
+      break;
+    case XB_FMT_DXT5:
+    case XB_FMT_DXT5_YCoCg:
+      format =
+          DXGI_FORMAT_BC3_UNORM; // XB_FMT_DXT5 -> DXGI_FORMAT_BC3_UNORM & DXGI_FORMAT_BC3_UNORM_SRGB
+      break;
+    case XB_FMT_RGB8:
+    case XB_FMT_A8R8G8B8:
+      format =
+          DXGI_FORMAT_B8G8R8A8_UNORM; // D3DFMT_A8R8G8B8 -> DXGI_FORMAT_B8G8R8A8_UNORM | DXGI_FORMAT_B8G8R8A8_UNORM_SRGB
+      break;
+    case XB_FMT_A8:
+      format = DXGI_FORMAT_R8_UNORM; // XB_FMT_A8 -> DXGI_FORMAT_A8_UNORM
+      break;
   }
 
   return format;
@@ -87,7 +91,8 @@ void CDXTexture::LoadToGPU()
     if (m_format != XB_FMT_RGB8)
     {
       // this is faster way to create texture with initial data instead of create empty and then copy to it
-      m_texture.Create(m_textureWidth, m_textureHeight, IsMipmapped() ? 0 : 1, usage, GetFormat(), m_pixels, GetPitch());
+      m_texture.Create(m_textureWidth, m_textureHeight, IsMipmapped() ? 0 : 1, usage, GetFormat(),
+                       m_pixels, GetPitch());
       if (m_texture.Get() != nullptr)
         needUpdate = false;
     }
@@ -114,7 +119,8 @@ void CDXTexture::LoadToGPU()
       m_texture.Release();
       usage = D3D11_USAGE_DYNAMIC;
 
-      m_texture.Create(m_textureWidth, m_textureHeight, IsMipmapped() ? 0 : 1, usage, GetFormat(), m_pixels, GetPitch());
+      m_texture.Create(m_textureWidth, m_textureHeight, IsMipmapped() ? 0 : 1, usage, GetFormat(),
+                       m_pixels, GetPitch());
       if (m_texture.Get() == nullptr)
       {
         CLog::Log(LOGDEBUG, "CDXTexture::CDXTexture: Error creating new texture for size {} x {}.",
@@ -132,8 +138,8 @@ void CDXTexture::LoadToGPU()
     D3D11_MAPPED_SUBRESOURCE lr;
     if (m_texture.LockRect(0, &lr, mapType))
     {
-      unsigned char *dst = (unsigned char *)lr.pData;
-      unsigned char *src = m_pixels;
+      unsigned char* dst = (unsigned char*)lr.pData;
+      unsigned char* src = m_pixels;
       unsigned int dstPitch = lr.RowPitch;
       unsigned int srcPitch = GetPitch();
       unsigned int minPitch = std::min(srcPitch, dstPitch);
@@ -143,8 +149,8 @@ void CDXTexture::LoadToGPU()
       {
         for (unsigned int y = 0; y < rows; y++)
         {
-          unsigned char *dst2 = dst;
-          unsigned char *src2 = src;
+          unsigned char* dst2 = dst;
+          unsigned char* src2 = src;
           for (unsigned int x = 0; x < srcPitch / 3; x++, dst2 += 4, src2 += 3)
           {
             dst2[0] = src2[2];

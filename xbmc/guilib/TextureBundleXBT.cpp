@@ -31,24 +31,19 @@
 #include <lzo/lzo1x.h>
 #include <lzo/lzoconf.h>
 
-
 #ifdef TARGET_WINDOWS_DESKTOP
 #ifdef NDEBUG
-#pragma comment(lib,"lzo2.lib")
+#pragma comment(lib, "lzo2.lib")
 #else
 #pragma comment(lib, "lzo2d.lib")
 #endif
 #endif
 
-CTextureBundleXBT::CTextureBundleXBT()
-  : m_TimeStamp{0}
-  , m_themeBundle{false}
+CTextureBundleXBT::CTextureBundleXBT() : m_TimeStamp{0}, m_themeBundle{false}
 {
 }
 
-CTextureBundleXBT::CTextureBundleXBT(bool themeBundle)
-  : m_TimeStamp{0}
-  , m_themeBundle{themeBundle}
+CTextureBundleXBT::CTextureBundleXBT(bool themeBundle) : m_TimeStamp{0}, m_themeBundle{themeBundle}
 {
 }
 
@@ -73,11 +68,13 @@ bool CTextureBundleXBT::OpenBundle()
   {
     // if we are the theme bundle, we only load if the user has chosen
     // a valid theme (or the skin has a default one)
-    std::string theme = CServiceBroker::GetSettingsComponent()->GetSettings()->GetString(CSettings::SETTING_LOOKANDFEEL_SKINTHEME);
+    std::string theme = CServiceBroker::GetSettingsComponent()->GetSettings()->GetString(
+        CSettings::SETTING_LOOKANDFEEL_SKINTHEME);
     if (!theme.empty() && !StringUtils::EqualsNoCase(theme, "SKINDEFAULT"))
     {
       std::string themeXBT(URIUtils::ReplaceExtension(theme, ".xbt"));
-      m_path = URIUtils::AddFileToFolder(CServiceBroker::GetWinSystem()->GetGfxContext().GetMediaDir(), "media", themeXBT);
+      m_path = URIUtils::AddFileToFolder(
+          CServiceBroker::GetWinSystem()->GetGfxContext().GetMediaDir(), "media", themeXBT);
     }
     else
     {
@@ -86,7 +83,8 @@ bool CTextureBundleXBT::OpenBundle()
   }
   else
   {
-    m_path = URIUtils::AddFileToFolder(CServiceBroker::GetWinSystem()->GetGfxContext().GetMediaDir(), "media", "Textures.xbt");
+    m_path = URIUtils::AddFileToFolder(
+        CServiceBroker::GetWinSystem()->GetGfxContext().GetMediaDir(), "media", "Textures.xbt");
   }
 
   m_path = CSpecialProtocol::TranslatePathConvertCase(m_path);

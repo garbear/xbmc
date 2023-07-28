@@ -33,7 +33,7 @@ CGUIMoverControl::CGUIMoverControl(int parentID,
   m_fAnalogSpeed = 2.0f; //! @todo implement correct analog speed
   ControlType = GUICONTROL_MOVER;
   SetLimits(0, 0, 720, 576); // defaults
-  SetLocation(0, 0, false);  // defaults
+  SetLocation(0, 0, false); // defaults
 }
 
 CGUIMoverControl::CGUIMoverControl(const CGUIMoverControl& control)
@@ -52,7 +52,7 @@ CGUIMoverControl::CGUIMoverControl(const CGUIMoverControl& control)
 {
 }
 
-void CGUIMoverControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIMoverControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   if (m_bInvalidated)
   {
@@ -72,7 +72,7 @@ void CGUIMoverControl::Process(unsigned int currentTime, CDirtyRegionList &dirty
       alphaChannel = 63 - (alphaCounter % 64);
 
     alphaChannel += 192;
-    if (SetAlpha( (unsigned char)alphaChannel ))
+    if (SetAlpha((unsigned char)alphaChannel))
       MarkDirtyRegion();
     m_imgFocus->SetVisible(true);
     m_imgNoFocus->SetVisible(false);
@@ -99,7 +99,7 @@ void CGUIMoverControl::Render()
   CGUIControl::Render();
 }
 
-bool CGUIMoverControl::OnAction(const CAction &action)
+bool CGUIMoverControl::OnAction(const CAction& action)
 {
   if (action.GetID() == ACTION_SELECT_ITEM)
   {
@@ -115,7 +115,7 @@ bool CGUIMoverControl::OnAction(const CAction &action)
     //  else if (m_dwAllowedDirections == ALLOWED_DIRECTIONS_LEFTRIGHT)
     //   Move((int)(m_fAnalogSpeed*action.GetAmount()), 0);
     //  else // ALLOWED_DIRECTIONS_ALL
-    Move((int)(m_fAnalogSpeed*action.GetAmount()), (int)( -m_fAnalogSpeed*action.GetAmount(1)));
+    Move((int)(m_fAnalogSpeed * action.GetAmount()), (int)(-m_fAnalogSpeed * action.GetAmount(1)));
     return true;
   }
   // base class
@@ -146,7 +146,7 @@ void CGUIMoverControl::OnRight()
   Move(static_cast<int>(m_movingSpeed.GetUpdatedDistance(MOVING_SPEED::EventType::RIGHT)), 0);
 }
 
-EVENT_RESULT CGUIMoverControl::OnMouseEvent(const CPoint &point, const CMouseEvent &event)
+EVENT_RESULT CGUIMoverControl::OnMouseEvent(const CPoint& point, const CMouseEvent& event)
 {
   if (event.m_id == ACTION_MOUSE_DRAG || event.m_id == ACTION_MOUSE_DRAG_END)
   {
@@ -207,17 +207,22 @@ void CGUIMoverControl::Move(int iX, int iY)
   int iLocX = m_iLocationX + iX;
   int iLocY = m_iLocationY + iY;
   // check if we are within the bounds
-  if (iLocX < m_iX1) iLocX = m_iX1;
-  if (iLocY < m_iY1) iLocY = m_iY1;
-  if (iLocX > m_iX2) iLocX = m_iX2;
-  if (iLocY > m_iY2) iLocY = m_iY2;
+  if (iLocX < m_iX1)
+    iLocX = m_iX1;
+  if (iLocY < m_iY1)
+    iLocY = m_iY1;
+  if (iLocX > m_iX2)
+    iLocX = m_iX2;
+  if (iLocY > m_iY2)
+    iLocY = m_iY2;
   // ok, now set the location of the mover
   SetLocation(iLocX, iLocY);
 }
 
 void CGUIMoverControl::SetLocation(int iLocX, int iLocY, bool bSetPosition)
 {
-  if (bSetPosition) SetPosition(GetXPosition() + iLocX - m_iLocationX, GetYPosition() + iLocY - m_iLocationY);
+  if (bSetPosition)
+    SetPosition(GetXPosition() + iLocX - m_iLocationX, GetYPosition() + iLocY - m_iLocationY);
   m_iLocationX = iLocX;
   m_iLocationY = iLocY;
 }

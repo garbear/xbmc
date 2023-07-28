@@ -7,22 +7,23 @@
  */
 
 #include "GUIShaderDX.h"
-#include "windowing/GraphicContext.h"
+
 #include "rendering/dx/DeviceResources.h"
 #include "rendering/dx/RenderContext.h"
 #include "utils/log.h"
+#include "windowing/GraphicContext.h"
 
 // shaders bytecode includes
-#include "guishader_vert.h"
-#include "guishader_checkerboard_right.h"
 #include "guishader_checkerboard_left.h"
+#include "guishader_checkerboard_right.h"
 #include "guishader_default.h"
 #include "guishader_fonts.h"
-#include "guishader_interlaced_right.h"
 #include "guishader_interlaced_left.h"
+#include "guishader_interlaced_right.h"
 #include "guishader_multi_texture_blend.h"
 #include "guishader_texture.h"
 #include "guishader_texture_noblend.h"
+#include "guishader_vert.h"
 
 #include <d3dcompiler.h>
 
@@ -45,8 +46,8 @@ static const D3D_SHADER_DATA cbPSShaderCode[SHADER_METHOD_RENDER_COUNT] =
 };
 // clang-format on
 
-CGUIShaderDX::CGUIShaderDX() :
-    m_pSampLinear(nullptr),
+CGUIShaderDX::CGUIShaderDX()
+  : m_pSampLinear(nullptr),
     m_pVPBuffer(nullptr),
     m_pWVPBuffer(nullptr),
     m_pVertexBuffer(nullptr),
@@ -70,12 +71,11 @@ CGUIShaderDX::~CGUIShaderDX()
 bool CGUIShaderDX::Initialize()
 {
   // Create input layout
-  D3D11_INPUT_ELEMENT_DESC layout[] =
-  {
-    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    { "TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT,       0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+  D3D11_INPUT_ELEMENT_DESC layout[] = {
+      {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+      {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+      {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0},
+      {"TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0},
   };
 
   if (!m_vertexShader.Create(guishader_vert, sizeof(guishader_vert), layout, ARRAYSIZE(layout)))
@@ -111,7 +111,8 @@ bool CGUIShaderDX::CreateBuffers()
   ComPtr<ID3D11Device> pDevice = DX::DeviceResources::Get()->GetD3DDevice();
 
   // create vertex buffer
-  CD3D11_BUFFER_DESC bufferDesc(sizeof(Vertex) * 4, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+  CD3D11_BUFFER_DESC bufferDesc(sizeof(Vertex) * 4, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DYNAMIC,
+                                D3D11_CPU_ACCESS_WRITE);
   if (FAILED(pDevice->CreateBuffer(&bufferDesc, NULL, m_pVertexBuffer.ReleaseAndGetAddressOf())))
   {
     CLog::LogF(LOGERROR, "Failed to create GUI vertex buffer.");
@@ -120,7 +121,8 @@ bool CGUIShaderDX::CreateBuffers()
 
   // Create the constant buffer for WVP
   size_t buffSize = (sizeof(cbWorld) + 15) & ~15;
-  CD3D11_BUFFER_DESC cbbd(buffSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE); // it can change very frequently
+  CD3D11_BUFFER_DESC cbbd(buffSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC,
+                          D3D11_CPU_ACCESS_WRITE); // it can change very frequently
   if (FAILED(pDevice->CreateBuffer(&cbbd, NULL, m_pWVPBuffer.ReleaseAndGetAddressOf())))
   {
     CLog::LogF(LOGERROR, "Failed to create the constant buffer.");
@@ -138,7 +140,7 @@ bool CGUIShaderDX::CreateBuffers()
   m_cbViewPort.Height = viewPort.Height();
 
   cbbd.ByteWidth = sizeof(cbViewPort);
-  D3D11_SUBRESOURCE_DATA initData = { &m_cbViewPort, 0, 0 };
+  D3D11_SUBRESOURCE_DATA initData = {&m_cbViewPort, 0, 0};
   // create viewport buffer
   if (FAILED(pDevice->CreateBuffer(&cbbd, &initData, m_pVPBuffer.ReleaseAndGetAddressOf())))
     return false;
@@ -158,7 +160,8 @@ bool CGUIShaderDX::CreateSamplers()
   sampDesc.MinLOD = 0;
   sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-  if (FAILED(DX::DeviceResources::Get()->GetD3DDevice()->CreateSamplerState(&sampDesc, m_pSampLinear.ReleaseAndGetAddressOf())))
+  if (FAILED(DX::DeviceResources::Get()->GetD3DDevice()->CreateSamplerState(
+          &sampDesc, m_pSampLinear.ReleaseAndGetAddressOf())))
     return false;
 
   DX::DeviceResources::Get()->GetD3DContext()->PSSetSamplers(0, 1, m_pSampLinear.GetAddressOf());
@@ -218,7 +221,7 @@ void CGUIShaderDX::DrawQuad(Vertex& v1, Vertex& v2, Vertex& v3, Vertex& v4)
   if (SUCCEEDED(pContext->Map(m_pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource)))
   {
     // we are using strip topology
-    Vertex vertices[4] = { v2, v3, v1, v4 };
+    Vertex vertices[4] = {v2, v3, v1, v4};
     memcpy(resource.pData, &vertices, sizeof(Vertex) * 4);
     pContext->Unmap(m_pVertexBuffer.Get(), 0);
     // Draw primitives
@@ -226,7 +229,9 @@ void CGUIShaderDX::DrawQuad(Vertex& v1, Vertex& v2, Vertex& v3, Vertex& v4)
   }
 }
 
-void CGUIShaderDX::DrawIndexed(unsigned int indexCount, unsigned int startIndex, unsigned int startVertex)
+void CGUIShaderDX::DrawIndexed(unsigned int indexCount,
+                               unsigned int startIndex,
+                               unsigned int startVertex)
 {
   if (!m_bCreated)
     return;
@@ -266,10 +271,8 @@ void CGUIShaderDX::SetViewPort(D3D11_VIEWPORT viewPort)
   if (!m_pVPBuffer)
     return;
 
-  if ( viewPort.TopLeftX != m_cbViewPort.TopLeftX
-    || viewPort.TopLeftY != m_cbViewPort.TopLeftY
-    || viewPort.Width    != m_cbViewPort.Width
-    || viewPort.Height   != m_cbViewPort.Height)
+  if (viewPort.TopLeftX != m_cbViewPort.TopLeftX || viewPort.TopLeftY != m_cbViewPort.TopLeftY ||
+      viewPort.Width != m_cbViewPort.Width || viewPort.Height != m_cbViewPort.Height)
   {
     m_cbViewPort.TopLeftX = viewPort.TopLeftX;
     m_cbViewPort.TopLeftY = viewPort.TopLeftY;
@@ -279,22 +282,23 @@ void CGUIShaderDX::SetViewPort(D3D11_VIEWPORT viewPort)
   }
 }
 
-void CGUIShaderDX::Project(float &x, float &y, float &z)
+void CGUIShaderDX::Project(float& x, float& y, float& z)
 {
 #if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-  XMVECTOR vLocation = { x, y, z };
+  XMVECTOR vLocation = {x, y, z};
 #elif defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-  XMVECTOR vLocation = { x, y };
+  XMVECTOR vLocation = {x, y};
 #endif
-  XMVECTOR vScreenCoord = XMVector3Project(vLocation, m_cbViewPort.TopLeftX, m_cbViewPort.TopLeftY,
-                                           m_cbViewPort.Width, m_cbViewPort.Height, 0, 1,
-                                           m_cbWorldViewProj.projection, m_cbWorldViewProj.view, m_cbWorldViewProj.world);
+  XMVECTOR vScreenCoord =
+      XMVector3Project(vLocation, m_cbViewPort.TopLeftX, m_cbViewPort.TopLeftY, m_cbViewPort.Width,
+                       m_cbViewPort.Height, 0, 1, m_cbWorldViewProj.projection,
+                       m_cbWorldViewProj.view, m_cbWorldViewProj.world);
   x = XMVectorGetX(vScreenCoord);
   y = XMVectorGetY(vScreenCoord);
   z = 0;
 }
 
-void XM_CALLCONV CGUIShaderDX::SetWVP(const XMMATRIX &w, const XMMATRIX &v, const XMMATRIX &p)
+void XM_CALLCONV CGUIShaderDX::SetWVP(const XMMATRIX& w, const XMMATRIX& v, const XMMATRIX& p)
 {
   m_bIsWVPDirty = true;
   m_cbWorldViewProj.world = w;
@@ -302,19 +306,19 @@ void XM_CALLCONV CGUIShaderDX::SetWVP(const XMMATRIX &w, const XMMATRIX &v, cons
   m_cbWorldViewProj.projection = p;
 }
 
-void CGUIShaderDX::SetWorld(const XMMATRIX &value)
+void CGUIShaderDX::SetWorld(const XMMATRIX& value)
 {
   m_bIsWVPDirty = true;
   m_cbWorldViewProj.world = value;
 }
 
-void CGUIShaderDX::SetView(const XMMATRIX &value)
+void CGUIShaderDX::SetView(const XMMATRIX& value)
 {
   m_bIsWVPDirty = true;
   m_cbWorldViewProj.view = value;
 }
 
-void CGUIShaderDX::SetProjection(const XMMATRIX &value)
+void CGUIShaderDX::SetProjection(const XMMATRIX& value)
 {
   m_bIsWVPDirty = true;
   m_cbWorldViewProj.projection = value;
@@ -375,32 +379,20 @@ void CGUIShaderDX::ClipToScissorParams(void)
   DX::Windowing()->GetViewPort(viewPort);
 
   // get current GUI transform
-  const TransformMatrix &guiMatrix = CServiceBroker::GetWinSystem()->GetGfxContext().GetGUIMatrix();
+  const TransformMatrix& guiMatrix = CServiceBroker::GetWinSystem()->GetGfxContext().GetGUIMatrix();
   // get current GPU transforms
   XMFLOAT4X4 world, view, projection;
   XMStoreFloat4x4(&world, m_cbWorldViewProj.world);
   XMStoreFloat4x4(&view, m_cbWorldViewProj.view);
   XMStoreFloat4x4(&projection, m_cbWorldViewProj.projection);
 
-  m_clipPossible = guiMatrix.m[0][1] == 0 &&
-    guiMatrix.m[1][0]  == 0 &&
-    guiMatrix.m[2][0]  == 0 &&
-    guiMatrix.m[2][1]  == 0 &&
-    view.m[0][1]       == 0 &&
-    view.m[0][2]       == 0 &&
-    view.m[1][0]       == 0 &&
-    view.m[1][2]       == 0 &&
-    view.m[2][0]       == 0 &&
-    view.m[2][1]       == 0 &&
-    projection.m[0][1] == 0 &&
-    projection.m[0][2] == 0 &&
-    projection.m[0][3] == 0 &&
-    projection.m[1][0] == 0 &&
-    projection.m[1][2] == 0 &&
-    projection.m[1][3] == 0 &&
-    projection.m[3][0] == 0 &&
-    projection.m[3][1] == 0 &&
-    projection.m[3][3] == 0;
+  m_clipPossible = guiMatrix.m[0][1] == 0 && guiMatrix.m[1][0] == 0 && guiMatrix.m[2][0] == 0 &&
+                   guiMatrix.m[2][1] == 0 && view.m[0][1] == 0 && view.m[0][2] == 0 &&
+                   view.m[1][0] == 0 && view.m[1][2] == 0 && view.m[2][0] == 0 &&
+                   view.m[2][1] == 0 && projection.m[0][1] == 0 && projection.m[0][2] == 0 &&
+                   projection.m[0][3] == 0 && projection.m[1][0] == 0 && projection.m[1][2] == 0 &&
+                   projection.m[1][3] == 0 && projection.m[3][0] == 0 && projection.m[3][1] == 0 &&
+                   projection.m[3][3] == 0;
 
   m_clipXFactor = 0.0f;
   m_clipXOffset = 0.0f;
@@ -416,7 +408,8 @@ void CGUIShaderDX::ClipToScissorParams(void)
 
     float clipW = (guiMatrix.m[2][3] * view.m[2][2] + view.m[3][2]) * projection.m[2][3];
     float xMult = (viewPort.x2 - viewPort.x1) / (2 * clipW);
-    float yMult = (viewPort.y1 - viewPort.y2) / (2 * clipW); // correct for inverted window coordinate scheme
+    float yMult =
+        (viewPort.y1 - viewPort.y2) / (2 * clipW); // correct for inverted window coordinate scheme
 
     m_clipXFactor = m_clipXFactor * xMult;
     m_clipXOffset = m_clipXOffset * xMult + (viewPort.x2 + viewPort.x1) / 2;

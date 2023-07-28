@@ -11,8 +11,19 @@
 #include "GUIListItemLayout.h"
 #include "input/Key.h"
 
-CGUIFixedListContainer::CGUIFixedListContainer(int parentID, int controlID, float posX, float posY, float width, float height, ORIENTATION orientation, const CScroller& scroller, int preloadItems, int fixedPosition, int cursorRange)
-    : CGUIBaseContainer(parentID, controlID, posX, posY, width, height, orientation, scroller, preloadItems)
+CGUIFixedListContainer::CGUIFixedListContainer(int parentID,
+                                               int controlID,
+                                               float posX,
+                                               float posY,
+                                               float width,
+                                               float height,
+                                               ORIENTATION orientation,
+                                               const CScroller& scroller,
+                                               int preloadItems,
+                                               int fixedPosition,
+                                               int cursorRange)
+  : CGUIBaseContainer(
+        parentID, controlID, posX, posY, width, height, orientation, scroller, preloadItems)
 {
   ControlType = GUICONTAINER_FIXEDLIST;
   m_type = VIEW_TYPE_LIST;
@@ -23,24 +34,24 @@ CGUIFixedListContainer::CGUIFixedListContainer(int parentID, int controlID, floa
 
 CGUIFixedListContainer::~CGUIFixedListContainer(void) = default;
 
-bool CGUIFixedListContainer::OnAction(const CAction &action)
+bool CGUIFixedListContainer::OnAction(const CAction& action)
 {
   switch (action.GetID())
   {
-  case ACTION_PAGE_UP:
+    case ACTION_PAGE_UP:
     {
       Scroll(-m_itemsPerPage);
       return true;
     }
     break;
-  case ACTION_PAGE_DOWN:
+    case ACTION_PAGE_DOWN:
     {
       Scroll(m_itemsPerPage);
       return true;
     }
     break;
-    // smooth scrolling (for analog controls)
-  case ACTION_SCROLL_UP:
+      // smooth scrolling (for analog controls)
+    case ACTION_SCROLL_UP:
     {
       m_analogScrollCount += action.GetAmount() * action.GetAmount();
       bool handled = false;
@@ -53,7 +64,7 @@ bool CGUIFixedListContainer::OnAction(const CAction &action)
       return handled;
     }
     break;
-  case ACTION_SCROLL_DOWN:
+    case ACTION_SCROLL_DOWN:
     {
       m_analogScrollCount += action.GetAmount() * action.GetAmount();
       bool handled = false;
@@ -120,7 +131,7 @@ void CGUIFixedListContainer::Scroll(int amount)
   ScrollToOffset(offset);
 }
 
-bool CGUIFixedListContainer::GetOffsetRange(int &minOffset, int &maxOffset) const
+bool CGUIFixedListContainer::GetOffsetRange(int& minOffset, int& maxOffset) const
 {
   GetCursorRange(minOffset, maxOffset);
   minOffset = -minOffset;
@@ -130,7 +141,8 @@ bool CGUIFixedListContainer::GetOffsetRange(int &minOffset, int &maxOffset) cons
 
 void CGUIFixedListContainer::ValidateOffset()
 {
-  if (!m_layout) return;
+  if (!m_layout)
+    return;
   // ensure our fixed cursor position is valid
   if (m_fixedCursor >= m_itemsPerPage)
     m_fixedCursor = m_itemsPerPage - 1;
@@ -146,19 +158,23 @@ void CGUIFixedListContainer::ValidateOffset()
   GetOffsetRange(minOffset, maxOffset);
   // and finally ensure our offset is valid
   // don't validate offset if we are scrolling in case the tween image exceed <0, 1> range
-  if (GetOffset() > maxOffset || (!m_scroller.IsScrolling() && m_scroller.GetValue() > maxOffset * m_layout->Size(m_orientation)))
+  if (GetOffset() > maxOffset ||
+      (!m_scroller.IsScrolling() &&
+       m_scroller.GetValue() > maxOffset * m_layout->Size(m_orientation)))
   {
     SetOffset(std::max(-minCursor, maxOffset));
     m_scroller.SetValue(GetOffset() * m_layout->Size(m_orientation));
   }
-  if (GetOffset() < minOffset || (!m_scroller.IsScrolling() && m_scroller.GetValue() < minOffset * m_layout->Size(m_orientation)))
+  if (GetOffset() < minOffset ||
+      (!m_scroller.IsScrolling() &&
+       m_scroller.GetValue() < minOffset * m_layout->Size(m_orientation)))
   {
     SetOffset(minOffset);
     m_scroller.SetValue(GetOffset() * m_layout->Size(m_orientation));
   }
 }
 
-int CGUIFixedListContainer::GetCursorFromPoint(const CPoint &point, CPoint *itemPoint) const
+int CGUIFixedListContainer::GetCursorFromPoint(const CPoint& point, CPoint* itemPoint) const
 {
   if (!m_focusedLayout || !m_layout)
     return -1;
@@ -166,14 +182,15 @@ int CGUIFixedListContainer::GetCursorFromPoint(const CPoint &point, CPoint *item
   GetCursorRange(minCursor, maxCursor);
   // see if the point is either side of our focus range
   float start = (minCursor + 0.2f) * m_layout->Size(m_orientation);
-  float end = (maxCursor - 0.2f) * m_layout->Size(m_orientation) + m_focusedLayout->Size(m_orientation);
+  float end =
+      (maxCursor - 0.2f) * m_layout->Size(m_orientation) + m_focusedLayout->Size(m_orientation);
   float pos = (m_orientation == VERTICAL) ? point.y : point.x;
   if (pos >= start && pos <= end)
   { // select the appropriate item
     pos -= minCursor * m_layout->Size(m_orientation);
     for (int row = minCursor; row <= maxCursor; row++)
     {
-      const CGUIListItemLayout *layout = (row == GetCursor()) ? m_focusedLayout : m_layout;
+      const CGUIListItemLayout* layout = (row == GetCursor()) ? m_focusedLayout : m_layout;
       if (pos < layout->Size(m_orientation))
       {
         if (!InsideLayout(layout, point))
@@ -186,7 +203,7 @@ int CGUIFixedListContainer::GetCursorFromPoint(const CPoint &point, CPoint *item
   return -1;
 }
 
-bool CGUIFixedListContainer::SelectItemFromPoint(const CPoint &point)
+bool CGUIFixedListContainer::SelectItemFromPoint(const CPoint& point)
 {
   if (!m_focusedLayout || !m_layout)
     return false;
@@ -274,18 +291,19 @@ bool CGUIFixedListContainer::HasPreviousPage() const
 
 bool CGUIFixedListContainer::HasNextPage() const
 {
-  return (GetOffset() < (int)m_items.size() - m_itemsPerPage && (int)m_items.size() >= m_itemsPerPage);
+  return (GetOffset() < (int)m_items.size() - m_itemsPerPage &&
+          (int)m_items.size() >= m_itemsPerPage);
 }
 
 int CGUIFixedListContainer::GetCurrentPage() const
 {
   int offset = CorrectOffset(GetOffset(), GetCursor());
-  if (offset + m_itemsPerPage - GetCursor() >= (int)GetRows())  // last page
+  if (offset + m_itemsPerPage - GetCursor() >= (int)GetRows()) // last page
     return (GetRows() + m_itemsPerPage - 1) / m_itemsPerPage;
   return offset / m_itemsPerPage + 1;
 }
 
-void CGUIFixedListContainer::GetCursorRange(int &minCursor, int &maxCursor) const
+void CGUIFixedListContainer::GetCursorRange(int& minCursor, int& maxCursor) const
 {
   minCursor = std::max(m_fixedCursor - m_cursorRange, 0);
   maxCursor = std::min(m_fixedCursor + m_cursorRange, m_itemsPerPage);
@@ -305,4 +323,3 @@ void CGUIFixedListContainer::GetCursorRange(int &minCursor, int &maxCursor) cons
       minCursor++;
   }
 }
-

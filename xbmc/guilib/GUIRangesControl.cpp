@@ -70,7 +70,8 @@ void CGUIRangesControl::CGUIRange::SetInvalid()
   m_guiLowerTexture->SetInvalid();
 }
 
-bool CGUIRangesControl::CGUIRange::SetDiffuseColor(const KODI::GUILIB::GUIINFO::CGUIInfoColor& color)
+bool CGUIRangesControl::CGUIRange::SetDiffuseColor(
+    const KODI::GUILIB::GUIINFO::CGUIInfoColor& color)
 {
   bool bChanged = false;
   bChanged |= m_guiFillTexture->SetDiffuseColor(color);
@@ -107,8 +108,11 @@ void CGUIRangesControl::CGUIRange::Render()
 }
 
 bool CGUIRangesControl::CGUIRange::UpdateLayout(float fBackgroundTextureHeight,
-                                                float fPosX, float fPosY, float fWidth,
-                                                float fScaleX, float fScaleY)
+                                                float fPosX,
+                                                float fPosY,
+                                                float fWidth,
+                                                float fScaleX,
+                                                float fScaleY)
 {
   bool bChanged = false;
 
@@ -249,22 +253,21 @@ void CGUIRangesControl::Render()
   CGUIControl::Render();
 }
 
-
 bool CGUIRangesControl::CanFocus() const
 {
   return false;
 }
 
-
 void CGUIRangesControl::SetRanges(const std::vector<std::pair<float, float>>& ranges)
 {
   ClearRanges();
   for (const auto& range : ranges)
-    m_ranges.emplace_back(CGUIRange(m_posX, m_posY, m_width, m_height,
-                                    m_guiLowerTextureInfo, m_guiFillTextureInfo, m_guiUpperTextureInfo, range));
+    m_ranges.emplace_back(CGUIRange(m_posX, m_posY, m_width, m_height, m_guiLowerTextureInfo,
+                                    m_guiFillTextureInfo, m_guiUpperTextureInfo, range));
 
   for (auto& range : m_ranges)
-    range.AllocResources(); // note: we need to alloc the instance actually inserted into the vector; hence the second loop.
+    range
+        .AllocResources(); // note: we need to alloc the instance actually inserted into the vector; hence the second loop.
 }
 
 void CGUIRangesControl::ClearRanges()
@@ -363,7 +366,7 @@ bool CGUIRangesControl::UpdateLayout()
 
   float offset = std::fabs(
       fScaleY * 0.5f * (m_guiOverlay->GetTextureHeight() - m_guiBackground->GetTextureHeight()));
-  if (offset > 0)  //  Center texture to the background if necessary
+  if (offset > 0) //  Center texture to the background if necessary
     bChanged |= m_guiOverlay->SetPosition(m_guiBackground->GetXPosition(),
                                           m_guiBackground->GetYPosition() + offset);
   else
@@ -380,7 +383,8 @@ void CGUIRangesControl::UpdateInfo(const CGUIListItem* item /* = nullptr */)
 {
   if (!IsDisabled() && m_iInfoCode)
   {
-    const std::string value = CServiceBroker::GetGUI()->GetInfoManager().GetLabel(m_iInfoCode, m_parentID);
+    const std::string value =
+        CServiceBroker::GetGUI()->GetInfoManager().GetLabel(m_iInfoCode, m_parentID);
     if (value != m_prevRanges)
     {
       std::vector<std::pair<float, float>> ranges;
@@ -401,11 +405,13 @@ void CGUIRangesControl::UpdateInfo(const CGUIListItem* item /* = nullptr */)
           if (first <= second)
             ranges.emplace_back(std::make_pair(first, second));
           else
-            CLog::Log(LOGERROR, "CGUIRangesControl::UpdateInfo - malformed ranges csv string (end element must be larger or equal than start element)");
+            CLog::Log(LOGERROR, "CGUIRangesControl::UpdateInfo - malformed ranges csv string (end "
+                                "element must be larger or equal than start element)");
         }
       }
       else
-        CLog::Log(LOGERROR, "CGUIRangesControl::UpdateInfo - malformed ranges csv string (string must contain even number of elements)");
+        CLog::Log(LOGERROR, "CGUIRangesControl::UpdateInfo - malformed ranges csv string (string "
+                            "must contain even number of elements)");
 
       SetRanges(ranges);
       m_prevRanges = value;

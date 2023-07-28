@@ -18,8 +18,10 @@
 #include "threads/SingleLock.h"
 #include "utils/TimeUtils.h"
 
-CGUIDialog::CGUIDialog(int id, const std::string &xmlFile, DialogModalityType modalityType /* = DialogModalityType::MODAL */)
-    : CGUIWindow(id, xmlFile)
+CGUIDialog::CGUIDialog(int id,
+                       const std::string& xmlFile,
+                       DialogModalityType modalityType /* = DialogModalityType::MODAL */)
+  : CGUIWindow(id, xmlFile)
 {
   m_modalityType = modalityType;
   m_wasRunning = false;
@@ -63,7 +65,7 @@ void CGUIDialog::OnWindowLoaded()
   }
 }
 
-bool CGUIDialog::OnAction(const CAction &action)
+bool CGUIDialog::OnAction(const CAction& action)
 {
   // keyboard or controller movement should prevent autoclosing
   if (!action.IsMouse() && m_autoClosing)
@@ -80,14 +82,14 @@ bool CGUIDialog::OnBack(int actionID)
 
 bool CGUIDialog::OnMessage(CGUIMessage& message)
 {
-  switch ( message.GetMessage() )
+  switch (message.GetMessage())
   {
-  case GUI_MSG_WINDOW_DEINIT:
+    case GUI_MSG_WINDOW_DEINIT:
     {
       CGUIWindow::OnMessage(message);
       return true;
     }
-  case GUI_MSG_WINDOW_INIT:
+    case GUI_MSG_WINDOW_INIT:
     {
       CGUIWindow::OnMessage(message);
       m_showStartTime = 0;
@@ -108,7 +110,7 @@ void CGUIDialog::OnDeinitWindow(int nextWindowID)
   CGUIWindow::OnDeinitWindow(nextWindowID);
 }
 
-void CGUIDialog::DoProcess(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIDialog::DoProcess(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   UpdateVisibility();
 
@@ -150,7 +152,7 @@ void CGUIDialog::UpdateVisibility()
   }
 }
 
-void CGUIDialog::Open_Internal(bool bProcessRenderLoop, const std::string &param /* = "" */)
+void CGUIDialog::Open_Internal(bool bProcessRenderLoop, const std::string& param /* = "" */)
 {
   if (!CServiceBroker::GetGUI()->GetWindowManager().Initialized() ||
       (m_active && !m_closing && !IsAnimating(ANIM_TYPE_WINDOW_CLOSE)))
@@ -182,11 +184,10 @@ void CGUIDialog::Open_Internal(bool bProcessRenderLoop, const std::string &param
   }
 }
 
-void CGUIDialog::Open(const std::string &param /* = "" */)
+void CGUIDialog::Open(const std::string& param /* = "" */)
 {
   CGUIDialog::Open(m_modalityType != DialogModalityType::MODELESS, param);
 }
-
 
 void CGUIDialog::Open(bool bProcessRenderLoop, const std::string& param /* = "" */)
 {
@@ -217,9 +218,9 @@ void CGUIDialog::SetDefaults()
 
 void CGUIDialog::SetAutoClose(unsigned int timeoutMs)
 {
-   m_autoClosing = true;
-   m_showDuration = timeoutMs;
-   ResetAutoClose();
+  m_autoClosing = true;
+  m_showDuration = timeoutMs;
+  ResetAutoClose();
 }
 
 void CGUIDialog::ResetAutoClose(void)

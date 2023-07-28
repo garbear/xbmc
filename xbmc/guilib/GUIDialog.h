@@ -32,19 +32,20 @@ enum class DialogModalityType
  \ingroup winmsg
  \brief
  */
-class CGUIDialog :
-      public CGUIWindow
+class CGUIDialog : public CGUIWindow
 {
 public:
-  CGUIDialog(int id, const std::string &xmlFile, DialogModalityType modalityType = DialogModalityType::MODAL);
+  CGUIDialog(int id,
+             const std::string& xmlFile,
+             DialogModalityType modalityType = DialogModalityType::MODAL);
   ~CGUIDialog(void) override;
 
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
-  void DoProcess(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void DoProcess(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
 
-  void Open(const std::string &param = "");
+  void Open(const std::string& param = "");
   void Open(bool bProcessRenderLoop, const std::string& param = "");
 
   bool OnBack(int actionID) override;
@@ -62,13 +63,13 @@ public:
   bool IsSoundEnabled() const override { return m_enableSound; }
 
 protected:
-  bool Load(TiXmlElement *pRootElement) override;
+  bool Load(TiXmlElement* pRootElement) override;
   void SetDefaults() override;
   void OnWindowLoaded() override;
   using CGUIWindow::UpdateVisibility;
   virtual void UpdateVisibility();
 
-  virtual void Open_Internal(bool bProcessRenderLoop, const std::string &param = "");
+  virtual void Open_Internal(bool bProcessRenderLoop, const std::string& param = "");
   void OnDeinitWindow(int nextWindowID) override;
 
   void ProcessRenderLoop(bool renderOnly = false);

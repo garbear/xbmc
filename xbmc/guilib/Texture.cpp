@@ -20,8 +20,9 @@
 #include "utils/URIUtils.h"
 #include "utils/log.h"
 #if defined(TARGET_DARWIN_EMBEDDED)
-#include <ImageIO/ImageIO.h>
 #include "filesystem/File.h"
+
+#include <ImageIO/ImageIO.h>
 #endif
 #if defined(TARGET_ANDROID)
 #include "platform/android/filesystem/AndroidAppFile.h"
@@ -93,8 +94,12 @@ void CTexture::Allocate(unsigned int width, unsigned int height, XB_FMT format)
     m_textureWidth = ((m_textureWidth + 15) / 16) * 16;
   }
 
-  // check for max texture size
-  #define CLAMP(x, y) { if (x > y) x = y; }
+// check for max texture size
+#define CLAMP(x, y) \
+  { \
+    if (x > y) \
+      x = y; \
+  }
   CLAMP(m_textureWidth, CServiceBroker::GetRenderSystem()->GetMaxTextureSize());
   CLAMP(m_textureHeight, CServiceBroker::GetRenderSystem()->GetMaxTextureSize());
   CLAMP(m_imageWidth, m_textureWidth);
@@ -141,7 +146,7 @@ void CTexture::Update(unsigned int width,
     memcpy(m_pixels, pixels, srcPitch * std::min(srcRows, dstRows));
   else
   {
-    const unsigned char *src = pixels;
+    const unsigned char* src = pixels;
     unsigned char* dst = m_pixels;
     for (unsigned int y = 0; y < srcRows && y < dstRows; y++)
     {
@@ -168,8 +173,8 @@ void CTexture::ClampToEdge()
   if (imagePitch < texturePitch)
   {
     unsigned int blockSize = GetBlockSize();
-    unsigned char *src = m_pixels + imagePitch - blockSize;
-    unsigned char *dst = m_pixels;
+    unsigned char* src = m_pixels + imagePitch - blockSize;
+    unsigned char* dst = m_pixels;
     for (unsigned int y = 0; y < imageRows; y++)
     {
       for (unsigned int x = imagePitch; x < texturePitch; x += blockSize)
@@ -180,7 +185,7 @@ void CTexture::ClampToEdge()
 
   if (imageRows < textureRows)
   {
-    unsigned char *dst = m_pixels + imageRows * texturePitch;
+    unsigned char* dst = m_pixels + imageRows * texturePitch;
     for (unsigned int y = imageRows; y < textureRows; y++)
     {
       memcpy(dst, dst - texturePitch, texturePitch);
@@ -211,14 +216,15 @@ std::unique_ptr<CTexture> CTexture::LoadFromFile(const std::string& texturePath,
         return NULL;
 
       std::unique_ptr<CTexture> texture = CTexture::CreateTexture();
-      texture->LoadFromMemory(width, height, width*4, XB_FMT_RGBA8, true, inputBuff);
+      texture->LoadFromMemory(width, height, width * 4, XB_FMT_RGBA8, true, inputBuff);
       delete[] inputBuff;
       return texture;
     }
   }
 #endif
   std::unique_ptr<CTexture> texture = CTexture::CreateTexture();
-  if (texture->LoadFromFileInternal(texturePath, idealWidth, idealHeight, requirePixels, strMimeType))
+  if (texture->LoadFromFileInternal(texturePath, idealWidth, idealHeight, requirePixels,
+                                    strMimeType))
     return texture;
   return {};
 }
@@ -252,10 +258,12 @@ bool CTexture::LoadFromFileInternal(const std::string& texturePath,
     return false;
   }
 
-  unsigned int width = maxWidth ? std::min(maxWidth, CServiceBroker::GetRenderSystem()->GetMaxTextureSize()) :
-                                  CServiceBroker::GetRenderSystem()->GetMaxTextureSize();
-  unsigned int height = maxHeight ? std::min(maxHeight, CServiceBroker::GetRenderSystem()->GetMaxTextureSize()) :
-                                    CServiceBroker::GetRenderSystem()->GetMaxTextureSize();
+  unsigned int width =
+      maxWidth ? std::min(maxWidth, CServiceBroker::GetRenderSystem()->GetMaxTextureSize())
+               : CServiceBroker::GetRenderSystem()->GetMaxTextureSize();
+  unsigned int height =
+      maxHeight ? std::min(maxHeight, CServiceBroker::GetRenderSystem()->GetMaxTextureSize())
+                : CServiceBroker::GetRenderSystem()->GetMaxTextureSize();
 
   // Read image into memory to use our vfs
   XFILE::CFile file;
@@ -286,7 +294,7 @@ bool CTexture::LoadFromFileInternal(const std::string& texturePath,
 
   IImage* pImage;
 
-  if(strMimeType.empty())
+  if (strMimeType.empty())
     pImage = ImageFactory::CreateLoader(texturePath);
   else
     pImage = ImageFactory::CreateLoaderFromMimeType(strMimeType);
@@ -311,13 +319,15 @@ bool CTexture::LoadFromFileInMem(unsigned char* buffer,
   if (!buffer || !size)
     return false;
 
-  unsigned int width = maxWidth ? std::min(maxWidth, CServiceBroker::GetRenderSystem()->GetMaxTextureSize()) :
-                                  CServiceBroker::GetRenderSystem()->GetMaxTextureSize();
-  unsigned int height = maxHeight ? std::min(maxHeight, CServiceBroker::GetRenderSystem()->GetMaxTextureSize()) :
-                                    CServiceBroker::GetRenderSystem()->GetMaxTextureSize();
+  unsigned int width =
+      maxWidth ? std::min(maxWidth, CServiceBroker::GetRenderSystem()->GetMaxTextureSize())
+               : CServiceBroker::GetRenderSystem()->GetMaxTextureSize();
+  unsigned int height =
+      maxHeight ? std::min(maxHeight, CServiceBroker::GetRenderSystem()->GetMaxTextureSize())
+                : CServiceBroker::GetRenderSystem()->GetMaxTextureSize();
 
   IImage* pImage = ImageFactory::CreateLoaderFromMimeType(mimeType);
-  if(!LoadIImage(pImage, buffer, size, width, height))
+  if (!LoadIImage(pImage, buffer, size, width, height))
   {
     delete pImage;
     return false;
@@ -332,12 +342,13 @@ bool CTexture::LoadIImage(IImage* pImage,
                           unsigned int width,
                           unsigned int height)
 {
-  if(pImage != NULL && pImage->LoadImageFromMemory(buffer, bufSize, width, height))
+  if (pImage != NULL && pImage->LoadImageFromMemory(buffer, bufSize, width, height))
   {
     if (pImage->Width() > 0 && pImage->Height() > 0)
     {
       Allocate(pImage->Width(), pImage->Height(), XB_FMT_A8R8G8B8);
-      if (m_pixels != nullptr && pImage->Decode(m_pixels, GetTextureWidth(), GetRows(), GetPitch(), XB_FMT_A8R8G8B8))
+      if (m_pixels != nullptr &&
+          pImage->Decode(m_pixels, GetTextureWidth(), GetRows(), GetPitch(), XB_FMT_A8R8G8B8))
       {
         if (pImage->Orientation())
           m_orientation = pImage->Orientation() - 1;
@@ -383,8 +394,8 @@ bool CTexture::LoadPaletted(unsigned int width,
 
   for (unsigned int y = 0; y < m_imageHeight; y++)
   {
-    unsigned char *dest = m_pixels + y * GetPitch();
-    const unsigned char *src = pixels + y * pitch;
+    unsigned char* dest = m_pixels + y * GetPitch();
+    const unsigned char* src = pixels + y * pitch;
     for (unsigned int x = 0; x < m_imageWidth; x++)
     {
       COLOR col = palette[*src++];
@@ -415,13 +426,14 @@ bool CTexture::SwapBlueRed(unsigned char* pixels,
                            unsigned int elements,
                            unsigned int offset)
 {
-  if (!pixels) return false;
-  unsigned char *dst = pixels;
+  if (!pixels)
+    return false;
+  unsigned char* dst = pixels;
   for (unsigned int y = 0; y < height; y++)
   {
     dst = pixels + (y * pitch);
-    for (unsigned int x = 0; x < pitch; x+=elements)
-      std::swap(dst[x+offset], dst[x+2+offset]);
+    for (unsigned int x = 0; x < pitch; x += elements)
+      std::swap(dst[x + offset], dst[x + 2 + offset]);
   }
   return true;
 }
@@ -430,20 +442,20 @@ unsigned int CTexture::GetPitch(unsigned int width) const
 {
   switch (m_format)
   {
-  case XB_FMT_DXT1:
-    return ((width + 3) / 4) * 8;
-  case XB_FMT_DXT3:
-  case XB_FMT_DXT5:
-  case XB_FMT_DXT5_YCoCg:
-    return ((width + 3) / 4) * 16;
-  case XB_FMT_A8:
-    return width;
-  case XB_FMT_RGB8:
-    return (((width + 1)* 3 / 4) * 4);
-  case XB_FMT_RGBA8:
-  case XB_FMT_A8R8G8B8:
-  default:
-    return width*4;
+    case XB_FMT_DXT1:
+      return ((width + 3) / 4) * 8;
+    case XB_FMT_DXT3:
+    case XB_FMT_DXT5:
+    case XB_FMT_DXT5_YCoCg:
+      return ((width + 3) / 4) * 16;
+    case XB_FMT_A8:
+      return width;
+    case XB_FMT_RGB8:
+      return (((width + 1) * 3 / 4) * 4);
+    case XB_FMT_RGBA8:
+    case XB_FMT_A8R8G8B8:
+    default:
+      return width * 4;
   }
 }
 
@@ -451,14 +463,14 @@ unsigned int CTexture::GetRows(unsigned int height) const
 {
   switch (m_format)
   {
-  case XB_FMT_DXT1:
-    return (height + 3) / 4;
-  case XB_FMT_DXT3:
-  case XB_FMT_DXT5:
-  case XB_FMT_DXT5_YCoCg:
-    return (height + 3) / 4;
-  default:
-    return height;
+    case XB_FMT_DXT1:
+      return (height + 3) / 4;
+    case XB_FMT_DXT3:
+    case XB_FMT_DXT5:
+    case XB_FMT_DXT5_YCoCg:
+      return (height + 3) / 4;
+    default:
+      return height;
   }
 }
 
@@ -466,16 +478,16 @@ unsigned int CTexture::GetBlockSize() const
 {
   switch (m_format)
   {
-  case XB_FMT_DXT1:
-    return 8;
-  case XB_FMT_DXT3:
-  case XB_FMT_DXT5:
-  case XB_FMT_DXT5_YCoCg:
-    return 16;
-  case XB_FMT_A8:
-    return 1;
-  default:
-    return 4;
+    case XB_FMT_DXT1:
+      return 8;
+    case XB_FMT_DXT3:
+    case XB_FMT_DXT5:
+    case XB_FMT_DXT5_YCoCg:
+      return 16;
+    case XB_FMT_A8:
+      return 1;
+    default:
+      return 4;
   }
 }
 

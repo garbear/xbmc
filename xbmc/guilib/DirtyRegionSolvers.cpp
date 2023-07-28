@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 
-void CUnionDirtyRegionSolver::Solve(const CDirtyRegionList &input, CDirtyRegionList &output)
+void CUnionDirtyRegionSolver::Solve(const CDirtyRegionList& input, CDirtyRegionList& output)
 {
   CDirtyRegion unifiedRegion;
   for (unsigned int i = 0; i < input.size(); i++)
@@ -22,30 +22,31 @@ void CUnionDirtyRegionSolver::Solve(const CDirtyRegionList &input, CDirtyRegionL
     output.push_back(unifiedRegion);
 }
 
-void CFillViewportAlwaysRegionSolver::Solve(const CDirtyRegionList &input, CDirtyRegionList &output)
+void CFillViewportAlwaysRegionSolver::Solve(const CDirtyRegionList& input, CDirtyRegionList& output)
 {
   CDirtyRegion unifiedRegion(CServiceBroker::GetWinSystem()->GetGfxContext().GetViewWindow());
   output.push_back(unifiedRegion);
 }
 
-void CFillViewportOnChangeRegionSolver::Solve(const CDirtyRegionList &input, CDirtyRegionList &output)
+void CFillViewportOnChangeRegionSolver::Solve(const CDirtyRegionList& input,
+                                              CDirtyRegionList& output)
 {
   if (!input.empty())
-    output.assign(1,CDirtyRegion(CServiceBroker::GetWinSystem()->GetGfxContext().GetViewWindow()));
+    output.assign(1, CDirtyRegion(CServiceBroker::GetWinSystem()->GetGfxContext().GetViewWindow()));
 }
 
 CGreedyDirtyRegionSolver::CGreedyDirtyRegionSolver()
 {
   m_costNewRegion = 10.0f;
-  m_costPerArea   = 0.01f;
+  m_costPerArea = 0.01f;
 }
 
-void CGreedyDirtyRegionSolver::Solve(const CDirtyRegionList &input, CDirtyRegionList &output)
+void CGreedyDirtyRegionSolver::Solve(const CDirtyRegionList& input, CDirtyRegionList& output)
 {
   for (unsigned int i = 0; i < input.size(); i++)
   {
     CDirtyRegion possibleUnionRegion;
-    int   possibleUnionNbr = -1;
+    int possibleUnionNbr = -1;
     float possibleUnionCost = 100000.0f;
 
     CDirtyRegion currentRegion = input[i];
@@ -58,8 +59,8 @@ void CGreedyDirtyRegionSolver::Solve(const CDirtyRegionList &input, CDirtyRegion
       {
         //! @todo if the temporaryCost is 0 then we could skip checking the other regions since there exist no better solution
         possibleUnionRegion = temporaryUnion;
-        possibleUnionNbr    = j;
-        possibleUnionCost   = temporaryCost;
+        possibleUnionNbr = j;
+        possibleUnionCost = temporaryCost;
       }
     }
 

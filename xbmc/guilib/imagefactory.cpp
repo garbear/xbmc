@@ -29,8 +29,8 @@ IImage* ImageFactory::CreateLoader(const std::string& strFileName)
 
 IImage* ImageFactory::CreateLoader(const CURL& url)
 {
-  if(!url.GetFileType().empty())
-    return CreateLoaderFromMimeType("image/"+url.GetFileType());
+  if (!url.GetFileType().empty())
+    return CreateLoaderFromMimeType("image/" + url.GetFileType());
 
   return CreateLoaderFromMimeType(CMime::GetMimeType(url));
 }

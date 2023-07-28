@@ -47,7 +47,9 @@ public:
    \param fallback if non-NULL, is set to an alternate value to use should the actual value be not appropriate. Defaults to NULL.
    \return label (or image).
    */
-  const std::string &GetLabel(int contextWindow, bool preferImage = false, std::string *fallback = NULL) const;
+  const std::string& GetLabel(int contextWindow,
+                              bool preferImage = false,
+                              std::string* fallback = NULL) const;
 
   /*!
    \brief Gets the label and returns it as an int value
@@ -76,21 +78,23 @@ public:
   static std::string GetLabel(const std::string& label,
                               int contextWindow,
                               bool preferImage = false);
-  static std::string GetItemLabel(const std::string &label, const CGUIListItem *item, bool preferImage = false);
+  static std::string GetItemLabel(const std::string& label,
+                                  const CGUIListItem* item,
+                                  bool preferImage = false);
 
   /*!
    \brief Replaces instances of $LOCALIZE[number] with the appropriate localized string
    \param label text to replace
    \return text with any localized strings filled in.
    */
-  static std::string ReplaceLocalize(const std::string &label);
+  static std::string ReplaceLocalize(const std::string& label);
 
   /*!
    \brief Replaces instances of $ADDON[id number] with the appropriate localized addon string
    \param label text to replace
    \return text with any localized strings filled in.
    */
-  static std::string ReplaceAddonStrings(std::string &&label);
+  static std::string ReplaceAddonStrings(std::string&& label);
 
   typedef std::function<std::string(const std::string&)> StringReplacerFunc;
 
@@ -102,7 +106,10 @@ public:
    \param strOutput the output string
    \return whether anything has been replaced.
    */
-  static bool ReplaceSpecialKeywordReferences(const std::string &strInput, const std::string &strKeyword, const StringReplacerFunc &func, std::string &strOutput);
+  static bool ReplaceSpecialKeywordReferences(const std::string& strInput,
+                                              const std::string& strKeyword,
+                                              const StringReplacerFunc& func,
+                                              std::string& strOutput);
 
   /*!
    \brief Replaces instances of $strKeyword[value] with the appropriate resolved string in-place
@@ -111,16 +118,22 @@ public:
    \param func function that does the actual replacement of each bracketed value found
    \return whether anything has been replaced.
    */
-  static bool ReplaceSpecialKeywordReferences(std::string &work, const std::string &strKeyword, const StringReplacerFunc &func);
+  static bool ReplaceSpecialKeywordReferences(std::string& work,
+                                              const std::string& strKeyword,
+                                              const StringReplacerFunc& func);
 
 private:
   class CInfoPortion
   {
   public:
-    CInfoPortion(int info, const std::string &prefix, const std::string &postfix, bool escaped = false);
-    bool NeedsUpdate(const std::string &label) const;
+    CInfoPortion(int info,
+                 const std::string& prefix,
+                 const std::string& postfix,
+                 bool escaped = false);
+    bool NeedsUpdate(const std::string& label) const;
     std::string Get() const;
     int m_info;
+
   private:
     bool m_escaped;
     mutable std::string m_label;
@@ -174,7 +187,7 @@ private:
                             std::string* fallback,
                             const std::vector<CInfoPortion>& infoPortion) const;
 
-  mutable bool        m_dirty = false;
+  mutable bool m_dirty = false;
   mutable std::string m_label;
   mutable std::string m_fallback;
   std::vector<CInfoPortion> m_infoLabel;
@@ -184,4 +197,3 @@ private:
 } // namespace GUIINFO
 } // namespace GUILIB
 } // namespace KODI
-

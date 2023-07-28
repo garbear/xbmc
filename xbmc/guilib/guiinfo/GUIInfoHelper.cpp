@@ -30,7 +30,7 @@ namespace GUIINFO
 {
 
 // conditions for window retrieval
-static const int WINDOW_CONDITION_HAS_LIST_ITEMS  = 1;
+static const int WINDOW_CONDITION_HAS_LIST_ITEMS = 1;
 static const int WINDOW_CONDITION_IS_MEDIA_WINDOW = 2;
 
 std::string GetPlaylistLabel(int item, PLAYLIST::Id playlistId /* = TYPE_NONE */)
@@ -77,7 +77,7 @@ std::string GetPlaylistLabel(int item, PLAYLIST::Id playlistId /* = TYPE_NONE */
 namespace
 {
 
-bool CheckWindowCondition(CGUIWindow *window, int condition)
+bool CheckWindowCondition(CGUIWindow* window, int condition)
 {
   // check if it satisfies our condition
   if (!window)
@@ -93,7 +93,7 @@ CGUIWindow* GetWindowWithCondition(int contextWindow, int condition)
 {
   const CGUIWindowManager& windowMgr = CServiceBroker::GetGUI()->GetWindowManager();
 
-  CGUIWindow *window = windowMgr.GetWindow(contextWindow);
+  CGUIWindow* window = windowMgr.GetWindow(contextWindow);
   if (CheckWindowCondition(window, condition))
     return window;
 
@@ -137,11 +137,11 @@ CGUIMediaWindow* GetMediaWindow(int contextWindow)
 
 CGUIControl* GetActiveContainer(int containerId, int contextWindow)
 {
-  CGUIWindow *window = GetWindow(contextWindow);
+  CGUIWindow* window = GetWindow(contextWindow);
   if (!window)
     return nullptr;
 
-  CGUIControl *control = nullptr;
+  CGUIControl* control = nullptr;
   if (!containerId) // No container specified, so we lookup the current view container
   {
     if (window->IsMediaWindow())
@@ -159,22 +159,22 @@ CGUIControl* GetActiveContainer(int containerId, int contextWindow)
   return nullptr;
 }
 
-CGUIListItemPtr GetCurrentListItem(int contextWindow, int containerId /* = 0 */, int itemOffset /* = 0 */, unsigned int itemFlags /* = 0 */)
+CGUIListItemPtr GetCurrentListItem(int contextWindow,
+                                   int containerId /* = 0 */,
+                                   int itemOffset /* = 0 */,
+                                   unsigned int itemFlags /* = 0 */)
 {
   CGUIListItemPtr item;
 
-  if (containerId == 0  &&
-      itemOffset == 0 &&
-      !(itemFlags & INFOFLAG_LISTITEM_CONTAINER) &&
-      !(itemFlags & INFOFLAG_LISTITEM_ABSOLUTE) &&
-      !(itemFlags & INFOFLAG_LISTITEM_POSITION))
+  if (containerId == 0 && itemOffset == 0 && !(itemFlags & INFOFLAG_LISTITEM_CONTAINER) &&
+      !(itemFlags & INFOFLAG_LISTITEM_ABSOLUTE) && !(itemFlags & INFOFLAG_LISTITEM_POSITION))
     item = GetCurrentListItemFromWindow(contextWindow);
 
   if (!item)
   {
     CGUIControl* activeContainer = GetActiveContainer(containerId, contextWindow);
     if (activeContainer)
-      item = static_cast<IGUIContainer *>(activeContainer)->GetListItem(itemOffset, itemFlags);
+      item = static_cast<IGUIContainer*>(activeContainer)->GetListItem(itemOffset, itemFlags);
   }
 
   return item;

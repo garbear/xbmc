@@ -33,7 +33,7 @@ public:
   CGUIColorManager(void);
   virtual ~CGUIColorManager(void);
 
-  void Load(const std::string &colorFile);
+  void Load(const std::string& colorFile);
 
   UTILS::COLOR::Color GetColor(const std::string& color) const;
 

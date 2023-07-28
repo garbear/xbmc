@@ -27,17 +27,28 @@
 class CGUIMultiImage : public CGUIControl, public IJobCallback
 {
 public:
-  CGUIMultiImage(int parentID, int controlID, float posX, float posY, float width, float height, const CTextureInfo& texture, unsigned int timePerImage, unsigned int fadeTime, bool randomized, bool loop, unsigned int timeToPauseAtEnd);
-  CGUIMultiImage(const CGUIMultiImage &from);
+  CGUIMultiImage(int parentID,
+                 int controlID,
+                 float posX,
+                 float posY,
+                 float width,
+                 float height,
+                 const CTextureInfo& texture,
+                 unsigned int timePerImage,
+                 unsigned int fadeTime,
+                 bool randomized,
+                 bool loop,
+                 unsigned int timeToPauseAtEnd);
+  CGUIMultiImage(const CGUIMultiImage& from);
   ~CGUIMultiImage(void) override;
   CGUIMultiImage* Clone() const override { return new CGUIMultiImage(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  void UpdateVisibility(const CGUIListItem *item = NULL) override;
-  void UpdateInfo(const CGUIListItem *item = NULL) override;
-  bool OnAction(const CAction &action) override;
-  bool OnMessage(CGUIMessage &message) override;
+  void UpdateVisibility(const CGUIListItem* item = NULL) override;
+  void UpdateInfo(const CGUIListItem* item = NULL) override;
+  bool OnAction(const CAction& action) override;
+  bool OnMessage(CGUIMessage& message) override;
   void AllocResources() override;
   void FreeResources(bool immediately = false) override;
   void DynamicResourceAlloc(bool bOnOff) override;
@@ -46,26 +57,32 @@ public:
   bool CanFocus() const override;
   std::string GetDescription() const override;
 
-  void SetInfo(const KODI::GUILIB::GUIINFO::CGUIInfoLabel &info);
-  void SetAspectRatio(const CAspectRatio &ratio);
+  void SetInfo(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& info);
+  void SetAspectRatio(const CAspectRatio& ratio);
 
 protected:
   void LoadDirectory();
   void OnDirectoryLoaded();
   void CancelLoading();
 
-  enum DIRECTORY_STATUS { UNLOADED = 0, LOADING, LOADED, READY };
-  void OnJobComplete(unsigned int jobID, bool success, CJob *job) override;
+  enum DIRECTORY_STATUS
+  {
+    UNLOADED = 0,
+    LOADING,
+    LOADED,
+    READY
+  };
+  void OnJobComplete(unsigned int jobID, bool success, CJob* job) override;
 
   class CMultiImageJob : public CJob
   {
   public:
-    explicit CMultiImageJob(const std::string &path);
+    explicit CMultiImageJob(const std::string& path);
     bool DoWork() override;
     const char* GetType() const override { return "multiimage"; }
 
     std::vector<std::string> m_files;
-    std::string              m_path;
+    std::string m_path;
   };
 
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_texturePath;
@@ -86,4 +103,3 @@ protected:
   DIRECTORY_STATUS m_directoryStatus;
   unsigned int m_jobID;
 };
-

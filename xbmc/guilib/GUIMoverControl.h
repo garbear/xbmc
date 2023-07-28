@@ -17,8 +17,8 @@
 #include "GUITexture.h"
 #include "utils/MovingSpeed.h"
 
-#define ALLOWED_DIRECTIONS_ALL   0
-#define ALLOWED_DIRECTIONS_UPDOWN  1
+#define ALLOWED_DIRECTIONS_ALL 0
+#define ALLOWED_DIRECTIONS_UPDOWN 1
 #define ALLOWED_DIRECTIONS_LEFTRIGHT 2
 
 /*!
@@ -41,9 +41,9 @@ public:
   ~CGUIMoverControl(void) override = default;
   CGUIMoverControl* Clone() const override { return new CGUIMoverControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   void OnUp() override;
   void OnDown() override;
   void OnLeft() override;
@@ -60,7 +60,7 @@ public:
   bool CanFocus() const override { return true; }
 
 protected:
-  EVENT_RESULT OnMouseEvent(const CPoint &point, const CMouseEvent &event) override;
+  EVENT_RESULT OnMouseEvent(const CPoint& point, const CMouseEvent& event) override;
   bool UpdateColors(const CGUIListItem* item) override;
   bool SetAlpha(unsigned char alpha);
   void Move(int iX, int iY);
@@ -75,4 +75,3 @@ protected:
 private:
   CGUIMoverControl(const CGUIMoverControl& control);
 };
-

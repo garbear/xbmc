@@ -36,7 +36,7 @@ CGUIBorderedImage::CGUIBorderedImage(const CGUIBorderedImage& right)
   ControlType = GUICONTROL_BORDEREDIMAGE;
 }
 
-void CGUIBorderedImage::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIBorderedImage::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   CGUIImage::Process(currentTime, dirtyregions);
   if (!m_borderImage->GetFileName().empty() && m_texture->ReadyToRender())

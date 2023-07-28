@@ -41,7 +41,7 @@ CGLTexture::~CGLTexture()
 
 void CGLTexture::CreateTextureObject()
 {
-  glGenTextures(1, (GLuint*) &m_texture);
+  glGenTextures(1, (GLuint*)&m_texture);
 }
 
 void CGLTexture::DestroyTextureObject()
@@ -72,7 +72,8 @@ void CGLTexture::LoadToGPU()
   // Set the texture's stretching properties
   if (IsMipmapped())
   {
-    GLenum mipmapFilter = (m_scalingMethod == TEXTURE_SCALING::NEAREST ? GL_LINEAR_MIPMAP_NEAREST : GL_LINEAR_MIPMAP_LINEAR);
+    GLenum mipmapFilter = (m_scalingMethod == TEXTURE_SCALING::NEAREST ? GL_LINEAR_MIPMAP_NEAREST
+                                                                       : GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmapFilter);
 
 #ifndef HAS_GLES
@@ -116,35 +117,33 @@ void CGLTexture::LoadToGPU()
 
   switch (m_format)
   {
-  case XB_FMT_DXT1:
-    format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-    break;
-  case XB_FMT_DXT3:
-    format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-    break;
-  case XB_FMT_DXT5:
-  case XB_FMT_DXT5_YCoCg:
-    format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-    break;
-  case XB_FMT_RGB8:
-    format = GL_RGB;
-    numcomponents = GL_RGB;
-    break;
-  case XB_FMT_A8R8G8B8:
-  default:
-    break;
+    case XB_FMT_DXT1:
+      format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+      break;
+    case XB_FMT_DXT3:
+      format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+      break;
+    case XB_FMT_DXT5:
+    case XB_FMT_DXT5_YCoCg:
+      format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+      break;
+    case XB_FMT_RGB8:
+      format = GL_RGB;
+      numcomponents = GL_RGB;
+      break;
+    case XB_FMT_A8R8G8B8:
+    default:
+      break;
   }
 
   if ((m_format & XB_FMT_DXT_MASK) == 0)
   {
-    glTexImage2D(GL_TEXTURE_2D, 0, numcomponents,
-                 m_textureWidth, m_textureHeight, 0,
-                 format, GL_UNSIGNED_BYTE, m_pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, numcomponents, m_textureWidth, m_textureHeight, 0, format,
+                 GL_UNSIGNED_BYTE, m_pixels);
   }
   else
   {
-    glCompressedTexImage2D(GL_TEXTURE_2D, 0, format,
-                           m_textureWidth, m_textureHeight, 0,
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, m_textureWidth, m_textureHeight, 0,
                            GetPitch() * GetRows(), m_pixels);
   }
 
@@ -155,7 +154,7 @@ void CGLTexture::LoadToGPU()
 
   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-#else	// GLES version
+#else // GLES version
 
   // All incoming textures are BGRA, which GLES does not necessarily support.
   // Some (most?) hardware supports BGRA textures via an extension.
@@ -184,7 +183,8 @@ void CGLTexture::LoadToGPU()
       {
         internalformat = pixelformat = GL_BGRA_EXT;
       }
-      else if (CServiceBroker::GetRenderSystem()->IsExtSupported("GL_APPLE_texture_format_BGRA8888"))
+      else if (CServiceBroker::GetRenderSystem()->IsExtSupported(
+                   "GL_APPLE_texture_format_BGRA8888"))
       {
         // Apple's implementation does not conform to spec. Instead, they require
         // differing format/internalformat, more like GL.
@@ -198,8 +198,8 @@ void CGLTexture::LoadToGPU()
       }
       break;
   }
-  glTexImage2D(GL_TEXTURE_2D, 0, internalformat, m_textureWidth, m_textureHeight, 0,
-    pixelformat, GL_UNSIGNED_BYTE, m_pixels);
+  glTexImage2D(GL_TEXTURE_2D, 0, internalformat, m_textureWidth, m_textureHeight, 0, pixelformat,
+               GL_UNSIGNED_BYTE, m_pixels);
 
   if (IsMipmapped())
   {
@@ -223,4 +223,3 @@ void CGLTexture::BindToUnit(unsigned int unit)
   glActiveTexture(GL_TEXTURE0 + unit);
   glBindTexture(GL_TEXTURE_2D, m_texture);
 }
-

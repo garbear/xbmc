@@ -15,13 +15,16 @@ class CGUIControlLookup : public CGUIControl
 public:
   CGUIControlLookup() = default;
   CGUIControlLookup(int parentID, int controlID, float posX, float posY, float width, float height)
-    : CGUIControl(parentID, controlID, posX, posY, width, height) {}
+    : CGUIControl(parentID, controlID, posX, posY, width, height)
+  {
+  }
   explicit CGUIControlLookup(const CGUIControlLookup& from);
   ~CGUIControlLookup(void) override = default;
 
-  CGUIControl *GetControl(int id, std::vector<CGUIControl*> *idCollector = nullptr) override;
+  CGUIControl* GetControl(int id, std::vector<CGUIControl*>* idCollector = nullptr) override;
+
 protected:
-  typedef std::multimap<int, CGUIControl *> LookupMap;
+  typedef std::multimap<int, CGUIControl*> LookupMap;
 
   /*!
   \brief Check whether a given control is valid
@@ -30,18 +33,20 @@ protected:
   \param control to check
   \return true if the control is valid, false otherwise.
   */
-  bool IsValidControl(const CGUIControl *control) const;
-  std::pair<LookupMap::const_iterator, LookupMap::const_iterator> GetLookupControls(int controlId) const
+  bool IsValidControl(const CGUIControl* control) const;
+  std::pair<LookupMap::const_iterator, LookupMap::const_iterator> GetLookupControls(
+      int controlId) const
   {
     return m_lookup.equal_range(controlId);
   };
 
   // fast lookup by id
-  void AddLookup(CGUIControl *control);
-  void RemoveLookup(CGUIControl *control);
+  void AddLookup(CGUIControl* control);
+  void RemoveLookup(CGUIControl* control);
   void RemoveLookup();
-  const LookupMap &GetLookup() const { return m_lookup; }
+  const LookupMap& GetLookup() const { return m_lookup; }
   void ClearLookup() { m_lookup.clear(); }
+
 private:
   LookupMap m_lookup;
 };

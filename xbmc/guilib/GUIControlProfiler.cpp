@@ -37,7 +37,7 @@ CGUIControlProfilerItem::~CGUIControlProfilerItem(void)
   Reset(NULL);
 }
 
-void CGUIControlProfilerItem::Reset(CGUIControlProfiler *pProfiler)
+void CGUIControlProfilerItem::Reset(CGUIControlProfiler* pProfiler)
 {
   m_controlID = 0;
   m_ControlType = CGUIControl::GUICONTROL_UNKNOWN;
@@ -46,7 +46,7 @@ void CGUIControlProfilerItem::Reset(CGUIControlProfiler *pProfiler)
   m_visTime = 0;
   m_renderTime = 0;
   const unsigned int dwSize = m_vecChildren.size();
-  for (unsigned int i=0; i<dwSize; ++i)
+  for (unsigned int i = 0; i < dwSize; ++i)
     delete m_vecChildren[i];
   m_vecChildren.clear();
 
@@ -70,80 +70,109 @@ void CGUIControlProfilerItem::BeginRender(void)
 
 void CGUIControlProfilerItem::EndRender(void)
 {
-  m_renderTime += (unsigned int)(m_pProfiler->m_fPerfScale * (CurrentHostCounter() - m_i64RenderStart));
+  m_renderTime +=
+      (unsigned int)(m_pProfiler->m_fPerfScale * (CurrentHostCounter() - m_i64RenderStart));
 }
 
-void CGUIControlProfilerItem::SaveToXML(TiXmlElement *parent)
+void CGUIControlProfilerItem::SaveToXML(TiXmlElement* parent)
 {
-  TiXmlElement *xmlControl = new TiXmlElement("control");
+  TiXmlElement* xmlControl = new TiXmlElement("control");
   parent->LinkEndChild(xmlControl);
 
-  const char *lpszType = NULL;
+  const char* lpszType = NULL;
   switch (m_ControlType)
   {
-  case CGUIControl::GUICONTROL_BUTTON:
-    lpszType = "button"; break;
-  case CGUIControl::GUICONTROL_FADELABEL:
-    lpszType = "fadelabel"; break;
-  case CGUIControl::GUICONTROL_IMAGE:
-  case CGUIControl::GUICONTROL_BORDEREDIMAGE:
-    lpszType = "image"; break;
-  case CGUIControl::GUICONTROL_LABEL:
-    lpszType = "label"; break;
-  case CGUIControl::GUICONTROL_LISTGROUP:
-    lpszType = "group"; break;
-  case CGUIControl::GUICONTROL_PROGRESS:
-    lpszType = "progress"; break;
-  case CGUIControl::GUICONTROL_RADIO:
-    lpszType = "radiobutton"; break;
-  case CGUIControl::GUICONTROL_RSS:
-    lpszType = "rss"; break;
-  case CGUIControl::GUICONTROL_SLIDER:
-    lpszType = "slider"; break;
-  case CGUIControl::GUICONTROL_SETTINGS_SLIDER:
-    lpszType = "sliderex"; break;
-  case CGUIControl::GUICONTROL_SPIN:
-    lpszType = "spincontrol"; break;
-  case CGUIControl::GUICONTROL_SPINEX:
-    lpszType = "spincontrolex"; break;
-  case CGUIControl::GUICONTROL_TEXTBOX:
-    lpszType = "textbox"; break;
-  case CGUIControl::GUICONTROL_TOGGLEBUTTON:
-    lpszType = "togglebutton"; break;
-  case CGUIControl::GUICONTROL_VIDEO:
-    lpszType = "videowindow"; break;
-  case CGUIControl::GUICONTROL_MOVER:
-    lpszType = "mover"; break;
-  case CGUIControl::GUICONTROL_RESIZE:
-    lpszType = "resize"; break;
-  case CGUIControl::GUICONTROL_EDIT:
-    lpszType = "edit"; break;
-  case CGUIControl::GUICONTROL_VISUALISATION:
-    lpszType = "visualisation"; break;
-  case CGUIControl::GUICONTROL_MULTI_IMAGE:
-    lpszType = "multiimage"; break;
-  case CGUIControl::GUICONTROL_GROUP:
-    lpszType = "group"; break;
-  case CGUIControl::GUICONTROL_GROUPLIST:
-    lpszType = "grouplist"; break;
-  case CGUIControl::GUICONTROL_SCROLLBAR:
-    lpszType = "scrollbar"; break;
-  case CGUIControl::GUICONTROL_LISTLABEL:
-    lpszType = "label"; break;
-  case CGUIControl::GUICONTAINER_LIST:
-    lpszType = "list"; break;
-  case CGUIControl::GUICONTAINER_WRAPLIST:
-    lpszType = "wraplist"; break;
-  case CGUIControl::GUICONTAINER_FIXEDLIST:
-    lpszType = "fixedlist"; break;
-  case CGUIControl::GUICONTAINER_PANEL:
-    lpszType = "panel"; break;
-  case CGUIControl::GUICONTROL_COLORBUTTON:
-    lpszType = "colorbutton";
-    break;
-  //case CGUIControl::GUICONTROL_UNKNOWN:
-  default:
-    break;
+    case CGUIControl::GUICONTROL_BUTTON:
+      lpszType = "button";
+      break;
+    case CGUIControl::GUICONTROL_FADELABEL:
+      lpszType = "fadelabel";
+      break;
+    case CGUIControl::GUICONTROL_IMAGE:
+    case CGUIControl::GUICONTROL_BORDEREDIMAGE:
+      lpszType = "image";
+      break;
+    case CGUIControl::GUICONTROL_LABEL:
+      lpszType = "label";
+      break;
+    case CGUIControl::GUICONTROL_LISTGROUP:
+      lpszType = "group";
+      break;
+    case CGUIControl::GUICONTROL_PROGRESS:
+      lpszType = "progress";
+      break;
+    case CGUIControl::GUICONTROL_RADIO:
+      lpszType = "radiobutton";
+      break;
+    case CGUIControl::GUICONTROL_RSS:
+      lpszType = "rss";
+      break;
+    case CGUIControl::GUICONTROL_SLIDER:
+      lpszType = "slider";
+      break;
+    case CGUIControl::GUICONTROL_SETTINGS_SLIDER:
+      lpszType = "sliderex";
+      break;
+    case CGUIControl::GUICONTROL_SPIN:
+      lpszType = "spincontrol";
+      break;
+    case CGUIControl::GUICONTROL_SPINEX:
+      lpszType = "spincontrolex";
+      break;
+    case CGUIControl::GUICONTROL_TEXTBOX:
+      lpszType = "textbox";
+      break;
+    case CGUIControl::GUICONTROL_TOGGLEBUTTON:
+      lpszType = "togglebutton";
+      break;
+    case CGUIControl::GUICONTROL_VIDEO:
+      lpszType = "videowindow";
+      break;
+    case CGUIControl::GUICONTROL_MOVER:
+      lpszType = "mover";
+      break;
+    case CGUIControl::GUICONTROL_RESIZE:
+      lpszType = "resize";
+      break;
+    case CGUIControl::GUICONTROL_EDIT:
+      lpszType = "edit";
+      break;
+    case CGUIControl::GUICONTROL_VISUALISATION:
+      lpszType = "visualisation";
+      break;
+    case CGUIControl::GUICONTROL_MULTI_IMAGE:
+      lpszType = "multiimage";
+      break;
+    case CGUIControl::GUICONTROL_GROUP:
+      lpszType = "group";
+      break;
+    case CGUIControl::GUICONTROL_GROUPLIST:
+      lpszType = "grouplist";
+      break;
+    case CGUIControl::GUICONTROL_SCROLLBAR:
+      lpszType = "scrollbar";
+      break;
+    case CGUIControl::GUICONTROL_LISTLABEL:
+      lpszType = "label";
+      break;
+    case CGUIControl::GUICONTAINER_LIST:
+      lpszType = "list";
+      break;
+    case CGUIControl::GUICONTAINER_WRAPLIST:
+      lpszType = "wraplist";
+      break;
+    case CGUIControl::GUICONTAINER_FIXEDLIST:
+      lpszType = "fixedlist";
+      break;
+    case CGUIControl::GUICONTAINER_PANEL:
+      lpszType = "panel";
+      break;
+    case CGUIControl::GUICONTROL_COLORBUTTON:
+      lpszType = "colorbutton";
+      break;
+    //case CGUIControl::GUICONTROL_UNKNOWN:
+    default:
+      break;
   }
 
   if (lpszType)
@@ -163,9 +192,9 @@ void CGUIControlProfilerItem::SaveToXML(TiXmlElement *parent)
 
   if (!m_strDescription.empty())
   {
-    TiXmlElement *elem = new TiXmlElement("description");
+    TiXmlElement* elem = new TiXmlElement("description");
     xmlControl->LinkEndChild(elem);
-    TiXmlText *text = new TiXmlText(m_strDescription.c_str());
+    TiXmlText* text = new TiXmlText(m_strDescription.c_str());
     elem->LinkEndChild(text);
   }
 
@@ -175,10 +204,10 @@ void CGUIControlProfilerItem::SaveToXML(TiXmlElement *parent)
   if (vis || rend)
   {
     std::string val;
-    TiXmlElement *elem = new TiXmlElement("rendertime");
+    TiXmlElement* elem = new TiXmlElement("rendertime");
     xmlControl->LinkEndChild(elem);
     val = std::to_string(rend);
-    TiXmlText *text = new TiXmlText(val.c_str());
+    TiXmlText* text = new TiXmlText(val.c_str());
     elem->LinkEndChild(text);
 
     elem = new TiXmlElement("visibletime");
@@ -190,26 +219,27 @@ void CGUIControlProfilerItem::SaveToXML(TiXmlElement *parent)
 
   if (m_vecChildren.size())
   {
-    TiXmlElement *xmlChilds = new TiXmlElement("children");
+    TiXmlElement* xmlChilds = new TiXmlElement("children");
     xmlControl->LinkEndChild(xmlChilds);
     const unsigned int dwSize = m_vecChildren.size();
-    for (unsigned int i=0; i<dwSize; ++i)
+    for (unsigned int i = 0; i < dwSize; ++i)
       m_vecChildren[i]->SaveToXML(xmlChilds);
   }
 }
 
-CGUIControlProfilerItem *CGUIControlProfilerItem::AddControl(CGUIControl *pControl)
+CGUIControlProfilerItem* CGUIControlProfilerItem::AddControl(CGUIControl* pControl)
 {
   m_vecChildren.push_back(new CGUIControlProfilerItem(m_pProfiler, this, pControl));
   return m_vecChildren.back();
 }
 
-CGUIControlProfilerItem *CGUIControlProfilerItem::FindOrAddControl(CGUIControl *pControl, bool recurse)
+CGUIControlProfilerItem* CGUIControlProfilerItem::FindOrAddControl(CGUIControl* pControl,
+                                                                   bool recurse)
 {
   const unsigned int dwSize = m_vecChildren.size();
-  for (unsigned int i=0; i<dwSize; ++i)
+  for (unsigned int i = 0; i < dwSize; ++i)
   {
-    CGUIControlProfilerItem *p = m_vecChildren[i];
+    CGUIControlProfilerItem* p = m_vecChildren[i];
     if (p->m_pControl == pControl)
       return p;
     if (recurse && (p = p->FindOrAddControl(pControl, true)))
@@ -222,14 +252,13 @@ CGUIControlProfilerItem *CGUIControlProfilerItem::FindOrAddControl(CGUIControl *
   return NULL;
 }
 
-CGUIControlProfiler::CGUIControlProfiler(void)
-: m_ItemHead(NULL, NULL, NULL), m_pLastItem(NULL)
+CGUIControlProfiler::CGUIControlProfiler(void) : m_ItemHead(NULL, NULL, NULL), m_pLastItem(NULL)
 // m_bIsRunning(false), no isRunning because it is static
 {
   m_fPerfScale = 100000.0f / CurrentHostFrequency();
 }
 
-CGUIControlProfiler &CGUIControlProfiler::Instance(void)
+CGUIControlProfiler& CGUIControlProfiler::Instance(void)
 {
   static CGUIControlProfiler _instance;
   return _instance;
@@ -248,31 +277,31 @@ void CGUIControlProfiler::Start(void)
   m_ItemHead.Reset(this);
 }
 
-void CGUIControlProfiler::BeginVisibility(CGUIControl *pControl)
+void CGUIControlProfiler::BeginVisibility(CGUIControl* pControl)
 {
-  CGUIControlProfilerItem *item = FindOrAddControl(pControl);
+  CGUIControlProfilerItem* item = FindOrAddControl(pControl);
   item->BeginVisibility();
 }
 
-void CGUIControlProfiler::EndVisibility(CGUIControl *pControl)
+void CGUIControlProfiler::EndVisibility(CGUIControl* pControl)
 {
-  CGUIControlProfilerItem *item = FindOrAddControl(pControl);
+  CGUIControlProfilerItem* item = FindOrAddControl(pControl);
   item->EndVisibility();
 }
 
-void CGUIControlProfiler::BeginRender(CGUIControl *pControl)
+void CGUIControlProfiler::BeginRender(CGUIControl* pControl)
 {
-  CGUIControlProfilerItem *item = FindOrAddControl(pControl);
+  CGUIControlProfilerItem* item = FindOrAddControl(pControl);
   item->BeginRender();
 }
 
-void CGUIControlProfiler::EndRender(CGUIControl *pControl)
+void CGUIControlProfiler::EndRender(CGUIControl* pControl)
 {
-  CGUIControlProfilerItem *item = FindOrAddControl(pControl);
+  CGUIControlProfilerItem* item = FindOrAddControl(pControl);
   item->EndRender();
 }
 
-CGUIControlProfilerItem *CGUIControlProfiler::FindOrAddControl(CGUIControl *pControl)
+CGUIControlProfilerItem* CGUIControlProfiler::FindOrAddControl(CGUIControl* pControl)
 {
   if (m_pLastItem)
   {
@@ -306,9 +335,9 @@ void CGUIControlProfiler::EndFrame(void)
   if (m_iFrameCount >= m_iMaxFrameCount)
   {
     const unsigned int dwSize = m_ItemHead.m_vecChildren.size();
-    for (unsigned int i=0; i<dwSize; ++i)
+    for (unsigned int i = 0; i < dwSize; ++i)
     {
-      CGUIControlProfilerItem *p = m_ItemHead.m_vecChildren[i];
+      CGUIControlProfilerItem* p = m_ItemHead.m_vecChildren[i];
       m_ItemHead.m_visTime += p->m_visTime;
       m_ItemHead.m_renderTime += p->m_renderTime;
     }
@@ -328,7 +357,7 @@ bool CGUIControlProfiler::SaveResults(void)
   TiXmlDeclaration decl("1.0", "", "yes");
   doc.InsertEndChild(decl);
 
-  TiXmlElement *root = new TiXmlElement("guicontrolprofiler");
+  TiXmlElement* root = new TiXmlElement("guicontrolprofiler");
   std::string str = std::to_string(m_iFrameCount);
   root->SetAttribute("framecount", str.c_str());
   root->SetAttribute("timeunit", "ms");

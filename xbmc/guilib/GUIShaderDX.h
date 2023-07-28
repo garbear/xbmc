@@ -16,14 +16,16 @@
 #include <DirectXMath.h>
 #include <wrl/client.h>
 
-struct Vertex {
+struct Vertex
+{
   Vertex() {}
 
-  Vertex(DirectX::XMFLOAT3 p, DirectX::XMFLOAT4 c)
-    : pos(p), color(c) {}
+  Vertex(DirectX::XMFLOAT3 p, DirectX::XMFLOAT4 c) : pos(p), color(c) {}
 
   Vertex(DirectX::XMFLOAT3 p, DirectX::XMFLOAT4 c, DirectX::XMFLOAT2 t1, DirectX::XMFLOAT2 t2)
-    : pos(p), color(c), texCoord(t1), texCoord2(t2) {}
+    : pos(p), color(c), texCoord(t1), texCoord2(t2)
+  {
+  }
 
   DirectX::XMFLOAT3 pos;
   DirectX::XMFLOAT4 color;
@@ -48,7 +50,7 @@ public:
   void SetShaderViews(unsigned int numViews, ID3D11ShaderResourceView** views);
   void SetViewPort(D3D11_VIEWPORT viewPort);
 
-  void XM_CALLCONV GetWVP(DirectX::XMMATRIX &w, DirectX::XMMATRIX &v, DirectX::XMMATRIX &p)
+  void XM_CALLCONV GetWVP(DirectX::XMMATRIX& w, DirectX::XMMATRIX& v, DirectX::XMMATRIX& p)
   {
     w = m_cbWorldViewProj.world;
     v = m_cbWorldViewProj.view;
@@ -57,24 +59,26 @@ public:
   DirectX::XMMATRIX XM_CALLCONV GetWorld() const { return m_cbWorldViewProj.world; }
   DirectX::XMMATRIX XM_CALLCONV GetView() const { return m_cbWorldViewProj.view; }
   DirectX::XMMATRIX XM_CALLCONV GetProjection() const { return m_cbWorldViewProj.projection; }
-  void XM_CALLCONV SetWVP(const DirectX::XMMATRIX &w, const DirectX::XMMATRIX &v, const DirectX::XMMATRIX &p);
-  void XM_CALLCONV SetWorld(const DirectX::XMMATRIX &value);
-  void XM_CALLCONV SetView(const DirectX::XMMATRIX &value);
-  void XM_CALLCONV SetProjection(const DirectX::XMMATRIX &value);
-  void Project(float &x, float &y, float &z);
+  void XM_CALLCONV SetWVP(const DirectX::XMMATRIX& w,
+                          const DirectX::XMMATRIX& v,
+                          const DirectX::XMMATRIX& p);
+  void XM_CALLCONV SetWorld(const DirectX::XMMATRIX& value);
+  void XM_CALLCONV SetView(const DirectX::XMMATRIX& value);
+  void XM_CALLCONV SetProjection(const DirectX::XMMATRIX& value);
+  void Project(float& x, float& y, float& z);
 
   void DrawQuad(Vertex& v1, Vertex& v2, Vertex& v3, Vertex& v4);
   void DrawIndexed(unsigned int indexCount, unsigned int startIndex, unsigned int startVertex);
   void Draw(unsigned int vertexCount, unsigned int startVertex);
 
-  bool  HardwareClipIsPossible(void) const { return m_clipPossible; }
-  float GetClipXFactor(void) const { return m_clipXFactor;  }
-  float GetClipXOffset(void) const { return m_clipXOffset;  }
-  float GetClipYFactor(void) const { return m_clipYFactor;  }
-  float GetClipYOffset(void) const { return m_clipYOffset;  }
+  bool HardwareClipIsPossible(void) const { return m_clipPossible; }
+  float GetClipXFactor(void) const { return m_clipXFactor; }
+  float GetClipXOffset(void) const { return m_clipXOffset; }
+  float GetClipYFactor(void) const { return m_clipYFactor; }
+  float GetClipYOffset(void) const { return m_clipYOffset; }
 
   // need to use aligned allocation because we use XMMATRIX in structures.
-  void* operator new (size_t size)
+  void* operator new(size_t size)
   {
     void* ptr = KODI::MEMORY::AlignedMalloc(size, __alignof(CGUIShaderDX));
     if (!ptr)
@@ -82,10 +86,7 @@ public:
     return ptr;
   }
   // free aligned memory.
-  void operator delete (void* ptr)
-  {
-    KODI::MEMORY::AlignedFree(ptr);
-  }
+  void operator delete(void* ptr) { KODI::MEMORY::AlignedFree(ptr); }
 
 private:
   struct cbWorldViewProj
@@ -120,7 +121,7 @@ private:
   cbViewPort m_cbViewPort = {};
   cbWorldViewProj m_cbWorldViewProj = {};
 
-  bool  m_bCreated;
+  bool m_bCreated;
   size_t m_currentShader;
   CD3DVertexShader m_vertexShader;
   CD3DPixelShader m_pixelShader[SHADER_METHOD_RENDER_COUNT];

@@ -62,7 +62,7 @@ void CGUITextureGL::Begin(UTILS::COLOR::Color color)
 
   if (m_diffuse.size())
   {
-    if (m_col[0] == 255 && m_col[1] == 255 && m_col[2] == 255 && m_col[3] == 255 )
+    if (m_col[0] == 255 && m_col[1] == 255 && m_col[2] == 255 && m_col[3] == 255)
     {
       m_renderSystem->EnableShader(ShaderMethodGL::SM_MULTI);
     }
@@ -104,7 +104,7 @@ void CGUITextureGL::End()
 {
   if (m_packedVertices.size())
   {
-    GLint posLoc  = m_renderSystem->ShaderGetPos();
+    GLint posLoc = m_renderSystem->ShaderGetPos();
     GLint tex0Loc = m_renderSystem->ShaderGetCoord0();
     GLint tex1Loc = m_renderSystem->ShaderGetCoord1();
     GLint uniColLoc = m_renderSystem->ShaderGetUniCol();
@@ -114,11 +114,13 @@ void CGUITextureGL::End()
 
     glGenBuffers(1, &VertexVBO);
     glBindBuffer(GL_ARRAY_BUFFER, VertexVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex)*m_packedVertices.size(), &m_packedVertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * m_packedVertices.size(),
+                 &m_packedVertices[0], GL_STATIC_DRAW);
 
     if (uniColLoc >= 0)
     {
-      glUniform4f(uniColLoc,(m_col[0] / 255.0f), (m_col[1] / 255.0f), (m_col[2] / 255.0f), (m_col[3] / 255.0f));
+      glUniform4f(uniColLoc, (m_col[0] / 255.0f), (m_col[1] / 255.0f), (m_col[2] / 255.0f),
+                  (m_col[3] / 255.0f));
     }
 
     if (m_diffuse.size())
@@ -137,9 +139,10 @@ void CGUITextureGL::End()
 
     glGenBuffers(1, &IndexVBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexVBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ushort)*m_idx.size(), m_idx.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ushort) * m_idx.size(), m_idx.data(),
+                 GL_STATIC_DRAW);
 
-    glDrawElements(GL_TRIANGLES, m_packedVertices.size()*6 / 4, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLES, m_packedVertices.size() * 6 / 4, GL_UNSIGNED_SHORT, 0);
 
     if (m_diffuse.size())
       glDisableVertexAttribArray(tex1Loc);
@@ -160,7 +163,8 @@ void CGUITextureGL::End()
   m_renderSystem->DisableShader();
 }
 
-void CGUITextureGL::Draw(float *x, float *y, float *z, const CRect &texture, const CRect &diffuse, int orientation)
+void CGUITextureGL::Draw(
+    float* x, float* y, float* z, const CRect& texture, const CRect& diffuse, int orientation)
 {
   PackedVertex vertices[4];
 
@@ -232,7 +236,7 @@ void CGUITextureGL::Draw(float *x, float *y, float *z, const CRect &texture, con
     }
   }
 
-  for (int i=0; i<4; i++)
+  for (int i = 0; i < 4; i++)
   {
     vertices[i].x = x[i];
     vertices[i].y = y[i];
@@ -243,12 +247,12 @@ void CGUITextureGL::Draw(float *x, float *y, float *z, const CRect &texture, con
   if ((m_packedVertices.size() / 4) > (m_idx.size() / 6))
   {
     size_t i = m_packedVertices.size() - 4;
-    m_idx.push_back(i+0);
-    m_idx.push_back(i+1);
-    m_idx.push_back(i+2);
-    m_idx.push_back(i+2);
-    m_idx.push_back(i+3);
-    m_idx.push_back(i+0);
+    m_idx.push_back(i + 0);
+    m_idx.push_back(i + 1);
+    m_idx.push_back(i + 2);
+    m_idx.push_back(i + 2);
+    m_idx.push_back(i + 3);
+    m_idx.push_back(i + 0);
   }
 }
 
@@ -257,20 +261,20 @@ void CGUITextureGL::DrawQuad(const CRect& rect,
                              CTexture* texture,
                              const CRect* texCoords)
 {
-  CRenderSystemGL *renderSystem = dynamic_cast<CRenderSystemGL*>(CServiceBroker::GetRenderSystem());
+  CRenderSystemGL* renderSystem = dynamic_cast<CRenderSystemGL*>(CServiceBroker::GetRenderSystem());
   if (texture)
   {
     texture->LoadToGPU();
     texture->BindToUnit(0);
   }
 
-  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_BLEND);          // Turn Blending On
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND); // Turn Blending On
 
   VerifyGLState();
 
   GLubyte col[4];
-  GLubyte idx[4] = {0, 1, 3, 2};  //determines order of the vertices
+  GLubyte idx[4] = {0, 1, 3, 2}; //determines order of the vertices
   GLuint vertexVBO;
   GLuint indexVBO;
 
@@ -278,7 +282,7 @@ void CGUITextureGL::DrawQuad(const CRect& rect,
   {
     float x, y, z;
     float u1, v1;
-  }vertex[4];
+  } vertex[4];
 
   if (texture)
     renderSystem->EnableShader(ShaderMethodGL::SM_TEXTURE);
@@ -328,7 +332,7 @@ void CGUITextureGL::DrawQuad(const CRect& rect,
 
   glGenBuffers(1, &vertexVBO);
   glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex)*4, &vertex[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_STATIC_DRAW);
 
   glVertexAttribPointer(posLoc, 3, GL_FLOAT, 0, sizeof(PackedVertex),
                         reinterpret_cast<const GLvoid*>(offsetof(PackedVertex, x)));
@@ -343,7 +347,7 @@ void CGUITextureGL::DrawQuad(const CRect& rect,
 
   glGenBuffers(1, &indexVBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte)*4, idx, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 4, idx, GL_STATIC_DRAW);
 
   glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, 0);
 
@@ -358,4 +362,3 @@ void CGUITextureGL::DrawQuad(const CRect& rect,
 
   renderSystem->DisableShader();
 }
-

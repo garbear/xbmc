@@ -187,7 +187,6 @@ void CGUIFontTTF::RemoveReference()
     g_fontManager.FreeFontFile(this);
 }
 
-
 void CGUIFontTTF::ClearCharacterCache()
 {
   m_texture.reset();
@@ -646,7 +645,6 @@ void CGUIFontTTF::DrawTextInternal(CGraphicContext& context,
 
   End();
 }
-
 
 float CGUIFontTTF::GetTextWidthInternal(const vecText& text)
 {

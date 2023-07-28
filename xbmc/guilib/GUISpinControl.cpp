@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 #define SPIN_BUTTON_DOWN 1
-#define SPIN_BUTTON_UP   2
+#define SPIN_BUTTON_UP 2
 
 namespace
 {
@@ -99,20 +99,20 @@ CGUISpinControl::CGUISpinControl(const CGUISpinControl& control)
   std::strcpy(m_szTyped, control.m_szTyped);
 }
 
-bool CGUISpinControl::OnAction(const CAction &action)
+bool CGUISpinControl::OnAction(const CAction& action)
 {
   switch (action.GetID())
   {
-  case REMOTE_0:
-  case REMOTE_1:
-  case REMOTE_2:
-  case REMOTE_3:
-  case REMOTE_4:
-  case REMOTE_5:
-  case REMOTE_6:
-  case REMOTE_7:
-  case REMOTE_8:
-  case REMOTE_9:
+    case REMOTE_0:
+    case REMOTE_1:
+    case REMOTE_2:
+    case REMOTE_3:
+    case REMOTE_4:
+    case REMOTE_5:
+    case REMOTE_6:
+    case REMOTE_7:
+    case REMOTE_8:
+    case REMOTE_9:
     {
       if (strlen(m_szTyped) >= 3)
       {
@@ -128,7 +128,7 @@ bool CGUISpinControl::OnAction(const CAction &action)
       sscanf(m_szTyped, "%i", &iValue);
       switch (m_iType)
       {
-      case SPIN_CONTROL_TYPE_INT:
+        case SPIN_CONTROL_TYPE_INT:
         {
           if (iValue < m_iStart || iValue > m_iEnd)
           {
@@ -150,7 +150,7 @@ bool CGUISpinControl::OnAction(const CAction &action)
         }
         break;
 
-      case SPIN_CONTROL_TYPE_TEXT:
+        case SPIN_CONTROL_TYPE_TEXT:
         {
           if (iValue < 0 || iValue >= (int)m_vecLabels.size())
           {
@@ -171,39 +171,38 @@ bool CGUISpinControl::OnAction(const CAction &action)
           SendWindowMessage(msg);
         }
         break;
-
       }
       return true;
     }
     break;
-  case ACTION_PAGE_UP:
-    if (!m_bReverse)
-      PageDown();
-    else
-      PageUp();
-    return true;
-    break;
-  case ACTION_PAGE_DOWN:
-    if (!m_bReverse)
-      PageUp();
-    else
-      PageDown();
-    return true;
-    break;
-  case ACTION_SELECT_ITEM:
-    if (m_iSelect == SPIN_BUTTON_UP)
-    {
-      MoveUp();
+    case ACTION_PAGE_UP:
+      if (!m_bReverse)
+        PageDown();
+      else
+        PageUp();
       return true;
-    }
-    if (m_iSelect == SPIN_BUTTON_DOWN)
-    {
-      MoveDown();
+      break;
+    case ACTION_PAGE_DOWN:
+      if (!m_bReverse)
+        PageUp();
+      else
+        PageDown();
       return true;
-    }
-    break;
+      break;
+    case ACTION_SELECT_ITEM:
+      if (m_iSelect == SPIN_BUTTON_UP)
+      {
+        MoveUp();
+        return true;
+      }
+      if (m_iSelect == SPIN_BUTTON_DOWN)
+      {
+        MoveDown();
+        return true;
+      }
+      break;
   }
-/*  static float m_fSmoothScrollOffset = 0.0f;
+  /*  static float m_fSmoothScrollOffset = 0.0f;
   if (action.GetID() == ACTION_SCROLL_UP)
   {
     m_fSmoothScrollOffset += action.GetAmount() * action.GetAmount();
@@ -257,87 +256,87 @@ void CGUISpinControl::Clear()
 
 bool CGUISpinControl::OnMessage(CGUIMessage& message)
 {
-  if (CGUIControl::OnMessage(message) )
+  if (CGUIControl::OnMessage(message))
     return true;
-  if (message.GetControlId() == GetID() )
+  if (message.GetControlId() == GetID())
   {
     switch (message.GetMessage())
     {
-    case GUI_MSG_ITEM_SELECT:
-      if (SPIN_CONTROL_TYPE_PAGE == m_iType)
-      {
-        m_currentItem = message.GetParam1();
+      case GUI_MSG_ITEM_SELECT:
+        if (SPIN_CONTROL_TYPE_PAGE == m_iType)
+        {
+          m_currentItem = message.GetParam1();
+          return true;
+        }
+        SetValue(message.GetParam1());
+        if (message.GetParam2() == SPIN_BUTTON_DOWN || message.GetParam2() == SPIN_BUTTON_UP)
+          m_iSelect = message.GetParam2();
         return true;
-      }
-      SetValue( message.GetParam1());
-      if (message.GetParam2() == SPIN_BUTTON_DOWN || message.GetParam2() == SPIN_BUTTON_UP)
-        m_iSelect = message.GetParam2();
-      return true;
-      break;
+        break;
 
-    case GUI_MSG_LABEL_RESET:
-      if (SPIN_CONTROL_TYPE_PAGE == m_iType)
-      {
-        m_itemsPerPage = message.GetParam1();
-        m_numItems = message.GetParam2();
-        return true;
-      }
-      {
-        Clear();
-        return true;
-      }
-      break;
+      case GUI_MSG_LABEL_RESET:
+        if (SPIN_CONTROL_TYPE_PAGE == m_iType)
+        {
+          m_itemsPerPage = message.GetParam1();
+          m_numItems = message.GetParam2();
+          return true;
+        }
+        {
+          Clear();
+          return true;
+        }
+        break;
 
-    case GUI_MSG_SHOWRANGE:
-      if (message.GetParam1() )
-        m_bShowRange = true;
-      else
-        m_bShowRange = false;
-      break;
+      case GUI_MSG_SHOWRANGE:
+        if (message.GetParam1())
+          m_bShowRange = true;
+        else
+          m_bShowRange = false;
+        break;
 
-    case GUI_MSG_SET_LABELS:
-      if (message.GetPointer())
-      {
-        auto labels =
-            static_cast<const std::vector<std::pair<std::string, int>>*>(message.GetPointer());
-        Clear();
-        for (const auto& i : *labels)
-          AddLabel(i.first, i.second);
-        SetValue( message.GetParam1());
-      }
-      break;
+      case GUI_MSG_SET_LABELS:
+        if (message.GetPointer())
+        {
+          auto labels =
+              static_cast<const std::vector<std::pair<std::string, int>>*>(message.GetPointer());
+          Clear();
+          for (const auto& i : *labels)
+            AddLabel(i.first, i.second);
+          SetValue(message.GetParam1());
+        }
+        break;
 
-    case GUI_MSG_LABEL_ADD:
+      case GUI_MSG_LABEL_ADD:
       {
         AddLabel(message.GetLabel(), message.GetParam1());
         return true;
       }
       break;
 
-    case GUI_MSG_ITEM_SELECTED:
+      case GUI_MSG_ITEM_SELECTED:
       {
-        message.SetParam1( GetValue() );
+        message.SetParam1(GetValue());
         message.SetParam2(m_iSelect);
 
         if (m_iType == SPIN_CONTROL_TYPE_TEXT)
         {
-          if ( m_iValue >= 0 && m_iValue < (int)m_vecLabels.size() )
-            message.SetLabel( m_vecLabels[m_iValue]);
+          if (m_iValue >= 0 && m_iValue < (int)m_vecLabels.size())
+            message.SetLabel(m_vecLabels[m_iValue]);
         }
         return true;
       }
 
-    case GUI_MSG_PAGE_UP:
-      if (CanMoveUp())
-        MoveUp();
-      return true;
+      case GUI_MSG_PAGE_UP:
+        if (CanMoveUp())
+          MoveUp();
+        return true;
 
-    case GUI_MSG_PAGE_DOWN:
-      if (CanMoveDown())
-        MoveDown();
-      return true;
+      case GUI_MSG_PAGE_DOWN:
+        if (CanMoveDown())
+          MoveDown();
+        return true;
 
-    case GUI_MSG_MOVE_OFFSET:
+      case GUI_MSG_MOVE_OFFSET:
       {
         int count = message.GetParam1();
         while (count < 0)
@@ -352,7 +351,6 @@ bool CGUISpinControl::OnMessage(CGUIMessage& message)
         }
         return true;
       }
-
     }
   }
   return false;
@@ -412,7 +410,7 @@ void CGUISpinControl::SetInvalid()
   m_imgspinDownDisabled->SetInvalid();
 }
 
-void CGUISpinControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUISpinControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   bool changed = false;
 
@@ -457,7 +455,7 @@ void CGUISpinControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyr
   }
   else
   {
-    if (m_iValue >= 0 && m_iValue < (int)m_vecLabels.size() )
+    if (m_iValue >= 0 && m_iValue < (int)m_vecLabels.size())
     {
       if (m_bShowRange)
       {
@@ -577,7 +575,7 @@ void CGUISpinControl::SetFloatRange(float fStart, float fEnd)
   m_fEnd = fEnd;
 }
 
-void CGUISpinControl::SetValueFromLabel(const std::string &label)
+void CGUISpinControl::SetValueFromLabel(const std::string& label)
 {
   if (m_iType == SPIN_CONTROL_TYPE_TEXT)
   {
@@ -696,13 +694,14 @@ float CGUISpinControl::GetWidth() const
 bool CGUISpinControl::CanMoveUp(bool bTestReverse)
 {
   // test for reverse...
-  if (bTestReverse && m_bReverse) return CanMoveDown(false);
+  if (bTestReverse && m_bReverse)
+    return CanMoveDown(false);
 
   switch (m_iType)
   {
-  case SPIN_CONTROL_TYPE_PAGE:
-    return m_currentItem > 0;
-  case SPIN_CONTROL_TYPE_INT:
+    case SPIN_CONTROL_TYPE_PAGE:
+      return m_currentItem > 0;
+    case SPIN_CONTROL_TYPE_INT:
     {
       if (m_iValue - 1 >= m_iStart)
         return true;
@@ -710,7 +709,7 @@ bool CGUISpinControl::CanMoveUp(bool bTestReverse)
     }
     break;
 
-  case SPIN_CONTROL_TYPE_FLOAT:
+    case SPIN_CONTROL_TYPE_FLOAT:
     {
       if (m_fValue - m_fInterval >= m_fStart)
         return true;
@@ -718,7 +717,7 @@ bool CGUISpinControl::CanMoveUp(bool bTestReverse)
     }
     break;
 
-  case SPIN_CONTROL_TYPE_TEXT:
+    case SPIN_CONTROL_TYPE_TEXT:
     {
       if (m_iValue - 1 >= 0)
         return true;
@@ -732,12 +731,13 @@ bool CGUISpinControl::CanMoveUp(bool bTestReverse)
 bool CGUISpinControl::CanMoveDown(bool bTestReverse)
 {
   // test for reverse...
-  if (bTestReverse && m_bReverse) return CanMoveUp(false);
+  if (bTestReverse && m_bReverse)
+    return CanMoveUp(false);
   switch (m_iType)
   {
-  case SPIN_CONTROL_TYPE_PAGE:
-    return m_currentItem < m_numItems;
-  case SPIN_CONTROL_TYPE_INT:
+    case SPIN_CONTROL_TYPE_PAGE:
+      return m_currentItem < m_numItems;
+    case SPIN_CONTROL_TYPE_INT:
     {
       if (m_iValue + 1 <= m_iEnd)
         return true;
@@ -745,7 +745,7 @@ bool CGUISpinControl::CanMoveDown(bool bTestReverse)
     }
     break;
 
-  case SPIN_CONTROL_TYPE_FLOAT:
+    case SPIN_CONTROL_TYPE_FLOAT:
     {
       if (m_fValue + m_fInterval <= m_fEnd)
         return true;
@@ -753,7 +753,7 @@ bool CGUISpinControl::CanMoveDown(bool bTestReverse)
     }
     break;
 
-  case SPIN_CONTROL_TYPE_TEXT:
+    case SPIN_CONTROL_TYPE_TEXT:
     {
       if (m_iValue + 1 < (int)m_vecLabels.size())
         return true;
@@ -768,7 +768,7 @@ void CGUISpinControl::PageUp()
 {
   switch (m_iType)
   {
-  case SPIN_CONTROL_TYPE_INT:
+    case SPIN_CONTROL_TYPE_INT:
     {
       if (m_iValue - 10 >= m_iStart)
         m_iValue -= 10;
@@ -776,13 +776,13 @@ void CGUISpinControl::PageUp()
         m_iValue = m_iStart;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
-      return ;
+      return;
     }
     break;
-  case SPIN_CONTROL_TYPE_PAGE:
-    ChangePage(-10);
-    break;
-  case SPIN_CONTROL_TYPE_TEXT:
+    case SPIN_CONTROL_TYPE_PAGE:
+      ChangePage(-10);
+      break;
+    case SPIN_CONTROL_TYPE_TEXT:
     {
       if (m_iValue - 10 >= 0)
         m_iValue -= 10;
@@ -790,18 +790,17 @@ void CGUISpinControl::PageUp()
         m_iValue = 0;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
-      return ;
+      return;
     }
     break;
   }
-
 }
 
 void CGUISpinControl::PageDown()
 {
   switch (m_iType)
   {
-  case SPIN_CONTROL_TYPE_INT:
+    case SPIN_CONTROL_TYPE_INT:
     {
       if (m_iValue + 10 <= m_iEnd)
         m_iValue += 10;
@@ -809,15 +808,15 @@ void CGUISpinControl::PageDown()
         m_iValue = m_iEnd;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
-      return ;
+      return;
     }
     break;
-  case SPIN_CONTROL_TYPE_PAGE:
-    ChangePage(10);
-    break;
-  case SPIN_CONTROL_TYPE_TEXT:
+    case SPIN_CONTROL_TYPE_PAGE:
+      ChangePage(10);
+      break;
+    case SPIN_CONTROL_TYPE_TEXT:
     {
-      if (m_iValue + 10 < (int)m_vecLabels.size() )
+      if (m_iValue + 10 < (int)m_vecLabels.size())
         m_iValue += 10;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
@@ -831,11 +830,11 @@ void CGUISpinControl::MoveUp(bool bTestReverse)
   if (bTestReverse && m_bReverse)
   { // actually should move down.
     MoveDown(false);
-    return ;
+    return;
   }
   switch (m_iType)
   {
-  case SPIN_CONTROL_TYPE_INT:
+    case SPIN_CONTROL_TYPE_INT:
     {
       if (m_iValue - 1 >= m_iStart)
         m_iValue--;
@@ -843,15 +842,15 @@ void CGUISpinControl::MoveUp(bool bTestReverse)
         m_iValue = m_iEnd;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
-      return ;
+      return;
     }
     break;
 
-  case SPIN_CONTROL_TYPE_PAGE:
-    ChangePage(-1);
-    break;
+    case SPIN_CONTROL_TYPE_PAGE:
+      ChangePage(-1);
+      break;
 
-  case SPIN_CONTROL_TYPE_FLOAT:
+    case SPIN_CONTROL_TYPE_FLOAT:
     {
       if (m_fValue - m_fInterval >= m_fStart)
         m_fValue -= m_fInterval;
@@ -859,11 +858,11 @@ void CGUISpinControl::MoveUp(bool bTestReverse)
         m_fValue = m_fEnd;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
-      return ;
+      return;
     }
     break;
 
-  case SPIN_CONTROL_TYPE_TEXT:
+    case SPIN_CONTROL_TYPE_TEXT:
     {
       if (m_iValue - 1 >= 0)
         m_iValue--;
@@ -871,7 +870,7 @@ void CGUISpinControl::MoveUp(bool bTestReverse)
         m_iValue = (int)m_vecLabels.size() - 1;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
-      return ;
+      return;
     }
     break;
   }
@@ -882,11 +881,11 @@ void CGUISpinControl::MoveDown(bool bTestReverse)
   if (bTestReverse && m_bReverse)
   { // actually should move up.
     MoveUp(false);
-    return ;
+    return;
   }
   switch (m_iType)
   {
-  case SPIN_CONTROL_TYPE_INT:
+    case SPIN_CONTROL_TYPE_INT:
     {
       if (m_iValue + 1 <= m_iEnd)
         m_iValue++;
@@ -894,15 +893,15 @@ void CGUISpinControl::MoveDown(bool bTestReverse)
         m_iValue = m_iStart;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
-      return ;
+      return;
     }
     break;
 
-  case SPIN_CONTROL_TYPE_PAGE:
-    ChangePage(1);
-    break;
+    case SPIN_CONTROL_TYPE_PAGE:
+      ChangePage(1);
+      break;
 
-  case SPIN_CONTROL_TYPE_FLOAT:
+    case SPIN_CONTROL_TYPE_FLOAT:
     {
       if (m_fValue + m_fInterval <= m_fEnd)
         m_fValue += m_fInterval;
@@ -910,19 +909,19 @@ void CGUISpinControl::MoveDown(bool bTestReverse)
         m_fValue = m_fStart;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
-      return ;
+      return;
     }
     break;
 
-  case SPIN_CONTROL_TYPE_TEXT:
+    case SPIN_CONTROL_TYPE_TEXT:
     {
-      if (m_iValue + 1 < (int)m_vecLabels.size() )
+      if (m_iValue + 1 < (int)m_vecLabels.size())
         m_iValue++;
       else if (m_iValue == (int)m_vecLabels.size() - 1)
         m_iValue = 0;
       CGUIMessage msg(GUI_MSG_CLICKED, GetID(), GetParentID());
       SendWindowMessage(msg);
-      return ;
+      return;
     }
     break;
   }
@@ -946,19 +945,19 @@ int CGUISpinControl::GetMinimum() const
 {
   switch (m_iType)
   {
-  case SPIN_CONTROL_TYPE_PAGE:
-    return 0;
-  case SPIN_CONTROL_TYPE_INT:
-    return m_iStart;
-    break;
+    case SPIN_CONTROL_TYPE_PAGE:
+      return 0;
+    case SPIN_CONTROL_TYPE_INT:
+      return m_iStart;
+      break;
 
-  case SPIN_CONTROL_TYPE_TEXT:
-    return 1;
-    break;
+    case SPIN_CONTROL_TYPE_TEXT:
+      return 1;
+      break;
 
-  case SPIN_CONTROL_TYPE_FLOAT:
-    return (int)(m_fStart*10.0f);
-    break;
+    case SPIN_CONTROL_TYPE_FLOAT:
+      return (int)(m_fStart * 10.0f);
+      break;
   }
   return 0;
 }
@@ -967,31 +966,31 @@ int CGUISpinControl::GetMaximum() const
 {
   switch (m_iType)
   {
-  case SPIN_CONTROL_TYPE_PAGE:
-    return m_numItems;
-  case SPIN_CONTROL_TYPE_INT:
-    return m_iEnd;
-    break;
+    case SPIN_CONTROL_TYPE_PAGE:
+      return m_numItems;
+    case SPIN_CONTROL_TYPE_INT:
+      return m_iEnd;
+      break;
 
-  case SPIN_CONTROL_TYPE_TEXT:
-    return (int)m_vecLabels.size();
-    break;
+    case SPIN_CONTROL_TYPE_TEXT:
+      return (int)m_vecLabels.size();
+      break;
 
-  case SPIN_CONTROL_TYPE_FLOAT:
-    return (int)(m_fEnd*10.0f);
-    break;
+    case SPIN_CONTROL_TYPE_FLOAT:
+      return (int)(m_fEnd * 10.0f);
+      break;
   }
   return 100;
 }
 
-bool CGUISpinControl::HitTest(const CPoint &point) const
+bool CGUISpinControl::HitTest(const CPoint& point) const
 {
   if (m_imgspinUpFocus->HitTest(point) || m_imgspinDownFocus->HitTest(point))
     return true;
   return CGUIControl::HitTest(point);
 }
 
-bool CGUISpinControl::OnMouseOver(const CPoint &point)
+bool CGUISpinControl::OnMouseOver(const CPoint& point)
 {
   int select = m_iSelect;
   if (m_imgspinDownFocus->HitTest(point))
@@ -1005,7 +1004,7 @@ bool CGUISpinControl::OnMouseOver(const CPoint &point)
   return CGUIControl::OnMouseOver(point);
 }
 
-EVENT_RESULT CGUISpinControl::OnMouseEvent(const CPoint &point, const CMouseEvent &event)
+EVENT_RESULT CGUISpinControl::OnMouseEvent(const CPoint& point, const CMouseEvent& event)
 {
   if (event.m_id == ACTION_MOUSE_LEFT_CLICK)
   {
@@ -1051,7 +1050,8 @@ void CGUISpinControl::ChangePage(int amount)
     m_currentItem = m_numItems - m_itemsPerPage;
   if (m_currentItem < 0)
     m_currentItem = 0;
-  CGUIMessage message(GUI_MSG_NOTIFY_ALL, GetParentID(), GetID(), GUI_MSG_PAGE_CHANGE, m_currentItem);
+  CGUIMessage message(GUI_MSG_NOTIFY_ALL, GetParentID(), GetID(), GUI_MSG_PAGE_CHANGE,
+                      m_currentItem);
   SendWindowMessage(message);
 }
 

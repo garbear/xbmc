@@ -48,7 +48,7 @@ CGUIResizeControl::CGUIResizeControl(const CGUIResizeControl& control)
 {
 }
 
-void CGUIResizeControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIResizeControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   if (m_bInvalidated)
   {
@@ -68,7 +68,7 @@ void CGUIResizeControl::Process(unsigned int currentTime, CDirtyRegionList &dirt
       alphaChannel = 63 - (alphaCounter % 64);
 
     alphaChannel += 192;
-    if (SetAlpha( (unsigned char)alphaChannel ))
+    if (SetAlpha((unsigned char)alphaChannel))
       MarkDirtyRegion();
     m_imgFocus->SetVisible(true);
     m_imgNoFocus->SetVisible(false);
@@ -93,7 +93,7 @@ void CGUIResizeControl::Render()
   CGUIControl::Render();
 }
 
-bool CGUIResizeControl::OnAction(const CAction &action)
+bool CGUIResizeControl::OnAction(const CAction& action)
 {
   if (action.GetID() == ACTION_SELECT_ITEM)
   {
@@ -104,7 +104,7 @@ bool CGUIResizeControl::OnAction(const CAction &action)
   }
   if (action.GetID() == ACTION_ANALOG_MOVE)
   {
-    Resize(m_fAnalogSpeed*action.GetAmount(), -m_fAnalogSpeed*action.GetAmount(1));
+    Resize(m_fAnalogSpeed * action.GetAmount(), -m_fAnalogSpeed * action.GetAmount(1));
     return true;
   }
   return CGUIControl::OnAction(action);
@@ -130,7 +130,7 @@ void CGUIResizeControl::OnRight()
   Resize(m_movingSpeed.GetUpdatedDistance(MOVING_SPEED::EventType::RIGHT), 0);
 }
 
-EVENT_RESULT CGUIResizeControl::OnMouseEvent(const CPoint &point, const CMouseEvent &event)
+EVENT_RESULT CGUIResizeControl::OnMouseEvent(const CPoint& point, const CMouseEvent& event)
 {
   if (event.m_id == ACTION_MOUSE_DRAG || event.m_id == ACTION_MOUSE_DRAG_END)
   {
@@ -186,10 +186,14 @@ void CGUIResizeControl::Resize(float x, float y)
   float width = m_width + x;
   float height = m_height + y;
   // check if we are within the bounds
-  if (width < m_x1) width = m_x1;
-  if (height < m_y1) height = m_y1;
-  if (width > m_x2) width = m_x2;
-  if (height > m_y2) height = m_y2;
+  if (width < m_x1)
+    width = m_x1;
+  if (height < m_y1)
+    height = m_y1;
+  if (width > m_x2)
+    width = m_x2;
+  if (height > m_y2)
+    height = m_y2;
   // ok, now set the default size of the resize control
   SetWidth(width);
   SetHeight(height);

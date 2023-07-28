@@ -36,7 +36,12 @@ public:
 
 protected:
   void Begin(UTILS::COLOR::Color color) override;
-  void Draw(float *x, float *y, float *z, const CRect &texture, const CRect &diffuse, int orientation) override;
+  void Draw(float* x,
+            float* y,
+            float* z,
+            const CRect& texture,
+            const CRect& diffuse,
+            int orientation) override;
   void End() override;
 
 private:
@@ -53,6 +58,5 @@ private:
 
   std::vector<PackedVertex> m_packedVertices;
   std::vector<GLushort> m_idx;
-  CRenderSystemGL *m_renderSystem;
+  CRenderSystemGL* m_renderSystem;
 };
-

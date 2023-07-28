@@ -30,10 +30,10 @@ public:
   CGUIWindowManager& GetWindowManager();
   CGUITextureManager& GetTextureManager();
   CGUILargeTextureManager& GetLargeTextureManager();
-  CStereoscopicsManager &GetStereoscopicsManager();
-  CGUIInfoManager &GetInfoManager();
-  CGUIColorManager &GetColorManager();
-  CGUIAudioManager &GetAudioManager();
+  CStereoscopicsManager& GetStereoscopicsManager();
+  CGUIInfoManager& GetInfoManager();
+  CGUIColorManager& GetColorManager();
+  CGUIAudioManager& GetAudioManager();
 
   bool ConfirmDelete(const std::string& path);
 

@@ -27,27 +27,33 @@
 class CGUIButtonControl : public CGUIControl
 {
 public:
-  CGUIButtonControl(int parentID, int controlID,
-                    float posX, float posY, float width, float height,
-                    const CTextureInfo& textureFocus, const CTextureInfo& textureNoFocus,
-                    const CLabelInfo &label, bool wrapMultiline = false);
+  CGUIButtonControl(int parentID,
+                    int controlID,
+                    float posX,
+                    float posY,
+                    float width,
+                    float height,
+                    const CTextureInfo& textureFocus,
+                    const CTextureInfo& textureNoFocus,
+                    const CLabelInfo& label,
+                    bool wrapMultiline = false);
 
   CGUIButtonControl(const CGUIButtonControl& control);
 
   ~CGUIButtonControl() override = default;
   CGUIButtonControl* Clone() const override { return new CGUIButtonControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  bool OnAction(const CAction &action) override ;
+  bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
   void AllocResources() override;
   void FreeResources(bool immediately = false) override;
   void DynamicResourceAlloc(bool bOnOff) override;
   void SetInvalid() override;
   void SetPosition(float posX, float posY) override;
-  virtual void SetLabel(const std::string & aLabel);
-  virtual void SetLabel2(const std::string & aLabel2);
+  virtual void SetLabel(const std::string& aLabel);
+  virtual void SetLabel2(const std::string& aLabel2);
   void SetClickActions(const CGUIAction& clickActions) { m_clickActions = clickActions; }
   const CGUIAction& GetClickActions() const { return m_clickActions; }
   void SetFocusActions(const CGUIAction& focusActions) { m_focusActions = focusActions; }
@@ -77,7 +83,7 @@ public:
 
 protected:
   friend class CGUISpinControlEx;
-  EVENT_RESULT OnMouseEvent(const CPoint &point, const CMouseEvent &event) override;
+  EVENT_RESULT OnMouseEvent(const CPoint& point, const CMouseEvent& event) override;
   void OnFocus() override;
   void OnUnFocus() override;
   virtual void ProcessText(unsigned int currentTime);
@@ -91,17 +97,17 @@ protected:
 
   std::unique_ptr<CGUITexture> m_imgFocus;
   std::unique_ptr<CGUITexture> m_imgNoFocus;
-  unsigned int  m_focusCounter;
+  unsigned int m_focusCounter;
   unsigned char m_alpha;
 
   float m_minWidth;
   float m_maxWidth;
   float m_labelMaxWidth{0};
 
-  KODI::GUILIB::GUIINFO::CGUIInfoLabel  m_info;
-  KODI::GUILIB::GUIINFO::CGUIInfoLabel  m_info2;
-  CGUILabel      m_label;
-  CGUILabel      m_label2;
+  KODI::GUILIB::GUIINFO::CGUIInfoLabel m_info;
+  KODI::GUILIB::GUIINFO::CGUIInfoLabel m_info2;
+  CGUILabel m_label;
+  CGUILabel m_label2;
 
   CGUIAction m_clickActions;
   CGUIAction m_focusActions;
@@ -109,4 +115,3 @@ protected:
 
   bool m_bSelected;
 };
-

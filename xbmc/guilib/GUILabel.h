@@ -22,8 +22,7 @@
 class CLabelInfo
 {
 public:
-  CLabelInfo():
-    scrollSuffix(" | ")
+  CLabelInfo() : scrollSuffix(" | ")
   {
     font = NULL;
     align = XBFONT_LEFT;
@@ -57,7 +56,7 @@ public:
   float offsetY;
   float width;
   float angle;
-  CGUIFont *font;
+  CGUIFont* font;
   int scrollSpeed;
   std::string scrollSuffix;
 };
@@ -71,20 +70,31 @@ class CGUILabel
 public:
   /*! \brief allowed color categories for labels, as defined by the skin
    */
-  enum COLOR { COLOR_TEXT = 0,
-               COLOR_SELECTED,
-               COLOR_FOCUSED,
-               COLOR_DISABLED,
-               COLOR_INVALID };
+  enum COLOR
+  {
+    COLOR_TEXT = 0,
+    COLOR_SELECTED,
+    COLOR_FOCUSED,
+    COLOR_DISABLED,
+    COLOR_INVALID
+  };
 
   /*! \brief allowed overflow handling techniques for labels, as defined by the skin
    */
-  enum OVER_FLOW { OVER_FLOW_TRUNCATE = 0,
-                   OVER_FLOW_SCROLL,
-                   OVER_FLOW_WRAP,
-                   OVER_FLOW_CLIP };
+  enum OVER_FLOW
+  {
+    OVER_FLOW_TRUNCATE = 0,
+    OVER_FLOW_SCROLL,
+    OVER_FLOW_WRAP,
+    OVER_FLOW_CLIP
+  };
 
-  CGUILabel(float posX, float posY, float width, float height, const CLabelInfo& labelInfo, OVER_FLOW overflow = OVER_FLOW_TRUNCATE);
+  CGUILabel(float posX,
+            float posY,
+            float width,
+            float height,
+            const CLabelInfo& labelInfo,
+            OVER_FLOW overflow = OVER_FLOW_TRUNCATE);
   CGUILabel(const CGUILabel& label);
 
   virtual ~CGUILabel() = default;
@@ -111,14 +121,14 @@ public:
    \param text std::string to set as this labels text
    \sa SetTextW, SetStyledText
    */
-  bool SetText(const std::string &label);
+  bool SetText(const std::string& label);
 
   /*! \brief Set the text to be displayed in the label
    Updates the label control and recomputes final position and size
    \param text std::wstring to set as this labels text
    \sa SetText, SetStyledText
    */
-  bool SetTextW(const std::wstring &label);
+  bool SetTextW(const std::wstring& label);
 
   /*! \brief Set styled text to be displayed in the label
    Updates the label control and recomputes final position and size
@@ -213,7 +223,7 @@ public:
    \param label1 First label to check
    \param label2 Second label to check
    */
-  static bool CheckAndCorrectOverlap(CGUILabel &label1, CGUILabel &label2);
+  static bool CheckAndCorrectOverlap(CGUILabel& label1, CGUILabel& label2);
 
 protected:
   UTILS::COLOR::Color GetColor() const;
@@ -226,15 +236,15 @@ protected:
   void UpdateRenderRect();
 
 private:
-  CLabelInfo     m_label;
+  CLabelInfo m_label;
   CGUITextLayout m_textLayout;
 
-  bool           m_scrolling;
-  OVER_FLOW      m_overflowType;
-  CScrollInfo    m_scrollInfo;
-  CRect          m_renderRect;   ///< actual sizing of text
-  CRect          m_maxRect;      ///< maximum sizing of text
+  bool m_scrolling;
+  OVER_FLOW m_overflowType;
+  CScrollInfo m_scrollInfo;
+  CRect m_renderRect; ///< actual sizing of text
+  CRect m_maxRect; ///< maximum sizing of text
   bool m_invalid = true; ///< if true, the label needs recomputing
   COLOR m_color = COLOR_TEXT; ///< color to render text \sa SetColor, GetColor
-  unsigned int   m_maxScrollLoops = ~0U;
+  unsigned int m_maxScrollLoops = ~0U;
 };

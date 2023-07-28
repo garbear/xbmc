@@ -49,8 +49,8 @@ public:
    \param element XML element to construct from
    \param contextWindow window context to use for any info labels
    */
-  CGUIStaticItem(const TiXmlElement *element, int contextWindow);
-  explicit CGUIStaticItem(const CFileItem &item); // for python
+  CGUIStaticItem(const TiXmlElement* element, int contextWindow);
+  explicit CGUIStaticItem(const CFileItem& item); // for python
   explicit CGUIStaticItem(const CGUIStaticItem& other);
   ~CGUIStaticItem() override = default;
   CGUIListItem* Clone() const override { return new CGUIStaticItem(*this); }
@@ -76,12 +76,12 @@ public:
    \param condition the condition to use.
    \param context the context for the condition (typically a window id).
    */
-  void SetVisibleCondition(const std::string &condition, int context);
+  void SetVisibleCondition(const std::string& condition, int context);
 
   const CGUIAction& GetClickActions() const { return m_clickActions; }
 
 private:
-  typedef std::vector< std::pair<KODI::GUILIB::GUIINFO::CGUIInfoLabel, std::string> > InfoVector;
+  typedef std::vector<std::pair<KODI::GUILIB::GUIINFO::CGUIInfoLabel, std::string>> InfoVector;
   InfoVector m_info;
   INFO::InfoPtr m_visCondition;
   bool m_visState;

@@ -72,7 +72,6 @@ bool LoadXMLData(const std::string& filepath, CXBMCTinyXML& xmlDoc)
 }
 } // unnamed namespace
 
-
 GUIFontManager::GUIFontManager() = default;
 
 GUIFontManager::~GUIFontManager()

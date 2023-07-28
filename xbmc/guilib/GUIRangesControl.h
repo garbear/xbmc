@@ -28,9 +28,14 @@ class CGUIRangesControl : public CGUIControl
   class CGUIRange
   {
   public:
-    CGUIRange(float fPosX, float fPosY, float fWidth, float fHeight,
-              const CTextureInfo& lowerTextureInfo, const CTextureInfo& fillTextureInfo,
-              const CTextureInfo& upperTextureInfo, const std::pair<float, float>& percentages);
+    CGUIRange(float fPosX,
+              float fPosY,
+              float fWidth,
+              float fHeight,
+              const CTextureInfo& lowerTextureInfo,
+              const CTextureInfo& fillTextureInfo,
+              const CTextureInfo& upperTextureInfo,
+              const std::pair<float, float>& percentages);
 
     CGUIRange(const CGUIRange& range);
 
@@ -42,20 +47,32 @@ class CGUIRangesControl : public CGUIControl
 
     bool Process(unsigned int iCurrentTime);
     void Render();
-    bool UpdateLayout(float fBackgroundTextureHeight, float fPosX, float fPosY, float fWidth, float fScaleX, float fScaleY);
+    bool UpdateLayout(float fBackgroundTextureHeight,
+                      float fPosX,
+                      float fPosY,
+                      float fWidth,
+                      float fScaleX,
+                      float fScaleY);
 
   private:
     std::unique_ptr<CGUITexture> m_guiLowerTexture;
     std::unique_ptr<CGUITexture> m_guiFillTexture;
     std::unique_ptr<CGUITexture> m_guiUpperTexture;
-    std::pair<float,float> m_percentValues;
+    std::pair<float, float> m_percentValues;
   };
 
 public:
-  CGUIRangesControl(int iParentID, int iControlID, float fPosX, float fPosY,
-                    float fWidth, float fHeight, const CTextureInfo& backGroundTexture,
-                    const CTextureInfo& leftTexture, const CTextureInfo& midTexture,
-                    const CTextureInfo& rightTexture, const CTextureInfo& overlayTexture,
+  CGUIRangesControl(int iParentID,
+                    int iControlID,
+                    float fPosX,
+                    float fPosY,
+                    float fWidth,
+                    float fHeight,
+                    const CTextureInfo& backGroundTexture,
+                    const CTextureInfo& leftTexture,
+                    const CTextureInfo& midTexture,
+                    const CTextureInfo& rightTexture,
+                    const CTextureInfo& overlayTexture,
                     int iInfo);
   ~CGUIRangesControl() override = default;
   CGUIRangesControl* Clone() const override { return new CGUIRangesControl(*this); }

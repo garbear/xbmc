@@ -6,18 +6,21 @@
  *  See LICENSES/README.md for more information.
  */
 
+#include "XBTFReader.h"
+
+#include "guilib/XBTF.h"
+#include "utils/EndianSwap.h"
+
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
 
-#include "XBTFReader.h"
-#include "guilib/XBTF.h"
-#include "utils/EndianSwap.h"
+#include <sys/stat.h>
 
 #ifdef TARGET_WINDOWS
 #include "filesystem/SpecialProtocol.h"
 #include "utils/CharsetConverter.h"
+
 #include "platform/win32/PlatformDefs.h"
 #endif
 
@@ -53,10 +56,9 @@ static bool ReadUInt64(FILE* file, uint64_t& value)
   return true;
 }
 
-CXBTFReader::CXBTFReader()
-  : CXBTFBase(),
-    m_path()
-{ }
+CXBTFReader::CXBTFReader() : CXBTFBase(), m_path()
+{
+}
 
 CXBTFReader::~CXBTFReader()
 {
@@ -203,7 +205,7 @@ bool CXBTFReader::Load(const CXBTFFrame& frame, unsigned char* buffer) const
 #if defined(TARGET_DARWIN) || defined(TARGET_FREEBSD)
   if (fseeko(m_file, static_cast<off_t>(frame.GetOffset()), SEEK_SET) == -1)
 #elif defined(TARGET_ANDROID)
-  if (fseek(m_file, static_cast<long>(frame.GetOffset()), SEEK_SET) == -1)  // No fseeko64 before N
+  if (fseek(m_file, static_cast<long>(frame.GetOffset()), SEEK_SET) == -1) // No fseeko64 before N
 #else
   if (fseeko64(m_file, static_cast<off_t>(frame.GetOffset()), SEEK_SET) == -1)
 #endif

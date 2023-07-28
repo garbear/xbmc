@@ -29,13 +29,14 @@ void CGUIColorManager::Clear()
 }
 
 // load the color file in
-void CGUIColorManager::Load(const std::string &colorFile)
+void CGUIColorManager::Load(const std::string& colorFile)
 {
   Clear();
 
   // load the global color map if it exists
   CXBMCTinyXML xmlDoc;
-  if (xmlDoc.LoadFile(CSpecialProtocol::TranslatePathConvertCase("special://xbmc/system/colors.xml")))
+  if (xmlDoc.LoadFile(
+          CSpecialProtocol::TranslatePathConvertCase("special://xbmc/system/colors.xml")))
     LoadXML(xmlDoc);
 
   // first load the default color map if it exists
@@ -57,7 +58,7 @@ void CGUIColorManager::Load(const std::string &colorFile)
     LoadXML(xmlDoc);
 }
 
-bool CGUIColorManager::LoadXML(CXBMCTinyXML &xmlDoc)
+bool CGUIColorManager::LoadXML(CXBMCTinyXML& xmlDoc)
 {
   TiXmlElement* pRootElement = xmlDoc.RootElement();
 
@@ -68,14 +69,14 @@ bool CGUIColorManager::LoadXML(CXBMCTinyXML &xmlDoc)
     return false;
   }
 
-  const TiXmlElement *color = pRootElement->FirstChildElement("color");
+  const TiXmlElement* color = pRootElement->FirstChildElement("color");
 
   while (color)
   {
     if (color->FirstChild() && color->Attribute("name"))
     {
       UTILS::COLOR::Color value = 0xffffffff;
-      sscanf(color->FirstChild()->Value(), "%x", (unsigned int*) &value);
+      sscanf(color->FirstChild()->Value(), "%x", (unsigned int*)&value);
       std::string name = color->Attribute("name");
       const auto it = m_colors.find(name);
       if (it != m_colors.end())

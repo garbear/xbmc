@@ -15,16 +15,19 @@
 
 #include "GUIAction.h"
 #include "GUIControlGroup.h"
-#include <memory>
 #include "threads/CriticalSection.h"
 
-class CFileItem; typedef std::shared_ptr<CFileItem> CFileItemPtr;
+#include <memory>
+
+class CFileItem;
+typedef std::shared_ptr<CFileItem> CFileItemPtr;
 
 #include <limits.h>
 #include <map>
 #include <vector>
 
-enum RenderOrder {
+enum RenderOrder
+{
   RENDER_ORDER_WINDOW = 0,
   RENDER_ORDER_DIALOG = 1,
   RENDER_ORDER_WINDOW_SCREENSAVER = INT_MAX,
@@ -42,10 +45,7 @@ class CVariant;
 class COrigin
 {
 public:
-  COrigin()
-  {
-    x = y = 0;
-  };
+  COrigin() { x = y = 0; };
   float x;
   float y;
   INFO::InfoPtr condition;
@@ -58,17 +58,22 @@ public:
 class CGUIWindow : public CGUIControlGroup, protected CCriticalSection
 {
 public:
-  enum LOAD_TYPE { LOAD_EVERY_TIME, LOAD_ON_GUI_INIT, KEEP_IN_MEMORY };
+  enum LOAD_TYPE
+  {
+    LOAD_EVERY_TIME,
+    LOAD_ON_GUI_INIT,
+    KEEP_IN_MEMORY
+  };
 
-  CGUIWindow(int id, const std::string &xmlFile);
+  CGUIWindow(int id, const std::string& xmlFile);
   ~CGUIWindow(void) override;
 
-  bool Initialize();  // loads the window
+  bool Initialize(); // loads the window
   bool Load(const std::string& strFileName, bool bContainsPath = false);
 
   void CenterWindow();
 
-  void DoProcess(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void DoProcess(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
 
   /*! \brief Main render function, called every frame.
    Window classes should override this only if they need to alter how something is rendered.
@@ -89,14 +94,17 @@ public:
    */
   virtual void FrameMove() {}
 
-  void Close(bool forceClose = false, int nextWindowID = 0, bool enableSound = true, bool bWait = true);
+  void Close(bool forceClose = false,
+             int nextWindowID = 0,
+             bool enableSound = true,
+             bool bWait = true);
 
   // OnAction() is called by our window manager.  We should process any messages
   // that should be handled at the window level in the derived classes, and any
   // unhandled messages should be dropped through to here where we send the message
   // on to the currently focused control.  Returns true if the action has been handled
   // and does not need to be passed further down the line (to our global action handlers)
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
 
   using CGUIControlGroup::OnBack;
   virtual bool OnBack(int actionID);
@@ -138,10 +146,16 @@ public:
   LOAD_TYPE GetLoadType() { return m_loadType; }
   int GetRenderOrder() { return m_renderOrder; }
   void SetInitialVisibility() override;
-  bool IsVisible() const override { return true; }; // windows are always considered visible as they implement their own
-                                                   // versions of UpdateVisibility, and are deemed visible if they're in
-                                                   // the window manager's active list.
-  virtual bool HasVisibleControls() { return true; }; //Assume that window always has visible controls
+  bool IsVisible() const override
+  {
+    return true;
+  }; // windows are always considered visible as they implement their own
+      // versions of UpdateVisibility, and are deemed visible if they're in
+      // the window manager's active list.
+  virtual bool HasVisibleControls()
+  {
+    return true;
+  }; //Assume that window always has visible controls
 
   bool IsAnimating(ANIMATION_TYPE animType) override;
 
@@ -160,11 +174,11 @@ public:
   void DisableAnimations();
 
   virtual void ResetControlStates();
-  void UpdateControlStats() override {}; // Do not count window itself
+  void UpdateControlStats() override{}; // Do not count window itself
 
-  void       SetRunActionsManually();
-  void       RunLoadActions() const;
-  void       RunUnloadActions() const;
+  void SetRunActionsManually();
+  void RunLoadActions() const;
+  void RunUnloadActions() const;
 
   /*! \brief Set a property
    Sets the value of a property referenced by a key.
@@ -172,13 +186,13 @@ public:
    \param value value to set, may be a string, integer, boolean or double.
    \sa GetProperty
    */
-  void SetProperty(const std::string &key, const CVariant &value);
+  void SetProperty(const std::string& key, const CVariant& value);
 
   /*! \brief Retrieve a property
    \param key name of the property to retrieve
    \return value of the property, empty if it doesn't exist
    */
-  CVariant GetProperty(const std::string &key) const;
+  CVariant GetProperty(const std::string& key) const;
 
   /*! \brief Clear a all the window's properties
    \sa SetProperty, HasProperty, GetProperty
@@ -191,22 +205,23 @@ public:
   bool HasSaveLastControl() const { return !m_defaultAlways; }
 
   virtual void OnDeinitWindow(int nextWindowID);
+
 protected:
-  EVENT_RESULT OnMouseEvent(const CPoint &point, const CMouseEvent &event) override;
+  EVENT_RESULT OnMouseEvent(const CPoint& point, const CMouseEvent& event) override;
 
   /*!
    \brief Load the window XML from the given path
    \param strPath the path to the window XML
    \param strLowerPath a lowered path to the window XML
    */
-  virtual bool LoadXML(const std::string& strPath, const std::string &strLowerPath);
+  virtual bool LoadXML(const std::string& strPath, const std::string& strLowerPath);
 
   /*!
    \brief Loads the window from the given XML element
    \param pRootElement the XML element
    \return true if the window is loaded from the given XML otherwise false.
    */
-  virtual bool Load(TiXmlElement *pRootElement);
+  virtual bool Load(TiXmlElement* pRootElement);
 
   /*!
    \brief Prepare the XML for load
@@ -225,7 +240,7 @@ protected:
   virtual void OnWindowLoaded();
   virtual void OnInitWindow();
   void Close_Internal(bool forceClose = false, int nextWindowID = 0, bool enableSound = true);
-  EVENT_RESULT OnMouseAction(const CAction &action);
+  EVENT_RESULT OnMouseAction(const CAction& action);
   bool Animate(unsigned int currentTime) override;
   bool CheckAnimation(ANIMATION_TYPE animType) override;
 
@@ -234,22 +249,22 @@ protected:
   virtual void RestoreControlStates();
 
   // methods for updating controls and sending messages
-  void OnEditChanged(int id, std::string &text);
+  void OnEditChanged(int id, std::string& text);
   bool SendMessage(int message, int id, int param1 = 0, int param2 = 0);
 
-  void LoadControl(TiXmlElement* pControl, CGUIControlGroup *pGroup, const CRect &rect);
+  void LoadControl(TiXmlElement* pControl, CGUIControlGroup* pGroup, const CRect& rect);
 
   std::vector<int> m_idRange;
   RESOLUTION_INFO m_coordsRes; // resolution that the window coordinates are in.
   bool m_needsScaling;
-  bool m_windowLoaded;  // true if the window's xml file has been loaded
+  bool m_windowLoaded; // true if the window's xml file has been loaded
   LOAD_TYPE m_loadType;
   bool m_dynamicResourceAlloc;
   bool m_closing;
-  bool m_active;        // true if window is active or dialog is running
+  bool m_active; // true if window is active or dialog is running
   KODI::GUILIB::GUIINFO::CGUIInfoColor m_clearBackground; // colour to clear the window
 
-  int m_renderOrder;      // for render order of dialogs
+  int m_renderOrder; // for render order of dialogs
 
   /*! \brief Grabs the window's top,left position in skin coordinates
    The window origin may change based on `<origin>` tag conditions in the skin.
@@ -257,7 +272,7 @@ protected:
    \return the window's origin in skin coordinates
    */
   CPoint GetPosition() const override;
-  std::vector<COrigin> m_origins;  // positions of dialogs depending on base window
+  std::vector<COrigin> m_origins; // positions of dialogs depending on base window
 
   // control states
   int m_lastControlID;
@@ -267,7 +282,7 @@ protected:
   bool m_animationsEnabled;
   struct icompare
   {
-    bool operator()(const std::string &s1, const std::string &s2) const;
+    bool operator()(const std::string& s1, const std::string& s2) const;
   };
 
   CGUIAction m_loadActions;
@@ -288,6 +303,6 @@ protected:
 
 private:
   std::map<std::string, CVariant, icompare> m_mapProperties;
-  std::map<INFO::InfoPtr, bool> m_xmlIncludeConditions; ///< \brief used to store conditions used to resolve includes for this window
+  std::map<INFO::InfoPtr, bool>
+      m_xmlIncludeConditions; ///< \brief used to store conditions used to resolve includes for this window
 };
-

@@ -28,7 +28,7 @@
 struct LocStr
 {
   std::string strTranslated; // string to be used in xbmc GUI
-  std::string strOriginal;   // the original English string the translation is based on
+  std::string strOriginal; // the original English string the translation is based on
 };
 
 // The default fallback language is fixed to be English
@@ -42,7 +42,9 @@ public:
   ~CLocalizeStrings(void) override;
   bool Load(const std::string& strPathName, const std::string& strLanguage);
   bool LoadSkinStrings(const std::string& path, const std::string& language);
-  bool LoadAddonStrings(const std::string& path, const std::string& language, const std::string& addonId);
+  bool LoadAddonStrings(const std::string& path,
+                        const std::string& language,
+                        const std::string& addonId);
   void ClearSkinStrings();
   const std::string& Get(uint32_t code) const;
   std::string GetAddonString(const std::string& addonId, uint32_t code);
@@ -57,7 +59,7 @@ protected:
   std::map<uint32_t, LocStr> m_strings;
   std::map<std::string, std::map<uint32_t, LocStr>> m_addonStrings;
   typedef std::map<uint32_t, LocStr>::const_iterator ciStrings;
-  typedef std::map<uint32_t, LocStr>::iterator       iStrings;
+  typedef std::map<uint32_t, LocStr>::iterator iStrings;
 
   mutable CSharedSection m_stringsMutex;
   CSharedSection m_addonStringsMutex;
@@ -69,4 +71,3 @@ protected:
  */
 extern CLocalizeStrings g_localizeStrings;
 extern CLocalizeStrings g_localizeStringsTemp;
-

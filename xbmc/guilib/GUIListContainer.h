@@ -25,18 +25,36 @@ class CTextureInfo;
 class CGUIListContainer : public CGUIBaseContainer
 {
 public:
-  CGUIListContainer(int parentID, int controlID, float posX, float posY, float width, float height, ORIENTATION orientation, const CScroller& scroller, int preloadItems);
+  CGUIListContainer(int parentID,
+                    int controlID,
+                    float posX,
+                    float posY,
+                    float width,
+                    float height,
+                    ORIENTATION orientation,
+                    const CScroller& scroller,
+                    int preloadItems);
   explicit CGUIListContainer(const CGUIListContainer& other);
   //#ifdef GUILIB_PYTHON_COMPATIBILITY
-  CGUIListContainer(int parentID, int controlID, float posX, float posY, float width, float height,
-                         const CLabelInfo& labelInfo, const CLabelInfo& labelInfo2,
-                         const CTextureInfo& textureButton, const CTextureInfo& textureButtonFocus,
-                         float textureHeight, float itemWidth, float itemHeight, float spaceBetweenItems);
+  CGUIListContainer(int parentID,
+                    int controlID,
+                    float posX,
+                    float posY,
+                    float width,
+                    float height,
+                    const CLabelInfo& labelInfo,
+                    const CLabelInfo& labelInfo2,
+                    const CTextureInfo& textureButton,
+                    const CTextureInfo& textureButtonFocus,
+                    float textureHeight,
+                    float itemWidth,
+                    float itemHeight,
+                    float spaceBetweenItems);
   //#endif
   ~CGUIListContainer(void) override;
   CGUIListContainer* Clone() const override { return new CGUIListContainer(*this); }
 
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
 
   bool HasNextPage() const override;
@@ -49,7 +67,6 @@ protected:
   bool MoveUp(bool wrapAround) override;
   void ValidateOffset() override;
   void SelectItem(int item) override;
-  bool SelectItemFromPoint(const CPoint &point) override;
-  int GetCursorFromPoint(const CPoint &point, CPoint *itemPoint = NULL) const override;
+  bool SelectItemFromPoint(const CPoint& point) override;
+  int GetCursorFromPoint(const CPoint& point, CPoint* itemPoint = NULL) const override;
 };
-

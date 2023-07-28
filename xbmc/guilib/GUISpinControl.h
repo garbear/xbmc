@@ -19,10 +19,10 @@
 
 #include <vector>
 
-#define SPIN_CONTROL_TYPE_INT    1
-#define SPIN_CONTROL_TYPE_FLOAT  2
-#define SPIN_CONTROL_TYPE_TEXT   3
-#define SPIN_CONTROL_TYPE_PAGE   4
+#define SPIN_CONTROL_TYPE_INT 1
+#define SPIN_CONTROL_TYPE_FLOAT 2
+#define SPIN_CONTROL_TYPE_TEXT 3
+#define SPIN_CONTROL_TYPE_PAGE 4
 
 /*!
  \ingroup controls
@@ -31,17 +31,30 @@
 class CGUISpinControl : public CGUIControl
 {
 public:
-  CGUISpinControl(int parentID, int controlID, float posX, float posY, float width, float height, const CTextureInfo& textureUp, const CTextureInfo& textureDown, const CTextureInfo& textureUpFocus, const CTextureInfo& textureDownFocus, const CTextureInfo& textureUpDisabled, const CTextureInfo& textureDownDisabled, const CLabelInfo& labelInfo, int iType);
+  CGUISpinControl(int parentID,
+                  int controlID,
+                  float posX,
+                  float posY,
+                  float width,
+                  float height,
+                  const CTextureInfo& textureUp,
+                  const CTextureInfo& textureDown,
+                  const CTextureInfo& textureUpFocus,
+                  const CTextureInfo& textureDownFocus,
+                  const CTextureInfo& textureUpDisabled,
+                  const CTextureInfo& textureDownDisabled,
+                  const CLabelInfo& labelInfo,
+                  int iType);
   ~CGUISpinControl() override = default;
   CGUISpinControl* Clone() const override { return new CGUISpinControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   void OnLeft() override;
   void OnRight() override;
-  bool HitTest(const CPoint &point) const override;
-  bool OnMouseOver(const CPoint &point) override;
+  bool HitTest(const CPoint& point) const override;
+  bool OnMouseOver(const CPoint& point) override;
   bool OnMessage(CGUIMessage& message) override;
   void AllocResources() override;
   void FreeResources(bool immediately = false) override;
@@ -52,7 +65,7 @@ public:
   void SetRange(int iStart, int iEnd);
   void SetFloatRange(float fStart, float fEnd);
   void SetValue(int iValue);
-  void SetValueFromLabel(const std::string &label);
+  void SetValueFromLabel(const std::string& label);
   void SetFloatValue(float fValue);
   void SetStringValue(const std::string& strValue);
   int GetValue() const;
@@ -73,7 +86,7 @@ public:
   float GetSpinWidth() const { return m_imgspinUp->GetWidth(); }
   float GetSpinHeight() const { return m_imgspinUp->GetHeight(); }
   void SetFloatInterval(float fInterval);
-  void SetShowRange(bool bOnoff) ;
+  void SetShowRange(bool bOnoff);
   void SetShowOnePage(bool showOnePage) { m_showOnePage = showOnePage; }
   void Clear();
   std::string GetDescription() const override;
@@ -84,7 +97,7 @@ public:
 protected:
   CGUISpinControl(const CGUISpinControl& control);
 
-  EVENT_RESULT OnMouseEvent(const CPoint &point, const CMouseEvent &event) override;
+  EVENT_RESULT OnMouseEvent(const CPoint& point, const CMouseEvent& event) override;
   bool UpdateColors(const CGUIListItem* item) override;
   /*! \brief Render the spinner text
    \param posX position of the left edge of the text
@@ -120,7 +133,7 @@ protected:
   std::unique_ptr<CGUITexture> m_imgspinDownFocus;
   std::unique_ptr<CGUITexture> m_imgspinUpDisabled;
   std::unique_ptr<CGUITexture> m_imgspinDownDisabled;
-  CGUILabel   m_label;
+  CGUILabel m_label;
   bool m_bShowRange;
   char m_szTyped[10];
   int m_iTypedPos;
@@ -130,4 +143,3 @@ protected:
   int m_numItems;
   bool m_showOnePage;
 };
-

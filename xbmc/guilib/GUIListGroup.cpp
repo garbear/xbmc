@@ -31,15 +31,15 @@ const std::set<CGUIControl::GUICONTROLTYPES> supportedTypes = {
 };
 } // namespace
 
-CGUIListGroup::CGUIListGroup(int parentID, int controlID, float posX, float posY, float width, float height)
-: CGUIControlGroup(parentID, controlID, posX, posY, width, height)
+CGUIListGroup::CGUIListGroup(
+    int parentID, int controlID, float posX, float posY, float width, float height)
+  : CGUIControlGroup(parentID, controlID, posX, posY, width, height)
 {
   m_item = NULL;
   ControlType = GUICONTROL_LISTGROUP;
 }
 
-CGUIListGroup::CGUIListGroup(const CGUIListGroup &right)
-: CGUIControlGroup(right)
+CGUIListGroup::CGUIListGroup(const CGUIListGroup& right) : CGUIControlGroup(right)
 {
   m_item = NULL;
   ControlType = GUICONTROL_LISTGROUP;
@@ -50,7 +50,7 @@ CGUIListGroup::~CGUIListGroup(void)
   FreeResources();
 }
 
-void CGUIListGroup::AddControl(CGUIControl *control, int position /*= -1*/)
+void CGUIListGroup::AddControl(CGUIControl* control, int position /*= -1*/)
 {
   if (control)
   {
@@ -60,18 +60,19 @@ void CGUIListGroup::AddControl(CGUIControl *control, int position /*= -1*/)
   CGUIControlGroup::AddControl(control, position);
 }
 
-void CGUIListGroup::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIListGroup::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   CServiceBroker::GetWinSystem()->GetGfxContext().SetOrigin(m_posX, m_posY);
 
   CRect rect;
   for (iControls it = m_children.begin(); it != m_children.end(); ++it)
   {
-    CGUIControl *control = *it;
+    CGUIControl* control = *it;
     control->UpdateVisibility(m_item);
     unsigned int oldDirty = dirtyregions.size();
     control->DoProcess(currentTime, dirtyregions);
-    if (control->IsVisible() || (oldDirty != dirtyregions.size())) // visible or dirty (was visible?)
+    if (control->IsVisible() ||
+        (oldDirty != dirtyregions.size())) // visible or dirty (was visible?)
       rect.Union(control->GetRenderRegion());
   }
 
@@ -88,13 +89,13 @@ void CGUIListGroup::ResetAnimation(ANIMATION_TYPE type)
     (*it)->ResetAnimation(type);
 }
 
-void CGUIListGroup::UpdateVisibility(const CGUIListItem *item)
+void CGUIListGroup::UpdateVisibility(const CGUIListItem* item)
 {
   CGUIControlGroup::UpdateVisibility(item);
   m_item = item;
 }
 
-void CGUIListGroup::UpdateInfo(const CGUIListItem *item)
+void CGUIListGroup::UpdateInfo(const CGUIListItem* item)
 {
   for (iControls it = m_children.begin(); it != m_children.end(); it++)
   {
@@ -104,12 +105,15 @@ void CGUIListGroup::UpdateInfo(const CGUIListItem *item)
   // now we have to check our overlapping label pairs
   for (unsigned int i = 0; i < m_children.size(); i++)
   {
-    if (m_children[i]->GetControlType() == CGUIControl::GUICONTROL_LISTLABEL && m_children[i]->IsVisible())
+    if (m_children[i]->GetControlType() == CGUIControl::GUICONTROL_LISTLABEL &&
+        m_children[i]->IsVisible())
     {
       for (unsigned int j = i + 1; j < m_children.size(); j++)
       {
-        if (m_children[j]->GetControlType() == CGUIControl::GUICONTROL_LISTLABEL && m_children[j]->IsVisible())
-          CGUIListLabel::CheckAndCorrectOverlap(*static_cast<CGUIListLabel*>(m_children[i]), *static_cast<CGUIListLabel*>(m_children[j]));
+        if (m_children[j]->GetControlType() == CGUIControl::GUICONTROL_LISTLABEL &&
+            m_children[j]->IsVisible())
+          CGUIListLabel::CheckAndCorrectOverlap(*static_cast<CGUIListLabel*>(m_children[i]),
+                                                *static_cast<CGUIListLabel*>(m_children[j]));
       }
     }
   }
@@ -120,7 +124,7 @@ void CGUIListGroup::EnlargeWidth(float difference)
   // Alters the width of the controls that have an ID of 1 to 14
   for (iControls it = m_children.begin(); it != m_children.end(); it++)
   {
-    CGUIControl *child = *it;
+    CGUIControl* child = *it;
     if (child->GetID() >= 1 && child->GetID() <= 14)
     {
       if (child->GetID() == 1)
@@ -142,7 +146,7 @@ void CGUIListGroup::EnlargeHeight(float difference)
   // Alters the height of the controls that have an ID of 1 to 14
   for (iControls it = m_children.begin(); it != m_children.end(); it++)
   {
-    CGUIControl *child = *it;
+    CGUIControl* child = *it;
     if (child->GetID() >= 1 && child->GetID() <= 14)
     {
       if (child->GetID() == 1)
@@ -174,7 +178,7 @@ void CGUIListGroup::SetFocusedItem(unsigned int focus)
   for (iControls it = m_children.begin(); it != m_children.end(); it++)
   {
     if ((*it)->GetControlType() == CGUIControl::GUICONTROL_LISTGROUP)
-      ((CGUIListGroup *)(*it))->SetFocusedItem(focus);
+      ((CGUIListGroup*)(*it))->SetFocusedItem(focus);
     else
       (*it)->SetFocus(focus > 0);
   }
@@ -185,8 +189,9 @@ unsigned int CGUIListGroup::GetFocusedItem() const
 {
   for (ciControls it = m_children.begin(); it != m_children.end(); it++)
   {
-    if ((*it)->GetControlType() == CGUIControl::GUICONTROL_LISTGROUP && ((CGUIListGroup *)(*it))->GetFocusedItem())
-      return ((CGUIListGroup *)(*it))->GetFocusedItem();
+    if ((*it)->GetControlType() == CGUIControl::GUICONTROL_LISTGROUP &&
+        ((CGUIListGroup*)(*it))->GetFocusedItem())
+      return ((CGUIListGroup*)(*it))->GetFocusedItem();
   }
   return m_bHasFocus ? 1 : 0;
 }
@@ -195,7 +200,8 @@ bool CGUIListGroup::MoveLeft()
 {
   for (iControls it = m_children.begin(); it != m_children.end(); it++)
   {
-    if ((*it)->GetControlType() == CGUIControl::GUICONTROL_LISTGROUP && ((CGUIListGroup *)(*it))->MoveLeft())
+    if ((*it)->GetControlType() == CGUIControl::GUICONTROL_LISTGROUP &&
+        ((CGUIListGroup*)(*it))->MoveLeft())
       return true;
   }
   return false;
@@ -205,7 +211,8 @@ bool CGUIListGroup::MoveRight()
 {
   for (iControls it = m_children.begin(); it != m_children.end(); it++)
   {
-    if ((*it)->GetControlType() == CGUIControl::GUICONTROL_LISTGROUP && ((CGUIListGroup *)(*it))->MoveRight())
+    if ((*it)->GetControlType() == CGUIControl::GUICONTROL_LISTGROUP &&
+        ((CGUIListGroup*)(*it))->MoveRight())
       return true;
   }
   return false;
@@ -217,21 +224,21 @@ void CGUIListGroup::SetState(bool selected, bool focused)
   {
     if ((*it)->GetControlType() == CGUIControl::GUICONTROL_LISTLABEL)
     {
-      CGUIListLabel *label = (CGUIListLabel *)(*it);
+      CGUIListLabel* label = (CGUIListLabel*)(*it);
       label->SetSelected(selected);
     }
     else if ((*it)->GetControlType() == CGUIControl::GUICONTROL_LISTGROUP)
-      ((CGUIListGroup *)(*it))->SetState(selected, focused);
+      ((CGUIListGroup*)(*it))->SetState(selected, focused);
   }
 }
 
-void CGUIListGroup::SelectItemFromPoint(const CPoint &point)
+void CGUIListGroup::SelectItemFromPoint(const CPoint& point)
 {
   CPoint controlCoords(point);
   m_transform.InverseTransformPosition(controlCoords.x, controlCoords.y);
   for (iControls it = m_children.begin(); it != m_children.end(); ++it)
   {
-    CGUIControl *child = *it;
+    CGUIControl* child = *it;
     if (child->GetControlType() == CGUIControl::GUICONTROL_LISTGROUP)
       static_cast<CGUIListGroup*>(child)->SelectItemFromPoint(point);
   }

@@ -139,7 +139,6 @@ struct CGUIFontCacheKeysMatch
   }
 };
 
-
 template<class Position, class Value>
 class CGUIFontCache
 {

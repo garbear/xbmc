@@ -30,7 +30,8 @@ public:
 
 protected:
   void Begin(UTILS::COLOR::Color color);
-  void Draw(float *x, float *y, float *z, const CRect &texture, const CRect &diffuse, int orientation);
+  void Draw(
+      float* x, float* y, float* z, const CRect& texture, const CRect& diffuse, int orientation);
   void End();
 
 private:
@@ -38,4 +39,3 @@ private:
 
   UTILS::COLOR::Color m_col;
 };
-

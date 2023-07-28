@@ -72,7 +72,6 @@ struct SVertex
 
 #include "GUIFontCache.h"
 
-
 class CGUIFontTTF
 {
   // use lookup table for the first 4096 glyphs (almost any letter or symbol) to

@@ -13,7 +13,6 @@
 class IImage
 {
 public:
-
   virtual ~IImage() = default;
 
   /*!
@@ -24,7 +23,10 @@ public:
    \param height The ideal height of the texture
    \return true if the image could be loaded
    */
-  virtual bool LoadImageFromMemory(unsigned char* buffer, unsigned int bufSize, unsigned int width, unsigned int height)=0;
+  virtual bool LoadImageFromMemory(unsigned char* buffer,
+                                   unsigned int bufSize,
+                                   unsigned int width,
+                                   unsigned int height) = 0;
   /*!
    \brief Decodes the previously loaded image data to the output buffer in 32 bit raw bits
    \param pixels The output buffer
@@ -34,7 +36,11 @@ public:
    \param format The format of the output buffer (JpegIO only)
    \return true if the image data could be decoded to the output buffer
    */
-  virtual bool Decode(unsigned char* const pixels, unsigned int width, unsigned int height, unsigned int pitch, unsigned int format)=0;
+  virtual bool Decode(unsigned char* const pixels,
+                      unsigned int width,
+                      unsigned int height,
+                      unsigned int pitch,
+                      unsigned int format) = 0;
   /*!
    \brief Encodes an thumbnail from raw bits of given memory location
    \remarks Caller need to call ReleaseThumbnailBuffer() afterwards to free the output buffer
@@ -48,27 +54,31 @@ public:
    \param bufferoutSize The output buffer size
    \return true if the thumbnail was successfully created
    */
-  virtual bool CreateThumbnailFromSurface(unsigned char* bufferin, unsigned int width, unsigned int height, unsigned int format, unsigned int pitch, const std::string& destFile,
-                                          unsigned char* &bufferout, unsigned int &bufferoutSize)=0;
+  virtual bool CreateThumbnailFromSurface(unsigned char* bufferin,
+                                          unsigned int width,
+                                          unsigned int height,
+                                          unsigned int format,
+                                          unsigned int pitch,
+                                          const std::string& destFile,
+                                          unsigned char*& bufferout,
+                                          unsigned int& bufferoutSize) = 0;
   /*!
    \brief Frees the output buffer allocated by CreateThumbnailFromSurface
    */
   virtual void ReleaseThumbnailBuffer() {}
 
-  unsigned int Width() const              { return m_width; }
-  unsigned int Height() const             { return m_height; }
-  unsigned int originalWidth() const      { return m_originalWidth; }
-  unsigned int originalHeight() const     { return m_originalHeight; }
-  unsigned int Orientation() const        { return m_orientation; }
-  bool hasAlpha() const                   { return m_hasAlpha; }
+  unsigned int Width() const { return m_width; }
+  unsigned int Height() const { return m_height; }
+  unsigned int originalWidth() const { return m_originalWidth; }
+  unsigned int originalHeight() const { return m_originalHeight; }
+  unsigned int Orientation() const { return m_orientation; }
+  bool hasAlpha() const { return m_hasAlpha; }
 
 protected:
-
   unsigned int m_width = 0;
   unsigned int m_height = 0;
-  unsigned int m_originalWidth = 0;   ///< original image width before scaling or cropping
-  unsigned int m_originalHeight = 0;  ///< original image height before scaling or cropping
+  unsigned int m_originalWidth = 0; ///< original image width before scaling or cropping
+  unsigned int m_originalHeight = 0; ///< original image height before scaling or cropping
   unsigned int m_orientation = 0;
   bool m_hasAlpha = false;
-
 };

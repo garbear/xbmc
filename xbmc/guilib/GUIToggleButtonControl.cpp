@@ -13,16 +13,45 @@
 #include "GUIWindowManager.h"
 #include "input/Key.h"
 
-CGUIToggleButtonControl::CGUIToggleButtonControl(int parentID, int controlID, float posX, float posY, float width, float height, const CTextureInfo& textureFocus, const CTextureInfo& textureNoFocus, const CTextureInfo& altTextureFocus, const CTextureInfo& altTextureNoFocus, const CLabelInfo &labelInfo, bool wrapMultiLine)
-    : CGUIButtonControl(parentID, controlID, posX, posY, width, height, textureFocus, textureNoFocus, labelInfo, wrapMultiLine)
-    , m_selectButton(parentID, controlID, posX, posY, width, height, altTextureFocus, altTextureNoFocus, labelInfo, wrapMultiLine)
+CGUIToggleButtonControl::CGUIToggleButtonControl(int parentID,
+                                                 int controlID,
+                                                 float posX,
+                                                 float posY,
+                                                 float width,
+                                                 float height,
+                                                 const CTextureInfo& textureFocus,
+                                                 const CTextureInfo& textureNoFocus,
+                                                 const CTextureInfo& altTextureFocus,
+                                                 const CTextureInfo& altTextureNoFocus,
+                                                 const CLabelInfo& labelInfo,
+                                                 bool wrapMultiLine)
+  : CGUIButtonControl(parentID,
+                      controlID,
+                      posX,
+                      posY,
+                      width,
+                      height,
+                      textureFocus,
+                      textureNoFocus,
+                      labelInfo,
+                      wrapMultiLine),
+    m_selectButton(parentID,
+                   controlID,
+                   posX,
+                   posY,
+                   width,
+                   height,
+                   altTextureFocus,
+                   altTextureNoFocus,
+                   labelInfo,
+                   wrapMultiLine)
 {
   ControlType = GUICONTROL_TOGGLEBUTTON;
 }
 
 CGUIToggleButtonControl::~CGUIToggleButtonControl(void) = default;
 
-void CGUIToggleButtonControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIToggleButtonControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   // ask our infoManager whether we are selected or not...
   if (m_toggleSelect)
@@ -69,7 +98,7 @@ void CGUIToggleButtonControl::Render()
   }
 }
 
-bool CGUIToggleButtonControl::OnAction(const CAction &action)
+bool CGUIToggleButtonControl::OnAction(const CAction& action)
 {
   if (action.GetID() == ACTION_SELECT_ITEM)
   {
@@ -136,13 +165,13 @@ bool CGUIToggleButtonControl::UpdateColors(const CGUIListItem* item)
   return changed;
 }
 
-void CGUIToggleButtonControl::SetLabel(const std::string &label)
+void CGUIToggleButtonControl::SetLabel(const std::string& label)
 {
   CGUIButtonControl::SetLabel(label);
   m_selectButton.SetLabel(label);
 }
 
-void CGUIToggleButtonControl::SetAltLabel(const std::string &label)
+void CGUIToggleButtonControl::SetAltLabel(const std::string& label)
 {
   if (label.size())
     m_selectButton.SetLabel(label);
@@ -155,7 +184,7 @@ std::string CGUIToggleButtonControl::GetDescription() const
   return CGUIButtonControl::GetDescription();
 }
 
-void CGUIToggleButtonControl::SetAltClickActions(const CGUIAction &clickActions)
+void CGUIToggleButtonControl::SetAltClickActions(const CGUIAction& clickActions)
 {
   m_selectButton.SetClickActions(clickActions);
 }
@@ -169,7 +198,7 @@ void CGUIToggleButtonControl::OnClick()
     CGUIButtonControl::OnClick();
 }
 
-void CGUIToggleButtonControl::SetToggleSelect(const std::string &toggleSelect)
+void CGUIToggleButtonControl::SetToggleSelect(const std::string& toggleSelect)
 {
   m_toggleSelect = CServiceBroker::GetGUI()->GetInfoManager().Register(toggleSelect, GetParentID());
 }

@@ -28,7 +28,18 @@ struct SGUIControlAndOffset
 class CGUIControlGroupList : public CGUIControlGroup
 {
 public:
-  CGUIControlGroupList(int parentID, int controlID, float posX, float posY, float width, float height, float itemGap, int pageControl, ORIENTATION orientation, bool useControlPositions, uint32_t alignment, const CScroller& scroller);
+  CGUIControlGroupList(int parentID,
+                       int controlID,
+                       float posX,
+                       float posY,
+                       float width,
+                       float height,
+                       float itemGap,
+                       int pageControl,
+                       ORIENTATION orientation,
+                       bool useControlPositions,
+                       uint32_t alignment,
+                       const CScroller& scroller);
   ~CGUIControlGroupList(void) override;
   CGUIControlGroupList* Clone() const override { return new CGUIControlGroupList(*this); }
 
@@ -37,15 +48,15 @@ public:
   virtual float Size() const;
   void SetInvalid() override;
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
   bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
 
-  EVENT_RESULT SendMouseEvent(const CPoint &point, const CMouseEvent &event) override;
-  void UnfocusFromPoint(const CPoint &point) override;
+  EVENT_RESULT SendMouseEvent(const CPoint& point, const CMouseEvent& event) override;
+  void UnfocusFromPoint(const CPoint& point) override;
 
-  void AddControl(CGUIControl *control, int position = -1) override;
+  void AddControl(CGUIControl* control, int position = -1) override;
   void ClearAll() override;
 
   virtual std::string GetLabel(int info) const;
@@ -62,11 +73,11 @@ public:
   using CGUIControlGroup::GetFirstFocusableControl;
 
 protected:
-  EVENT_RESULT OnMouseEvent(const CPoint &point, const CMouseEvent &event) override;
+  EVENT_RESULT OnMouseEvent(const CPoint& point, const CMouseEvent& event) override;
   bool IsControlOnScreen(float pos, const CGUIControl* control) const;
   void ValidateOffset();
   void CalculateItemGap();
-  inline float Size(const CGUIControl *control) const;
+  inline float Size(const CGUIControl* control) const;
   void ScrollTo(float offset);
   float GetAlignOffset() const;
 
@@ -125,4 +136,3 @@ protected:
   // for autosizing
   float m_minSize;
 };
-

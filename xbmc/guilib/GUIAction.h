@@ -13,7 +13,8 @@
 #include <vector>
 
 class CGUIControl;
-class CGUIListItem; typedef std::shared_ptr<CGUIListItem> CGUIListItemPtr;
+class CGUIListItem;
+typedef std::shared_ptr<CGUIListItem> CGUIListItemPtr;
 
 /**
  * Class containing vector of condition->(action/navigation route) and handling its execution.

@@ -32,5 +32,5 @@ public:
    \param data pointer of callbackData
    \param slider pointer to the slider control
    */
-  virtual void OnSliderChange(void *data, CGUISliderControl *slider) = 0;
+  virtual void OnSliderChange(void* data, CGUISliderControl* slider) = 0;
 };

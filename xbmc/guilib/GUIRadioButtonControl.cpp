@@ -67,27 +67,27 @@ void CGUIRadioButtonControl::Render()
 {
   CGUIButtonControl::Render();
 
-  if ( IsSelected() && !IsDisabled() )
+  if (IsSelected() && !IsDisabled())
   {
     if (HasFocus())
       m_imgRadioOnFocus->Render();
     else
       m_imgRadioOnNoFocus->Render();
   }
-  else if ( !IsSelected() && !IsDisabled() )
+  else if (!IsSelected() && !IsDisabled())
   {
     if (HasFocus())
       m_imgRadioOffFocus->Render();
     else
       m_imgRadioOffNoFocus->Render();
   }
-  else if ( IsSelected() && IsDisabled() )
+  else if (IsSelected() && IsDisabled())
     m_imgRadioOnDisabled->Render();
   else
     m_imgRadioOffDisabled->Render();
 }
 
-void CGUIRadioButtonControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIRadioButtonControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   if (m_toggleSelect)
   {
@@ -114,7 +114,7 @@ void CGUIRadioButtonControl::Process(unsigned int currentTime, CDirtyRegionList 
   CGUIButtonControl::Process(currentTime, dirtyregions);
 }
 
-bool CGUIRadioButtonControl::OnAction(const CAction &action)
+bool CGUIRadioButtonControl::OnAction(const CAction& action)
 {
   if (action.GetID() == ACTION_SELECT_ITEM)
   {
@@ -254,7 +254,7 @@ bool CGUIRadioButtonControl::UpdateColors(const CGUIListItem* item)
   return changed;
 }
 
-void CGUIRadioButtonControl::SetToggleSelect(const std::string &toggleSelect)
+void CGUIRadioButtonControl::SetToggleSelect(const std::string& toggleSelect)
 {
   m_toggleSelect = CServiceBroker::GetGUI()->GetInfoManager().Register(toggleSelect, GetParentID());
 }

@@ -28,16 +28,23 @@ class CRssReader;
 class CGUIRSSControl : public CGUIControl, public IRssObserver
 {
 public:
-  CGUIRSSControl(int parentID, int controlID, float posX, float posY, float width, float height,
-                 const CLabelInfo& labelInfo, const KODI::GUILIB::GUIINFO::CGUIInfoColor &channelColor,
-                 const KODI::GUILIB::GUIINFO::CGUIInfoColor &headlineColor, std::string& strRSSTags);
-  CGUIRSSControl(const CGUIRSSControl &from);
+  CGUIRSSControl(int parentID,
+                 int controlID,
+                 float posX,
+                 float posY,
+                 float width,
+                 float height,
+                 const CLabelInfo& labelInfo,
+                 const KODI::GUILIB::GUIINFO::CGUIInfoColor& channelColor,
+                 const KODI::GUILIB::GUIINFO::CGUIInfoColor& headlineColor,
+                 std::string& strRSSTags);
+  CGUIRSSControl(const CGUIRSSControl& from);
   ~CGUIRSSControl(void) override;
   CGUIRSSControl* Clone() const override { return new CGUIRSSControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  void OnFeedUpdate(const vecText &feed) override;
+  void OnFeedUpdate(const vecText& feed) override;
   void OnFeedRelease() override;
   bool CanFocus() const override { return true; }
   CRect CalcRenderRegion() const override;
@@ -67,6 +74,5 @@ protected:
   CScrollInfo m_scrollInfo;
   bool m_dirty = true;
   bool m_stopped;
-  int  m_urlset;
+  int m_urlset;
 };
-

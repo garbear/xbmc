@@ -84,22 +84,32 @@ void CLibraryGUIInfo::ResetLibraryBools()
   m_libraryRoleCounts.clear();
 }
 
-bool CLibraryGUIInfo::InitCurrentItem(CFileItem *item)
+bool CLibraryGUIInfo::InitCurrentItem(CFileItem* item)
 {
   return false;
 }
 
-bool CLibraryGUIInfo::GetLabel(std::string& value, const CFileItem *item, int contextWindow, const CGUIInfo &info, std::string *fallback) const
+bool CLibraryGUIInfo::GetLabel(std::string& value,
+                               const CFileItem* item,
+                               int contextWindow,
+                               const CGUIInfo& info,
+                               std::string* fallback) const
 {
   return false;
 }
 
-bool CLibraryGUIInfo::GetInt(int& value, const CGUIListItem *gitem, int contextWindow, const CGUIInfo &info) const
+bool CLibraryGUIInfo::GetInt(int& value,
+                             const CGUIListItem* gitem,
+                             int contextWindow,
+                             const CGUIInfo& info) const
 {
   return false;
 }
 
-bool CLibraryGUIInfo::GetBool(bool& value, const CGUIListItem *gitem, int contextWindow, const CGUIInfo &info) const
+bool CLibraryGUIInfo::GetBool(bool& value,
+                              const CGUIListItem* gitem,
+                              int contextWindow,
+                              const CGUIInfo& info) const
 {
   switch (info.m_info)
   {
@@ -229,7 +239,7 @@ bool CLibraryGUIInfo::GetBool(bool& value, const CGUIListItem *gitem, int contex
       std::string strRole = info.GetData3();
       // Find value for role if already stored
       int artistcount = -1;
-      for (const auto &role : m_libraryRoleCounts)
+      for (const auto& role : m_libraryRoleCounts)
       {
         if (StringUtils::EqualsNoCase(strRole, role.first))
         {
@@ -255,7 +265,7 @@ bool CLibraryGUIInfo::GetBool(bool& value, const CGUIListItem *gitem, int contex
     {
       const CURL url(info.GetData3());
       const std::shared_ptr<CProfileManager> profileManager =
-            CServiceBroker::GetSettingsComponent()->GetProfileManager();
+          CServiceBroker::GetSettingsComponent()->GetProfileManager();
       CFileItemList items;
 
       std::string libDir = profileManager->GetLibraryFolder();

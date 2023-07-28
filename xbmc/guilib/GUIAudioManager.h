@@ -23,7 +23,11 @@ class CSettings;
 class TiXmlNode;
 class IAESound;
 
-enum WINDOW_SOUND { SOUND_INIT = 0, SOUND_DEINIT };
+enum WINDOW_SOUND
+{
+  SOUND_INIT = 0,
+  SOUND_DEINIT
+};
 
 class CGUIAudioManager : public ISettingCallback
 {
@@ -54,7 +58,6 @@ public:
   bool Load();
   void UnLoad();
 
-
   void PlayActionSound(const CAction& action);
   void PlayWindowSound(int id, WINDOW_SOUND event);
   void PlayPythonSound(const std::string& strFileName, bool useCached = true);
@@ -72,18 +75,17 @@ private:
   typedef std::map<int, CWindowSounds> windowSoundMap;
   typedef std::map<const std::string, std::shared_ptr<IAESound>> pythonSoundsMap;
 
-  soundCache          m_soundCache;
-  actionSoundMap      m_actionSoundMap;
-  windowSoundMap      m_windowSoundMap;
-  pythonSoundsMap     m_pythonSounds;
+  soundCache m_soundCache;
+  actionSoundMap m_actionSoundMap;
+  windowSoundMap m_windowSoundMap;
+  pythonSoundsMap m_pythonSounds;
 
-  std::string          m_strMediaDir;
-  bool                m_bEnabled;
+  std::string m_strMediaDir;
+  bool m_bEnabled;
 
-  CCriticalSection    m_cs;
+  CCriticalSection m_cs;
 
   std::shared_ptr<IAESound> LoadSound(const std::string& filename);
   std::shared_ptr<IAESound> LoadWindowSound(TiXmlNode* pWindowNode,
                                             const std::string& strIdentifier);
 };
-

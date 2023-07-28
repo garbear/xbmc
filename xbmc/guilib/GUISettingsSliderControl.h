@@ -20,8 +20,7 @@
  \ingroup controls
  \brief
  */
-class CGUISettingsSliderControl :
-      public CGUISliderControl
+class CGUISettingsSliderControl : public CGUISliderControl
 {
 public:
   CGUISettingsSliderControl(int parentID,
@@ -42,11 +41,11 @@ public:
                             const CLabelInfo& labelInfo,
                             int iType);
   ~CGUISettingsSliderControl() override = default;
-  CGUISettingsSliderControl *Clone() const override { return new CGUISettingsSliderControl(*this); }
+  CGUISettingsSliderControl* Clone() const override { return new CGUISettingsSliderControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   void OnUnFocus() override;
   EVENT_RESULT OnMouseEvent(const CPoint& point, const CMouseEvent& event) override;
   void SetActive();
@@ -79,4 +78,3 @@ private:
   CGUILabel m_label;
   bool m_active; ///< Whether the slider has been activated by a click.
 };
-

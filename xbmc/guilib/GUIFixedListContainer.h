@@ -22,20 +22,30 @@
 class CGUIFixedListContainer : public CGUIBaseContainer
 {
 public:
-  CGUIFixedListContainer(int parentID, int controlID, float posX, float posY, float width, float height, ORIENTATION orientation, const CScroller& scroller, int preloadItems, int fixedPosition, int cursorRange);
+  CGUIFixedListContainer(int parentID,
+                         int controlID,
+                         float posX,
+                         float posY,
+                         float width,
+                         float height,
+                         ORIENTATION orientation,
+                         const CScroller& scroller,
+                         int preloadItems,
+                         int fixedPosition,
+                         int cursorRange);
   ~CGUIFixedListContainer(void) override;
   CGUIFixedListContainer* Clone() const override { return new CGUIFixedListContainer(*this); }
 
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
 
 protected:
   void Scroll(int amount) override;
   bool MoveDown(bool wrapAround) override;
   bool MoveUp(bool wrapAround) override;
-  bool GetOffsetRange(int &minOffset, int &maxOffset) const override;
+  bool GetOffsetRange(int& minOffset, int& maxOffset) const override;
   void ValidateOffset() override;
-  bool SelectItemFromPoint(const CPoint &point) override;
-  int GetCursorFromPoint(const CPoint &point, CPoint *itemPoint = NULL) const override;
+  bool SelectItemFromPoint(const CPoint& point) override;
+  int GetCursorFromPoint(const CPoint& point, CPoint* itemPoint = NULL) const override;
   void SelectItem(int item) override;
   bool HasNextPage() const override;
   bool HasPreviousPage() const override;
@@ -52,9 +62,8 @@ private:
    \param maxCursor the maximal cursor position
    \sa m_fixedCursor, m_cursorRange
    */
-  void GetCursorRange(int &minCursor, int &maxCursor) const;
+  void GetCursorRange(int& minCursor, int& maxCursor) const;
 
-  int m_fixedCursor;    ///< default position the skinner wishes to use for the focused item
-  int m_cursorRange;    ///< range that the focused item can vary when at the ends of the list
+  int m_fixedCursor; ///< default position the skinner wishes to use for the focused item
+  int m_cursorRange; ///< range that the focused item can vary when at the ends of the list
 };
-

@@ -22,13 +22,21 @@
 class CGUIPanelContainer : public CGUIBaseContainer
 {
 public:
-  CGUIPanelContainer(int parentID, int controlID, float posX, float posY, float width, float height, ORIENTATION orientation, const CScroller& scroller, int preloadItems);
+  CGUIPanelContainer(int parentID,
+                     int controlID,
+                     float posX,
+                     float posY,
+                     float width,
+                     float height,
+                     ORIENTATION orientation,
+                     const CScroller& scroller,
+                     int preloadItems);
   ~CGUIPanelContainer(void) override;
   CGUIPanelContainer* Clone() const override { return new CGUIPanelContainer(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
   void OnLeft() override;
   void OnRight() override;
@@ -36,6 +44,7 @@ public:
   void OnDown() override;
   bool GetCondition(int condition, int data) const override;
   std::string GetLabel(int info) const override;
+
 protected:
   bool MoveUp(bool wrapAround) override;
   bool MoveDown(bool wrapAround) override;
@@ -46,9 +55,9 @@ protected:
   void ValidateOffset() override;
   void CalculateLayout() override;
   unsigned int GetRows() const override;
-  int  CorrectOffset(int offset, int cursor) const override;
-  bool SelectItemFromPoint(const CPoint &point) override;
-  int GetCursorFromPoint(const CPoint &point, CPoint *itemPoint = NULL) const override;
+  int CorrectOffset(int offset, int cursor) const override;
+  bool SelectItemFromPoint(const CPoint& point) override;
+  int GetCursorFromPoint(const CPoint& point, CPoint* itemPoint = NULL) const override;
   void SetCursor(int cursor) override;
   void SelectItem(int item) override;
   bool HasPreviousPage() const override;
@@ -59,4 +68,3 @@ protected:
 
   int m_itemsPerRow;
 };
-

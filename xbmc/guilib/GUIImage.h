@@ -38,29 +38,32 @@ public:
       m_fadeTime = fadeTime;
       m_fading = false;
     };
-    ~CFadingTexture()
-    {
-      m_texture->FreeResources();
-    };
+    ~CFadingTexture() { m_texture->FreeResources(); };
 
     std::unique_ptr<CGUITexture> m_texture; ///< texture to fade out
     unsigned int m_fadeTime; ///< time to fade out (ms)
-    bool         m_fading;   ///< whether we're fading out
+    bool m_fading; ///< whether we're fading out
 
   private:
     CFadingTexture(const CFadingTexture&) = delete;
     CFadingTexture& operator=(const CFadingTexture&) = delete;
   };
 
-  CGUIImage(int parentID, int controlID, float posX, float posY, float width, float height, const CTextureInfo& texture);
-  CGUIImage(const CGUIImage &left);
+  CGUIImage(int parentID,
+            int controlID,
+            float posX,
+            float posY,
+            float width,
+            float height,
+            const CTextureInfo& texture);
+  CGUIImage(const CGUIImage& left);
   ~CGUIImage(void) override;
   CGUIImage* Clone() const override { return new CGUIImage(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  void UpdateVisibility(const CGUIListItem *item = NULL) override;
-  bool OnAction(const CAction &action) override ;
+  void UpdateVisibility(const CGUIListItem* item = NULL) override;
+  bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
   void AllocResources() override;
   void FreeResources(bool immediately = false) override;
@@ -68,11 +71,13 @@ public:
   bool IsDynamicallyAllocated() override { return m_bDynamicResourceAlloc; }
   void SetInvalid() override;
   bool CanFocus() const override;
-  void UpdateInfo(const CGUIListItem *item = NULL) override;
+  void UpdateInfo(const CGUIListItem* item = NULL) override;
 
-  virtual void SetInfo(const KODI::GUILIB::GUIINFO::CGUIInfoLabel &info);
-  virtual void SetFileName(const std::string& strFileName, bool setConstant = false, const bool useCache = true);
-  virtual void SetAspectRatio(const CAspectRatio &aspect);
+  virtual void SetInfo(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& info);
+  virtual void SetFileName(const std::string& strFileName,
+                           bool setConstant = false,
+                           const bool useCache = true);
+  virtual void SetAspectRatio(const CAspectRatio& aspect);
   void SetWidth(float width) override;
   void SetHeight(float height) override;
   void SetPosition(float posX, float posY) override;
@@ -93,7 +98,7 @@ protected:
   virtual void FreeTextures(bool immediately = false);
   void FreeResourcesButNotAnims();
   unsigned char GetFadeLevel(unsigned int time) const;
-  bool ProcessFading(CFadingTexture *texture, unsigned int frameTime, unsigned int currentTime);
+  bool ProcessFading(CFadingTexture* texture, unsigned int frameTime, unsigned int currentTime);
 
   /*!
    * \brief Update the diffuse color based on the current item infos
@@ -108,7 +113,7 @@ protected:
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_info;
 
   std::unique_ptr<CGUITexture> m_texture;
-  std::vector<CFadingTexture *> m_fadingTextures;
+  std::vector<CFadingTexture*> m_fadingTextures;
   std::string m_currentTexture;
   std::string m_currentFallback;
 
@@ -116,4 +121,3 @@ protected:
   unsigned int m_currentFadeTime;
   unsigned int m_lastRenderTime;
 };
-

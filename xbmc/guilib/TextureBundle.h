@@ -46,10 +46,9 @@ public:
   std::optional<CTextureBundleXBT::Animation> LoadAnim(const std::string& filename);
 
   void Close();
+
 private:
   CTextureBundleXBT m_tbXBT;
 
   bool m_useXBT;
 };
-
-

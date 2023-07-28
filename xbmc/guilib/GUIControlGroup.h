@@ -30,10 +30,10 @@ public:
   ~CGUIControlGroup(void) override;
   CGUIControlGroup* Clone() const override { return new CGUIControlGroup(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
   void RenderEx() override;
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
   virtual bool SendControlMessage(CGUIMessage& message);
   bool HasFocus() const override;
@@ -42,8 +42,8 @@ public:
   void DynamicResourceAlloc(bool bOnOff) override;
   bool CanFocus() const override;
 
-  EVENT_RESULT SendMouseEvent(const CPoint &point, const CMouseEvent &event) override;
-  void UnfocusFromPoint(const CPoint &point) override;
+  EVENT_RESULT SendMouseEvent(const CPoint& point, const CMouseEvent& event) override;
+  void UnfocusFromPoint(const CPoint& point) override;
 
   void SetInitialVisibility() override;
 
@@ -54,12 +54,12 @@ public:
   void ResetAnimations() override;
 
   int GetFocusedControlID() const;
-  CGUIControl *GetFocusedControl() const;
-  virtual CGUIControl *GetFirstFocusableControl(int id);
+  CGUIControl* GetFocusedControl() const;
+  virtual CGUIControl* GetFirstFocusableControl(int id);
 
-  virtual void AddControl(CGUIControl *control, int position = -1);
-  bool InsertControl(CGUIControl *control, const CGUIControl *insertPoint);
-  virtual bool RemoveControl(const CGUIControl *control);
+  virtual void AddControl(CGUIControl* control, int position = -1);
+  bool InsertControl(CGUIControl* control, const CGUIControl* insertPoint);
+  virtual bool RemoveControl(const CGUIControl* control);
   virtual void ClearAll();
   void SetDefaultControl(int id, bool always)
   {
@@ -68,7 +68,7 @@ public:
   }
   void SetRenderFocusedLast(bool renderLast) { m_renderFocusedLast = renderLast; }
 
-  void SaveStates(std::vector<CControlState> &states) override;
+  void SaveStates(std::vector<CControlState>& states) override;
 
   bool IsGroup() const override { return true; }
 
@@ -77,19 +77,20 @@ public:
 #endif
 protected:
   // sub controls
-  std::vector<CGUIControl *> m_children;
+  std::vector<CGUIControl*> m_children;
 
-  typedef std::vector<CGUIControl *>::iterator iControls;
-  typedef std::vector<CGUIControl *>::const_iterator ciControls;
-  typedef std::vector<CGUIControl *>::reverse_iterator rControls;
-  typedef std::vector<CGUIControl *>::const_reverse_iterator crControls;
+  typedef std::vector<CGUIControl*>::iterator iControls;
+  typedef std::vector<CGUIControl*>::const_iterator ciControls;
+  typedef std::vector<CGUIControl*>::reverse_iterator rControls;
+  typedef std::vector<CGUIControl*>::const_reverse_iterator crControls;
 
-  int  m_defaultControl;
+  int m_defaultControl;
   bool m_defaultAlways;
   int m_focusedControl;
   bool m_renderFocusedLast;
+
 private:
-  typedef std::vector< std::vector<CGUIControl *> * > COLLECTORTYPE;
+  typedef std::vector<std::vector<CGUIControl*>*> COLLECTORTYPE;
 
   struct IDCollectorList
   {
@@ -99,9 +100,10 @@ private:
         delete item;
     }
 
-    std::vector<CGUIControl *> *Get() {
+    std::vector<CGUIControl*>* Get()
+    {
       if (++m_stackDepth > m_items.size())
-        m_items.push_back(new std::vector<CGUIControl *>());
+        m_items.push_back(new std::vector<CGUIControl*>());
       return m_items[m_stackDepth - 1];
     }
 
@@ -109,7 +111,7 @@ private:
 
     COLLECTORTYPE m_items;
     size_t m_stackDepth = 0;
-  }m_idCollector;
+  } m_idCollector;
 
   struct IDCollector
   {
@@ -117,8 +119,7 @@ private:
 
     ~IDCollector() { m_list.Release(); }
 
-    IDCollectorList &m_list;
-    std::vector<CGUIControl *> *m_collector;
+    IDCollectorList& m_list;
+    std::vector<CGUIControl*>* m_collector;
   };
 };
-

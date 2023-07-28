@@ -91,7 +91,9 @@ bool CGUILabel::Process(unsigned int currentTime)
 {
   //! @todo Add the correct processing
 
-  bool overFlows = (m_renderRect.Width() + 0.5f < m_textLayout.GetTextWidth()); // 0.5f to deal with floating point rounding issues
+  bool overFlows =
+      (m_renderRect.Width() + 0.5f <
+       m_textLayout.GetTextWidth()); // 0.5f to deal with floating point rounding issues
   bool renderSolid = (m_color == COLOR_DISABLED);
 
   if (overFlows && m_scrolling && !renderSolid)
@@ -109,9 +111,12 @@ void CGUILabel::Render()
 {
   UTILS::COLOR::Color color = GetColor();
   bool renderSolid = (m_color == COLOR_DISABLED);
-  bool overFlows = (m_renderRect.Width() + 0.5f < m_textLayout.GetTextWidth()); // 0.5f to deal with floating point rounding issues
+  bool overFlows =
+      (m_renderRect.Width() + 0.5f <
+       m_textLayout.GetTextWidth()); // 0.5f to deal with floating point rounding issues
   if (overFlows && m_scrolling && !renderSolid)
-    m_textLayout.RenderScrolling(m_renderRect.x1, m_renderRect.y1, m_label.angle, color, m_label.shadowColor, 0, m_renderRect.Width(), m_scrollInfo);
+    m_textLayout.RenderScrolling(m_renderRect.x1, m_renderRect.y1, m_label.angle, color,
+                                 m_label.shadowColor, 0, m_renderRect.Width(), m_scrollInfo);
   else
   {
     float posX = m_renderRect.x1;
@@ -124,7 +129,8 @@ void CGUILabel::Render()
       // is aligned correctly), so we must undo the UpdateRenderRect() changes for horizontal alignment.
       if (m_label.align & XBFONT_CENTER_X)
         posX += m_renderRect.Width() * 0.5f;
-      if (m_label.align & XBFONT_CENTER_Y) // need to pass a centered Y so that <angle> will rotate around the correct point.
+      if (m_label.align &
+          XBFONT_CENTER_Y) // need to pass a centered Y so that <angle> will rotate around the correct point.
         posY += m_renderRect.Height() * 0.5f;
       align = m_label.align;
     }
@@ -134,7 +140,10 @@ void CGUILabel::Render()
       if (m_label.align & XBFONT_RIGHT)
         align |= XBFONT_RIGHT;
     }
-    m_textLayout.Render(posX, posY, m_label.angle, color, m_label.shadowColor, align, m_overflowType == OVER_FLOW_CLIP ? m_textLayout.GetTextWidth() : m_renderRect.Width(), renderSolid);
+    m_textLayout.Render(posX, posY, m_label.angle, color, m_label.shadowColor, align,
+                        m_overflowType == OVER_FLOW_CLIP ? m_textLayout.GetTextWidth()
+                                                         : m_renderRect.Width(),
+                        renderSolid);
   }
 }
 
@@ -175,7 +184,7 @@ bool CGUILabel::SetStyledText(const vecText& text, const std::vector<UTILS::COLO
   return true;
 }
 
-bool CGUILabel::SetText(const std::string &label)
+bool CGUILabel::SetText(const std::string& label)
 {
   if (m_textLayout.Update(label, m_maxRect.Width(), m_invalid))
   { // needed an update - reset scrolling and update our text layout
@@ -188,7 +197,7 @@ bool CGUILabel::SetText(const std::string &label)
     return false;
 }
 
-bool CGUILabel::SetTextW(const std::wstring &label)
+bool CGUILabel::SetTextW(const std::wstring& label)
 {
   if (m_textLayout.UpdateW(label, m_maxRect.Width(), m_invalid))
   {
@@ -223,23 +232,25 @@ void CGUILabel::UpdateRenderRect()
 
 float CGUILabel::GetMaxWidth() const
 {
-  if (m_label.width) return m_label.width;
-  return m_maxRect.Width() - 2*m_label.offsetX;
+  if (m_label.width)
+    return m_label.width;
+  return m_maxRect.Width() - 2 * m_label.offsetX;
 }
 
-bool CGUILabel::CheckAndCorrectOverlap(CGUILabel &label1, CGUILabel &label2)
+bool CGUILabel::CheckAndCorrectOverlap(CGUILabel& label1, CGUILabel& label2)
 {
   CRect rect(label1.m_renderRect);
   if (rect.Intersect(label2.m_renderRect).IsEmpty())
     return false; // nothing to do (though it could potentially encroach on the min_space requirement)
 
   // overlap vertically and horizontally - check alignment
-  CGUILabel &left = label1.m_renderRect.x1 <= label2.m_renderRect.x1 ? label1 : label2;
-  CGUILabel &right = label1.m_renderRect.x1 <= label2.m_renderRect.x1 ? label2 : label1;
+  CGUILabel& left = label1.m_renderRect.x1 <= label2.m_renderRect.x1 ? label1 : label2;
+  CGUILabel& right = label1.m_renderRect.x1 <= label2.m_renderRect.x1 ? label2 : label1;
   if ((left.m_label.align & 3) == 0 && right.m_label.align & XBFONT_RIGHT)
   {
     static const float min_space = 10;
-    float chopPoint = (left.m_maxRect.x1 + left.GetMaxWidth() + right.m_maxRect.x2 - right.GetMaxWidth()) * 0.5f;
+    float chopPoint =
+        (left.m_maxRect.x1 + left.GetMaxWidth() + right.m_maxRect.x2 - right.GetMaxWidth()) * 0.5f;
     // [1       [2...[2  1].|..........1]         2]
     // [1       [2.....[2   |      1]..1]         2]
     // [1       [2..........|.[2   1]..1]         2]

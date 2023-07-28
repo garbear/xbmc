@@ -37,9 +37,9 @@ public:
   ~CGUIResizeControl() override = default;
   CGUIResizeControl* Clone() const override { return new CGUIResizeControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  bool OnAction(const CAction &action) override;
+  bool OnAction(const CAction& action) override;
   void OnUp() override;
   void OnDown() override;
   void OnLeft() override;
@@ -53,7 +53,7 @@ public:
   bool CanFocus() const override { return true; }
 
 protected:
-  EVENT_RESULT OnMouseEvent(const CPoint &point, const CMouseEvent &event) override;
+  EVENT_RESULT OnMouseEvent(const CPoint& point, const CMouseEvent& event) override;
   bool UpdateColors(const CGUIListItem* item) override;
   bool SetAlpha(unsigned char alpha);
   void Resize(float x, float y);
@@ -67,4 +67,3 @@ protected:
 private:
   CGUIResizeControl(const CGUIResizeControl& control);
 };
-

@@ -19,24 +19,31 @@
  \ingroup controls
  \brief
  */
-class CGUIRadioButtonControl :
-      public CGUIButtonControl
+class CGUIRadioButtonControl : public CGUIButtonControl
 {
 public:
-  CGUIRadioButtonControl(int parentID, int controlID,
-                         float posX, float posY, float width, float height,
-                         const CTextureInfo& textureFocus, const CTextureInfo& textureNoFocus,
+  CGUIRadioButtonControl(int parentID,
+                         int controlID,
+                         float posX,
+                         float posY,
+                         float width,
+                         float height,
+                         const CTextureInfo& textureFocus,
+                         const CTextureInfo& textureNoFocus,
                          const CLabelInfo& labelInfo,
-                         const CTextureInfo& radioOnFocus, const CTextureInfo& radioOnNoFocus,
-                         const CTextureInfo& radioOffFocus, const CTextureInfo& radioOffNoFocus,
-                         const CTextureInfo& radioOnDisabled, const CTextureInfo& radioOffDisabled);
+                         const CTextureInfo& radioOnFocus,
+                         const CTextureInfo& radioOnNoFocus,
+                         const CTextureInfo& radioOffFocus,
+                         const CTextureInfo& radioOffNoFocus,
+                         const CTextureInfo& radioOnDisabled,
+                         const CTextureInfo& radioOffDisabled);
 
   ~CGUIRadioButtonControl() override = default;
   CGUIRadioButtonControl* Clone() const override { return new CGUIRadioButtonControl(*this); }
 
-  void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
+  void Process(unsigned int currentTime, CDirtyRegionList& dirtyregions) override;
   void Render() override;
-  bool OnAction(const CAction &action) override ;
+  bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
   void AllocResources() override;
   void FreeResources(bool immediately = false) override;
@@ -47,7 +54,7 @@ public:
   void SetHeight(float height) override;
   std::string GetDescription() const override;
   void SetRadioDimensions(float posX, float posY, float width, float height);
-  void SetToggleSelect(const std::string &toggleSelect);
+  void SetToggleSelect(const std::string& toggleSelect);
   bool IsSelected() const { return m_bSelected; }
 
 protected:

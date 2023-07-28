@@ -59,7 +59,7 @@ CGUIButtonControl::CGUIButtonControl(const CGUIButtonControl& control)
 {
 }
 
-void CGUIButtonControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void CGUIButtonControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   ProcessText(currentTime);
   if (m_bInvalidated)
@@ -128,7 +128,7 @@ CGUILabel::COLOR CGUIButtonControl::GetTextColor() const
   return CGUILabel::COLOR_TEXT;
 }
 
-#define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
+#define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 float CGUIButtonControl::GetWidth() const
 {
   if (m_minWidth && m_minWidth != m_width)
@@ -183,13 +183,14 @@ void CGUIButtonControl::ProcessText(unsigned int currentTime)
   // render the second label if it exists
   if (!m_info2.GetLabel(m_parentID).empty())
   {
-    changed |= m_label2.SetAlign(XBFONT_RIGHT | (m_label.GetLabelInfo().align & XBFONT_CENTER_Y) | XBFONT_TRUNCATED);
+    changed |= m_label2.SetAlign(XBFONT_RIGHT | (m_label.GetLabelInfo().align & XBFONT_CENTER_Y) |
+                                 XBFONT_TRUNCATED);
     changed |= m_label2.SetScrolling(HasFocus());
 
     // If overlapping was corrected - compare render rects to determine
     // if they changed since last frame.
     if (CGUILabel::CheckAndCorrectOverlap(m_label, m_label2))
-      changed |= (m_label.GetRenderRect()  != labelRenderRect ||
+      changed |= (m_label.GetRenderRect() != labelRenderRect ||
                   m_label2.GetRenderRect() != label2RenderRect);
 
     changed |= m_label2.SetColor(GetTextColor());
@@ -201,7 +202,7 @@ void CGUIButtonControl::ProcessText(unsigned int currentTime)
     MarkDirtyRegion();
 }
 
-bool CGUIButtonControl::OnAction(const CAction &action)
+bool CGUIButtonControl::OnAction(const CAction& action)
 {
   if (action.GetID() == ACTION_SELECT_ITEM)
   {
@@ -284,7 +285,7 @@ void CGUIButtonControl::SetInvalid()
   m_imgNoFocus->SetInvalid();
 }
 
-void CGUIButtonControl::SetLabel(const std::string &label)
+void CGUIButtonControl::SetLabel(const std::string& label)
 { // NOTE: No fallback for buttons at this point
   if (m_info.GetLabel(GetParentID(), false) != label)
   {
@@ -293,7 +294,7 @@ void CGUIButtonControl::SetLabel(const std::string &label)
   }
 }
 
-void CGUIButtonControl::SetLabel2(const std::string &label2)
+void CGUIButtonControl::SetLabel2(const std::string& label2)
 { // NOTE: No fallback for buttons at this point
   if (m_info2.GetLabel(GetParentID(), false) != label2)
   {
@@ -335,7 +336,7 @@ CRect CGUIButtonControl::CalcRenderRegion() const
   return buttonRect;
 }
 
-EVENT_RESULT CGUIButtonControl::OnMouseEvent(const CPoint &point, const CMouseEvent &event)
+EVENT_RESULT CGUIButtonControl::OnMouseEvent(const CPoint& point, const CMouseEvent& event)
 {
   if (event.m_id == ACTION_MOUSE_LEFT_CLICK)
   {

@@ -60,7 +60,7 @@ GUIScrollBarControl::GUIScrollBarControl(const GUIScrollBarControl& control)
 {
 }
 
-void GUIScrollBarControl::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
+void GUIScrollBarControl::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
   bool changed = false;
 
@@ -100,56 +100,56 @@ bool GUIScrollBarControl::OnMessage(CGUIMessage& message)
 {
   switch (message.GetMessage())
   {
-  case GUI_MSG_ITEM_SELECT:
-    SetValue(message.GetParam1());
-    return true;
-  case GUI_MSG_LABEL_RESET:
-    SetRange(message.GetParam1(), message.GetParam2());
-    return true;
-  case GUI_MSG_PAGE_UP:
-    Move(-1);
-    return true;
-  case GUI_MSG_PAGE_DOWN:
-    Move(1);
-    return true;
+    case GUI_MSG_ITEM_SELECT:
+      SetValue(message.GetParam1());
+      return true;
+    case GUI_MSG_LABEL_RESET:
+      SetRange(message.GetParam1(), message.GetParam2());
+      return true;
+    case GUI_MSG_PAGE_UP:
+      Move(-1);
+      return true;
+    case GUI_MSG_PAGE_DOWN:
+      Move(1);
+      return true;
   }
   return CGUIControl::OnMessage(message);
 }
 
-bool GUIScrollBarControl::OnAction(const CAction &action)
+bool GUIScrollBarControl::OnAction(const CAction& action)
 {
-  switch ( action.GetID() )
+  switch (action.GetID())
   {
-  case ACTION_MOVE_LEFT:
-    if (m_orientation == HORIZONTAL)
-    {
-      if(Move( -1))
-        return true;
-    }
-    break;
+    case ACTION_MOVE_LEFT:
+      if (m_orientation == HORIZONTAL)
+      {
+        if (Move(-1))
+          return true;
+      }
+      break;
 
-  case ACTION_MOVE_RIGHT:
-    if (m_orientation == HORIZONTAL)
-    {
-      if(Move(1))
-        return true;
-    }
-    break;
-  case ACTION_MOVE_UP:
-    if (m_orientation == VERTICAL)
-    {
-      if(Move(-1))
-        return true;
-    }
-    break;
+    case ACTION_MOVE_RIGHT:
+      if (m_orientation == HORIZONTAL)
+      {
+        if (Move(1))
+          return true;
+      }
+      break;
+    case ACTION_MOVE_UP:
+      if (m_orientation == VERTICAL)
+      {
+        if (Move(-1))
+          return true;
+      }
+      break;
 
-  case ACTION_MOVE_DOWN:
-    if (m_orientation == VERTICAL)
-    {
-      if(Move(1))
-        return true;
-    }
-    break;
+    case ACTION_MOVE_DOWN:
+      if (m_orientation == VERTICAL)
+      {
+        if (Move(1))
+          return true;
+      }
+      break;
   }
   return CGUIControl::OnAction(action);
 }
@@ -158,12 +158,16 @@ bool GUIScrollBarControl::Move(int numSteps)
 {
   if (numSteps < 0 && m_offset == 0) // we are at the beginning - can't scroll up/left anymore
     return false;
-  if (numSteps > 0 && m_offset == std::max(m_numItems - m_pageSize, 0)) // we are at the end - we can't scroll down/right anymore
+  if (numSteps > 0 &&
+      m_offset == std::max(m_numItems - m_pageSize,
+                           0)) // we are at the end - we can't scroll down/right anymore
     return false;
 
   m_offset += numSteps * m_pageSize;
-  if (m_offset > m_numItems - m_pageSize) m_offset = m_numItems - m_pageSize;
-  if (m_offset < 0) m_offset = 0;
+  if (m_offset > m_numItems - m_pageSize)
+    m_offset = m_numItems - m_pageSize;
+  if (m_offset < 0)
+    m_offset = 0;
   CGUIMessage message(GUI_MSG_NOTIFY_ALL, GetParentID(), GetID(), GUI_MSG_PAGE_CHANGE, m_offset);
   SendWindowMessage(message);
   SetInvalid();
@@ -242,7 +246,8 @@ bool GUIScrollBarControl::UpdateBarSize()
     float nibSize = GetHeight() * percent;
     if (nibSize < m_guiNibFocus->GetTextureHeight() + 2 * MIN_NIB_SIZE)
       nibSize = m_guiNibFocus->GetTextureHeight() + 2 * MIN_NIB_SIZE;
-    if (nibSize > GetHeight()) nibSize = GetHeight();
+    if (nibSize > GetHeight())
+      nibSize = GetHeight();
 
     changed |= m_guiBarNoFocus->SetHeight(nibSize);
     changed |= m_guiBarFocus->SetHeight(nibSize);
@@ -254,8 +259,10 @@ bool GUIScrollBarControl::UpdateBarSize()
     // and the position
     percent = (m_numItems == m_pageSize) ? 0 : (float)m_offset / (m_numItems - m_pageSize);
     float nibPos = (GetHeight() - nibSize) * percent;
-    if (nibPos < 0) nibPos = 0;
-    if (nibPos > GetHeight() - nibSize) nibPos = GetHeight() - nibSize;
+    if (nibPos < 0)
+      nibPos = 0;
+    if (nibPos > GetHeight() - nibSize)
+      nibPos = GetHeight() - nibSize;
 
     changed |= m_guiBarNoFocus->SetPosition(GetXPosition(), GetYPosition() + nibPos);
     changed |= m_guiBarFocus->SetPosition(GetXPosition(), GetYPosition() + nibPos);
@@ -269,7 +276,8 @@ bool GUIScrollBarControl::UpdateBarSize()
     float nibSize = GetWidth() * percent + 0.5f;
     if (nibSize < m_guiNibFocus->GetTextureWidth() + 2 * MIN_NIB_SIZE)
       nibSize = m_guiNibFocus->GetTextureWidth() + 2 * MIN_NIB_SIZE;
-    if (nibSize > GetWidth()) nibSize = GetWidth();
+    if (nibSize > GetWidth())
+      nibSize = GetWidth();
 
     changed |= m_guiBarNoFocus->SetWidth(nibSize);
     changed |= m_guiBarFocus->SetWidth(nibSize);
@@ -279,8 +287,10 @@ bool GUIScrollBarControl::UpdateBarSize()
     // and the position
     percent = (m_numItems == m_pageSize) ? 0 : (float)m_offset / (m_numItems - m_pageSize);
     float nibPos = (GetWidth() - nibSize) * percent;
-    if (nibPos < 0) nibPos = 0;
-    if (nibPos > GetWidth() - nibSize) nibPos = GetWidth() - nibSize;
+    if (nibPos < 0)
+      nibPos = 0;
+    if (nibPos > GetWidth() - nibSize)
+      nibPos = GetWidth() - nibSize;
 
     changed |= m_guiBarNoFocus->SetPosition(GetXPosition() + nibPos, GetYPosition());
     changed |= m_guiBarFocus->SetPosition(GetXPosition() + nibPos, GetYPosition());
@@ -291,7 +301,7 @@ bool GUIScrollBarControl::UpdateBarSize()
   return changed;
 }
 
-void GUIScrollBarControl::SetFromPosition(const CPoint &point)
+void GUIScrollBarControl::SetFromPosition(const CPoint& point)
 {
   float fPercent;
   if (m_orientation == VERTICAL)
@@ -300,8 +310,10 @@ void GUIScrollBarControl::SetFromPosition(const CPoint &point)
   else
     fPercent = (point.x - m_guiBackground->GetXPosition() - 0.5f * m_guiBarFocus->GetWidth()) /
                (m_guiBackground->GetWidth() - m_guiBarFocus->GetWidth());
-  if (fPercent < 0) fPercent = 0;
-  if (fPercent > 1) fPercent = 1;
+  if (fPercent < 0)
+    fPercent = 0;
+  if (fPercent > 1)
+    fPercent = 1;
 
   int offset = (int)(floor(fPercent * (m_numItems - m_pageSize) + 0.5f));
 
@@ -314,7 +326,7 @@ void GUIScrollBarControl::SetFromPosition(const CPoint &point)
   }
 }
 
-EVENT_RESULT GUIScrollBarControl::OnMouseEvent(const CPoint &point, const CMouseEvent &event)
+EVENT_RESULT GUIScrollBarControl::OnMouseEvent(const CPoint& point, const CMouseEvent& event)
 {
   if (event.m_id == ACTION_MOUSE_DRAG || event.m_id == ACTION_MOUSE_DRAG_END)
   {
@@ -348,7 +360,8 @@ EVENT_RESULT GUIScrollBarControl::OnMouseEvent(const CPoint &point, const CMouse
   }
   else if (event.m_id == ACTION_GESTURE_NOTIFY)
   {
-    return (m_orientation == HORIZONTAL) ? EVENT_RESULT_PAN_HORIZONTAL_WITHOUT_INERTIA : EVENT_RESULT_PAN_VERTICAL_WITHOUT_INERTIA;
+    return (m_orientation == HORIZONTAL) ? EVENT_RESULT_PAN_HORIZONTAL_WITHOUT_INERTIA
+                                         : EVENT_RESULT_PAN_VERTICAL_WITHOUT_INERTIA;
   }
   else if (event.m_id == ACTION_GESTURE_BEGIN)
   { // grab exclusive access

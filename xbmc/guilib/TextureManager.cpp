@@ -48,7 +48,7 @@
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-CTextureArray::CTextureArray(int width, int height, int loops,  bool texCoordsArePixels)
+CTextureArray::CTextureArray(int width, int height, int loops, bool texCoordsArePixels)
 {
   m_width = width;
   m_height = height;
@@ -70,7 +70,6 @@ unsigned int CTextureArray::size() const
 {
   return m_textures.size();
 }
-
 
 void CTextureArray::Reset()
 {
@@ -113,7 +112,6 @@ void CTextureArray::Free()
   Reset();
 }
 
-
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
@@ -125,8 +123,7 @@ CTextureMap::CTextureMap()
 }
 
 CTextureMap::CTextureMap(const std::string& textureName, int width, int height, int loops)
-: m_texture(width, height, loops)
-, m_textureName(textureName)
+  : m_texture(width, height, loops), m_textureName(textureName)
 {
   m_referenceCount = 0;
   m_memUsage = 0;
@@ -166,7 +163,7 @@ const CTextureArray& CTextureMap::GetTexture()
 void CTextureMap::Dump() const
 {
   if (!m_referenceCount)
-    return;   // nothing to see here
+    return; // nothing to see here
 
   CLog::Log(LOGDEBUG, "{0}: texture:{1} has {2} frames {3} refcount", __FUNCTION__, m_textureName,
             m_texture.m_textures.size(), m_referenceCount);
@@ -182,7 +179,6 @@ void CTextureMap::Flush()
   if (!m_referenceCount)
     FreeTexture();
 }
-
 
 void CTextureMap::FreeTexture()
 {
@@ -229,26 +225,32 @@ CGUITextureManager::~CGUITextureManager(void)
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-bool CGUITextureManager::CanLoad(const std::string &texturePath)
+bool CGUITextureManager::CanLoad(const std::string& texturePath)
 {
   if (texturePath.empty())
     return false;
 
   if (!CURL::IsFullPath(texturePath))
-    return true;  // assume we have it
+    return true; // assume we have it
 
   // we can't (or shouldn't) be loading from remote paths, so check these
   return URIUtils::IsHD(texturePath);
 }
 
-bool CGUITextureManager::HasTexture(const std::string &textureName, std::string *path, int *bundle, int *size)
+bool CGUITextureManager::HasTexture(const std::string& textureName,
+                                    std::string* path,
+                                    int* bundle,
+                                    int* size)
 {
   std::unique_lock<CCriticalSection> lock(m_section);
 
   // default values
-  if (bundle) *bundle = -1;
-  if (size) *size = 0;
-  if (path) *path = textureName;
+  if (bundle)
+    *bundle = -1;
+  if (size)
+    *size = 0;
+  if (path)
+    *path = textureName;
 
   if (textureName.empty())
     return false;
@@ -260,10 +262,11 @@ bool CGUITextureManager::HasTexture(const std::string &textureName, std::string 
   std::string bundledName = CTextureBundle::Normalize(textureName);
   for (int i = 0; i < (int)m_vecTextures.size(); ++i)
   {
-    CTextureMap *pMap = m_vecTextures[i];
+    CTextureMap* pMap = m_vecTextures[i];
     if (pMap->GetName() == textureName)
     {
-      if (size) *size = 1;
+      if (size)
+        *size = 1;
       return true;
     }
   }
@@ -272,7 +275,8 @@ bool CGUITextureManager::HasTexture(const std::string &textureName, std::string 
   {
     if (m_TexBundle[i].HasFile(bundledName))
     {
-      if (bundle) *bundle = i;
+      if (bundle)
+        *bundle = i;
       return true;
     }
   }
@@ -284,7 +288,8 @@ bool CGUITextureManager::HasTexture(const std::string &textureName, std::string 
   return !fullPath.empty();
 }
 
-const CTextureArray& CGUITextureManager::Load(const std::string& strTextureName, bool checkBundleOnly /*= false */)
+const CTextureArray& CGUITextureManager::Load(const std::string& strTextureName,
+                                              bool checkBundleOnly /*= false */)
 {
   std::string strPath;
   static CTextureArray emptyTexture;
@@ -301,7 +306,7 @@ const CTextureArray& CGUITextureManager::Load(const std::string& strTextureName,
   {
     for (int i = 0; i < (int)m_vecTextures.size(); ++i)
     {
-      CTextureMap *pMap = m_vecTextures[i];
+      CTextureMap* pMap = m_vecTextures[i];
       if (pMap->GetName() == strTextureName)
       {
         //CLog::Log(LOGDEBUG, "Total memusage {}", GetMemoryUsage());
@@ -391,7 +396,8 @@ const CTextureArray& CGUITextureManager::Load(const std::string& strTextureName,
     CTextureMap* pMap = new CTextureMap(strTextureName, 0, 0, 0);
     unsigned int maxWidth = 0;
     unsigned int maxHeight = 0;
-    uint64_t maxMemoryUsage = 91238400;// 1920*1080*4*11 bytes, i.e, a total of approx. 12 full hd frames
+    uint64_t maxMemoryUsage =
+        91238400; // 1920*1080*4*11 bytes, i.e, a total of approx. 12 full hd frames
 
     auto frame = anim.ReadFrame();
     while (frame)
@@ -399,7 +405,8 @@ const CTextureArray& CGUITextureManager::Load(const std::string& strTextureName,
       std::unique_ptr<CTexture> glTexture = CTexture::CreateTexture();
       if (glTexture)
       {
-        glTexture->LoadFromMemory(anim.Width(), anim.Height(), frame->GetPitch(), XB_FMT_A8R8G8B8, true, frame->m_pImage);
+        glTexture->LoadFromMemory(anim.Width(), anim.Height(), frame->GetPitch(), XB_FMT_A8R8G8B8,
+                                  true, frame->m_pImage);
         maxWidth = std::max(maxWidth, glTexture->GetWidth());
         maxHeight = std::max(maxHeight, glTexture->GetHeight());
         pMap->Add(std::move(glTexture), frame->m_delay);
@@ -452,7 +459,8 @@ const CTextureArray& CGUITextureManager::Load(const std::string& strTextureName,
     height = pTexture->GetHeight();
   }
 
-  if (!pTexture) return emptyTexture;
+  if (!pTexture)
+    return emptyTexture;
 
   CTextureMap* pMap = new CTextureMap(strTextureName, width, height, 0);
   pMap->Add(std::move(pTexture), 100);
@@ -468,8 +476,8 @@ const CTextureArray& CGUITextureManager::Load(const std::string& strTextureName,
   return pMap->GetTexture();
 }
 
-
-void CGUITextureManager::ReleaseTexture(const std::string& strTextureName, bool immediately /*= false */)
+void CGUITextureManager::ReleaseTexture(const std::string& strTextureName,
+                                        bool immediately /*= false */)
 {
   std::unique_lock<CCriticalSection> lock(CServiceBroker::GetWinSystem()->GetGfxContext());
 
@@ -526,7 +534,7 @@ void CGUITextureManager::FreeUnusedTextures(unsigned int timeDelay)
     auto winSystem = dynamic_cast<WIN_SYSTEM_CLASS*>(CServiceBroker::GetWinSystem());
     if (!winSystem->IsBackgrounded() || glIsTexture(m_unusedHwTextures[i]))
 #endif
-      glDeleteTextures(1, (GLuint*) &m_unusedHwTextures[i]);
+      glDeleteTextures(1, (GLuint*)&m_unusedHwTextures[i]);
   }
 #endif
   m_unusedHwTextures.clear();
@@ -580,7 +588,7 @@ void CGUITextureManager::Flush()
   {
     CTextureMap* pMap = *i;
     pMap->Flush();
-    if (pMap->IsEmpty() )
+    if (pMap->IsEmpty())
     {
       delete pMap;
       i = m_vecTextures.erase(i);
@@ -602,24 +610,25 @@ unsigned int CGUITextureManager::GetMemoryUsage() const
   return memUsage;
 }
 
-void CGUITextureManager::SetTexturePath(const std::string &texturePath)
+void CGUITextureManager::SetTexturePath(const std::string& texturePath)
 {
   std::unique_lock<CCriticalSection> lock(m_section);
   m_texturePaths.clear();
   AddTexturePath(texturePath);
 }
 
-void CGUITextureManager::AddTexturePath(const std::string &texturePath)
+void CGUITextureManager::AddTexturePath(const std::string& texturePath)
 {
   std::unique_lock<CCriticalSection> lock(m_section);
   if (!texturePath.empty())
     m_texturePaths.push_back(texturePath);
 }
 
-void CGUITextureManager::RemoveTexturePath(const std::string &texturePath)
+void CGUITextureManager::RemoveTexturePath(const std::string& texturePath)
 {
   std::unique_lock<CCriticalSection> lock(m_section);
-  for (std::vector<std::string>::iterator it = m_texturePaths.begin(); it != m_texturePaths.end(); ++it)
+  for (std::vector<std::string>::iterator it = m_texturePaths.begin(); it != m_texturePaths.end();
+       ++it)
   {
     if (*it == texturePath)
     {
@@ -629,7 +638,8 @@ void CGUITextureManager::RemoveTexturePath(const std::string &texturePath)
   }
 }
 
-std::string CGUITextureManager::GetTexturePath(const std::string &textureName, bool directory /* = false */)
+std::string CGUITextureManager::GetTexturePath(const std::string& textureName,
+                                               bool directory /* = false */)
 {
   if (CURL::IsFullPath(textureName))
     return textureName;
