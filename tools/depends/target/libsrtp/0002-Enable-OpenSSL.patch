@@ -1,0 +1,25 @@
+From 90ff0bac0feb35e7631a9fd0152c22c63f0f51e8 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Thu, 10 Aug 2023 14:38:14 -0700
+Subject: [PATCH 2/2] Enable OpenSSL
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 84a7092..b4ed7e0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,7 +56,7 @@ endif()
+ set(ENABLE_DEBUG_LOGGING OFF CACHE BOOL "Enable debug logging in all modules")
+ set(ERR_REPORTING_STDOUT OFF CACHE BOOL "Enable logging to stdout")
+ set(ERR_REPORTING_FILE "" CACHE FILEPATH "Use file for logging")
+-set(ENABLE_OPENSSL OFF CACHE BOOL "Enable OpenSSL crypto engine")
++set(ENABLE_OPENSSL ON CACHE BOOL "Enable OpenSSL crypto engine")
+ set(ENABLE_MBEDTLS OFF CACHE BOOL "Enable MbedTLS crypto engine")
+ set(ENABLE_NSS OFF CACHE BOOL "Enable NSS crypto engine")
+ option(LIBSRTP_TEST_APPS "Build libSRTP test applications" ON)
+-- 
+2.34.1
+

@@ -1,0 +1,9 @@
+LIBNAME=libdatachannel
+VERSION=0.19.0-alpha.5
+ARCHIVE=v$(VERSION).tar.gz
+SHA512=871b55ae6f52756f653bd021efd622e71fafcfe08b806cecf215b356b61e896e265bee392a350a451812d2408280a644943b485ebb8d5b44a720203c8ba383e2
+BYPRODUCT=libdatachannel.a
+BYPRODUCT_WIN=datachannel.lib
+
+# TODO
+BASE_URL=https://github.com/paullouisageneau/libdatachannel/archive/refs/tags

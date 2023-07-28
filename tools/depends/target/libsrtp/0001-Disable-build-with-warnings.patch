@@ -1,0 +1,25 @@
+From 7b72c9d8a8fe8643bd4934901c8e96ac7043ae96 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Thu, 10 Aug 2023 00:59:11 -0700
+Subject: [PATCH 1/2] Disable build with warnings
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 314b6ec..84a7092 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -61,7 +61,7 @@ set(ENABLE_MBEDTLS OFF CACHE BOOL "Enable MbedTLS crypto engine")
+ set(ENABLE_NSS OFF CACHE BOOL "Enable NSS crypto engine")
+ option(LIBSRTP_TEST_APPS "Build libSRTP test applications" ON)
+ set(BUILD_WITH_SANITIZERS OFF CACHE BOOL "Adds sanitizer flags to compiler")
+-set(BUILD_WITH_WARNINGS ON CACHE BOOL "Adds warnings and warning as error flags to compiler")
++set(BUILD_WITH_WARNINGS OFF CACHE BOOL "Adds warnings and warning as error flags to compiler")
+ option(BUILD_SHARED_LIBS "Build shared library" OFF)
+ 
+ if(ENABLE_OPENSSL OR ENABLE_MBEDTLS OR ENABLE_NSS)
+-- 
+2.34.1
+
