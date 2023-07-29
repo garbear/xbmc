@@ -51,7 +51,8 @@ static const D3D_SHADER_DATA cbPSShaderCode[SHADER_METHOD_RENDER_COUNT] =
 // clang-format on
 
 CGUIShaderDX::CGUIShaderDX()
-  : m_pSampLinear(nullptr),
+  : m_pSampLinear{nullptr},
+    m_pSampNearestNeightbor{nullptr},
     m_pVPBuffer(nullptr),
     m_pWVPBuffer(nullptr),
     m_pVertexBuffer(nullptr),
@@ -154,7 +155,7 @@ bool CGUIShaderDX::CreateBuffers()
 
 bool CGUIShaderDX::CreateSamplers()
 {
-  // Describe the Sampler State
+  // Linear sampler
   D3D11_SAMPLER_DESC sampDesc = {};
   sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
   sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -168,9 +169,24 @@ bool CGUIShaderDX::CreateSamplers()
           &sampDesc, m_pSampLinear.ReleaseAndGetAddressOf())))
     return false;
 
-  DX::DeviceResources::Get()->GetD3DContext()->PSSetSamplers(0, 1, m_pSampLinear.GetAddressOf());
+  // Nearest neighbor sampler
+  sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+
+  if (FAILED(DX::DeviceResources::Get()->GetD3DDevice()->CreateSamplerState(
+          &sampDesc, m_pSampNearestNeightbor.ReleaseAndGetAddressOf())))
+    return false;
+
+  SetSamplers();
 
   return true;
+}
+
+void CGUIShaderDX::SetSamplers()
+{
+  // Slot 0: linear sampler
+  // Slot 1: nearest neighbor sampler
+  ID3D11SamplerState* samplers[] = {m_pSampLinear.Get(), m_pSampNearestNeightbor.Get()};
+  DX::DeviceResources::Get()->GetD3DContext()->PSSetSamplers(0, 2, samplers);
 }
 
 void CGUIShaderDX::ApplyStateBlock(void)
@@ -187,7 +203,7 @@ void CGUIShaderDX::ApplyStateBlock(void)
   pContext->PSSetConstantBuffers(0, 1, m_pWVPBuffer.GetAddressOf());
   pContext->PSSetConstantBuffers(1, 1, m_pVPBuffer.GetAddressOf());
 
-  pContext->PSSetSamplers(0, 1, m_pSampLinear.GetAddressOf());
+  SetSamplers();
 
   RestoreBuffers();
 }
@@ -267,6 +283,7 @@ void CGUIShaderDX::Release()
   m_pWVPBuffer = nullptr;
   m_pVPBuffer = nullptr;
   m_pSampLinear = nullptr;
+  m_pSampNearestNeightbor = nullptr;
   m_bCreated = false;
 }
 

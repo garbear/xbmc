@@ -114,6 +114,7 @@ private:
   void Release(void);
   bool CreateBuffers(void);
   bool CreateSamplers(void);
+  void SetSamplers(void);
   void ApplyChanges(void);
   void ClipToScissorParams(void);
 
@@ -126,6 +127,7 @@ private:
   CD3DVertexShader m_vertexShader;
   CD3DPixelShader m_pixelShader[SHADER_METHOD_RENDER_COUNT];
   Microsoft::WRL::ComPtr<ID3D11SamplerState> m_pSampLinear;
+  Microsoft::WRL::ComPtr<ID3D11SamplerState> m_pSampNearestNeightbor;
 
   // GUI buffers
   bool m_bIsWVPDirty;
