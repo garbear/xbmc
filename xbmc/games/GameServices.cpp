@@ -15,6 +15,8 @@
 #include "games/agents/GameAgentManager.h"
 #include "profiles/ProfileManager.h"
 
+#include <rtc/rtc.hpp>
+
 using namespace KODI;
 using namespace GAME;
 
@@ -31,6 +33,7 @@ CGameServices::CGameServices(CControllerManager& controllerManager,
     m_gameAgentManager(new CGameAgentManager(peripheralManager, inputManager)),
     m_videoShaders(new SHADER::CShaderPresetFactory(addons))
 {
+  rtc::InitLogger(rtc::LogLevel::Info);
 }
 
 CGameServices::~CGameServices() = default;

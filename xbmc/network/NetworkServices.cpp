@@ -20,6 +20,7 @@
 #include "network/EventServer.h"
 #include "network/Network.h"
 #include "network/TCPServer.h"
+#include "network/libp2p/ILibp2p.h"
 #include "settings/AdvancedSettings.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
@@ -78,7 +79,13 @@
 #include "platform/darwin/osx/XBMCHelper.h"
 #endif
 
-using namespace KODI::MESSAGING;
+#if defined(HAS_LIBP2P)
+#include "network/libp2p/Libp2p.h"
+#endif
+
+using namespace KODI;
+using namespace MESSAGING;
+using namespace NETWORK;
 using namespace JSONRPC;
 using namespace EVENTSERVER;
 #ifdef HAS_UPNP
@@ -102,6 +109,9 @@ CNetworkServices::CNetworkServices()
   , m_httpWebinterfaceAddonsHandler(*new CHTTPWebinterfaceAddonsHandler)
 #endif // HAS_WEB_INTERFACE
 #endif // HAS_WEB_SERVER
+#ifdef HAS_LIBP2P
+  , m_libp2p(std::make_unique<CLibp2p>())
+#endif
 {
 #ifdef HAS_WEB_SERVER
   m_webserver.RegisterRequestHandler(&m_httpImageHandler);
@@ -138,12 +148,13 @@ CNetworkServices::CNetworkServices()
       CSettings::SETTING_SERVICES_ESALLINTERFACES,
       CSettings::SETTING_SERVICES_ESINITIALDELAY,
       CSettings::SETTING_SERVICES_ESCONTINUOUSDELAY,
+      CSettings::SETTING_SERVICES_WSDISCOVERY,
+      CSettings::SETTING_SERVICES_LIBP2P,
       CSettings::SETTING_SMB_WINSSERVER,
       CSettings::SETTING_SMB_WORKGROUP,
       CSettings::SETTING_SMB_MINPROTOCOL,
       CSettings::SETTING_SMB_MAXPROTOCOL,
       CSettings::SETTING_SMB_LEGACYSECURITY,
-      CSettings::SETTING_SERVICES_WSDISCOVERY,
   };
   m_settings = CServiceBroker::GetSettingsComponent()->GetSettings();
   m_settings->GetSettingsManager()->RegisterCallback(this, settingSet);
@@ -491,6 +502,14 @@ bool CNetworkServices::OnSettingChanging(const std::shared_ptr<const CSetting>& 
   }
 #endif // HAS_FILESYSTEM_SMB
 
+  else if (settingId == CSettings::SETTING_SERVICES_LIBP2P)
+  {
+    if (m_settings->GetBool(CSettings::SETTING_SERVICES_LIBP2P))
+      return StartLibp2p();
+    else
+      return StopLibp2p(false);
+  }
+
   return true;
 }
 
@@ -545,6 +564,8 @@ bool CNetworkServices::OnSettingUpdate(const std::shared_ptr<CSetting>& setting,
 
 void CNetworkServices::Start()
 {
+  if (m_settings->GetBool(CSettings::SETTING_SERVICES_LIBP2P))
+    StartLibp2p();
   StartZeroconf();
   if (m_settings->GetBool(CSettings::SETTING_SERVICES_UPNP))
     StartUPnP();
@@ -601,6 +622,7 @@ void CNetworkServices::Stop(bool bWait)
   StopAirPlayServer(bWait);
   StopAirTunesServer(bWait);
   StopWSDiscovery();
+  StopLibp2p(bWait);
 }
 
 bool CNetworkServices::StartServer(enum ESERVERS server, bool start)
@@ -654,6 +676,11 @@ bool CNetworkServices::StartServer(enum ESERVERS server, bool start)
     case ES_WSDISCOVERY:
       // the callback will take care of starting/stopping WS-Discovery
       ret = settings->SetBool(CSettings::SETTING_SERVICES_WSDISCOVERY, start);
+      break;
+
+    case ES_LIBP2P:
+      // the callback will take care of starting/stopping libp2p
+      ret = settings->SetBool(CSettings::SETTING_SERVICES_LIBP2P, start);
       break;
 
     default:
@@ -1251,6 +1278,46 @@ bool CNetworkServices::StopWSDiscovery()
   return true;
 #endif // HAS_FILESYSTEM_SMB
   return false;
+}
+
+bool CNetworkServices::StartLibp2p()
+{
+  if (!m_libp2p)
+    return false;
+
+  if (!m_settings->GetBool(CSettings::SETTING_SERVICES_LIBP2P))
+    return false;
+
+  if (IsLibp2pRunning())
+    return true;
+
+  CLog::Log(LOGINFO, "Starting libp2p");
+  m_libp2p->Start();
+
+  return true;
+}
+
+bool CNetworkServices::IsLibp2pRunning() const
+{
+  if (m_libp2p)
+    return m_libp2p->IsOnline();
+
+  return false;
+}
+
+bool CNetworkServices::StopLibp2p(bool bWait)
+{
+  if (!m_libp2p)
+    return true;
+
+  if (!bWait)
+    CLog::Log(LOGINFO, "Signaling libp2p to stop");
+  else
+    CLog::Log(LOGINFO, "Stopping libp2p");
+
+  m_libp2p->Stop(bWait);
+
+  return true;
 }
 
 bool CNetworkServices::ValidatePort(int port)
