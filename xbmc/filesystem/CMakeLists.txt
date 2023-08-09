@@ -23,6 +23,10 @@ set(SOURCES AddonsDirectory.cpp
             IDirectory.cpp
             IFile.cpp
             ImageFile.cpp
+            IIPFS.cpp
+            IPFS.cpp
+            IPFSFile.cpp
+            IPFSDirectory.cpp
             LibraryDirectory.cpp
             MultiPathDirectory.cpp
             MultiPathFile.cpp
@@ -87,6 +91,10 @@ set(HEADERS AddonsDirectory.h
             IFileDirectory.h
             IFileTypes.h
             ImageFile.h
+            IIPFS.h
+            IPFS.h
+            IPFSFile.h
+            IPFSDirectory.h
             LibraryDirectory.h
             MultiPathDirectory.h
             MultiPathFile.h
@@ -171,6 +179,15 @@ if(ENABLE_UPNP)
                       UPnPFile.cpp)
   list(APPEND HEADERS UPnPDirectory.h
                       UPnPFile.h)
+endif()
+
+if(ENABLE_LIBTORRENT)
+  list(APPEND SOURCES MagnetDirectory.cpp
+                      MagnetFile.cpp
+  )
+  list(APPEND HEADERS MagnetDirectory.h
+                      MagnetFile.h
+  )
 endif()
 
 core_add_library(filesystem)

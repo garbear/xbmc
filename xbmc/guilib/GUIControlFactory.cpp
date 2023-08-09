@@ -29,6 +29,7 @@
 #include "GUIMultiImage.h"
 #include "GUIPanelContainer.h"
 #include "GUIProgressControl.h"
+#include "GUIQRCode.h"
 #include "GUIRSSControl.h"
 #include "GUIRadioButtonControl.h"
 #include "GUIRangesControl.h"
@@ -46,6 +47,7 @@
 #include "GUIWrappingListContainer.h"
 #include "LocalizeStrings.h"
 #include "addons/Skin.h"
+#include "cores/RetroEngine/guicontrols/GUIGameEngineControl.h"
 #include "cores/RetroPlayer/guicontrols/GUIGameControl.h"
 #include "games/controllers/guicontrols/GUIGameController.h"
 #include "games/controllers/guicontrols/GUIGameControllerList.h"
@@ -76,6 +78,7 @@ static const ControlMapping controls[] = {
     {"fixedlist", CGUIControl::GUICONTAINER_FIXEDLIST},
     {"gamecontroller", CGUIControl::GUICONTROL_GAMECONTROLLER},
     {"gamecontrollerlist", CGUIControl::GUICONTROL_GAMECONTROLLERLIST},
+    {"gameengine", CGUIControl::GUICONTROL_GAMEENGINE},
     {"gamewindow", CGUIControl::GUICONTROL_GAME},
     {"group", CGUIControl::GUICONTROL_GROUP},
     {"group", CGUIControl::GUICONTROL_LISTGROUP},
@@ -89,6 +92,7 @@ static const ControlMapping controls[] = {
     {"multiimage", CGUIControl::GUICONTROL_MULTI_IMAGE},
     {"panel", CGUIControl::GUICONTAINER_PANEL},
     {"progress", CGUIControl::GUICONTROL_PROGRESS},
+    {"qrcode", CGUIControl::GUICONTROL_QRCODE},
     {"radiobutton", CGUIControl::GUICONTROL_RADIO},
     {"ranges", CGUIControl::GUICONTROL_RANGES},
     {"renderaddon", CGUIControl::GUICONTROL_RENDERADDON},
@@ -1721,6 +1725,30 @@ CGUIControl* CGUIControlFactory::Create(int parentID,
 
       break;
     }
+    case CGUIControl::GUICONTROL_GAMEENGINE:
+    {
+      auto gameEngineControl =
+          new RETRO_ENGINE::CGUIGameEngineControl(parentID, id, posX, posY, width, height);
+
+      GUIINFO::CGUIInfoLabel savestatePath;
+      GetInfoLabel(pControlNode, "savestate", savestatePath, parentID);
+      gameEngineControl->SetSavestate(savestatePath);
+
+      GUIINFO::CGUIInfoLabel videoFilter;
+      GetInfoLabel(pControlNode, "videofilter", videoFilter, parentID);
+      gameEngineControl->SetVideoFilter(videoFilter);
+
+      GUIINFO::CGUIInfoLabel stretchMode;
+      GetInfoLabel(pControlNode, "stretchmode", stretchMode, parentID);
+      gameEngineControl->SetStretchMode(stretchMode);
+
+      GUIINFO::CGUIInfoLabel rotation;
+      GetInfoLabel(pControlNode, "rotation", rotation, parentID);
+      gameEngineControl->SetRotation(rotation);
+
+      control = gameEngineControl;
+      break;
+    }
     case CGUIControl::GUICONTROL_COLORBUTTON:
     {
       control = new CGUIColorButtonControl(parentID, id, posX, posY, width, height, textureFocus,
@@ -1734,6 +1762,22 @@ CGUIControl* CGUIControlFactory::Create(int parentID,
       rcontrol->SetClickActions(clickActions);
       rcontrol->SetFocusActions(focusActions);
       rcontrol->SetUnFocusActions(unfocusActions);
+
+      break;
+    }
+    case CGUIControl::GUICONTROL_QRCODE:
+    {
+      control = new CGUIQRCode(parentID, id, posX, posY, width, height, texture);
+
+      CGUIQRCode* qrcontrol = static_cast<CGUIQRCode*>(control);
+
+      // Set content
+      static const GUIINFO::CGUIInfoLabel empty;
+      const GUIINFO::CGUIInfoLabel& content = !infoLabels.empty() ? infoLabels[0] : empty;
+      qrcontrol->SetContent(content);
+
+      // Set texture
+      qrcontrol->SetInfo(textureFile);
 
       break;
     }
