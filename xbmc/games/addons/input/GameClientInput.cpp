@@ -178,13 +178,13 @@ float CGameClientInput::GetPortActivation(const std::string& portAddress)
 {
   float activation = 0.0f;
 
-  if (m_portMutex.try_lock())
+  std::unique_lock<std::recursive_mutex> lock(m_portMutex, std::defer_lock);
+
+  if (lock.try_lock())
   {
     auto it = m_joysticks.find(portAddress);
     if (it != m_joysticks.end())
       activation = it->second->GetActivation();
-
-    m_portMutex.unlock();
   }
 
   return activation;
