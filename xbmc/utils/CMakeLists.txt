@@ -185,7 +185,7 @@ set(HEADERS ActorProtocol.h
             XMLUtils.h
             XTimeUtils.h)
 
-if(XSLT_FOUND)
+if(TARGET XSLT::XSLT)
   list(APPEND SOURCES XSLTUtils.cpp)
   list(APPEND HEADERS XSLTUtils.h)
 endif()
