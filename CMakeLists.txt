@@ -265,7 +265,7 @@ endif()
 
 if(ENABLE_AIRTUNES)
   find_package(Shairplay)
-  if(SHAIRPLAY_FOUND)
+  if(TARGET Shairplay::Shairplay)
     core_require_dep(Shairplay)
   endif()
 endif()
