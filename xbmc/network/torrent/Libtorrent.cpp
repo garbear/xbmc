@@ -9,6 +9,7 @@
 #include "Libtorrent.h"
 
 #include "LibtorrentAlerts.h"
+#include "LibtorrentCache.h"
 #include "TempDiskIO.h"
 #include "Torrent.h"
 #include "TorrentPiece.h"
@@ -16,11 +17,9 @@
 #include "filesystem/SpecialProtocol.h"
 #include "utils/StringUtils.h"
 #include "utils/SystemInfo.h"
-#include "utils/URIUtils.h"
 #include "utils/log.h"
 
 #include <chrono>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -40,7 +39,9 @@ const std::vector<std::string> LIBTORRENT_DHT_NODES = {
 } // namespace
 
 CLibtorrent::CLibtorrent()
-  : CThread("libtorrent"), m_alerts(std::make_unique<CLibtorrentAlerts>(*this))
+  : CThread("libtorrent"),
+    m_alerts(std::make_unique<CLibtorrentAlerts>(*this)),
+    m_cache(std::make_unique<CLibtorrentCache>())
 {
 }
 
@@ -55,7 +56,8 @@ void CLibtorrent::Start()
 
   //! @todo Load DHT session state
 
-  sessionParams.disk_io_constructor = CTempDiskIO::CreateTempDisk;
+  //! @todo Implement custom persistent disk IO
+  //sessionParams.disk_io_constructor = CTempDiskIO::CreateTempDisk;
 
   lt::settings_pack& settings = sessionParams.settings;
 
@@ -129,7 +131,7 @@ void CLibtorrent::Process()
 lt::torrent_handle CLibtorrent::AddTorrent(const std::string& magnetUri)
 {
   lt::add_torrent_params addTorrentParams;
-  addTorrentParams.save_path = CSpecialProtocol::TranslatePath("special://temp/");
+  addTorrentParams.save_path = m_cache->GetCachePath();
   addTorrentParams.flags &= ~lt::torrent_flags::auto_managed;
   addTorrentParams.flags &= ~lt::torrent_flags::paused;
 
@@ -147,14 +149,11 @@ lt::torrent_handle CLibtorrent::AddTorrent(const std::string& magnetUri)
   }
   else
   {
-    std::stringstream str;
-    str << addTorrentParams.info_hashes.get_best();
+    const std::string metadataPath =
+        m_cache->GetMetadataPath(addTorrentParams.info_hashes.get_best());
 
-    const std::string path = URIUtils::AddFileToFolder(
-        CSpecialProtocol::TranslatePath("special://masterprofile/cache"), str.str() + ".torrent");
-
-    // Try to read up cache
-    addTorrentParams.ti = std::make_shared<lt::torrent_info>(path, errorCode);
+    // Try to read from cache
+    addTorrentParams.ti = std::make_shared<lt::torrent_info>(metadataPath, errorCode);
 
     if (errorCode)
     {
@@ -179,13 +178,23 @@ lt::torrent_handle CLibtorrent::AddTorrent(const std::string& magnetUri)
         return {};
       }
 
-      //! @todo Write metadata to cache
+      // Save metadata to cache
+      addTorrentParams.ti = torrentHandle.torrent_file_with_hashes();
+      m_cache->SaveMetadata(addTorrentParams);
 
       return torrentHandle;
     }
   }
 
-  return {};
+  // Doesn't matter if it's a duplicate since we never remove torrents
+  lt::torrent_handle torrentHandle = AddTorrent(addTorrentParams, errorCode);
+  if (errorCode)
+  {
+    CLog::Log(LOGERROR, "Failed to add torrent: {}", errorCode.message());
+    return {};
+  }
+
+  return torrentHandle;
 }
 
 bool CLibtorrent::WaitForMetadata(const lt::sha1_hash& infoHash)
