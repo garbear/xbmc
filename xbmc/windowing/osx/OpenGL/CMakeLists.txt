@@ -1,4 +1,4 @@
-if(OPENGL_FOUND)
+if(TARGET OpenGL::GL)
   set(SOURCES OSXGLView.mm
               WindowControllerMacOS.mm
               WinSystemOSXGL.mm)
