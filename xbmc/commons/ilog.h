@@ -45,4 +45,3 @@ constexpr int LOGEPG = (1 << (LOGMASKBIT + 16));
 constexpr int LOGANNOUNCE = (1 << (LOGMASKBIT + 17));
 constexpr int LOGWSDISCOVERY = (1 << (LOGMASKBIT + 18));
 constexpr int LOGADDONS = (1 << (LOGMASKBIT + 19));
-constexpr int LOGLIBTORRENT = (1 << (LOGMASKBIT + 20));
