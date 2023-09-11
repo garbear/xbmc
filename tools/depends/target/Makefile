@@ -24,18 +24,15 @@ DEPENDS = \
   libass \
   libbluray \
   libcec \
-  libdatachannel \
   libffi \
   libgcrypt \
   libgpg-error \
   libjpeg-turbo \
-  libjuice \
   liblzo2 \
   libmicrohttpd \
   libplist \
   libpng \
   libshairplay \
-  libsrtp \
   libusb \
   libxml2 \
   libxslt \
@@ -44,7 +41,6 @@ DEPENDS = \
   nghttp2 \
   openssl \
   p8-platform \
-  plog \
   python3 \
   pythonmodule-pil \
   pythonmodule-pycryptodome \
@@ -52,7 +48,6 @@ DEPENDS = \
   sqlite3 \
   tinyxml \
   udfread \
-  usrsctp \
   xz
 
 ifeq ($(ENABLE_GPLV3),yes)
@@ -170,7 +165,6 @@ libbluray: fontconfig freetype2 $(ICONV) udfread libxml2
 libcdio-gplv3: $(ICONV)
 libcdio: $(ICONV)
 libcec: p8-platform
-libdatachannel: libjuice libsrtp plog usrsctp
 libdisplay-info: hwdata
 libevdev: libudev
 libgcrypt: libgpg-error
@@ -178,7 +172,6 @@ libinput: mtdev libevdev
 libmicrohttpd: gnutls libgcrypt libgpg-error
 libplist: $(ZLIB)
 libpng: $(ZLIB)
-libsrtp: openssl
 libva: libdrm $(LIBVA_DEPS)
 libxml2: $(ZLIB)
 libxslt: libgcrypt libxml2
