@@ -34,7 +34,7 @@ CDVDClock::CDVDClock()
   m_vSyncAdjust = 0;
   m_frameTime = DVD_TIME_BASE / 60.0;
 
-  m_videoRefClock.reset(new CVideoReferenceClock());
+  m_videoRefClock = std::make_unique<CVideoReferenceClock>();
   m_lastSystemTime = m_videoRefClock->GetTime();
   m_systemOffset = m_videoRefClock->GetTime();
   m_systemFrequency = CurrentHostFrequency();

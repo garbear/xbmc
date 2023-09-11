@@ -414,7 +414,7 @@ void CReversiblePlayback::UpdateMemoryStream()
 
     if (!m_memoryStream)
     {
-      m_memoryStream.reset(new CDeltaPairMemoryStream);
+      m_memoryStream = std::make_unique<CDeltaPairMemoryStream>();
       m_memoryStream->Init(m_gameClient->SerializeSize(), frameCount);
     }
 

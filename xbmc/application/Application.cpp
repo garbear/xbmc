@@ -351,7 +351,7 @@ bool CApplication::Create()
   const auto keyboardLayoutManager = std::make_shared<CKeyboardLayoutManager>();
   CServiceBroker::RegisterKeyboardLayoutManager(keyboardLayoutManager);
 
-  m_ServiceManager.reset(new CServiceManager());
+  m_ServiceManager = std::make_unique<CServiceManager>();
 
   if (!m_ServiceManager->InitStageOne())
   {
@@ -421,7 +421,7 @@ bool CApplication::Create()
     return false;
   }
 
-  m_pActiveAE.reset(new ActiveAE::CActiveAE());
+  m_pActiveAE = std::make_unique<ActiveAE::CActiveAE>();
   CServiceBroker::RegisterAE(m_pActiveAE.get());
 
   // initialize m_replayGainSettings
@@ -562,7 +562,7 @@ bool CApplication::CreateGUI()
   if (sav_res)
     CDisplaySettings::GetInstance().SetCurrentResolution(RES_DESKTOP, true);
 
-  m_pGUI.reset(new CGUIComponent());
+  m_pGUI = std::make_unique<CGUIComponent>();
   m_pGUI->Init();
 
   // Splash requires gui component!!
@@ -2747,7 +2747,7 @@ bool CApplication::OnMessage(CGUIMessage& message)
         CGUIMessage msg(GUI_MSG_PLAYLISTPLAYER_CHANGED, 0, 0, CServiceBroker::GetPlaylistPlayer().GetCurrentPlaylist(), param, item);
         CServiceBroker::GetGUI()->GetWindowManager().SendThreadMessage(msg);
         CServiceBroker::GetPlaylistPlayer().SetCurrentSong(m_nextPlaylistItem);
-        m_itemCurrentFile.reset(new CFileItem(*item));
+        m_itemCurrentFile = std::make_shared<CFileItem>(*item);
       }
       CServiceBroker::GetGUI()->GetInfoManager().SetCurrentItem(*m_itemCurrentFile);
       g_partyModeManager.OnSongChange(true);

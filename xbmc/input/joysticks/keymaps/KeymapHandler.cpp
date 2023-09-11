@@ -33,7 +33,7 @@ CKeymapHandler::CKeymapHandler(IActionListener* actionHandler, const IKeymap* ke
   assert(m_keymap != nullptr);
 
   if (m_keymap->Environment()->UseEasterEgg())
-    m_easterEgg.reset(new CJoystickEasterEgg(ControllerID()));
+    m_easterEgg = std::make_unique<CJoystickEasterEgg>(ControllerID());
 }
 
 bool CKeymapHandler::HotkeysPressed(const std::set<std::string>& keyNames) const

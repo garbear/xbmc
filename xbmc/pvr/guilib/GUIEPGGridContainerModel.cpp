@@ -125,14 +125,14 @@ void CGUIEPGGridContainerModel::Initialize(const std::unique_ptr<CFileItemList>&
   ruler.SetFromUTCDateTime(m_gridStart);
   CDateTime rulerEnd;
   rulerEnd.SetFromUTCDateTime(m_gridEnd);
-  CFileItemPtr rulerItem(new CFileItem(ruler.GetAsLocalizedDate(true)));
+  CFileItemPtr rulerItem = std::make_shared<CFileItem>(ruler.GetAsLocalizedDate(true));
   rulerItem->SetProperty("DateLabel", true);
   m_rulerItems.emplace_back(rulerItem);
 
   const CDateTimeSpan unit(0, 0, iRulerUnit * MINSPERBLOCK, 0);
   for (; ruler < rulerEnd; ruler += unit)
   {
-    rulerItem.reset(new CFileItem(ruler.GetAsLocalizedTime("", false)));
+    rulerItem = std::make_shared<CFileItem>(ruler.GetAsLocalizedTime("", false));
     rulerItem->SetLabel2(ruler.GetAsLocalizedDate(true));
     m_rulerItems.emplace_back(rulerItem);
   }

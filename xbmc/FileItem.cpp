@@ -2542,7 +2542,7 @@ void CFileItemList::Archive(CArchive& ar)
     {
       CFileItemPtr pItem=m_items[0];
       if (pItem->IsParentFolder())
-        pParent.reset(new CFileItem(*pItem));
+        pParent = std::make_shared<CFileItem>(*pItem);
     }
 
     SetIgnoreURLOptions(false);

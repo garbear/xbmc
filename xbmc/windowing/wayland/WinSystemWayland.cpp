@@ -139,7 +139,7 @@ struct MsgBufferScale
 CWinSystemWayland::CWinSystemWayland()
 : CWinSystemBase{}, m_protocol{"WinSystemWaylandInternal"}
 {
-  m_winEvents.reset(new CWinEventsWayland());
+  m_winEvents = std::make_unique<CWinEventsWayland>();
 }
 
 CWinSystemWayland::~CWinSystemWayland() noexcept
@@ -167,7 +167,7 @@ bool CWinSystemWayland::InitWindowSystem()
   VIDEOPLAYER::CProcessInfoWayland::Register();
   RETRO::CRPProcessInfoWayland::Register();
 
-  m_registry.reset(new CRegistry{*m_connection});
+  m_registry = std::make_unique<CRegistry>(*m_connection);
 
   m_registry->RequestSingleton(m_compositor, 1, 4);
   m_registry->RequestSingleton(m_shm, 1, 1);

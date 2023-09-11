@@ -706,7 +706,7 @@ bool CAESinkPULSE::Register()
     pa_simple_free(s);
   }
 
-  m_pMonitor.reset(new CDriverMonitor());
+  m_pMonitor = std::make_unique<CDriverMonitor>();
   m_pMonitor->Start();
 
   AE::AESinkRegEntry entry;

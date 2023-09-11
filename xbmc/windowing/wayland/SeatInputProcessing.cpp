@@ -26,7 +26,7 @@ void CSeatInputProcessing::AddSeat(CSeat* seat)
   seat->AddRawInputHandlerKeyboard(seatState.keyboardProcessor.get());
   seatState.pointerProcessor.reset(new CInputProcessorPointer(m_inputSurface, *this));
   seat->AddRawInputHandlerPointer(seatState.pointerProcessor.get());
-  seatState.touchProcessor.reset(new CInputProcessorTouch(m_inputSurface));
+  seatState.touchProcessor = std::make_unique<CInputProcessorTouch>(m_inputSurface);
   seat->AddRawInputHandlerTouch(seatState.touchProcessor.get());
 }
 

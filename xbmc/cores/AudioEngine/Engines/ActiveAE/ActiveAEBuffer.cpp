@@ -467,7 +467,7 @@ bool CActiveAEBufferPoolAtempo::Create(unsigned int totaltime)
 {
   CActiveAEBufferPool::Create(totaltime);
 
-  m_pTempoFilter.reset(new CActiveAEFilter());
+  m_pTempoFilter = std::make_unique<CActiveAEFilter>();
   m_pTempoFilter->Init(CAEUtil::GetAVSampleFormat(m_format.m_dataFormat), m_format.m_sampleRate, CAEUtil::GetAVChannelLayout(m_format.m_channelLayout));
 
   return true;

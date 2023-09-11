@@ -48,7 +48,7 @@ void TestBasicEnvironment::SetUp()
 
   XFILE::CFile *f;
 
-  g_application.m_ServiceManager.reset(new CServiceManager());
+  g_application.m_ServiceManager = std::make_unique<CServiceManager>();
 
   if (!CXBMCTestUtils::Instance().SetReferenceFileBasePath())
     SetUpError();
