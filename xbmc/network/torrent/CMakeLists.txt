@@ -8,7 +8,6 @@ set(HEADERS ILibtorrent.h
 if (ENABLE_LIBTORRENT)
   list(APPEND SOURCES Libtorrent.cpp
                       LibtorrentAlerts.cpp
-                      LibtorrentCache.cpp
                       TempDiskIO.cpp
                       TempStorage.cpp
                       Torrent.cpp
@@ -17,7 +16,6 @@ if (ENABLE_LIBTORRENT)
   list(APPEND HEADERS ILibtorrentAlertHandler.h
                       Libtorrent.h
                       LibtorrentAlerts.h
-                      LibtorrentCache.h
                       TempDiskIO.h
                       TempStorage.h
                       Torrent.h

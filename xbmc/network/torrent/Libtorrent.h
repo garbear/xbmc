@@ -31,7 +31,6 @@ namespace NETWORK
 {
 class CTorrent;
 class CLibtorrentAlerts;
-class CLibtorrentCache;
 class CTorrentPiece;
 
 class CLibtorrent : public ILibtorrent, public ILibtorrentAlertHandler, private CThread
@@ -80,7 +79,6 @@ private:
 
   // libtorrent subsystems
   std::unique_ptr<CLibtorrentAlerts> m_alerts;
-  std::unique_ptr<CLibtorrentCache> m_cache;
 
   // Torrent parameters
   std::map<lt::sha1_hash, std::shared_ptr<CTorrent>> m_torrents;
