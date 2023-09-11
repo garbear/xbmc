@@ -51,7 +51,6 @@
 #include "settings/AdvancedSettings.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
-#include "storage/MediaManager.h"
 #include "threads/SingleLock.h"
 #include "utils/FontUtils.h"
 #include "utils/JobManager.h"
