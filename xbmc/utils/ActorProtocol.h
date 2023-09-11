@@ -33,7 +33,7 @@ class CPayloadWrap : public CPayloadWrapBase
 public:
   ~CPayloadWrap() override = default;
   CPayloadWrap(Payload* data) { m_pPayload.reset(data); }
-  CPayloadWrap(Payload& data) { m_pPayload.reset(new Payload(data)); }
+  CPayloadWrap(Payload& data) { m_pPayload = std::make_unique<Payload>(data); }
   Payload* GetPlayload() { return m_pPayload.get(); }
 
 protected:

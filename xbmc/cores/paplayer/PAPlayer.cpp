@@ -296,7 +296,7 @@ bool PAPlayer::QueueNextFileEx(const CFileItem &file, bool fadeIn)
         file.GetStartOffset() == m_currentStream->m_fileItem->GetEndOffset() && m_currentStream &&
         m_currentStream->m_prepareTriggered)
     {
-      m_currentStream->m_nextFileItem.reset(new CFileItem(file));
+      m_currentStream->m_nextFileItem = std::make_unique<CFileItem>(file);
       m_upcomingCrossfadeMS = 0;
       return true;
     }

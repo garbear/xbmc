@@ -171,7 +171,7 @@ bool CPVRTimerRuleMatcher::MatchSearchText(const std::shared_ptr<CPVREpgInfoTag>
   {
     if (!m_textSearch)
     {
-      m_textSearch.reset(new CRegExp(true /* case insensitive */));
+      m_textSearch = std::make_unique<CRegExp>(true /* case insensitive */);
       m_textSearch->RegComp(m_timerRule->EpgSearchString());
     }
     return m_textSearch->RegFind(epgTag->Title()) >= 0 ||
@@ -183,7 +183,7 @@ bool CPVRTimerRuleMatcher::MatchSearchText(const std::shared_ptr<CPVREpgInfoTag>
   {
     if (!m_textSearch)
     {
-      m_textSearch.reset(new CRegExp(true /* case insensitive */));
+      m_textSearch = std::make_unique<CRegExp>(true /* case insensitive */);
       m_textSearch->RegComp(m_timerRule->EpgSearchString());
     }
     return m_textSearch->RegFind(epgTag->Title()) >= 0;

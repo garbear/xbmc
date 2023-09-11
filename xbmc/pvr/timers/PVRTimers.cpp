@@ -928,7 +928,7 @@ std::shared_ptr<CPVRTimerInfoTag> CPVRTimers::UpdateEntry(
   }
   else
   {
-    tag.reset(new CPVRTimerInfoTag());
+    tag = std::make_shared<CPVRTimerInfoTag>();
     if (tag->UpdateEntry(timer))
     {
       tag->SetTimerID(++m_iLastId);

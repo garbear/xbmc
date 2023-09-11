@@ -147,7 +147,7 @@ bool CPlayerGUIInfo::InitCurrentItem(CFileItem *item)
   if (item && m_appPlayer->IsPlaying())
   {
     CLog::Log(LOGDEBUG, "CPlayerGUIInfo::InitCurrentItem({})", CURL::GetRedacted(item->GetPath()));
-    m_currentItem.reset(new CFileItem(*item));
+    m_currentItem = std::make_unique<CFileItem>(*item);
   }
   else
   {

@@ -36,10 +36,8 @@ namespace XBMCAddon
                        bool offscreen) :
       m_offscreen(offscreen)
     {
-      item.reset();
-
       // create CFileItem
-      item.reset(new CFileItem());
+      item = std::make_shared<CFileItem>();
       if (!item) // not sure if this is really possible
         return;
 

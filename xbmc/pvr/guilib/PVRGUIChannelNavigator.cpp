@@ -316,7 +316,7 @@ void CPVRGUIChannelNavigator::HideInfo()
     {
       m_currentChannel = m_playingChannel;
       if (m_playingChannel)
-        item.reset(new CFileItem(m_playingChannel));
+        item = std::make_shared<CFileItem>(m_playingChannel);
     }
 
     CheckAndPublishPreviewAndPlayerShowInfoChangedEvent();
@@ -350,7 +350,7 @@ void CPVRGUIChannelNavigator::SetPlayingChannel(
     {
       m_currentChannel = m_playingChannel;
       if (m_playingChannel)
-        item.reset(new CFileItem(m_playingChannel));
+        item = std::make_shared<CFileItem>(m_playingChannel);
     }
 
     CheckAndPublishPreviewAndPlayerShowInfoChangedEvent();

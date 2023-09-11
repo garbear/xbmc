@@ -43,7 +43,7 @@ void CJoystickMapper::MapActions(int windowID, const tinyxml2::XMLNode* pDevice)
   // Create/overwrite keymap
   auto& keymap = m_joystickKeymaps[controllerId];
   if (!keymap)
-    keymap.reset(new CWindowKeymap(controllerId));
+    keymap = std::make_shared<CWindowKeymap>(controllerId);
 
   const auto* pButton = pDevice->FirstChildElement();
   while (pButton != nullptr)

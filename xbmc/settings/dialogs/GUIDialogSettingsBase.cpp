@@ -675,8 +675,8 @@ CGUIControl* CGUIDialogSettingsBase::AddSetting(const std::shared_ptr<CSetting>&
       return NULL;
 
     static_cast<CGUIRadioButtonControl*>(pControl)->SetLabel(label);
-    pSettingControl.reset(new CGUIControlRadioButtonSetting(
-        static_cast<CGUIRadioButtonControl*>(pControl), iControlID, pSetting, this));
+    pSettingControl = std::make_shared<CGUIControlRadioButtonSetting>(
+        static_cast<CGUIRadioButtonControl*>(pControl), iControlID, pSetting, this);
   }
   else if (controlType == "spinner")
   {
@@ -686,8 +686,8 @@ CGUIControl* CGUIDialogSettingsBase::AddSetting(const std::shared_ptr<CSetting>&
       return NULL;
 
     static_cast<CGUISpinControlEx*>(pControl)->SetText(label);
-    pSettingControl.reset(new CGUIControlSpinExSetting(static_cast<CGUISpinControlEx*>(pControl),
-                                                       iControlID, pSetting, this));
+    pSettingControl = std::make_shared<CGUIControlSpinExSetting>(
+        static_cast<CGUISpinControlEx*>(pControl), iControlID, pSetting, this);
   }
   else if (controlType == "edit")
   {
@@ -697,8 +697,8 @@ CGUIControl* CGUIDialogSettingsBase::AddSetting(const std::shared_ptr<CSetting>&
       return NULL;
 
     static_cast<CGUIEditControl*>(pControl)->SetLabel(label);
-    pSettingControl.reset(new CGUIControlEditSetting(static_cast<CGUIEditControl*>(pControl),
-                                                     iControlID, pSetting, this));
+    pSettingControl = std::make_shared<CGUIControlEditSetting>(
+        static_cast<CGUIEditControl*>(pControl), iControlID, pSetting, this);
   }
   else if (controlType == "list")
   {
@@ -708,8 +708,8 @@ CGUIControl* CGUIDialogSettingsBase::AddSetting(const std::shared_ptr<CSetting>&
       return NULL;
 
     static_cast<CGUIButtonControl*>(pControl)->SetLabel(label);
-    pSettingControl.reset(new CGUIControlListSetting(static_cast<CGUIButtonControl*>(pControl),
-                                                     iControlID, pSetting, this));
+    pSettingControl = std::make_shared<CGUIControlListSetting>(
+        static_cast<CGUIButtonControl*>(pControl), iControlID, pSetting, this);
   }
   else if (controlType == "button" || controlType == "slider")
   {
@@ -722,8 +722,8 @@ CGUIControl* CGUIDialogSettingsBase::AddSetting(const std::shared_ptr<CSetting>&
         return NULL;
 
       static_cast<CGUIButtonControl*>(pControl)->SetLabel(label);
-      pSettingControl.reset(new CGUIControlButtonSetting(static_cast<CGUIButtonControl*>(pControl),
-                                                         iControlID, pSetting, this));
+      pSettingControl = std::make_shared<CGUIControlButtonSetting>(
+          static_cast<CGUIButtonControl*>(pControl), iControlID, pSetting, this);
     }
     else
     {
@@ -733,8 +733,8 @@ CGUIControl* CGUIDialogSettingsBase::AddSetting(const std::shared_ptr<CSetting>&
         return NULL;
 
       static_cast<CGUISettingsSliderControl*>(pControl)->SetText(label);
-      pSettingControl.reset(new CGUIControlSliderSetting(
-          static_cast<CGUISettingsSliderControl*>(pControl), iControlID, pSetting, this));
+      pSettingControl = std::make_shared<CGUIControlSliderSetting>(
+          static_cast<CGUISettingsSliderControl*>(pControl), iControlID, pSetting, this);
     }
   }
   else if (controlType == "range")
@@ -745,8 +745,8 @@ CGUIControl* CGUIDialogSettingsBase::AddSetting(const std::shared_ptr<CSetting>&
       return NULL;
 
     static_cast<CGUISettingsSliderControl*>(pControl)->SetText(label);
-    pSettingControl.reset(new CGUIControlRangeSetting(
-        static_cast<CGUISettingsSliderControl*>(pControl), iControlID, pSetting, this));
+    pSettingControl = std::make_shared<CGUIControlRangeSetting>(
+        static_cast<CGUISettingsSliderControl*>(pControl), iControlID, pSetting, this);
   }
   else if (controlType == "label")
   {
@@ -756,8 +756,8 @@ CGUIControl* CGUIDialogSettingsBase::AddSetting(const std::shared_ptr<CSetting>&
       return NULL;
 
     static_cast<CGUIButtonControl*>(pControl)->SetLabel(label);
-    pSettingControl.reset(new CGUIControlLabelSetting(static_cast<CGUIButtonControl*>(pControl),
-                                                      iControlID, pSetting, this));
+    pSettingControl = std::make_shared<CGUIControlLabelSetting>(
+        static_cast<CGUIButtonControl*>(pControl), iControlID, pSetting, this);
   }
   else if (controlType == "colorbutton")
   {
@@ -767,8 +767,8 @@ CGUIControl* CGUIDialogSettingsBase::AddSetting(const std::shared_ptr<CSetting>&
       return nullptr;
 
     static_cast<CGUIColorButtonControl*>(pControl)->SetLabel(label);
-    pSettingControl.reset(new CGUIControlColorButtonSetting(
-        static_cast<CGUIColorButtonControl*>(pControl), iControlID, pSetting, this));
+    pSettingControl = std::make_shared<CGUIControlColorButtonSetting>(
+        static_cast<CGUIColorButtonControl*>(pControl), iControlID, pSetting, this);
   }
   else
     return nullptr;

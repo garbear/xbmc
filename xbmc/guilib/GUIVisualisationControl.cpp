@@ -386,7 +386,7 @@ bool CGUIVisualisationControl::InitVisualization()
   if (y + h > context.GetHeight())
     h = context.GetHeight() - y;
 
-  m_instance.reset(new KODI::ADDONS::CVisualization(addonBase, x, y, w, h));
+  m_instance = std::make_unique<KODI::ADDONS::CVisualization>(addonBase, x, y, w, h);
   CreateBuffers();
 
   m_alreadyStarted = false;

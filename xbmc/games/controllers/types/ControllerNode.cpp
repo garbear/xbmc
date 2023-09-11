@@ -32,7 +32,7 @@ CControllerNode& CControllerNode::operator=(const CControllerNode& rhs)
     m_controller = rhs.m_controller;
     m_portAddress = rhs.m_portAddress;
     m_controllerAddress = rhs.m_controllerAddress;
-    m_hub.reset(new CControllerHub(*rhs.m_hub));
+    m_hub = std::make_unique<CControllerHub>(*rhs.m_hub);
   }
 
   return *this;
@@ -56,7 +56,7 @@ void CControllerNode::Clear()
   m_controller.reset();
   m_portAddress.clear();
   m_controllerAddress.clear();
-  m_hub.reset(new CControllerHub);
+  m_hub = std::make_unique<CControllerHub>();
 }
 
 void CControllerNode::SetController(ControllerPtr controller)
@@ -94,7 +94,7 @@ void CControllerNode::SetControllerAddress(std::string controllerAddress)
 
 void CControllerNode::SetHub(CControllerHub hub)
 {
-  m_hub.reset(new CControllerHub(std::move(hub)));
+  m_hub = std::make_unique<CControllerHub>(std::move(hub));
 }
 
 bool CControllerNode::IsControllerAccepted(const std::string& controllerId) const

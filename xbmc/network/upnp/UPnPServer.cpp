@@ -601,7 +601,7 @@ CUPnPServer::OnBrowseMetadata(PLT_ActionReference&          action,
         id.TrimRight("/");
         if (id == "virtualpath://upnproot") {
             id += "/";
-            item.reset(new CFileItem((const char*)id, true));
+            item = std::make_shared<CFileItem>((const char*)id, true);
             item->SetLabel("Root");
             item->SetLabelPreformatted(true);
             object = Build(item, true, context, thumb_loader);
@@ -610,15 +610,18 @@ CUPnPServer::OnBrowseMetadata(PLT_ActionReference&          action,
             return NPT_FAILURE;
         }
     } else {
-        item.reset(new CFileItem((const char*)id, false));
+      item = std::make_shared<CFileItem>((const char*)id, false);
 
-        // attempt to determine the parent of this item
-        std::string parent;
-        if (URIUtils::IsVideoDb((const char*)id) || URIUtils::IsMusicDb((const char*)id) || StringUtils::StartsWithNoCase((const char*)id, "library://video/")) {
-            if (!URIUtils::GetParentPath((const char*)id, parent)) {
-                parent = "0";
-            }
+      // attempt to determine the parent of this item
+      std::string parent;
+      if (URIUtils::IsVideoDb((const char*)id) || URIUtils::IsMusicDb((const char*)id) ||
+          StringUtils::StartsWithNoCase((const char*)id, "library://video/"))
+      {
+        if (!URIUtils::GetParentPath((const char*)id, parent))
+        {
+          parent = "0";
         }
+      }
         else {
             // non-library objects - playlists / sources
             //
@@ -713,13 +716,13 @@ CUPnPServer::OnBrowseDirectChildren(PLT_ActionReference&          action,
             CFileItemPtr item;
 
             // music library
-            item.reset(new CFileItem("musicdb://", true));
+            item = std::make_shared<CFileItem>("musicdb://", true);
             item->SetLabel("Music Library");
             item->SetLabelPreformatted(true);
             items.Add(item);
 
             // video library
-            item.reset(new CFileItem("library://video/", true));
+            item = std::make_shared<CFileItem>("library://video/", true);
             item->SetLabel("Video Library");
             item->SetLabelPreformatted(true);
             items.Add(item);

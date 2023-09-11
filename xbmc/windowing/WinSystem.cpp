@@ -24,7 +24,7 @@ const char* CWinSystemBase::SETTING_WINSYSTEM_IS_HDR_DISPLAY = "winsystem.ishdrd
 
 CWinSystemBase::CWinSystemBase()
 {
-  m_gfxContext.reset(new CGraphicContext());
+  m_gfxContext = std::make_unique<CGraphicContext>();
 }
 
 CWinSystemBase::~CWinSystemBase() = default;
@@ -255,7 +255,8 @@ KODI::WINDOWING::COSScreenSaverManager* CWinSystemBase::GetOSScreenSaver()
     auto impl = GetOSScreenSaverImpl();
     if (impl)
     {
-      m_screenSaverManager.reset(new KODI::WINDOWING::COSScreenSaverManager(std::move(impl)));
+      m_screenSaverManager =
+          std::make_unique<KODI::WINDOWING::COSScreenSaverManager>(std::move(impl));
     }
   }
 

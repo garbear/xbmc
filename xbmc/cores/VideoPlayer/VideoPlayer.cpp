@@ -616,7 +616,7 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
     m_messenger("player"),
     m_renderManager(m_clock, this)
 {
-  m_outboundEvents.reset(new CJobQueue(false, 1, CJob::PRIORITY_NORMAL));
+  m_outboundEvents = std::make_unique<CJobQueue>(false, 1, CJob::PRIORITY_NORMAL);
   m_players_created = false;
   m_pDemuxer = nullptr;
   m_pSubtitleDemuxer = nullptr;

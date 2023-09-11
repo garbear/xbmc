@@ -42,7 +42,8 @@ CProcessInfo* CProcessInfo::CreateInstance()
 
 CProcessInfo::CProcessInfo()
 {
-  m_videoSettingsLocked.reset(new CVideoSettingsLocked(m_videoSettings, m_settingsSection));
+  m_videoSettingsLocked =
+      std::make_unique<CVideoSettingsLocked>(m_videoSettings, m_settingsSection);
 }
 
 void CProcessInfo::SetDataCache(CDataCacheCore *cache)
