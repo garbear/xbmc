@@ -6,7 +6,6 @@ endif
 
 # Keep in alphabetical order
 DEPENDS = \
-  boost \
   bzip2 \
   curl \
   dav1d \
@@ -37,7 +36,6 @@ DEPENDS = \
   libpng \
   libshairplay \
   libsrtp \
-  libtorrent \
   libusb \
   libxml2 \
   libxslt \
@@ -53,7 +51,6 @@ DEPENDS = \
   pythonmodule-setuptools \
   sqlite3 \
   tinyxml \
-  try_signal \
   udfread \
   usrsctp \
   xz
@@ -182,7 +179,6 @@ libmicrohttpd: gnutls libgcrypt libgpg-error
 libplist: $(ZLIB)
 libpng: $(ZLIB)
 libsrtp: openssl
-libtorrent: boost libdatachannel openssl try_signal $(ZLIB)
 libva: libdrm $(LIBVA_DEPS)
 libxml2: $(ZLIB)
 libxslt: libgcrypt libxml2
