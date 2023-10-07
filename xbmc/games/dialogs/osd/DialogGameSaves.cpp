@@ -10,17 +10,11 @@
 
 #include "FileItem.h"
 #include "ServiceBroker.h"
-#include "URL.h"
 #include "addons/Addon.h"
 #include "addons/AddonManager.h"
 #include "addons/addoninfo/AddonType.h"
 #include "cores/RetroEngine/RetroEngine.h"
-#include "cores/RetroEngine/RetroEngineServices.h"
-#include "cores/RetroEngine/guibridge/RetroEngineGuiBridge.h"
-#include "cores/RetroEngine/input/RetroEngineInputManager.h"
-#include "cores/RetroEngine/rendering/RetroEngineRenderer.h"
 #include "cores/RetroEngine/streams/RetroEngineStreamManager.h"
-#include "cores/RetroPlayer/process/RPProcessInfo.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "dialogs/GUIDialogContextMenu.h"
@@ -318,40 +312,25 @@ void CDialogGameSaves::OnInitWindow()
 
     if (!gameClient->Initialize())
     {
-      CLog::Log(LOGERROR, "Failed to initialize game client {}", gameClient->ID());
       enabled = false;
       continue;
     }
 
-    //! @todo Each savestate needs its own stream manager
-    std::string savestatePath;
+    /*
+    auto m_streamManager = std::make_unique<RETRO_ENGINE::CRetroEngineStreamManager>();
 
-    std::map<std::string, RETRO_ENGINE::CRetroEngineGuiBridge*> guiBridges;
-    std::map<std::string, std::unique_ptr<RETRO_ENGINE::CRetroEngineStreamManager>> streamManagers;
+    // Initialize input
+    m_input = std::make_unique<CRetroPlayerInput>(CServiceBroker::GetPeripherals(),
+      *m_processInfo, m_gameClient);
+    m_input->StartAgentManager();
 
-    guiBridges[savestatePath] = &CServiceBroker::GetRetroEngineServices().GuiBridge(savestatePath);
-    streamManagers[savestatePath] = std::make_unique<RETRO_ENGINE::CRetroEngineStreamManager>();
-
-    // Initialize rendering
-    auto renderer = std::make_unique<RETRO_ENGINE::CRetroEngineRenderer>(
-        *guiBridges[savestatePath], *streamManagers[savestatePath]);
-    renderer->Initialize();
-
-    CLog::Log(LOGINFO, "Opening: {}", CURL::GetRedacted(m_gamePath));
-
-    CFileItem gameFile;
-    gameFile.SetPath(m_gamePath);
-    if (!gameClient->OpenFile(gameFile, *streamManagers[savestatePath], nullptr))
+    if (!bStandalone)
     {
-      CLog::Log(LOGERROR, "Failed to open game for game client {}", gameClient->ID());
-      gameClient->Unload();
-      enabled = false;
-      continue;
+      std::string redactedPath = CURL::GetRedacted(fileCopy.GetPath());
+      CLog::Log(LOGINFO, "RetroPlayer[PLAYER]: Opening: {}", redactedPath);
+      bSuccess = m_gameClient->OpenFile(fileCopy, *m_streamManager, m_input.get());
     }
-
-    auto retroEngine =
-        std::make_unique<RETRO_ENGINE::CRetroEngine>(*guiBridges[savestatePath], savestatePath);
-    //retroEngine->AddGameClient(std::move(gameClient));
+    */
   }
 }
 
