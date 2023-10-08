@@ -13,6 +13,8 @@
 #include "cores/RetroEngine/streams/IRetroEngineStream.h"
 #include "cores/RetroEngine/streams/RetroEngineStreamManager.h"
 #include "cores/RetroEngine/streams/RetroEngineStreamSwFramebuffer.h"
+#include "games/addons/GameClient.h"
+#include "utils/log.h"
 
 using namespace KODI;
 using namespace RETRO_ENGINE;
@@ -27,14 +29,32 @@ CRetroEngine::CRetroEngine(CRetroEngineGuiBridge& guiBridge, const std::string& 
 
 CRetroEngine::~CRetroEngine() = default;
 
-void CRetroEngine::Initialize()
+bool CRetroEngine::Initialize(std::vector<std::shared_ptr<GAME::CGameClient>> gameClients)
 {
+  m_gameClients = std::move(gameClients);
+
+  // Initial game clients
+  for (const auto& gameClient : m_gameClients)
+  {
+    if (!gameClient->Initialize())
+    {
+      CLog::Log(LOGERROR, "Failed to initialize game client {}", gameClient->ID());
+      return false;
+    }
+  }
+
   // Initialize rendering
   m_renderer->Initialize();
+
+  return true;
 }
 
 void CRetroEngine::Deinitialize()
 {
+  // Deinitialize game clients
+  for (const auto& gameClient : m_gameClients)
+    gameClient->Deinitialize();
+
   // Deinitialize stream
   if (m_stream)
     m_streamManager->CloseStream(std::move(m_stream));
