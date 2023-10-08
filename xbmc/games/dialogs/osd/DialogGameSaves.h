@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "games/GameTypes.h"
 #include "guilib/GUIDialog.h"
 
 #include <memory>
@@ -20,6 +21,11 @@ class CGUIViewControl;
 
 namespace KODI
 {
+namespace RETRO_ENGINE
+{
+class IRetroEngine;
+}
+
 namespace GAME
 {
 /*!
@@ -115,7 +121,12 @@ private:
 
   // State parameters
   std::string m_currentCaption;
-  std::string m_currentGameClient;
+  std::string m_currentGameClientId;
+
+  // RetroEngine parameters
+  std::string m_gamePath;
+  std::map<std::string, GameClientPtr> m_gameClients; // ID -> game client
+  std::unique_ptr<RETRO_ENGINE::IRetroEngine> m_retroEngine;
   std::string m_currentGameClientVersion;
 };
 } // namespace GAME
