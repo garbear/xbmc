@@ -13,6 +13,11 @@
 
 namespace KODI
 {
+namespace GAME
+{
+class CGameClient;
+} // namespace GAME
+
 namespace RETRO_ENGINE
 {
 
@@ -21,15 +26,25 @@ class CRetroEngineRenderer;
 class CRetroEngineStreamManager;
 class IRetroEngineStream;
 
-class CRetroEngine
+class IRetroEngine
+{
+public:
+  virtual ~IRetroEngine() = default;
+
+  // Lifecycle functions
+  virtual bool Initialize(std::vector<std::shared_ptr<GAME::CGameClient>> gameClients) = 0;
+  virtual void Deinitialize() = 0;
+};
+
+class CRetroEngine : public IRetroEngine
 {
 public:
   explicit CRetroEngine(CRetroEngineGuiBridge& guiBridge, const std::string& savestatePath);
   ~CRetroEngine();
 
-  // Lifecycle functions
-  void Initialize();
-  void Deinitialize();
+  // Implementation of IRetroEngine
+  bool Initialize(std::vector<std::shared_ptr<GAME::CGameClient>> gameClients) override;
+  void Deinitialize() override;
 
 private:
   // Construction parameters
@@ -40,6 +55,7 @@ private:
   std::unique_ptr<CRetroEngineStreamManager> m_streamManager;
   std::unique_ptr<IRetroEngineStream> m_stream;
   std::unique_ptr<CRetroEngineRenderer> m_renderer;
+  std::vector<std::shared_ptr<GAME::CGameClient>> m_gameClients;
 };
 } // namespace RETRO_ENGINE
 } // namespace KODI
