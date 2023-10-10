@@ -63,7 +63,22 @@ void CIPFS::Deinitialize()
 
 bool CIPFS::IsOnline()
 {
+  //! @todo
   return static_cast<bool>(m_blockStore);
+}
+
+std::string CIPFS::ResolveName(const std::string& identifier)
+{
+  //! @todo
+  return "";
+}
+
+void CIPFS::PublishName(const std::string& ipfsPath,
+                        unsigned int lifetimeSecs,
+                        unsigned int ttlSecs,
+                        const std::string& keyName)
+{
+  //! @todo
 }
 
 CVariant CIPFS::GetDAG(const std::string& cid)
@@ -96,12 +111,11 @@ std::string CIPFS::PutDAG(const CVariant& content)
   if (!m_blockStore)
     return "";
 
-  //! @todo Switch to cbor
   std::string json;
   if (!CJSONVariantWriter::Write(content, json, true))
     return "";
 
-  //! @todo lz4 or zstd compress data
+  //! @todo lz4-compress data
   std::vector<uint8_t> data{json.begin(), json.end()};
   if (data.empty())
     return "";
@@ -119,4 +133,22 @@ std::string CIPFS::PutDAG(const CVariant& content)
   //! @todo
   std::string cid{multihash.begin(), multihash.end()};
   return cid;
+}
+
+std::vector<std::string> CIPFS::ListKeys()
+{
+  //! @todo
+  return {};
+}
+
+void CIPFS::RemoveKey(const std::string& keyName)
+{
+  //! @todo
+}
+
+void CIPFS::ImportKey(const std::string& keyName,
+                      const KODI::CRYPTO::PrivateKey& privateKey,
+                      const std::string& password)
+{
+  //! @todo
 }
