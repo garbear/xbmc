@@ -1,4 +1,3 @@
 xbmc/filesystem                         filesystem
-xbmc/filesystem/ipfs                    filesystem/ipfs
 xbmc/filesystem/MusicDatabaseDirectory  filesystem/musicdatabase
 xbmc/filesystem/VideoDatabaseDirectory  filesystem/videodatabase
