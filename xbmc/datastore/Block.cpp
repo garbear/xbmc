@@ -8,14 +8,11 @@
 
 #include "Block.h"
 
-#include <utility>
-
 using namespace KODI;
 using namespace DATASTORE;
 
-void CBlock::SetCID(CCID cid)
+CBlock::CBlock(CCID cid, std::vector<uint8_t> data) : m_cid(std::move(cid)), m_data(std::move(data))
 {
-  m_cid = std::move(cid);
 }
 
 std::vector<uint8_t> CBlock::Serialize() const
