@@ -489,7 +489,7 @@ std::shared_ptr<CPVRChannelGroupMember> GetFirstMatchingGroupMember(
       if (channelGroup->IsDeleted())
         continue;
 
-      const std::shared_ptr<CPVRChannelGroupMember> groupMember{
+      std::shared_ptr<CPVRChannelGroupMember> groupMember{
           channelGroup->GetByUniqueID(channel->StorageId())};
       if (groupMember)
         return groupMember;
