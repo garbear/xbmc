@@ -166,7 +166,7 @@ CInfoScanner::INFO_TYPE CVideoTagLoaderFFmpeg::LoadMKV(CVideoInfoTag& tag,
         art->emplace_back(EmbeddedArt(m_fctx->streams[i]->attached_pic.data,
                                       size, avtag->value, type));
       else
-        tag.m_coverArt.emplace_back(EmbeddedArtInfo(size, avtag->value, type));
+        tag.m_coverArt.emplace_back(size, avtag->value, type);
     }
   }
 
@@ -261,7 +261,7 @@ CInfoScanner::INFO_TYPE CVideoTagLoaderFFmpeg::LoadMP4(CVideoInfoTag& tag,
       art->emplace_back(EmbeddedArt(m_fctx->streams[i]->attached_pic.data,
                                     size, "image/png", type));
     else
-      tag.m_coverArt.emplace_back(EmbeddedArtInfo(size, "image/png", type));
+      tag.m_coverArt.emplace_back(size, "image/png", type);
   }
 
   return hasfull ? CInfoScanner::FULL_NFO : CInfoScanner::TITLE_NFO;

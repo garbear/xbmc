@@ -222,7 +222,7 @@ bool CPVRTimers::CheckAndAppendTimerNotification(
   {
     const std::string strMessage =
         bDeleted ? tag->GetDeletedNotificationText() : tag->GetNotificationText();
-    timerNotifications.emplace_back(std::make_pair(tag->ClientID(), strMessage));
+    timerNotifications.emplace_back(tag->ClientID(), strMessage);
     return true;
   }
   return false;
@@ -614,8 +614,8 @@ bool CPVRTimers::UpdateEntries(int iMaxNotificationDelay)
                 if (childTimer)
                 {
                   bChanged = true;
-                  childTimersToInsert.emplace_back(
-                      std::make_pair(timer, childTimer)); // remember and insert/save later
+                  childTimersToInsert.emplace_back(timer,
+                                                   childTimer); // remember and insert/save later
                 }
               }
             }
@@ -662,8 +662,8 @@ bool CPVRTimers::UpdateEntries(int iMaxNotificationDelay)
         if (childTimer)
         {
           bChanged = true;
-          childTimersToInsert.emplace_back(std::make_pair(
-              matcher->GetTimerRule(), childTimer)); // remember and insert/save later
+          childTimersToInsert.emplace_back(matcher->GetTimerRule(),
+                                           childTimer); // remember and insert/save later
         }
       }
     }
