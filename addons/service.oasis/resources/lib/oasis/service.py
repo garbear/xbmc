@@ -15,6 +15,7 @@ import xbmcgui  # pylint: disable=import-error
 from oasis.windows.camera_view import CameraView
 from oasis.windows.fireworks_hud import FireworksHUD
 from oasis.windows.station_hud import StationHUD
+from oasis.windows.ventura_hud import VenturaHUD
 
 
 class OasisService:
@@ -29,6 +30,8 @@ class OasisService:
 
         # TODO: Hardware configuration
         if hostname == "nuc":
+            window = VenturaHUD("VideoHUD.xml", addon_path, "default", "1080i", False)
+        elif hostname == "nuc2":
             window = StationHUD("StationHUD.xml", addon_path, "default", "1080i", False)
         elif hostname == "asus":
             window = CameraView("CameraView1.xml", addon_path, "default", "1080i", False)
