@@ -141,6 +141,17 @@ void CGameUtils::GetGameClients(const CFileItem& file,
     bHasVfsGameClient |= bVfs;
   }
 
+  // Remove game clients that require OpenGL
+  // TODO: Remove this once we support hardware rendering
+  candidates.erase(std::remove_if(candidates.begin(), candidates.end(),
+                                  [](const GameClientPtr& gameClient)
+                                  { return gameClient->RequiresGL(); }),
+                   candidates.end());
+  installable.erase(std::remove_if(installable.begin(), installable.end(),
+                                   [](const GameClientPtr& gameClient)
+                                   { return gameClient->RequiresGL(); }),
+                    installable.end());
+
   // Sort by name
   //! @todo Move to presentation code
   auto SortByName = [](const GameClientPtr& lhs, const GameClientPtr& rhs)
