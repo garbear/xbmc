@@ -107,15 +107,31 @@ static bool IsGameType(AddonType type)
   return gameTypes.find(type) != gameTypes.end();
 }
 
+static bool IsOpenGLGameAddon(const AddonPtr& addon)
+{
+  return addon->Type() == AddonType::GAMEDLL &&
+    std::static_pointer_cast<GAME::CGameClient>(addon)->RequiresGL();
+}
+
 static bool IsStandaloneGame(const AddonPtr& addon)
 {
   return GAME::CGameUtils::IsStandaloneGame(addon);
+}
+
+static bool IsUsableStandaloneGame(const AddonPtr& addon)
+{
+  return IsStandaloneGame(addon) && !IsOpenGLGameAddon(addon);
 }
 
 static bool IsEmulator(const AddonPtr& addon)
 {
   return addon->Type() == AddonType::GAMEDLL &&
          std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsPath();
+}
+
+static bool IsUsableEmulator(const AddonPtr& addon)
+{
+  return IsEmulator(addon) && !IsOpenGLGameAddon(addon);
 }
 
 static bool IsGameProvider(const AddonPtr& addon)
@@ -148,6 +164,11 @@ static bool IsGameAddon(const AddonPtr& addon)
          IsGameProvider(addon) ||
          IsGameResource(addon) ||
          IsGameSupportAddon(addon);
+}
+
+static bool IsUsableGameAddon(const AddonPtr& addon)
+{
+  return IsGameAddon(addon) && !IsOpenGLGameAddon(addon);
 }
 
 static bool IsUserInstalled(const AddonPtr& addon)
@@ -205,7 +226,7 @@ static void GenerateGameListing(const CURL& path, const VECADDONS& addons, CFile
   // Emulators
   for (const auto& addon : addons)
   {
-    if (IsEmulator(addon))
+    if (IsUsableEmulator(addon))
     {
       CFileItemPtr item(new CFileItem(g_localizeStrings.Get(35207))); // Emulators
       CURL itemPath = path;
@@ -222,7 +243,7 @@ static void GenerateGameListing(const CURL& path, const VECADDONS& addons, CFile
   // Standalone games
   for (const auto& addon : addons)
   {
-    if (IsStandaloneGame(addon))
+    if (IsUsableStandaloneGame(addon))
     {
       CFileItemPtr item(new CFileItem(g_localizeStrings.Get(35208))); // Standalone games
       CURL itemPath = path;
@@ -313,7 +334,7 @@ static void GenerateMainCategoryListing(const CURL& path, const VECADDONS& addon
       item->SetArt("thumb", thumb);
     items.Add(item);
   }
-  if (std::any_of(addons.begin(), addons.end(), IsGameAddon))
+  if (std::any_of(addons.begin(), addons.end(), IsUsableGameAddon))
   {
     CFileItemPtr item(new CFileItem(CAddonInfo::TranslateType(AddonType::GAME, true)));
     item->SetPath(URIUtils::AddFileToFolder(path.Get(), CATEGORY_GAME_ADDONS));
@@ -372,14 +393,14 @@ static void GenerateCategoryListing(const CURL& path, VECADDONS& addons,
   {
     items.SetProperty("addoncategory", g_localizeStrings.Get(35207)); // Emulators
     addons.erase(std::remove_if(addons.begin(), addons.end(),
-        [](const AddonPtr& addon){ return !IsEmulator(addon); }), addons.end());
+        [](const AddonPtr& addon){ return !IsUsableEmulator(addon); }), addons.end());
     CAddonsDirectory::GenerateAddonListing(path, addons, items, g_localizeStrings.Get(35207)); // Emulators
   }
   else if (category == CATEGORY_STANDALONE_GAMES)
   {
     items.SetProperty("addoncategory", g_localizeStrings.Get(35208)); // Standalone games
     addons.erase(std::remove_if(addons.begin(), addons.end(),
-        [](const AddonPtr& addon){ return !IsStandaloneGame(addon); }), addons.end());
+        [](const AddonPtr& addon){ return !IsUsableStandaloneGame(addon); }), addons.end());
     CAddonsDirectory::GenerateAddonListing(path, addons, items, g_localizeStrings.Get(35208)); // Standalone games
   }
   else if (category == CATEGORY_GAME_PROVIDERS)
