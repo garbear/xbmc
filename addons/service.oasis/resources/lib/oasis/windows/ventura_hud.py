@@ -19,7 +19,7 @@ from oasis.utils.playlist_player import PlaylistPlayer
 
 
 # TODO
-ASSET_DIR: str = "/home/garrett/Videos/Ventura"
+ASSET_DIR: str = "/home/ubuntu/Videos/Ventura"
 
 
 class VenturaHUD(xbmcgui.WindowXML):
