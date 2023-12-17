@@ -26,7 +26,7 @@ namespace SMART_HOME
 constexpr const char* ROS_NAMESPACE = "oasis"; //! @todo
 
 //! @todo Hardware configuration
-constexpr const char* LAB_HOSTNAME = "starship"; //! @todo
+constexpr const char* LAB_HOSTNAME = "substation"; //! @todo
 
 constexpr const char* SUBSCRIBE_LAB_TOPIC = "lab_state";
 constexpr const char* SUBSCRIBE_TELEMETRY_TOPIC = "system_telemetry";
