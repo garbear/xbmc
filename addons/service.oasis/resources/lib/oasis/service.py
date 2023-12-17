@@ -39,6 +39,8 @@ class OasisService:
             window = CameraView("CameraViewVertical2.xml", addon_path, "default", "1080i", False)
         elif hostname == "starship":
             window = CameraView("CameraView16.xml", addon_path, "default", "1080i", False)
+        elif hostname == "substation":
+            window = VenturaHUD("LabHUD.xml", addon_path, "default", "1080i", False)
         elif hostname == "zotac":
             window = FireworksHUD("VideoHUD.xml", addon_path, "default", "1080i", False)
         else:
