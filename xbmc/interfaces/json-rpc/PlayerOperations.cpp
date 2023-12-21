@@ -30,7 +30,7 @@
 #include "interfaces/builtins/Builtins.h"
 #include "messaging/ApplicationMessenger.h"
 #include "music/MusicDatabase.h"
-#include "pictures/GUIWindowSlideShow.h"
+#include "pictures/SlideShowDelegator.h"
 #include "pvr/PVRManager.h"
 #include "pvr/PVRPlaybackState.h"
 #include "pvr/channels/PVRChannel.h"
@@ -277,13 +277,10 @@ JSONRPC_STATUS CPlayerOperations::GetItem(const std::string &method, ITransportL
 
     case Picture:
     {
-      CGUIWindowSlideShow *slideshow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-      if (!slideshow)
-        return FailedToExecute;
-
+      CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
       CFileItemList slides;
-      slideshow->GetSlideShowContents(slides);
-      fileItem = slides[slideshow->CurrentSlide() - 1];
+      slideShow.GetSlideShowContents(slides);
+      fileItem = slides[slideShow.CurrentSlide() - 1];
       break;
     }
 
@@ -298,7 +295,6 @@ JSONRPC_STATUS CPlayerOperations::GetItem(const std::string &method, ITransportL
 
 JSONRPC_STATUS CPlayerOperations::PlayPause(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
 {
-  CGUIWindowSlideShow *slideshow = NULL;
   switch (GetPlayer(parameterObject["playerid"]))
   {
     case Video:
@@ -326,20 +322,20 @@ JSONRPC_STATUS CPlayerOperations::PlayPause(const std::string &method, ITranspor
       result["speed"] = appPlayer->IsPausedPlayback() ? 0 : (int)lrint(appPlayer->GetPlaySpeed());
       return OK;
     }
-
     case Picture:
-      slideshow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-      if (slideshow && slideshow->IsPlaying() &&
-         (parameterObject["play"].isString() ||
-         (parameterObject["play"].isBoolean() && parameterObject["play"].asBoolean() == slideshow->IsPaused())))
+    {
+      CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
+      if (slideShow.IsPlaying() && (parameterObject["play"].isString() ||
+                                    (parameterObject["play"].isBoolean() &&
+                                     parameterObject["play"].asBoolean() == slideShow.IsPaused())))
         SendSlideshowAction(ACTION_PAUSE);
 
-      if (slideshow && slideshow->IsPlaying() && !slideshow->IsPaused())
-        result["speed"] = slideshow->GetDirection();
+      if (slideShow.IsPlaying() && !slideShow.IsPaused())
+        result["speed"] = slideShow.GetDirection();
       else
         result["speed"] = 0;
       return OK;
-
+    }
     case None:
     default:
       return FailedToExecute;
@@ -786,14 +782,11 @@ JSONRPC_STATUS CPlayerOperations::Open(const std::string &method, ITransportLaye
         std::string firstPicturePath;
         if (playlistStartPosition > 0)
         {
-          CGUIWindowSlideShow *slideshow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-          if (slideshow != NULL)
-          {
-            CFileItemList list;
-            slideshow->GetSlideShowContents(list);
-            if (playlistStartPosition < list.Size())
-              firstPicturePath = list.Get(playlistStartPosition)->GetPath();
-          }
+          CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
+          CFileItemList list;
+          slideShow.GetSlideShowContents(list);
+          if (playlistStartPosition < list.Size())
+            firstPicturePath = list.Get(playlistStartPosition)->GetPath();
         }
 
         return StartSlideshow("", false, optionShuffled.isBoolean() && optionShuffled.asBoolean(), firstPicturePath);
@@ -885,14 +878,13 @@ JSONRPC_STATUS CPlayerOperations::Open(const std::string &method, ITransportLaye
 
       if (slideshow)
       {
-        CGUIWindowSlideShow *slideshow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-        if (!slideshow)
-          return FailedToExecute;
-
+        //! @todo: This should be a delegator method instead of going via GUI!
+        //! look into triggering stop from Reset() itself!
         SendSlideshowAction(ACTION_STOP);
-        slideshow->Reset();
+        CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
+        slideShow.Reset();
         for (int index = 0; index < list.Size(); index++)
-          slideshow->Add(list[index].get());
+          slideShow.Add(list[index].get());
 
         return StartSlideshow("", false, optionShuffled.isBoolean() && optionShuffled.asBoolean());
       }
@@ -1032,7 +1024,6 @@ JSONRPC_STATUS CPlayerOperations::GoTo(const std::string &method, ITransportLaye
 
 JSONRPC_STATUS CPlayerOperations::SetShuffle(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
 {
-  CGUIWindowSlideShow *slideshow = NULL;
   CVariant shuffle = parameterObject["shuffle"];
   switch (GetPlayer(parameterObject["playerid"]))
   {
@@ -1063,10 +1054,14 @@ JSONRPC_STATUS CPlayerOperations::SetShuffle(const std::string &method, ITranspo
     }
 
     case Picture:
-      slideshow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-      if (slideshow == NULL)
+    {
+      CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
+      if (slideShow.NumSlides() < 0)
+      {
         return FailedToExecute;
-      if (slideshow->IsShuffled())
+      }
+
+      if (slideShow.IsShuffled())
       {
         if ((shuffle.isBoolean() && !shuffle.asBoolean()) ||
             (shuffle.isString() && shuffle.asString() == "toggle"))
@@ -1076,10 +1071,10 @@ JSONRPC_STATUS CPlayerOperations::SetShuffle(const std::string &method, ITranspo
       {
         if ((shuffle.isBoolean() && shuffle.asBoolean()) ||
             (shuffle.isString() && shuffle.asString() == "toggle"))
-          slideshow->Shuffle();
+          slideShow.Shuffle();
       }
       break;
-
+    }
     default:
       return FailedToExecute;
   }
@@ -1529,7 +1524,6 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
   }
   else if (property == "speed")
   {
-    CGUIWindowSlideShow *slideshow = NULL;
     switch (player)
     {
       case Video:
@@ -1540,15 +1534,15 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
         result = appPlayer->IsPausedPlayback() ? 0 : (int)lrint(appPlayer->GetPlaySpeed());
         break;
       }
-
       case Picture:
-        slideshow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-        if (slideshow && slideshow->IsPlaying() && !slideshow->IsPaused())
-          result = slideshow->GetDirection();
+      {
+        CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
+        if (slideShow.IsPlaying() && !slideShow.IsPaused())
+          result = slideShow.GetDirection();
         else
           result = 0;
         break;
-
+      }
       default:
         return FailedToExecute;
     }
@@ -1584,7 +1578,6 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
   }
   else if (property == "percentage")
   {
-    CGUIWindowSlideShow *slideshow = NULL;
     switch (player)
     {
       case Video:
@@ -1602,15 +1595,15 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
         }
         break;
       }
-
       case Picture:
-        slideshow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-        if (slideshow && slideshow->NumSlides() > 0)
-          result = (double)slideshow->CurrentSlide() / slideshow->NumSlides();
+      {
+        CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
+        if (slideShow.NumSlides() > 0)
+          result = static_cast<double>(slideShow.CurrentSlide()) / slideShow.NumSlides();
         else
           result = 0.0;
         break;
-
+      }
       default:
         return FailedToExecute;
     }
@@ -1671,11 +1664,11 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
   }
   else if (property == "position")
   {
-    CGUIWindowSlideShow *slideshow = NULL;
     switch (player)
     {
       case Video:
       case Audio: /* Return the position of current item if there is an active playlist */
+      {
         if (!IsPVRChannel() &&
             CServiceBroker::GetPlaylistPlayer().GetCurrentPlaylist() == playlistId)
         {
@@ -1684,18 +1677,21 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
         else
           result = -1;
         break;
-
+      }
       case Picture:
-        slideshow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-        if (slideshow && slideshow->IsPlaying())
-          result = slideshow->CurrentSlide() - 1;
+      {
+        CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
+        if (slideShow.IsPlaying())
+          result = slideShow.CurrentSlide() - 1;
         else
           result = -1;
         break;
-
+      }
       default:
+      {
         result = -1;
         break;
+      }
     }
   }
   else if (property == "repeat")
@@ -1732,11 +1728,11 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
   }
   else if (property == "shuffled")
   {
-    CGUIWindowSlideShow *slideshow = NULL;
     switch (player)
     {
       case Video:
       case Audio:
+      {
         if (IsPVRChannel())
         {
           result = false;
@@ -1745,18 +1741,21 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
 
         result = CServiceBroker::GetPlaylistPlayer().IsShuffled(playlistId);
         break;
-
+      }
       case Picture:
-        slideshow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-        if (slideshow && slideshow->IsPlaying())
-          result = slideshow->IsShuffled();
+      {
+        CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
+        if (slideShow.IsPlaying())
+          result = slideShow.IsShuffled();
         else
           result = -1;
         break;
-
+      }
       default:
+      {
         result = -1;
         break;
+      }
     }
   }
   else if (property == "canseek")
