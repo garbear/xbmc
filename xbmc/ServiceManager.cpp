@@ -43,6 +43,7 @@
 #if !defined(TARGET_WINDOWS) && defined(HAS_DVD_DRIVE)
 #include "storage/DetectDVDType.h"
 #endif
+#include "pictures/SlideShowDelegator.h"
 #include "storage/MediaManager.h"
 #include "utils/FileExtensionProvider.h"
 #include "utils/log.h"
@@ -107,6 +108,7 @@ bool CServiceManager::InitStageOne()
 #endif
 
   m_playlistPlayer.reset(new PLAYLIST::CPlayListPlayer());
+  m_slideShowDelegator = std::make_unique<CSlideShowDelegator>();
 
   m_network = CNetworkBase::GetNetwork();
 
@@ -270,6 +272,7 @@ void CServiceManager::DeinitStageOne()
 
   m_network.reset();
   m_playlistPlayer.reset();
+  m_slideShowDelegator.reset();
 #ifdef HAS_PYTHON
   CScriptInvocationManager::GetInstance().UnregisterLanguageInvocationHandler(m_XBPython.get());
   m_XBPython.reset();
@@ -439,4 +442,9 @@ CDatabaseManager& CServiceManager::GetDatabaseManager()
 CMediaManager& CServiceManager::GetMediaManager()
 {
   return *m_mediaManager;
+}
+
+CSlideShowDelegator& CServiceManager::GetSlideShowDelegator()
+{
+  return *m_slideShowDelegator;
 }
