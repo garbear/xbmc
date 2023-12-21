@@ -102,7 +102,7 @@
 #include "network/upnp/UPnP.h"
 #endif
 #include "peripherals/Peripherals.h"
-#include "pictures/GUIWindowSlideShow.h"
+#include "pictures/SlideShowDelegator.h"
 #include "platform/Environment.h"
 #include "playlists/PlayList.h"
 #include "playlists/PlayListFactory.h"
@@ -959,10 +959,9 @@ bool CApplication::OnAction(const CAction &action)
   // playing or ACTION_PLAYER_PLAY if we are seeking (FF/RW) or not playing.
   if (action.GetID() == ACTION_PLAYER_PLAYPAUSE)
   {
-    CGUIWindowSlideShow* pSlideShow = CServiceBroker::GetGUI()->
-                         GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
+    CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
     if ((appPlayer->IsPlaying() && appPlayer->GetPlaySpeed() == 1) ||
-        (pSlideShow && pSlideShow->InSlideShow() && !pSlideShow->IsPaused()))
+        (slideShow.InSlideShow() && !slideShow.IsPaused()))
       return OnAction(CAction(ACTION_PAUSE));
     else
       return OnAction(CAction(ACTION_PLAYER_PLAY));
@@ -1633,8 +1632,7 @@ void CApplication::OnApplicationMessage(ThreadMessage* pMsg)
 
   case TMSG_PICTURE_SHOW:
   {
-    CGUIWindowSlideShow *pSlideShow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-    if (!pSlideShow) return;
+    CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
 
     // stop playing file
     if (appPlayer->IsPlayingVideo())
@@ -1661,33 +1659,32 @@ void CApplication::OnApplicationMessage(ThreadMessage* pMsg)
       CUtil::GetRecursiveListing(pathToUrl.Get(), items, CServiceBroker::GetFileExtensionProvider().GetPictureExtensions(), XFILE::DIR_FLAG_NO_FILE_DIRS);
       if (items.Size() > 0)
       {
-        pSlideShow->Reset();
+        slideShow.Reset();
         for (int i = 0; i<items.Size(); ++i)
         {
-          pSlideShow->Add(items[i].get());
+          slideShow.Add(items[i].get());
         }
-        pSlideShow->Select(items[0]->GetPath());
+        slideShow.Select(items[0]->GetPath());
       }
     }
     else
     {
       CFileItem item(pMsg->strParam, false);
-      pSlideShow->Reset();
-      pSlideShow->Add(&item);
-      pSlideShow->Select(pMsg->strParam);
+      slideShow.Reset();
+      slideShow.Add(&item);
+      slideShow.Select(pMsg->strParam);
     }
   }
   break;
 
   case TMSG_PICTURE_SLIDESHOW:
   {
-    CGUIWindowSlideShow *pSlideShow = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIWindowSlideShow>(WINDOW_SLIDESHOW);
-    if (!pSlideShow) return;
+    CSlideShowDelegator& slideShow = CServiceBroker::GetSlideShowDelegator();
 
     if (appPlayer->IsPlayingVideo())
       StopPlaying();
 
-    pSlideShow->Reset();
+    slideShow.Reset();
 
     CFileItemList items;
     std::string strPath = pMsg->strParam;
@@ -1699,8 +1696,8 @@ void CApplication::OnApplicationMessage(ThreadMessage* pMsg)
     if (items.Size() > 0)
     {
       for (int i = 0; i<items.Size(); ++i)
-        pSlideShow->Add(items[i].get());
-      pSlideShow->StartSlideShow(); //Start the slideshow!
+        slideShow.Add(items[i].get());
+      slideShow.StartSlideShow(); //Start the slideshow!
     }
 
     if (CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindow() != WINDOW_SLIDESHOW)
