@@ -48,6 +48,7 @@ class CNetworkBase;
 class CWinSystemBase;
 class CPowerManager;
 class CWeatherManager;
+class CSlideShowDelegator;
 
 namespace KODI
 {
@@ -127,6 +128,7 @@ public:
   PERIPHERALS::CPeripherals& GetPeripherals();
 
   PLAYLIST::CPlayListPlayer& GetPlaylistPlayer();
+  CSlideShowDelegator& GetSlideShowDelegator();
   int init_level = 0;
 
   CFavouritesService& GetFavouritesService();
@@ -197,4 +199,5 @@ protected:
 #if !defined(TARGET_WINDOWS) && defined(HAS_DVD_DRIVE)
   std::unique_ptr<MEDIA_DETECT::CDetectDVDMedia> m_DetectDVDType;
 #endif
+  std::unique_ptr<CSlideShowDelegator> m_slideShowDelegator;
 };
