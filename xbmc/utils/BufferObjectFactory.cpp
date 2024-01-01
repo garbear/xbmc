@@ -33,7 +33,7 @@ std::unique_ptr<CBufferObject> CBufferObjectFactory::CreateBufferObject(bool nee
 void CBufferObjectFactory::RegisterBufferObject(
     const std::function<std::unique_ptr<CBufferObject>()>& createFunc)
 {
-  m_bufferObjects.emplace_front(createFunc);
+  m_bufferObjects.emplace_back(createFunc);
 }
 
 void CBufferObjectFactory::ClearBufferObjects()
