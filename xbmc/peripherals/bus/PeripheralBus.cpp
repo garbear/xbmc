@@ -9,6 +9,8 @@
 #include "PeripheralBus.h"
 
 #include "FileItem.h"
+#include "games/controllers/Controller.h"
+#include "games/controllers/ControllerLayout.h"
 #include "guilib/LocalizeStrings.h"
 #include "peripherals/Peripherals.h"
 #include "peripherals/devices/Peripheral.h"
@@ -18,6 +20,7 @@
 
 #include <mutex>
 
+using namespace KODI;
 using namespace PERIPHERALS;
 using namespace std::chrono_literals;
 
@@ -322,7 +325,14 @@ void CPeripheralBus::GetDirectory(const std::string& strPath, CFileItemList& ite
 
     peripheralFile->SetProperty("version", strVersion);
     peripheralFile->SetLabel2(strDetails);
-    peripheralFile->SetArt("icon", "DefaultAddon.png");
+
+    // Get icon from peripheral, if possible
+    std::string peripheralIcon = "DefaultAddon.png";
+    const GAME::ControllerPtr controllerProfile = peripheral->ControllerProfile();
+    if (controllerProfile)
+      peripheralIcon = controllerProfile->Layout().ImagePath();
+    peripheralFile->SetArt("icon", peripheralIcon);
+
     items.Add(peripheralFile);
   }
 }
