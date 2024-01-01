@@ -145,7 +145,6 @@ public:
   bool IsExtensionValid(const std::string& strExtension) const;
   const std::string& GetEmulatorName() const { return m_emulatorName; }
   const std::string& GetPlatforms() const { return m_platforms; }
-  bool RequiresGL() const { return m_requiresGL; }
 
   // Start/stop gameplay
   bool Initialize(void);
@@ -241,7 +240,6 @@ private:
   // Game API xml parameters
   bool m_bSupportsVFS;
   bool m_bSupportsStandalone;
-  bool m_requiresGL{false};
   std::set<std::string> m_extensions;
   bool m_bSupportsAllExtensions = false;
   std::string m_emulatorName;

@@ -51,10 +51,9 @@ using namespace GAME;
 #define EXTENSION_SEPARATOR "|"
 #define EXTENSION_WILDCARD "*"
 
-constexpr auto GAME_PROPERTY_EXTENSIONS = "extensions";
-constexpr auto GAME_PROPERTY_SUPPORTS_VFS = "supports_vfs";
-constexpr auto GAME_PROPERTY_SUPPORTS_STANDALONE = "supports_standalone";
-constexpr auto GAME_PROPERTY_REQUIRES_GL = "requires_gl";
+#define GAME_PROPERTY_EXTENSIONS "extensions"
+#define GAME_PROPERTY_SUPPORTS_VFS "supports_vfs"
+#define GAME_PROPERTY_SUPPORTS_STANDALONE "supports_standalone"
 
 // --- NormalizeExtension ------------------------------------------------------
 
@@ -104,8 +103,6 @@ CGameClient::CGameClient(const ADDON::AddonInfoPtr& addonInfo)
       addonInfo->Type(AddonType::GAMEDLL)->GetValue(GAME_PROPERTY_SUPPORTS_VFS).asBoolean();
   m_bSupportsStandalone =
       addonInfo->Type(AddonType::GAMEDLL)->GetValue(GAME_PROPERTY_SUPPORTS_STANDALONE).asBoolean();
-  m_requiresGL =
-      addonInfo->Type(AddonType::GAMEDLL)->GetValue(GAME_PROPERTY_REQUIRES_GL).asBoolean();
 
   std::tie(m_emulatorName, m_platforms) = ParseLibretroName(Name());
 }
@@ -577,7 +574,6 @@ void CGameClient::LogAddonProperties(void) const
   CLog::Log(LOGINFO, "GAME: Valid extensions:    {}", StringUtils::Join(m_extensions, " "));
   CLog::Log(LOGINFO, "GAME: Supports VFS:        {}", m_bSupportsVFS);
   CLog::Log(LOGINFO, "GAME: Supports standalone: {}", m_bSupportsStandalone);
-  CLog::Log(LOGINFO, "GAME: Requires GL:         {}", m_requiresGL);
   CLog::Log(LOGINFO, "GAME: ------------------------------------");
 }
 
