@@ -12,6 +12,7 @@ constexpr auto AGENT_DIALOG_XML = "DialogGameControllers.xml";
 
 // GUI control IDs
 constexpr auto CONTROL_ACTIVE_PORT_LIST = 4;
+constexpr auto CONTROL_AGENT_AVATAR_LIST = 6;
 constexpr auto CONTROL_AGENT_CONTROLLER_LIST = 7;
 
 // GUI button IDs
