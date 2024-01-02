@@ -5685,12 +5685,7 @@ msgctxt "#10831"
 msgid "Players"
 msgstr ""
 
-#. Name of window for viewing and configuring player avatars while playing a game
-msgctxt "#10832"
-msgid "Avatars"
-msgstr ""
-
-#empty strings from id 10833 to 11999
+#empty strings from id 10832 to 11999
 
 #: xbmc/guilib/WindowIDs.h
 msgctxt "#12000"

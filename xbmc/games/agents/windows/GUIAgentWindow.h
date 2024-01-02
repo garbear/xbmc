@@ -18,7 +18,6 @@ namespace KODI
 namespace GAME
 {
 class IActivePortList;
-class IAgentAvatarList;
 class IAgentControllerList;
 
 /*!
@@ -48,9 +47,6 @@ private:
   // Actions for port list
   void UpdateActivePortList();
 
-  // Actions for avatar list
-  void UpdateAvatarList();
-
   // Actions for controller list
   void UpdateControllerList();
   void FocusControllerList();
@@ -58,7 +54,6 @@ private:
 
   // GUI parameters
   std::unique_ptr<IActivePortList> m_portList;
-  std::unique_ptr<IAgentAvatarList> m_avatarList;
   std::unique_ptr<IAgentControllerList> m_controllerList;
 
   // Game parameters
