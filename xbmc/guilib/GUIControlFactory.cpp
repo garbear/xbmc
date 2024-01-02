@@ -1481,6 +1481,13 @@ CGUIControl* CGUIControlFactory::Create(int parentID,
       icontrol->SetInfo(textureFile);
       icontrol->SetAspectRatio(aspect);
       icontrol->SetCrossFade(fadeTime);
+
+      // Set image filter
+      GUIINFO::CGUIInfoLabel imageFilter;
+      GetInfoLabel(pControlNode, "imagefilter", imageFilter, parentID);
+      icontrol->SetImageFilter(imageFilter);
+
+      break;
     }
     break;
     case CGUIControl::GUICONTROL_MULTI_IMAGE:
