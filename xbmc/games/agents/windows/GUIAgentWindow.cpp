@@ -8,6 +8,7 @@
 
 #include "GUIAgentWindow.h"
 
+#include "GUIAgentAvatarList.h"
 #include "GUIAgentControllerList.h"
 #include "GUIAgentDefines.h"
 #include "ServiceBroker.h"
@@ -32,6 +33,7 @@ using namespace GAME;
 CGUIAgentWindow::CGUIAgentWindow()
   : CGUIDialog(WINDOW_DIALOG_GAME_AGENTS, AGENT_DIALOG_XML),
     m_portList(std::make_unique<CGUIActivePortList>(*this, CONTROL_ACTIVE_PORT_LIST, true)),
+    m_avatarList(std::make_unique<CGUIAgentAvatarList>(*this)),
     m_controllerList(std::make_unique<CGUIAgentControllerList>(*this))
 {
   // Initialize CGUIWindow
@@ -86,6 +88,12 @@ bool CGUIAgentWindow::OnMessage(CGUIMessage& message)
         case CONTROL_ACTIVE_PORT_LIST:
         {
           UpdateActivePortList();
+          bHandled = true;
+          break;
+        }
+        case CONTROL_AGENT_AVATAR_LIST:
+        {
+          UpdateAvatarList();
           bHandled = true;
           break;
         }
@@ -153,6 +161,7 @@ void CGUIAgentWindow::OnInitWindow()
 
   // Initialize GUI
   m_portList->Initialize(m_gameClient);
+  m_avatarList->Initialize(m_gameClient);
   m_controllerList->Initialize(m_gameClient);
 }
 
@@ -160,6 +169,7 @@ void CGUIAgentWindow::OnDeinitWindow(int nextWindowID)
 {
   // Deinitialize GUI
   m_controllerList->Deinitialize();
+  m_avatarList->Deinitialize();
   m_portList->Deinitialize();
 
   // Deinitialize game properties
@@ -176,6 +186,11 @@ void CGUIAgentWindow::CloseDialog()
 void CGUIAgentWindow::UpdateActivePortList()
 {
   m_portList->Refresh();
+}
+
+void CGUIAgentWindow::UpdateAvatarList()
+{
+  m_avatarList->Refresh();
 }
 
 void CGUIAgentWindow::UpdateControllerList()
