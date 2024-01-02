@@ -164,18 +164,12 @@ void CGUIGameControllerList::UpdatePort(int itemNumber, const std::vector<std::s
 void CGUIGameControllerList::UpdatePortIndex(const PERIPHERALS::PeripheralPtr& agentPeripheral,
                                              const std::vector<std::string>& inputPorts)
 {
-  CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
-
-  // Upcast peripheral to input provider
-  JOYSTICK::IInputProvider* const inputProvider =
-      static_cast<JOYSTICK::IInputProvider*>(agentPeripheral.get());
-
-  // See if the input provider has a port address
-  std::string portAddress = agentInput.GetPortAddress(inputProvider);
-  if (portAddress.empty())
-    return;
+  const std::string portAddress = GetPortAddress(agentPeripheral);
 
   m_portIndex = -1;
+
+  if (portAddress.empty())
+    return;
 
   // Search ports for input provider's address
   for (size_t i = 0; i < inputPorts.size(); ++i)
@@ -192,4 +186,35 @@ void CGUIGameControllerList::UpdatePortIndex(const PERIPHERALS::PeripheralPtr& a
 void CGUIGameControllerList::UpdatePeripheral(const PERIPHERALS::PeripheralPtr& agentPeripheral)
 {
   m_peripheralLocation = agentPeripheral->Location();
+}
+
+std::string CGUIGameControllerList::GetPortAddress(
+    const PERIPHERALS::PeripheralPtr& agentPeripheral)
+{
+  CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
+
+  // Upcast peripheral to input providers
+  KEYBOARD::IKeyboardInputProvider* const keyboardInputProvider =
+      static_cast<KEYBOARD::IKeyboardInputProvider*>(agentPeripheral.get());
+  MOUSE::IMouseInputProvider* const mouseInputProvider =
+      static_cast<MOUSE::IMouseInputProvider*>(agentPeripheral.get());
+  JOYSTICK::IInputProvider* const joystickInputProvider =
+      static_cast<JOYSTICK::IInputProvider*>(agentPeripheral.get());
+
+  // See if the keyboard input provider has a port address
+  const std::string keyboardAddress = agentInput.GetKeyboardAddress(keyboardInputProvider);
+  if (!keyboardAddress.empty())
+    return keyboardAddress;
+
+  // See if the mouse input provider has a port address
+  const std::string mouseAddress = agentInput.GetMouseAddress(mouseInputProvider);
+  if (!mouseAddress.empty())
+    return mouseAddress;
+
+  // See if the joystick input provider has a port address
+  const std::string joystickAddress = agentInput.GetPortAddress(joystickInputProvider);
+  if (!joystickAddress.empty())
+    return joystickAddress;
+
+  return "";
 }
