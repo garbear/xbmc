@@ -1,10 +1,13 @@
-set(SOURCES GUIAgentControllerList.cpp
+set(SOURCES GUIAgentAvatarList.cpp
+            GUIAgentControllerList.cpp
             GUIAgentWindow.cpp
 )
 
-set(HEADERS GUIAgentControllerList.h
+set(HEADERS GUIAgentAvatarList.h
+            GUIAgentControllerList.h
             GUIAgentDefines.h
             GUIAgentWindow.h
+            IAgentAvatarList.h
             IAgentControllerList.h
 )
 

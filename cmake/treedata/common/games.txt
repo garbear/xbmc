@@ -3,7 +3,10 @@ xbmc/games/addons                  games/addons
 xbmc/games/addons/cheevos          games/addons/cheevos
 xbmc/games/addons/input            games/addons/input
 xbmc/games/addons/streams          games/addons/streams
+xbmc/games/agents                  games/agents
+xbmc/games/agents/avatars          games/agents/avatars
 xbmc/games/agents/dialogs          games/agents/dialogs
+xbmc/games/agents/guicontrols      games/agents/guicontrols
 xbmc/games/agents/input            games/agents/input
 xbmc/games/agents/windows          games/agents/windows
 xbmc/games/controllers             games/controllers
