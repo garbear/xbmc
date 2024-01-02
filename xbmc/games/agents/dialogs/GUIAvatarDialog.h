@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2022-2024 Team Kodi
+ *  Copyright (C) 2021 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -17,49 +17,40 @@ namespace KODI
 {
 namespace GAME
 {
-class IActivePortList;
-class IAgentAvatarList;
-class IAgentControllerList;
+class IAvatarList;
 
 /*!
  * \ingroup games
  */
-class CGUIAgentWindow : public CGUIDialog
+class CGUIAvatarDialog : public CGUIDialog
 {
 public:
-  CGUIAgentWindow();
-  ~CGUIAgentWindow() override;
+  CGUIAvatarDialog();
+  ~CGUIAvatarDialog() override;
 
   // Implementation of CGUIControl via CGUIDialog
   bool OnMessage(CGUIMessage& message) override;
 
 protected:
   // Implementation of CGUIWindow via CGUIDialog
-  void FrameMove() override;
   void OnWindowLoaded() override;
   void OnWindowUnload() override;
   void OnInitWindow() override;
   void OnDeinitWindow(int nextWindowID) override;
+  void FrameMove() override;
 
 private:
-  // Window actions
-  void CloseDialog();
-
-  // Actions for port list
-  void UpdateActivePortList();
-
   // Actions for avatar list
   void UpdateAvatarList();
+  void FocusAvatarList();
+  bool OnClickAction();
 
-  // Actions for controller list
-  void UpdateControllerList();
-  void FocusControllerList();
-  void OnControllerClick();
+  // Actions for the available buttons
+  void ResetAvatars();
+  void CloseDialog();
 
   // GUI parameters
-  std::unique_ptr<IActivePortList> m_portList;
-  std::unique_ptr<IAgentAvatarList> m_avatarList;
-  std::unique_ptr<IAgentControllerList> m_controllerList;
+  std::unique_ptr<IAvatarList> m_avatarList;
 
   // Game parameters
   GameClientPtr m_gameClient;

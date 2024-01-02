@@ -49,6 +49,7 @@
 #include "addons/Skin.h"
 #include "cores/RetroEngine/guicontrols/GUIGameEngineControl.h"
 #include "cores/RetroPlayer/guicontrols/GUIGameControl.h"
+#include "games/agents/guicontrols/GUIAvatarControl.h"
 #include "games/controllers/guicontrols/GUIGameController.h"
 #include "games/controllers/guicontrols/GUIGameControllerList.h"
 #include "input/actions/ActionIDs.h"
@@ -71,6 +72,7 @@ typedef struct
 } ControlMapping;
 
 static const ControlMapping controls[] = {
+    {"avatarcontrol", CGUIControl::GUICONTROL_AVATAR},
     {"button", CGUIControl::GUICONTROL_BUTTON},
     {"cameraview", CGUIControl::GUICONTROL_CAMERA},
     {"colorbutton", CGUIControl::GUICONTROL_COLORBUTTON},
@@ -1735,6 +1737,25 @@ CGUIControl* CGUIControlFactory::Create(int parentID,
       lcontrol->SetClickActions(clickActions);
       lcontrol->SetFocusActions(focusActions);
       lcontrol->SetUnFocusActions(unfocusActions);
+
+      break;
+    }
+    case CGUIControl::GUICONTROL_AVATAR:
+    {
+      control = new GAME::CGUIAvatarControl(parentID, id, posX, posY, width, height, texture);
+
+      GAME::CGUIAvatarControl* acontrol = static_cast<GAME::CGUIAvatarControl*>(control);
+
+      // Set texture
+      acontrol->SetInfo(textureFile);
+
+      // Set aspect ratio
+      acontrol->SetAspectRatio(aspect);
+
+      // Set image filter
+      GUIINFO::CGUIInfoLabel imageFilter;
+      GetInfoLabel(pControlNode, "imagefilter", imageFilter, parentID);
+      acontrol->SetImageFilter(imageFilter);
 
       break;
     }
