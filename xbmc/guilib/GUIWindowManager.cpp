@@ -146,6 +146,7 @@
 
 /* Game related include files */
 #include "cores/RetroPlayer/guiwindows/GameWindowFullScreen.h"
+#include "games/agents/dialogs/GUIAvatarDialog.h"
 #include "games/agents/windows/GUIAgentWindow.h"
 #include "games/controllers/windows/GUIControllerWindow.h"
 #include "games/dialogs/disc/DialogGameDiscManager.h"
@@ -360,6 +361,7 @@ void CGUIWindowManager::CreateWindows()
   Add(new GAME::CDialogGameAchievements);
   Add(new GAME::CDialogGameLeaderboards);
   Add(new GAME::CDialogGameLeaderboardEntries);
+  Add(new GAME::CGUIAvatarDialog);
   Add(new RETRO::CGameWindowFullScreen);
 }
 
@@ -490,6 +492,7 @@ bool CGUIWindowManager::DestroyWindows()
     DestroyWindow(WINDOW_DIALOG_GAME_ACHIEVEMENTS);
     DestroyWindow(WINDOW_DIALOG_GAME_LEADERBOARDS);
     DestroyWindow(WINDOW_DIALOG_GAME_LEADERBOARD_ENTRIES);
+    DestroyWindow(WINDOW_DIALOG_GAME_AVATARS);
     DestroyWindow(WINDOW_FULLSCREEN_GAME);
 
     Remove(WINDOW_SETTINGS_SERVICE);

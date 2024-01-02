@@ -15,5 +15,6 @@
 		<include condition="Window.IsDialogTopMost(gameachievements)">GameDialogAchievements</include>
 		<include condition="Window.IsDialogTopMost(gameleaderboards)">GameDialogLeaderboards</include>
 		<include condition="Window.IsDialogTopMost(gameleaderboardentries)">GameDialogLeaderboardEntries</include>
+		<include condition="Window.IsDialogTopMost(gameavatars)">GameDialogAvatars</include>
 	</controls>
 </window>
