@@ -40,7 +40,7 @@ class CShaderPresetFactory;
 
 namespace GAME
 {
-class CGameAgentManager;
+class CAgentInput;
 class CControllerManager;
 class CGameSettings;
 
@@ -81,7 +81,7 @@ public:
 
   RETRO::CGUIGameRenderManager& GameRenderManager() { return m_gameRenderManager; }
 
-  CGameAgentManager& GameAgentManager() { return *m_gameAgentManager; }
+  CAgentInput& AgentInput() { return *m_agentInput; }
 
   SHADER::CShaderPresetFactory& VideoShaders() { return *m_videoShaders; }
 
@@ -93,7 +93,7 @@ private:
 
   // Game services
   std::unique_ptr<CGameSettings> m_gameSettings;
-  std::unique_ptr<CGameAgentManager> m_gameAgentManager;
+  std::unique_ptr<CAgentInput> m_agentInput;
   std::unique_ptr<SHADER::CShaderPresetFactory> m_videoShaders;
 };
 } // namespace GAME
