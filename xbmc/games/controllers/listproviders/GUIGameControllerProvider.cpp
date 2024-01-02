@@ -11,6 +11,8 @@
 #include "FileItem.h"
 #include "ServiceBroker.h"
 #include "games/GameServices.h"
+#include "games/agents/input/AgentController.h"
+#include "games/agents/input/AgentInput.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerLayout.h"
 #include "games/ports/windows/GUIPortDefines.h"
@@ -121,6 +123,18 @@ void CGUIGameControllerProvider::InitializeItems()
 void CGUIGameControllerProvider::UpdateItems()
 {
   ControllerPtr controller = m_controllerProfile;
+
+  //! @todo
+  if (!controller && !m_peripheralLocation.empty())
+  {
+    CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
+    std::vector<std::shared_ptr<CAgentController>> controllers = agentInput.GetControllers();
+    for (const std::shared_ptr<CAgentController>& agentController : controllers)
+    {
+      if (agentController->GetPeripheralLocation() == m_peripheralLocation)
+        controller = agentController->GetController();
+    }
+  }
 
   int portIndex = -1;
   for (unsigned int i = 0; i < static_cast<unsigned int>(m_items.size()); ++i)

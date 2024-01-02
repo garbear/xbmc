@@ -8,6 +8,7 @@
 #pragma once
 
 #include "XBDateTime.h"
+#include "games/agents/input/IAgentJoystickHandler.h"
 #include "games/controllers/ControllerTypes.h"
 #include "peripherals/PeripheralTypes.h"
 
@@ -18,6 +19,7 @@ namespace KODI
 {
 namespace GAME
 {
+class CAgentInput;
 class CAgentJoystick;
 
 /*!
@@ -28,10 +30,10 @@ class CAgentJoystick;
  * The term "agent" is used to distinguish game players from the myriad of other
  * uses of the term "player" in Kodi, such as media players and player cores.
  */
-class CAgentController
+class CAgentController : public IAgentJoystickHandler
 {
 public:
-  CAgentController(PERIPHERALS::PeripheralPtr peripheral);
+  CAgentController(CAgentInput& agentInput, PERIPHERALS::PeripheralPtr peripheral);
   ~CAgentController();
 
   // Lifecycle functions
@@ -45,13 +47,23 @@ public:
   ControllerPtr GetController() const;
   CDateTime LastActive() const;
   float GetActivation() const;
+  const std::string& GetPortAddress() const { return m_portAddress; }
+
+  // Input mutators
+  void SetPortAddress(std::string portAddress);
+
+  // Implementation of IGameAgentJoystickHandler
+  void OnPortIncrease() override;
+  void OnPortDecrease() override;
 
 private:
   // Construction parameters
+  CAgentInput& m_agentInput;
   const PERIPHERALS::PeripheralPtr m_peripheral;
 
   // Input parameters
   std::unique_ptr<CAgentJoystick> m_joystick;
+  std::string m_portAddress;
 };
 
 } // namespace GAME

@@ -17,6 +17,7 @@ namespace KODI
 namespace GAME
 {
 class CControllerActivity;
+class IAgentJoystickHandler;
 
 /*!
  * \ingroup games
@@ -26,7 +27,7 @@ class CControllerActivity;
 class CAgentJoystick : public JOYSTICK::IInputHandler
 {
 public:
-  CAgentJoystick(PERIPHERALS::PeripheralPtr peripheral);
+  CAgentJoystick(IAgentJoystickHandler& inputHandler, PERIPHERALS::PeripheralPtr peripheral);
 
   ~CAgentJoystick() override;
 
@@ -64,6 +65,7 @@ public:
 
 private:
   // Construction parameters
+  IAgentJoystickHandler& m_inputHandler;
   const PERIPHERALS::PeripheralPtr m_peripheral;
 
   // Input state

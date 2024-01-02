@@ -55,10 +55,10 @@ public:
   uint32_t GetAlignment() const { return m_alignment; }
 
 private:
-  void UpdatePort(int itemNumber, const std::vector<std::string>& inputPorts);
-  void UpdatePortIndex(const PERIPHERALS::PeripheralPtr& agentPeripheral,
+  void UpdatePort(const std::string& peripheralLocation,
+                  const std::vector<std::string>& inputPorts);
+  void UpdatePortIndex(const std::string& peripheralLocation,
                        const std::vector<std::string>& inputPorts);
-  void UpdatePeripheral(const PERIPHERALS::PeripheralPtr& agentPeripheral);
 
   // Game properties
   GameClientPtr m_gameClient;

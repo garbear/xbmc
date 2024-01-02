@@ -20,6 +20,7 @@
 #include "peripherals/devices/PeripheralJoystick.h"
 #include "utils/log.h"
 
+#include <algorithm>
 #include <array>
 
 using namespace KODI;
@@ -73,8 +74,6 @@ void CAgentInput::Stop()
     }
 
     m_portMap.clear();
-    m_peripheralMap.clear();
-    m_disconnectedPeripherals.clear();
   }
 
   // Notify observers if anything changed
@@ -142,13 +141,19 @@ std::vector<std::shared_ptr<CAgentController>> CAgentInput::GetControllers() con
   return m_controllers;
 }
 
-std::string CAgentInput::GetPortAddress(JOYSTICK::IInputProvider* inputProvider) const
+std::string CAgentInput::GetPortAddress(const std::string& peripheralLocation) const
 {
-  auto it = m_portMap.find(inputProvider);
-  if (it != m_portMap.end())
-    return it->second->GetPortAddress();
+  std::string portAddress;
 
-  return "";
+  std::lock_guard<std::mutex> lock(m_agentMutex);
+
+  auto it = std::find_if(m_controllers.begin(), m_controllers.end(),
+                         [&peripheralLocation](const std::shared_ptr<CAgentController>& controller)
+                         { return controller->GetPeripheralLocation() == peripheralLocation; });
+  if (it != m_controllers.end())
+    portAddress = (*it)->GetPortAddress();
+
+  return portAddress;
 }
 
 std::vector<std::string> CAgentInput::GetInputPorts() const
@@ -167,9 +172,11 @@ std::vector<std::string> CAgentInput::GetInputPorts() const
 float CAgentInput::GetPortActivation(const std::string& portAddress) const
 {
   float activation = 0.0f;
+  JoystickMap joystickMap = m_gameClient->Input().GetJoystickMap();
 
-  if (m_gameClient)
-    activation = m_gameClient->Input().GetPortActivation(portAddress);
+  auto it = joystickMap.find(portAddress);
+  if (it != joystickMap.end())
+    activation = it->second->GetActivation();
 
   return activation;
 }
@@ -256,33 +263,23 @@ void CAgentInput::ProcessJoysticks(PERIPHERALS::EventLockHandlePtr& inputHandlin
                      }),
       joysticks.end());
 
+  // Move joysticks that haven't provided input yet to the end
+  std::stable_sort(joysticks.begin(), joysticks.end(),
+                   [](const PERIPHERALS::PeripheralPtr& lhs, const PERIPHERALS::PeripheralPtr& rhs)
+                   {
+                     if (lhs->LastActive().IsValid() && !rhs->LastActive().IsValid())
+                       return true;
+                     if (!lhs->LastActive().IsValid() && rhs->LastActive().IsValid())
+                       return false;
+
+                     return false;
+                   });
+
   // Update agent controllers
   ProcessAgentControllers(joysticks, inputHandlingLock);
 
   // Update expired joysticks
   UpdateExpiredJoysticks(joysticks, inputHandlingLock);
-
-  // Perform the port mapping
-  PortMap newPortMap =
-      MapJoysticks(joysticks, m_gameClient->Input().GetJoystickMap(), m_currentPorts,
-                   m_currentPeripherals, m_gameClient->Input().GetPlayerLimit());
-
-  // Update connected joysticks
-  std::set<PERIPHERALS::PeripheralPtr> disconnectedPeripherals;
-  UpdateConnectedJoysticks(joysticks, newPortMap, inputHandlingLock, disconnectedPeripherals);
-
-  // Rebuild peripheral map
-  PeripheralMap peripheralMap;
-  for (const auto& [inputProvider, joystick] : m_portMap)
-    peripheralMap[joystick->GetControllerAddress()] = joystick->GetSource();
-
-  // Log peripheral map if there were any changes
-  if (peripheralMap != m_peripheralMap || disconnectedPeripherals != m_disconnectedPeripherals)
-  {
-    m_peripheralMap = std::move(peripheralMap);
-    m_disconnectedPeripherals = std::move(disconnectedPeripherals);
-    LogPeripheralMap(m_peripheralMap, m_disconnectedPeripherals);
-  }
 }
 
 void CAgentInput::ProcessKeyboard()
@@ -345,8 +342,22 @@ void CAgentInput::ProcessAgentControllers(const PERIPHERALS::PeripheralVector& j
     if (it == m_controllers.end())
     {
       // Handle new controller
-      m_controllers.emplace_back(std::make_shared<CAgentController>(joystick));
+      m_controllers.emplace_back(std::make_shared<CAgentController>(*this, joystick));
       SetChanged(true);
+
+      // Assign the agent a free port
+      std::vector<std::string> inputPorts = GetInputPorts();
+      for (const std::string& portAddress : inputPorts)
+      {
+        if (std::find_if(m_controllers.begin(), m_controllers.end(),
+                         [&portAddress](const std::shared_ptr<CAgentController>& controller) {
+                           return controller->GetPortAddress() == portAddress;
+                         }) == m_controllers.end())
+        {
+          m_controllers.back()->SetPortAddress(portAddress);
+          break;
+        }
+      }
     }
     else
     {
@@ -364,7 +375,7 @@ void CAgentInput::ProcessAgentControllers(const PERIPHERALS::PeripheralVector& j
         if (!inputHandlingLock)
           inputHandlingLock = m_peripheralManager.RegisterEventLock();
 
-        // Reinitialize agent's controller
+        // Reinitialize agent's new controller
         agentController.Deinitialize();
         agentController.Initialize();
 
@@ -412,7 +423,7 @@ void CAgentInput::UpdateExpiredJoysticks(const PERIPHERALS::PeripheralVector& jo
   // Make a copy - expired joysticks are removed from m_portMap
   PortMap portMapCopy = m_portMap;
 
-  for (const auto& [inputProvider, joystick] : portMapCopy)
+  for (const auto& [inputProvider, gameClientJoystick] : portMapCopy)
   {
     // Structured binding cannot be captured, so make a copy
     JOYSTICK::IInputProvider* const inputProviderCopy = inputProvider;
@@ -436,7 +447,7 @@ void CAgentInput::UpdateExpiredJoysticks(const PERIPHERALS::PeripheralVector& jo
     {
       // Must use nullptr because peripheral has likely fallen out of scope,
       // destroying the object
-      joystick->UnregisterInput(nullptr);
+      gameClientJoystick->UnregisterInput(nullptr);
 
       if (!inputHandlingLock)
         inputHandlingLock = m_peripheralManager.RegisterEventLock();
@@ -447,11 +458,9 @@ void CAgentInput::UpdateExpiredJoysticks(const PERIPHERALS::PeripheralVector& jo
   }
 }
 
-void CAgentInput::UpdateConnectedJoysticks(
-    const PERIPHERALS::PeripheralVector& joysticks,
-    const PortMap& newPortMap,
-    PERIPHERALS::EventLockHandlePtr& inputHandlingLock,
-    std::set<PERIPHERALS::PeripheralPtr>& disconnectedPeripherals)
+void CAgentInput::UpdateConnectedJoysticks(const PERIPHERALS::PeripheralVector& joysticks,
+                                           const PortMap& newPortMap,
+                                           PERIPHERALS::EventLockHandlePtr& inputHandlingLock)
 {
   for (auto& peripheralJoystick : joysticks)
   {
@@ -498,181 +507,32 @@ void CAgentInput::UpdateConnectedJoysticks(
       }
     }
   }
-
-  // Record disconnected peripherals
-  for (const auto& peripheral : joysticks)
-  {
-    // Upcast peripheral to input interface
-    JOYSTICK::IInputProvider* inputProvider = peripheral.get();
-
-    // Check if peripheral is disconnected
-    if (m_portMap.find(inputProvider) == m_portMap.end())
-      disconnectedPeripherals.emplace(peripheral);
-  }
 }
 
 CAgentInput::PortMap CAgentInput::MapJoysticks(
-    const PERIPHERALS::PeripheralVector& peripheralJoysticks,
+    std::vector<std::shared_ptr<CAgentController>> controllers,
     const JoystickMap& gameClientjoysticks,
-    CurrentPortMap& currentPorts,
-    CurrentPeripheralMap& currentPeripherals,
     int playerLimit)
 {
   PortMap result;
 
-  // First, create a map of the current ports to attempt to preserve
-  // player numbers
-  for (const auto& [portAddress, joystick] : gameClientjoysticks)
+  // Loop through the agents and assign ports
+  for (const std::shared_ptr<CAgentController>& controller : controllers)
   {
-    std::string sourceLocation = joystick->GetSourceLocation();
-    if (!sourceLocation.empty())
-      currentPorts[portAddress] = std::move(sourceLocation);
-  }
+    PERIPHERALS::PeripheralPtr joystick = controller->GetPeripheral();
+    const std::string& portAddress = controller->GetPortAddress();
 
-  // Allow reverse lookups by peripheral location
-  for (const auto& [portAddress, sourceLocation] : currentPorts)
-    currentPeripherals[sourceLocation] = portAddress;
+    // Upcast joystick to input provider
+    JOYSTICK::IInputProvider* inputProvider = joystick.get();
 
-  // Next, create a list of joystick peripherals sorted by order of last
-  // button press. Joysticks without a current port are assigned in this
-  // order.
-  PERIPHERALS::PeripheralVector availableJoysticks = peripheralJoysticks;
-  std::sort(availableJoysticks.begin(), availableJoysticks.end(),
-            [](const PERIPHERALS::PeripheralPtr& lhs, const PERIPHERALS::PeripheralPtr& rhs)
-            {
-              if (lhs->LastActive().IsValid() && !rhs->LastActive().IsValid())
-                return true;
-              if (!lhs->LastActive().IsValid() && rhs->LastActive().IsValid())
-                return false;
-
-              return lhs->LastActive() > rhs->LastActive();
-            });
-
-  // Loop through the active ports and assign joysticks
-  unsigned int iJoystick = 0;
-  for (const auto& [portAddress, gameClientJoystick] : gameClientjoysticks)
-  {
-    const unsigned int joystickCount = ++iJoystick;
-
-    // Check if we're out of joystick peripherals or over the topology limit
-    if (availableJoysticks.empty() ||
-        (playerLimit >= 0 && static_cast<int>(joystickCount) > playerLimit))
+    /*! @todo Check that port is under the player limit */
+    auto it = gameClientjoysticks.find(portAddress);
+    if (it != gameClientjoysticks.end())
     {
-      gameClientJoystick->ClearSource();
-      continue;
-    }
-
-    PERIPHERALS::PeripheralVector::iterator itJoystick = availableJoysticks.end();
-
-    // Attempt to preserve player numbers
-    auto itCurrentPort = currentPorts.find(portAddress);
-    if (itCurrentPort != currentPorts.end())
-    {
-      const PeripheralLocation& currentPeripheral = itCurrentPort->second;
-
-      // Find peripheral with matching source location
-      itJoystick = std::find_if(availableJoysticks.begin(), availableJoysticks.end(),
-                                [&currentPeripheral](const PERIPHERALS::PeripheralPtr& joystick)
-                                { return joystick->Location() == currentPeripheral; });
-    }
-
-    if (itJoystick == availableJoysticks.end())
-    {
-      // Get the next most recently active joystick that doesn't have a current port
-      itJoystick = std::find_if(
-          availableJoysticks.begin(), availableJoysticks.end(),
-          [&currentPeripherals, &gameClientjoysticks](const PERIPHERALS::PeripheralPtr& joystick)
-          {
-            const PeripheralLocation& joystickLocation = joystick->Location();
-
-            // If joystick doesn't have a current port, use it
-            auto itPeripheral = currentPeripherals.find(joystickLocation);
-            if (itPeripheral == currentPeripherals.end())
-              return true;
-
-            // Get the address of the last port this joystick was connected to
-            const PortAddress& portAddress = itPeripheral->second;
-
-            // If port is disconnected, use this joystick
-            if (gameClientjoysticks.find(portAddress) == gameClientjoysticks.end())
-              return true;
-
-            return false;
-          });
-    }
-
-    // If found, assign the port and remove from the lists
-    if (itJoystick != availableJoysticks.end())
-    {
-      // Dereference iterator
-      PERIPHERALS::PeripheralPtr peripheralJoystick = *itJoystick;
-
       // Map joystick
-      MapJoystick(std::move(peripheralJoystick), gameClientJoystick, result);
-
-      // Remove from availableJoysticks list
-      availableJoysticks.erase(itJoystick);
-    }
-    else
-    {
-      // No joystick found, clear the port
-      gameClientJoystick->ClearSource();
+      result[inputProvider] = it->second;
     }
   }
 
   return result;
-}
-
-void CAgentInput::MapJoystick(PERIPHERALS::PeripheralPtr peripheralJoystick,
-                              std::shared_ptr<CGameClientJoystick> gameClientJoystick,
-                              PortMap& result)
-{
-  // Upcast peripheral joystick to input provider
-  JOYSTICK::IInputProvider* inputProvider = peripheralJoystick.get();
-
-  // Update game joystick's source peripheral
-  gameClientJoystick->SetSource(std::move(peripheralJoystick));
-
-  // Map input provider to input handler
-  result[inputProvider] = std::move(gameClientJoystick);
-}
-
-void CAgentInput::LogPeripheralMap(
-    const PeripheralMap& peripheralMap,
-    const std::set<PERIPHERALS::PeripheralPtr>& disconnectedPeripherals)
-{
-  CLog::Log(LOGDEBUG, "===== Peripheral Map =====");
-
-  unsigned int line = 0;
-
-  if (!peripheralMap.empty())
-  {
-    for (const auto& [controllerAddress, peripheral] : peripheralMap)
-    {
-      if (line != 0)
-        CLog::Log(LOGDEBUG, "");
-      CLog::Log(LOGDEBUG, "{}:", controllerAddress);
-      CLog::Log(LOGDEBUG, "    {} [{}]", peripheral->Location(), peripheral->DeviceName());
-
-      ++line;
-    }
-  }
-
-  if (!disconnectedPeripherals.empty())
-  {
-    if (line != 0)
-      CLog::Log(LOGDEBUG, "");
-    CLog::Log(LOGDEBUG, "Disconnected:");
-
-    // Sort by peripheral location
-    std::map<std::string, std::string> disconnectedPeripheralMap;
-    for (const auto& peripheral : disconnectedPeripherals)
-      disconnectedPeripheralMap[peripheral->Location()] = peripheral->DeviceName();
-
-    // Log location and device name for disconnected peripherals
-    for (const auto& [location, deviceName] : disconnectedPeripheralMap)
-      CLog::Log(LOGDEBUG, "    {} [{}]", location, deviceName);
-  }
-
-  CLog::Log(LOGDEBUG, "==========================");
 }

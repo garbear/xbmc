@@ -78,13 +78,7 @@ public:
   const std::string& GetPortAddress() const { return m_portAddress; }
   ControllerPtr GetController() const { return m_controller; }
   std::string GetControllerAddress() const;
-  PERIPHERALS::PeripheralPtr GetSource() const { return m_sourcePeripheral; }
-  std::string GetSourceLocation() const;
   float GetActivation() const;
-
-  // Input mutators
-  void SetSource(PERIPHERALS::PeripheralPtr sourcePeripheral);
-  void ClearSource();
 
   // Input handlers
   bool SetRumble(const std::string& feature, float magnitude);
@@ -97,7 +91,6 @@ private:
 
   // Input parameters
   std::unique_ptr<CPortInput> m_portInput;
-  PERIPHERALS::PeripheralPtr m_sourcePeripheral;
 };
 } // namespace GAME
 } // namespace KODI

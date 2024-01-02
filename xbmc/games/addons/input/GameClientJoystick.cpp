@@ -176,27 +176,9 @@ std::string CGameClientJoystick::GetControllerAddress() const
   return CGameClientTopology::MakeAddress(m_portAddress, m_controller->ID());
 }
 
-std::string CGameClientJoystick::GetSourceLocation() const
-{
-  if (m_sourcePeripheral)
-    return m_sourcePeripheral->Location();
-
-  return "";
-}
-
 float CGameClientJoystick::GetActivation() const
 {
   return m_portInput->GetActivation();
-}
-
-void CGameClientJoystick::SetSource(PERIPHERALS::PeripheralPtr sourcePeripheral)
-{
-  m_sourcePeripheral = std::move(sourcePeripheral);
-}
-
-void CGameClientJoystick::ClearSource()
-{
-  m_sourcePeripheral.reset();
 }
 
 bool CGameClientJoystick::SetRumble(const std::string& feature, float magnitude)

@@ -8,6 +8,7 @@
 
 #include "AgentController.h"
 
+#include "AgentInput.h"
 #include "AgentJoystick.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerLayout.h"
@@ -16,8 +17,10 @@
 using namespace KODI;
 using namespace GAME;
 
-CAgentController::CAgentController(PERIPHERALS::PeripheralPtr peripheral)
-  : m_peripheral(std::move(peripheral)), m_joystick(std::make_unique<CAgentJoystick>(m_peripheral))
+CAgentController::CAgentController(CAgentInput& agentInput, PERIPHERALS::PeripheralPtr peripheral)
+  : m_agentInput(agentInput),
+    m_peripheral(std::move(peripheral)),
+    m_joystick(std::make_unique<CAgentJoystick>(m_peripheral))
 {
   Initialize();
 }
@@ -76,4 +79,71 @@ CDateTime CAgentController::LastActive() const
 float CAgentController::GetActivation() const
 {
   return m_joystick->GetActivation();
+}
+
+void CAgentController::SetPortAddress(std::string portAddress)
+{
+  m_portAddress = std::move(portAddress);
+}
+
+void CAgentController::OnPortIncrease()
+{
+  std::vector<std::string> ports = m_agentInput.GetInputPorts();
+  if (ports.empty())
+    return;
+
+  std::string oldPortAddress = m_portAddress;
+
+  for (auto it = ports.begin(); it != ports.end(); ++it)
+  {
+    if (*it == m_portAddress)
+    {
+      ++it;
+      if (it == ports.end())
+        m_portAddress = ports.back();
+      else
+        m_portAddress = *it;
+      break;
+    }
+
+    if (*it > m_portAddress)
+    {
+      m_portAddress = *it;
+      break;
+    }
+  }
+
+  if (m_portAddress != oldPortAddress)
+    m_agentInput.Refresh();
+}
+
+void CAgentController::OnPortDecrease()
+{
+  std::vector<std::string> ports = m_agentInput.GetInputPorts();
+  if (ports.empty())
+    return;
+
+  std::string oldPortAddress = m_portAddress;
+
+  for (auto it = ports.rbegin(); it != ports.rend(); ++it)
+  {
+    if (*it == m_portAddress)
+    {
+      ++it;
+      if (it == ports.rend())
+        m_portAddress.clear();
+      else
+        m_portAddress = *it;
+      break;
+    }
+
+    if (*it < m_portAddress)
+    {
+      m_portAddress = *it;
+      break;
+    }
+  }
+
+  if (m_portAddress != oldPortAddress)
+    m_agentInput.Refresh();
 }

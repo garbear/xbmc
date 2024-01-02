@@ -72,7 +72,8 @@ void CGUIGameControllerList::UpdateInfo(const CGUIListItem* item)
   m_portCount = inputPorts.size();
 
   // Update port index
-  UpdatePort(item->GetCurrentItem(), inputPorts);
+  if (item->IsFileItem())
+    UpdatePort(static_cast<const CFileItem*>(item)->GetPath(), inputPorts);
 
   bool bUpdateListProvider = false;
 
@@ -142,28 +143,18 @@ void CGUIGameControllerList::ClearGameClient()
   m_gameClient.reset();
 }
 
-void CGUIGameControllerList::UpdatePort(int itemNumber, const std::vector<std::string>& inputPorts)
+void CGUIGameControllerList::UpdatePort(const std::string& peripheralLocation,
+                                        const std::vector<std::string>& inputPorts)
 {
-  // Item numbers start from 1
-  if (itemNumber < 1)
-    return;
-
-  const unsigned int controllerIndex = static_cast<unsigned int>(itemNumber - 1);
-
-  CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
-
-  std::vector<std::shared_ptr<CAgentController>> agentControllers = agentInput.GetControllers();
-  if (controllerIndex < static_cast<unsigned int>(agentControllers.size()))
-  {
-    const std::shared_ptr<CAgentController>& agentController = agentControllers.at(controllerIndex);
-    UpdatePortIndex(agentController->GetPeripheral(), inputPorts);
-    UpdatePeripheral(agentController->GetPeripheral());
-  }
+  UpdatePortIndex(peripheralLocation, inputPorts);
+  m_peripheralLocation = peripheralLocation;
 }
 
-void CGUIGameControllerList::UpdatePortIndex(const PERIPHERALS::PeripheralPtr& agentPeripheral,
+void CGUIGameControllerList::UpdatePortIndex(const std::string& peripheralLocation,
                                              const std::vector<std::string>& inputPorts)
 {
+  m_portIndex = -1;
+
   CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
 
   // Upcast peripheral to input provider
@@ -171,11 +162,9 @@ void CGUIGameControllerList::UpdatePortIndex(const PERIPHERALS::PeripheralPtr& a
       static_cast<JOYSTICK::IInputProvider*>(agentPeripheral.get());
 
   // See if the input provider has a port address
-  std::string portAddress = agentInput.GetPortAddress(inputProvider);
+  std::string portAddress = agentInput.GetPortAddress(peripheralLocation);
   if (portAddress.empty())
     return;
-
-  m_portIndex = -1;
 
   // Search ports for input provider's address
   for (size_t i = 0; i < inputPorts.size(); ++i)
@@ -187,9 +176,4 @@ void CGUIGameControllerList::UpdatePortIndex(const PERIPHERALS::PeripheralPtr& a
       break;
     }
   }
-}
-
-void CGUIGameControllerList::UpdatePeripheral(const PERIPHERALS::PeripheralPtr& agentPeripheral)
-{
-  m_peripheralLocation = agentPeripheral->Location();
 }

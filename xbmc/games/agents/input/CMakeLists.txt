@@ -6,6 +6,7 @@ set(SOURCES AgentController.cpp
 set(HEADERS AgentController.h
             AgentInput.h
             AgentJoystick.h
+            IAgentJoystickHandler.h
 )
 
 core_add_library(games_agents_input)

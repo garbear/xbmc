@@ -8,6 +8,7 @@
 
 #include "AgentJoystick.h"
 
+#include "IAgentJoystickHandler.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/input/ControllerActivity.h"
 #include "input/joysticks/interfaces/IInputProvider.h"
@@ -16,8 +17,10 @@
 using namespace KODI;
 using namespace GAME;
 
-CAgentJoystick::CAgentJoystick(PERIPHERALS::PeripheralPtr peripheral)
-  : m_peripheral(std::move(peripheral)),
+CAgentJoystick::CAgentJoystick(IAgentJoystickHandler& inputHandler,
+                               PERIPHERALS::PeripheralPtr peripheral)
+  : m_inputHandler(inputHandler),
+    m_peripheral(std::move(peripheral)),
     m_controllerActivity(std::make_unique<CControllerActivity>())
 {
 }
@@ -74,6 +77,20 @@ bool CAgentJoystick::AcceptsInput(const std::string& feature) const
 bool CAgentJoystick::OnButtonPress(const std::string& feature, bool bPressed)
 {
   m_controllerActivity->OnButtonPress(bPressed);
+
+  if (bPressed)
+  {
+    // Handle "left" and "right" cannonical buttons
+    if (feature == "left")
+    {
+      m_inputHandler.OnPortDecrease();
+    }
+    else if (feature == "right")
+    {
+      m_inputHandler.OnPortIncrease();
+    }
+  }
+
   return true;
 }
 
