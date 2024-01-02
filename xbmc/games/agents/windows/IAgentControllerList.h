@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021-2023 Team Kodi
+ *  Copyright (C) 2021-2024 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -21,12 +21,19 @@ namespace GAME
 /*!
  * \ingroup games
  *
- * \brief A list populated by game-playing agents
+ * \brief A list populated by the controllers of game-playing agents (\ref CGameAgent)
+ *
+ * This class manages the behavior of the controller list (with control ID 7) in
+ * the player dialog (<b>`GameAgents`</b> window).
+ *
+ * The active ports are determined by \ref IActivePortList.
+ *
+ * The list is populated by the \ref CGUIGameControllerProvider.
  */
-class IAgentList
+class IAgentControllerList
 {
 public:
-  virtual ~IAgentList() = default;
+  virtual ~IAgentControllerList() = default;
 
   /*!
    * \brief Callback when the GUI window is loaded
