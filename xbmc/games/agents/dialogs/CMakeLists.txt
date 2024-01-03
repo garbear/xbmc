@@ -1,8 +1,10 @@
-set(SOURCES GUIAvatarDialog.cpp
+set(SOURCES DialogSelectAvatar.cpp
+            GUIAvatarDialog.cpp
             GUIAvatarList.cpp
 )
 
-set(HEADERS GUIAvatarDefines.h
+set(HEADERS DialogSelectAvatar.h
+            GUIAvatarDefines.h
             GUIAvatarDialog.h
             GUIAvatarList.h
             IAvatarList.h
