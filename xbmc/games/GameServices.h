@@ -58,6 +58,11 @@ public:
                 ADDON::CAddonMgr& addons);
   ~CGameServices();
 
+  // Lifecycle functions
+  void Initialize();
+  void Deinitialize();
+
+  // Controller accessors
   ControllerPtr GetController(const std::string& controllerId);
   ControllerPtr GetDefaultController();
   ControllerPtr GetDefaultKeyboard();
