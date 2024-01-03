@@ -45,6 +45,7 @@ class IMouseInputProvider;
 
 namespace GAME
 {
+class CAgentInputMap;
 class CGameClient;
 class CGameClientJoystick;
 
@@ -73,6 +74,8 @@ public:
   virtual ~CAgentInput();
 
   // Lifecycle functions
+  void Initialize();
+  void Deinitialize();
   void Start(GameClientPtr gameClient);
   void Stop();
   void Refresh();
@@ -204,6 +207,11 @@ private:
    * Source peripherals are not exposed to the game.
    */
   std::set<PERIPHERALS::PeripheralPtr> m_disconnectedPeripherals;
+
+  /*!
+   * \brief Input map for the agents
+   */
+  std::unique_ptr<CAgentInputMap> m_inputMap;
 };
 } // namespace GAME
 } // namespace KODI
