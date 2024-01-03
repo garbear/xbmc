@@ -818,4 +818,112 @@
 			</control>
 		</control>
 	</include>
+	<include name="GameDialogSelectAvatar">
+		<control type="group">
+			<centertop>50%</centertop>
+			<centerleft>50%</centerleft>
+			<width>800</width>
+			<height>960</height>
+			<include content="DialogBackgroundCommons">
+				<param name="width" value="800" />
+				<param name="height" value="960" />
+				<param name="header_label" value="$LOCALIZE[10832]" />
+				<param name="header_id" value="2" />
+			</include>
+			<control type="group">
+				<description>Content area</description>
+				<top>96</top>
+				<bottom>40</bottom>
+				<left>40</left>
+				<right>40</right>
+				<control type="group">
+					<control type="label" id="4">
+						<height>82</height>
+						<align>center</align>
+						<font>font52_title</font>
+						<shadowcolor>text_shadow</shadowcolor>
+					</control>
+					<control type="label">
+						<top>82</top>
+						<height>72</height>
+						<align>center</align>
+						<label>35301</label>
+						<font>font45</font>
+						<shadowcolor>text_shadow</shadowcolor>
+					</control>
+				</control>
+				<control type="group">
+					<description>Area of the dialog for avatars</description>
+					<top>190</top>
+					<height>636</height>
+					<control type="image">
+						<description>Controller list background</description>
+						<top>-20</top>
+						<bottom>-20</bottom>
+						<left>-20</left>
+						<right>-20</right>
+						<texture border="40">buttons/dialogbutton-nofo.png</texture>
+					</control>
+					<control type="list" id="3">
+						<description>Controller list</description>
+						<pagecontrol>61</pagecontrol>
+						<scrolltime tween="sine">200</scrolltime>
+						<orientation>vertical</orientation>
+						<itemlayout width="720" height="106">
+							<control type="avatarcontrol">
+								<description>Avatar image</description>
+								<top>5</top>
+								<left>20</left>
+								<width>96</width>
+								<height>96</height>
+								<texture>$INFO[ListItem.Icon]</texture>
+								<imagefilter>nearest</imagefilter>
+							</control>
+							<control type="label">
+								<description>Avatar name</description>
+								<left>130</left>
+								<label>$INFO[ListItem.Label]</label>
+								<font>font37</font>
+								<shadowcolor>text_shadow</shadowcolor>
+								<aligny>center</aligny>
+							</control>
+						</itemlayout>
+						<focusedlayout width="720" height="106">
+							<control type="image">
+								<top>-20</top>
+								<bottom>-20</bottom>
+								<left>-20</left>
+								<right>-20</right>
+								<texture border="40" colordiffuse="button_focus">buttons/dialogbutton-fo.png</texture>
+								<visible>Control.HasFocus(3)</visible>
+							</control>
+							<control type="avatarcontrol">
+								<description>Avatar image</description>
+								<top>5</top>
+								<left>20</left>
+								<width>96</width>
+								<height>96</height>
+								<texture>$INFO[ListItem.Icon]</texture>
+								<imagefilter>nearest</imagefilter>
+							</control>
+							<control type="label">
+								<description>Avatar name</description>
+								<left>130</left>
+								<label>$INFO[ListItem.Label]</label>
+								<font>font37</font>
+								<shadowcolor>text_shadow</shadowcolor>
+								<aligny>center</aligny>
+							</control>
+						</focusedlayout>
+					</control>
+					<control type="scrollbar" id="61">
+						<description>Controller list scroll bar</description>
+						<right>-12</right>
+						<width>12</width>
+						<orientation>vertical</orientation>
+					</control>
+				</control>
+			</control>
+		</control>
+	</include>
 </includes>

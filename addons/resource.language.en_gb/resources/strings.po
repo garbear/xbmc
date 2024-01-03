@@ -5729,7 +5729,13 @@ msgctxt "#10831"
 msgid "Players"
 msgstr ""
 
-#empty strings from id 10832 to 11999
+#. Name of window for selecting an avatar while playing a game
+#: addons/skin.estuary/xml/Includes_DialogSelect.xml
+msgctxt "#10832"
+msgid "Select Avatar"
+msgstr ""
+
+#empty strings from id 10833 to 11999
 
 #: xbmc/guilib/WindowIDs.h
 msgctxt "#12000"
@@ -18845,7 +18851,21 @@ msgctxt "#35271"
 msgid "Playing with:"
 msgstr ""
 
-#empty strings from id 35272 to 35399
+#empty strings from id 35272 to 35299
+
+#. Label for a game player to get ready to play. {0:d} - player number, e.g. "Ready Player 1"
+#: xbmc/games/dialogs/osd/DialogSelectAvatar.cpp
+msgctxt "#35300"
+msgid "Ready Player {0:d}"
+msgstr ""
+
+#. Label for a player to choose their avatar while playing a game
+#: addons/skin.estuary/xml/Includes_DialogSelect.xml
+msgctxt "#35301"
+msgid "Choose your avatar"
+msgstr ""
+
+#empty strings from id 35302 to 35399
 
 #. Name of add-ons that provide user identities
 #: xbmc/addons/addoninfo/AddonInfo.cpp
