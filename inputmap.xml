@@ -1,0 +1,201 @@
+<inputmap>
+	<controllers>
+		<controller id="0" type="keyboard" bus="application">
+			<config apperance="game.controller.keyboard"/>
+			<lastactive>2024-01-18</lastactive>
+		</controller>
+		<controller id="1" type="mouse" bus="application">
+			<config apperance="game.controller.mouse"/>
+			<lastactive>2024-01-18</lastactive>
+		</controller>
+		<controller id="2" type="joystick" bus="addon" vid="0000" pid="0000" name="Xbox 360-compatible controller" provider="linux" buttons="14" hats="0" axes="8" requestedport="-1" ordinal="0" lastlocation="peripheral.joystick/0">
+			<config apperance="game.controller.ps.dual.analog" leftdeadzone="0.20" rightdeadzone="0.20"/>
+			<lastactive>2024-01-18</lastactive>
+		</controller>
+		<controller id="3" type="joystick" bus="addon" vid="0000" pid="0000" name="Xbox 360-compatible controller" provider="linux" buttons="14" hats="0" axes="8" requestedport="-1" ordinal="1" lastlocation="peripheral.joystick/1">
+			<config apperance="game.controller.ps.dual.analog" leftdeadzone="0.20" rightdeadzone="0.20"/>
+			<lastactive>2024-01-18</lastactive>
+		</controller>
+	</controllers>
+	<topologies>
+		<logicaltopology id="0" sha2-256="00d7aa5d36c145c6ec8b23b1e65ac55e919f72e020957c013dbdedf3f56914c3" digestcreation="2024-01-20T10:00:59Z">
+			<definition>
+				<port type="controller" id="1">
+					<accepts controller="game.controller.snes"/>
+					<accepts controller="game.controller.snes.mouse"/>
+					<accepts controller="game.controller.snes.multitap">
+						<port type="controller" id="1">
+							<accepts controller="game.controller.snes"/>
+						</port>
+						<port type="controller" id="2">
+							<accepts controller="game.controller.snes"/>
+						</port>
+						<port type="controller" id="3">
+							<accepts controller="game.controller.snes"/>
+						</port>
+						<port type="controller" id="4">
+							<accepts controller="game.controller.snes"/>
+						</port>
+					</accepts>
+				</port>
+				<port type="controller" id="2">
+					<accepts controller="game.controller.snes"/>
+					<accepts controller="game.controller.snes.mouse"/>
+					<accepts controller="game.controller.snes.multitap">
+						<port type="controller" id="1">
+							<accepts controller="game.controller.snes"/>
+						</port>
+						<port type="controller" id="2">
+							<accepts controller="game.controller.snes"/>
+						</port>
+						<port type="controller" id="3">
+							<accepts controller="game.controller.snes"/>
+						</port>
+						<port type="controller" id="4">
+							<accepts controller="game.controller.snes"/>
+						</port>
+					</accepts>
+					<accepts controller="game.controller.snes.super.scope"/>
+					<accepts controller="game.controller.konami.justifier.snes"/>
+				</port>
+			</definition>
+			<gameclients>
+				<gameclient>game.libretro.snes9x</gameclient>
+				<gameclient>game.libretro.snes9x2002</gameclient>
+				<gameclient>game.libretro.snes9x2010</gameclient>
+			</gameclients>
+		</logicaltopology>
+		<logicaltopology id="1" sha2-256="00d7aa5d36c145c6ec8b23b1e65ac55e919f72e020957c013dbdedf3f56914c3" digestcreation="2024-01-20T10:00:59Z">
+			<definition>
+				<port type="keyboard">
+					<accepts controller="game.controller.keyboard"/>
+				</port>
+				<port type="mouse">
+					<accepts controller="game.controller.mouse"/>
+				</port>
+				<port type="controller" id="1">
+					<accepts controller="game.controller.gravis.gamepad"/>
+					<accepts controller="game.controller.joystick.4button"/>
+					<accepts controller="game.controller.joystick.2button">
+						<port type="controller" id="1">
+							<accepts controller="game.controller.joystick.2button"/>
+						</port>
+					</accepts>
+				</port>
+			</definition>
+			<gameclients>
+				<gameclient>game.libretro.dosbox</gameclient>
+				<gameclient>game.libretro.dosbox-pure</gameclient>
+			</gameclients>
+		</logicaltopology>
+	</topologies>
+	<agents>
+		<agent player="1" name="Mr. Man" avatar="resource://resource.avatar.opengameart/avatars/Blue_Enemy/01x/001.png">
+			<mapping topology="0" controlleraddress="/1/game.controller.snes">
+				<button name="a" mapcontroller="2" mapas="game.controller.default" mapbutton="b"/>
+				<button name="b" mapcontroller="2" mapas="game.controller.default" mapbutton="a"/>
+				<button name="down" mapcontroller="2" mapas="game.controller.default" mapanalogstick="leftstick" direction="down"/>
+				<button name="down" mapcontroller="2" mapas="game.controller.default" mapbutton="down"/>
+				<button name="left" mapcontroller="2" mapas="game.controller.default" mapanalogstick="leftstick" direction="left"/>
+				<button name="left" mapcontroller="2" mapas="game.controller.default" mapbutton="left"/>
+				<button name="leftbumper" mapcontroller="2" mapas="game.controller.default" mapbutton="leftbumper"/>
+				<button name="right" mapcontroller="2" mapas="game.controller.default" mapanalogstick="leftstick" direction="right"/>
+				<button name="right" mapcontroller="2" mapas="game.controller.default" mapbutton="right"/>
+				<button name="rightbumper" mapcontroller="2" mapas="game.controller.default" mapbutton="rightbumper"/>
+				<button name="select" mapcontroller="2" mapas="game.controller.default" mapbutton="back"/>
+				<button name="start" mapcontroller="2" mapas="game.controller.default" mapbutton="start"/>
+				<button name="up" mapcontroller="2" mapas="game.controller.default" mapanalogstick="leftstick" direction="up"/>
+				<button name="up" mapcontroller="2" mapas="game.controller.default" mapbutton="up"/>
+				<button name="x" mapcontroller="2" mapas="game.controller.default" mapbutton="y"/>
+				<button name="y" mapcontroller="2" mapas="game.controller.default" mapbutton="x"/>
+			</mapping>
+		</agent>
+		<agent player="2" name="Green Hero" avatar="resource://resource.avatar.opengameart/avatars/Green_Hero/01x/001.png">
+			<mapping topology="0" controlleraddress="/2/game.controller.snes">
+				<button name="a" mapcontroller="2" mapas="game.controller.default" mapbutton="b"/>
+				<button name="a" mapcontroller="3" mapas="game.controller.default" mapbutton="b"/>
+				<button name="b" mapcontroller="3" mapas="game.controller.default" mapbutton="a"/>
+				<button name="down" mapcontroller="3" mapas="game.controller.default" mapbutton="down"/>
+				<button name="left" mapcontroller="3" mapas="game.controller.default" mapbutton="left"/>
+				<button name="leftbumper" mapcontroller="3" mapas="game.controller.default" mapbutton="leftbumper"/>
+				<button name="right" mapcontroller="3" mapas="game.controller.default" mapbutton="right"/>
+				<button name="rightbumper" mapcontroller="3" mapas="game.controller.default" mapbutton="rightbumper"/>
+				<button name="select" mapcontroller="3" mapas="game.controller.default" mapbutton="back"/>
+				<button name="start" mapcontroller="3" mapas="game.controller.default" mapbutton="start"/>
+				<button name="up" mapcontroller="3" mapas="game.controller.default" mapbutton="up"/>
+				<button name="x" mapcontroller="3" mapas="game.controller.default" mapbutton="y"/>
+				<button name="y" mapcontroller="3" mapas="game.controller.default" mapbutton="x"/>
+			</mapping>
+			<mapping topology="0" controlleraddress="/2/game.controller.snes.super.scope">
+				<button name="a" mapcontroller="3" mapas="game.controller.default" mapanalogstick="rightstick" direction="right"/>
+				<button name="b" mapcontroller="3" mapas="game.controller.default" mapanalogstick="rightstick" direction="down"/>
+				<button name="down" mapcontroller="3" mapas="game.controller.default" mapanalogstick="leftstick" direction="down"/>
+				<button name="left" mapcontroller="3" mapas="game.controller.default" mapanalogstick="leftstick" direction="left"/>
+				<button name="leftbumper" mapcontroller="3" mapas="game.controller.default" mapbutton="lefttrigger"/>
+				<button name="right" mapcontroller="3" mapas="game.controller.default" mapanalogstick="leftstick" direction="right"/>
+				<button name="rightbumper" mapcontroller="3" mapas="game.controller.default" mapbutton="righttrigger"/>
+				<button name="select" mapcontroller="3" mapas="game.controller.default" mapbutton="back"/>
+				<button name="start" mapcontroller="3" mapas="game.controller.default" mapbutton="guide"/>
+				<button name="up" mapcontroller="3" mapas="game.controller.default" mapanalogstick="leftstick" direction="up"/>
+				<button name="x" mapcontroller="3" mapas="game.controller.default" mapanalogstick="rightstick" direction="up"/>
+				<button name="y" mapcontroller="3" mapas="game.controller.default" mapanalogstick="rightstick" direction="left"/>
+			</mapping>
+		</agent>
+		<agent player="3" name="Gum Bot" avatar="resource://resource.avatar.opengameart/avatars/Gum_Bot/01x/001.png">
+			<mapping topology="0" controlleraddress="/2/game.controller.multitap/1/game.controller.snes">
+				<button name="a" mapcontroller="0" mapas="game.controller.keyboard" mapkey="z"/>
+				<button name="b" mapcontroller="0" mapas="game.controller.keyboard" mapkey="x"/>
+				<button name="start" mapcontroller="1" mapas="game.controller.default" mapbutton="middle"/>
+				<button name="x" mapcontroller="1" mapas="game.controller.default" mapbutton="left"/>
+				<button name="y" mapcontroller="1" mapas="game.controller.default" mapbutton="right"/>
+			</mapping>
+		</agent>
+	</agents>
+</inputmap>
+
+
+
+
+Profiles
+                                                 OK
+<avatar> Blue Enemy     Player 1 <SNES>
+<avatar> Green Hero     Player 2 <SNES>
+<avatar> Gum Bot        Player 3 <SNES>
+<avatar> Mr. Man        Player 4 <SNES>
+<avatar> Neko           Player 5 <SNES>
+<!--<avatar> PegLeg     Player 6 <SNES>-->
+<!--<avatar> Red Enemy  Player 7 <SNES>-->
+<!--<avatar> Samurai    Player 8 <SNES>-->
+
+
+= Rename
+= Choose avatar
+= Reset avatar
+= Reset controls
+
+
+
+Sony Interactive Entertainment Wireless Controller
+
+                                                        OK
+                                                        Settings
+                                                        Reset
+<SNES> <avatar> Map Player 1          <PS controller>
+<SNES> <avatar> Map Player 2
+<SNES> <avatar> Map Player 3          <PS controller>
+<SNES> <avatar> Map Player 4
+<SNES> <avatar> Map Player 5
+<!--   <avatar> Map Player 6 -->
+<!--   <avatar> Map Player 7 -->
+<!--   <avatar> Map Player 8 -->
+
+
+= TODO
+
+
+
+Player Order
+
+1 Blue Enemy
+2 Mr. Man
+
