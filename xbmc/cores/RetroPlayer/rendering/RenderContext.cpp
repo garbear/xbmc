@@ -312,10 +312,12 @@ RESOLUTION_INFO& CRenderContext::GetResolutionInfo(RESOLUTION resolution)
 
 void CRenderContext::StartAgentInput(GAME::GameClientPtr gameClient)
 {
-  m_gameServices.AgentInput().Start(std::move(gameClient));
+  //! @todo
+  //m_gameServices.AgentInput().Start(std::move(gameClient));
 }
 
 void CRenderContext::StopAgentInput()
 {
-  m_gameServices.AgentInput().Stop();
+  //! @todo
+  //m_gameServices.AgentInput().Stop();
 }

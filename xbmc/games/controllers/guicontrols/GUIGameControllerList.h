@@ -60,8 +60,6 @@ private:
                        const std::vector<std::string>& inputPorts);
   void UpdatePeripheral(const PERIPHERALS::PeripheralPtr& agentPeripheral);
 
-  static std::string GetPortAddress(const PERIPHERALS::PeripheralPtr& agentPeripheral);
-
   // Game properties
   GameClientPtr m_gameClient;
   unsigned int m_portCount{0};
