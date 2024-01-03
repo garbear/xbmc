@@ -9,6 +9,7 @@
 #include "AgentInput.h"
 
 #include "AgentController.h"
+#include "AgentInputMap.h"
 #include "games/addons/GameClient.h"
 #include "games/addons/input/GameClientInput.h"
 #include "games/addons/input/GameClientJoystick.h"
@@ -26,20 +27,35 @@ using namespace KODI;
 using namespace GAME;
 
 CAgentInput::CAgentInput(PERIPHERALS::CPeripherals& peripheralManager, CInputManager& inputManager)
-  : m_peripheralManager(peripheralManager), m_inputManager(inputManager)
+  : m_peripheralManager(peripheralManager),
+    m_inputManager(inputManager),
+    m_inputMap(std::make_unique<CAgentInputMap>())
 {
+}
+
+CAgentInput::~CAgentInput() = default;
+
+void CAgentInput::Initialize()
+{
+  // Load input map
+  //! @todo Load async to not block main thread during app initialization
+  m_inputMap->LoadXML();
+
   // Register callbacks
   m_peripheralManager.RegisterObserver(this);
   m_inputManager.RegisterKeyboardDriverHandler(this);
   m_inputManager.RegisterMouseDriverHandler(this);
 }
 
-CAgentInput::~CAgentInput()
+void CAgentInput::Deinitialize()
 {
   // Unregister callbacks in reverse order
   m_inputManager.UnregisterMouseDriverHandler(this);
   m_inputManager.UnregisterKeyboardDriverHandler(this);
   m_peripheralManager.UnregisterObserver(this);
+
+  // Clear input map
+  m_inputMap->Clear();
 }
 
 void CAgentInput::Start(GameClientPtr gameClient)
@@ -53,6 +69,9 @@ void CAgentInput::Start(GameClientPtr gameClient)
 
   // Perform initial refresh
   Refresh();
+
+  // Update input map
+  m_inputMap->AddGameClient(m_gameClient);
 }
 
 void CAgentInput::Stop()
