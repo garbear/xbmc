@@ -29,7 +29,7 @@ void CAgentJoystick::Initialize()
   // Record appearance to detect changes
   m_controllerAppearance = m_peripheral->ControllerProfile();
 
-  // Upcast peripheral to input interface
+  // Upcast peripheral to input provider interface
   JOYSTICK::IInputProvider* inputProvider = m_peripheral.get();
 
   // Register input handler to silently observe all input
