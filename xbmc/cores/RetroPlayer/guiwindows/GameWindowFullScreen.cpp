@@ -17,6 +17,7 @@
 #include "cores/RetroPlayer/guibridge/GUIRenderHandle.h"
 #include "games/GameServices.h"
 #include "games/GameSettings.h"
+#include "games/agents/dialogs/DialogSelectAvatar.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIControl.h"
 #include "guilib/GUIDialog.h"
@@ -24,6 +25,7 @@
 #include "guilib/WindowIDs.h"
 #include "input/actions/Action.h"
 #include "input/actions/ActionIDs.h"
+#include "messaging/ApplicationMessenger.h"
 #include "windowing/GraphicContext.h" //! @todo Remove me
 #include "windowing/WinSystem.h"
 
@@ -199,6 +201,10 @@ void CGameWindowFullScreen::OnInitWindow()
       TriggerOSD();
     }
   }
+
+  // Show avatar selection
+  //! @todo
+  //TriggerAvatarSelection();
 }
 
 void CGameWindowFullScreen::OnDeinitWindow(int nextWindowID)
@@ -221,9 +227,41 @@ void CGameWindowFullScreen::TriggerOSD()
   }
 }
 
+void CGameWindowFullScreen::TriggerAvatarSelection()
+{
+  GAME::CDialogSelectAvatar* dialog = GetSelectAvatarDialog();
+
+  if (dialog != nullptr && !dialog->IsPlayerOneReady())
+  {
+    dialog->Open();
+    if (dialog->IsPlayerOneReady())
+    {
+      // Show the OSD on the first launch
+      auto appMessenger = CServiceBroker::GetAppMessenger();
+      if (appMessenger)
+        appMessenger->PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1,
+                              static_cast<void*>(new CAction(ACTION_SHOW_OSD)));
+    }
+  }
+}
+
 CGUIDialog* CGameWindowFullScreen::GetOSD()
 {
   return CServiceBroker::GetGUI()->GetWindowManager().GetDialog(WINDOW_DIALOG_GAME_OSD);
+}
+
+GAME::CDialogSelectAvatar* CGameWindowFullScreen::GetSelectAvatarDialog()
+{
+  GAME::CDialogSelectAvatar* dialog = nullptr;
+
+  CGUIComponent* gui = CServiceBroker::GetGUI();
+  if (gui != nullptr)
+  {
+    dialog =
+        gui->GetWindowManager().GetWindow<GAME::CDialogSelectAvatar>(WINDOW_DIALOG_SELECT_AVATAR);
+  }
+
+  return dialog;
 }
 
 void CGameWindowFullScreen::RegisterWindow()
