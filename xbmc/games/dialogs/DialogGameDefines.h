@@ -8,6 +8,9 @@
 
 #pragma once
 
+// Skin XML files
+constexpr auto SELECT_AVATAR_DIALOG_XML = "DialogSelect.xml";
+
 // Name of list item property for savestate captions
 constexpr auto SAVESTATE_LABEL = "savestate.label";
 constexpr auto SAVESTATE_CAPTION = "savestate.caption";
@@ -30,3 +33,7 @@ constexpr unsigned int CONTROL_SAVES_NEW_BUTTON = 10825;
 constexpr unsigned int CONTROL_SAVES_CANCEL_BUTTON = 10826;
 constexpr unsigned int CONTROL_NUMBER_OF_ITEMS = 10827;
 constexpr unsigned int CONTROL_SAVES_EMULATOR_VERSION = 10828;
+
+// Control IDs for avatar dialogs
+constexpr unsigned int CONTROL_SELECT_AVATAR_DETAILED_LIST = 3;
+constexpr unsigned int CONTROL_SELECT_AVATAR_READY_PLAYER_LABEL = 4;
