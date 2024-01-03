@@ -14,6 +14,11 @@ class CGUIDialog;
 
 namespace KODI
 {
+namespace GAME
+{
+class CDialogSelectAvatar;
+}
+
 namespace RETRO
 {
 class CGameWindowFullScreenText;
@@ -45,7 +50,10 @@ protected:
 
 private:
   void TriggerOSD();
+  void TriggerAvatarSelection();
+
   CGUIDialog* GetOSD();
+  GAME::CDialogSelectAvatar* GetSelectAvatarDialog();
 
   void RegisterWindow();
   void UnregisterWindow();
