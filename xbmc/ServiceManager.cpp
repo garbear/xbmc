@@ -203,6 +203,7 @@ bool CServiceManager::InitStageThree(const std::shared_ptr<CProfileManager>& pro
   m_gameServices = std::make_unique<GAME::CGameServices>(
       *m_gameControllerManager, *m_gameRenderManager, *m_peripherals, *profileManager,
       *m_inputManager, *m_addonMgr);
+  m_gameServices->Initialize();
 
   m_contextMenuManager->Init();
 
@@ -229,6 +230,7 @@ void CServiceManager::DeinitStageThree()
   m_playerCoreFactory.reset();
   m_PVRManager->Deinit();
   m_contextMenuManager->Deinit();
+  m_gameServices->Deinitialize();
   m_gameServices.reset();
   m_peripherals->Clear();
 
