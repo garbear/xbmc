@@ -15,6 +15,7 @@
 #include "application/ApplicationPlayer.h" //! @todo Remove me
 #include "cores/RetroPlayer/guibridge/GUIGameRenderManager.h"
 #include "cores/RetroPlayer/guibridge/GUIRenderHandle.h"
+#include "games/agents/dialogs/DialogSelectAvatar.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIControl.h"
 #include "guilib/GUIDialog.h"
@@ -22,6 +23,7 @@
 #include "guilib/WindowIDs.h"
 #include "input/actions/Action.h"
 #include "input/actions/ActionIDs.h"
+#include "messaging/ApplicationMessenger.h"
 #include "windowing/GraphicContext.h" //! @todo Remove me
 
 using namespace KODI;
@@ -178,6 +180,9 @@ void CGameWindowFullScreen::OnInitWindow()
   CServiceBroker::GetWinSystem()->GetGfxContext().SetFullScreenVideo(true); //! @todo
 
   CGUIWindow::OnInitWindow();
+
+  // Show avatar selection
+  TriggerAvatarSelection();
 }
 
 void CGameWindowFullScreen::OnDeinitWindow(int nextWindowID)
@@ -200,9 +205,41 @@ void CGameWindowFullScreen::TriggerOSD()
   }
 }
 
+void CGameWindowFullScreen::TriggerAvatarSelection()
+{
+  GAME::CDialogSelectAvatar* dialog = GetSelectAvatarDialog();
+
+  if (dialog != nullptr && !dialog->IsPlayerOneReady())
+  {
+    dialog->Open();
+    if (dialog->IsPlayerOneReady())
+    {
+      // Show the OSD on the first launch
+      auto appMessenger = CServiceBroker::GetAppMessenger();
+      if (appMessenger)
+        appMessenger->PostMsg(TMSG_GUI_ACTION, WINDOW_INVALID, -1,
+                              static_cast<void*>(new CAction(ACTION_SHOW_OSD)));
+    }
+  }
+}
+
 CGUIDialog* CGameWindowFullScreen::GetOSD()
 {
   return CServiceBroker::GetGUI()->GetWindowManager().GetDialog(WINDOW_DIALOG_GAME_OSD);
+}
+
+GAME::CDialogSelectAvatar* CGameWindowFullScreen::GetSelectAvatarDialog()
+{
+  GAME::CDialogSelectAvatar* dialog = nullptr;
+
+  CGUIComponent* gui = CServiceBroker::GetGUI();
+  if (gui != nullptr)
+  {
+    dialog =
+        gui->GetWindowManager().GetWindow<GAME::CDialogSelectAvatar>(WINDOW_DIALOG_SELECT_AVATAR);
+  }
+
+  return dialog;
 }
 
 void CGameWindowFullScreen::RegisterWindow()
