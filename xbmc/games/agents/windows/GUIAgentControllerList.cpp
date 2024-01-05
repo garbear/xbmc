@@ -290,71 +290,9 @@ void CGUIAgentControllerList::OnControllerSelect(const CFileItem& selectedAgentI
 
 void CGUIAgentControllerList::ShowControllerDialog(const CAgentController& agentController)
 {
-  // Get the dialog
-  PERIPHERALS::CGUIDialogPeripheralSettings* pSettingsDialog =
-      CServiceBroker::GetGUI()
-          ->GetWindowManager()
-          .GetWindow<PERIPHERALS::CGUIDialogPeripheralSettings>(WINDOW_DIALOG_PERIPHERAL_SETTINGS);
-  if (pSettingsDialog == nullptr)
-    return;
+  //! @todo
+  std::string controllerUid = agentController.GetPeripheralLocation();
 
-  const PERIPHERALS::PeripheralPtr peripheral = agentController.GetPeripheral();
-
-  // Get a file item for the peripheral settings dialog
-  CFileItemPtr peripheralItem;
-
-  CFileItemList peripherals;
-  CServiceBroker::GetPeripherals().GetDirectory("peripherals://all/", peripherals);
-  for (int i = 0; i < peripherals.Size(); ++i)
-  {
-    if (peripherals[i]->GetProperty("location").asString() == peripheral->Location())
-    {
-      peripheralItem = peripherals[i];
-      break;
-    }
-  }
-
-  if (!peripheralItem)
-  {
-    CLog::Log(LOGERROR, "Failed to get peripheral for location {}", peripheral->Location());
-    if (peripherals.IsEmpty())
-      CLog::Log(LOGERROR, "No peripherals available");
-    else
-    {
-      CLog::Log(LOGERROR, "Available peripherals are:");
-      for (int i = 0; i < peripherals.Size(); ++i)
-        CLog::Log(LOGERROR, "  - \"{}\" ({})", peripherals[i]->GetProperty("location").asString(),
-                  peripherals[i]->GetPath());
-    }
-    return;
-  }
-
-  // Remember controller profile to detect changes
-  const std::string oldControllerId =
-      peripheral->ControllerProfile() ? peripheral->ControllerProfile()->ID() : "";
-
-  // Pass peripheral item properties to settings dialog so skin authors
-  // can use it to show more detailed information about the device
-  pSettingsDialog->SetProperty("vendor", peripheralItem->GetProperty("vendor"));
-  pSettingsDialog->SetProperty("product", peripheralItem->GetProperty("product"));
-  pSettingsDialog->SetProperty("bus", peripheralItem->GetProperty("bus"));
-  pSettingsDialog->SetProperty("location", peripheralItem->GetProperty("location"));
-  pSettingsDialog->SetProperty("class", peripheralItem->GetProperty("class"));
-  pSettingsDialog->SetProperty("version", peripheralItem->GetProperty("version"));
-
-  // Open settings dialog
-  pSettingsDialog->SetFileItem(peripheralItem.get());
-  pSettingsDialog->RegisterPeripheralManager(CServiceBroker::GetPeripherals());
-  pSettingsDialog->Open();
-  pSettingsDialog->UnregisterPeripheralManager();
-
-  // Check for changes in the controller profile
-  const std::string newControllerId =
-      peripheral->ControllerProfile() ? peripheral->ControllerProfile()->ID() : "";
-
-  if (oldControllerId != newControllerId)
-  {
-    CServiceBroker::GetPeripherals().SetChanged(true);
-    CServiceBroker::GetPeripherals().NotifyObservers(ObservableMessagePeripheralsChanged);
-  }
+  CServiceBroker::GetGUI()->GetWindowManager().ActivateWindow(WINDOW_DIALOG_AGENT_CONTROLLER,
+                                                              controllerUid);
 }
