@@ -177,6 +177,7 @@ const CWindowTranslator::WindowMapByName CWindowTranslator::WindowMappingByName 
     {"gameagents", WINDOW_DIALOG_GAME_AGENTS},
     {"gameavatars", WINDOW_DIALOG_GAME_AVATARS},
     {"selectavatar", WINDOW_DIALOG_SELECT_AVATAR},
+    {"agentcontroller", WINDOW_DIALOG_AGENT_CONTROLLER},
     {"dialogselectvideo", WINDOW_DIALOG_SELECT_VIDEO_STREAM},
     {"dialogselectaudio", WINDOW_DIALOG_SELECT_AUDIO_STREAM},
     {"dialogselectsubtitle", WINDOW_DIALOG_SELECT_SUBTITLE_STREAM},
