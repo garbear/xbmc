@@ -61,6 +61,7 @@ msgstr ""
 #: xbmc/windows/GUIWindowFileManager.cpp
 #: addons/skin.estuary/xml/Variables.xml
 #: xbmc/video/dialogs/GUIDialogSubtitles.cpp
+#: addons/skin.estuary/xml/Includes_DialogSelect.xml
 msgctxt "#5"
 msgid "Settings"
 msgstr ""
