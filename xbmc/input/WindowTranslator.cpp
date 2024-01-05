@@ -177,6 +177,7 @@ const CWindowTranslator::WindowMapByName CWindowTranslator::WindowMappingByName 
     {"gameagents", WINDOW_DIALOG_GAME_AGENTS},
     {"selectavatar", WINDOW_DIALOG_SELECT_AVATAR},
     {"gameavatars", WINDOW_DIALOG_GAME_AVATARS},
+    {"agentcontroller", WINDOW_DIALOG_AGENT_CONTROLLER},
 };
 
 namespace
