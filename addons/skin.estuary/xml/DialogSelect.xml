@@ -4,7 +4,7 @@
 	<include>Animation_DialogPopupOpenClose</include>
 	<depth>DepthOSD</depth>
 	<controls>
-		<include condition="![Window.IsActive(selectvideoversion) | Window.IsActive(selectvideoextra) | Window.IsActive(gamesaves) | Window.IsActive(gamestretchmode) | Window.IsActive(gamevideofilter) | Window.IsActive(gamevideorotation) | Window.IsActive(ingamesaves) | Window.IsActive(selectavatar)]">DefaultDialogSelectLayout</include>
+		<include condition="![Window.IsActive(selectvideoversion) | Window.IsActive(selectvideoextra) | Window.IsActive(gamesaves) | Window.IsActive(gamestretchmode) | Window.IsActive(gamevideofilter) | Window.IsActive(gamevideorotation) | Window.IsActive(ingamesaves) | Window.IsActive(selectavatar) | Window.IsActive(agentcontroller)]">DefaultDialogSelectLayout</include>
 		<include condition="Window.IsActive(gamesaves)">GameDialogSelectSaveLayout</include>
 		<include condition="Window.IsActive(gamevideofilter)">GameDialogSelectFilterLayout</include>
 		<include condition="Window.IsActive(gamestretchmode)">GameDialogSelectViewLayout</include>
@@ -13,5 +13,6 @@
 		<include condition="Window.IsActive(selectvideoversion)">VideoSelectLayout</include>
 		<include condition="Window.IsActive(selectvideoextra)">VideoSelectLayout</include>
 		<include condition="Window.IsActive(selectavatar)">GameDialogSelectAvatar</include>
+		<include condition="Window.IsActive(agentcontroller)">GameDialogAgentController</include>
 	</controls>
 </window>

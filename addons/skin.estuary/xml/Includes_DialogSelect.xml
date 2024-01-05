@@ -926,4 +926,119 @@
 			</control>
 		</control>
 	</include>
+	<include name="GameDialogAgentController">
+		<control type="group">
+			<centertop>50%</centertop>
+			<centerleft>50%</centerleft>
+			<width>1340</width>
+			<height>870</height>
+			<include content="DialogBackgroundCommons">
+				<param name="width" value="1340" />
+				<param name="height" value="870" />
+				<param name="header_label" value="" />
+				<param name="header_id" value="2" />
+			</include>
+			<control type="group">
+				<description>Content area</description>
+				<top>100</top>
+				<bottom>30</bottom>
+				<left>30</left>
+				<right>30</right>
+				<control type="group">
+					<description>Area of the dialog for avatars</description>
+					<height>742</height>
+					<width>960</width>
+					<control type="image">
+						<description>Controller list background</description>
+						<top>-20</top>
+						<bottom>-20</bottom>
+						<left>-20</left>
+						<right>-20</right>
+						<texture border="40">buttons/dialogbutton-nofo.png</texture>
+					</control>
+					<control type="list" id="3">
+						<description>Controller list</description>
+						<pagecontrol>61</pagecontrol>
+						<scrolltime tween="sine">200</scrolltime>
+						<orientation>vertical</orientation>
+						<itemlayout width="960" height="106">
+							<include>AgentControllerListItem</include>
+						</itemlayout>
+						<focusedlayout width="960" height="106">
+							<control type="image">
+								<top>-20</top>
+								<bottom>-20</bottom>
+								<left>-20</left>
+								<right>-20</right>
+								<texture border="40" colordiffuse="button_focus">buttons/dialogbutton-fo.png</texture>
+								<visible>Control.HasFocus(3)</visible>
+							</control>
+							<include>AgentControllerListItem</include>
+						</focusedlayout>
+					</control>
+					<control type="scrollbar" id="61">
+						<description>Controller list scroll bar</description>
+						<right>-12</right>
+						<width>12</width>
+						<orientation>vertical</orientation>
+					</control>
+				</control>
+				<control type="grouplist" id="9001">
+					<top>-20</top>
+					<right>-20</right>
+					<width>330</width>
+					<onleft>3</onleft>
+					<itemgap>dialogbuttons_itemgap</itemgap>
+					<include content="DefaultDialogButton">
+						<param name="width" value="330" />
+						<param name="id" value="18" />
+						<param name="label" value="$LOCALIZE[186]" />
+					</include>
+					<include content="DefaultDialogButton">
+						<param name="width" value="330" />
+						<param name="id" value="19" />
+						<param name="label" value="$LOCALIZE[5]" />
+					</include>
+					<include content="DefaultDialogButton">
+						<param name="width" value="330" />
+						<param name="id" value="20" />
+						<param name="label" value="$LOCALIZE[13007]" />
+					</include>
+				</control>
+			</control>
+		</control>
+	</include>
+	<include name="AgentControllerListItem">
+		<control type="gamecontroller">
+			<top>5</top>
+			<left>12</left>
+			<width>96</width>
+			<height>96</height>
+			<controllerid>game.controller.snes</controllerid>
+		</control>
+		<control type="avatarcontrol">
+			<description>Avatar image</description>
+			<top>5</top>
+			<left>111</left>
+			<width>96</width>
+			<height>96</height>
+			<texture>$INFO[ListItem.Icon]</texture>
+			<imagefilter>nearest</imagefilter>
+		</control>
+		<control type="label">
+			<description>Label to map the player number</description>
+			<left>215</left>
+			<label>$INFO[ListItem.Label]</label>
+			<font>font37</font>
+			<shadowcolor>text_shadow</shadowcolor>
+			<aligny>center</aligny>
+		</control>
+		<control type="gamecontroller">
+			<top>5</top>
+			<right>12</right>
+			<width>96</width>
+			<height>96</height>
+			<controllerid>$INFO[ListItem.Property(game.controllerid)]</controllerid>
+		</control>
+	</include>
 </includes>
