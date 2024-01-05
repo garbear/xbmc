@@ -146,6 +146,7 @@
 #include "cores/RetroPlayer/guiwindows/GameWindowFullScreen.h"
 #include "games/agents/dialogs/DialogSelectAvatar.h"
 #include "games/agents/dialogs/GUIAvatarDialog.h"
+#include "games/agents/dialogs/GUIDialogAgentController.h"
 #include "games/agents/windows/GUIAgentWindow.h"
 #include "games/controllers/windows/GUIControllerWindow.h"
 #include "games/dialogs/osd/DialogGameAdvancedSettings.h"
@@ -325,6 +326,7 @@ void CGUIWindowManager::CreateWindows()
   Add(new GAME::CDialogSelectAvatar);
   Add(new GAME::CGUIAgentWindow);
   Add(new GAME::CGUIAvatarDialog);
+  Add(new GAME::CGUIDialogAgentController);
   Add(new RETRO::CGameWindowFullScreen);
 }
 
@@ -448,6 +450,7 @@ bool CGUIWindowManager::DestroyWindows()
     DestroyWindow(WINDOW_DIALOG_GAME_AGENTS);
     DestroyWindow(WINDOW_DIALOG_SELECT_AVATAR);
     DestroyWindow(WINDOW_DIALOG_GAME_AVATARS);
+    DestroyWindow(WINDOW_DIALOG_AGENT_CONTROLLER);
     DestroyWindow(WINDOW_FULLSCREEN_GAME);
 
     Remove(WINDOW_SETTINGS_SERVICE);
