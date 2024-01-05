@@ -72,7 +72,7 @@ void CGUIGameControllerList::UpdateInfo(const CGUIListItem* item)
   m_portCount = inputPorts.size();
 
   // Update port index
-  UpdatePort(item->GetCurrentItem(), inputPorts);
+  UpdatePort(item->GetPath(), inputPorts);
 
   bool bUpdateListProvider = false;
 
@@ -142,13 +142,12 @@ void CGUIGameControllerList::ClearGameClient()
   m_gameClient.reset();
 }
 
-void CGUIGameControllerList::UpdatePort(int itemNumber, const std::vector<std::string>& inputPorts)
+void CGUIGameControllerList::UpdatePort(const std::string& controllerAddress,
+                                        const std::vector<std::string>& inputPorts)
 {
-  // Item numbers start from 1
-  if (itemNumber < 1)
-    return;
+  unsigned int controllerIndex = 0;
 
-  const unsigned int controllerIndex = static_cast<unsigned int>(itemNumber - 1);
+  //static_cast<unsigned int>(itemNumber - 1);
 
   CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
 

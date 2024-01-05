@@ -143,7 +143,8 @@ void CGUIAgentControllerList::Refresh()
   for (const std::shared_ptr<const CAgentController>& agentController : agentControllers)
     AddItem(*agentController);
 
-  // Add a "No controllers connected" item if no agents are available
+  // Add a "No controllers connected" item if controllers are needed (no
+  // keyboard/mouse port) and no controllers are available
   if (m_vecItems->IsEmpty())
   {
     CFileItemPtr item =
