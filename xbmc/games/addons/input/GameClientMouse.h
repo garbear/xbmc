@@ -20,6 +20,7 @@ class IMouseInputProvider;
 
 namespace GAME
 {
+class CControllerActivity;
 class CGameClient;
 
 /*!
@@ -57,10 +58,12 @@ public:
   bool OnMotion(const std::string& relpointer, int differenceX, int differenceY) override;
   bool OnButtonPress(const std::string& button) override;
   void OnButtonRelease(const std::string& button) override;
+  void OnInputFrame() override;
 
   // Input accessors
   const std::string& GetControllerID() const { return m_controllerId; }
   const PERIPHERALS::PeripheralPtr& GetSource() const { return m_sourcePeripheral; }
+  float GetActivation() const;
 
   // Input mutators
   void SetSource(PERIPHERALS::PeripheralPtr sourcePeripheral);
@@ -74,6 +77,7 @@ private:
 
   // Input parameters
   PERIPHERALS::PeripheralPtr m_sourcePeripheral;
+  std::unique_ptr<CControllerActivity> m_mouseActivity;
 };
 } // namespace GAME
 } // namespace KODI
