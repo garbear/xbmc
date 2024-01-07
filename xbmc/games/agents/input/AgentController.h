@@ -19,6 +19,8 @@ namespace KODI
 namespace GAME
 {
 class CAgentJoystick;
+class CAgentKeyboard;
+class CAgentMouse;
 
 /*!
  * \ingroup games
@@ -52,6 +54,8 @@ private:
 
   // Input parameters
   std::unique_ptr<CAgentJoystick> m_joystick;
+  std::unique_ptr<CAgentKeyboard> m_keyboard;
+  std::unique_ptr<CAgentMouse> m_mouse;
 };
 
 } // namespace GAME
