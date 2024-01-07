@@ -50,6 +50,9 @@ void CAgentInput::Start(GameClientPtr gameClient)
   // Register callbacks
   if (m_gameClient)
     m_gameClient->Input().RegisterObserver(this);
+
+  // Perform initial refresh
+  Refresh();
 }
 
 void CAgentInput::Stop()
@@ -214,7 +217,7 @@ std::string CAgentInput::GetMouseAddress(MOUSE::IMouseInputProvider* inputProvid
   return "";
 }
 
-std::vector<std::string> CAgentInput::GetInputPorts() const
+std::vector<std::string> CAgentInput::GetGameInputPorts() const
 {
   std::vector<std::string> inputPorts;
 
@@ -227,7 +230,7 @@ std::vector<std::string> CAgentInput::GetInputPorts() const
   return inputPorts;
 }
 
-float CAgentInput::GetPortActivation(const std::string& portAddress) const
+float CAgentInput::GetGamePortActivation(const std::string& portAddress) const
 {
   float activation = 0.0f;
 
@@ -248,6 +251,19 @@ float CAgentInput::GetPeripheralActivation(const std::string& peripheralLocation
   }
 
   return 0.0f;
+}
+
+void CAgentInput::SetAppFocusState(bool isAppFocused)
+{
+  if (m_appFocused && !isAppFocused)
+  {
+    // Clear button state
+    for (const std::shared_ptr<CAgentController>& controller : m_controllers)
+      controller->ClearButtonState();
+  }
+
+  // Update state
+  m_appFocused = isAppFocused;
 }
 
 void CAgentInput::ProcessJoysticks(PERIPHERALS::EventLockHandlePtr& inputHandlingLock)

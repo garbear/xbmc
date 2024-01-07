@@ -11,6 +11,7 @@
 #include "GameClientInput.h"
 #include "addons/kodi-dev-kit/include/kodi/addon-instance/Game.h"
 #include "games/addons/GameClient.h"
+#include "games/controllers/input/ControllerActivity.h"
 #include "input/mouse/interfaces/IMouseInputProvider.h"
 
 #include <utility>
@@ -23,7 +24,8 @@ CGameClientMouse::CGameClientMouse(CGameClient& gameClient,
                                    MOUSE::IMouseInputProvider* inputProvider)
   : m_gameClient(gameClient),
     m_controllerId(std::move(controllerId)),
-    m_inputProvider(inputProvider)
+    m_inputProvider(inputProvider),
+    m_mouseActivity(std::make_unique<CControllerActivity>())
 {
   inputProvider->RegisterMouseHandler(this, false);
 }
@@ -40,6 +42,9 @@ std::string CGameClientMouse::ControllerID(void) const
 
 bool CGameClientMouse::OnMotion(const std::string& relpointer, int dx, int dy)
 {
+  //! @todo Fix this
+  //m_mouseActivity->OnMouseMotion(relpointer, differenceX, differenceY);
+
   // Only allow activated input in fullscreen game
   if (!m_gameClient.Input().AcceptsInput())
   {
@@ -63,6 +68,9 @@ bool CGameClientMouse::OnMotion(const std::string& relpointer, int dx, int dy)
 
 bool CGameClientMouse::OnButtonPress(const std::string& button)
 {
+  m_mouseActivity->OnMouseButtonPress(button);
+  m_mouseActivity->OnInputFrame();
+
   // Only allow activated input in fullscreen game
   if (!m_gameClient.Input().AcceptsInput())
   {
@@ -83,6 +91,9 @@ bool CGameClientMouse::OnButtonPress(const std::string& button)
 
 void CGameClientMouse::OnButtonRelease(const std::string& button)
 {
+  m_mouseActivity->OnMouseButtonRelease(button);
+  m_mouseActivity->OnInputFrame();
+
   game_input_event event;
 
   event.type = GAME_INPUT_EVENT_DIGITAL_BUTTON;
@@ -93,6 +104,16 @@ void CGameClientMouse::OnButtonRelease(const std::string& button)
   event.digital_button.pressed = false;
 
   m_gameClient.Input().InputEvent(event);
+}
+
+void CGameClientMouse::OnInputFrame()
+{
+  m_mouseActivity->OnInputFrame();
+}
+
+float CGameClientMouse::GetActivation() const
+{
+  return m_mouseActivity->GetActivation();
 }
 
 void CGameClientMouse::SetSource(PERIPHERALS::PeripheralPtr sourcePeripheral)
