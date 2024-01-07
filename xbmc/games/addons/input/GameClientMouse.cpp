@@ -40,7 +40,7 @@ std::string CGameClientMouse::ControllerID(void) const
   return m_controllerId;
 }
 
-bool CGameClientMouse::OnMotion(const std::string& relpointer, int dx, int dy)
+bool CGameClientMouse::OnMotion(const std::string& relpointer, int differenceX, int differenceY)
 {
   //! @todo Allow mouse motion to activate controller
   //! This will follow a larger refactoring of the mouse input system
@@ -61,8 +61,8 @@ bool CGameClientMouse::OnMotion(const std::string& relpointer, int dx, int dy)
   event.port_type = GAME_PORT_MOUSE;
   event.port_address = MOUSE_PORT_ADDRESS;
   event.feature_name = relpointer.c_str();
-  event.rel_pointer.x = dx;
-  event.rel_pointer.y = dy;
+  event.rel_pointer.x = differenceX;
+  event.rel_pointer.y = differenceY;
 
   return m_gameClient.Input().InputEvent(event);
 }
