@@ -38,7 +38,9 @@ std::string CGameClientMouse::ControllerID(void) const
   return m_controllerId;
 }
 
-bool CGameClientMouse::OnMotion(const std::string& relpointer, int dx, int dy)
+bool CGameClientMouse::OnMotion(const MOUSE::PointerName& relpointer,
+                                int differenceX,
+                                int differenceY)
 {
   // Only allow activated input in fullscreen game
   if (!m_gameClient.Input().AcceptsInput())
@@ -55,8 +57,8 @@ bool CGameClientMouse::OnMotion(const std::string& relpointer, int dx, int dy)
   event.port_type = GAME_PORT_MOUSE;
   event.port_address = ""; // Not used
   event.feature_name = relpointer.c_str();
-  event.rel_pointer.x = dx;
-  event.rel_pointer.y = dy;
+  event.rel_pointer.x = differenceX;
+  event.rel_pointer.y = differenceY;
 
   return m_gameClient.Input().InputEvent(event);
 }
