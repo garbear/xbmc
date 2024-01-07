@@ -62,6 +62,11 @@ public:
    * \param button      The name of the feature being released
    */
   virtual void OnButtonRelease(const ButtonName& button) = 0;
+
+  /*!
+   * \brief Called at the end of the frame that provided input
+   */
+  virtual void OnInputFrame() = 0;
 };
 } // namespace MOUSE
 } // namespace KODI

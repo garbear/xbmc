@@ -10,6 +10,7 @@
 
 #include "FileItem.h"
 #include "ServiceBroker.h"
+#include "application/Application.h"
 #include "games/GameServices.h"
 #include "games/addons/input/GameClientTopology.h"
 #include "games/agents/input/AgentInput.h"
@@ -69,13 +70,15 @@ void CGUIGameController::DoProcess(unsigned int currentTime, CDirtyRegionList& d
     peripheralLocation = m_peripheralLocation;
   }
 
-  const GAME::CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
+  GAME::CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
+
+  agentInput.SetAppFocusState(g_application.IsAppFocused());
 
   // Highlight the controller if it is active
   float activation = 0.0f;
 
   if (!portAddress.empty())
-    activation = agentInput.GetPortActivation(portAddress);
+    activation = agentInput.GetGamePortActivation(portAddress);
 
   if (!peripheralLocation.empty())
     activation = std::max(agentInput.GetPeripheralActivation(peripheralLocation), activation);
