@@ -94,9 +94,10 @@ public:
   std::string GetPortAddress(JOYSTICK::IInputProvider* inputProvider) const;
   std::string GetKeyboardAddress(KEYBOARD::IKeyboardInputProvider* inputProvider) const;
   std::string GetMouseAddress(MOUSE::IMouseInputProvider* inputProvider) const;
-  std::vector<std::string> GetInputPorts() const;
-  float GetPortActivation(const std::string& address) const;
+  std::vector<std::string> GetGameInputPorts() const;
+  float GetGamePortActivation(const std::string& address) const;
   float GetPeripheralActivation(const std::string& peripheralLocation) const;
+  void SetAppFocusState(bool isAppFocused);
 
 private:
   //! @todo De-duplicate these types
@@ -149,6 +150,7 @@ private:
   int m_initialMouseX{-1};
   int m_initialMouseY{-1};
   std::vector<std::shared_ptr<CAgentController>> m_controllers;
+  bool m_appFocused{true};
 
   // Synchronization parameters
   mutable std::mutex m_controllerMutex;
