@@ -74,14 +74,11 @@ void CGUIGameController::DoProcess(unsigned int currentTime, CDirtyRegionList& d
   // Highlight the controller if it is active
   float activation = 0.0f;
 
-  //! @todo
-  /*
   if (!portAddress.empty())
-    activation = agentInput.GetGamePortActivation(portAddress);
+    activation = agentInput.GetPortActivation(portAddress);
 
   if (!peripheralLocation.empty())
-    activation = std::max(agentInput.GetControllerActivation(peripheralLocation), activation);
-  */
+    activation = std::max(agentInput.GetPeripheralActivation(peripheralLocation), activation);
 
   SetActivation(activation);
 

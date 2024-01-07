@@ -81,11 +81,8 @@ bool CGUIAgentControllerList::Initialize(GameClientPtr gameClient)
   if (m_gameClient)
     m_gameClient->Input().RegisterObserver(this);
   CServiceBroker::GetAddonMgr().Events().Subscribe(this, &CGUIAgentControllerList::OnEvent);
-  //! @todo
-  /*
   if (CServiceBroker::IsServiceManagerUp())
     CServiceBroker::GetGameServices().AgentInput().RegisterObserver(this);
-  */
 
   return true;
 }
@@ -93,11 +90,8 @@ bool CGUIAgentControllerList::Initialize(GameClientPtr gameClient)
 void CGUIAgentControllerList::Deinitialize()
 {
   // Unregister observers in reverse order
-  //! @todo
-  /*
   if (CServiceBroker::IsServiceManagerUp())
     CServiceBroker::GetGameServices().AgentInput().UnregisterObserver(this);
-  */
   CServiceBroker::GetAddonMgr().Events().Unsubscribe(this);
   if (m_gameClient)
     m_gameClient->Input().UnregisterObserver(this);
@@ -144,13 +138,10 @@ void CGUIAgentControllerList::Refresh()
 
   CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
 
-  //! @todo
-  /*
   std::vector<std::shared_ptr<const CAgentController>> agentControllers =
       agentInput.GetControllers();
   for (const std::shared_ptr<const CAgentController>& agentController : agentControllers)
     AddItem(*agentController);
-  */
 
   // Add a "No controllers connected" item if no agents are available
   if (m_vecItems->IsEmpty())
@@ -271,8 +262,6 @@ void CGUIAgentControllerList::OnControllerSelect(const CFileItem& selectedAgentI
 {
   CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
 
-  //! @todo
-  /*
   std::vector<std::shared_ptr<const CAgentController>> agentControllers =
       agentInput.GetControllers();
   for (const std::shared_ptr<const CAgentController>& agentController : agentControllers)
@@ -296,7 +285,6 @@ void CGUIAgentControllerList::OnControllerSelect(const CFileItem& selectedAgentI
       break;
     }
   }
-  */
 }
 
 void CGUIAgentControllerList::ShowControllerDialog(const CAgentController& agentController)
