@@ -57,6 +57,7 @@ public:
   bool OnMotion(const std::string& relpointer, int differenceX, int differenceY) override;
   bool OnButtonPress(const std::string& button) override;
   void OnButtonRelease(const std::string& button) override;
+  void OnInputFrame() override {}
 
   // Input accessors
   const std::string& GetControllerID() const { return m_controllerId; }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2023 Team Kodi
+ *  Copyright (C) 2023-2024 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -7,6 +7,11 @@
  */
 
 #pragma once
+
+#include "input/keyboard/KeyboardTypes.h"
+#include "input/mouse/MouseTypes.h"
+
+#include <set>
 
 namespace KODI
 {
@@ -34,11 +39,24 @@ public:
   void OnAnalogStickMotion(float x, float y);
   void OnWheelMotion(float position);
   void OnThrottleMotion(float position);
+  void OnKeyPress(const KEYBOARD::KeyName& key);
+  void OnKeyRelease(const KEYBOARD::KeyName& key);
+  void OnMouseMotion(const MOUSE::PointerName& relpointer, int differenceX, int differenceY);
+  void OnMouseButtonPress(const MOUSE::ButtonName& button);
+  void OnMouseButtonRelease(const MOUSE::ButtonName& button);
   void OnInputFrame();
 
 private:
+  // Input helpers
+  static INPUT::INTERCARDINAL_DIRECTION GetPointerDirection(int differenceX, int differenceY);
+
+  // State parameters
   float m_lastActivation{0.0f};
   float m_currentActivation{0.0f};
+  std::set<KEYBOARD::KeyName> m_activeKeys;
+  std::set<MOUSE::PointerName> m_activePointers;
+  std::set<MOUSE::ButtonName> m_activeButtons;
+  bool m_bKeyPressed{false};
 };
 } // namespace GAME
 } // namespace KODI
