@@ -101,6 +101,8 @@ std::string CGameClientTopology::MakeAddress(const std::string& baseAddress,
 {
   std::ostringstream address;
 
+  address << "/";
+
   if (!baseAddress.empty())
     address << baseAddress;
 
