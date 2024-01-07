@@ -272,7 +272,7 @@ CPointerDetector::CPointerDetector(CButtonMapping* buttonMapping)
 {
 }
 
-bool CPointerDetector::OnMotion(int x, int y)
+bool CPointerDetector::OnPosition(int x, int y)
 {
   if (!m_bStarted)
   {
@@ -284,10 +284,10 @@ bool CPointerDetector::OnMotion(int x, int y)
 
   if (m_frameCount++ >= MIN_FRAME_COUNT)
   {
-    int dx = x - m_startX;
-    int dy = y - m_startY;
+    int differenceX = x - m_startX;
+    int differenceY = y - m_startY;
 
-    INPUT::INTERCARDINAL_DIRECTION dir = GetPointerDirection(dx, dy);
+    INPUT::INTERCARDINAL_DIRECTION dir = GetPointerDirection(differenceX, differenceY);
 
     CDriverPrimitive primitive(static_cast<RELATIVE_POINTER_DIRECTION>(dir));
     if (primitive.IsValid())
@@ -412,7 +412,7 @@ bool CButtonMapping::OnPosition(int x, int y)
   if (!m_buttonMapper->AcceptsPrimitive(PRIMITIVE_TYPE::RELATIVE_POINTER))
     return false;
 
-  return GetPointer().OnMotion(x, y);
+  return GetPointer().OnPosition(x, y);
 }
 
 bool CButtonMapping::OnButtonPress(MOUSE::BUTTON_ID button)
