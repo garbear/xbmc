@@ -78,7 +78,7 @@ option(ENABLE_AIRTUNES    "Enable AirTunes support?" ON)
 option(ENABLE_OPTICAL     "Enable optical support?" ON)
 option(ENABLE_PYTHON      "Enable python support?" ON)
 option(ENABLE_TESTING     "Enable testing support?" ON)
-option(ENABLE_LIBTORRENT  "Enable libtorrent support?" ON)
+option(ENABLE_LIBTORRENT  "Enable libtorrent support?" OFF)
 option(ENABLE_ROS2        "Enable ROS 2 support?" OFF)
 
 # Internal Depends - supported on all platforms
