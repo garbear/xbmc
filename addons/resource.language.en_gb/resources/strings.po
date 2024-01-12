@@ -18266,6 +18266,7 @@ msgstr ""
 
 #. Name of keyboard category in the settings category window
 #: system/settings/settings.xml
+#: xbmc/input/keyboard/KeyboardTranslator.cpp
 msgctxt "#35150"
 msgid "Keyboard"
 msgstr ""
