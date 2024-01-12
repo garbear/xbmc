@@ -7,6 +7,7 @@ set(HEADERS interfaces/IActionMap.h
             interfaces/IKeyboardInputHandler.h
             interfaces/IKeyboardInputProvider.h
             KeyboardEasterEgg.h
+            KeyboardSymbols.h
             KeyboardTypes.h
             KeymapActionMap.h
 )

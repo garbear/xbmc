@@ -9,6 +9,7 @@
 #pragma once
 
 #include "input/joysticks/JoystickTypes.h"
+#include "input/keyboard/KeyboardSymbols.h"
 #include "input/keyboard/KeyboardTypes.h"
 
 #include <string>
@@ -36,11 +37,14 @@ public:
   /*!
    * \brief Translate a keyboard symbol to a Kodi key code
    *
+   * Keyboard symbols are hardware-independent virtual key representations.
+   * They are used to help facilitate keyboard mapping.
+   *
    * \param symbol The key's symbol, defined in the kodi-game-controllers project
    *
    * \return The layout-independent keycode associated with the key
    */
-  static KEYBOARD::KeySymbol TranslateKeysym(const std::string& symbol);
+  static KEYBOARD::KeySymbol TranslateKeysym(const KEYBOARD::SYMBOL_NAME& symbolName);
 
   /*!
    * \brief Translate a Kodi key code to a keyboard symbol
