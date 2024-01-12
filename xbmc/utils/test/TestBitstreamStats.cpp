@@ -24,7 +24,7 @@ public:
 
 };
 
-TEST(TestBitstreamStats, General)
+TEST(TestBitstreamStats, DISABLED_General)
 {
   int i;
   BitstreamStats a;

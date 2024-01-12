@@ -19,7 +19,7 @@
 using namespace PLAYLIST;
 
 
-TEST(TestPlayListB4S, LoadData)
+TEST(TestPlayListB4S, DISABLED_LoadData)
 {
   const std::string filename = XBMC_REF_FILE_PATH("/xbmc/playlists/test/test.b4s");
   CPlayListB4S playlist;

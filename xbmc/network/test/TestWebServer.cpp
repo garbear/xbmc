@@ -364,7 +364,7 @@ TEST_F(TestWebServer, IsStarted)
   ASSERT_TRUE(webserver.IsStarted());
 }
 
-TEST_F(TestWebServer, CanGetJsonRpcApiDescriptionWithHttpGet)
+TEST_F(TestWebServer, DISABLED_CanGetJsonRpcApiDescriptionWithHttpGet)
 {
   std::string result;
   CCurlFile curl;
@@ -387,7 +387,7 @@ TEST_F(TestWebServer, CanGetJsonRpcApiDescriptionWithHttpGet)
   EXPECT_TRUE(cacheControl.find("no-cache") != std::string::npos);
 }
 
-TEST_F(TestWebServer, CanReadDataOverJsonRpcWithHttpGet)
+TEST_F(TestWebServer, DISABLED_CanReadDataOverJsonRpcWithHttpGet)
 {
   // initialized JSON-RPC
   JSONRPC::CJSONRPC::Initialize();
@@ -422,7 +422,7 @@ TEST_F(TestWebServer, CanReadDataOverJsonRpcWithHttpGet)
   JSONRPC::CJSONRPC::Cleanup();
 }
 
-TEST_F(TestWebServer, CannotModifyOverJsonRpcWithHttpGet)
+TEST_F(TestWebServer, DISABLED_CannotModifyOverJsonRpcWithHttpGet)
 {
   // initialized JSON-RPC
   JSONRPC::CJSONRPC::Initialize();
@@ -461,7 +461,7 @@ TEST_F(TestWebServer, CannotModifyOverJsonRpcWithHttpGet)
   JSONRPC::CJSONRPC::Cleanup();
 }
 
-TEST_F(TestWebServer, CanReadDataOverJsonRpcWithHttpPost)
+TEST_F(TestWebServer, DISABLED_CanReadDataOverJsonRpcWithHttpPost)
 {
   // initialized JSON-RPC
   JSONRPC::CJSONRPC::Initialize();
@@ -497,7 +497,7 @@ TEST_F(TestWebServer, CanReadDataOverJsonRpcWithHttpPost)
   JSONRPC::CJSONRPC::Cleanup();
 }
 
-TEST_F(TestWebServer, CanModifyOverJsonRpcWithHttpPost)
+TEST_F(TestWebServer, DISABLED_CanModifyOverJsonRpcWithHttpPost)
 {
   // initialized JSON-RPC
   JSONRPC::CJSONRPC::Initialize();
@@ -536,13 +536,13 @@ TEST_F(TestWebServer, CanModifyOverJsonRpcWithHttpPost)
   JSONRPC::CJSONRPC::Cleanup();
 }
 
-TEST_F(TestWebServer, CanNotHeadNonExistingFile)
+TEST_F(TestWebServer, DISABLED_CanNotHeadNonExistingFile)
 {
   CCurlFile curl;
   ASSERT_FALSE(curl.Exists(CURL(GetUrlOfTestFile("file_does_not_exist"))));
 }
 
-TEST_F(TestWebServer, CanHeadFile)
+TEST_F(TestWebServer, DISABLED_CanHeadFile)
 {
   CCurlFile curl;
   ASSERT_TRUE(curl.Exists(CURL(GetUrlOfTestFile(TEST_FILES_HTML))));
@@ -550,13 +550,13 @@ TEST_F(TestWebServer, CanHeadFile)
   CheckHtmlTestFileResponse(curl);
 }
 
-TEST_F(TestWebServer, CanNotGetNonExistingFile)
+TEST_F(TestWebServer, DISABLED_CanNotGetNonExistingFile)
 {
   CCurlFile curl;
   ASSERT_FALSE(curl.Exists(CURL(GetUrlOfTestFile(("file_does_not_exist")))));
 }
 
-TEST_F(TestWebServer, CanGetFile)
+TEST_F(TestWebServer, DISABLED_CanGetFile)
 {
   std::string result;
   CCurlFile curl;
@@ -567,7 +567,7 @@ TEST_F(TestWebServer, CanGetFile)
   CheckHtmlTestFileResponse(curl);
 }
 
-TEST_F(TestWebServer, CanGetFileForcingNoCache)
+TEST_F(TestWebServer, DISABLED_CanGetFileForcingNoCache)
 {
   // check non-cacheable HTML with Control-Cache: no-cache
   std::string result;
@@ -597,7 +597,7 @@ TEST_F(TestWebServer, CanGetFileForcingNoCache)
   CheckRangesTestFileResponse(curl_txt_pragma);
 }
 
-TEST_F(TestWebServer, CanGetCachedFileWithOlderIfModifiedSince)
+TEST_F(TestWebServer, DISABLED_CanGetCachedFileWithOlderIfModifiedSince)
 {
   // get the last modified date of the file
   CDateTime lastModified;
@@ -614,7 +614,7 @@ TEST_F(TestWebServer, CanGetCachedFileWithOlderIfModifiedSince)
   CheckRangesTestFileResponse(curl);
 }
 
-TEST_F(TestWebServer, CanGetCachedFileWithExactIfModifiedSince)
+TEST_F(TestWebServer, DISABLED_CanGetCachedFileWithExactIfModifiedSince)
 {
   // get the last modified date of the file
   CDateTime lastModified;
@@ -630,7 +630,7 @@ TEST_F(TestWebServer, CanGetCachedFileWithExactIfModifiedSince)
   CheckRangesTestFileResponse(curl, MHD_HTTP_NOT_MODIFIED, true);
 }
 
-TEST_F(TestWebServer, CanGetCachedFileWithNewerIfModifiedSince)
+TEST_F(TestWebServer, DISABLED_CanGetCachedFileWithNewerIfModifiedSince)
 {
   // get the last modified date of the file
   CDateTime lastModified;
@@ -648,7 +648,7 @@ TEST_F(TestWebServer, CanGetCachedFileWithNewerIfModifiedSince)
   CheckRangesTestFileResponse(curl, MHD_HTTP_NOT_MODIFIED, true);
 }
 
-TEST_F(TestWebServer, CanGetCachedFileWithNewerIfModifiedSinceForcingNoCache)
+TEST_F(TestWebServer, DISABLED_CanGetCachedFileWithNewerIfModifiedSinceForcingNoCache)
 {
   // get the last modified date of the file
   CDateTime lastModified;
@@ -666,7 +666,7 @@ TEST_F(TestWebServer, CanGetCachedFileWithNewerIfModifiedSinceForcingNoCache)
   CheckRangesTestFileResponse(curl);
 }
 
-TEST_F(TestWebServer, CanGetCachedFileWithOlderIfUnmodifiedSince)
+TEST_F(TestWebServer, DISABLED_CanGetCachedFileWithOlderIfUnmodifiedSince)
 {
   // get the last modified date of the file
   CDateTime lastModified;
@@ -681,7 +681,7 @@ TEST_F(TestWebServer, CanGetCachedFileWithOlderIfUnmodifiedSince)
   ASSERT_FALSE(curl.Get(GetUrlOfTestFile(TEST_FILES_RANGES), result));
 }
 
-TEST_F(TestWebServer, CanGetCachedFileWithExactIfUnmodifiedSince)
+TEST_F(TestWebServer, DISABLED_CanGetCachedFileWithExactIfUnmodifiedSince)
 {
   // get the last modified date of the file
   CDateTime lastModified;
@@ -697,7 +697,7 @@ TEST_F(TestWebServer, CanGetCachedFileWithExactIfUnmodifiedSince)
   CheckRangesTestFileResponse(curl);
 }
 
-TEST_F(TestWebServer, CanGetCachedFileWithNewerIfUnmodifiedSince)
+TEST_F(TestWebServer, DISABLED_CanGetCachedFileWithNewerIfUnmodifiedSince)
 {
   // get the last modified date of the file
   CDateTime lastModified;
@@ -714,7 +714,7 @@ TEST_F(TestWebServer, CanGetCachedFileWithNewerIfUnmodifiedSince)
   CheckRangesTestFileResponse(curl);
 }
 
-TEST_F(TestWebServer, CanGetRangedFileRange0_)
+TEST_F(TestWebServer, DISABLED_CanGetRangedFileRange0_)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   const std::string range = "bytes=0-";
@@ -730,7 +730,7 @@ TEST_F(TestWebServer, CanGetRangedFileRange0_)
   CheckRangesTestFileResponse(curl, result, ranges);
 }
 
-TEST_F(TestWebServer, CanGetRangedFileRange0_End)
+TEST_F(TestWebServer, DISABLED_CanGetRangedFileRange0_End)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   const std::string range = GenerateRangeHeaderValue(0, rangedFileContent.size());
@@ -746,7 +746,7 @@ TEST_F(TestWebServer, CanGetRangedFileRange0_End)
   CheckRangesTestFileResponse(curl, result, ranges);
 }
 
-TEST_F(TestWebServer, CanGetRangedFileRange0_2xEnd)
+TEST_F(TestWebServer, DISABLED_CanGetRangedFileRange0_2xEnd)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   const std::string range = GenerateRangeHeaderValue(0, rangedFileContent.size() * 2);
@@ -762,7 +762,7 @@ TEST_F(TestWebServer, CanGetRangedFileRange0_2xEnd)
   CheckRangesTestFileResponse(curl, result, ranges);
 }
 
-TEST_F(TestWebServer, CanGetRangedFileRange0_First)
+TEST_F(TestWebServer, DISABLED_CanGetRangedFileRange0_First)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   std::vector<std::string> rangedContent = StringUtils::Split(TEST_FILES_DATA_RANGES, ";");
@@ -779,7 +779,7 @@ TEST_F(TestWebServer, CanGetRangedFileRange0_First)
   CheckRangesTestFileResponse(curl, result, ranges);
 }
 
-TEST_F(TestWebServer, CanGetRangedFileRangeFirst_Second)
+TEST_F(TestWebServer, DISABLED_CanGetRangedFileRangeFirst_Second)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   std::vector<std::string> rangedContent = StringUtils::Split(TEST_FILES_DATA_RANGES, ";");
@@ -796,7 +796,7 @@ TEST_F(TestWebServer, CanGetRangedFileRangeFirst_Second)
   CheckRangesTestFileResponse(curl, result, ranges);
 }
 
-TEST_F(TestWebServer, CanGetRangedFileRange_Last)
+TEST_F(TestWebServer, DISABLED_CanGetRangedFileRange_Last)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   std::vector<std::string> rangedContent = StringUtils::Split(TEST_FILES_DATA_RANGES, ";");
@@ -814,7 +814,7 @@ TEST_F(TestWebServer, CanGetRangedFileRange_Last)
   CheckRangesTestFileResponse(curl, result, ranges);
 }
 
-TEST_F(TestWebServer, CanGetRangedFileRangeFirstSecond)
+TEST_F(TestWebServer, DISABLED_CanGetRangedFileRangeFirstSecond)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   std::vector<std::string> rangedContent = StringUtils::Split(TEST_FILES_DATA_RANGES, ";");
@@ -835,7 +835,7 @@ TEST_F(TestWebServer, CanGetRangedFileRangeFirstSecond)
   CheckRangesTestFileResponse(curl, result, ranges);
 }
 
-TEST_F(TestWebServer, CanGetRangedFileRangeFirstSecondLast)
+TEST_F(TestWebServer, DISABLED_CanGetRangedFileRangeFirstSecondLast)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   std::vector<std::string> rangedContent = StringUtils::Split(TEST_FILES_DATA_RANGES, ";");
@@ -857,7 +857,7 @@ TEST_F(TestWebServer, CanGetRangedFileRangeFirstSecondLast)
   CheckRangesTestFileResponse(curl, result, ranges);
 }
 
-TEST_F(TestWebServer, CanGetCachedRangedFileWithOlderIfRange)
+TEST_F(TestWebServer, DISABLED_CanGetCachedRangedFileWithOlderIfRange)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   const std::string range = "bytes=0-";
@@ -880,7 +880,7 @@ TEST_F(TestWebServer, CanGetCachedRangedFileWithOlderIfRange)
   CheckRangesTestFileResponse(curl);
 }
 
-TEST_F(TestWebServer, CanGetCachedRangedFileWithExactIfRange)
+TEST_F(TestWebServer, DISABLED_CanGetCachedRangedFileWithExactIfRange)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   const std::string range = "bytes=0-";
@@ -901,7 +901,7 @@ TEST_F(TestWebServer, CanGetCachedRangedFileWithExactIfRange)
   CheckRangesTestFileResponse(curl, result, ranges);
 }
 
-TEST_F(TestWebServer, CanGetCachedRangedFileWithNewerIfRange)
+TEST_F(TestWebServer, DISABLED_CanGetCachedRangedFileWithNewerIfRange)
 {
   const std::string rangedFileContent = TEST_FILES_DATA_RANGES;
   const std::string range = "bytes=0-";

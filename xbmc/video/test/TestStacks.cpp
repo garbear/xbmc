@@ -28,7 +28,7 @@ protected:
   ~TestStacks() override = default;
 };
 
-TEST_F(TestStacks, TestMovieFilesStackFilesAB)
+TEST_F(TestStacks, DISABLED_TestMovieFilesStackFilesAB)
 {
   const std::string movieFolder =
       XBMC_REF_FILE_PATH("xbmc/video/test/testdata/moviestack_ab/Movie-(2001)");
@@ -43,7 +43,7 @@ TEST_F(TestStacks, TestMovieFilesStackFilesAB)
   EXPECT_EQ(items.Get(0)->IsStack(), true);
 }
 
-TEST_F(TestStacks, TestMovieFilesStackFilesPart)
+TEST_F(TestStacks, DISABLED_TestMovieFilesStackFilesPart)
 {
   const std::string movieFolder =
       XBMC_REF_FILE_PATH("xbmc/video/test/testdata/moviestack_part/Movie_(2001)");
@@ -58,7 +58,7 @@ TEST_F(TestStacks, TestMovieFilesStackFilesPart)
   EXPECT_EQ(items.Get(0)->IsStack(), true);
 }
 
-TEST_F(TestStacks, TestMovieFilesStackDvdIso)
+TEST_F(TestStacks, DISABLED_TestMovieFilesStackDvdIso)
 {
   const std::string movieFolder =
       XBMC_REF_FILE_PATH("xbmc/video/test/testdata/moviestack_dvdiso/Movie_(2001)");

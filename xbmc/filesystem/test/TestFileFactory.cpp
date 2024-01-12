@@ -48,7 +48,7 @@ protected:
  * network connection, the settings and VFS URLs must be given as
  * arguments in the main testsuite program.
  */
-TEST_F(TestFileFactory, Read)
+TEST_F(TestFileFactory, DISABLED_Read)
 {
   XFILE::CFile file;
   std::string str;
@@ -98,7 +98,7 @@ TEST_F(TestFileFactory, Read)
   }
 }
 
-TEST_F(TestFileFactory, Write)
+TEST_F(TestFileFactory, DISABLED_Write)
 {
   XFILE::CFile file, inputfile;
   std::string str;

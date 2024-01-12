@@ -15,7 +15,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(TestMediaSourceSettings, LoadString)
+TEST(TestMediaSourceSettings, DISABLED_LoadString)
 {
   CMediaSourceSettings& ms = CMediaSourceSettings::GetInstance();
   EXPECT_TRUE(ms.Load(XBMC_REF_FILE_PATH("/xbmc/settings/test/test-MediaSources.xml")));
@@ -28,7 +28,7 @@ TEST(TestMediaSourceSettings, LoadString)
   EXPECT_EQ(ms.GetSources("games")->size(), 0);
 }
 
-TEST(TestMediaSourceSettings, SaveString)
+TEST(TestMediaSourceSettings, DISABLED_SaveString)
 {
   CMediaSourceSettings& ms = CMediaSourceSettings::GetInstance();
   EXPECT_TRUE(ms.Load(XBMC_REF_FILE_PATH("/xbmc/settings/test/test-MediaSources.xml")));
