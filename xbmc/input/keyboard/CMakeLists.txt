@@ -1,4 +1,5 @@
 set(SOURCES KeyboardEasterEgg.cpp
+            KeyboardTranslator.cpp
             KeymapActionMap.cpp
 )
 
@@ -7,6 +8,8 @@ set(HEADERS interfaces/IActionMap.h
             interfaces/IKeyboardInputHandler.h
             interfaces/IKeyboardInputProvider.h
             KeyboardEasterEgg.h
+            KeyboardSymbols.h
+            KeyboardTranslator.h
             KeyboardTypes.h
             KeymapActionMap.h
 )
