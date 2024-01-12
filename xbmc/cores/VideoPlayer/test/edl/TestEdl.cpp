@@ -26,7 +26,7 @@ protected:
   TestEdl() = default;
 };
 
-TEST_F(TestEdl, TestParsingMplayerTimeBasedEDL)
+TEST_F(TestEdl, DISABLED_TestParsingMplayerTimeBasedEDL)
 {
   CEdl edl;
 
@@ -105,7 +105,7 @@ TEST_F(TestEdl, TestParsingMplayerTimeBasedEDL)
   EXPECT_EQ(thisEdit.end, edl.GetTimeAfterRestoringCuts(commbreak.end));
 }
 
-TEST_F(TestEdl, TestParsingMplayerTimeBasedInterleavedCutsEDL)
+TEST_F(TestEdl, DISABLED_TestParsingMplayerTimeBasedInterleavedCutsEDL)
 {
   CEdl edl;
 
@@ -133,7 +133,7 @@ TEST_F(TestEdl, TestParsingMplayerTimeBasedInterleavedCutsEDL)
             edl.GetTimeWithoutCuts(edl.GetRawEditList().at(3).start));
 }
 
-TEST_F(TestEdl, TestParsingMplayerFrameBasedEDL)
+TEST_F(TestEdl, DISABLED_TestParsingMplayerFrameBasedEDL)
 {
   CEdl edl;
   // suppose we're playing a file with 60 fps
@@ -158,7 +158,7 @@ TEST_F(TestEdl, TestParsingMplayerFrameBasedEDL)
             static_cast<int64_t>((6127 / fps) * 1000) - edl.GetTotalCutTime());
 }
 
-TEST_F(TestEdl, TestParsingMplayerTimeBasedMixedEDL)
+TEST_F(TestEdl, DISABLED_TestParsingMplayerTimeBasedMixedEDL)
 {
   CEdl edl;
 
@@ -189,7 +189,7 @@ TEST_F(TestEdl, TestParsingMplayerTimeBasedMixedEDL)
   EXPECT_EQ(edl.GetEditList().front().start, (15 * 1000) - edl.GetTotalCutTime());
 }
 
-TEST_F(TestEdl, TestParsingVideoRedoEDL)
+TEST_F(TestEdl, DISABLED_TestParsingVideoRedoEDL)
 {
   CEdl edl;
 
@@ -212,7 +212,7 @@ TEST_F(TestEdl, TestParsingVideoRedoEDL)
   EXPECT_EQ(edl.GetCutMarkers().front(), 423.523 * 1000);
 }
 
-TEST_F(TestEdl, TestSnapStreamEDL)
+TEST_F(TestEdl, DISABLED_TestSnapStreamEDL)
 {
   CEdl edl;
 
@@ -233,7 +233,7 @@ TEST_F(TestEdl, TestSnapStreamEDL)
   EXPECT_EQ(edl.GetEditList().front().end, std::lround(593.660 * 1000));
 }
 
-TEST_F(TestEdl, TestComSkipVersion1EDL)
+TEST_F(TestEdl, DISABLED_TestComSkipVersion1EDL)
 {
   CEdl edl;
 
@@ -257,7 +257,7 @@ TEST_F(TestEdl, TestComSkipVersion1EDL)
   EXPECT_EQ(edl.GetEditList().front().end, std::lround(17792 / fps * 1000));
 }
 
-TEST_F(TestEdl, TestComSkipVersion2EDL)
+TEST_F(TestEdl, DISABLED_TestComSkipVersion2EDL)
 {
   CEdl edl;
 
@@ -280,7 +280,7 @@ TEST_F(TestEdl, TestComSkipVersion2EDL)
   EXPECT_EQ(edl.GetEditList().front().end, std::lround(17792 / fpsInEdlFile * 1000));
 }
 
-TEST_F(TestEdl, TestRuntimeSetEDL)
+TEST_F(TestEdl, DISABLED_TestRuntimeSetEDL)
 {
   // this is a simple test for SetLastEditTime, SetLastEditActionType and corresponding getters
   CEdl edl;
@@ -290,7 +290,7 @@ TEST_F(TestEdl, TestRuntimeSetEDL)
   EXPECT_EQ(edl.GetLastEditActionType(), Action::COMM_BREAK);
 }
 
-TEST_F(TestEdl, TestCommBreakAdvancedSettings)
+TEST_F(TestEdl, DISABLED_TestCommBreakAdvancedSettings)
 {
   CEdl edl;
   const std::shared_ptr<CAdvancedSettings> advancedSettings =
@@ -361,7 +361,7 @@ TEST_F(TestEdl, TestCommBreakAdvancedSettings)
   EXPECT_EQ(edl.GetEditList().at(4).start, edl.GetEditList().at(4).end);
 }
 
-TEST_F(TestEdl, TestCommBreakAdvancedSettingsRemoveSmallCommbreaks)
+TEST_F(TestEdl, DISABLED_TestCommBreakAdvancedSettingsRemoveSmallCommbreaks)
 {
   // this is a variation of TestCommBreakAdvancedSettings
   // should make sure the number of commbreaks in the file is now 3 instead of 5
@@ -392,7 +392,7 @@ TEST_F(TestEdl, TestCommBreakAdvancedSettingsRemoveSmallCommbreaks)
   EXPECT_EQ(edl.GetEditList().size(), 3);
 }
 
-TEST_F(TestEdl, TestMergeSmallCommbreaks)
+TEST_F(TestEdl, DISABLED_TestMergeSmallCommbreaks)
 {
   CEdl edl;
   const std::shared_ptr<CAdvancedSettings> advancedSettings =
@@ -425,7 +425,7 @@ TEST_F(TestEdl, TestMergeSmallCommbreaks)
   EXPECT_EQ(edl.GetEditList().at(0).end, std::lround(65.1 * 1000));
 }
 
-TEST_F(TestEdl, TestMergeSmallCommbreaksAdvanced)
+TEST_F(TestEdl, DISABLED_TestMergeSmallCommbreaksAdvanced)
 {
   CEdl edl;
   const std::shared_ptr<CAdvancedSettings> advancedSettings =

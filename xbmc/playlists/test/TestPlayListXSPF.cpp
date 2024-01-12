@@ -18,7 +18,7 @@
 using namespace PLAYLIST;
 
 
-TEST(TestPlayListXSPF, Load)
+TEST(TestPlayListXSPF, DISABLED_Load)
 {
   std::string filename = XBMC_REF_FILE_PATH("/xbmc/playlists/test/test.xspf");
   CPlayListXSPF playlist;

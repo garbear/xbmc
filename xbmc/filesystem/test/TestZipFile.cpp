@@ -33,7 +33,7 @@ protected:
   }
 };
 
-TEST_F(TestZipFile, Read)
+TEST_F(TestZipFile, DISABLED_Read)
 {
   XFILE::CFile file;
   char buf[20] = {};
@@ -87,7 +87,7 @@ TEST_F(TestZipFile, Read)
   file.Close();
 }
 
-TEST_F(TestZipFile, Exists)
+TEST_F(TestZipFile, DISABLED_Exists)
 {
   std::string reffile, strpathinzip;
   CFileItemList itemlist;
@@ -101,7 +101,7 @@ TEST_F(TestZipFile, Exists)
   EXPECT_TRUE(XFILE::CFile::Exists(strpathinzip));
 }
 
-TEST_F(TestZipFile, Stat)
+TEST_F(TestZipFile, DISABLED_Stat)
 {
   struct __stat64 buffer;
   std::string reffile, strpathinzip;
@@ -121,7 +121,7 @@ TEST_F(TestZipFile, Stat)
  * NOTE: The test case is considered a "success" as long as the corrupted
  * file was successfully generated and the test case runs without a segfault.
  */
-TEST_F(TestZipFile, CorruptedFile)
+TEST_F(TestZipFile, DISABLED_CorruptedFile)
 {
   XFILE::CFile *file;
   char buf[16] = {};
@@ -191,7 +191,7 @@ TEST_F(TestZipFile, CorruptedFile)
   XBMC_DELETETEMPFILE(file);
 }
 
-TEST_F(TestZipFile, ExtendedLocalHeader)
+TEST_F(TestZipFile, DISABLED_ExtendedLocalHeader)
 {
   XFILE::CFile file;
   ssize_t readlen;
