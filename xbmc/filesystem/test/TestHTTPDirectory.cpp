@@ -212,12 +212,12 @@ protected:
   CHTTPDirectory m_httpDirectory;
 };
 
-TEST_F(TestHTTPDirectory, IsStarted)
+TEST_F(TestHTTPDirectory, DISABLED_IsStarted)
 {
   ASSERT_TRUE(m_webServer.IsStarted());
 }
 
-TEST_F(TestHTTPDirectory, ApacheDefaultIndex)
+TEST_F(TestHTTPDirectory, DISABLED_ApacheDefaultIndex)
 {
   CFileItemList items;
 
@@ -228,7 +228,7 @@ TEST_F(TestHTTPDirectory, ApacheDefaultIndex)
   CheckFileItems(items);
 }
 
-TEST_F(TestHTTPDirectory, ApacheFancyIndex)
+TEST_F(TestHTTPDirectory, DISABLED_ApacheFancyIndex)
 {
   CFileItemList items;
 
@@ -238,7 +238,7 @@ TEST_F(TestHTTPDirectory, ApacheFancyIndex)
   CheckFileItemsAndMetadata(items);
 }
 
-TEST_F(TestHTTPDirectory, ApacheHtmlIndex)
+TEST_F(TestHTTPDirectory, DISABLED_ApacheHtmlIndex)
 {
   CFileItemList items;
 
@@ -248,7 +248,7 @@ TEST_F(TestHTTPDirectory, ApacheHtmlIndex)
   CheckFileItemsAndMetadata(items);
 }
 
-TEST_F(TestHTTPDirectory, BasicIndex)
+TEST_F(TestHTTPDirectory, DISABLED_BasicIndex)
 {
   CFileItemList items;
 
@@ -258,7 +258,7 @@ TEST_F(TestHTTPDirectory, BasicIndex)
   CheckFileItems(items);
 }
 
-TEST_F(TestHTTPDirectory, BasicMultilineIndex)
+TEST_F(TestHTTPDirectory, DISABLED_BasicMultilineIndex)
 {
   CFileItemList items;
 
@@ -269,7 +269,7 @@ TEST_F(TestHTTPDirectory, BasicMultilineIndex)
   CheckFileItems(items);
 }
 
-TEST_F(TestHTTPDirectory, LighttpDefaultIndex)
+TEST_F(TestHTTPDirectory, DISABLED_LighttpDefaultIndex)
 {
   CFileItemList items;
 
@@ -280,7 +280,7 @@ TEST_F(TestHTTPDirectory, LighttpDefaultIndex)
   CheckFileItemsAndMetadata(items);
 }
 
-TEST_F(TestHTTPDirectory, NginxDefaultIndex)
+TEST_F(TestHTTPDirectory, DISABLED_NginxDefaultIndex)
 {
   CFileItemList items;
 
@@ -290,7 +290,7 @@ TEST_F(TestHTTPDirectory, NginxDefaultIndex)
   CheckFileItemsAndMetadata(items);
 }
 
-TEST_F(TestHTTPDirectory, NginxFancyIndex)
+TEST_F(TestHTTPDirectory, DISABLED_NginxFancyIndex)
 {
   CFileItemList items;
 

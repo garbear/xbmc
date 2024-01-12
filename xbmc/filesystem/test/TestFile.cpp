@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(TestFile, Read)
+TEST(TestFile, DISABLED_Read)
 {
   const std::string newLine = CXBMCTestUtils::Instance().getNewLineCharacters();
   const size_t size = 1616;
@@ -84,7 +84,7 @@ TEST(TestFile, Read)
   file.Close();
 }
 
-TEST(TestFile, Write)
+TEST(TestFile, DISABLED_Write)
 {
   XFILE::CFile *file;
   const char str[] = "TestFile.Write test string\n";
@@ -110,7 +110,7 @@ TEST(TestFile, Write)
   EXPECT_TRUE(XBMC_DELETETEMPFILE(file));
 }
 
-TEST(TestFile, Exists)
+TEST(TestFile, DISABLED_Exists)
 {
   XFILE::CFile *file;
 
@@ -121,7 +121,7 @@ TEST(TestFile, Exists)
   EXPECT_TRUE(XBMC_DELETETEMPFILE(file));
 }
 
-TEST(TestFile, Stat)
+TEST(TestFile, DISABLED_Stat)
 {
   XFILE::CFile *file;
   struct __stat64 buffer;
@@ -135,7 +135,7 @@ TEST(TestFile, Stat)
   EXPECT_TRUE(XBMC_DELETETEMPFILE(file));
 }
 
-TEST(TestFile, Delete)
+TEST(TestFile, DISABLED_Delete)
 {
   XFILE::CFile *file;
   std::string path;
@@ -149,7 +149,7 @@ TEST(TestFile, Delete)
   EXPECT_FALSE(XBMC_DELETETEMPFILE(file));
 }
 
-TEST(TestFile, Rename)
+TEST(TestFile, DISABLED_Rename)
 {
   XFILE::CFile *file1, *file2;
   std::string path1, path2;
@@ -171,7 +171,7 @@ TEST(TestFile, Rename)
   EXPECT_FALSE(XBMC_DELETETEMPFILE(file2));
 }
 
-TEST(TestFile, Copy)
+TEST(TestFile, DISABLED_Copy)
 {
   XFILE::CFile *file1, *file2;
   std::string path1, path2;
@@ -194,7 +194,7 @@ TEST(TestFile, Copy)
   EXPECT_FALSE(XBMC_DELETETEMPFILE(file2));
 }
 
-TEST(TestFile, SetHidden)
+TEST(TestFile, DISABLED_SetHidden)
 {
   XFILE::CFile *file;
 

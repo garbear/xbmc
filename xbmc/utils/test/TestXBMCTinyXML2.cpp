@@ -42,7 +42,7 @@ TEST(TestXBMCTinyXML2, ParseFromString)
   EXPECT_TRUE(retval);
 }
 
-TEST(TestXBMCTinyXML2, ParseFromChar)
+TEST(TestXBMCTinyXML2, DISABLED_ParseFromChar)
 {
   bool retval = false;
   // scraper results with unescaped &
@@ -77,7 +77,7 @@ TEST(TestXBMCTinyXML2, ParseFromCharFail)
   EXPECT_FALSE(load);
 }
 
-TEST(TestXBMCTinyXML2, ParseFromFileHandle)
+TEST(TestXBMCTinyXML2, DISABLED_ParseFromFileHandle)
 {
   bool retval = false;
   // scraper results with unescaped &

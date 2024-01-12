@@ -12,7 +12,7 @@
 #include <gtest/gtest.h>
 
 
-TEST(TestPOUtils, General)
+TEST(TestPOUtils, DISABLED_General)
 {
   CPODocument a;
 

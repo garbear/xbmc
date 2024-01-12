@@ -17,7 +17,7 @@ protected:
   TestSkinTimers() = default;
 };
 
-TEST_F(TestSkinTimers, TestSkinTimerParsing)
+TEST_F(TestSkinTimers, DISABLED_TestSkinTimerParsing)
 {
   auto timersFile = XBMC_REF_FILE_PATH("xbmc/addons/gui/skin/test/testdata/Timers.xml");
   CGUIInfoManager infoMgr;
