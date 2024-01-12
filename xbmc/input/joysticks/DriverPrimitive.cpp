@@ -8,7 +8,7 @@
 
 #include "DriverPrimitive.h"
 
-#include "games/controllers/ControllerTranslator.h"
+#include "input/keyboard/KeyboardTranslator.h"
 #include "utils/StringUtils.h"
 
 #include <utility>
@@ -245,7 +245,7 @@ std::string CDriverPrimitive::ToString() const
     }
     case PRIMITIVE_TYPE::KEY:
       return StringUtils::Format("key {}",
-                                 GAME::CControllerTranslator::TranslateKeycode(m_keycode));
+                                 KEYBOARD::CKeyboardTranslator::TranslateKeycode(m_keycode));
     case PRIMITIVE_TYPE::RELATIVE_POINTER:
     {
       switch (m_pointerDirection)
