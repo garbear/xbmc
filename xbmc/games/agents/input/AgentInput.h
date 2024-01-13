@@ -51,14 +51,31 @@ class CGameClientJoystick;
 /*!
  * \ingroup games
  *
- * \brief Class to manage input for game-playing agents
+ * \brief Class to manage game-playing agents for a running game client
+ *
+ * Currently, port mapping is controller-based and does not take into account
+ * the human belonging to the controller. In the future, humans and possibly
+ * bots will be managed here.
+ *
+ * To map ports to controllers, a list of controllers is retrieved in
+ * ProcessJoysticks(). After expired controllers are removed, the port mapping
+ * occurs in the static function MapJoysticks(). The strategy is to simply
+ * sort controllers by heuristics and greedily assign to game ports.
  */
-class CAgentInput : public Observer, KEYBOARD::IKeyboardDriverHandler, MOUSE::IMouseDriverHandler
+class CAgentInput : public Observable,
+                    public Observer,
+                    KEYBOARD::IKeyboardDriverHandler,
+                    MOUSE::IMouseDriverHandler
 {
 public:
   CAgentInput(PERIPHERALS::CPeripherals& peripheralManager, CInputManager& inputManager);
 
   virtual ~CAgentInput();
+
+  // Lifecycle functions
+  void Start(GameClientPtr gameClient);
+  void Stop();
+  void Refresh();
 
   // Implementation of Observer
   void Notify(const Observable& obs, const ObservableMessage msg) override;
@@ -73,35 +90,66 @@ public:
   void OnButtonRelease(MOUSE::BUTTON_ID button) override {}
 
   // Public interface
-  /*
   std::vector<std::shared_ptr<const CAgentController>> GetControllers() const;
-  float GetControllerActivation(const std::string& peripheralLocation) const;
+  std::string GetPortAddress(JOYSTICK::IInputProvider* inputProvider) const;
+  std::string GetKeyboardAddress(KEYBOARD::IKeyboardInputProvider* inputProvider) const;
+  std::string GetMouseAddress(MOUSE::IMouseInputProvider* inputProvider) const;
   std::vector<std::string> GetGameInputPorts() const;
   float GetGamePortActivation(const std::string& address) const;
-  float GetGameKeyboardActivation() const;
-  float GetGameMouseActivation() const;
-  */
+  float GetPeripheralActivation(const std::string& peripheralLocation) const;
+  void SetAppFocusState(bool isAppFocused);
 
 private:
+  //! @todo De-duplicate these types
+  using PortAddress = std::string;
+  using JoystickMap = std::map<PortAddress, std::shared_ptr<CGameClientJoystick>>;
+  using PortMap = std::map<JOYSTICK::IInputProvider*, std::shared_ptr<CGameClientJoystick>>;
+
   using PeripheralLocation = std::string;
+  using CurrentPortMap = std::map<PortAddress, PeripheralLocation>;
+  using CurrentPeripheralMap = std::map<PeripheralLocation, PortAddress>;
+
+  using ControllerAddress = std::string;
+  using PeripheralMap = std::map<ControllerAddress, PERIPHERALS::PeripheralPtr>;
+
+  // Internal interface
+  void ProcessJoysticks(PERIPHERALS::EventLockHandlePtr& inputHandlingLock);
+  void ProcessKeyboard();
+  void ProcessMouse();
 
   // Internal helpers
-  void Refresh();
-  void ProcessAgentControllers(const PERIPHERALS::PeripheralVector& peripherals);
+  void ProcessAgentControllers(const PERIPHERALS::PeripheralVector& joysticks,
+                               PERIPHERALS::EventLockHandlePtr& inputHandlingLock);
+  void UpdateExpiredJoysticks(const PERIPHERALS::PeripheralVector& joysticks,
+                              PERIPHERALS::EventLockHandlePtr& inputHandlingLock);
+  void UpdateConnectedJoysticks(const PERIPHERALS::PeripheralVector& joysticks,
+                                const PortMap& newPortMap,
+                                PERIPHERALS::EventLockHandlePtr& inputHandlingLock,
+                                std::set<PERIPHERALS::PeripheralPtr>& disconnectedJoysticks);
+
+  // Static functionals
+  static PortMap MapJoysticks(const PERIPHERALS::PeripheralVector& peripheralJoysticks,
+                              const JoystickMap& gameClientjoysticks,
+                              CurrentPortMap& currentPorts,
+                              CurrentPeripheralMap& currentPeripherals,
+                              int playerLimit);
+  static void MapJoystick(PERIPHERALS::PeripheralPtr peripheralJoystick,
+                          std::shared_ptr<CGameClientJoystick> gameClientJoystick,
+                          PortMap& result);
+  static void LogPeripheralMap(const PeripheralMap& peripheralMap,
+                               const std::set<PERIPHERALS::PeripheralPtr>& disconnectedPeripherals);
 
   // Construction parameters
   PERIPHERALS::CPeripherals& m_peripheralManager;
   CInputManager& m_inputManager;
 
   // State parameters
+  GameClientPtr m_gameClient;
   bool m_bHasKeyboard = false;
   bool m_bHasMouse = false;
   int m_initialMouseX{-1};
   int m_initialMouseY{-1};
-
-  // Input parameters
   std::vector<std::shared_ptr<CAgentController>> m_controllers;
-<<<<<<< HEAD
   bool m_appFocused{true};
 
   // Synchronization parameters
@@ -158,8 +206,6 @@ private:
    * Source peripherals are not exposed to the game.
    */
   std::set<PERIPHERALS::PeripheralPtr> m_disconnectedPeripherals;
-=======
->>>>>>> eb6a044052 (Player Viewer: New input system)
 };
 } // namespace GAME
 } // namespace KODI

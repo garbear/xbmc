@@ -57,24 +57,6 @@ private:
   std::unique_ptr<CAgentJoystick> m_joystick;
   std::unique_ptr<CAgentKeyboard> m_keyboard;
   std::unique_ptr<CAgentMouse> m_mouse;
-
-  // Controller parameters
-  int m_unqiueId{-1};
-  std::string m_type;
-  std::string m_bus;
-  uint16_t m_vid{0x0000};
-  uint16_t m_pid{0x0000};
-  std::string m_name;
-  std::string m_provider;
-  unsigned int m_buttonCount{0};
-  unsigned int m_hatCount{0};
-  unsigned int m_axisCount{0};
-  int m_requestedPort{-1};
-  unsigned int m_ordinal{0};
-  std::string m_lastLocation;
-  std::string m_appearance;
-  float m_leftDeadzone{-1.0f};
-  float m_rightDeadzone{-1.0f};
 };
 
 } // namespace GAME
