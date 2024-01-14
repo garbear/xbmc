@@ -14,6 +14,9 @@
 
 class TiXmlElement;
 
+/*!
+ * \ingroup mouse
+ */
 class CMouseTranslator
 {
 public:
