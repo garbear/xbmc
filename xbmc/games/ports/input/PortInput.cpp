@@ -12,7 +12,7 @@
 #include "games/controllers/input/ControllerActivity.h"
 #include "games/controllers/input/InputSink.h"
 #include "guilib/WindowIDs.h"
-#include "input/joysticks/keymaps/KeymapHandling.h"
+#include "input/keymaps/joysticks/KeymapHandling.h"
 #include "peripherals/devices/Peripheral.h"
 
 using namespace KODI;
@@ -37,7 +37,7 @@ void CPortInput::RegisterInput(JOYSTICK::IInputProvider* provider)
   provider->RegisterInputHandler(this, false);
 
   // Register GUI input
-  m_appInput.reset(new JOYSTICK::CKeymapHandling(provider, false, this));
+  m_appInput = std::make_unique<KEYMAP::CKeymapHandling>(provider, false, this);
 }
 
 void CPortInput::UnregisterInput(JOYSTICK::IInputProvider* provider)

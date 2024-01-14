@@ -22,7 +22,6 @@
 class TiXmlDocument;
 class CDateTime;
 class CSetting;
-class IKeymap;
 
 namespace KODI
 {
@@ -37,12 +36,17 @@ class IInputHandler;
 namespace KEYBOARD
 {
 class IKeyboardDriverHandler;
-}
+} // namespace KEYBOARD
+
+namespace KEYMAP
+{
+class IKeymap;
+} // namespace KEYMAP
 
 namespace MOUSE
 {
 class IMouseDriverHandler;
-}
+} // namespace MOUSE
 } // namespace KODI
 
 namespace PERIPHERALS
@@ -243,7 +247,7 @@ public:
 
   virtual KODI::JOYSTICK::IDriverReceiver* GetDriverReceiver() { return nullptr; }
 
-  virtual IKeymap* GetKeymap(const std::string& controllerId) { return nullptr; }
+  virtual KODI::KEYMAP::IKeymap* GetKeymap(const std::string& controllerId) { return nullptr; }
 
   /*!
    * \brief Return the last time this peripheral was active
