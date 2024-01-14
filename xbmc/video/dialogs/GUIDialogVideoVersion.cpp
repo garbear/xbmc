@@ -24,7 +24,7 @@
 #include "guilib/GUIWindow.h"
 #include "guilib/GUIWindowManager.h"
 #include "guilib/LocalizeStrings.h"
-#include "input/Key.h"
+#include "input/actions/ActionIDs.h"
 #include "playlists/PlayListTypes.h"
 #include "settings/MediaSourceSettings.h"
 #include "settings/Settings.h"
