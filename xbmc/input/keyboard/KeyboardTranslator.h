@@ -10,7 +10,7 @@
 
 #include "KeyboardSymbols.h"
 #include "KeyboardTypes.h"
-#include "input/XBMC_keysym.h"
+#include "XBMC_keysym.h"
 
 namespace KODI
 {
