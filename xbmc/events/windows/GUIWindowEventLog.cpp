@@ -115,6 +115,7 @@ bool CGUIWindowEventLog::OnMessage(CGUIMessage& message)
     default:
       break;
     }
+    break;
   }
 
   default:
