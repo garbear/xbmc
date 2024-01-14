@@ -15,8 +15,6 @@ set(HEADERS interfaces/IButtonMap.h
             interfaces/IInputHandler.h
             interfaces/IInputProvider.h
             interfaces/IInputReceiver.h
-            interfaces/IKeyHandler.h
-            interfaces/IKeymapHandler.h
             DeadzoneFilter.h
             DriverPrimitive.h
             JoystickEasterEgg.h

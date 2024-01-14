@@ -15,12 +15,13 @@
 #include "guilib/GUIKeyboardFactory.h"
 #include "guilib/GUIWindow.h"
 #include "guilib/GUIWindowManager.h"
-#include "input/ButtonTranslator.h"
 #include "input/actions/ActionIDs.h"
 #include "input/actions/ActionTranslator.h"
+#include "input/keymaps/ButtonTranslator.h"
 #include "messaging/ApplicationMessenger.h"
 #include "utils/Variant.h"
 
+using namespace KODI;
 using namespace JSONRPC;
 
 //! @todo the breakage of the screensaver should be refactored
@@ -103,7 +104,7 @@ JSONRPC_STATUS CInputOperations::ButtonEvent(const std::string& method,
     return InvalidParams;
   }
 
-  uint32_t keycode = CButtonTranslator::TranslateString(keymap, button);
+  uint32_t keycode = KEYMAP::CButtonTranslator::TranslateString(keymap, button);
   if (keycode == 0)
   {
     return InvalidParams;
