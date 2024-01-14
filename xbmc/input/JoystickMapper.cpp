@@ -56,7 +56,7 @@ void CJoystickMapper::MapActions(int windowID, const TiXmlNode* pDevice)
     {
       // Update keymap
       unsigned int actionId = ACTION_NONE;
-      if (CActionTranslator::TranslateString(actionString, actionId))
+      if (ACTION::CActionTranslator::TranslateString(actionString, actionId))
       {
         JOYSTICK::KeymapAction action = {
             actionId,

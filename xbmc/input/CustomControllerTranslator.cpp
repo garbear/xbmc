@@ -14,6 +14,8 @@
 #include "utils/XBMCTinyXML.h"
 #include "utils/log.h"
 
+using namespace KODI;
+
 void CCustomControllerTranslator::MapActions(int windowID, const TiXmlNode* pCustomController)
 {
   CustomControllerButtonMap buttonMap;
@@ -109,7 +111,7 @@ bool CCustomControllerTranslator::TranslateString(int windowId,
     if (it3 != buttonMap.end())
     {
       strAction = it3->second;
-      CActionTranslator::TranslateString(strAction, actionId);
+      ACTION::CActionTranslator::TranslateString(strAction, actionId);
     }
   }
 
