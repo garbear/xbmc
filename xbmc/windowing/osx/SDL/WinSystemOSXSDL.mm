@@ -23,7 +23,7 @@
 #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
 #include "guilib/DispResource.h"
 #include "guilib/GUIWindowManager.h"
-#include "input/KeyboardStat.h"
+#include "input/keyboard/KeyboardStat.h"
 #include "messaging/ApplicationMessenger.h"
 #include "rendering/gl/ScreenshotSurfaceGL.h"
 #include "settings/DisplaySettings.h"
