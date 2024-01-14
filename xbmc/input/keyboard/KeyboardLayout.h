@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "InputCodingTable.h"
+#include "input/InputCodingTable.h"
 
 #include <map>
 #include <string>
@@ -16,6 +16,13 @@
 
 class TiXmlElement;
 
+namespace KODI
+{
+namespace KEYBOARD
+{
+/*!
+ * \ingroup keyboard
+ */
 class CKeyboardLayout
 {
 public:
@@ -50,3 +57,5 @@ private:
   Keyboards m_keyboards;
   IInputCodingTablePtr m_codingtable;
 };
+} // namespace KEYBOARD
+} // namespace KODI
