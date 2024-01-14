@@ -5,6 +5,7 @@ set(SOURCES MouseStat.cpp
 set(HEADERS interfaces/IMouseDriverHandler.h
             interfaces/IMouseInputHandler.h
             interfaces/IMouseInputProvider.h
+            MouseEvent.h
             MouseStat.h
             MouseTranslator.h
             MouseTypes.h
