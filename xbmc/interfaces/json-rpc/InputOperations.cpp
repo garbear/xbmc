@@ -83,7 +83,7 @@ JSONRPC_STATUS CInputOperations::SendText(const std::string &method, ITransportL
 JSONRPC_STATUS CInputOperations::ExecuteAction(const std::string &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
 {
   unsigned int action;
-  if (!CActionTranslator::TranslateString(parameterObject["action"].asString(), action))
+  if (!ACTION::CActionTranslator::TranslateString(parameterObject["action"].asString(), action))
     return InvalidParams;
 
   return SendAction(action);
