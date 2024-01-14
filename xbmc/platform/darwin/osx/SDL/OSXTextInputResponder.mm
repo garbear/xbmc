@@ -11,7 +11,7 @@
 #include "GUIUserMessages.h"
 #include "ServiceBroker.h"
 #include "guilib/GUIWindowManager.h"
-#include "input/Key.h"
+#include "input/keyboard/Key.h"
 #include "messaging/ApplicationMessenger.h"
 #include "utils/log.h"
 

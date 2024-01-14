@@ -19,6 +19,9 @@
 
 #include <algorithm>
 
+using namespace KODI;
+using namespace KEYBOARD;
+
 #define KEYBOARD_LAYOUTS_PATH "special://xbmc/system/keyboardlayouts"
 
 CKeyboardLayoutManager::~CKeyboardLayoutManager()

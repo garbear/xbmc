@@ -46,6 +46,13 @@
 #include "guilib/GUIFontManager.h"
 #include "guilib/StereoscopicsManager.h"
 #include "guilib/TextureManager.h"
+#include "input/InertialScrollingHandler.h"
+#include "input/InputManager.h"
+#include "input/actions/Action.h"
+#include "input/actions/ActionIDs.h"
+#include "input/actions/ActionTranslator.h"
+#include "input/keyboard/KeyboardLayoutManager.h"
+#include "interfaces/AnnouncementManager.h"
 #include "interfaces/builtins/Builtins.h"
 #include "interfaces/generic/ScriptInvocationManager.h"
 #include "music/MusicLibraryQueue.h"
@@ -82,8 +89,8 @@
 #include "guilib/GUIAudioManager.h"
 #include "guilib/LocalizeStrings.h"
 #include "input/InertialScrollingHandler.h"
-#include "input/KeyboardLayoutManager.h"
 #include "input/actions/ActionTranslator.h"
+#include "input/keyboard/KeyboardLayoutManager.h"
 #include "messaging/ApplicationMessenger.h"
 #include "messaging/ThreadMessage.h"
 #include "messaging/helpers/DialogHelper.h"
@@ -363,7 +370,7 @@ bool CApplication::Create()
   const auto appMessenger = std::make_shared<CApplicationMessenger>();
   CServiceBroker::RegisterAppMessenger(appMessenger);
 
-  const auto keyboardLayoutManager = std::make_shared<CKeyboardLayoutManager>();
+  const auto keyboardLayoutManager = std::make_shared<KEYBOARD::CKeyboardLayoutManager>();
   CServiceBroker::RegisterKeyboardLayoutManager(keyboardLayoutManager);
 
   m_ServiceManager.reset(new CServiceManager());
