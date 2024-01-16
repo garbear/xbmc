@@ -56,6 +56,9 @@ class CGUIDialogPeripheralSettings;
 class CPeripheralBus;
 class CPeripherals;
 
+/*!
+ * \ingroup peripherals
+ */
 typedef enum
 {
   STATE_SWITCH_TOGGLE,
@@ -63,6 +66,9 @@ typedef enum
   STATE_STANDBY
 } CecStateChange;
 
+/*!
+ * \ingroup peripherals
+ */
 class CPeripheral : public KODI::JOYSTICK::IInputProvider,
                     public KODI::KEYBOARD::IKeyboardInputProvider,
                     public KODI::MOUSE::IMouseInputProvider
