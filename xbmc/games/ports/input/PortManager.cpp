@@ -104,17 +104,19 @@ void CPortManager::SaveXMLAsync()
                       m_saveFutures.end());
 
   // Save async
-  std::future<void> task = std::async(std::launch::async, [this, ports = std::move(ports)]() {
-    CXBMCTinyXML doc;
-    TiXmlElement node(XML_ROOT_PORTS);
+  std::future<void> task = std::async(std::launch::async,
+                                      [this, ports = std::move(ports)]()
+                                      {
+                                        CXBMCTinyXML doc;
+                                        TiXmlElement node(XML_ROOT_PORTS);
 
-    SerializePorts(node, ports);
+                                        SerializePorts(node, ports);
 
-    doc.InsertEndChild(node);
+                                        doc.InsertEndChild(node);
 
-    std::lock_guard<std::mutex> lock(m_saveMutex);
-    doc.SaveFile(m_xmlPath);
-  });
+                                        std::lock_guard<std::mutex> lock(m_saveMutex);
+                                        doc.SaveFile(m_xmlPath);
+                                      });
 
   m_saveFutures.emplace_back(std::move(task));
 }
@@ -246,9 +248,8 @@ void CPortManager::DeserializeControllers(const TiXmlElement* pPort, ControllerN
     std::string controllerId = XMLUtils::GetAttribute(pController, XML_ATTR_CONTROLLER_ID);
 
     auto it = std::find_if(controllers.begin(), controllers.end(),
-                           [&controllerId](const CControllerNode& controller) {
-                             return controller.GetController()->ID() == controllerId;
-                           });
+                           [&controllerId](const CControllerNode& controller)
+                           { return controller.GetController()->ID() == controllerId; });
     if (it != controllers.end())
     {
       CControllerNode& controller = *it;
