@@ -41,6 +41,9 @@ class CPeripheral;
 class CPeripherals;
 class CPeripheralAddon;
 
+/*!
+* \ingroup peripherals
+*/
 class CAddonInputHandling : public KODI::JOYSTICK::IDriverHandler,
                             public KODI::JOYSTICK::IInputReceiver,
                             public KODI::KEYBOARD::IKeyboardDriverHandler,
