@@ -459,11 +459,11 @@ msgid "Right Meta"
 msgstr ""
 
 msgctxt "#30108"
-msgid "Left Windows"
+msgid "Left Super"
 msgstr ""
 
 msgctxt "#30109"
-msgid "Right Windows"
+msgid "Right Super"
 msgstr ""
 
 msgctxt "#30110"
@@ -547,8 +547,8 @@ msgid "~"
 msgstr ""
 
 msgctxt "#30130"
-msgid "Mode/Option"
-msgstr ""
+msgid "Mode"
+msgstr "Mode"
 
 msgctxt "#30131"
 msgid "Compose"
@@ -593,7 +593,3 @@ msgstr ""
 msgctxt "#30141"
 msgid "OEM 102nd Key"
 msgstr ""
-
-#~ msgctxt "#30130"
-#~ msgid "Mode"
-#~ msgstr "Mode"

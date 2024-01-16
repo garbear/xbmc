@@ -459,12 +459,12 @@ msgid "Right Meta"
 msgstr "Oikea Meta"
 
 msgctxt "#30108"
-msgid "Left Windows"
-msgstr ""
+msgid "Left Super"
+msgstr "Vasen Super"
 
 msgctxt "#30109"
-msgid "Right Windows"
-msgstr ""
+msgid "Right Super"
+msgstr "Oikea Super"
 
 msgctxt "#30110"
 msgid "!"
@@ -547,8 +547,8 @@ msgid "~"
 msgstr "~"
 
 msgctxt "#30130"
-msgid "Mode/Option"
-msgstr ""
+msgid "Mode"
+msgstr "Mode"
 
 msgctxt "#30131"
 msgid "Compose"
@@ -593,15 +593,3 @@ msgstr "Clear"
 msgctxt "#30141"
 msgid "OEM 102nd Key"
 msgstr ""
-
-#~ msgctxt "#30108"
-#~ msgid "Left Super"
-#~ msgstr "Vasen Super"
-
-#~ msgctxt "#30109"
-#~ msgid "Right Super"
-#~ msgstr "Oikea Super"
-
-#~ msgctxt "#30130"
-#~ msgid "Mode"
-#~ msgstr "Mode"
