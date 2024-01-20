@@ -212,7 +212,7 @@ void CGUIAgentControllerList::OnEvent(const ADDON::AddonEvent& event)
 void CGUIAgentControllerList::AddItem(const CAgentController& agentController)
 {
   // Create the list item from agent properties
-  const std::string label = agentController.GetPeripheralName();
+  const std::string label = agentController.GetControllerName();
   const ControllerPtr controller = agentController.GetController();
   const std::string& path = agentController.GetPeripheralLocation();
 
