@@ -151,30 +151,77 @@ bool CAndroidJoystickState::Initialize(const CJNIViewInputDevice& inputDevice)
                 axisId, deviceName, m_deviceId);
   }
 
-  // add the usual suspects
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_A}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_B}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_C}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_X}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_Y}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_Z}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BACK}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_MENU}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_HOME}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_SELECT}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_MODE}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_START}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_L1}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_R1}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_L2}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_R2}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_THUMBL}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_BUTTON_THUMBR}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_DPAD_UP}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_DPAD_RIGHT}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_DPAD_DOWN}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_DPAD_LEFT}});
-  m_buttons.emplace_back(JoystickAxis{{AKEYCODE_DPAD_CENTER}});
+  // clang-format off
+  std::vector<int> buttons{
+      // add the usual suspects
+      AKEYCODE_BUTTON_A,
+      AKEYCODE_BUTTON_B,
+      AKEYCODE_BUTTON_C,
+      AKEYCODE_BUTTON_X,
+      AKEYCODE_BUTTON_Y,
+      AKEYCODE_BUTTON_Z,
+      AKEYCODE_BACK,
+      AKEYCODE_MENU,
+      AKEYCODE_HOME,
+      AKEYCODE_BUTTON_SELECT,
+      AKEYCODE_BUTTON_MODE,
+      AKEYCODE_BUTTON_START,
+      AKEYCODE_BUTTON_L1,
+      AKEYCODE_BUTTON_R1,
+      AKEYCODE_BUTTON_L2,
+      AKEYCODE_BUTTON_R2,
+      AKEYCODE_BUTTON_THUMBL,
+      AKEYCODE_BUTTON_THUMBR,
+      AKEYCODE_DPAD_UP,
+      AKEYCODE_DPAD_RIGHT,
+      AKEYCODE_DPAD_DOWN,
+      AKEYCODE_DPAD_LEFT,
+      AKEYCODE_DPAD_CENTER,
+      // found on the NVidia Shield controller
+      AKEYCODE_VOLUME_UP,
+      AKEYCODE_VOLUME_DOWN,
+      AKEYCODE_MEDIA_PLAY_PAUSE,
+      // add generic gamepad buttons for controllers that Android doesn't know
+      // how to map
+      AKEYCODE_BUTTON_1,
+      AKEYCODE_BUTTON_2,
+      AKEYCODE_BUTTON_3,
+      AKEYCODE_BUTTON_4,
+      AKEYCODE_BUTTON_5,
+      AKEYCODE_BUTTON_6,
+      AKEYCODE_BUTTON_7,
+      AKEYCODE_BUTTON_8,
+      AKEYCODE_BUTTON_9,
+      AKEYCODE_BUTTON_10,
+      AKEYCODE_BUTTON_11,
+      AKEYCODE_BUTTON_12,
+      AKEYCODE_BUTTON_13,
+      AKEYCODE_BUTTON_14,
+      AKEYCODE_BUTTON_15,
+      AKEYCODE_BUTTON_16,
+  };
+  // clang-format on
+
+  // check for presence of buttons
+  auto results = inputDevice.hasKeys(buttons);
+
+  if (results.size() != buttons.size())
+  {
+    CLog::Log(LOGERROR, "CAndroidJoystickState: failed to get key status for {} buttons",
+              buttons.size());
+    return false;
+  }
+
+  // log positive results and assign results to buttons
+  for (unsigned int i = 0; i < buttons.size(); ++i)
+  {
+    if (results[i])
+    {
+      CLog::Log(LOGDEBUG, "CAndroidJoystickState:     button found: {} ({})",
+                CAndroidJoystickTranslator::TranslateKeyCode(buttons[i]), buttons[i]);
+      m_buttons.emplace_back(JoystickAxis{{buttons[i]}});
+    }
+  }
 
   // check if there are no buttons or axes at all
   if (GetButtonCount() == 0 && GetAxisCount() == 0)
