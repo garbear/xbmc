@@ -30,5 +30,14 @@ public:
    * \return The translated enum label, or "unknown" if unknown
    */
   static const char* TranslateKeyCode(int keyCode);
+
+  /*!
+   * \brief Translate a key code to an Android enum suitable for logging
+   *
+   * \param keyCode The key code given in <android/keycodes.h>
+   *
+   * \return The translated enum label, or "unknown" if unknown
+   */
+  static const char* TranslateSource(int source);
 };
 } // namespace PERIPHERALS

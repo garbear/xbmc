@@ -100,10 +100,11 @@ bool CAndroidJoystickState::Initialize(const CJNIViewInputDevice& inputDevice)
         !motionRange.isFromSource(CJNIViewInputDevice::SOURCE_GAMEPAD))
     {
       CLog::Log(LOGDEBUG,
-                "CAndroidJoystickState: ignoring axis {} from source {} for input device \"{}\" "
-                "with ID {}",
-                motionRange.getAxis(), motionRange.getSource(), deviceName, m_deviceId);
-      continue;
+                "CAndroidJoystickState: axis {} has unexpected source {} ({}) for input device "
+                "\"{}\" with ID {}",
+                motionRange.getAxis(),
+                CAndroidJoystickTranslator::TranslateSource(motionRange.getSource()),
+                motionRange.getSource(), deviceName, m_deviceId);
     }
 
     int axisId = motionRange.getAxis();
@@ -115,15 +116,41 @@ bool CAndroidJoystickState::Initialize(const CJNIViewInputDevice& inputDevice)
                       motionRange.getRange(),
                       motionRange.getResolution()};
 
-    // check if the axis ID belongs to a D-pad, analogue stick or trigger
-    if (axisId == AMOTION_EVENT_AXIS_HAT_X || axisId == AMOTION_EVENT_AXIS_HAT_Y ||
-        axisId == AMOTION_EVENT_AXIS_X || axisId == AMOTION_EVENT_AXIS_Y ||
-        axisId == AMOTION_EVENT_AXIS_Z || axisId == AMOTION_EVENT_AXIS_RX ||
-        axisId == AMOTION_EVENT_AXIS_RY || axisId == AMOTION_EVENT_AXIS_RZ ||
-        axisId == AMOTION_EVENT_AXIS_LTRIGGER || axisId == AMOTION_EVENT_AXIS_RTRIGGER ||
-        axisId == AMOTION_EVENT_AXIS_GAS || axisId == AMOTION_EVENT_AXIS_BRAKE ||
-        axisId == AMOTION_EVENT_AXIS_THROTTLE || axisId == AMOTION_EVENT_AXIS_RUDDER ||
-        axisId == AMOTION_EVENT_AXIS_WHEEL)
+    // check if the axis ID belongs to a D-pad, analogue stick, trigger or
+    // generic axis
+    // clang-format off
+    if (axisId == AMOTION_EVENT_AXIS_HAT_X ||
+        axisId == AMOTION_EVENT_AXIS_HAT_Y ||
+        axisId == AMOTION_EVENT_AXIS_X ||
+        axisId == AMOTION_EVENT_AXIS_Y ||
+        axisId == AMOTION_EVENT_AXIS_Z ||
+        axisId == AMOTION_EVENT_AXIS_RX ||
+        axisId == AMOTION_EVENT_AXIS_RY ||
+        axisId == AMOTION_EVENT_AXIS_RZ ||
+        axisId == AMOTION_EVENT_AXIS_LTRIGGER ||
+        axisId == AMOTION_EVENT_AXIS_RTRIGGER ||
+        axisId == AMOTION_EVENT_AXIS_GAS ||
+        axisId == AMOTION_EVENT_AXIS_BRAKE ||
+        axisId == AMOTION_EVENT_AXIS_THROTTLE ||
+        axisId == AMOTION_EVENT_AXIS_RUDDER ||
+        axisId == AMOTION_EVENT_AXIS_WHEEL ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_1 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_2 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_3 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_4 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_5 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_6 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_7 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_8 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_9 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_10 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_11 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_12 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_13 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_14 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_15 ||
+        axisId == AMOTION_EVENT_AXIS_GENERIC_16)
+    // clang-format on
     {
       // check if this axis is already known
       if (ContainsAxis(axisId, m_axes))
