@@ -10,6 +10,7 @@
 
 #include <android/input.h>
 #include <android/keycodes.h>
+#include <androidjni/View.h>
 
 using namespace PERIPHERALS;
 
@@ -690,6 +691,36 @@ const char* CAndroidJoystickTranslator::TranslateKeyCode(int keyCode)
       return "AKEYCODE_PROFILE_SWITCH";
     default:
       break;
+  }
+
+  return "unknown";
+}
+
+const char* CAndroidJoystickTranslator::TranslateSource(int source)
+{
+  // clang-format off
+  static const std::vector<std::pair<int, const char*>> sources{
+      {CJNIViewInputDevice::SOURCE_DPAD, "SOURCE_DPAD"},
+      {CJNIViewInputDevice::SOURCE_GAMEPAD, "SOURCE_GAMEPAD"},
+      {CJNIViewInputDevice::SOURCE_HDMI, "SOURCE_HDMI"},
+      {CJNIViewInputDevice::SOURCE_JOYSTICK, "SOURCE_JOYSTICK"},
+      {CJNIViewInputDevice::SOURCE_KEYBOARD, "SOURCE_KEYBOARD"},
+      {CJNIViewInputDevice::SOURCE_MOUSE, "SOURCE_MOUSE"},
+      {CJNIViewInputDevice::SOURCE_MOUSE_RELATIVE, "SOURCE_MOUSE_RELATIVE"},
+      {CJNIViewInputDevice::SOURCE_ROTARY_ENCODER, "SOURCE_ROTARY_ENCODER"},
+      {CJNIViewInputDevice::SOURCE_STYLUS, "SOURCE_STYLUS"},
+      {CJNIViewInputDevice::SOURCE_TOUCHPAD, "SOURCE_TOUCHPAD"},
+      {CJNIViewInputDevice::SOURCE_TOUCHSCREEN, "SOURCE_TOUCHSCREEN"},
+      {CJNIViewInputDevice::SOURCE_TOUCH_NAVIGATION, "SOURCE_TOUCH_NAVIGATION"},
+      {CJNIViewInputDevice::SOURCE_TRACKBALL, "SOURCE_TRACKBALL"},
+      {CJNIViewInputDevice::SOURCE_UNKNOWN, "SOURCE_UNKNOWN"},
+  };
+  // clang-format on
+
+  for (const auto& it : sources)
+  {
+    if (it.first != 0 && it.first == source)
+      return it.second;
   }
 
   return "unknown";
