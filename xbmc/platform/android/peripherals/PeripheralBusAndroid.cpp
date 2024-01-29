@@ -382,8 +382,56 @@ bool CPeripheralBusAndroid::ConvertToPeripheralScanResult(
   if (!inputDevice.supportsSource(CJNIViewInputDevice::SOURCE_JOYSTICK) &&
       !inputDevice.supportsSource(CJNIViewInputDevice::SOURCE_GAMEPAD))
   {
-    CLog::Log(LOGDEBUG, "CPeripheralBusAndroid: ignoring non-joystick device");
-    return false;
+    // Observed a PS4 controller with only SOURCE_MOUSE
+    CLog::Log(LOGDEBUG, "CPeripheralBusAndroid: checking non-joystick device for joystick buttons");
+
+    // clang-format off
+    std::vector<int> keys{
+        AKEYCODE_BUTTON_A,
+        AKEYCODE_BUTTON_B,
+        AKEYCODE_BUTTON_C,
+        AKEYCODE_BUTTON_X,
+        AKEYCODE_BUTTON_Y,
+        AKEYCODE_BUTTON_Z,
+        AKEYCODE_BUTTON_L1,
+        AKEYCODE_BUTTON_R1,
+        AKEYCODE_BUTTON_L2,
+        AKEYCODE_BUTTON_R2,
+        AKEYCODE_BUTTON_THUMBL,
+        AKEYCODE_BUTTON_THUMBR,
+        AKEYCODE_BUTTON_START,
+        AKEYCODE_BUTTON_SELECT,
+        AKEYCODE_BUTTON_MODE,
+    };
+    // clang-format on
+
+    auto results = inputDevice.hasKeys(keys);
+
+    if (results.size() != keys.size())
+    {
+      CLog::Log(LOGERROR, "Failed to get key status for {} keys", keys.size());
+      return false;
+    }
+
+    bool hasJoystickButton = false;
+    for (unsigned int i = 0; i < keys.size(); i++)
+    {
+      if (results[i])
+      {
+        CLog::Log(LOGDEBUG, "CPeripheralBusAndroid:     found button: {} ({})",
+                  CAndroidJoystickTranslator::TranslateKeyCode(keys[i]), keys[i]);
+        hasJoystickButton = true;
+      }
+    }
+
+    if (!hasJoystickButton)
+    {
+      CLog::Log(LOGDEBUG, "CPeripheralBusAndroid: ignoring non-joystick device");
+      return false;
+    }
+
+    CLog::Log(LOGDEBUG,
+              "CPeripheralBusAndroid: device has joystick buttons, treating it as a joystick");
   }
 
   peripheralScanResult.m_type = PERIPHERAL_JOYSTICK;
