@@ -3,6 +3,8 @@
   <category name="face" label="35074">
     <button name="button1" type="digital" label="30001"/>
     <button name="button2" type="digital" label="30002"/>
+  </category>
+  <category name="joysticks" label="35073">
     <button name="up" type="digital" label="30003"/>
     <button name="right" type="digital" label="30004"/>
     <button name="down" type="digital" label="30005"/>
