@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <layout label="30000" image="layout.png" mask="mask.png">
   <category name="face" label="35074">
+    <button name="fire1" type="digital" label="30017"/>
+    <button name="fire2" type="digital" label="30018"/>
     <button name="start" type="digital" label="30013"/>
     <button name="pause" type="digital" label="30014"/>
-    <button name="reset" type="digital" label="30015"/>
-    <analogstick name="joystick" label="30016"/>
+    <!-- Note: Reset button is performed via Reset from the in-game OSD -->
+  </category>
+  <category name="joysticks" label="35073">
+    <button name="up" type="digital" label="30019"/>
+    <button name="right" type="digital" label="30020"/>
+    <button name="down" type="digital" label="30021"/>
+    <button name="left" type="digital" label="30022"/>
   </category>
   <category name="keypad" label="35109">
     <button name="num1" type="digital" label="30001"/>
@@ -19,5 +26,8 @@
     <button name="num0" type="digital" label="30010"/>
     <button name="star" type="digital" label="30011"/>
     <button name="pound" type="digital" label="30012"/>
+  </category>
+  <category name="offscreen" label="10103">
+    <button name="togglevkbd" type="digital" label="30023"/>
   </category>
 </layout>
