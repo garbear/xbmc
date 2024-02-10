@@ -18,6 +18,7 @@
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h"
 #include "guilib/LocalizeStrings.h"
+#include "music/MusicFileItemClassify.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
 #include "utils/ContentUtils.h"
@@ -36,6 +37,7 @@
 
 #include <utility>
 
+using namespace KODI::MUSIC;
 using namespace KODI::VIDEO;
 
 namespace CONTEXTMENU
@@ -415,7 +417,7 @@ bool CVideoResume::Execute(const std::shared_ptr<CFileItem>& itemIn) const
 {
   const auto item{std::make_shared<CFileItem>(itemIn->GetItemToPlay())};
 #ifdef HAS_OPTICAL_DRIVE
-  if (item->IsDVD() || item->IsCDDA())
+  if (item->IsDVD() || IsCDDA(*item))
     return MEDIA_DETECT::CAutorun::PlayDisc(item->GetPath(), true, false);
 #endif
 
@@ -443,7 +445,7 @@ bool CVideoPlay::Execute(const std::shared_ptr<CFileItem>& itemIn) const
 {
   const auto item{std::make_shared<CFileItem>(itemIn->GetItemToPlay())};
 #ifdef HAS_OPTICAL_DRIVE
-  if (item->IsDVD() || item->IsCDDA())
+  if (item->IsDVD() || IsCDDA(*item))
     return MEDIA_DETECT::CAutorun::PlayDisc(item->GetPath(), true, true);
 #endif
   SetPathAndPlay(item, PlayMode::PLAY);
