@@ -27,6 +27,7 @@
 #include "utils/URIUtils.h"
 #include "utils/XTimeUtils.h"
 #include "utils/log.h"
+#include "video/VideoFileItemClassify.h"
 
 #include <functional>
 #include <limits>
@@ -37,6 +38,7 @@
 
 #define LIBBLURAY_BYTESEEK 0
 
+using namespace KODI;
 using namespace XFILE;
 
 using namespace std::chrono_literals;
@@ -145,7 +147,7 @@ bool CDVDInputStreamBluray::Open()
     // Check whether disc is AACS protected
     CURL url3(root);
     CFileItem base(url3, false);
-    openDisc = base.IsProtectedBlurayDisc();
+    openDisc = VIDEO::IsProtectedBlurayDisc(base);
 
     // check for a menu call for an image file
     if (StringUtils::EqualsNoCase(filename, "menu"))
@@ -159,7 +161,7 @@ bool CDVDInputStreamBluray::Open()
 
       // Check whether disc is AACS protected
       if (!openDisc)
-        openDisc = item.IsProtectedBlurayDisc();
+        openDisc = VIDEO::IsProtectedBlurayDisc(item);
 
       if (item.IsDiscImage())
       {
@@ -177,7 +179,7 @@ bool CDVDInputStreamBluray::Open()
 
     openStream = true;
   }
-  else if (m_item.IsProtectedBlurayDisc())
+  else if (VIDEO::IsProtectedBlurayDisc(m_item))
   {
     openDisc = true;
   }
