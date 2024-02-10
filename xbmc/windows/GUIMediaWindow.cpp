@@ -24,6 +24,7 @@
 #include "addons/addoninfo/AddonType.h"
 #include "application/Application.h"
 #include "messaging/ApplicationMessenger.h"
+#include "network/NetworkFileItemClassify.h"
 #if defined(TARGET_ANDROID)
 #include "platform/android/activity/XBMCApp.h"
 #endif
@@ -80,8 +81,8 @@
 #define PLUGIN_REFRESH_DELAY 200
 
 using namespace ADDON;
+using namespace KODI;
 using namespace KODI::MESSAGING;
-using namespace KODI::VIDEO;
 using namespace std::chrono_literals;
 
 namespace
@@ -1504,7 +1505,7 @@ bool CGUIMediaWindow::OnPlayMedia(int iItem, const std::string &player)
   CLog::Log(LOGDEBUG, "{} {}", __FUNCTION__, CURL::GetRedacted(pItem->GetPath()));
 
   bool bResult = false;
-  if (pItem->IsInternetStream() || pItem->IsPlayList())
+  if (NETWORK::IsInternetStream(*pItem) || pItem->IsPlayList())
     bResult = g_application.PlayMedia(*pItem, player, m_guiState->GetPlaylist());
   else
     bResult = g_application.PlayFile(*pItem, player);
