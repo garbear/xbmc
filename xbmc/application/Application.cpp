@@ -2377,7 +2377,7 @@ bool CApplication::PlayFile(CFileItem item, const std::string& player, bool bRes
       CUtil::ClearSubtitles();
   }
 
-  if (item.IsDiscStub())
+  if (IsDiscStub(item))
   {
     return CServiceBroker::GetMediaManager().playStubFile(item);
   }
