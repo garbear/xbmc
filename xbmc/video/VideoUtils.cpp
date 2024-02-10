@@ -30,6 +30,8 @@
 #include <cstdint>
 #include <vector>
 
+using namespace KODI::VIDEO;
+
 namespace
 {
 VIDEO_UTILS::ResumeInformation GetFolderItemResumeInformation(const CFileItem& item)
@@ -127,13 +129,13 @@ VIDEO_UTILS::ResumeInformation GetNonFolderItemResumeInformation(const CFileItem
     }
 
     std::string path = item.GetPath();
-    if (item.IsVideoDb() || item.IsDVD())
+    if (IsVideoDb(item) || item.IsDVD())
     {
       if (item.HasVideoInfoTag())
       {
         path = item.GetVideoInfoTag()->m_strFileNameAndPath;
       }
-      else if (item.IsVideoDb())
+      else if (IsVideoDb(item))
       {
         // Obtain path+filename from video db
         XFILE::VIDEODATABASEDIRECTORY::CQueryParams params;
