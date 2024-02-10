@@ -1,4 +1,5 @@
-set(SOURCES TestNetwork.cpp)
+set(SOURCES TestNetwork.cpp
+            TestNetworkFileItemClassify.cpp)
 
 if(TARGET ${APP_NAME_LC}::MicroHttpd)
   list(APPEND SOURCES TestWebServer.cpp)
