@@ -68,7 +68,6 @@
 #include <memory>
 
 using namespace KODI;
-using namespace KODI::VIDEO;
 using namespace XFILE;
 using namespace PLAYLIST;
 using namespace MUSIC_INFO;
@@ -848,7 +847,7 @@ bool CFileItem::Exists(bool bUseCache /* = true */) const
       IsVirtualDirectoryRoot() || IsPlugin() || IsPVR())
     return true;
 
-  if (IsVideoDb(*this) && HasVideoInfoTag())
+  if (VIDEO::IsVideoDb(*this) && HasVideoInfoTag())
   {
     CFileItem dbItem(m_bIsFolder ? GetVideoInfoTag()->m_strPath : GetVideoInfoTag()->m_strFileNameAndPath, m_bIsFolder);
     return dbItem.Exists();
@@ -1055,10 +1054,10 @@ bool CFileItem::IsDiscImage() const
 
 bool CFileItem::IsOpticalMediaFile() const
 {
-  if (IsDVDFile(*this, false, true))
+  if (VIDEO::IsDVDFile(*this, false, true))
     return true;
 
-  return IsBDFile(*this);
+  return VIDEO::IsBDFile(*this);
 }
 
 bool CFileItem::IsRAR() const
@@ -1140,7 +1139,7 @@ bool CFileItem::IsBluray() const
 
   CFileItem item = CFileItem(VIDEO::UTILS::GetOpticalMediaPath(*this), false);
 
-  return IsBDFile(item);
+  return VIDEO::IsBDFile(item);
 }
 
 bool CFileItem::IsDVD() const
@@ -1166,11 +1165,6 @@ bool CFileItem::IsOnLAN() const
 bool CFileItem::IsISO9660() const
 {
   return URIUtils::IsISO9660(m_strPath);
-}
-
-bool CFileItem::IsRemote() const
-{
-  return URIUtils::IsRemote(m_strPath);
 }
 
 bool CFileItem::IsSmb() const
@@ -1281,7 +1275,7 @@ void CFileItem::FillInDefaultIcon()
         // audio
         SetArt("icon", "DefaultAudio.png");
       }
-      else if (IsVideo(*this))
+      else if (VIDEO::IsVideo(*this))
       {
         // video
         SetArt("icon", "DefaultVideo.png");
@@ -1475,7 +1469,7 @@ bool CFileItem::IsSamePath(const CFileItem *item) const
     if (item->HasProperty("item_start") || HasProperty("item_start"))
       return (item->GetProperty("item_start") == GetProperty("item_start"));
     // See if we have associated a bluray playlist
-    if (IsBlurayPlaylist(*this) || IsBlurayPlaylist(*item))
+    if (VIDEO::IsBlurayPlaylist(*this) || VIDEO::IsBlurayPlaylist(*item))
       return (GetDynPath() == item->GetDynPath());
     return true;
   }
@@ -1508,7 +1502,7 @@ bool CFileItem::IsSamePath(const CFileItem *item) const
       dbItem.SetProperty("item_start", GetProperty("item_start"));
     return dbItem.IsSamePath(item);
   }
-  if (IsVideoDb(*this) && HasVideoInfoTag())
+  if (VIDEO::IsVideoDb(*this) && HasVideoInfoTag())
   {
     CFileItem dbItem(GetVideoInfoTag()->m_strFileNameAndPath, false);
     if (HasProperty("item_start"))
@@ -1522,7 +1516,7 @@ bool CFileItem::IsSamePath(const CFileItem *item) const
       dbItem.SetProperty("item_start", item->GetProperty("item_start"));
     return IsSamePath(&dbItem);
   }
-  if (IsVideoDb(*item) && item->HasVideoInfoTag())
+  if (VIDEO::IsVideoDb(*item) && item->HasVideoInfoTag())
   {
     CFileItem dbItem(item->GetVideoInfoTag()->m_strFileNameAndPath, false);
     if (item->HasProperty("item_start"))
@@ -1676,7 +1670,7 @@ void CFileItem::MergeInfo(const CFileItem& item)
     SetLabel2(item.GetLabel2());
   if (!item.GetArt().empty())
   {
-    if (IsVideo(item))
+    if (VIDEO::IsVideo(item))
       AppendArt(item.GetArt());
     else
       SetArt(item.GetArt());
@@ -1884,7 +1878,7 @@ void CFileItem::SetDynPath(const std::string &path)
 
 std::string CFileItem::GetBlurayPath() const
 {
-  if (IsBlurayPlaylist(*this))
+  if (VIDEO::IsBlurayPlaylist(*this))
   {
     CURL url(GetDynPath());
     CURL url2(url.GetHostName()); // strip bluray://
@@ -2018,7 +2012,10 @@ std::string CFileItem::GetUserMusicThumb(bool alwaysCheckRemote /* = false */, b
   }
 
   // if a folder, check for folder.jpg
-  if (m_bIsFolder && !IsFileFolder() && (!IsRemote() || alwaysCheckRemote || CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_MUSICFILES_FINDREMOTETHUMBS)))
+  if (m_bIsFolder && !IsFileFolder() &&
+      (!NETWORK::IsRemote(*this) || alwaysCheckRemote ||
+       CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+           CSettings::SETTING_MUSICFILES_FINDREMOTETHUMBS)))
   {
     std::vector<CVariant> thumbs = CServiceBroker::GetSettingsComponent()->GetSettings()->GetList(
         CSettings::SETTING_MUSICLIBRARY_MUSICTHUMBS);
@@ -2315,7 +2312,7 @@ std::string CFileItem::GetBaseMoviePath(bool bUseFolderNames) const
 
 std::string CFileItem::GetLocalFanart() const
 {
-  if (IsVideoDb(*this))
+  if (VIDEO::IsVideoDb(*this))
   {
     if (!HasVideoInfoTag())
       return ""; // nothing can be done
@@ -2397,7 +2394,7 @@ std::string CFileItem::GetLocalMetadataPath() const
     return m_strPath;
 
   std::string parent{};
-  if (IsBlurayPlaylist(*this))
+  if (VIDEO::IsBlurayPlaylist(*this))
     parent = URIUtils::GetParentPath(GetBlurayPath());
   else
     parent = URIUtils::GetParentPath(m_strPath);
@@ -2489,7 +2486,7 @@ bool CFileItem::LoadGameTag()
 
 bool CFileItem::LoadDetails()
 {
-  if (IsVideoDb(*this))
+  if (VIDEO::IsVideoDb(*this))
   {
     if (HasVideoInfoTag())
       return true;
@@ -2549,7 +2546,7 @@ bool CFileItem::LoadDetails()
     return false;
   }
 
-  if (!IsPlayList() && IsVideo(*this))
+  if (!IsPlayList() && VIDEO::IsVideo(*this))
   {
     if (HasVideoInfoTag())
       return true;
@@ -2581,7 +2578,7 @@ bool CFileItem::LoadDetails()
       if (playlist->Load(GetPath()) && playlist->size() == 1)
       {
         const auto item{(*playlist)[0]};
-        if (IsVideo(*item))
+        if (VIDEO::IsVideo(*item))
         {
           CVideoDatabase db;
           if (!db.Open())
