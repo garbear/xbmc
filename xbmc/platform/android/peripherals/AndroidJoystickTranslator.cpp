@@ -703,6 +703,7 @@ const char* CAndroidJoystickTranslator::TranslateJoystickButton(int buttonKeycod
   switch (buttonKeycode)
   {
     case AKEYCODE_BUTTON_A:
+    case AKEYCODE_DPAD_CENTER:
       return GAME::CDefaultController::FEATURE_A;
     case AKEYCODE_BUTTON_B:
       return GAME::CDefaultController::FEATURE_B;
