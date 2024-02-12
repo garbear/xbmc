@@ -46,7 +46,7 @@ public:
 
   std::string GetAppearance() const override;
 
-  bool SetAppearance(const std::string& controllerId) const override;
+  bool SetAppearance(const std::string& controllerId) override;
 
   bool GetFeature(const KODI::JOYSTICK::CDriverPrimitive& primitive,
                   KODI::JOYSTICK::FeatureName& feature) override;

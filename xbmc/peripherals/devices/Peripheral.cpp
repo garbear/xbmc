@@ -13,6 +13,7 @@
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerLayout.h"
 #include "guilib/LocalizeStrings.h"
+#include "input/joysticks/generic/GenericButtonMap.h"
 #include "input/joysticks/interfaces/IInputHandler.h"
 #include "input/keyboard/generic/DefaultKeyboardHandling.h"
 #include "input/mouse/generic/DefaultMouseHandling.h"
@@ -593,20 +594,38 @@ void CPeripheral::RegisterInputHandler(IInputHandler* handler, bool bPromiscuous
   auto it = m_inputHandlers.find(handler);
   if (it == m_inputHandlers.end())
   {
+    std::unique_ptr<KODI::JOYSTICK::IDriverHandler> joystickDriverHandler;
+
     PeripheralAddonPtr addon = m_manager.GetAddonWithButtonMap(this);
     if (addon)
     {
       std::unique_ptr<CAddonInputHandling> addonInput = std::make_unique<CAddonInputHandling>(
           m_manager, this, std::move(addon), handler, GetDriverReceiver());
       if (addonInput->Load())
-      {
-        RegisterJoystickDriverHandler(addonInput.get(), bPromiscuous);
-        m_inputHandlers[handler] = std::move(addonInput);
-      }
+        joystickDriverHandler = std::move(addonInput);
     }
     else
     {
       CLog::Log(LOGDEBUG, "Failed to locate add-on for \"{}\"", m_strLocation);
+    }
+
+    if (!joystickDriverHandler)
+    {
+      /*
+      std::unique_ptr<JOYSTICK::CGenericButtonMap> genericInput =
+          std::make_unique<JOYSTICK::CGenericButtonMap>(Location(), handler);
+      if (genericInput->Load())
+        joystickDriverHandler = std::move(genericInput);
+      std::unique_ptr<JOYSTICK::CGenericInputHandling> genericInput =
+          std::make_unique<JOYSTICK::CGenericInputHandling>(Location(), handler);
+      joystickDriverHandler = std::move(genericInput);
+      */
+    }
+
+    if (joystickDriverHandler)
+    {
+      RegisterJoystickDriverHandler(joystickDriverHandler.get(), bPromiscuous);
+      m_inputHandlers[handler] = std::move(joystickDriverHandler);
     }
   }
 }
