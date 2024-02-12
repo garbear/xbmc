@@ -124,7 +124,7 @@ std::string CAddonButtonMap::GetAppearance() const
   return m_controllerAppearance;
 }
 
-bool CAddonButtonMap::SetAppearance(const std::string& controllerId) const
+bool CAddonButtonMap::SetAppearance(const std::string& controllerId)
 {
   return false;
 }
