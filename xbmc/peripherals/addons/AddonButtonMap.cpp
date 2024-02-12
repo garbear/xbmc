@@ -126,7 +126,7 @@ std::string CAddonButtonMap::GetAppearance() const
   return m_controllerAppearance;
 }
 
-bool CAddonButtonMap::SetAppearance(const std::string& controllerId) const
+bool CAddonButtonMap::SetAppearance(const std::string& controllerId)
 {
   if (auto addon = m_addon.lock())
     return addon->SetAppearance(m_device, controllerId);

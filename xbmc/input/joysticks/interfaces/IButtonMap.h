@@ -83,7 +83,7 @@ public:
   *
   * \return True if the appearance was set, false on error
   */
-  virtual bool SetAppearance(const std::string& controllerId) const = 0;
+  virtual bool SetAppearance(const std::string& controllerId) = 0;
 
   /*!
    * \brief Get the feature associated with a driver primitive

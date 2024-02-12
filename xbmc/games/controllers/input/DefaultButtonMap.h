@@ -41,7 +41,7 @@ public:
   void Reset() override {}
   bool IsEmpty() const override { return false; }
   std::string GetAppearance() const override;
-  bool SetAppearance(const std::string& controllerId) const override { return false; }
+  bool SetAppearance(const std::string& controllerId) override { return false; }
   bool GetFeature(const JOYSTICK::CDriverPrimitive& primitive,
                   JOYSTICK::FeatureName& feature) override;
   JOYSTICK::FEATURE_TYPE GetFeatureType(const JOYSTICK::FeatureName& feature) override
