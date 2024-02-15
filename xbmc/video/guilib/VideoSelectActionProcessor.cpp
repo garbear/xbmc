@@ -19,7 +19,7 @@
 #include "settings/SettingsComponent.h"
 #include "utils/StringUtils.h"
 #include "utils/Variant.h"
-#include "video/VideoUtils.h"
+#include "video/guilib/VideoGUIUtils.h"
 
 using namespace VIDEO::GUILIB;
 
