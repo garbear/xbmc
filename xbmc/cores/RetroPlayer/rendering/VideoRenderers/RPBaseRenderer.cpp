@@ -50,8 +50,12 @@ bool CRPBaseRenderer::IsCompatible(const CRenderVideoSettings& settings) const
   if (m_shaderPreset)
     shaderPreset = m_shaderPreset->GetShaderPreset();
 
-  if (settings.GetShaderPreset() != shaderPreset)
-    return false;
+  // Shader preset might not be initialized yet
+  if (!shaderPreset.empty())
+  {
+    if (settings.GetShaderPreset() != shaderPreset)
+      return false;
+  }
 
   return true;
 }

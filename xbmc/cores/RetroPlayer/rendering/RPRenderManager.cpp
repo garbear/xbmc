@@ -527,6 +527,7 @@ std::shared_ptr<CRPBaseRenderer> CRPRenderManager::GetRendererForSettings(
     renderer->SetScalingMethod(effectiveRenderSettings.VideoSettings().GetScalingMethod());
     renderer->SetStretchMode(effectiveRenderSettings.VideoSettings().GetRenderStretchMode());
     renderer->SetRenderRotation(effectiveRenderSettings.VideoSettings().GetRenderRotation());
+    renderer->SetShaderPreset(effectiveRenderSettings.VideoSettings().GetShaderPreset());
     renderer->SetPixels(effectiveRenderSettings.VideoSettings().GetPixels());
   }
 
