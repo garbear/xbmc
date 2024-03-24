@@ -54,11 +54,15 @@
   <addon>xbmc.webinterface</addon>
   <addon optional="true">inputstream.adaptive</addon>
   <addon optional="true">peripheral.joystick</addon>
+  <addon optional="true">plugin.video.themoviedb.helper</addon>
   <addon optional="true">repository.chrisism.dev</addon>
   <addon optional="true">repository.jurialmunkey</addon>
   <addon optional="true">repository.teeedubb</addon>
   <addon optional="true">repository.zachmorris</addon>
   <addon optional="true">screensaver.matrixtrails</addon>
+  <addon optional="true">script.module.infotagger</addon>
+  <addon optional="true">script.module.jurialmunkey</addon>
+  <addon optional="true">script.skinvariables</addon>
   <addon optional="true">service.xbmc.versioncheck</addon>
   <addon optional="true">vfs.libarchive</addon>
   <addon optional="true">vfs.rar</addon>
