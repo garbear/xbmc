@@ -44,10 +44,7 @@ bool CShaderLutGL::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderContext& context,
                                                                const KODI::SHADER::ShaderLut& lut)
 {
-  auto wrapType = CShaderUtilsGL::TranslateWrapType(lut.wrap);
-  auto filterType = lut.filter ? GL_LINEAR : GL_NEAREST;
-
-  std::unique_ptr<CTexture> texture = CGLTexture::LoadFromFile(lut.path);
+  std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
   CGLTexture* textureGL = static_cast<CGLTexture*>(texture.get());
 
   if (textureGL == nullptr)
@@ -56,10 +53,15 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
     return std::unique_ptr<IShaderTexture>();
   }
 
-  textureGL->CreateTextureObject();
+  if (lut.mipmap)
+    textureGL->SetMipmapping();
+
+  textureGL->SetScalingMethod(lut.filter == FILTER_TYPE_LINEAR ? TEXTURE_SCALING::LINEAR : TEXTURE_SCALING::NEAREST);
+  textureGL->LoadToGPU();
+
+  auto wrapType = CShaderUtilsGL::TranslateWrapType(lut.wrap);
+
   glBindTexture(GL_TEXTURE_2D, textureGL->getMTexture());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterType);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterType);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrapType);
@@ -71,9 +73,6 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
   GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
   glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
 #endif
-
-  if (lut.mipmap)
-    textureGL->SetMipmapping();
 
   return std::unique_ptr<IShaderTexture>(
       new CShaderTextureGL(static_cast<CGLTexture*>(texture.release())));
