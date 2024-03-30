@@ -118,6 +118,9 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
   glBindVertexArray(VAO);
 #endif
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void CShaderGL::SetShaderParameters()
