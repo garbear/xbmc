@@ -14,7 +14,8 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} OR P8Platform_FIND_REQU
   macro(buildlibp8platform)
     set(patches "${CORE_SOURCE_DIR}/tools/depends/target/${MODULE_LC}/001-all-fix-c++17-support.patch"
                 "${CORE_SOURCE_DIR}/tools/depends/target/${MODULE_LC}/002-all-fixcmakeinstall.patch"
-                "${CORE_SOURCE_DIR}/tools/depends/target/${MODULE_LC}/003-all-cmake_tweakversion.patch")
+                "${CORE_SOURCE_DIR}/tools/depends/target/${MODULE_LC}/003-all-cmake_tweakversion.patch"
+                "${CORE_SOURCE_DIR}/tools/depends/target/${MODULE_LC}/004-all-fix-cxx-standard.patch")
 
     generate_patchcommand("${patches}")
 
