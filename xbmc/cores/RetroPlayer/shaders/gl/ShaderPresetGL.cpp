@@ -293,13 +293,13 @@ bool CShaderPresetGL::CreateShaderTextures()
         textureFormat = GL_RGBA;
     }
 
-    auto texture = new CGLTexture(static_cast<unsigned int>(scaledSize.x),
+    auto textureGL = new CGLTexture(static_cast<unsigned int>(scaledSize.x),
                                   static_cast<unsigned int>(scaledSize.y),
                                   static_cast<XB_FMT>(textureFormat)); //! @todo Format translation?
 
-    texture->CreateTextureObject();
+    textureGL->CreateTextureObject();
 
-    if (texture->getMTexture() <= 0)
+    if (textureGL->getMTexture() <= 0)
     {
       CLog::Log(LOGERROR, "Couldn't create a texture for video shader {}.", pass.sourcePath);
       return false;
@@ -307,7 +307,7 @@ bool CShaderPresetGL::CreateShaderTextures()
 
     auto wrapType = CShaderUtilsGL::TranslateWrapType(WRAP_TYPE_BORDER);
 
-    glBindTexture(GL_TEXTURE_2D, texture->getMTexture());
+    glBindTexture(GL_TEXTURE_2D, textureGL->getMTexture());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
@@ -322,7 +322,7 @@ bool CShaderPresetGL::CreateShaderTextures()
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
 #endif
 
-    m_pShaderTextures.emplace_back(new CShaderTextureGL(*texture));
+    m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL));
     m_pShaders[shaderIdx]->SetSizes(prevSize, scaledSize);
 
     prevSize = scaledSize;
