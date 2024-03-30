@@ -98,21 +98,19 @@ bool CShaderGL::Create(const std::string& shaderSource,
 void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 {
   CShaderTextureGL* sourceGL = static_cast<CShaderTextureGL*>(source);
-  GLuint texture = sourceGL->GetPointer()->getMTexture();
+  sourceGL->GetPointer()->BindToUnit(0);
   glUseProgram(m_shaderProgram);
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, texture);
 
-  //  for (int i = 0; i < m_luts.size(); ++i)
-  //  {
-  //    auto* lutTexture = dynamic_cast<CShaderTextureGL*>(m_luts[i].get()->GetTexture());
-  //    if (lutTexture)
-  //    {
-  //      glActiveTexture(GL_TEXTURE1 + i);
-  //      GLuint lutTextureID = lutTexture->GetPointer()->getMTexture();
-  //      glBindTexture(GL_TEXTURE_2D, lutTextureID);
-  //    }
-  //  }
+  for (unsigned int i = 0; i < m_luts.size(); ++i)
+  {
+    auto* lutTexture = dynamic_cast<CShaderTextureGL*>(m_luts[i].get()->GetTexture());
+    if (lutTexture)
+    {
+      GLint paramLoc = glGetUniformLocation(m_shaderProgram, m_luts[i]->GetID().c_str());
+      glUniform1i(paramLoc, 1 + i);
+      lutTexture->GetPointer()->BindToUnit(1 + i);
+    }
+  }
 
 #ifndef HAS_GLES
   glBindVertexArray(VAO);
