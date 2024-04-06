@@ -85,7 +85,7 @@ bool CShaderGL::Create(const std::string& shaderSource,
   glDeleteShader(vShader);
   glDeleteShader(fShader);
 
-  glUseProgram(m_shaderProgram);
+  SetShaderParameters();
 
 #ifndef HAS_GLES
   glGenVertexArrays(1, &VAO);
@@ -112,18 +112,6 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
     }
   }
 
-#ifndef HAS_GLES
-  glBindVertexArray(VAO);
-#endif
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-void CShaderGL::SetShaderParameters()
-{
-  glUseProgram(m_shaderProgram);
   glUniformMatrix4fv(m_MVPMatrixLoc, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&m_MVP));
 
 #ifndef HAS_GLES
@@ -147,6 +135,16 @@ void CShaderGL::SetShaderParameters()
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_indices), m_indices, GL_STATIC_DRAW);
+
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void CShaderGL::SetShaderParameters()
+{
+  glUseProgram(m_shaderProgram);
 
   for (const auto& parameter : m_shaderParameters)
   {
@@ -228,8 +226,6 @@ void CShaderGL::PrepareParameters(CPoint* dest, bool isLastPass, uint64_t frameC
   m_indices[1][0] = 1;
   m_indices[1][1] = 2;
   m_indices[1][2] = 3;
-
-  SetShaderParameters();
 }
 
 void CShaderGL::UpdateMVP()
