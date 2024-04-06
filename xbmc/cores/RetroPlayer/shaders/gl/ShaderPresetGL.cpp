@@ -410,14 +410,6 @@ void CShaderPresetGL::DisposeShaders()
 
 void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPoint* dest)
 {
-  for (unsigned shaderIdx = 0; shaderIdx < m_pShaders.size() - 1; ++shaderIdx)
-  {
-    auto& videoShader = m_pShaders[shaderIdx];
-    videoShader->PrepareParameters(m_dest, false, static_cast<uint64_t>(m_frameCount));
-  }
-
-  m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
-
   if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
       m_dest[3] != dest[3] || texture->GetWidth() != m_outputSize.x ||
       texture->GetHeight() != m_outputSize.y)
@@ -427,9 +419,20 @@ void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPo
 
     m_outputSize = {texture->GetWidth(), texture->GetHeight()};
 
+    // Update projection matrix and update video shaders
     UpdateMVPs();
     UpdateViewPort();
   }
+
+  // Prepare params for all shaders except the last (needs special flag)
+  for (unsigned shaderIdx = 0; shaderIdx < m_pShaders.size() - 1; ++shaderIdx)
+  {
+    auto& videoShader = m_pShaders[shaderIdx];
+    videoShader->PrepareParameters(m_dest, false, static_cast<uint64_t>(m_frameCount));
+  }
+
+  // Prepare params for last shader
+  m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
 }
 
 void CShaderPresetGL::RenderShader(IShader* shader,
