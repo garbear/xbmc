@@ -315,7 +315,7 @@ void CRPRendererOpenGL::Render(uint8_t alpha)
     SHADER::CShaderTextureGL target(*targetTexture);
     if (!m_shaderPreset->RenderUpdate(destPoints, &source, &target))
     {
-      m_shadersNeedUpdate = false;
+      m_bShadersNeedUpdate = false;
       m_bUseShaderPreset = false;
     }
   }
