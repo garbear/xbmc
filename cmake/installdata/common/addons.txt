@@ -39,7 +39,6 @@ addons/script.module.pytz/*
 addons/script.module.requests/*
 addons/script.module.six/*
 addons/script.module.urllib3/*
-addons/service.xbmc.versioncheck/*
 addons/weather.openmeteo/*
 addons/webinterface.default/*
 addons/xbmc.addon/metadata.xsd
