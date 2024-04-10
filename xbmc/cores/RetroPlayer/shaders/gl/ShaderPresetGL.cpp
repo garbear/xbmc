@@ -204,8 +204,11 @@ bool CShaderPresetGL::Update()
 
 void CShaderPresetGL::SetVideoSize(const unsigned videoWidth, const unsigned videoHeight)
 {
-  m_videoSize = {videoWidth, videoHeight};
-  m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
+  if (videoWidth != m_videoSize.x || videoHeight != m_videoSize.y) {
+    m_videoSize = {videoWidth, videoHeight};
+    m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
+    m_bPresetNeedsUpdate = true;
+  }
 }
 
 bool CShaderPresetGL::SetShaderPreset(const std::string& shaderPresetPath)
@@ -324,6 +327,7 @@ bool CShaderPresetGL::CreateShaderTextures()
 
     m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL));
     m_pShaders[shaderIdx]->SetSizes(prevSize, scaledSize);
+    m_pShaders[shaderIdx]->UpdateMVP();
 
     prevSize = scaledSize;
   }

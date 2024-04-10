@@ -27,7 +27,7 @@ CRPBaseRenderer::CRPBaseRenderer(const CRenderSettings& renderSettings,
   : m_context(context),
     m_bufferPool(std::move(bufferPool)),
     m_renderSettings(renderSettings),
-    m_shadersNeedUpdate(true),
+    m_bShadersNeedUpdate(true),
     m_bUseShaderPreset(false)
 {
   m_bufferPool->RegisterRenderer(this);
@@ -157,7 +157,7 @@ void CRPBaseRenderer::SetShaderPreset(const std::string& presetPath)
   if (presetPath != m_renderSettings.VideoSettings().GetShaderPreset())
   {
     m_renderSettings.VideoSettings().SetShaderPreset(presetPath);
-    m_shadersNeedUpdate = true;
+    m_bShadersNeedUpdate = true;
   }
 }
 
@@ -232,6 +232,10 @@ void CRPBaseRenderer::ManageRenderArea(const IRenderBuffer& renderBuffer)
 
   // Adapt the drawing rect points if we have to rotate
   m_rotatedDestCoords = CRenderUtils::ReorderDrawPoints(destRect, rotationDegCCW);
+
+  // Update video shader source size
+  if (m_shaderPreset)
+    m_shaderPreset->SetVideoSize(sourceWidth, sourceHeight);
 }
 
 void CRPBaseRenderer::MarkDirty()
@@ -245,25 +249,12 @@ void CRPBaseRenderer::MarkDirty()
  */
 void CRPBaseRenderer::Updateshaders()
 {
-  if (m_shadersNeedUpdate)
+  if (m_bShadersNeedUpdate)
   {
     if (m_shaderPreset)
-    {
-      if (!m_renderBuffer)
-      {
-        CLog::Log(LOGWARNING, "{} - Render buffer not set, can't update video shader source size!",
-                  __FUNCTION__);
-        return;
-      }
-      auto sourceWidth = m_renderBuffer->GetWidth();
-      auto sourceHeight = m_renderBuffer->GetHeight();
-
-      // We need to set this here because m_sourceRect isn't valid on init/pre-init
-      m_shaderPreset->SetVideoSize(sourceWidth, sourceHeight);
       m_bUseShaderPreset =
           m_shaderPreset->SetShaderPreset(m_renderSettings.VideoSettings().GetShaderPreset());
-    }
-    m_shadersNeedUpdate = false;
+    m_bShadersNeedUpdate = false;
   }
 }
 
