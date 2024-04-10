@@ -309,6 +309,7 @@ bool CShaderPresetDX::CreateShaderTextures()
 
     // notify shader of its source and dest size
     m_pShaders[shaderIdx]->SetSizes(prevSize, scaledSize);
+    m_pShaders[shaderIdx]->UpdateMVP();
 
     prevSize = scaledSize;
   }
@@ -479,8 +480,11 @@ const std::string& CShaderPresetDX::GetShaderPreset() const
 
 void CShaderPresetDX::SetVideoSize(const unsigned videoWidth, const unsigned videoHeight)
 {
-  m_videoSize = {videoWidth, videoHeight};
-  m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
+  if (videoWidth != m_videoSize.x || videoHeight != m_videoSize.y) {
+    m_videoSize = {videoWidth, videoHeight};
+    m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
+    m_bPresetNeedsUpdate = true;
+  }
 }
 
 void CShaderPresetDX::UpdateMVPs()
