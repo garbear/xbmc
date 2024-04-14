@@ -240,15 +240,6 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
   if (renderBuffer == nullptr)
     return;
 
-  CRect rect = m_sourceRect;
-
-  rect.x1 /= renderBuffer->GetWidth();
-  rect.x2 /= renderBuffer->GetWidth();
-  rect.y1 /= renderBuffer->GetHeight();
-  rect.y2 /= renderBuffer->GetHeight();
-
-  const uint32_t color = (alpha << 24) | 0xFFFFFF;
-
   RenderBufferTextures* rbTextures;
   const auto it = m_RBTexturesMap.find(renderBuffer);
   if (it != m_RBTexturesMap.end())
@@ -278,17 +269,6 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
   const auto sourceTexture = &rbTextures->source;
   const auto targetTexture = &rbTextures->target;
 
-  glBindTexture(m_textureTarget, sourceTexture->getMTexture());
-
-  GLint filter = GL_NEAREST;
-  if (GetRenderSettings().VideoSettings().GetScalingMethod() == SCALINGMETHOD::LINEAR)
-    filter = GL_LINEAR;
-
-  glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, filter);
-  glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, filter);
-  glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
   Updateshaders();
 
   if (m_bUseShaderPreset)
@@ -308,6 +288,26 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
   }
   else
   {
+    CRect rect = m_sourceRect;
+
+    rect.x1 /= renderBuffer->GetWidth();
+    rect.x2 /= renderBuffer->GetWidth();
+    rect.y1 /= renderBuffer->GetHeight();
+    rect.y2 /= renderBuffer->GetHeight();
+
+    const uint32_t color = (alpha << 24) | 0xFFFFFF;
+
+    glBindTexture(m_textureTarget, sourceTexture->getMTexture());
+
+    GLint filter = GL_NEAREST;
+    if (GetRenderSettings().VideoSettings().GetScalingMethod() == SCALINGMETHOD::LINEAR)
+      filter = GL_LINEAR;
+
+    glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, filter);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     m_context.EnableGUIShader(GL_SHADER_METHOD::TEXTURE_NOALPHA);
 
     GLubyte colour[4];
