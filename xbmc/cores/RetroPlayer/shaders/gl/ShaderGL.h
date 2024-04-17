@@ -86,9 +86,6 @@ private:
   // Resolution of the viewport/window
   float2 m_viewportSize;
 
-  // Resolution of the texture that holds the input
-  //float2 m_textureSize;
-
   GLuint m_shaderProgram = 0;
 
   // Projection matrix

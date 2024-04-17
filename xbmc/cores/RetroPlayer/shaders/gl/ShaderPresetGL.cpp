@@ -30,8 +30,6 @@ CShaderPresetGL::CShaderPresetGL(RETRO::CRenderContext& context,
                                  unsigned int videoHeight)
   : m_context(context), m_videoSize(videoWidth, videoHeight)
 {
-  m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
-
   CRect viewPort;
   m_context.GetViewPort(viewPort);
   m_outputSize = {viewPort.Width(), viewPort.Height()};
@@ -206,7 +204,6 @@ void CShaderPresetGL::SetVideoSize(const unsigned videoWidth, const unsigned vid
 {
   if (videoWidth != m_videoSize.x || videoHeight != m_videoSize.y) {
     m_videoSize = {videoWidth, videoHeight};
-    m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
     m_bPresetNeedsUpdate = true;
   }
 }
@@ -337,7 +334,6 @@ bool CShaderPresetGL::CreateShaderTextures()
 bool CShaderPresetGL::CreateShaders()
 {
   auto numPasses = m_passes.size();
-  m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
 
   ShaderLutVec passLUTsGL;
   for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)

@@ -98,9 +98,6 @@ private:
   // Resolution of the viewport/window
   float2 m_viewportSize;
 
-  // Resolution of the texture that holds the input
-  // float2 m_textureSize;
-
   // Holds the data bount to the input cbuffer (cbInput here)
   ID3D11Buffer* m_pInputBuffer = nullptr;
 
