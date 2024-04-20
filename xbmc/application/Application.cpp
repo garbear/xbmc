@@ -192,7 +192,6 @@ using namespace XFILE;
 #ifdef HAS_OPTICAL_DRIVE
 using namespace MEDIA_DETECT;
 #endif
-using namespace VIDEO;
 using namespace MUSIC_INFO;
 using namespace EVENTSERVER;
 using namespace JSONRPC;
@@ -200,7 +199,6 @@ using namespace PVR;
 using namespace PERIPHERALS;
 using namespace KODI;
 using namespace KODI::MESSAGING;
-using namespace KODI::VIDEO;
 using namespace ActiveAE;
 
 using namespace XbmcThreads;
@@ -2374,11 +2372,11 @@ bool CApplication::PlayFile(CFileItem item, const std::string& player, bool bRes
     m_nextPlaylistItem = -1;
     stackHelper->Clear();
 
-    if (IsVideo(item))
+    if (VIDEO::IsVideo(item))
       CUtil::ClearSubtitles();
   }
 
-  if (IsDiscStub(item))
+  if (VIDEO::IsDiscStub(item))
   {
     return CServiceBroker::GetMediaManager().playStubFile(item);
   }
@@ -2419,7 +2417,7 @@ bool CApplication::PlayFile(CFileItem item, const std::string& player, bool bRes
   {
     // the following code block is only applicable when bRestart is false OR to ISO stacks
 
-    if (IsVideo(item))
+    if (VIDEO::IsVideo(item))
     {
       // open the d/b and retrieve the bookmarks for the current movie
       CVideoDatabase dbs;
@@ -2427,7 +2425,7 @@ bool CApplication::PlayFile(CFileItem item, const std::string& player, bool bRes
 
       std::string path = item.GetPath();
       std::string videoInfoTagPath(item.GetVideoInfoTag()->m_strFileNameAndPath);
-      if (videoInfoTagPath.find("removable://") == 0 || IsVideoDb(item))
+      if (videoInfoTagPath.find("removable://") == 0 || VIDEO::IsVideoDb(item))
         path = videoInfoTagPath;
 
       // Note that we need to load the tag from database also if the item already has a tag,
@@ -2497,7 +2495,7 @@ bool CApplication::PlayFile(CFileItem item, const std::string& player, bool bRes
 
   // a disc image might be Blu-Ray disc
   if (!(options.startpercent > 0.0 || options.starttime > 0.0) &&
-      (IsBDFile(item) || item.IsDiscImage()))
+      (VIDEO::IsBDFile(item) || item.IsDiscImage()))
   {
     // No video selection when using external or remote players (they handle it if supported)
     const bool isSimpleMenuAllowed = [&]()
@@ -2531,7 +2529,7 @@ bool CApplication::PlayFile(CFileItem item, const std::string& player, bool bRes
         CSettings::SETTING_MUSICFILES_SELECTACTION) &&
         !CMediaSettings::GetInstance().DoesMediaStartWindowed();
   }
-  else if (IsVideo(item) && playlistId == PLAYLIST::TYPE_VIDEO &&
+  else if (VIDEO::IsVideo(item) && playlistId == PLAYLIST::TYPE_VIDEO &&
            CServiceBroker::GetPlaylistPlayer().GetPlaylist(playlistId).size() > 1)
   { // playing from a playlist by the looks
     // don't switch to fullscreen if we are not playing the first item...
@@ -2856,9 +2854,9 @@ bool CApplication::OnMessage(CGUIMessage& message)
       bool bNothingToQueue = false;
 
       const auto appPlayer = GetComponent<CApplicationPlayer>();
-      if (!IsVideo(file) && appPlayer->IsPlayingVideo())
+      if (!VIDEO::IsVideo(file) && appPlayer->IsPlayingVideo())
         bNothingToQueue = true;
-      else if ((!MUSIC::IsAudio(file) || IsVideo(file)) && appPlayer->IsPlayingAudio())
+      else if ((!MUSIC::IsAudio(file) || VIDEO::IsVideo(file)) && appPlayer->IsPlayingAudio())
         bNothingToQueue = true;
 
       if (bNothingToQueue)
@@ -3126,7 +3124,7 @@ bool CApplication::ExecuteXBMCAction(std::string actionStr,
     }
     else
 #endif
-        if (MUSIC::IsAudio(item) || IsVideo(item) || item.IsGame())
+        if (MUSIC::IsAudio(item) || VIDEO::IsVideo(item) || item.IsGame())
     { // an audio or video file
       PlayFile(item, "");
     }
@@ -3247,7 +3245,7 @@ void CApplication::ProcessSlow()
 
   // Temporarily pause pausable jobs when viewing video/picture
   int currentWindow = CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindow();
-  if (IsVideo(CurrentFileItem()) || CurrentFileItem().IsPicture() ||
+  if (VIDEO::IsVideo(CurrentFileItem()) || CurrentFileItem().IsPicture() ||
       currentWindow == WINDOW_FULLSCREEN_VIDEO || currentWindow == WINDOW_FULLSCREEN_GAME ||
       currentWindow == WINDOW_SLIDESHOW)
   {
