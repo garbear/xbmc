@@ -39,6 +39,14 @@ CShaderPresetDX::CShaderPresetDX(RETRO::CRenderContext& context,
   m_outputSize = {viewPort.Width(), viewPort.Height()};
 }
 
+CShaderPresetDX::~CShaderPresetDX()
+{
+  DisposeShaders();
+
+  // The GUI is going to render after this, so apply the state required
+  m_context.ApplyStateBlock();
+}
+
 ShaderParameterMap CShaderPresetDX::GetShaderParameters(
     const std::vector<ShaderParameter>& parameters, const std::string& sourceStr) const
 {
@@ -72,13 +80,6 @@ ShaderParameterMap CShaderPresetDX::GetShaderParameters(
   return matchParams;
 }
 
-CShaderPresetDX::~CShaderPresetDX()
-{
-  DisposeShaders();
-  // The gui is going to render after this, so apply the state required
-  m_context.ApplyStateBlock();
-}
-
 bool CShaderPresetDX::ReadPresetFile(const std::string& presetPath)
 {
   return CServiceBroker::GetGameServices().VideoShaders().LoadPreset(presetPath, *this);
@@ -108,14 +109,15 @@ bool CShaderPresetDX::RenderUpdate(const CPoint dest[],
   CShaderTextureCD3D* firstShaderTexture = m_pShaderTextures.front().get();
   IShader* lastShader = m_pShaders.back().get();
 
-  const unsigned passesNum = static_cast<unsigned int>(m_pShaderTextures.size());
+  const unsigned passesNum = static_cast<unsigned int>(m_pShaders.size());
 
   if (passesNum == 1)
-    m_pShaders.front()->Render(source, target);
+    firstShader->Render(source, target);
   else if (passesNum == 2)
   {
     // Apply first pass
     RenderShader(firstShader, source, firstShaderTexture);
+
     // Apply last pass
     RenderShader(lastShader, firstShaderTexture, target);
   }
@@ -232,8 +234,7 @@ bool CShaderPresetDX::CreateShaderTextures()
   {
     ShaderPass& pass = m_passes[shaderIdx];
 
-    // resolve final texture resolution, taking scale type and scale multiplier into account
-
+    // Resolve final texture resolution, taking scale type and scale multiplier into account
     float2 scaledSize;
     switch (pass.fbo.scaleX.type)
     {
@@ -241,11 +242,11 @@ bool CShaderPresetDX::CreateShaderTextures()
         scaledSize.x = static_cast<float>(pass.fbo.scaleX.abs);
         break;
       case SCALE_TYPE_VIEWPORT:
-        scaledSize.x = m_outputSize.x;
+        scaledSize.x = m_outputSize.x * pass.fbo.scaleX.scale;
         break;
       case SCALE_TYPE_INPUT:
       default:
-        scaledSize.x = prevSize.x;
+        scaledSize.x = prevSize.x * pass.fbo.scaleX.scale;
         break;
     }
     switch (pass.fbo.scaleY.type)
@@ -254,34 +255,27 @@ bool CShaderPresetDX::CreateShaderTextures()
         scaledSize.y = static_cast<float>(pass.fbo.scaleY.abs);
         break;
       case SCALE_TYPE_VIEWPORT:
-        scaledSize.y = m_outputSize.y;
+        scaledSize.y = m_outputSize.y * pass.fbo.scaleY.scale;
         break;
       case SCALE_TYPE_INPUT:
       default:
-        scaledSize.y = prevSize.y;
+        scaledSize.y = prevSize.y * pass.fbo.scaleY.scale;
         break;
     }
 
-    // if the scale was unspecified
+    // If the scale was unspecified
     if (pass.fbo.scaleX.scale == 0 && pass.fbo.scaleY.scale == 0)
     {
-      // if the last shader has the scale unspecified
+      // If the last shader has the scale unspecified
       if (shaderIdx == numPasses - 1)
       {
-        // we're supposed to output at full (viewport) res
-        // TODO: Thus, we can also (maybe) bypass rendering to an intermediate render target (on the
+        // We're supposed to output at full (viewport) resolution
+        //! @todo Thus, we can also (maybe) bypass rendering to an intermediate render target (on the
         // last pass)
         scaledSize.x = m_outputSize.x;
         scaledSize.y = m_outputSize.y;
       }
     }
-    else
-    {
-      scaledSize.x *= pass.fbo.scaleX.scale;
-      scaledSize.y *= pass.fbo.scaleY.scale;
-    }
-
-    // For reach pass, create the texture
 
     // Determine the framebuffer data format
     DXGI_FORMAT textureFormat;
@@ -307,12 +301,15 @@ bool CShaderPresetDX::CreateShaderTextures()
     }
     m_pShaderTextures.emplace_back(new CShaderTextureCD3D(texture));
 
-    // notify shader of its source and dest size
+    // Notify shader of its source and dest size
     m_pShaders[shaderIdx]->SetSizes(prevSize, scaledSize);
-    m_pShaders[shaderIdx]->UpdateMVP();
 
     prevSize = scaledSize;
   }
+
+  // Update MVPs
+  UpdateMVPs();
+
   return true;
 }
 
@@ -347,7 +344,7 @@ bool CShaderPresetDX::CreateShaders()
     // Get only the parameters belonging to this specific shader
     ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
     IShaderSampler* passSampler = reinterpret_cast<IShaderSampler*>(
-        pass.filter
+        pass.filter == FILTER_TYPE_LINEAR
             ? m_pSampLinear
             : m_pSampNearest); //! @todo Wrap in CShaderSamplerDX instead of reinterpret_cast
 

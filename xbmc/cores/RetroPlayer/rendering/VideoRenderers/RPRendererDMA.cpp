@@ -87,10 +87,18 @@ void CRPRendererDMA::Render(uint8_t alpha)
 
   if (m_bUseShaderPreset)
   {
+    GLint filter = GL_NEAREST;
+    if (m_shaderPreset->GetPasses()[0].filter == SHADER::FILTER_TYPE_LINEAR)
+      filter = GL_LINEAR;
+
+    glBindTexture(m_textureTarget, sourceTexture->getMTexture());
+    glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, filter);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     const CPoint destPoints[4] = {m_rotatedDestCoords[0], m_rotatedDestCoords[1],
                                   m_rotatedDestCoords[2], m_rotatedDestCoords[3]};
-
-    targetTexture->CreateTextureObject();
 
     SHADER::CShaderTextureGL source(*sourceTexture);
     SHADER::CShaderTextureGL target(*targetTexture);
@@ -111,12 +119,11 @@ void CRPRendererDMA::Render(uint8_t alpha)
 
     const uint32_t color = (alpha << 24) | 0xFFFFFF;
 
-    glBindTexture(m_textureTarget, sourceTexture->getMTexture());
-
     GLint filter = GL_NEAREST;
     if (GetRenderSettings().VideoSettings().GetScalingMethod() == SCALINGMETHOD::LINEAR)
       filter = GL_LINEAR;
 
+    glBindTexture(m_textureTarget, sourceTexture->getMTexture());
     glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, filter);
     glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, filter);
     glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
