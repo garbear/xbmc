@@ -261,7 +261,7 @@ bool CVideoChooseVersion::IsVisible(const CFileItem& item) const
   return item.HasVideoVersions() &&
          !CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
              CSettings::SETTING_VIDEOLIBRARY_SHOWVIDEOVERSIONSASFOLDER) &&
-         !VIDEO::IsVideoAssetFile(item);
+         !IsVideoAssetFile(item);
 }
 
 bool CVideoChooseVersion::Execute(const std::shared_ptr<CFileItem>& item) const
@@ -455,7 +455,7 @@ bool CVideoPlayUsing::IsVisible(const CFileItem& item) const
   if (item.HasVideoVersions() &&
       !CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
           CSettings::SETTING_VIDEOLIBRARY_SHOWVIDEOVERSIONSASFOLDER) &&
-      !VIDEO::IsVideoAssetFile(item))
+      !IsVideoAssetFile(item))
     return false;
 
   if (item.IsLiveTV())
@@ -477,7 +477,7 @@ bool CVideoPlayVersionUsing::IsVisible(const CFileItem& item) const
   return item.HasVideoVersions() &&
          !CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
              CSettings::SETTING_VIDEOLIBRARY_SHOWVIDEOVERSIONSASFOLDER) &&
-         !VIDEO::IsVideoAssetFile(item);
+         !IsVideoAssetFile(item);
 }
 
 bool CVideoPlayVersionUsing::Execute(const std::shared_ptr<CFileItem>& itemIn) const
