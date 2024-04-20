@@ -58,7 +58,7 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
   D3D11_SAMPLER_DESC sampDesc;
 
   auto wrapType = CShaderUtilsDX::TranslateWrapType(lut.wrap);
-  auto filterType = lut.filter ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
+  auto filterType = lut.filter == FILTER_TYPE_LINEAR ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
 
   ZeroMemory(&sampDesc, sizeof(D3D11_SAMPLER_DESC));
   sampDesc.Filter = filterType;
