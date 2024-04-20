@@ -21,7 +21,7 @@ class CRegExp;
 class CFileItem;
 class CFileItemList;
 
-namespace VIDEO
+namespace KODI::VIDEO
 {
   class IVideoInfoTagLoader;
 
@@ -267,5 +267,4 @@ namespace VIDEO
     static std::pair<CInfoScanner::INFO_TYPE, std::unique_ptr<IVideoInfoTagLoader>> ReadInfoTag(
         CFileItem& item, const ADDON::ScraperPtr& scraper, bool lookInFolder, bool resetTag);
   };
-}
-
+  } // namespace KODI::VIDEO
