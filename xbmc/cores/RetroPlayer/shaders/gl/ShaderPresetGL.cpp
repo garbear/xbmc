@@ -100,8 +100,6 @@ bool CShaderPresetGL::RenderUpdate(const CPoint* dest,
   IShader* firstShader = m_pShaders.front().get();
   CShaderTextureGL* firstShaderTexture = m_pShaderTextures.front().get();
   IShader* lastShader = m_pShaders.back().get();
-  int screenWidth = m_context.GetScreenWidth();
-  int screenHeight = m_context.GetScreenHeight();
 
   const unsigned passesNum = static_cast<unsigned int>(m_pShaderTextures.size());
 
@@ -109,22 +107,19 @@ bool CShaderPresetGL::RenderUpdate(const CPoint* dest,
     firstShader->Render(source, target);
   else if (passesNum == 2)
   {
-    // Initialize FBO
-    firstShaderTexture->CreateFBO(screenWidth, screenHeight);
     // Apply first pass
     firstShaderTexture->BindFBO();
-    RenderShader(firstShader, source, target);
+    RenderShader(firstShader, source, firstShaderTexture);
     firstShaderTexture->UnbindFBO();
+
     // Apply last pass
     RenderShader(lastShader, firstShaderTexture, target);
   }
   else
   {
-    // Initialize FBO
-    firstShaderTexture->CreateFBO(screenWidth, screenHeight);
     // Apply first pass
     firstShaderTexture->BindFBO();
-    RenderShader(firstShader, source, target);
+    RenderShader(firstShader, source, firstShaderTexture);
     firstShaderTexture->UnbindFBO();
 
     // Apply all passes except the first and last one (which needs to be applied to the backbuffer)
@@ -134,14 +129,13 @@ bool CShaderPresetGL::RenderUpdate(const CPoint* dest,
       IShader* shader = m_pShaders[shaderIdx].get();
       CShaderTextureGL* prevTexture = m_pShaderTextures[shaderIdx - 1].get();
       CShaderTextureGL* texture = m_pShaderTextures[shaderIdx].get();
-      texture->CreateFBO(screenWidth, screenHeight);
       texture->BindFBO();
       RenderShader(shader, prevTexture,
-                   target); // The target on each call is only used for setting the viewport
+                   texture); // The target on each call is only used for setting the viewport
       texture->UnbindFBO();
     }
 
-    // TODO: Remove last texture, useless
+    //! @todo: Remove last texture, useless
     // Apply last pass
     CShaderTextureGL* secToLastTexture = m_pShaderTextures[m_pShaderTextures.size() - 2].get();
     RenderShader(lastShader, secToLastTexture, target);
@@ -297,6 +291,7 @@ bool CShaderPresetGL::CreateShaderTextures()
                                   static_cast<unsigned int>(scaledSize.y),
                                   static_cast<XB_FMT>(textureFormat)); //! @todo Format translation?
 
+//    textureGL->SetScalingMethod(pass.filter == FILTER_TYPE_LINEAR ? TEXTURE_SCALING::LINEAR : TEXTURE_SCALING::NEAREST);
     textureGL->CreateTextureObject();
 
     if (textureGL->getMTexture() <= 0)
@@ -305,11 +300,13 @@ bool CShaderPresetGL::CreateShaderTextures()
       return false;
     }
 
-    auto wrapType = CShaderUtilsGL::TranslateWrapType(WRAP_TYPE_BORDER);
+    auto wrapType = CShaderUtilsGL::TranslateWrapType(pass.wrap);
+    auto filterType = (pass.filter == FILTER_TYPE_LINEAR ? GL_LINEAR : GL_NEAREST);
 
     glBindTexture(GL_TEXTURE_2D, textureGL->getMTexture());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, scaledSize.x, scaledSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, (void*)0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterType);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterType);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrapType);
@@ -351,7 +348,7 @@ bool CShaderPresetGL::CreateShaders()
 
     std::unique_ptr<CShaderGL> videoShader(new CShaderGL(m_context));
 
-    auto shaderSource = pass.vertexSource; //also contains fragment source
+    auto shaderSource = pass.vertexSource; // Also contains fragment source
     auto shaderPath = pass.sourcePath;
 
     // Get only the parameters belonging to this specific shader
@@ -439,9 +436,11 @@ void CShaderPresetGL::RenderShader(IShader* shader,
                                    IShaderTexture* source,
                                    IShaderTexture* target) const
 {
-  CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
-  m_context.SetViewPort(newViewPort);
-  m_context.SetScissors(newViewPort);
+//  CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
+//  m_context.SetViewPort(newViewPort);
+//  m_context.SetScissors(newViewPort);
+  glViewport(0, 0, (GLsizei) target->GetWidth(), (GLsizei) target->GetHeight());
+  glScissor(0, 0, (GLsizei) target->GetWidth(), (GLsizei) target->GetHeight());
 
   shader->Render(source, target);
 }

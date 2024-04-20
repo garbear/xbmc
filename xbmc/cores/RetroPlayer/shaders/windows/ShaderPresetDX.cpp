@@ -109,11 +109,12 @@ bool CShaderPresetDX::RenderUpdate(const CPoint dest[],
   const unsigned passesNum = static_cast<unsigned int>(m_pShaderTextures.size());
 
   if (passesNum == 1)
-    m_pShaders.front()->Render(source, target);
+    firstShader->Render(source, target);
   else if (passesNum == 2)
   {
     // Apply first pass
     RenderShader(firstShader, source, firstShaderTexture);
+
     // Apply last pass
     RenderShader(lastShader, firstShaderTexture, target);
   }
@@ -342,7 +343,7 @@ bool CShaderPresetDX::CreateShaders()
     // Get only the parameters belonging to this specific shader
     ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
     IShaderSampler* passSampler = reinterpret_cast<IShaderSampler*>(
-        pass.filter
+        pass.filter == FILTER_TYPE_LINEAR
             ? m_pSampLinear
             : m_pSampNearest); //! @todo Wrap in CShaderSamplerDX instead of reinterpret_cast
 

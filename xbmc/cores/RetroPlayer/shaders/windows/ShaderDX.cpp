@@ -163,6 +163,7 @@ void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
   v[3].z = 0;
   v[3].tu = 0;
   v[3].tv = 1;
+
   UnlockVertexBuffer();
 }
 
