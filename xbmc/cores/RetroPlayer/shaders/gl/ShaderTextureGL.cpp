@@ -13,20 +13,26 @@
 using namespace KODI;
 using namespace SHADER;
 
-bool CShaderTextureGL::CreateFBO(int width, int height)
+bool CShaderTextureGL::CreateFBO()
 {
   if (FBO == 0)
     glGenFramebuffers(1, &FBO);
 
+  return true;
+}
+
+bool CShaderTextureGL::BindFBO()
+{
   GLuint renderTargetID = GetPointer()->getMTexture();
   if (renderTargetID == 0)
     return false;
 
-  BindFBO();
+  if (FBO == 0)
+    if (!CreateFBO())
+      return false;
+
+  glBindFramebuffer(GL_FRAMEBUFFER, FBO);
   glBindTexture(GL_TEXTURE_2D, renderTargetID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTargetID, 0);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -35,13 +41,8 @@ bool CShaderTextureGL::CreateFBO(int width, int height)
     UnbindFBO();
     return false;
   }
-  UnbindFBO();
-  return true;
-}
 
-void CShaderTextureGL::BindFBO()
-{
-  glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+  return true;
 }
 
 void CShaderTextureGL::UnbindFBO()
