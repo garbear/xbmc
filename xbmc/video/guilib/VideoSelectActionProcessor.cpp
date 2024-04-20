@@ -22,7 +22,8 @@
 #include "utils/Variant.h"
 #include "video/guilib/VideoGUIUtils.h"
 
-using namespace VIDEO::GUILIB;
+namespace KODI::VIDEO::GUILIB
+{
 
 Action CVideoSelectActionProcessorBase::GetDefaultSelectAction()
 {
@@ -88,3 +89,5 @@ unsigned int CVideoSelectActionProcessorBase::ChooseStackItemPartNumber() const
 
   return dialog->GetSelectedItem() + 1; // part numbers are 1-based
 }
+
+} // namespace KODI::VIDEO::GUILIB
