@@ -54,9 +54,10 @@ public:
   /*!
    * \brief Sets the input and output sizes in pixels
    * \param prevSize Input image size of the shader in pixels
+   * \param prevTextureSize Power-of-two input texture size in pixels
    * \param nextSize Output image size of the shader in pixels
    */
-  virtual void SetSizes(const float2& prevSize, const float2& nextSize) = 0;
+  virtual void SetSizes(const float2& prevSize, const float2& prevTextureSize, const float2& nextSize) = 0;
 
   /*!
    * \brief Construct the vertex buffer that will be used to render the shader
