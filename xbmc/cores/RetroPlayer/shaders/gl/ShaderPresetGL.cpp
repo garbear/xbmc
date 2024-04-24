@@ -30,8 +30,6 @@ CShaderPresetGL::CShaderPresetGL(RETRO::CRenderContext& context,
                                  unsigned int videoHeight)
   : m_context(context), m_videoSize(videoWidth, videoHeight)
 {
-  m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
-
   CRect viewPort;
   m_context.GetViewPort(viewPort);
   m_outputSize = {viewPort.Width(), viewPort.Height()};
@@ -206,7 +204,6 @@ void CShaderPresetGL::SetVideoSize(const unsigned videoWidth, const unsigned vid
 {
   if (videoWidth != m_videoSize.x || videoHeight != m_videoSize.y) {
     m_videoSize = {videoWidth, videoHeight};
-    m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
     m_bPresetNeedsUpdate = true;
   }
 }
@@ -231,6 +228,7 @@ bool CShaderPresetGL::CreateShaderTextures()
   CServiceBroker::GetRenderSystem()->GetRenderVersion(major, minor);
 
   float2 prevSize = m_videoSize;
+  float2 prevTextureSize = m_videoSize;
 
   unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
 
@@ -304,8 +302,10 @@ bool CShaderPresetGL::CreateShaderTextures()
       }
     }
 
-    auto textureGL = new CGLTexture(static_cast<unsigned int>(scaledSize.x),
-                                    static_cast<unsigned int>(scaledSize.y),
+    float2 textureSize = CShaderUtils::GetOptimalTextureSize(scaledSize);
+
+    auto textureGL = new CGLTexture(static_cast<unsigned int>(textureSize.x),
+                                    static_cast<unsigned int>(textureSize.y),
                                     XB_FMT_A8R8G8B8); // Format is not used
 
     textureGL->CreateTextureObject();
@@ -331,7 +331,7 @@ bool CShaderPresetGL::CreateShaderTextures()
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NEVER);
 //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0);
 //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, MAX_FLOAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, internalformat, scaledSize.x, scaledSize.y, 0, pixelformat,
+    glTexImage2D(GL_TEXTURE_2D, 0, internalformat, textureSize.x, textureSize.y, 0, pixelformat,
                  internalformat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
 
 #ifndef HAS_GLES
@@ -342,13 +342,14 @@ bool CShaderPresetGL::CreateShaderTextures()
     m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL));
 
     // Notify shader of its source and dest size
-    m_pShaders[shaderIdx]->SetSizes(prevSize, scaledSize);
+    m_pShaders[shaderIdx]->SetSizes(prevSize, prevTextureSize, scaledSize);
 
     prevSize = scaledSize;
+    prevTextureSize = textureSize;
   }
 
   // The last shader pass is supposed to output at full (viewport) resolution
-  m_pShaders[numPasses - 1]->SetSizes(prevSize, m_outputSize);
+  m_pShaders[numPasses - 1]->SetSizes(prevSize, prevTextureSize, m_outputSize);
 
   // Update MVPs
   UpdateMVPs();
@@ -359,7 +360,6 @@ bool CShaderPresetGL::CreateShaderTextures()
 bool CShaderPresetGL::CreateShaders()
 {
   auto numPasses = m_passes.size();
-  m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
 
   ShaderLutVec passLUTsGL;
   for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)

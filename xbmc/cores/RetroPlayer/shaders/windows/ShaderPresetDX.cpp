@@ -32,8 +32,6 @@ CShaderPresetDX::CShaderPresetDX(RETRO::CRenderContext& context,
                                  unsigned videoHeight)
   : m_context(context), m_videoSize(videoWidth, videoHeight)
 {
-  m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
-
   CRect viewPort;
   m_context.GetViewPort(viewPort);
   m_outputSize = {viewPort.Width(), viewPort.Height()};
@@ -227,6 +225,7 @@ bool CShaderPresetDX::CreateShaderTextures()
   // firstTexture.reset(new CShaderTextureDX(fTexture));
 
   float2 prevSize = m_videoSize;
+  float2 prevTextureSize = m_videoSize;
 
   unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
 
@@ -292,8 +291,10 @@ bool CShaderPresetDX::CreateShaderTextures()
         textureFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
     }
 
+    float2 textureSize = CShaderUtils::GetOptimalTextureSize(scaledSize);
+
     CD3DTexture* texture(new CD3DTexture());
-    if (!texture->Create(static_cast<UINT>(scaledSize.x), static_cast<UINT>(scaledSize.y), 1,
+    if (!texture->Create(static_cast<UINT>(textureSize.x), static_cast<UINT>(textureSize.y), 1,
                          D3D11_USAGE_DEFAULT, textureFormat, nullptr, 0))
     {
       CLog::Log(LOGERROR, "Couldn't create a texture for video shader {}", pass.sourcePath);
@@ -302,9 +303,10 @@ bool CShaderPresetDX::CreateShaderTextures()
     m_pShaderTextures.emplace_back(new CShaderTextureCD3D(texture));
 
     // Notify shader of its source and dest size
-    m_pShaders[shaderIdx]->SetSizes(prevSize, scaledSize);
+    m_pShaders[shaderIdx]->SetSizes(prevSize, prevTextureSize, scaledSize);
 
     prevSize = scaledSize;
+    prevTextureSize = textureSize;
   }
 
   // Update MVPs
@@ -316,9 +318,6 @@ bool CShaderPresetDX::CreateShaderTextures()
 bool CShaderPresetDX::CreateShaders()
 {
   auto numPasses = m_passes.size();
-  // todo: replace with per-shader texture size
-  // todo: actually use this
-  m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
 
   // todo: is this pass specific?
   ShaderLutVec passLUTsDX;
@@ -479,7 +478,6 @@ void CShaderPresetDX::SetVideoSize(const unsigned videoWidth, const unsigned vid
 {
   if (videoWidth != m_videoSize.x || videoHeight != m_videoSize.y) {
     m_videoSize = {videoWidth, videoHeight};
-    m_textureSize = CShaderUtils::GetOptimalTextureSize(m_videoSize);
     m_bPresetNeedsUpdate = true;
   }
 }

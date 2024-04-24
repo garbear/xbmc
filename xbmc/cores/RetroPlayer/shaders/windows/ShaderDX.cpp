@@ -239,7 +239,7 @@ CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
       {m_inputSize.ToDXVector()}, // video_size
       // Shaders don't (and shouldn't) know about _actual_ texture
       // size, because D3D gives them correct texture coordinates
-      {m_inputSize.ToDXVector()}, // texture_size
+      {m_inputTextureSize.ToDXVector()}, // texture_size
       // As per the spec, this is the viewport resolution (not the
       // output res of each shader
       {m_viewportSize.ToDXVector()}, // output_size
@@ -252,8 +252,9 @@ CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
   return input;
 }
 
-void CShaderDX::SetSizes(const float2& prevSize, const float2& nextSize)
+void CShaderDX::SetSizes(const float2& prevSize, const float2& prevTextureSize, const float2& nextSize)
 {
   m_inputSize = prevSize;
+  m_inputTextureSize = prevTextureSize;
   m_outputSize = nextSize;
 }
