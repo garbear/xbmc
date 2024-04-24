@@ -275,7 +275,7 @@ CShaderGL::uniformInputs CShaderGL::GetInputData(uint64_t frameCount)
   uniformInputs input = {
       // Resolution of texture passed to the shader
       {m_inputSize}, // video_size
-      {m_inputSize}, // texture_size
+      {m_inputTextureSize}, // texture_size
       // As per the spec, this is the viewport resolution (not the
       // output res of each shader)
       {m_viewportSize}, // output_size
@@ -288,9 +288,10 @@ CShaderGL::uniformInputs CShaderGL::GetInputData(uint64_t frameCount)
   return input;
 }
 
-void CShaderGL::SetSizes(const float2& prevSize, const float2& nextSize)
+void CShaderGL::SetSizes(const float2& prevSize, const float2& prevTextureSize, const float2& nextSize)
 {
   m_inputSize = prevSize;
+  m_inputTextureSize = prevTextureSize;
   m_outputSize = nextSize;
 }
 
