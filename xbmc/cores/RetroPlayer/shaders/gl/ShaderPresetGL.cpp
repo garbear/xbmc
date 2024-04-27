@@ -80,7 +80,7 @@ ShaderParameterMap CShaderPresetGL::GetShaderParameters(
   return matchParams;
 }
 
-bool CShaderPresetGL::RenderUpdate(const CPoint* dest,
+bool CShaderPresetGL::RenderUpdate(const CPoint dest[],
                                    IShaderTexture* source,
                                    IShaderTexture* target)
 {
@@ -97,62 +97,44 @@ bool CShaderPresetGL::RenderUpdate(const CPoint* dest,
 
   PrepareParameters(target, dest);
 
-  IShader* firstShader = m_pShaders.front().get();
+  // Apply all passes except the last one (which needs to be applied to the backbuffer)
+  for (unsigned int shaderIdx = 0; shaderIdx < static_cast<unsigned int>(m_pShaders.size()) - 1;
+        ++shaderIdx)
+  {
+    IShader* shader = m_pShaders[shaderIdx].get();
+    IShaderTexture* texture = m_pShaderTextures[shaderIdx].get();
+    RenderShader(shader, source, texture); // The target is used for setting the viewport and binding the FBO
+    source = texture;
+  }
+
+  // Restore our viewport
+  m_context.SetViewPort(viewPort);
+  m_context.SetScissors(viewPort);
+
+  // Apply the last pass and write to target (backbuffer) instead of the last texture
   IShader* lastShader = m_pShaders.back().get();
-
-  const unsigned passesNum = static_cast<unsigned int>(m_pShaders.size());
-
-  if (passesNum == 1)
-    firstShader->Render(source, target);
-  else if (passesNum == 2)
-  {
-    // Apply first pass
-    CShaderTextureGL* firstShaderTexture = m_pShaderTextures.front().get();
-    firstShaderTexture->BindFBO();
-    RenderShader(firstShader, source, firstShaderTexture);
-    firstShaderTexture->UnbindFBO();
-
-    // Apply last pass
-    CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
-    m_context.SetViewPort(newViewPort);
-    m_context.SetScissors(newViewPort);
-    lastShader->Render(firstShaderTexture, target);
-  }
-  else
-  {
-    // Apply first pass
-    CShaderTextureGL* firstShaderTexture = m_pShaderTextures.front().get();
-    firstShaderTexture->BindFBO();
-    RenderShader(firstShader, source, firstShaderTexture);
-    firstShaderTexture->UnbindFBO();
-
-    // Apply all passes except the first and last one (which needs to be applied to the backbuffer)
-    for (unsigned int shaderIdx = 1; shaderIdx < static_cast<unsigned int>(m_pShaders.size()) - 1;
-         ++shaderIdx)
-    {
-      IShader* shader = m_pShaders[shaderIdx].get();
-      CShaderTextureGL* prevTexture = m_pShaderTextures[shaderIdx - 1].get();
-      CShaderTextureGL* texture = m_pShaderTextures[shaderIdx].get();
-      texture->BindFBO();
-      RenderShader(shader, prevTexture,
-                   texture); // The target on each call is only used for setting the viewport
-      texture->UnbindFBO();
-    }
-
-    // Apply last pass
-    CShaderTextureGL* secToLastTexture = m_pShaderTextures[m_pShaderTextures.size() - 2].get();
-    CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
-    m_context.SetViewPort(newViewPort);
-    m_context.SetScissors(newViewPort);
-    lastShader->Render(secToLastTexture, target);
-  }
+  lastShader->Render(source, target);
 
   m_frameCount += static_cast<float>(m_speed);
 
-  // Restore our view port.
-  m_context.SetViewPort(viewPort);
-
   return true;
+}
+
+void CShaderPresetGL::RenderShader(IShader* shader,
+                                   IShaderTexture* source,
+                                   IShaderTexture* target) const
+{
+  if (static_cast<CShaderTextureGL*>(target)->BindFBO())
+  {
+    CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
+    glViewport((GLsizei) newViewPort.x1, (GLsizei) newViewPort.y1,
+               (GLsizei) newViewPort.x2, (GLsizei) newViewPort.y2);
+    glScissor((GLsizei) newViewPort.x1, (GLsizei) newViewPort.y1,
+              (GLsizei) newViewPort.x2, (GLsizei) newViewPort.y2);
+
+    shader->Render(source, target);
+    static_cast<CShaderTextureGL*>(target)->UnbindFBO();
+  }
 }
 
 bool CShaderPresetGL::Update()
@@ -459,16 +441,6 @@ void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPo
 
   // Prepare params for last shader
   m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
-}
-
-void CShaderPresetGL::RenderShader(IShader* shader,
-                                   IShaderTexture* source,
-                                   IShaderTexture* target) const
-{
-  glViewport(0, 0, (GLsizei) target->GetWidth(), (GLsizei) target->GetHeight());
-  glScissor(0, 0, (GLsizei) target->GetWidth(), (GLsizei) target->GetHeight());
-
-  shader->Render(source, target);
 }
 
 bool CShaderPresetGL::ReadPresetFile(const std::string& presetPath)
