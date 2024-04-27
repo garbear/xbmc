@@ -100,49 +100,25 @@ bool CShaderPresetDX::RenderUpdate(const CPoint dest[],
 
   PrepareParameters(target, dest);
 
-  // At this point, the input video has been rendered to the first texture ("source", not
-  // m_pShaderTextures[0])
+  // Apply all passes except the last one (which needs to be applied to the backbuffer)
+  for (unsigned int shaderIdx = 0; shaderIdx < static_cast<unsigned int>(m_pShaders.size()) - 1;
+        ++shaderIdx)
+  {
+    IShader* shader = m_pShaders[shaderIdx].get();
+    IShaderTexture* texture = m_pShaderTextures[shaderIdx].get();
+    RenderShader(shader, source, texture);
+    source = texture;
+  }
 
-  IShader* firstShader = m_pShaders.front().get();
-  CShaderTextureCD3D* firstShaderTexture = m_pShaderTextures.front().get();
+  // Restore our viewport
+  m_context.SetViewPort(viewPort);
+  m_context.SetScissors(viewPort);
+
+  // Apply the last pass and write to target (backbuffer) instead of the last texture
   IShader* lastShader = m_pShaders.back().get();
-
-  const unsigned passesNum = static_cast<unsigned int>(m_pShaders.size());
-
-  if (passesNum == 1)
-    firstShader->Render(source, target);
-  else if (passesNum == 2)
-  {
-    // Apply first pass
-    RenderShader(firstShader, source, firstShaderTexture);
-
-    // Apply last pass
-    RenderShader(lastShader, firstShaderTexture, target);
-  }
-  else
-  {
-    // Apply first pass
-    RenderShader(firstShader, source, firstShaderTexture);
-
-    // Apply all passes except the first and last one (which needs to be applied to the backbuffer)
-    for (unsigned int shaderIdx = 1; shaderIdx < static_cast<unsigned int>(m_pShaders.size()) - 1;
-         ++shaderIdx)
-    {
-      IShader* shader = m_pShaders[shaderIdx].get();
-      CShaderTextureCD3D* prevTexture = m_pShaderTextures[shaderIdx - 1].get();
-      CShaderTextureCD3D* texture = m_pShaderTextures[shaderIdx].get();
-      RenderShader(shader, prevTexture, texture);
-    }
-
-    // Apply last pass and write to target (backbuffer) instead of the last texture
-    CShaderTextureCD3D* secToLastTexture = m_pShaderTextures[m_pShaderTextures.size() - 2].get();
-    RenderShader(lastShader, secToLastTexture, target);
-  }
+  lastShader->Render(source, target);
 
   m_frameCount += static_cast<float>(m_speed);
-
-  // Restore our view port.
-  m_context.SetViewPort(viewPort);
 
   return true;
 }
