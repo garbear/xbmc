@@ -31,6 +31,7 @@ CONFIGURE=./configure --prefix=$(PREFIX) \
                       --disable-guile \
                       --disable-tools \
                       --without-idn \
+                      --without-brotli \
                       $(CONFIGURE_OPTIONS)
 
 # LLVM 15 has raised this to error by default. drop back to warning
