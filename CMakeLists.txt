@@ -186,6 +186,7 @@ endforeach()
 set(required_buildtools FlatC
                         JsonSchemaBuilder
                         TexturePacker
+                        ${PLATFORM_REQUIRED_TOOLS}
 )
 
 # Optional build tools
