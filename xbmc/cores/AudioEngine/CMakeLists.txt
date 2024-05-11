@@ -46,7 +46,7 @@ set(HEADERS AEResampleFactory.h
             Utils/AEStreamInfo.h
             Utils/AEUtil.h)
 
-if(TARGET ALSA::ALSA)
+if(TARGET ${APP_NAME_LC}::Alsa)
   list(APPEND SOURCES Sinks/AESinkALSA.cpp
                       Utils/AEELDParser.cpp)
   list(APPEND HEADERS Sinks/AESinkALSA.h
