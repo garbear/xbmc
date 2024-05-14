@@ -330,7 +330,7 @@ bool CShaderPresetGL::CreateShaderTextures()
     prevTextureSize = textureSize;
   }
 
-  // The last shader pass is supposed to output at full (viewport) resolution
+  // The last shader pass is supposed to output at full resolution
   m_pShaders[numPasses - 1]->SetSizes(prevSize, prevTextureSize, m_outputSize);
 
   // Update MVPs
@@ -416,7 +416,7 @@ void CShaderPresetGL::DisposeShaders()
   m_bPresetNeedsUpdate = true;
 }
 
-void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPoint* dest)
+void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPoint dest[])
 {
   if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
       m_dest[3] != dest[3] || texture->GetWidth() != m_outputSize.x ||

@@ -153,10 +153,8 @@ void CShaderGL::SetShaderParameters()
   }
 }
 
-void CShaderGL::PrepareParameters(CPoint* dest, bool isLastPass, uint64_t frameCount)
+void CShaderGL::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount)
 {
-  UpdateInputBuffer(frameCount);
-
   if (!isLastPass)
   {
     // bottom left x,y
@@ -171,6 +169,9 @@ void CShaderGL::PrepareParameters(CPoint* dest, bool isLastPass, uint64_t frameC
     // top left x,y
     m_VertexCoords[3][0] = -m_outputSize.x / 2;
     m_VertexCoords[3][1] = m_outputSize.y / 2;
+
+    // Set destination rectangle size
+    m_destSize = m_outputSize;
   }
   else // last pass
   {
@@ -186,6 +187,9 @@ void CShaderGL::PrepareParameters(CPoint* dest, bool isLastPass, uint64_t frameC
     // top left x,y
     m_VertexCoords[3][0] = dest[0].x - m_outputSize.x / 2;
     m_VertexCoords[3][1] = dest[0].y - m_outputSize.y / 2;
+
+    // Set destination rectangle size for the last pass
+    m_destSize = {dest[2].x - dest[0].x, dest[2].y - dest[0].y};
   }
 
   // bottom left z, tu, tv, r, g, b
@@ -195,7 +199,6 @@ void CShaderGL::PrepareParameters(CPoint* dest, bool isLastPass, uint64_t frameC
   m_colors[0][0] = 0.0f;
   m_colors[0][1] = 0.0f;
   m_colors[0][2] = 0.0f;
-
   // bottom right z, tu, tv, r, g, b
   m_VertexCoords[1][2] = 0;
   m_TexCoords[1][0] = 1.0f;
@@ -203,7 +206,6 @@ void CShaderGL::PrepareParameters(CPoint* dest, bool isLastPass, uint64_t frameC
   m_colors[1][0] = 0.0f;
   m_colors[1][1] = 0.0f;
   m_colors[1][2] = 0.0f;
-
   // top right z, tu, tv, r, g, b
   m_VertexCoords[2][2] = 0;
   m_TexCoords[2][0] = 1.0f;
@@ -211,7 +213,6 @@ void CShaderGL::PrepareParameters(CPoint* dest, bool isLastPass, uint64_t frameC
   m_colors[2][0] = 0.0f;
   m_colors[2][1] = 0.0f;
   m_colors[2][2] = 0.0f;
-
   // top left z, tu, tv, r, g, b
   m_VertexCoords[3][2] = 0;
   m_TexCoords[3][0] = 0.0f;
@@ -226,6 +227,8 @@ void CShaderGL::PrepareParameters(CPoint* dest, bool isLastPass, uint64_t frameC
   m_indices[1][0] = 1;
   m_indices[1][1] = 2;
   m_indices[1][2] = 3;
+
+  UpdateInputBuffer(frameCount);
 }
 
 void CShaderGL::UpdateMVP()
@@ -273,12 +276,9 @@ CShaderGL::uniformInputs CShaderGL::GetInputData(uint64_t frameCount)
     frameCount %= m_frameCountMod;
 
   uniformInputs input = {
-      // Resolution of texture passed to the shader
       {m_inputSize}, // video_size
       {m_inputTextureSize}, // texture_size
-      // As per the spec, this is the viewport resolution (not the
-      // output res of each shader)
-      {m_viewportSize}, // output_size
+      {m_destSize}, // output_size
       // Current frame count that can be modulo'ed
       static_cast<GLint>(frameCount), // frame_count
       // Time always flows forward

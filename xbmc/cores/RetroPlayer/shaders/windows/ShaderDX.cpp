@@ -111,8 +111,6 @@ void CShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
 
 void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount)
 {
-  UpdateInputBuffer(frameCount);
-
   CUSTOMVERTEX* v;
   LockVertexBuffer(reinterpret_cast<void**>(&v));
 
@@ -130,6 +128,9 @@ void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
     // bottom left
     v[3].x = -m_outputSize.x / 2;
     v[3].y = m_outputSize.y / 2;
+
+    // Set destination rectangle size
+    m_destSize = m_outputSize;
   }
   else // last pass
   {
@@ -145,6 +146,9 @@ void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
     // bottom left
     v[3].x = dest[3].x - m_outputSize.x / 2;
     v[3].y = dest[3].y - m_outputSize.y / 2;
+
+    // Set destination rectangle size for the last pass
+    m_destSize = {dest[2].x - dest[0].x, dest[2].y - dest[0].y};
   }
 
   // top left
@@ -165,6 +169,8 @@ void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
   v[3].tv = 1;
 
   UnlockVertexBuffer();
+
+  UpdateInputBuffer(frameCount);
 }
 
 bool CShaderDX::CreateVertexBuffer(unsigned vertCount, unsigned vertSize)
@@ -235,14 +241,9 @@ CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
     frameCount %= m_frameCountMod;
 
   cbInput input = {
-      // Resution of texture passed to the shader
       {m_inputSize.ToDXVector()}, // video_size
-      // Shaders don't (and shouldn't) know about _actual_ texture
-      // size, because D3D gives them correct texture coordinates
       {m_inputTextureSize.ToDXVector()}, // texture_size
-      // As per the spec, this is the viewport resolution (not the
-      // output res of each shader
-      {m_viewportSize.ToDXVector()}, // output_size
+      {m_destSize.ToDXVector()}, // output_size
       // Current frame count that can be modulo'ed
       {static_cast<float>(frameCount)}, // frame_count
       // Time always flows forward

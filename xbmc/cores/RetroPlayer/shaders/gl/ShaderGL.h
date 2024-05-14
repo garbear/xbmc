@@ -83,8 +83,11 @@ private:
   // Resolution of the texture that holds the input
   float2 m_inputTextureSize;
 
-  // Resolution of the output of the shader
+  // Resolution of the output viewport of the shader
   float2 m_outputSize;
+
+  // Resolution of the destination rectangle of the shader
+  float2 m_destSize;
 
   // Resolution of the viewport/window
   float2 m_viewportSize;
