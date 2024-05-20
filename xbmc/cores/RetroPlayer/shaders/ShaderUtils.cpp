@@ -13,15 +13,24 @@ using namespace SHADER;
 
 float2 CShaderUtils::GetOptimalTextureSize(float2 videoSize)
 {
-  unsigned sizeMax = videoSize.Max<unsigned>();
-  unsigned size = 1;
+  unsigned textureWidth = 1;
+  unsigned textureHeight = 1;
 
-  // Find smallest possible power-of-two size that can contain input texture
+  // Find smallest possible power-of-two sized width that can contain the input texture
   while (true)
   {
-    if (size >= sizeMax)
+    if (textureWidth >= videoSize.x)
       break;
-    size *= 2;
+    textureWidth *= 2;
   }
-  return float2(size, size);
+
+  // Find smallest possible power-of-two sized height that can contain the input texture
+  while (true)
+  {
+    if (textureHeight >= videoSize.y)
+      break;
+    textureHeight *= 2;
+  }
+
+  return float2(textureWidth, textureHeight);
 }
