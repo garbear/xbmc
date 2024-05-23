@@ -22,6 +22,8 @@
 #include "utils/log.h"
 #include "windowing/WinSystem.h"
 
+#include <exception>
+
 #if defined(TARGET_LINUX)
 #include "utils/EGLUtils.h"
 #endif
@@ -49,6 +51,12 @@ bool CRenderSystemGL::InitRenderSystem()
   {
     sscanf(ver, "%d.%d", &m_RenderVersionMajor, &m_RenderVersionMinor);
     m_RenderVersion = ver;
+  }
+  else
+  {
+    CLog::Log(LOGFATAL, "CRenderSystemGL::{} - glGetString(GL_VERSION) returned NULL, exiting",
+              __FUNCTION__);
+    std::terminate();
   }
 
   CLog::Log(LOGINFO, "CRenderSystemGL::{} - Version: {}, Major: {}, Minor: {}", __FUNCTION__,
