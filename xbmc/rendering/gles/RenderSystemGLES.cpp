@@ -22,6 +22,8 @@
 #include "utils/log.h"
 #include "windowing/GraphicContext.h"
 
+#include <exception>
+
 #if defined(TARGET_LINUX)
 #include "utils/EGLUtils.h"
 #endif
@@ -53,6 +55,12 @@ bool CRenderSystemGLES::InitRenderSystem()
     if (!m_RenderVersionMajor)
       sscanf(ver, "%*s %*s %d.%d", &m_RenderVersionMajor, &m_RenderVersionMinor);
     m_RenderVersion = ver;
+  }
+  else
+  {
+    CLog::Log(LOGFATAL, "CRenderSystemGLES::{} - glGetString(GL_VERSION) returned NULL, exiting",
+              __FUNCTION__);
+    std::terminate();
   }
 
   // Get our driver vendor and renderer
