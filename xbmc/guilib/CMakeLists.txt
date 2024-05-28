@@ -161,20 +161,20 @@ set(HEADERS DDSImage.h
             XBTF.h
             XBTFReader.h)
 
-if(TARGET OpenGL::GL OR TARGET OpenGL::GLES)
+if(TARGET ${APP_NAME_LC}::OpenGl OR TARGET ${APP_NAME_LC}::OpenGLES)
   list(APPEND SOURCES Shader.cpp
                       TextureGL.cpp)
   list(APPEND HEADERS Shader.h
                       TextureGL.h)
 
-  if(TARGET OpenGL::GL)
+  if(TARGET ${APP_NAME_LC}::OpenGl)
     list(APPEND SOURCES GUIFontTTFGL.cpp
                         GUITextureGL.cpp)
     list(APPEND HEADERS GUIFontTTFGL.h
                         GUITextureGL.h)
   endif()
 
-  if(TARGET OpenGL::GLES)
+  if(TARGET ${APP_NAME_LC}::OpenGLES)
     list(APPEND SOURCES GUIFontTTFGLES.cpp
                         GUITextureGLES.cpp)
     list(APPEND HEADERS GUIFontTTFGLES.h

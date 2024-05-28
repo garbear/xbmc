@@ -5,7 +5,7 @@
 #
 # This will define the following targets:
 #
-#   PCRE::PCRE    - The PCRE library
+#   ${APP_NAME_LC}::PCRE    - The PCRE library
 
 macro(buildPCRE)
   set(PCRE_VERSION ${${MODULE}_VER})
@@ -56,7 +56,7 @@ macro(buildPCRE)
   BUILD_DEP_TARGET()
 endmacro()
 
-if(NOT PCRE::pcre)
+if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
 
   include(cmake/scripts/common/ModuleHelpers.cmake)
 
@@ -77,25 +77,21 @@ if(NOT PCRE::pcre)
   else()
     if(NOT TARGET PCRE::pcre)
       find_package(PkgConfig)
-      if(PKG_CONFIG_FOUND)
+      if(PKG_CONFIG_FOUND AND NOT (WIN32 OR WINDOWS_STORE))
         pkg_check_modules(PC_PCRE pcre QUIET)
       endif()
 
       find_path(PCRE_INCLUDE_DIR pcre.h
                                  HINTS ${DEPENDS_PATH}/include ${PC_PCRE_INCLUDEDIR}
-                                 ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG}
-                                 NO_CACHE)
+                                 ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG})
       find_library(PCRE_LIBRARY_RELEASE NAMES pcre
                                         HINTS ${DEPENDS_PATH}/lib ${PC_PCRE_LIBDIR}
-                                        ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG}
-                                        NO_CACHE)
+                                        ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG})
       find_library(PCRE_LIBRARY_DEBUG NAMES pcred
                                       HINTS ${DEPENDS_PATH}/lib ${PC_PCRE_LIBDIR}
-                                      ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG}
-                                      NO_CACHE)
+                                      ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG})
       set(PCRE_VERSION ${PC_PCRE_VERSION})
     else()
-
       # Populate variables for find_package_handle_standard_args usage
       get_target_property(_PCRE_CONFIGURATIONS PCRE::pcre IMPORTED_CONFIGURATIONS)
       foreach(_pcre_config IN LISTS _PCRE_CONFIGURATIONS)
@@ -111,16 +107,11 @@ if(NOT PCRE::pcre)
       # ToDo: patch PCRE cmake to include includedir in config file
       find_path(PCRE_INCLUDE_DIR pcre.h
                                  HINTS ${DEPENDS_PATH}/include ${PC_PCRE_INCLUDEDIR}
-                                 ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG}
-                                 NO_CACHE)
+                                 ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG})
 
       set_target_properties(PCRE::pcre PROPERTIES
                                        INTERFACE_INCLUDE_DIRECTORIES "${PCRE_INCLUDE_DIR}")
     endif()
-  endif()
-
-  if(TARGET PCRE::pcre)
-    get_target_property(PCRE_INCLUDE_DIR PCRE::pcre INTERFACE_INCLUDE_DIRECTORIES)
   endif()
 
   include(SelectLibraryConfigurations)
@@ -133,30 +124,42 @@ if(NOT PCRE::pcre)
                                     VERSION_VAR PCRE_VERSION)
 
   if(PCRE_FOUND)
-    if(NOT TARGET PCRE::pcre)
-      add_library(PCRE::pcre UNKNOWN IMPORTED)
+    # cmake target and not building internal
+    if(TARGET PCRE::pcre AND NOT TARGET pcre)
+      add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} ALIAS PCRE::pcre)
+    else()
+      add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
       if(PCRE_LIBRARY_RELEASE)
-        set_target_properties(PCRE::pcre PROPERTIES
-                                         IMPORTED_CONFIGURATIONS RELEASE
-                                         IMPORTED_LOCATION_RELEASE "${PCRE_LIBRARY_RELEASE}")
+        set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
+                                                                         IMPORTED_CONFIGURATIONS RELEASE
+                                                                         IMPORTED_LOCATION_RELEASE "${PCRE_LIBRARY_RELEASE}")
       endif()
       if(PCRE_LIBRARY_DEBUG)
-        set_target_properties(PCRE::pcre PROPERTIES
-                                         IMPORTED_CONFIGURATIONS DEBUG
-                                         IMPORTED_LOCATION_DEBUG "${PCRE_LIBRARY_DEBUG}")
+        set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
+                                                                         IMPORTED_LOCATION_DEBUG "${PCRE_LIBRARY_DEBUG}")
+        set_property(TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} APPEND PROPERTY
+                                                                              IMPORTED_CONFIGURATIONS DEBUG)
       endif()
-      set_target_properties(PCRE::pcre PROPERTIES
-                                       INTERFACE_INCLUDE_DIRECTORIES "${PCRE_INCLUDE_DIR}")
+      set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
+                                                                       INTERFACE_INCLUDE_DIRECTORIES "${PCRE_INCLUDE_DIR}")
     endif()
 
     # Wee need to explicitly add this define. The cmake config does not propagate this info
     if(WIN32)
-      set_property(TARGET PCRE::pcre APPEND PROPERTY
-                                            INTERFACE_COMPILE_DEFINITIONS "PCRE_STATIC=1")
+      get_target_property(aliased_target ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} ALIASED_TARGET)
+
+      if(NOT aliased_target OR "${aliased_target}" STREQUAL "")
+        set(_pcre_target "${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME}")
+      else()
+        set(_pcre_target "${aliased_target}")
+      endif()
+
+      set_property(TARGET ${_pcre_target} APPEND PROPERTY
+                                                 INTERFACE_COMPILE_DEFINITIONS "PCRE_STATIC")
     endif()
 
     if(TARGET pcre)
-      add_dependencies(PCRE::pcre pcre)
+      add_dependencies(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} pcre)
     endif()
 
     # Add internal build target when a Multi Config Generator is used
@@ -174,8 +177,9 @@ if(NOT PCRE::pcre)
       endif()
       add_dependencies(build_internal_depends pcre)
     endif()
-
-    set_property(GLOBAL APPEND PROPERTY INTERNAL_DEPS_PROP PCRE::pcre)
-
+  else()
+    if(PCRE_FIND_REQUIRED)
+      message(FATAL_ERROR "PCRE library not found. You may want to try -DENABLE_INTERNAL_PCRE=ON")
+    endif()
   endif()
 endif()

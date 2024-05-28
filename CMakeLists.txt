@@ -10,6 +10,11 @@ if(POLICY CMP0069)
   cmake_policy(SET CMP0069 NEW)
 endif()
 
+if(POLICY CMP0079)
+  set(CMAKE_POLICY_DEFAULT_CMP0079 NEW)
+  cmake_policy(SET CMP0079 NEW)
+endif()
+
 if(POLICY CMP0135)
   set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
   cmake_policy(SET CMP0135 NEW)
@@ -129,9 +134,6 @@ if(CORE_SYSTEM_NAME STREQUAL linux)
   option(ADDONS_CONFIGURE_AT_STARTUP "Configure binary addons at startup?" ON)
 endif()
 
-# set scope of INTERNAL_DEPS
-set_property(GLOBAL PROPERTY INTERNAL_DEPS_PROP)
-
 # Build static libraries per directory
 if(NOT CMAKE_GENERATOR MATCHES "Visual Studio" AND NOT CMAKE_GENERATOR STREQUAL Xcode)
   set(ENABLE_STATIC_LIBS TRUE)
@@ -213,16 +215,16 @@ set(required_deps ASS>=0.15.0
                   HarfBuzz
                   Iconv
                   LibDvd
+                  libZlib
                   Lzo2
-                  OpenSSL>=1.1.0
                   PCRE
                   RapidJSON>=1.0.2
                   Spdlog
                   Sqlite3
+                  SSL>=1.1.0
                   TagLib>=1.9.0
                   TinyXML
                   TinyXML2
-                  ZLIB
                   ${PLATFORM_REQUIRED_DEPS})
 
 # Optional dependencies. Keep in alphabetical order please
@@ -267,11 +269,11 @@ elseif(ENABLE_MYSQLCLIENT AND NOT ENABLE_MYSQLCLIENT STREQUAL AUTO)
 endif()
 
 core_optional_dep(MariaDBClient)
-if(NOT TARGET MariaDBClient::MariaDBClient)
+if(NOT TARGET ${APP_NAME_LC}::MariaDBClient)
   core_optional_dep(MySqlClient)
 endif()
 
-if(NOT TARGET UDEV::UDEV)
+if(NOT TARGET ${APP_NAME_LC}::UDEV)
   core_optional_dep(LibUSB)
 endif()
 
@@ -285,7 +287,7 @@ endif()
 
 if(ENABLE_AIRTUNES)
   find_package(Shairplay)
-  if(TARGET Shairplay::Shairplay)
+  if(TARGET ${APP_NAME_LC}::Shairplay)
     core_require_dep(Shairplay)
   endif()
 endif()
@@ -296,7 +298,7 @@ endif()
 set(outputFilterRegex "addons/xbmc.json")
 find_addon_xml_in_files(${outputFilterRegex})
 
-if(TARGET ${APP_NAME_LC}::Alsa AND TARGET PulseAudio::PulseAudio)
+if(TARGET ${APP_NAME_LC}::Alsa AND TARGET ${APP_NAME_LC}::PulseAudio)
   list(APPEND AUDIO_BACKENDS_LIST "alsa+pulseaudio")
 endif()
 
@@ -343,7 +345,7 @@ endif()
 # Generate messages
 core_add_subdirs_from_filelist(${CMAKE_SOURCE_DIR}/cmake/messages/flatbuffers/*.txt)
 
-include_directories(${INCLUDES} SYSTEM ${SYSTEM_INCLUDES})
+include_directories(${INCLUDES})
 add_compile_options(${ARCH_DEFINES} "${SYSTEM_DEFINES}" ${DEP_DEFINES} ${PATH_DEFINES})
 
 set(core_DEPENDS "" CACHE STRING "" FORCE)
@@ -363,7 +365,6 @@ if(NOT ${CORE_SYSTEM_NAME} MATCHES "windows")
   file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/system/players/VideoPlayer)
 endif()
 
-set(LIBCEC_SONAME "${CEC_SONAME}")
 if(NOT CORE_SYSTEM_NAME STREQUAL windows AND NOT CORE_SYSTEM_NAME STREQUAL android AND NOT CORE_SYSTEM_NAME STREQUAL windowsstore)
   configure_file(${CMAKE_SOURCE_DIR}/xbmc/DllPaths_generated.h.in
                  ${CORE_BUILD_DIR}/DllPaths_generated.h @ONLY)
@@ -371,9 +372,6 @@ elseif(CORE_SYSTEM_NAME STREQUAL android)
   configure_file(${CMAKE_SOURCE_DIR}/xbmc/DllPaths_generated_android.h.in
                  ${CORE_BUILD_DIR}/DllPaths_generated_android.h @ONLY)
 endif()
-
-get_property(INTERNAL_DEPS GLOBAL PROPERTY INTERNAL_DEPS_PROP)
-set(GLOBAL_TARGET_DEPS ${INTERNAL_DEPS} ${PLATFORM_GLOBAL_TARGET_DEPS})
 
 # main library (used for main binary and tests)
 if(CORE_SYSTEM_NAME STREQUAL "darwin_embedded")
@@ -391,7 +389,6 @@ if(CORE_SYSTEM_NAME STREQUAL "darwin_embedded")
 else()
   add_library(lib${APP_NAME_LC} STATIC $<TARGET_OBJECTS:compileinfo>)
 endif()
-add_dependencies(lib${APP_NAME_LC} ${GLOBAL_TARGET_DEPS})
 set_target_properties(lib${APP_NAME_LC} PROPERTIES PREFIX "")
 
 # Other files (IDE)
@@ -408,7 +405,10 @@ core_add_subdirs_from_filelist(${CMAKE_SOURCE_DIR}/cmake/treedata/common/*.txt
 core_add_optional_subdirs_from_filelist(${CMAKE_SOURCE_DIR}/cmake/treedata/optional/common/*.txt
                                         ${CMAKE_SOURCE_DIR}/cmake/treedata/optional/${CORE_SYSTEM_NAME}/*.txt)
 
-target_link_libraries(lib${APP_NAME_LC} PUBLIC ${core_DEPENDS} ${SYSTEM_LDFLAGS} ${DEPLIBS} ${CMAKE_DL_LIBS} ${GLOBAL_TARGET_DEPS})
+# core_DEPENDS: these are the artifact/object files of /xbmc/*
+# SYSTEM_LDFLAGS: system linker flags
+# DEPLIBS: system libraries for linking
+target_link_libraries(lib${APP_NAME_LC} PUBLIC ${core_DEPENDS} ${SYSTEM_LDFLAGS} ${DEPLIBS} ${CMAKE_DL_LIBS})
 core_target_link_libraries(lib${APP_NAME_LC})
 set_target_properties(lib${APP_NAME_LC} PROPERTIES PROJECT_LABEL "xbmc")
 source_group_by_folder(lib${APP_NAME_LC} RELATIVE ${CMAKE_SOURCE_DIR}/xbmc)
@@ -488,9 +488,6 @@ add_custom_target(gen_skin_pack DEPENDS ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/${
 # Packaging target. This generates system addon, xbt creation, copy files to build tree
 add_custom_target(generate-packaging ALL
                   DEPENDS TexturePacker::TexturePacker::Executable export-files gen_skin_pack gen_system_addons)
-# Make sure we build any libs before we look to export-files.
-# We may need to export some shared libs/data (eg Python)
-add_dependencies(export-files ${GLOBAL_TARGET_DEPS})
 
 # Add to lib${APP_NAME_LC} solely for Win UWP. msix building doesnt seem to pick up the
 # generated buildtree if we do it later. Other platforms dont care when this happens.
