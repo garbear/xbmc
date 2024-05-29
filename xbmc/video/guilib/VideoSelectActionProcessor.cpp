@@ -20,6 +20,7 @@
 #include "settings/SettingsComponent.h"
 #include "utils/StringUtils.h"
 #include "utils/Variant.h"
+#include "video/VideoFileItemClassify.h"
 #include "video/guilib/VideoGUIUtils.h"
 
 using namespace VIDEO::GUILIB;
@@ -58,7 +59,17 @@ bool CVideoSelectActionProcessorBase::Process(Action action)
       return OnQueueSelected();
 
     case ACTION_INFO:
+    {
+      if (GetDefaultAction() == ACTION_INFO && !KODI::VIDEO::IsVideoDb(*m_item) &&
+          !m_item->IsPlugin() && !m_item->IsScript() &&
+          !VIDEO_UTILS::HasItemVideoDbInformation(*m_item))
+      {
+        // for items without info fall back to default play action
+        return Process(CVideoPlayActionProcessorBase::GetDefaultAction());
+      }
+
       return OnInfoSelected();
+    }
 
     default:
       break;
