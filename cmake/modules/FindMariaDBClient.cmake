@@ -5,9 +5,14 @@
 #
 # This will define the following target:
 #
-#   ${APP_NAME_LC}::MariaDBClient   - The MariaDBClient library
+#   MariaDBClient::MariaDBClient   - The MariaDBClient library
 
-if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
+if(NOT TARGET MariaDBClient::MariaDBClient)
+  # Don't find system wide installed version on Windows
+  if(WIN32)
+    set(EXTRA_FIND_ARGS NO_SYSTEM_ENVIRONMENT_PATH)
+  endif()
+
   find_package(PkgConfig)
 
   if(PKG_CONFIG_FOUND)
@@ -15,15 +20,18 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
   endif()
 
   find_path(MARIADBCLIENT_INCLUDE_DIR NAMES mariadb/mysql.h mariadb/server/mysql.h
-                                      HINTS ${PC_MARIADBCLIENT_INCLUDEDIR})
+                                      HINTS ${PC_MARIADBCLIENT_INCLUDEDIR}
+                                      NO_CACHE)
   find_library(MARIADBCLIENT_LIBRARY_RELEASE NAMES mariadbclient mariadb libmariadb
                                              HINTS ${PC_MARIADBCLIENT_LIBDIR}
                                              PATH_SUFFIXES mariadb
-                                             ${${CORE_PLATFORM_LC}_SEARCH_CONFIG})
+                                             ${EXTRA_FIND_ARGS}
+                                             NO_CACHE)
   find_library(MARIADBCLIENT_LIBRARY_DEBUG NAMES mariadbclient mariadb libmariadbd
                                            HINTS ${PC_MARIADBCLIENT_LIBDIR}
                                            PATH_SUFFIXES mariadb
-                                           ${${CORE_PLATFORM_LC}_SEARCH_CONFIG})
+                                           ${EXTRA_FIND_ARGS}
+                                           NO_CACHE)
 
   if(PC_MARIADBCLIENT_VERSION)
     set(MARIADBCLIENT_VERSION_STRING ${PC_MARIADBCLIENT_VERSION})
@@ -42,23 +50,24 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
                                     VERSION_VAR MARIADBCLIENT_VERSION_STRING)
 
   if(MARIADBCLIENT_FOUND)
-    add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
+    add_library(MariaDBClient::MariaDBClient UNKNOWN IMPORTED)
     if(MARIADBCLIENT_LIBRARY_RELEASE)
-      set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
-                                                                       IMPORTED_CONFIGURATIONS RELEASE
-                                                                       IMPORTED_LOCATION_RELEASE "${MARIADBCLIENT_LIBRARY_RELEASE}")
+      set_target_properties(MariaDBClient::MariaDBClient PROPERTIES
+                                                         IMPORTED_CONFIGURATIONS RELEASE
+                                                         IMPORTED_LOCATION_RELEASE "${MARIADBCLIENT_LIBRARY_RELEASE}")
     endif()
     if(MARIADBCLIENT_LIBRARY_DEBUG)
-      set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
-                                                                       IMPORTED_LOCATION_DEBUG "${MARIADBCLIENT_LIBRARY_DEBUG}")
-      set_property(TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} APPEND PROPERTY
-                                                                            IMPORTED_CONFIGURATIONS DEBUG)
+      set_target_properties(MariaDBClient::MariaDBClient PROPERTIES
+                                                         IMPORTED_CONFIGURATIONS DEBUG
+                                                         IMPORTED_LOCATION_DEBUG "${MARIADBCLIENT_LIBRARY_DEBUG}")
     endif()
-    set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
-                                                                     INTERFACE_INCLUDE_DIRECTORIES "${MARIADBCLIENT_INCLUDE_DIR}"
-                                                                     INTERFACE_COMPILE_DEFINITIONS HAS_MARIADB)
+    set_target_properties(MariaDBClient::MariaDBClient PROPERTIES
+                                                       INTERFACE_INCLUDE_DIRECTORIES "${MARIADBCLIENT_INCLUDE_DIR}"
+                                                       INTERFACE_COMPILE_DEFINITIONS HAS_MARIADB=1)
     if(CORE_SYSTEM_NAME STREQUAL osx OR HOST MATCHES "steamdeck")
-      target_link_libraries(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} INTERFACE gssapi_krb5)
+      target_link_libraries(MariaDBClient::MariaDBClient INTERFACE gssapi_krb5)
     endif()
+
+    set_property(GLOBAL APPEND PROPERTY INTERNAL_DEPS_PROP MariaDBClient::MariaDBClient)
   endif()
 endif()

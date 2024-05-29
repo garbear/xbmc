@@ -124,14 +124,14 @@ set(HEADERS AddonsDirectory.h
             ZipFile.h
             ZipManager.h)
 
-if(TARGET ${APP_NAME_LC}::Iso9660pp)
+if(ISO9660PP_FOUND)
   list(APPEND SOURCES ISO9660Directory.cpp
                       ISO9660File.cpp)
   list(APPEND HEADERS ISO9660Directory.h
                       ISO9660File.h)
 endif()
 
-if(TARGET ${APP_NAME_LC}::Udfread)
+if(TARGET udfread::udfread)
   list(APPEND SOURCES UDFBlockInput.cpp
                       UDFDirectory.cpp
                       UDFFile.cpp)
@@ -140,7 +140,7 @@ if(TARGET ${APP_NAME_LC}::Udfread)
                       UDFFile.h)
 endif()
 
-if(TARGET ${APP_NAME_LC}::Bluray)
+if(BLURAY_FOUND)
   list(APPEND SOURCES BlurayCallback.cpp
                       BlurayDirectory.cpp
                       BlurayFile.cpp)
@@ -158,7 +158,7 @@ if(ENABLE_OPTICAL)
                       DVDDirectory.h)
 endif()
 
-if(TARGET ${APP_NAME_LC}::NFS)
+if(TARGET libnfs::nfs)
   list(APPEND SOURCES NFSDirectory.cpp
                       NFSFile.cpp)
   list(APPEND HEADERS NFSDirectory.h

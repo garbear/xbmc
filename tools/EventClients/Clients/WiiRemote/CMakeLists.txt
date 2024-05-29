@@ -12,12 +12,12 @@ add_executable(${APP_NAME_LC}-wiiremote ${SOURCES} ${HEADERS})
 
 target_include_directories(${APP_NAME_LC}-wiiremote
                            PRIVATE $<TARGET_PROPERTY:${APP_NAME_LC}::Bluetooth,INTERFACE_INCLUDE_DIRECTORIES>
-                                   $<TARGET_PROPERTY:${APP_NAME_LC}::CWiid,INTERFACE_INCLUDE_DIRECTORIES>)
+                                   ${CWIID_INCLUDE_DIRS})
 
 target_link_libraries(${APP_NAME_LC}-wiiremote
                       PRIVATE ${SYSTEM_LDFLAGS}
                               ${APP_NAME_LC}::Bluetooth
-                              ${APP_NAME_LC}::CWiid)
+                              ${CWIID_LIBRARIES})
 
 target_compile_options(${APP_NAME_LC}-wiiremote PRIVATE ${ARCH_DEFINES})
 

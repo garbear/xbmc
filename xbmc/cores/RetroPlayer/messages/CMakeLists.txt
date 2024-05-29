@@ -20,8 +20,8 @@ set_target_properties(retroplayer_messages PROPERTIES FOLDER "Generated Messages
                                                       INCLUDE_DIRECTORIES ${CMAKE_CURRENT_BINARY_DIR}
                                                       SOURCES "${FLATC_OUTPUTS}")
 
-if(TARGET ${APP_NAME_LC}::FlatBuffers)
-  set_property(TARGET ${APP_NAME_LC}::FlatBuffers APPEND PROPERTY
+if(TARGET flatbuffers::flatheaders)
+  set_property(TARGET flatbuffers::flatheaders APPEND PROPERTY
                                                INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}")
-  add_dependencies(retroplayer_messages ${APP_NAME_LC}::FlatBuffers)
+  add_dependencies(retroplayer_messages flatbuffers::flatheaders)
 endif()

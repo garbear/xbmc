@@ -4,9 +4,9 @@
 #
 # This will define the following target:
 #
-#   ${APP_NAME_LC}::LircClient - The lirc library
+#   LIRCCLIENT::LIRCCLIENT - The lirc library
 
-if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
+if(NOT TARGET LIRCCLIENT::LIRCCLIENT)
   find_package(PkgConfig)
   if(PKG_CONFIG_FOUND)
     pkg_check_modules(PC_LIRC lirc QUIET)
@@ -22,10 +22,13 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
                                     REQUIRED_VARS LIRCCLIENT_LIBRARY LIRCCLIENT_INCLUDE_DIR)
 
   if(LIRCCLIENT_FOUND)
-    add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
-    set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
-                                                                     IMPORTED_LOCATION "${LIRCCLIENT_LIBRARY}"
-                                                                     INTERFACE_INCLUDE_DIRECTORIES "${LIRCCLIENT_INCLUDE_DIR}"
-                                                                     INTERFACE_COMPILE_DEFINITIONS HAS_LIRC)
+    add_library(LIRCCLIENT::LIRCCLIENT UNKNOWN IMPORTED)
+    set_target_properties(LIRCCLIENT::LIRCCLIENT PROPERTIES
+                                                 IMPORTED_LOCATION "${LIRCCLIENT_LIBRARY}"
+                                                 INTERFACE_INCLUDE_DIRECTORIES "${LIRCCLIENT_INCLUDE_DIR}"
+                                                 INTERFACE_COMPILE_DEFINITIONS "HAS_LIRC=1")
+    set_property(GLOBAL APPEND PROPERTY INTERNAL_DEPS_PROP LIRCCLIENT::LIRCCLIENT)
   endif()
+
+  mark_as_advanced(LIRCCLIENT_LIBRARY LIRCCLIENT_INCLUDE_DIR)
 endif()

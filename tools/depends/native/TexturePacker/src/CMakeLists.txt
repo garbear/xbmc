@@ -13,8 +13,6 @@ if(ENABLE_STATIC)
   set(ZLIB_USE_STATIC_LIBS ON)
 endif()
 
-set(APP_NAME_LC texturepacker)
-
 find_package(Lzo2 REQUIRED)
 find_package(PNG REQUIRED)
 find_package(GIF REQUIRED)
@@ -70,7 +68,7 @@ target_link_libraries(TexturePacker
                               ${GIF_LIBRARIES}
                               ${PNG_LIBRARIES}
                               ${JPEG_LIBRARIES}
-                              texturepacker::Lzo2)
+                              ${LZO2_LIBRARIES})
 
 target_compile_definitions(TexturePacker PRIVATE ${ARCH_DEFINES} ${SYSTEM_DEFINES})
 target_compile_features(TexturePacker PUBLIC cxx_std_17)

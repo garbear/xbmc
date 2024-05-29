@@ -5,12 +5,12 @@ if(CORE_SYSTEM_NAME STREQUAL windows OR CORE_SYSTEM_NAME STREQUAL windowsstore)
   list(APPEND HEADERS DXVAEnumeratorHD.h)
 endif()
 
-if(TARGET ${APP_NAME_LC}::VAAPI)
-  if(TARGET ${APP_NAME_LC}::OpenGl)
+if(VAAPI_FOUND)
+  if(TARGET OpenGL::GL)
     list(APPEND SOURCES RendererVAAPIGL.cpp)
     list(APPEND HEADERS RendererVAAPIGL.h)
   endif()
-  if(TARGET ${APP_NAME_LC}::OpenGLES)
+  if(TARGET OpenGL::GLES)
     list(APPEND SOURCES RendererVAAPIGLES.cpp)
     list(APPEND HEADERS RendererVAAPIGLES.h)
   endif()
@@ -20,7 +20,7 @@ if(TARGET ${APP_NAME_LC}::VAAPI)
   endif()
 endif()
 
-if(TARGET ${APP_NAME_LC}::VDPAU)
+if(TARGET VDPAU::VDPAU)
   list(APPEND SOURCES RendererVDPAU.cpp
                       VdpauGL.cpp)
   list(APPEND HEADERS RendererVDPAU.h
@@ -28,14 +28,14 @@ if(TARGET ${APP_NAME_LC}::VDPAU)
 endif()
 
 if(CORE_SYSTEM_NAME STREQUAL osx)
-  if(TARGET ${APP_NAME_LC}::OpenGl)
+  if(TARGET OpenGL::GL)
     list(APPEND SOURCES RendererVTBGL.cpp)
     list(APPEND HEADERS RendererVTBGL.h)
   endif()
 endif()
 
 if(CORE_SYSTEM_NAME STREQUAL darwin_embedded)
-  if(TARGET ${APP_NAME_LC}::OpenGLES)
+  if(TARGET OpenGL::GLES)
     list(APPEND SOURCES RendererVTBGLES.cpp)
     list(APPEND HEADERS RendererVTBGLES.h)
   endif()
@@ -56,7 +56,7 @@ if("gbm" IN_LIST CORE_PLATFORM_NAME_LC OR "wayland" IN_LIST CORE_PLATFORM_NAME_L
                         VideoLayerBridgeDRMPRIME.h)
   endif()
 
-  if(TARGET ${APP_NAME_LC}::OpenGLES)
+  if(TARGET OpenGL::GLES)
     list(APPEND SOURCES RendererDRMPRIMEGLES.cpp
                         DRMPRIMEEGL.cpp)
     list(APPEND HEADERS RendererDRMPRIMEGLES.h

@@ -26,17 +26,11 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
   if(DETOURS_FOUND)
     add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
     set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
-                                                                     INTERFACE_INCLUDE_DIRECTORIES "${DETOURS_INCLUDE_DIR}")
-    if(DETOURS_LIBRARY_RELEASE)
-      set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
-                                                                       IMPORTED_CONFIGURATIONS RELEASE
-                                                                       IMPORTED_LOCATION_RELEASE "${DETOURS_LIBRARY_RELEASE}")
-    endif()
+                                                                     INTERFACE_INCLUDE_DIRECTORIES "${DETOURS_INCLUDE_DIR}"
+                                                                     IMPORTED_LOCATION "${DETOURS_LIBRARY_RELEASE}")
     if(DETOURS_LIBRARY_DEBUG)
       set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
                                                                        IMPORTED_LOCATION_DEBUG "${DETOURS_LIBRARY_DEBUG}")
-      set_property(TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} APPEND PROPERTY
-                                                                            IMPORTED_CONFIGURATIONS DEBUG)
     endif()
   else()
     if(Detours_FIND_REQUIRED)

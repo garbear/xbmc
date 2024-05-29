@@ -44,7 +44,7 @@ set(HEADERS AdvancedSettings.h
             SettingsComponent.h
             SubtitlesSettings.h)
 
-if(TARGET ${APP_NAME_LC}::Bluray)
+if(BLURAY_FOUND)
   list(APPEND SOURCES DiscSettings.cpp)
 endif()
 

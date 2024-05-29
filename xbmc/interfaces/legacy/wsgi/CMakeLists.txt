@@ -1,4 +1,4 @@
-if(TARGET ${APP_NAME_LC}::MicroHttpd)
+if(MICROHTTPD_FOUND)
   set(SOURCES WsgiErrorStream.cpp
               WsgiInputStream.cpp
               WsgiResponseBody.cpp

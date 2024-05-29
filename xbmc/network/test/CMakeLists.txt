@@ -1,6 +1,6 @@
 set(SOURCES TestNetwork.cpp)
 
-if(TARGET ${APP_NAME_LC}::MicroHttpd)
+if(MICROHTTPD_FOUND)
   list(APPEND SOURCES TestWebServer.cpp)
 endif()
 

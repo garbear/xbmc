@@ -57,18 +57,18 @@ if(TARGET ${APP_NAME_LC}::Alsa)
     list(APPEND HEADERS Sinks/alsa/ALSAHControlMonitor.h)
   endif()
 
-  if(TARGET ${APP_NAME_LC}::UDEV)
+  if(TARGET UDEV::UDEV)
     list(APPEND SOURCES Sinks/alsa/ALSADeviceMonitor.cpp)
     list(APPEND HEADERS Sinks/alsa/ALSADeviceMonitor.h)
   endif()
 endif()
 
-if(TARGET ${APP_NAME_LC}::PulseAudio)
+if(TARGET PulseAudio::PulseAudio)
   list(APPEND SOURCES Sinks/AESinkPULSE.cpp)
   list(APPEND HEADERS Sinks/AESinkPULSE.h)
 endif()
 
-if(TARGET ${APP_NAME_LC}::Pipewire)
+if(PIPEWIRE_FOUND)
   list(APPEND SOURCES Sinks/pipewire/AESinkPipewire.cpp
                       Sinks/pipewire/Pipewire.cpp
                       Sinks/pipewire/PipewireContext.cpp
@@ -91,12 +91,12 @@ if(TARGET ${APP_NAME_LC}::Pipewire)
                       Sinks/pipewire/PipewireThreadLoop.h)
 endif()
 
-if(TARGET ${APP_NAME_LC}::Sndio)
+if(TARGET Sndio::Sndio)
   list(APPEND SOURCES Sinks/AESinkSNDIO.cpp)
   list(APPEND HEADERS Sinks/AESinkSNDIO.h)
 endif()
 
-if(TARGET ${APP_NAME_LC}::FFMPEG)
+if(TARGET ffmpeg::ffmpeg)
   list(APPEND SOURCES Engines/ActiveAE/ActiveAEResampleFFMPEG.cpp)
   list(APPEND HEADERS Engines/ActiveAE/ActiveAEResampleFFMPEG.h)
 endif()

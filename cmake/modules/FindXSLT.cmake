@@ -5,23 +5,21 @@
 #
 # This will define the following target:
 #
-#   ${APP_NAME_LC}::XSLT - The XSLT library
+#   XSLT::XSLT - The XSLT library
 
-if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
+if(NOT TARGET XSLT::XSLT)
 
   find_package(LibXml2 REQUIRED)
   find_package(PkgConfig)
 
-  if(PKG_CONFIG_FOUND AND NOT (WIN32 OR WINDOWS_STORE))
+  if(PKG_CONFIG_FOUND)
     pkg_check_modules(PC_XSLT libxslt QUIET)
   endif()
 
   find_path(XSLT_INCLUDE_DIR NAMES libxslt/xslt.h
-                             HINTS ${DEPENDS_PATH}/include ${PC_XSLT_INCLUDEDIR}
-                             ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG})
+                             HINTS ${PC_XSLT_INCLUDEDIR})
   find_library(XSLT_LIBRARY NAMES xslt libxslt
-                            HINTS ${DEPENDS_PATH}/lib ${PC_XSLT_LIBDIR}
-                            ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG})
+                            HINTS ${PC_XSLT_LIBDIR})
 
   set(XSLT_VERSION ${PC_XSLT_VERSION})
 
@@ -31,12 +29,13 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
                                     VERSION_VAR XSLT_VERSION)
 
   if(XSLT_FOUND)
-    add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
-    set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
-                                                                     IMPORTED_LOCATION "${XSLT_LIBRARY}"
-                                                                     INTERFACE_INCLUDE_DIRECTORIES "${XSLT_INCLUDE_DIR}"
-                                                                     INTERFACE_COMPILE_DEFINITIONS HAVE_LIBXSLT)
+    add_library(XSLT::XSLT UNKNOWN IMPORTED)
+    set_target_properties(XSLT::XSLT PROPERTIES
+                                     IMPORTED_LOCATION "${XSLT_LIBRARY}"
+                                     INTERFACE_INCLUDE_DIRECTORIES "${XSLT_INCLUDE_DIR}"
+                                     INTERFACE_COMPILE_DEFINITIONS HAVE_LIBXSLT=1)
 
-    target_link_libraries(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} INTERFACE LibXml2::LibXml2)
+    target_link_libraries(XSLT::XSLT INTERFACE LibXml2::LibXml2)
+    set_property(GLOBAL APPEND PROPERTY INTERNAL_DEPS_PROP XSLT::XSLT)
   endif()
 endif()

@@ -7,16 +7,15 @@
 #
 #   Shairplay::Shairplay - The Shairplay library
 
-if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
+if(NOT TARGET Shairplay::Shairplay)
 
-  find_path(SHAIRPLAY_INCLUDE_DIR shairplay/raop.h)
-  find_library(SHAIRPLAY_LIBRARY NAMES shairplay libshairplay)
+  find_path(SHAIRPLAY_INCLUDE_DIR shairplay/raop.h NO_CACHE)
 
   include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(Shairplay
-                                    REQUIRED_VARS SHAIRPLAY_LIBRARY SHAIRPLAY_INCLUDE_DIR)
+  find_library(SHAIRPLAY_LIBRARY NAMES shairplay libshairplay
+                                 NO_CACHE)
 
-  if(SHAIRPLAY_FOUND)
+  if(SHAIRPLAY_INCLUDE_DIR AND SHAIRPLAY_LIBRARY)
     include(CheckCSourceCompiles)
     set(CMAKE_REQUIRED_INCLUDES ${SHAIRPLAY_INCLUDE_DIR})
     set(CMAKE_REQUIRED_LIBRARIES ${SHAIRPLAY_LIBRARIES})
@@ -29,15 +28,17 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
                                return 0;
                              }
                             " HAVE_SHAIRPLAY_CALLBACK_CLS)
-    unset(CMAKE_REQUIRED_INCLUDES)
-    unset(CMAKE_REQUIRED_LIBRARIES)
+  endif()
 
-    if(HAVE_SHAIRPLAY_CALLBACK_CLS)
-      add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
-      set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
-                                                                       IMPORTED_LOCATION "${SHAIRPLAY_LIBRARY}"
-                                                                       INTERFACE_INCLUDE_DIRECTORIES "${SHAIRPLAY_INCLUDE_DIR}"
-                                                                       INTERFACE_COMPILE_DEFINITIONS HAS_AIRTUNES)
-    endif()
+  find_package_handle_standard_args(Shairplay
+                                    REQUIRED_VARS SHAIRPLAY_LIBRARY SHAIRPLAY_INCLUDE_DIR HAVE_SHAIRPLAY_CALLBACK_CLS)
+
+  if(SHAIRPLAY_FOUND)
+    add_library(Shairplay::Shairplay UNKNOWN IMPORTED)
+    set_target_properties(Shairplay::Shairplay PROPERTIES
+                                               IMPORTED_LOCATION "${SHAIRPLAY_LIBRARY}"
+                                               INTERFACE_INCLUDE_DIRECTORIES "${SHAIRPLAY_INCLUDE_DIR}"
+                                               INTERFACE_COMPILE_DEFINITIONS HAS_AIRTUNES=1)
+    set_property(GLOBAL APPEND PROPERTY INTERNAL_DEPS_PROP Shairplay::Shairplay)
   endif()
 endif()

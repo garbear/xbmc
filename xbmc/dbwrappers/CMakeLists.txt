@@ -10,7 +10,7 @@ set(HEADERS Database.h
             qry_dat.h
             sqlitedataset.h)
 
-if(TARGET ${APP_NAME_LC}::MySqlClient OR TARGET ${APP_NAME_LC}::MariaDBClient)
+if(TARGET MySqlClient::MySqlClient OR TARGET MariaDBClient::MariaDBClient)
   list(APPEND SOURCES mysqldataset.cpp)
   list(APPEND HEADERS mysqldataset.h)
 endif()

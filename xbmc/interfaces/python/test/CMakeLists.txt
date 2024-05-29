@@ -1,4 +1,4 @@
-if(TARGET ${APP_NAME_LC}::Python)
+if(PYTHON_FOUND)
   set(SOURCES TestSwig.cpp)
 
   core_add_test_library(python_test)

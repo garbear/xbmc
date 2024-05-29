@@ -5,10 +5,10 @@
 #
 # This will define the following target:
 #
-#   ${APP_NAME_LC}::RapidJSON - The RapidJSON library
+#   RapidJSON::RapidJSON - The RapidJSON library
 #
 
-if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
+if(NOT TARGET RapidJSON::RapidJSON)
   include(cmake/scripts/common/ModuleHelpers.cmake)
 
   macro(buildrapidjson)
@@ -71,7 +71,8 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
 
       find_path(RAPIDJSON_INCLUDE_DIRS NAMES rapidjson/rapidjson.h
                                        HINTS ${DEPENDS_PATH}/include ${PC_RapidJSON_INCLUDEDIR}
-                                       ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG})
+                                       ${${CORE_PLATFORM_NAME_LC}_SEARCH_CONFIG}
+                                       NO_CACHE)
     endif()
   endif()
 
@@ -81,11 +82,11 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
                                     VERSION_VAR RapidJSON_VERSION)
 
   if(RAPIDJSON_FOUND)
-    add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} INTERFACE IMPORTED)
-    set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
-                                                                     INTERFACE_INCLUDE_DIRECTORIES "${RAPIDJSON_INCLUDE_DIRS}")
+    add_library(RapidJSON::RapidJSON INTERFACE IMPORTED)
+    set_target_properties(RapidJSON::RapidJSON PROPERTIES
+                                               INTERFACE_INCLUDE_DIRECTORIES "${RAPIDJSON_INCLUDE_DIRS}")
     if(TARGET rapidjson)
-      add_dependencies(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} rapidjson)
+      add_dependencies(RapidJSON::RapidJSON rapidjson)
     endif()
 
     # Add internal build target when a Multi Config Generator is used
@@ -103,9 +104,7 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
       endif()
       add_dependencies(build_internal_depends rapidjson)
     endif()
-  else()
-    if(RapidJSON_FIND_REQUIRED)
-      message(FATAL_ERROR "RapidJSON library not found. You may want to try -DENABLE_INTERNAL_RapidJSON=ON")
-    endif()
+
+    set_property(GLOBAL APPEND PROPERTY INTERNAL_DEPS_PROP RapidJSON::RapidJSON)
   endif()
 endif()

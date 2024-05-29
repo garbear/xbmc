@@ -1,4 +1,4 @@
-if(TARGET ${APP_NAME_LC}::OpenGl)
+if(TARGET OpenGL::GL)
   set(SOURCES RenderSystemGL.cpp
               ScreenshotSurfaceGL.cpp
               GLShader.cpp)

@@ -1,4 +1,4 @@
-if(TARGET ${APP_NAME_LC}::MicroHttpd)
+if(MICROHTTPD_FOUND)
   set(SOURCES HTTPFileHandler.cpp
               HTTPImageHandler.cpp
               HTTPImageTransformationHandler.cpp
@@ -9,7 +9,7 @@ if(TARGET ${APP_NAME_LC}::MicroHttpd)
               HTTPWebinterfaceHandler.cpp
               IHTTPRequestHandler.cpp)
 
-  if(TARGET ${APP_NAME_LC}::Python)
+  if(PYTHON_FOUND)
     list(APPEND SOURCES HTTPPythonHandler.cpp)
   endif()
 
@@ -22,7 +22,7 @@ if(TARGET ${APP_NAME_LC}::MicroHttpd)
               HTTPWebinterfaceAddonsHandler.h
               HTTPWebinterfaceHandler.h
               IHTTPRequestHandler.h)
-  if(TARGET ${APP_NAME_LC}::Python)
+  if(PYTHON_FOUND)
     list(APPEND HEADERS HTTPPythonHandler.h)
   endif()
 

@@ -1,13 +1,13 @@
 set(SOURCES "")
 set(HEADERS "")
 
-if(TARGET ${APP_NAME_LC}::LircClient)
+if(TARGET LIRCCLIENT::LIRCCLIENT)
   list(APPEND SOURCES LIRC.cpp)
   list(APPEND HEADERS LIRC.h)
 endif()
 
 if("gbm" IN_LIST CORE_PLATFORM_NAME_LC)
-  if(TARGET ${APP_NAME_LC}::LibInput)
+  if(LIBINPUT_FOUND)
     list(APPEND SOURCES LibInputHandler.cpp
                         LibInputKeyboard.cpp
                         LibInputPointer.cpp

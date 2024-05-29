@@ -94,17 +94,23 @@ find_package_handle_standard_args(LibDvdCSS
                                   VERSION_VAR LIBDVDCSS_VERSION)
 
 if(LIBDVDCSS_FOUND)
-  add_library(LibDvdCSS::LibDvdCSS UNKNOWN IMPORTED)
-  set_target_properties(LibDvdCSS::LibDvdCSS PROPERTIES
-                                             IMPORTED_LOCATION "${LIBDVDCSS_LIBRARY}"
-                                             INTERFACE_COMPILE_DEFINITIONS "HAVE_DVDCSS_DVDCSS_H"
-                                             INTERFACE_INCLUDE_DIRECTORIES "${LIBDVDCSS_INCLUDE_DIR}")
+  if(NOT TARGET LibDvdCSS::LibDvdCSS)
+    add_library(LibDvdCSS::LibDvdCSS UNKNOWN IMPORTED)
 
-  if(TARGET libdvdcss)
-    add_dependencies(LibDvdCSS::LibDvdCSS libdvdcss)
+    set_target_properties(LibDvdCSS::LibDvdCSS PROPERTIES
+                                               IMPORTED_LOCATION "${LIBDVDCSS_LIBRARY}"
+                                               INTERFACE_COMPILE_DEFINITIONS "HAVE_DVDCSS_DVDCSS_H"
+                                               INTERFACE_INCLUDE_DIRECTORIES "${LIBDVDCSS_INCLUDE_DIR}")
+
+    if(TARGET libdvdcss)
+      add_dependencies(LibDvdCSS::LibDvdCSS libdvdcss)
+    endif()
   endif()
+
 else()
-  if(LibDvdCSS_FIND_REQUIRED)
+  if(LIBDVDCSS_FIND_REQUIRED)
     message(FATAL_ERROR "Libdvdcss not found. Possibly remove ENABLE_DVDCSS.")
   endif()
 endif()
+
+mark_as_advanced(LIBDVDCSS_INCLUDE_DIR LIBDVDCSS_LIBRARY)

@@ -16,20 +16,20 @@ set(HEADERS GLContext.h
             XRandR.h
             X11DPMSSupport.h)
 
-if(TARGET ${APP_NAME_LC}::GLX)
+if(GLX_FOUND)
   list(APPEND SOURCES GLContextGLX.cpp
                       VideoSyncGLX.cpp)
   list(APPEND HEADERS GLContextGLX.h
                       VideoSyncGLX.h)
 endif()
 
-if(TARGET ${APP_NAME_LC}::OpenGl)
+if(TARGET OpenGL::GL)
   list(APPEND SOURCES WinSystemX11GLContext.cpp)
   list(APPEND HEADERS WinSystemX11GLContext.h)
   list(APPEND SOURCES VideoSyncOML.cpp)
   list(APPEND HEADERS VideoSyncOML.h)
 endif()
-if(TARGET ${APP_NAME_LC}::OpenGLES)
+if(TARGET OpenGL::GLES)
   list(APPEND SOURCES WinSystemX11GLESContext.cpp)
   list(APPEND HEADERS WinSystemX11GLESContext.h)
 endif()
