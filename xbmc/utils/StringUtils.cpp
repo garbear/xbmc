@@ -49,6 +49,9 @@
 
 #define FORMAT_BLOCK_SIZE 512 // # of bytes for initial allocation for printf
 
+namespace KODI::UTILS
+{
+
 namespace
 {
 /*!
@@ -1943,3 +1946,5 @@ std::string StringUtils::CreateFromCString(const char* cstr)
 {
   return cstr != nullptr ? std::string(cstr) : std::string();
 }
+
+} // namespace KODI::UTILS
