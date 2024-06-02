@@ -25,6 +25,9 @@
 
 using namespace XFILE;
 
+namespace KODI::UTILS::FONT
+{
+
 namespace
 {
 // \brief Get font family from SFNT table entries
@@ -80,8 +83,7 @@ std::string GetFamilyNameFromSfnt(FT_Face face)
 }
 } // unnamed namespace
 
-bool UTILS::FONT::GetFontFamilyNames(const std::vector<uint8_t>& buffer,
-                                     std::set<std::string>& familyNames)
+bool GetFontFamilyNames(const std::vector<uint8_t>& buffer, std::set<std::string>& familyNames)
 {
   FT_Library m_library{nullptr};
   FT_Init_FreeType(&m_library);
@@ -151,8 +153,7 @@ bool UTILS::FONT::GetFontFamilyNames(const std::vector<uint8_t>& buffer,
   return true;
 }
 
-bool UTILS::FONT::GetFontFamilyNames(const std::string& filepath,
-                                     std::set<std::string>& familyNames)
+bool GetFontFamilyNames(const std::string& filepath, std::set<std::string>& familyNames)
 {
   std::vector<uint8_t> buffer;
   if (filepath.empty())
@@ -166,7 +167,7 @@ bool UTILS::FONT::GetFontFamilyNames(const std::string& filepath,
   return GetFontFamilyNames(buffer, familyNames);
 }
 
-std::string UTILS::FONT::GetFontFamily(std::vector<uint8_t>& buffer)
+std::string GetFontFamily(std::vector<uint8_t>& buffer)
 {
   FT_Library m_library{nullptr};
   FT_Init_FreeType(&m_library);
@@ -203,7 +204,7 @@ std::string UTILS::FONT::GetFontFamily(std::vector<uint8_t>& buffer)
   return familyName;
 }
 
-std::string UTILS::FONT::GetFontFamily(const std::string& filepath)
+std::string GetFontFamily(const std::string& filepath)
 {
   std::vector<uint8_t> buffer;
   if (filepath.empty())
@@ -216,19 +217,18 @@ std::string UTILS::FONT::GetFontFamily(const std::string& filepath)
   return GetFontFamily(buffer);
 }
 
-bool UTILS::FONT::IsSupportedFontExtension(const std::string& filepath)
+bool IsSupportedFontExtension(const std::string& filepath)
 {
-  return URIUtils::HasExtension(filepath, UTILS::FONT::SUPPORTED_EXTENSIONS_MASK);
+  return URIUtils::HasExtension(filepath, SUPPORTED_EXTENSIONS_MASK);
 }
 
-void UTILS::FONT::ClearTemporaryFonts()
+void ClearTemporaryFonts()
 {
-  if (!CDirectory::Exists(UTILS::FONT::FONTPATH::TEMP))
+  if (!CDirectory::Exists(FONTPATH::TEMP))
     return;
 
   CFileItemList items;
-  CDirectory::GetDirectory(UTILS::FONT::FONTPATH::TEMP, items,
-                           UTILS::FONT::SUPPORTED_EXTENSIONS_MASK,
+  CDirectory::GetDirectory(FONTPATH::TEMP, items, SUPPORTED_EXTENSIONS_MASK,
                            DIR_FLAG_NO_FILE_DIRS | DIR_FLAG_BYPASS_CACHE | DIR_FLAG_GET_HIDDEN);
   for (const auto& item : items)
   {
@@ -239,10 +239,10 @@ void UTILS::FONT::ClearTemporaryFonts()
   }
 }
 
-std::string UTILS::FONT::FONTPATH::GetSystemFontPath(const std::string& filename)
+std::string FONTPATH::GetSystemFontPath(const std::string& filename)
 {
-  std::string fontPath = URIUtils::AddFileToFolder(
-      CSpecialProtocol::TranslatePath(UTILS::FONT::FONTPATH::SYSTEM), filename);
+  std::string fontPath =
+      URIUtils::AddFileToFolder(CSpecialProtocol::TranslatePath(FONTPATH::SYSTEM), filename);
   if (XFILE::CFile::Exists(fontPath))
   {
     return CSpecialProtocol::TranslatePath(fontPath);
@@ -251,3 +251,5 @@ std::string UTILS::FONT::FONTPATH::GetSystemFontPath(const std::string& filename
   CLog::LogF(LOGERROR, "Could not find application system font {}", filename);
   return "";
 }
+
+} // namespace KODI::UTILS::FONT
