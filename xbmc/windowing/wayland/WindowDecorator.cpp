@@ -690,9 +690,6 @@ bool CWindowDecorator::StateHasWindowDecorations(IShellSurface::StateBitset stat
 
 CSizeInt CWindowDecorator::CalculateMainSurfaceSize(CSizeInt size, IShellSurface::StateBitset state) const
 {
-  //! @todo Dual monitor span
-  size.SetWidth(size.Width() * 2);
-
   if (StateHasWindowDecorations(state))
   {
     // Subtract decorations
@@ -707,9 +704,6 @@ CSizeInt CWindowDecorator::CalculateMainSurfaceSize(CSizeInt size, IShellSurface
 
 CSizeInt CWindowDecorator::CalculateFullSurfaceSize(CSizeInt size, IShellSurface::StateBitset state) const
 {
-  //! @todo Dual monitor span
-  size.SetWidth(size.Width() * 2);
-
   if (StateHasWindowDecorations(state))
   {
     // Add decorations
