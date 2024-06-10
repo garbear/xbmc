@@ -512,35 +512,14 @@ bool CApplication::CreateGUI()
 
   // Retrieve the matching resolution based on GUI settings
   bool sav_res = false;
-  CDisplaySettings::GetInstance().SetCurrentResolution(CDisplaySettings::GetInstance().GetDisplayResolution());
+  CDisplaySettings::GetInstance().SetCurrentResolution(RES_WINDOW);
   CLog::Log(LOGINFO, "Checking resolution {}",
             CDisplaySettings::GetInstance().GetCurrentResolution());
-  if (!CServiceBroker::GetWinSystem()->GetGfxContext().IsValidResolution(CDisplaySettings::GetInstance().GetCurrentResolution()))
-  {
-    CLog::Log(LOGINFO, "Setting safe mode {}", RES_DESKTOP);
-    // defer saving resolution after window was created
-    CDisplaySettings::GetInstance().SetCurrentResolution(RES_DESKTOP);
-    sav_res = true;
-  }
 
   // update the window resolution
   const std::shared_ptr<CSettings> settings = CServiceBroker::GetSettingsComponent()->GetSettings();
-  CServiceBroker::GetWinSystem()->SetWindowResolution(settings->GetInt(CSettings::SETTING_WINDOW_WIDTH), settings->GetInt(CSettings::SETTING_WINDOW_HEIGHT));
+  CServiceBroker::GetWinSystem()->SetWindowResolution(1366, 1920 + 768);
 
-  if (CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_startFullScreen && CDisplaySettings::GetInstance().GetCurrentResolution() == RES_WINDOW)
-  {
-    // defer saving resolution after window was created
-    CDisplaySettings::GetInstance().SetCurrentResolution(RES_DESKTOP);
-    sav_res = true;
-  }
-
-  if (!CServiceBroker::GetWinSystem()->GetGfxContext().IsValidResolution(CDisplaySettings::GetInstance().GetCurrentResolution()))
-  {
-    // Oh uh - doesn't look good for starting in their wanted screenmode
-    CLog::Log(LOGERROR, "The screen resolution requested is not valid, resetting to a valid mode");
-    CDisplaySettings::GetInstance().SetCurrentResolution(RES_DESKTOP);
-    sav_res = true;
-  }
   if (!InitWindow())
   {
     return false;
