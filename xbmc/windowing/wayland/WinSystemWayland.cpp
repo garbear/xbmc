@@ -731,7 +731,7 @@ void CWinSystemWayland::ProcessMessages()
     }
   }
 
-  if (lastConfigureMessage)
+  if (lastConfigureMessage && CDisplaySettings::GetInstance().GetCurrentResolution() != RES_WINDOW)
   {
     if (skippedConfigures > 0)
     {
