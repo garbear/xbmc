@@ -6,6 +6,8 @@ if (ENABLE_ROS2)
                       Ros2LabSubscriber.cpp
                       Ros2Node.cpp
                       Ros2StationSubscriber.cpp
+                      Ros2SystemHealthManager.cpp
+                      Ros2SystemHealthSubscriber.cpp
                       Ros2TrainSubscriber.cpp
                       Ros2Translator.cpp
                       Ros2VideoSubscription.cpp
@@ -15,6 +17,8 @@ if (ENABLE_ROS2)
                       Ros2LabSubscriber.h
                       Ros2Node.h
                       Ros2StationSubscriber.h
+                      Ros2SystemHealthManager.h
+                      Ros2SystemHealthSubscriber.h
                       Ros2TrainSubscriber.h
                       Ros2Translator.h
                       Ros2VideoSubscription.h
