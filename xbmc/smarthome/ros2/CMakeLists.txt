@@ -4,12 +4,20 @@ if (ENABLE_ROS2)
   list(APPEND SOURCES Ros2.cpp
                       Ros2InputPublisher.cpp
                       Ros2Node.cpp
+                      Ros2PropertyManager.cpp
+                      Ros2PropertySubscriber.cpp
+                      Ros2SystemHealthManager.cpp
+                      Ros2SystemHealthSubscriber.cpp
                       Ros2Translator.cpp
                       Ros2VideoSubscription.cpp
   )
   list(APPEND HEADERS Ros2.h
                       Ros2InputPublisher.h
                       Ros2Node.h
+                      Ros2PropertyManager.h
+                      Ros2PropertySubscriber.h
+                      Ros2SystemHealthManager.h
+                      Ros2SystemHealthSubscriber.h
                       Ros2Translator.h
                       Ros2VideoSubscription.h
   )

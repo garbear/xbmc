@@ -26,6 +26,7 @@
 #include "messaging/ApplicationMessenger.h"
 #include "playlists/PlayListTypes.h"
 #include "settings/SkinSettings.h"
+#include "smarthome/guiinfo/SmartHomeProperty.h"
 #include "utils/ArtUtils.h"
 #include "utils/CharsetConverter.h"
 #include "utils/FileUtils.h"
@@ -37,9 +38,11 @@
 #include <algorithm>
 #include <array>
 #include <charconv>
+#include <chrono>
 #include <cmath>
 #include <functional>
 #include <iterator>
+#include <limits>
 #include <memory>
 #include <mutex>
 
@@ -4582,6 +4585,96 @@ constexpr std::array<InfoMap, 16> retroplayer = {{
     {"discejected", RETROPLAYER_DISC_EJECTED},
     {"disclabel", RETROPLAYER_DISC_LABEL},
     {"emptytray", RETROPLAYER_EMPTY_TRAY},
+}};
+// clang-format on
+
+/// \page modules__infolabels_boolean_conditions
+/// \subsection modules__infolabels_boolean_conditions_SmartHome SmartHome
+/// \table_start
+///   \table_h3{ Labels, Type, Description }
+///   \table_row3{   <b>`SmartHome.System(name).IsActive(timeout)`</b>,
+///                  \anchor SmartHome_System_IsActive
+///                  _boolean_,
+///     @return Evaluates to true if the system has sent telemetry within the
+///     specified timeout, in seconds
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_IsActive `SmartHome.System(name).IsActive(timeout)`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).Property(property\,type[\,format])`</b>,
+///                  \anchor SmartHome_System_Property
+///                  _string_,
+///     Returns the value of a generic property for the named smart-home
+///     system. Supported property types are `bool`\, `int8`\, `int16`\,
+///     `int32`\, `int64`\, `uint8`\, `uint16`\, `uint32`\, `uint64`\,
+///     `float32`\, `float64` and `string`. The optional format uses fmt
+///     syntax; for example\, `{:.1f} V` formats a floating-point value as
+///     `7.8 V`.
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_Property `SmartHome.System(name).Property(property\,type[\,format])`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).CPUTemperature`</b>,
+///                  \anchor SmartHome_System_CPUTemperature
+///                  _string_,
+///     @return The CPU temperature of the given system, in localized units
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_CPUTemperature `SmartHome.System(name).CPUTemperature`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).CPUUtilization`</b>,
+///                  \anchor SmartHome_System_CPUUtilization
+///                  _string_,
+///     @return The CPU utilization of the given system, in percent
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_CPUUtilization `SmartHome.System(name).CPUUtilization`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).CPUFrequency`</b>,
+///                  \anchor SmartHome_System_CPUFrequency
+///                  _string_,
+///     @return The CPU frequency of the given system, formatted with an appropriate unit
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_CPUFrequency `SmartHome.System(name).CPUFrequency`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).RAMUtilization`</b>,
+///                  \anchor SmartHome_System_RAMUtilization
+///                  _string_,
+///     @return The RAM utilization of the given system, in percent
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_RAMUtilization `SmartHome.System(name).RAMUtilization`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).BatteryCharge`</b>,
+///                  \anchor SmartHome_System_BatteryCharge
+///                  _string_,
+///     @return The current charge of the system's battery, in percent
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_BatteryCharge `SmartHome.System(name).BatteryCharge`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).BatteryLoad`</b>,
+///                  \anchor SmartHome_System_BatteryLoad
+///                  _string_,
+///     @return The current load provided by the system's battery, in Watts
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_BatteryLoad `SmartHome.System(name).BatteryLoad`\endlink
+///     <p>
+///   }
+/// \table_end
+///
+/// -----------------------------------------------------------------------------
+// clang-format off
+constexpr std::array<InfoMap, 8> smarthome = {{
+    {"isactive",            SMARTHOME_IS_ACTIVE},
+    {"cputemperature",      SMARTHOME_CPU_TEMPERATURE},
+    {"cpuutilization",      SMARTHOME_CPU_UTILIZATION},
+    {"cpufrequency",        SMARTHOME_CPU_FREQUENCY},
+    {"ramutilization",      SMARTHOME_RAM_UTILIZATION},
+    {"batterycharge",       SMARTHOME_BATTERY_CHARGE},
+    {"batteryload",         SMARTHOME_BATTERY_LOAD},
+    {"property",            SMARTHOME_PROPERTY},
 }};
 // clang-format on
 
@@ -11579,6 +11672,64 @@ int CGUIInfoManager::TranslateSingleString(const std::string& strCondition, bool
             return AddMultiInfo(
                 CGUIInfo(control_label.val, controlID, atoi(info[2].param(0).c_str())));
           return 0;
+        }
+      }
+    }
+    else if (info[0].Name() == "smarthome")
+    {
+      if (info[1].Name() == "system")
+      {
+        // Parameter is system name
+        const std::string systemName = info[1].param();
+
+        if (systemName.empty())
+          return 0;
+
+        if (info[2].Name() == "property")
+        {
+          if (info[2].num_params() != 2 && info[2].num_params() != 3)
+            return 0;
+
+          const std::string& propertyName = info[2].param(0);
+          const std::string& typeName = info[2].param(1);
+          const std::string propertyFormat = info[2].num_params() == 3 ? info[2].param(2) : "";
+          const auto type = KODI::SMART_HOME::SmartHomePropertyTypeFromString(typeName);
+          if (propertyName.empty() || !type ||
+              !KODI::SMART_HOME::IsValidSmartHomePropertyFormat(*type, propertyFormat))
+            return 0;
+
+          return AddMultiInfo(
+              CGUIInfo(SMARTHOME_PROPERTY, systemName, propertyName, typeName, propertyFormat));
+        }
+
+        // Get next info
+        for (const auto& systemLabel : smarthome)
+        {
+          if (info[2].Name() == systemLabel.str)
+          {
+            int timeoutMs = 0;
+            if (info[2].Name() == "isactive")
+            {
+              const std::string& timeoutParam = info[2].param();
+              if (!timeoutParam.empty())
+              {
+                const float timeoutSeconds = StringUtils::ToFloat(timeoutParam, 0.0f);
+                if (timeoutSeconds > 0.0f)
+                {
+                  const auto timeout = std::chrono::duration_cast<std::chrono::milliseconds>(
+                      std::chrono::duration<float>(timeoutSeconds));
+                  if (timeout.count() > 0)
+                  {
+                    const auto clampedTimeout = std::min(
+                        timeout, std::chrono::milliseconds{std::numeric_limits<int>::max()});
+                    timeoutMs = static_cast<int>(clampedTimeout.count());
+                  }
+                }
+              }
+            }
+            return AddMultiInfo(
+                CGUIInfo(systemLabel.val, 2, 0, 0, systemName, timeoutMs)); // 2 => absolute
+          }
         }
       }
     }

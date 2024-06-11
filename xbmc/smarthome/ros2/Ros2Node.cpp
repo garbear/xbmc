@@ -9,6 +9,7 @@
 #include "Ros2Node.h"
 
 #include "Ros2InputPublisher.h"
+#include "Ros2SystemHealthManager.h"
 #include "Ros2VideoSubscription.h"
 #include "ServiceBroker.h"
 #include "network/Network.h"
@@ -24,6 +25,8 @@ using namespace SMART_HOME;
 
 namespace
 {
+constexpr const char* ROS_NAMESPACE = "oasis"; //! @todo
+
 // Name of the ROS node (hostname is concatenated at the end)
 constexpr const char* NODE_NAME_PREFIX = "kodi_"; //! @todo Get from version.txt
 
@@ -34,7 +37,9 @@ constexpr const char* THREAD_NAME = "ROS2"; // TODO
 constexpr const char* HOSTNAME_UNKNOWN = "unknown";
 } // namespace
 
-CRos2Node::CRos2Node(CSmartHomeInputManager& inputManager) : m_inputManager(inputManager)
+CRos2Node::CRos2Node(CSmartHomeInputManager& inputManager)
+  : m_inputManager(inputManager),
+    m_systemHealthManager(std::make_unique<CRos2SystemHealthManager>(ROS_NAMESPACE))
 {
 }
 
@@ -54,6 +59,9 @@ void CRos2Node::Initialize()
   m_executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
   m_executor->add_node(m_node);
   m_thread = std::make_unique<CThread>(this, THREAD_NAME);
+
+  // Managers
+  m_systemHealthManager->Initialize(m_node);
 
   // Publishers
   m_peripheralPublisher =
@@ -78,6 +86,8 @@ void CRos2Node::Deinitialize()
 
   if (m_executor && m_node)
     m_executor->remove_node(m_node);
+
+  m_systemHealthManager->Deinitialize();
 
   for (const auto& videoSub : m_videoSubs)
     videoSub.second.subscription->Deinitialize();
@@ -121,6 +131,11 @@ void CRos2Node::UnregisterImageTopic(const ImageSubscriptionKey& subscription)
     it->second.subscription->Deinitialize();
     m_videoSubs.erase(it);
   }
+}
+
+ISystemHealthHUD* CRos2Node::GetSystemHealthHUD() const
+{
+  return m_systemHealthManager.get();
 }
 
 void CRos2Node::FrameMove()

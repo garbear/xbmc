@@ -31,9 +31,11 @@ namespace KODI
 namespace SMART_HOME
 {
 class CRos2InputPublisher;
+class CRos2SystemHealthManager;
 class CRos2VideoSubscription;
 class CSmartHomeGuiBridge;
 class CSmartHomeInputManager;
+class ISystemHealthHUD;
 
 class CRos2Node : public IRunnable
 {
@@ -48,6 +50,7 @@ public:
   // GUI interface
   void RegisterImageTopic(CSmartHomeGuiBridge& guiBridge, const ImageSubscriptionKey& subscription);
   void UnregisterImageTopic(const ImageSubscriptionKey& subscription);
+  ISystemHealthHUD* GetSystemHealthHUD() const;
 
   //! @todo Remove GUI dependency
   void FrameMove();
@@ -72,6 +75,7 @@ private:
   // Subscription identity -> owned subscriber and number of camera controls
   std::map<ImageSubscriptionKey, VideoSubscription> m_videoSubs;
   std::unique_ptr<CRos2InputPublisher> m_peripheralPublisher;
+  std::unique_ptr<CRos2SystemHealthManager> m_systemHealthManager;
 
   // Threading parameters
   std::unique_ptr<CThread> m_thread;

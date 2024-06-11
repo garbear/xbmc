@@ -554,6 +554,16 @@ constexpr uint32_t SLIDESHOW_ISRANDOM                = 801;
 constexpr uint32_t SLIDESHOW_ISACTIVE                = 802;
 constexpr uint32_t SLIDESHOW_ISVIDEO                 = 803;
 
+// Smart Home infolabels
+constexpr uint32_t SMARTHOME_IS_ACTIVE               = 850;
+constexpr uint32_t SMARTHOME_PROPERTY                = 851;
+constexpr uint32_t SMARTHOME_CPU_TEMPERATURE         = 852;
+constexpr uint32_t SMARTHOME_CPU_UTILIZATION         = 853;
+constexpr uint32_t SMARTHOME_CPU_FREQUENCY           = 854;
+constexpr uint32_t SMARTHOME_RAM_UTILIZATION         = 855;
+constexpr uint32_t SMARTHOME_BATTERY_CHARGE          = 856;
+constexpr uint32_t SMARTHOME_BATTERY_LOAD            = 857;
+
 constexpr int      SLIDESHOW_LABELS_START            = 900;
 constexpr uint32_t SLIDESHOW_FILE_NAME               = SLIDESHOW_LABELS_START;
 constexpr uint32_t SLIDESHOW_FILE_PATH               = SLIDESHOW_LABELS_START + 1;

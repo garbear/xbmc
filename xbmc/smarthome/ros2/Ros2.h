@@ -36,6 +36,7 @@ public:
   void Deinitialize() override;
   void RegisterImageTopic(const ImageSubscriptionKey& subscription) override;
   void UnregisterImageTopic(const ImageSubscriptionKey& subscription) override;
+  ISystemHealthHUD* GetSystemHealthHUD() const override;
   void FrameMove() override;
 
 private:

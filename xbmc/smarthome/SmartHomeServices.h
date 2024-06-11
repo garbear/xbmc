@@ -15,6 +15,7 @@
 #include <vector>
 
 class CAppParams;
+class CGUIInfoManager;
 
 namespace PERIPHERALS
 {
@@ -31,6 +32,7 @@ class CGameServices;
 namespace SMART_HOME
 {
 class CSmartHomeGuiBridge;
+class CSmartHomeGuiInfo;
 class CSmartHomeGuiManager;
 class CSmartHomeInputManager;
 class IRos2;
@@ -41,7 +43,7 @@ public:
   CSmartHomeServices(PERIPHERALS::CPeripherals& peripheralManager);
   ~CSmartHomeServices();
 
-  void Initialize(GAME::CGameServices& gameServices);
+  void Initialize(GAME::CGameServices& gameServices, CGUIInfoManager* guiInfoManager);
   void Deinitialize();
 
   // Smart home subsystems
@@ -55,6 +57,7 @@ private:
   static std::vector<std::string> GetCmdLineArgs();
 
   // Subsystems
+  std::unique_ptr<CSmartHomeGuiInfo> m_guiInfo;
   std::unique_ptr<CSmartHomeGuiManager> m_guiManager;
   std::unique_ptr<CSmartHomeInputManager> m_inputManager;
   std::unique_ptr<IRos2> m_ros2;
