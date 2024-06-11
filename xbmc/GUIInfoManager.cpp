@@ -10624,6 +10624,14 @@ int CGUIInfoManager::TranslateSingleString(const std::string &strCondition, bool
           return rd.val;
       }
     }
+    else if (cat.name == "smarthome")
+    {
+      for (const infomap& i : smarthome)
+      {
+        if (prop.name == i.str)
+          return i.val;
+      }
+    }
   }
   else if (info.size() == 3 || info.size() == 4)
   {
