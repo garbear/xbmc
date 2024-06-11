@@ -11,6 +11,7 @@
 #include "Ros2InputPublisher.h"
 #include "Ros2LabSubscriber.h"
 #include "Ros2StationSubscriber.h"
+#include "Ros2SystemHealthManager.h"
 #include "Ros2TrainSubscriber.h"
 #include "Ros2VideoSubscription.h"
 #include "ServiceBroker.h"
@@ -26,6 +27,8 @@ using namespace SMART_HOME;
 
 namespace
 {
+constexpr const char* ROS_NAMESPACE = "oasis"; //! @todo
+
 // Name of the ROS node (hostname is concatenated at the end)
 constexpr const char* NODE_NAME_PREFIX = "kodi_"; //! @todo Get from version.txt
 
@@ -36,7 +39,9 @@ constexpr const char* THREAD_NAME = "ROS2"; // TODO
 constexpr const char* HOSTNAME_UNKNOWN = "unknown";
 } // namespace
 
-CRos2Node::CRos2Node(CSmartHomeInputManager& inputManager) : m_inputManager(inputManager)
+CRos2Node::CRos2Node(CSmartHomeInputManager& inputManager)
+  : m_inputManager(inputManager),
+    m_systemHealthManager(std::make_unique<CRos2SystemHealthManager>(ROS_NAMESPACE))
 {
 }
 
@@ -51,6 +56,9 @@ void CRos2Node::Initialize()
   // Can't make virtual calls from constructor
   m_node = std::make_shared<rclcpp::Node>(NODE_NAME_PREFIX + hostname);
   m_thread = std::make_unique<CThread>(this, THREAD_NAME);
+
+  // Managers
+  m_systemHealthManager->Initialize(m_node);
 
   // Publishers
   m_peripheralPublisher =
@@ -77,6 +85,8 @@ void CRos2Node::Deinitialize()
   // Stop thread
   if (m_thread)
     m_thread->StopThread(true);
+
+  m_systemHealthManager->Deinitialize();
 
   for (const auto& videoSub : m_videoSubs)
     videoSub.second->Deinitialize();
@@ -125,6 +135,11 @@ void CRos2Node::UnregisterImageTopic(const std::string& topic)
   auto it = m_videoSubs.find(topic);
   if (it != m_videoSubs.end())
     m_videoSubs.erase(it);
+}
+
+ISystemHealthHUD* CRos2Node::GetSystemHealthHUD() const
+{
+  return m_systemHealthManager.get();
 }
 
 ILabHUD* CRos2Node::GetLabHUD() const

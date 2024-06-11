@@ -3,6 +3,7 @@ set(SOURCES SmartHomeGuiInfo.cpp
 
 set(HEADERS ILabHUD.h
             IStationHUD.h
+            ISystemHealthHUD.h
             ITrainHUD.h
             SmartHomeGuiInfo.h
 )

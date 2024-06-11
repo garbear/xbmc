@@ -28,12 +28,14 @@ namespace SMART_HOME
 class CRos2InputPublisher;
 class CRos2LabSubscriber;
 class CRos2StationSubscriber;
+class CRos2SystemHealthManager;
 class CRos2TrainSubscriber;
 class CRos2VideoSubscription;
 class CSmartHomeGuiBridge;
 class CSmartHomeInputManager;
 class ILabHUD;
 class IStationHUD;
+class ISystemHealthHUD;
 class ITrainHUD;
 
 class CRos2Node : public IRunnable
@@ -49,6 +51,7 @@ public:
   // GUI interface
   void RegisterImageTopic(CSmartHomeGuiBridge& guiBridge, const std::string& topic);
   void UnregisterImageTopic(const std::string& topic);
+  ISystemHealthHUD* GetSystemHealthHUD() const;
   ILabHUD* GetLabHUD() const;
   IStationHUD* GetStationHUD() const;
   ITrainHUD* GetTrainHUD() const;
@@ -65,6 +68,7 @@ private:
 
   // ROS parameters
   std::shared_ptr<rclcpp::Node> m_node;
+  std::unique_ptr<CRos2SystemHealthManager> m_systemHealthManager;
   std::map<std::string, std::unique_ptr<CRos2VideoSubscription>> m_videoSubs; // Topic -> subscriber
   std::unique_ptr<CRos2InputPublisher> m_peripheralPublisher;
   std::unique_ptr<CRos2LabSubscriber> m_labSubscriber;
