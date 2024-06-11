@@ -518,7 +518,7 @@ bool CApplication::CreateGUI()
 
   // update the window resolution
   const std::shared_ptr<CSettings> settings = CServiceBroker::GetSettingsComponent()->GetSettings();
-  CServiceBroker::GetWinSystem()->SetWindowResolution(1366, 1920 + 768);
+  CServiceBroker::GetWinSystem()->SetWindowResolution(1366 / 2, (1920 + 768) / 2);
 
   if (!InitWindow())
   {
