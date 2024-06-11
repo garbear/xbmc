@@ -14,6 +14,9 @@ namespace KODI
 {
 namespace SMART_HOME
 {
+
+class ISystemHealthHUD;
+
 class IRos2
 {
 public:
@@ -32,6 +35,7 @@ public:
   // GUI interface
   virtual void RegisterImageTopic(const std::string& topic) = 0;
   virtual void UnregisterImageTopic(const std::string& topic) = 0;
+  virtual ISystemHealthHUD* GetSystemHealthHUD() const = 0;
 
   //! @todo Remove GUI dependency
   virtual void FrameMove() = 0;
