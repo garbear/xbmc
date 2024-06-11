@@ -36,9 +36,9 @@ class OasisService:
         elif hostname == "asus":
             window = CameraView("CameraView1.xml", addon_path, "default", "1080i", False)
         elif hostname == "lenovo":
-            window = CameraView("CameraViewVertical2.xml", addon_path, "default", "1080i", False)
+            window = VenturaHUD("VerticalHUD.xml", addon_path, "default", "1080i", False)
         elif hostname == "starship":
-            window = CameraView("CameraView16.xml", addon_path, "default", "1080i", False)
+            window = VenturaHUD("VerticalHUD.xml", addon_path, "default", "1080i", False)
         elif hostname == "substation":
             window = VenturaHUD("LabHUD.xml", addon_path, "default", "1080i", False)
         elif hostname == "zotac":
