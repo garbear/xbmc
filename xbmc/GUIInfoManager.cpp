@@ -4081,7 +4081,7 @@ const infomap retroplayer[] =
 ///                  _string_,
 ///     @return The CPU temperature of the given system, in localized units
 ///     <p><hr>
-///     @skinning_v2 **[New Infolabel]** \link SmartHome_System_CPUTemperature `SmartHome.System(name).CPUTemperature`\endlink
+///     @skinning_v22 **[New Infolabel]** \link SmartHome_System_CPUTemperature `SmartHome.System(name).CPUTemperature`\endlink
 ///     <p>
 ///   }
 ///   \table_row3{   <b>`SmartHome.System(name).CPUUtilization`</b>,
@@ -4089,7 +4089,7 @@ const infomap retroplayer[] =
 ///                  _string_,
 ///     @return The CPU utilization of the given system, in percent
 ///     <p><hr>
-///     @skinning_v2 **[New Infolabel]** \link SmartHome_System_CPUUtilization `SmartHome.System(name).CPUUtilization`\endlink
+///     @skinning_v22 **[New Infolabel]** \link SmartHome_System_CPUUtilization `SmartHome.System(name).CPUUtilization`\endlink
 ///     <p>
 ///   }
 ///   \table_row3{   <b>`SmartHome.HasLab`</b>,
