@@ -36,6 +36,7 @@ public:
   void Deinitialize() override;
   void RegisterImageTopic(const std::string& topic) override;
   void UnregisterImageTopic(const std::string& topic) override;
+  ISystemHealthHUD* GetSystemHealthHUD() const override;
   void FrameMove() override;
 
 private:
