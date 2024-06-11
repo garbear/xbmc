@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "utils/Temperature.h"
+
 #include <string>
 
 namespace KODI
@@ -26,20 +28,35 @@ public:
   /*!
    * \brief Returns true if the system has been used recently, false otherwise
    *
+   * The system will be subscribed to if not already subscribed.
+   *
    * \param systemName The name of the system
    *
    * \return true if the system has been used recently, false otherwise
    */
-  virtual bool IsActive(const std::string& systemName) const = 0;
+  virtual bool IsActive(const std::string& systemName) = 0;
 
   /*!
-   * \brief Get the temperature of the system, in degrees Celsius
+   * \brief Get the temperature of the system's CPU, in degrees Celsius
+   *
+   * The system will be subscribed to if not already subscribed.
    *
    * \param systemName The name of the system
    *
    * \return The temperature of the system, in degrees Celsius
    */
-  virtual float TemperatureDegC(const std::string& systemName) const = 0;
+  virtual CTemperature CPUTemperature(const std::string& systemName) = 0;
+
+  /*!
+   * \brief Get the CPU utilization, as a percent
+   *
+   * The system will be subscribed to if not already subscribed.
+   *
+   * \param systemName The name of the system
+   *
+   * \return The CPU utilization, as a percent
+   */
+  virtual float CPUUtilization(const std::string& systemName) = 0;
 };
 } // namespace SMART_HOME
 } // namespace KODI

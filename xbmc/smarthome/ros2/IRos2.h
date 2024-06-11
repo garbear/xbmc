@@ -17,6 +17,7 @@ namespace SMART_HOME
 
 class ILabHUD;
 class IStationHUD;
+class ISystemHealthHUD;
 class ITrainHUD;
 
 class IRos2
@@ -37,6 +38,7 @@ public:
   // GUI interface
   virtual void RegisterImageTopic(const std::string& topic) = 0;
   virtual void UnregisterImageTopic(const std::string& topic) = 0;
+  virtual ISystemHealthHUD* GetSystemHealthHUD() const = 0;
   virtual ILabHUD* GetLabHUD() const = 0;
   virtual IStationHUD* GetStationHUD() const = 0;
   virtual ITrainHUD* GetTrainHUD() const = 0;

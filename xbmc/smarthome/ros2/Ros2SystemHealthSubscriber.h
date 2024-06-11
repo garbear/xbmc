@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "utils/Temperature.h"
+
 #include <chrono>
 #include <mutex>
 
@@ -31,7 +33,7 @@ class CRos2SystemHealthSubscriber
 public:
   CRos2SystemHealthSubscriber(std::string rosNamespace);
   CRos2SystemHealthSubscriber(const CRos2SystemHealthSubscriber&) = delete;
-  CRos2SystemHealthSubscriber(CRos2SystemHealthSubscriber&& rhs);
+  CRos2SystemHealthSubscriber(CRos2SystemHealthSubscriber&&) = delete;
 
   // ROS functions
   void Initialize(std::shared_ptr<rclcpp::Node> node, const std::string& systemName);
@@ -39,7 +41,8 @@ public:
 
   // GUI functions
   bool IsActive() const;
-  float TemperatureDegC() const;
+  CTemperature CPUTemperature() const;
+  float CPUUtilization() const;
 
 private:
   // ROS messages
@@ -54,7 +57,8 @@ private:
 
   // GUI parameters
   std::chrono::time_point<std::chrono::steady_clock> m_lastActive;
-  float m_temperatureDegC{};
+  CTemperature m_cpuTemperature;
+  float m_cpuUtilization;
 
   // Synchronization parameters
   mutable std::mutex m_mutex;

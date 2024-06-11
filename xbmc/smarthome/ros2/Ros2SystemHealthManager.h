@@ -37,13 +37,16 @@ public:
   // ROS functions
   void Initialize(std::shared_ptr<rclcpp::Node> node);
   void Deinitialize();
-  void AddSystem(const std::string& systemName);
 
   // Implementation of ISystemHealthHUD
-  bool IsActive(const std::string& systemName) const override;
-  float TemperatureDegC(const std::string& systemName) const override;
+  bool IsActive(const std::string& systemName) override;
+  CTemperature CPUTemperature(const std::string& systemName) override;
+  float CPUUtilization(const std::string& systemName) override;
 
 private:
+  // Utility functions
+  void AddSystem(const std::string& systemName);
+
   // ROS parameters
   const std::string m_rosNamespace;
   std::shared_ptr<rclcpp::Node> m_node;

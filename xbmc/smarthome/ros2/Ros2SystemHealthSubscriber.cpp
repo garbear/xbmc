@@ -30,14 +30,6 @@ CRos2SystemHealthSubscriber::CRos2SystemHealthSubscriber(std::string rosNamespac
 {
 }
 
-CRos2SystemHealthSubscriber::CRos2SystemHealthSubscriber(CRos2SystemHealthSubscriber&& rhs)
-  : m_rosNamespace(rhs.m_rosNamespace),
-    m_telemetrySubscriber(std::move(rhs.m_telemetrySubscriber)),
-    m_lastActive(rhs.m_lastActive),
-    m_temperatureDegC(rhs.m_temperatureDegC)
-{
-}
-
 void CRos2SystemHealthSubscriber::Initialize(std::shared_ptr<rclcpp::Node> node,
                                              const std::string& systemName)
 {
@@ -89,11 +81,18 @@ bool CRos2SystemHealthSubscriber::IsActive() const
   return isActive;
 }
 
-float CRos2SystemHealthSubscriber::TemperatureDegC() const
+CTemperature CRos2SystemHealthSubscriber::CPUTemperature() const
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
-  return m_temperatureDegC;
+  return m_cpuTemperature;
+}
+
+float CRos2SystemHealthSubscriber::CPUUtilization() const
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  return m_cpuUtilization;
 }
 
 void CRos2SystemHealthSubscriber::OnSystemTelemetry(const SystemTelemetry::SharedPtr msg)
@@ -104,5 +103,6 @@ void CRos2SystemHealthSubscriber::OnSystemTelemetry(const SystemTelemetry::Share
   m_lastActive = std::chrono::steady_clock::now();
 
   // Update system health parameters
-  m_temperatureDegC = msg->cpu_temperature;
+  m_cpuTemperature = CTemperature::CreateFromCelsius(msg->cpu_temperature);
+  m_cpuUtilization = msg->cpu_utilization;
 }

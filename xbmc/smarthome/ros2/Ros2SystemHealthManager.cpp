@@ -33,6 +33,42 @@ void CRos2SystemHealthManager::Deinitialize()
   m_systemHealths.clear();
 }
 
+bool CRos2SystemHealthManager::IsActive(const std::string& systemName)
+{
+  auto it = m_systemHealths.find(systemName);
+  if (it == m_systemHealths.end())
+  {
+    AddSystem(systemName);
+    it = m_systemHealths.find(systemName);
+  }
+
+  return it->second.IsActive();
+}
+
+CTemperature CRos2SystemHealthManager::CPUTemperature(const std::string& systemName)
+{
+  auto it = m_systemHealths.find(systemName);
+  if (it == m_systemHealths.end())
+  {
+    AddSystem(systemName);
+    it = m_systemHealths.find(systemName);
+  }
+
+  return it->second.CPUTemperature();
+}
+
+float CRos2SystemHealthManager::CPUUtilization(const std::string& systemName)
+{
+  auto it = m_systemHealths.find(systemName);
+  if (it == m_systemHealths.end())
+  {
+    AddSystem(systemName);
+    it = m_systemHealths.find(systemName);
+  }
+
+  return it->second.CPUUtilization();
+}
+
 void CRos2SystemHealthManager::AddSystem(const std::string& systemName)
 {
   if (!m_node)
@@ -41,34 +77,10 @@ void CRos2SystemHealthManager::AddSystem(const std::string& systemName)
   auto it = m_systemHealths.find(systemName);
   if (it == m_systemHealths.end())
   {
-    CRos2SystemHealthSubscriber subscriber(m_rosNamespace);
+    // Add a new subscriber to the map
+    m_systemHealths.emplace(systemName, m_rosNamespace);
 
     // Initialize subscriber
-    subscriber.Initialize(m_node, systemName);
-
-    // Add the subscriber to the map
-    m_systemHealths.emplace(systemName, std::move(subscriber));
+    m_systemHealths.at(systemName).Initialize(m_node, systemName);
   }
-}
-
-bool CRos2SystemHealthManager::IsActive(const std::string& systemName) const
-{
-  bool isActive = false;
-
-  auto it = m_systemHealths.find(systemName);
-  if (it != m_systemHealths.end())
-    isActive = it->second.IsActive();
-
-  return isActive;
-}
-
-float CRos2SystemHealthManager::TemperatureDegC(const std::string& systemName) const
-{
-  float temperatureDegC = 0.0f;
-
-  auto it = m_systemHealths.find(systemName);
-  if (it != m_systemHealths.end())
-    temperatureDegC = it->second.TemperatureDegC();
-
-  return temperatureDegC;
 }
