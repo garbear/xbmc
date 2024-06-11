@@ -26,9 +26,11 @@ namespace KODI
 namespace SMART_HOME
 {
 class CRos2InputPublisher;
+class CRos2SystemHealthManager;
 class CRos2VideoSubscription;
 class CSmartHomeGuiBridge;
 class CSmartHomeInputManager;
+class ISystemHealthHUD;
 
 class CRos2Node : public IRunnable
 {
@@ -40,8 +42,10 @@ public:
   void Initialize();
   void Deinitialize();
 
+  // GUI interface
   void RegisterImageTopic(CSmartHomeGuiBridge& guiBridge, const std::string& topic);
   void UnregisterImageTopic(const std::string& topic);
+  ISystemHealthHUD* GetSystemHealthHUD() const;
 
   //! @todo Remove GUI dependency
   void FrameMove();
@@ -55,6 +59,7 @@ private:
 
   // ROS parameters
   std::shared_ptr<rclcpp::Node> m_node;
+  std::unique_ptr<CRos2SystemHealthManager> m_systemHealthManager;
   std::map<std::string, std::unique_ptr<CRos2VideoSubscription>> m_videoSubs; // Topic -> subscriber
   std::unique_ptr<CRos2InputPublisher> m_peripheralPublisher;
 
