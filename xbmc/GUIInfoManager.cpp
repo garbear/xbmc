@@ -36,9 +36,11 @@
 #include <algorithm>
 #include <array>
 #include <charconv>
+#include <chrono>
 #include <cmath>
 #include <functional>
 #include <iterator>
+#include <limits>
 #include <memory>
 #include <mutex>
 
@@ -4294,6 +4296,64 @@ constexpr std::array<InfoMap, 3> retroplayer = {{
     {"videofilter",   RETROPLAYER_VIDEO_FILTER},
     {"stretchmode",   RETROPLAYER_STRETCH_MODE},
     {"videorotation", RETROPLAYER_VIDEO_ROTATION},
+}};
+// clang-format on
+
+/// \page modules__infolabels_boolean_conditions
+/// \subsection modules__infolabels_boolean_conditions_SmartHome SmartHome
+/// \table_start
+///   \table_h3{ Labels, Type, Description }
+///   \table_row3{   <b>`SmartHome.System(name).IsActive(timeout)`</b>,
+///                  \anchor SmartHome_System_IsActive
+///                  _boolean_,
+///     @return Evaluates to true if the system has sent telemetry within the
+///     specified timeout, in seconds
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link SmartHome_System_IsActive `SmartHome.System(name).IsActive(timeout)`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).CPUTemperature`</b>,
+///                  \anchor SmartHome_System_CPUTemperature
+///                  _string_,
+///     @return The CPU temperature of the given system, in localized units
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link SmartHome_System_CPUTemperature `SmartHome.System(name).CPUTemperature`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).CPUUtilization`</b>,
+///                  \anchor SmartHome_System_CPUUtilization
+///                  _string_,
+///     @return The CPU utilization of the given system, in percent
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link SmartHome_System_CPUUtilization `SmartHome.System(name).CPUUtilization`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).CPUFrequency`</b>,
+///                  \anchor SmartHome_System_CPUFrequency
+///                  _string_,
+///     @return The CPU frequency of the given system, formatted with an appropriate unit
+///     <p><hr>
+///     @skinning_v25 **[New Infolabel]** \link SmartHome_System_CPUFrequency `SmartHome.System(name).CPUFrequency`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).RAMUtilization`</b>,
+///                  \anchor SmartHome_System_RAMUtilization
+///                  _string_,
+///     @return The RAM utilization of the given system, in percent
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_RAMUtilization `SmartHome.System(name).RAMUtilization`\endlink
+///     <p>
+///   }
+/// \table_end
+///
+/// -----------------------------------------------------------------------------
+// clang-format off
+constexpr std::array<InfoMap, 5> smarthome = {{
+    {"isactive",            SMARTHOME_IS_ACTIVE},
+    {"cputemperature",      SMARTHOME_CPU_TEMPERATURE},
+    {"cpuutilization",      SMARTHOME_CPU_UTILIZATION},
+    {"cpufrequency",        SMARTHOME_CPU_FREQUENCY},
+    {"ramutilization",      SMARTHOME_RAM_UTILIZATION},
 }};
 // clang-format on
 
@@ -11250,6 +11310,44 @@ int CGUIInfoManager::TranslateSingleString(const std::string &strCondition, bool
           if (controlID)
             return AddMultiInfo(CGUIInfo(control_label.val, controlID, atoi(info[2].param(0).c_str())));
           return 0;
+        }
+      }
+    }
+    else if (info[0].Name() == "smarthome")
+    {
+      if (info[1].Name() == "system")
+      {
+        // Parameter is system name
+        const std::string systemName = info[1].param();
+
+        // Get next info
+        for (const auto& systemLabel : smarthome)
+        {
+          if (info[2].Name() == systemLabel.str)
+          {
+            int timeoutMs = 0;
+            if (info[2].Name() == "isactive")
+            {
+              const std::string& timeoutParam = info[2].param();
+              if (!timeoutParam.empty())
+              {
+                const float timeoutSeconds = StringUtils::ToFloat(timeoutParam, 0.0f);
+                if (timeoutSeconds > 0.0f)
+                {
+                  const auto timeout = std::chrono::duration_cast<std::chrono::milliseconds>(
+                      std::chrono::duration<float>(timeoutSeconds));
+                  if (timeout.count() > 0)
+                  {
+                    const auto clampedTimeout = std::min(
+                        timeout, std::chrono::milliseconds{std::numeric_limits<int>::max()});
+                    timeoutMs = static_cast<int>(clampedTimeout.count());
+                  }
+                }
+              }
+            }
+            return AddMultiInfo(
+                CGUIInfo(systemLabel.val, 2, 0, 0, systemName, timeoutMs)); // 2 => absolute
+          }
         }
       }
     }
