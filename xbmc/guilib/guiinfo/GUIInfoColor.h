@@ -31,6 +31,7 @@ class CGUIInfoColor
 {
 public:
   constexpr CGUIInfoColor(UTILS::COLOR::Color color = 0) : m_color(color) {}
+  constexpr CGUIInfoColor(UTILS::COLOR::Color color, int info) : m_info(info), m_color(color) {}
 
   constexpr operator UTILS::COLOR::Color() const { return m_color; }
 
