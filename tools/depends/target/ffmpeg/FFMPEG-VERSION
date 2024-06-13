@@ -1,5 +1,6 @@
 LIBNAME=ffmpeg
-VERSION=6.0.1
-ARCHIVE=$(LIBNAME)-$(VERSION).tar.gz
-SHA512=945e34840092dc0fd3824eb1af2be79868af2afb4fe13159b19a9bcfc464cc4d53243c13ff065199290e9393ddbf4b1c5c8abccf83a31a31d6c7490e499fd1fc
+VERSION=6.1.1
+ARCHIVE=rpi_import_1.tar.gz
+SHA512=88ce933c1b34e1bc5f8b8510e5f2fe635de852e2fe084eb122dad26f2ef6c07d9885c90886cef5f3ec6af052d9148340d83df5857ccfc16eeb29caf603a3438d
 
+BASE_URL=https://github.com/jc-kynesim/rpi-ffmpeg/archive/refs/heads/dev/6.1.1

@@ -62,6 +62,12 @@ endif()
 
 if(CORE_SYSTEM_NAME STREQUAL linux OR CORE_SYSTEM_NAME STREQUAL freebsd)
   list(APPEND ffmpeg_conf --enable-pic
+                          --disable-mmal
+                          --enable-libdrm
+                          --enable-libudev
+                          --enable-sand
+                          --enable-v4l2-request
+                          --enable-v4l2_m2m
                           --target-os=linux
               )
   if(ENABLE_VAAPI)
