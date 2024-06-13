@@ -1,0 +1,30 @@
+From 8542ff3a82f4416f0200fecf92cc86436a88169e Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Thu, 13 Jun 2024 20:04:06 -0700
+Subject: [PATCH] Fix locating drm headers on Linux
+
+Fixes error:
+
+  vf_deinterlace_v4l2m2m.c:24:10: fatal error: drm_fourcc.h: No such file or directory
+     24 | #include <drm_fourcc.h>
+        |          ^~~~~~~~~~~~~~
+
+---
+ configure | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configure b/configure
+index ec0a1f4a8b..74d3a34e32 100755
+--- a/configure
++++ b/configure
+@@ -5770,6 +5770,7 @@ case $target_os in
+     linux)
+         enable section_data_rel_ro
+         enabled_any arm aarch64 && enable_weak linux_perf
++        add_cflags -I/usr/include/drm
+         ;;
+     irix*)
+         target_os=irix
+-- 
+2.34.1
+

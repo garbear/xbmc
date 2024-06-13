@@ -82,6 +82,9 @@ macro(buildFFMPEG)
                     ${CMAKE_SOURCE_DIR}/tools/depends/target/ffmpeg/CMakeLists.txt
                     <SOURCE_DIR>)
 
+  find_package(Patch MODULE REQUIRED)
+  list(APPEND PATCH_COMMAND COMMAND ${PATCH_EXECUTABLE} -p1 -i ${CMAKE_SOURCE_DIR}/tools/depends/target/${MODULE_LC}/0001-Fix-locating-drm-headers-on-Linux.patch)
+
   if(CMAKE_GENERATOR STREQUAL Xcode)
     set(FFMPEG_GENERATOR CMAKE_GENERATOR "Unix Makefiles")
   endif()

@@ -1,6 +1,7 @@
 -include ../../Makefile.include
 include FFMPEG-VERSION
-DEPS = FFMPEG-VERSION Makefile ../../download-files.include
+DEPS = FFMPEG-VERSION Makefile ../../download-files.include \
+  0001-Fix-locating-drm-headers-on-Linux.patch
 
 BUILD_TYPE = Release
 ifeq ($(DEBUG_BUILD),yes)
@@ -41,6 +42,7 @@ all: .installed-$(PLATFORM)
 $(PLATFORM): $(DEPS) | $(TARBALLS_LOCATION)/$(ARCHIVE).$(HASH_TYPE)
 	rm -rf $(PLATFORM); mkdir -p $(PLATFORM)
 	rm -rf $(PLATFORM); mkdir -p $(PLATFORM)/build
+	cd $(PLATFORM); patch -p1 -i ../0001-Fix-locating-drm-headers-on-Linux.patch
 	cd $(PLATFORM); $(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(TARBALLS_LOCATION)/$(ARCHIVE)
 	cd $(PLATFORM); cp ../CMakeLists.txt ./
 	cd $(PLATFORM)/build; $(CMAKE) $(CMAKE_ARGS) ..
