@@ -47,7 +47,7 @@
 				<control type="list">
 					<description>Node list</description>
 					<orientation>vertical</orientation>
-					<itemlayout width="1466" height="80">
+					<itemlayout width="1466" height="68">
 						<control type="label">
 							<label>$INFO[ListItem.Label]</label>
 							<left>125</left>
@@ -73,7 +73,7 @@
 							<aligny>center</aligny>
 						</control>
 					</itemlayout>
-					<focusedlayout width="1466" height="80">
+					<focusedlayout width="1466" height="60">
 						<control type="label">
 							<label>$INFO[ListItem.Label]</label>
 							<left>125</left>
@@ -129,6 +129,11 @@
 							<label>LEGO substation</label>
 							<property name="smarthome.cputemperature">$INFO[SmartHome.System(substation).CPUTemperature]</property>
 							<property name="smarthome.cpuutilization">$INFO[SmartHome.System(substation).CPUUtilization]</property>
+						</item>
+						<item>
+							<label>Patio</label>
+							<property name="smarthome.cputemperature">$INFO[SmartHome.System(patio).CPUTemperature]</property>
+							<property name="smarthome.cpuutilization">$INFO[SmartHome.System(patio).CPUUtilization]</property>
 						</item>
 					</content>
 				</control>

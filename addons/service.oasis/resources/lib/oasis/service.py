@@ -29,8 +29,6 @@ class OasisService:
         window: xbmcgui.WindowXML
 
         # TODO: Hardware configuration
-        if hostname == "kodibox":
-            window = VenturaHUD("XGameHUS.xml", addon_path, "default", "1080i", False)
         if hostname == "nuc":
             window = VenturaHUD("VideoHUD.xml", addon_path, "default", "1080i", False)
         elif hostname == "nuc2":
@@ -43,6 +41,8 @@ class OasisService:
             window = VenturaHUD(
                 "VerticalHUD.xml", addon_path, "default", "1080i", False
             )
+        elif hostname == "patio":
+            window = VenturaHUD("XGameHUS.xml", addon_path, "default", "1080i", False)
         elif hostname == "starship":
             window = VenturaHUD("StationHUD.xml", addon_path, "default", "1080i", False)
         elif hostname == "substation":
