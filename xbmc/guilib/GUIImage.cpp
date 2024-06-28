@@ -43,7 +43,9 @@ CGUIImage::CGUIImage(const CGUIImage& left)
     m_currentTexture(),
     m_currentFallback(),
     m_imageFilterInfo(left.m_imageFilterInfo),
-    m_imageFilter(left.m_imageFilter)
+    m_imageFilter(left.m_imageFilter),
+    m_diffuseFilterInfo(left.m_diffuseFilterInfo),
+    m_diffuseFilter(left.m_diffuseFilter)
 {
   m_crossFadeTime = left.m_crossFadeTime;
   // defaults
@@ -81,6 +83,13 @@ void CGUIImage::UpdateInfo(const CGUIListItem *item)
     {
       m_imageFilter = ImageSettings::TranslateImageFilter(imageFilter);
       UpdateImageFilter(m_imageFilter);
+    }
+
+    std::string diffuseFilter = m_diffuseFilterInfo.GetItemLabel(item);
+    if (!diffuseFilter.empty())
+    {
+      m_diffuseFilter = ImageSettings::TranslateImageFilter(diffuseFilter);
+      UpdateDiffuseFilter(m_diffuseFilter);
     }
   }
 
@@ -429,6 +438,20 @@ void CGUIImage::SetImageFilter(const GUIINFO::CGUIInfoLabel& imageFilter)
   }
 }
 
+void CGUIImage::SetDiffuseFilter(const GUIINFO::CGUIInfoLabel& diffuseFilter)
+{
+  m_diffuseFilterInfo = diffuseFilter;
+
+  // Check if a diffuse filter is available without a listitem
+  static const CFileItem empty;
+  const std::string strDiffuseFilter = m_diffuseFilterInfo.GetItemLabel(&empty);
+  if (!strDiffuseFilter.empty())
+  {
+    m_diffuseFilter = ImageSettings::TranslateImageFilter(strDiffuseFilter);
+    UpdateDiffuseFilter(m_diffuseFilter);
+  }
+}
+
 void CGUIImage::UpdateImageFilter(IMAGE_FILTER imageFilter)
 {
   switch (imageFilter)
@@ -441,6 +464,25 @@ void CGUIImage::UpdateImageFilter(IMAGE_FILTER imageFilter)
     case IMAGE_FILTER::NEAREST:
     {
       m_texture->SetScalingMethod(TEXTURE_SCALING::NEAREST);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void CGUIImage::UpdateDiffuseFilter(IMAGE_FILTER diffuseFilter)
+{
+  switch (diffuseFilter)
+  {
+    case IMAGE_FILTER::LINEAR:
+    {
+      m_texture->SetDiffuseScalingMethod(TEXTURE_SCALING::LINEAR);
+      break;
+    }
+    case IMAGE_FILTER::NEAREST:
+    {
+      m_texture->SetDiffuseScalingMethod(TEXTURE_SCALING::NEAREST);
       break;
     }
     default:
