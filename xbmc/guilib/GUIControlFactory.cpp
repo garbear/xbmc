@@ -1506,6 +1506,11 @@ CGUIControl* CGUIControlFactory::Create(int parentID,
       GetInfoLabel(pControlNode, "imagefilter", imageFilter, parentID);
       icontrol->SetImageFilter(imageFilter);
 
+      // Set duffuse filter
+      GUIINFO::CGUIInfoLabel diffuseFilter;
+      GetInfoLabel(pControlNode, "diffusefilter", diffuseFilter, parentID);
+      icontrol->SetDiffuseFilter(diffuseFilter);
+
       break;
     }
     case CGUIControl::GUICONTROL_MULTI_IMAGE:

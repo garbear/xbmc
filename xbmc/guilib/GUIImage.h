@@ -81,6 +81,7 @@ public:
   std::string GetDescription() const override;
   void SetCrossFade(unsigned int time);
   void SetImageFilter(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& imageFilter);
+  void SetDiffuseFilter(const KODI::GUILIB::GUIINFO::CGUIInfoLabel& diffuseFilter);
 
   const std::string& GetFileName() const;
   float GetTextureWidth() const;
@@ -105,6 +106,7 @@ protected:
   void UpdateDiffuseColor(const CGUIListItem* item);
 
   void UpdateImageFilter(KODI::GUILIB::IMAGE_FILTER imageFilter);
+  void UpdateDiffuseFilter(KODI::GUILIB::IMAGE_FILTER diffuseFilter);
 
   bool m_bDynamicResourceAlloc;
 
@@ -123,4 +125,7 @@ protected:
 
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_imageFilterInfo;
   KODI::GUILIB::IMAGE_FILTER m_imageFilter{KODI::GUILIB::IMAGE_FILTER::UNKNOWN};
+
+  KODI::GUILIB::GUIINFO::CGUIInfoLabel m_diffuseFilterInfo;
+  KODI::GUILIB::IMAGE_FILTER m_diffuseFilter{KODI::GUILIB::IMAGE_FILTER::UNKNOWN};
 };
