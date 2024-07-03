@@ -12,11 +12,14 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
   macro(buildBoost)
     set(BOOST_VERSION ${${MODULE}_VER})
 
+    set(patches "${CORE_SOURCE_DIR}/tools/depends/target/${MODULE_LC}/0001-Add-libraries-to-includes-list.patch")
+
+    generate_patchcommand("${patches}")
+
     set(CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
                    # context fails on macOS x64
                    # cobalt fails on UWP x86/x64
                    # stacktrace fails on UWP ARM
-                   -DBOOST_EXCLUDE_LIBRARIES="cobalt;context;stacktrace"
                    -DBUILD_SHARED_LIBS=OFF)
 
     BUILD_DEP_TARGET()

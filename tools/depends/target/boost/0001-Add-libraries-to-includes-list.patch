@@ -1,0 +1,25 @@
+From 321747324b7bf4fa40f5c02212a7174f9080ad09 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Tue, 2 Jul 2024 22:08:07 -0700
+Subject: [PATCH] Add libraries to includes list
+
+---
+ tools/cmake/include/BoostRoot.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/cmake/include/BoostRoot.cmake b/tools/cmake/include/BoostRoot.cmake
+index a0f68358..b3aacc58 100644
+--- a/tools/cmake/include/BoostRoot.cmake
++++ b/tools/cmake/include/BoostRoot.cmake
+@@ -24,7 +24,7 @@ set(__boost_incompatible_libraries "")
+ if(CMAKE_SOURCE_DIR STREQUAL Boost_SOURCE_DIR)
+ 
+   # --with-<library>
+-  set(BOOST_INCLUDE_LIBRARIES "" CACHE STRING
++  set(BOOST_INCLUDE_LIBRARIES "json;system" CACHE STRING
+     "List of libraries to build (default: all but excluded and incompatible)")
+ 
+   # --without-<library>
+-- 
+2.37.0.windows.1
+
