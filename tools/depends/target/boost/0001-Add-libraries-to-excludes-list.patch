@@ -16,7 +16,7 @@ index a0f68358..c3f0ebd4 100644
  
    # --without-<library>
 -  set(BOOST_EXCLUDE_LIBRARIES "" CACHE STRING
-+  set(BOOST_EXCLUDE_LIBRARIES "cobalt;context;stacktrace" CACHE STRING
++  set(BOOST_EXCLUDE_LIBRARIES "cobalt;stacktrace" CACHE STRING
      "List of libraries to exclude from build")
  
    set(BOOST_INCOMPATIBLE_LIBRARIES
