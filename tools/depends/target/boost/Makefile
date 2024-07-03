@@ -5,6 +5,7 @@ include ../../download-files.include
 DEPS := \
   ../../download-files.include \
   ../../Makefile.include \
+  0001-Add-libraries-to-includes-list.patch \
   BOOST-VERSION \
   Makefile \
 
