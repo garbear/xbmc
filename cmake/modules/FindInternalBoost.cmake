@@ -12,7 +12,7 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
   macro(buildBoost)
     set(BOOST_VERSION ${${MODULE}_VER})
 
-    set(patches "${CORE_SOURCE_DIR}/tools/depends/target/${MODULE_LC}/0001-Add-libraries-to-includes-list.patch")
+    set(patches "${CORE_SOURCE_DIR}/tools/depends/target/${MODULE_LC}/0001-Add-libraries-to-excludes-list.patch")
 
     generate_patchcommand("${patches}")
 

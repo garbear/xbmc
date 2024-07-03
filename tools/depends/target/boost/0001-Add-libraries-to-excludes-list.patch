@@ -1,0 +1,25 @@
+From 0d35d855cffabdd7d12436f48e7a2491d363316a Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Wed, 3 Jul 2024 09:16:18 -0700
+Subject: [PATCH] Add libraries to excludes list
+
+---
+ tools/cmake/include/BoostRoot.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/cmake/include/BoostRoot.cmake b/tools/cmake/include/BoostRoot.cmake
+index a0f68358..c3f0ebd4 100644
+--- a/tools/cmake/include/BoostRoot.cmake
++++ b/tools/cmake/include/BoostRoot.cmake
+@@ -28,7 +28,7 @@ if(CMAKE_SOURCE_DIR STREQUAL Boost_SOURCE_DIR)
+     "List of libraries to build (default: all but excluded and incompatible)")
+ 
+   # --without-<library>
+-  set(BOOST_EXCLUDE_LIBRARIES "" CACHE STRING
++  set(BOOST_EXCLUDE_LIBRARIES "cobalt;context;stacktrace" CACHE STRING
+     "List of libraries to exclude from build")
+ 
+   set(BOOST_INCOMPATIBLE_LIBRARIES
+-- 
+2.37.0.windows.1
+
