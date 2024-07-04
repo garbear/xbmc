@@ -20,6 +20,5 @@ class CPlatformAndroid : public CPlatformPosix
     ~CPlatformAndroid() override = default;
 
     bool InitStageOne() override;
-    bool InitStageThree() override;
     void PlatformSyslog() override;
 };
