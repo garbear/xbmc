@@ -56,75 +56,58 @@ void CGameLoop::Process(void)
 {
   while (!m_bStop)
   {
-    if (m_speedFactor == 0.0)
+    if (m_loopSpeedFactor != m_speedFactor)
     {
-      m_lastFrameMs = 0.0;
+      m_lastFrameUs = std::chrono::microseconds::zero();
+      m_loopSpeedFactor = m_speedFactor;
+    }
+
+    if (m_loopSpeedFactor == 0.0)
+    {
+      m_lastFrameUs = std::chrono::microseconds::zero();
       m_sleepEvent.Wait(5000ms);
     }
     else
     {
-      if (m_speedFactor > 0.0)
+      if (m_lastFrameUs == std::chrono::microseconds::zero())
+        m_lastFrameUs = NowUs();
+
+      if (m_loopSpeedFactor > 0.0)
         m_callback->FrameEvent();
-      else if (m_speedFactor < 0.0)
+      else if (m_loopSpeedFactor < 0.0)
         m_callback->RewindEvent();
 
-      if (m_lastFrameMs > 0.0)
-      {
-        m_lastFrameMs += FrameTimeMs();
-        m_adjustTime = m_lastFrameMs - NowMs();
-      }
-      else
-      {
-        m_lastFrameMs = NowMs();
-        m_adjustTime = 0.0;
-      }
-
       // Calculate sleep time
-      double sleepTimeMs = SleepTimeMs();
+      std::chrono::microseconds sleepTimeUs = SleepTimeUs();
 
-      // Sleep at least 1 ms to avoid sleeping forever
-      while (sleepTimeMs > 1.0)
-      {
-        m_sleepEvent.Wait(std::chrono::milliseconds(static_cast<unsigned int>(sleepTimeMs)));
-
-        if (m_bStop)
-          break;
-
-        // Speed may have changed, update sleep time
-        sleepTimeMs = SleepTimeMs();
-      }
+      if (sleepTimeUs > std::chrono::microseconds::zero())
+        m_sleepEvent.Wait(sleepTimeUs);
     }
   }
 }
 
-double CGameLoop::FrameTimeMs() const
+std::chrono::microseconds CGameLoop::FrameTimeUs() const
 {
-  if (m_speedFactor != 0.0)
-    return 1000.0 / m_fps / std::abs(m_speedFactor);
+  if (m_loopSpeedFactor != 0.0)
+    return std::chrono::duration_cast<std::chrono::microseconds>(1s / m_fps /
+                                                                 std::abs(m_loopSpeedFactor));
   else
-    return 1000.0 / m_fps / 1.0;
+    return std::chrono::duration_cast<std::chrono::microseconds>(1s / m_fps);
 }
 
-double CGameLoop::SleepTimeMs() const
+std::chrono::microseconds inline CGameLoop::SleepTimeUs()
 {
   // Calculate next frame time
-  const double nextFrameMs = m_lastFrameMs + FrameTimeMs();
+  const std::chrono::microseconds nextFrameUs = m_lastFrameUs += FrameTimeUs();
 
   // Calculate sleep time
-  double sleepTimeMs = (nextFrameMs - NowMs()) + m_adjustTime;
+  std::chrono::microseconds sleepTimeUs = (nextFrameUs - NowUs());
 
-  // Reset adjust time
-  m_adjustTime = 0.0;
-
-  // Positive or zero
-  sleepTimeMs = (sleepTimeMs >= 0.0 ? sleepTimeMs : 0.0);
-
-  return sleepTimeMs;
+  return sleepTimeUs;
 }
 
-double CGameLoop::NowMs() const
+std::chrono::microseconds CGameLoop::NowUs() const
 {
-  return std::chrono::duration<double, std::milli>(
-             std::chrono::steady_clock::now().time_since_epoch())
-      .count();
+  return std::chrono::duration_cast<std::chrono::microseconds>(
+      std::chrono::steady_clock::now().time_since_epoch());
 }
