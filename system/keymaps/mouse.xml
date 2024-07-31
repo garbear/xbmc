@@ -57,7 +57,7 @@
   </FullscreenVideo>
   <FullscreenGame>
     <mouse>
-      <rightclick>Info</rightclick>
+      <mousemove>noop</mousemove>
     </mouse>
   </FullscreenGame>
   <contextmenu>  <!-- Give a way out of the context menu without actually having to select something.  -->
