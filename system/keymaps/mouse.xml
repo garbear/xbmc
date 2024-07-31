@@ -53,8 +53,19 @@
   <FullscreenVideo>
     <mouse>
       <rightclick>Info</rightclick>
+      <mousemove>noop</mousemove>
     </mouse>
   </FullscreenVideo>
+  <FullscreenLiveTV>
+    <mouse>
+      <mousemove>noop</mousemove>
+    </mouse>
+  </FullscreenLiveTV>
+  <Visualisation>
+    <mouse>
+      <mousemove>noop</mousemove>
+    </mouse>
+  </Visualisation>
   <FullscreenGame>
     <mouse>
       <mousemove>noop</mousemove>
