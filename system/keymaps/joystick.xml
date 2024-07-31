@@ -132,7 +132,6 @@
   </FullscreenVideo>
   <FullscreenGame>
     <joystick profile="game.controller.default">
-      <back>noop</back>
       <start holdtime="1000">OSD</start>
       <guide>OSD</guide>
       <!-- Give games access to volume controls -->
@@ -183,6 +182,11 @@
       -->
     </joystick>
   </FullscreenGame>
+  <GameOSD>
+    <joystick profile="game.controller.default">
+      <back>noop</back>
+    </joystick>
+  </GameOSD>
   <FullscreenLiveTV>
     <joystick profile="game.controller.default">
       <a>Pause</a>
