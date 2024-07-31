@@ -132,6 +132,7 @@
   </FullscreenVideo>
   <FullscreenGame>
     <joystick profile="game.controller.default">
+      <back>Noop</back>
       <start holdtime="1000">OSD</start>
       <guide>OSD</guide>
       <!-- Give games access to volume controls -->
@@ -168,8 +169,7 @@
       <!-- <a hotkey="back">Screenshot</a> -->
       <!-- Reset is disabled until player can undo a reset -->
       <!--<b hotkey="back">PlayerControl(Reset)</b> -->
-      <x hotkey="back">OSD</x>
-      <y hotkey="back">OSD</y>
+      <a hotkey="back">OSD</a>
       <start hotkey="back">Stop</start>
       <rightbumper hotkey="back">AnalogFastForward</rightbumper>
       <leftbumper hotkey="back">AnalogRewind</leftbumper>
