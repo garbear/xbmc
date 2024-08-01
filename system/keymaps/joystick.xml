@@ -168,6 +168,7 @@
       <!-- <a hotkey="back">Screenshot</a> -->
       <!-- Reset is disabled until player can undo a reset -->
       <!--<b hotkey="back">PlayerControl(Reset)</b> -->
+      <y hotkey="back">OSD</y>
       <a hotkey="back">OSD</a>
       <start hotkey="back">Stop</start>
       <rightbumper hotkey="back">AnalogFastForward</rightbumper>
