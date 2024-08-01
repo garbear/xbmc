@@ -53,11 +53,22 @@
   <FullscreenVideo>
     <mouse>
       <rightclick>Info</rightclick>
+      <mousemove>noop</mousemove>
     </mouse>
   </FullscreenVideo>
+  <FullscreenLiveTV>
+    <mouse>
+      <mousemove>noop</mousemove>
+    </mouse>
+  </FullscreenLiveTV>
+  <Visualisation>
+    <mouse>
+      <mousemove>noop</mousemove>
+    </mouse>
+  </Visualisation>
   <FullscreenGame>
     <mouse>
-      <rightclick>Info</rightclick>
+      <mousemove>noop</mousemove>
     </mouse>
   </FullscreenGame>
   <contextmenu>  <!-- Give a way out of the context menu without actually having to select something.  -->

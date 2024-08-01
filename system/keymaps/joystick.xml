@@ -168,8 +168,8 @@
       <!-- <a hotkey="back">Screenshot</a> -->
       <!-- Reset is disabled until player can undo a reset -->
       <!--<b hotkey="back">PlayerControl(Reset)</b> -->
-      <x hotkey="back">OSD</x>
       <y hotkey="back">OSD</y>
+      <a hotkey="back">OSD</a>
       <start hotkey="back">Stop</start>
       <rightbumper hotkey="back">AnalogFastForward</rightbumper>
       <leftbumper hotkey="back">AnalogRewind</leftbumper>
@@ -183,6 +183,11 @@
       -->
     </joystick>
   </FullscreenGame>
+  <GameOSD>
+    <joystick profile="game.controller.default">
+      <back>noop</back>
+    </joystick>
+  </GameOSD>
   <FullscreenLiveTV>
     <joystick profile="game.controller.default">
       <a>Pause</a>
