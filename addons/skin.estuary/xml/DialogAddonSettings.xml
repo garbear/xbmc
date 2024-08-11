@@ -123,6 +123,64 @@
 					<param name="label" value="" />
 				</include>
 			</control>
+			<control type="group">
+				<description>Currently-playing emulator name and icon</description>
+				<visible>Player.HasGame + String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)</visible>
+				<left>1480</left>
+				<width>310</width>
+				<top>382</top>
+				<height>360</height>
+				<control type="group">
+					<left>52</left>
+					<control type="image">
+						<description>Background image</description>
+						<left>-20</left>
+						<right>-20</right>
+						<top>-20</top>
+						<bottom>-20</bottom>
+						<texture border="40">buttons/dialogbutton-nofo.png</texture>
+					</control>
+					<control type="label">
+						<description>Label for "Playing with:" text</description>
+						<top>14</top>
+						<height>20</height>
+						<font>font16</font>
+						<shadowcolor>text_shadow</shadowcolor>
+						<label>$LOCALIZE[35271]</label>
+						<align>center</align>
+					</control>
+					<control type="label">
+						<description>Emulator name</description>
+						<top>60</top>
+						<height>20</height>
+						<font>font23_narrow</font>
+						<textcolor>button_focus</textcolor>
+						<shadowcolor>text_shadow</shadowcolor>
+						<align>center</align>
+						<label>$INFO[Window(addonsettings).Property(GameClient.Name)]</label>
+						<scroll>true</scroll>
+					</control>
+					<control type="label">
+						<description>Emulator version</description>
+						<top>90</top>
+						<height>20</height>
+						<font>font23_narrow</font>
+						<textcolor>button_focus</textcolor>
+						<shadowcolor>text_shadow</shadowcolor>
+						<align>center</align>
+						<label>$INFO[Window(addonsettings).Property(Addon.Version)]</label>
+					</control>
+					<control type="image">
+						<description>Emulator icon</description>
+						<top>138</top>
+						<height>192</height>
+						<left>33</left>
+						<width>192</width>
+						<aspectratio>keep</aspectratio>
+						<texture>$INFO[Window(addonsettings).Property(Addon.Icon)]</texture>
+					</control>
+				</control>
+			</control>
 			<control type="radiobutton" id="20">
 				<left>29</left>
 				<top>700</top>
