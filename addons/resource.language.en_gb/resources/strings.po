@@ -18839,7 +18839,13 @@ msgctxt "#35270"
 msgid "Your account is not verified. Please check your email to complete your sign up."
 msgstr ""
 
-#empty strings from id 35271 to 35504
+#. Label for showing which emulator the game is playing with
+#: system/settings/settings.xml
+msgctxt "#35271"
+msgid "Playing with:"
+msgstr ""
+
+#empty strings from id 35272 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/pvr/addons/PVRClients.cpp

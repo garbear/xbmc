@@ -14,10 +14,12 @@
 #include "GUIUserMessages.h"
 #include "ServiceBroker.h"
 #include "addons/AddonManager.h"
+#include "addons/addoninfo/AddonInfo.h"
 #include "addons/addoninfo/AddonType.h"
 #include "addons/settings/AddonSettings.h"
 #include "dialogs/GUIDialogSelect.h"
 #include "dialogs/GUIDialogYesNo.h"
+#include "games/addons/GameClient.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h"
 #include "guilib/LocalizeStrings.h"
@@ -37,7 +39,8 @@
 #define CONTROL_BTN_LEVELS 20
 
 using namespace ADDON;
-using namespace KODI::MESSAGING;
+using namespace KODI;
+using namespace MESSAGING;
 
 CGUIDialogAddonSettings::CGUIDialogAddonSettings()
   : CGUIDialogSettingsManagerBase(WINDOW_DIALOG_ADDON_SETTINGS, "DialogAddonSettings.xml")
@@ -418,8 +421,22 @@ void CGUIDialogAddonSettings::SetupView()
 
   CGUIDialogSettingsManagerBase::SetupView();
 
-  // set addon id as window property
+  // set addon properties as window properties
   SetProperty("Addon.ID", m_addon->ID());
+  SetProperty("Addon.Type", ADDON::CAddonInfo::TranslateType(m_addon->Type(), false));
+  SetProperty("Addon.Icon", m_addon->Icon());
+  SetProperty("Addon.Version", m_addon->Version().asString());
+
+  if (m_addon->Type() == ADDON::AddonType::GAMEDLL)
+  {
+    std::shared_ptr<GAME::CGameClient> gameClient =
+        std::dynamic_pointer_cast<GAME::CGameClient>(m_addon);
+    if (gameClient)
+    {
+      SetProperty("GameClient.Name", gameClient->GetEmulatorName());
+      SetProperty("GameClient.Platforms", gameClient->GetPlatforms());
+    }
+  }
 
   // set heading
   SetHeading(StringUtils::Format("$LOCALIZE[10004] - {}",
