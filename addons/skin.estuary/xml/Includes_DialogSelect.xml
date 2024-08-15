@@ -339,7 +339,7 @@
 							<texture border="40">buttons/dialogbutton-nofo.png</texture>
 						</control>
 						<control type="label">
-							<description>Label for Saved with: text</description>
+							<description>Label for "Saved with:" text</description>
 							<top>14</top>
 							<height>20</height>
 							<font>font16</font>
@@ -355,6 +355,7 @@
 							<textcolor>button_focus</textcolor>
 							<shadowcolor>text_shadow</shadowcolor>
 							<align>center</align>
+							<scroll>true</scroll>
 						</control>
 						<control type="image" id="10824">
 							<description>Emulator icon</description>
