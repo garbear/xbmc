@@ -327,7 +327,7 @@
 					<right>0</right>
 					<width>310</width>
 					<top>162</top>
-					<height>330</height>
+					<height>360</height>
 					<bottom>50</bottom>
 					<control type="group">
 						<left>52</left>
@@ -357,9 +357,18 @@
 							<align>center</align>
 							<scroll>true</scroll>
 						</control>
+						<control type="label" id="10828">
+							<description>Emulator version</description>
+							<top>90</top>
+							<height>20</height>
+							<font>font23_narrow</font>
+							<textcolor>button_focus</textcolor>
+							<shadowcolor>text_shadow</shadowcolor>
+							<align>center</align>
+						</control>
 						<control type="image" id="10824">
 							<description>Emulator icon</description>
-							<top>108</top>
+							<top>138</top>
 							<height>192</height>
 							<right>33</right>
 							<width>192</width>
