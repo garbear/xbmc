@@ -767,12 +767,6 @@ bool CGUIMediaWindow::GetDirectory(const std::string &strDirectory, CFileItemLis
       m_history.RemoveParentPath();
   }
 
-  // Store parent path along with item as parent path cannot safely be calculated from item's path.
-  for (const auto& item : items)
-  {
-    item->SetProperty("ParentPath", m_vecItems->GetPath());
-  }
-
   // update the view state's reference to the current items
   m_guiState.reset(CGUIViewState::GetViewState(GetID(), items));
 
@@ -1761,6 +1755,8 @@ bool CGUIMediaWindow::OnPopupMenu(int itemIdx)
   auto item = m_vecItems->Get(itemIdx);
   if (!item)
     return false;
+
+  item->SetProperty("ParentPath", m_vecItems->GetPath());
 
   CContextButtons buttons;
 
