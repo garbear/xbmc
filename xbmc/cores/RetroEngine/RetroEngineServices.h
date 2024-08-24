@@ -41,7 +41,6 @@ public:
 
   // RetroEngine subsystems
   CRetroEngineGuiBridge& GuiBridge(const std::string& savestatePath);
-  CRetroEngineInputManager& InputManager() { return *m_inputManager; }
 
 private:
   // Subsystems
