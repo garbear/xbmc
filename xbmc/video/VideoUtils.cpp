@@ -133,15 +133,12 @@ void CAsyncGetItemsForPlaylist::GetItemsForPlaylist(const std::shared_ptr<CFileI
 
   if (item->m_bIsFolder)
   {
-    if (!item->IsPlugin())
+    // check if it's a folder with dvd or bluray files, then just add the relevant file
+    const std::string mediapath = item->GetOpticalMediaPath();
+    if (!mediapath.empty())
     {
-      // check if it's a folder with dvd or bluray files, then just add the relevant file
-      const std::string mediapath = item->GetOpticalMediaPath();
-      if (!mediapath.empty())
-      {
-        m_queuedItems.Add(std::make_shared<CFileItem>(mediapath, false));
-        return;
-      }
+      m_queuedItems.Add(std::make_shared<CFileItem>(mediapath, false));
+      return;
     }
 
     // Check if we add a locked share
