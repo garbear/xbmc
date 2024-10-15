@@ -14,6 +14,7 @@ import xbmcgui  # pylint: disable=import-error
 
 from oasis.windows.camera_view import CameraView
 from oasis.windows.fireworks_hud import FireworksHUD
+from oasis.windows.halloween_hud import HalloweenHUD
 from oasis.windows.station_hud import StationHUD
 from oasis.windows.ventura_hud import VenturaHUD
 
@@ -30,15 +31,21 @@ class OasisService:
 
         # TODO: Hardware configuration
         if hostname == "cinder":
-            window = CameraView("CameraView6.xml", addon_path, "default", "1080i", False)
+            window = HalloweenHUD(
+                "HalloweenHUD.xml", addon_path, "default", "1080i", False
+            )
         elif hostname == "lenovo":
-            window = VenturaHUD(
+            window = HalloweenHUD(
                 "VerticalHUD.xml", addon_path, "default", "1080i", False
             )
         elif hostname == "substation":
-            window = VenturaHUD("LabHUD.xml", addon_path, "default", "1080i", False)
+            window = HalloweenHUD(
+                "LabHUD.xml", addon_path, "default", "1080i", False
+            )
         else:
-            window = VenturaHUD("VenturaHUD.xml", addon_path, "default", "1080i", False)
+            window = HalloweenHUD(
+                "HalloweenHUD.xml", addon_path, "default", "1080i", False
+            )
 
         window.doModal()
         xbmc.sleep(100)
