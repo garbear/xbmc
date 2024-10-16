@@ -30,6 +30,7 @@ namespace KODI
 namespace SMART_HOME
 {
 class CRos2InputPublisher;
+class CRos2NowPlayingPublisher;
 class CRos2SystemHealthManager;
 class CRos2VideoSubscription;
 class CSmartHomeGuiBridge;
@@ -67,6 +68,7 @@ private:
   std::unique_ptr<CRos2SystemHealthManager> m_systemHealthManager;
   std::map<std::string, std::unique_ptr<CRos2VideoSubscription>> m_videoSubs; // Topic -> subscriber
   std::unique_ptr<CRos2InputPublisher> m_peripheralPublisher;
+  std::unique_ptr<CRos2NowPlayingPublisher> m_nowPlayingPublisher;
 
   // Threading parameters
   std::unique_ptr<CThread> m_thread;
