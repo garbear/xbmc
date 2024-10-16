@@ -31,6 +31,7 @@ namespace KODI
 namespace SMART_HOME
 {
 class CRos2InputPublisher;
+class CRos2NowPlayingPublisher;
 class CRos2PowerMeterManager;
 class CRos2SystemHealthManager;
 class CRos2VehicleManager;
@@ -84,6 +85,7 @@ private:
   std::unique_ptr<CRos2SystemHealthManager> m_systemHealthManager;
   std::unique_ptr<CRos2PowerMeterManager> m_powerMeterManager;
   std::unique_ptr<CRos2VehicleManager> m_vehicleManager;
+  std::unique_ptr<CRos2NowPlayingPublisher> m_nowPlayingPublisher;
 
   // Threading parameters
   std::unique_ptr<CThread> m_thread;

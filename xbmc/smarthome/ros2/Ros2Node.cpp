@@ -9,6 +9,7 @@
 #include "Ros2Node.h"
 
 #include "Ros2InputPublisher.h"
+#include "Ros2NowPlayingPublisher.h"
 #include "Ros2PowerMeterManager.h"
 #include "Ros2SystemHealthManager.h"
 #include "Ros2VehicleManager.h"
@@ -72,9 +73,10 @@ void CRos2Node::Initialize()
   m_vehicleManager->Initialize(m_node);
 
   // Publishers
-  m_peripheralPublisher =
-      std::make_unique<CRos2InputPublisher>(m_node, m_inputManager, std::move(hostname));
+  m_peripheralPublisher = std::make_unique<CRos2InputPublisher>(m_node, m_inputManager, hostname);
   m_peripheralPublisher->Initialize();
+  m_nowPlayingPublisher = std::make_unique<CRos2NowPlayingPublisher>(m_node, std::move(hostname));
+  m_nowPlayingPublisher->Initialize();
 
   // Create thread
   m_thread->Create(false);
@@ -101,6 +103,12 @@ void CRos2Node::Deinitialize()
   for (const auto& videoSub : m_videoSubs)
     videoSub.second.subscription->Deinitialize();
   m_videoSubs.clear();
+
+  if (m_nowPlayingPublisher)
+  {
+    m_nowPlayingPublisher->Deinitialize();
+    m_nowPlayingPublisher.reset();
+  }
 
   if (m_peripheralPublisher)
   {
