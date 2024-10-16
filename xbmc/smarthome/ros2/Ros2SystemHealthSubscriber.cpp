@@ -104,6 +104,6 @@ void CRos2SystemHealthSubscriber::OnSystemTelemetry(const SystemTelemetry::Share
 
   // Update system health parameters
   if (msg->cpu_temperature != 0.0)
-     m_cpuTemperature= CTemperature::CreateFromCelsius(msg->cpu_temperature);
+    m_cpuTemperature = CTemperature::CreateFromCelsius(msg->cpu_temperature);
   m_cpuUtilization = msg->cpu_utilization;
 }
