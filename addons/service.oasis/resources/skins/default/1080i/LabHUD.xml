@@ -10,8 +10,8 @@
 			<animation effect="fade" time="1500">VisibleChange</animation>
 			<left>120</left>
 			<width>780</width>
-			<top>100</top>
-			<height>880</height>
+			<top>102</top>
+			<height>876</height>
 			<control type="image">
 				<description>Lab content area background</description>
 				<top>-20</top>
@@ -23,10 +23,10 @@
 			<control type="list">
 				<description>Sensor data list</description>
 				<orientation>vertical</orientation>
-				<itemlayout width="600" height="220">
+				<itemlayout width="780" height="146">
 					<control type="label">
 						<label>$INFO[ListItem.Label]</label>
-						<left>20</left>
+						<left>30</left>
 						<font>font60</font>
 						<shadowcolor>text_shadow</shadowcolor>
 						<align>left</align>
@@ -34,7 +34,7 @@
 					</control>
 					<control type="label">
 						<label>$INFO[ListItem.Label2]</label>
-						<right>20</right>
+						<right>30</right>
 						<width>300</width>
 						<font>font60</font>
 						<shadowcolor>text_shadow</shadowcolor>
@@ -42,10 +42,10 @@
 						<aligny>center</aligny>
 					</control>
 				</itemlayout>
-				<focusedlayout width="600" height="220">
+				<focusedlayout width="780" height="146">
 					<control type="label">
 						<label>$INFO[ListItem.Label]</label>
-						<left>20</left>
+						<left>30</left>
 						<font>font60</font>
 						<shadowcolor>text_shadow</shadowcolor>
 						<align>left</align>
@@ -53,7 +53,7 @@
 					</control>
 					<control type="label">
 						<label>$INFO[ListItem.Label2]</label>
-						<right>20</right>
+						<right>30</right>
 						<width>300</width>
 						<font>font60</font>
 						<shadowcolor>text_shadow</shadowcolor>
@@ -63,21 +63,28 @@
 				</focusedlayout>
 				<content>
 					<item>
-						<label>CPU</label>
-						<label2>$INFO[SmartHome.LabCPU]</label2> <!--20 %-->
-						<property name="smarthome.cputemperature">$INFO[SmartHome.System(substation).CPUTemperature]</property>
+						<label>RPi Power CPU</label>
+						<label2>$INFO[SmartHome.System(substation).CPUTemperature]</label2> <!-- % -->
 					</item>
 					<item>
-						<label>Memory</label>
-						<label2>$INFO[SmartHome.LabMemory]</label2> <!--20 %-->
+						<label>RPi Video CPU</label>
+						<label2>$INFO[SmartHome.System(station).CPUTemperature]</label2> <!-- % -->
 					</item>
 					<item>
-						<label>Current</label>
-						<label2>$INFO[SmartHome.LabCurrent]</label2> <!-- 50 mA -->
+						<label>Arduino 1 RAM</label>
+						<label2>$INFO[SmartHome.LabMemory]</label2> <!-- % -->
 					</item>
 					<item>
-						<label>IR</label>
-						<label2>$INFO[SmartHome.LabIR]</label2> <!-- 5.00 V -->
+						<label>Arduino 2 RAM</label>
+						<label2></label2> <!-- % -->
+					</item>
+					<item>
+						<label>Lab Current</label>
+						<label2>$INFO[SmartHome.LabCurrent]</label2> <!-- mA -->
+					</item>
+					<item>
+						<label>Lab Infrared</label>
+						<label2>$INFO[SmartHome.LabIR]</label2> <!-- V -->
 					</item>
 				</content>
 			</control>
