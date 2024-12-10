@@ -83,7 +83,7 @@ bool CGUIWindowMusicPlaylistEditor::OnClick(int iItem, const std::string& player
   CFileItemPtr item = m_vecItems->Get(iItem);
 
   // Expand .m3u files in sources list when clicked on regardless of <playlistasfolders>
-  if (item->IsFileFolder(EFILEFOLDER_MASK_ONBROWSE))
+  if (item->IsFileFolder(FileFolderType::MASK_ONBROWSE))
     return Update(item->GetPath());
   // Avoid playback (default click behaviour) of media files
   if (!item->m_bIsFolder)
@@ -411,7 +411,7 @@ void CGUIWindowMusicPlaylistEditor::OnSourcesContext()
 
   CFileItemPtr item = GetCurrentListItem();
   CContextButtons buttons;
-  if (item->IsFileFolder(EFILEFOLDER_MASK_ONBROWSE))
+  if (item->IsFileFolder(FileFolderType::MASK_ONBROWSE))
     buttons.Add(CONTEXT_BUTTON_BROWSE_INTO, 37015); //Browse into
   if (item && !item->IsParentFolder() && !m_vecItems->IsVirtualDirectoryRoot())
     buttons.Add(CONTEXT_BUTTON_QUEUE_ITEM, 15019); // Add (to playlist)
