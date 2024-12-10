@@ -236,7 +236,7 @@ bool CGUIWindowGames::GetDirectory(const std::string& strDirectory, CFileItemLis
   for (int i = 0; i < items.Size(); ++i)
   {
     CFileItemPtr item = items[i];
-    if (item->m_bIsFolder || !item->IsFileFolder(EFILEFOLDER_TYPE_ALWAYS))
+    if (item->m_bIsFolder || !item->IsFileFolder(FileFolderType::ALWAYS))
       continue;
 
     const std::string originalPath = item->GetPath();
