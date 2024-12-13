@@ -101,6 +101,10 @@ void CDialogGameVideoFilter::InitScalingMethods()
 
 void CDialogGameVideoFilter::InitVideoFilters()
 {
+  //! @TODO Re-enable shaders on OpenGL
+#if defined(HAS_GL)
+  return;
+#endif
 
   std::vector<VideoFilterProperties> videoFilters;
 
