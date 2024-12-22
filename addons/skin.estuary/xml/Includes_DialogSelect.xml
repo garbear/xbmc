@@ -1194,7 +1194,7 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
+							<aspectratio>keep</aspectratio>
 							<texture border="4">$INFO[ListItem.Art(screenshot)]</texture>
 							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
 							<bordersize>4</bordersize>
@@ -1231,7 +1231,7 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
+							<aspectratio>keep</aspectratio>
 							<texture border="4">$INFO[ListItem.Art(screenshot)]</texture>
 							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
 							<bordersize>4</bordersize>
