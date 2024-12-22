@@ -1203,7 +1203,7 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
+							<aspectratio>keep</aspectratio>
 							<texture>$INFO[ListItem.Icon]</texture>
 						</control>
 						<control type="gamewindow">
@@ -1235,7 +1235,7 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
+							<aspectratio>keep</aspectratio>
 							<texture>$INFO[ListItem.Icon]</texture>
 						</control>
 						<control type="gamewindow">
