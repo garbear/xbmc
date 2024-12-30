@@ -17,10 +17,10 @@
 namespace CONTEXTMENU
 {
 
-class CVideoInfoBase : public CStaticContextMenuAction
+class CVideoInfo : public CStaticContextMenuAction
 {
 public:
-  explicit CVideoInfoBase(MediaType mediaType);
+  explicit CVideoInfo(MediaType mediaType);
   bool IsVisible(const CFileItem& item) const override;
   bool Execute(const std::shared_ptr<CFileItem>& item) const override;
 
@@ -28,34 +28,34 @@ private:
   const MediaType m_mediaType;
 };
 
-struct CTVShowInfo : CVideoInfoBase
+struct CTVShowInfo : CVideoInfo
 {
-  CTVShowInfo() : CVideoInfoBase(MediaTypeTvShow) {}
+  CTVShowInfo() : CVideoInfo(MediaTypeTvShow) {}
 };
 
-struct CSeasonInfo : CVideoInfoBase
+struct CSeasonInfo : CVideoInfo
 {
-  CSeasonInfo() : CVideoInfoBase(MediaTypeSeason) {}
+  CSeasonInfo() : CVideoInfo(MediaTypeSeason) {}
 };
 
-struct CEpisodeInfo : CVideoInfoBase
+struct CEpisodeInfo : CVideoInfo
 {
-  CEpisodeInfo() : CVideoInfoBase(MediaTypeEpisode) {}
+  CEpisodeInfo() : CVideoInfo(MediaTypeEpisode) {}
 };
 
-struct CMusicVideoInfo : CVideoInfoBase
+struct CMusicVideoInfo : CVideoInfo
 {
-  CMusicVideoInfo() : CVideoInfoBase(MediaTypeMusicVideo) {}
+  CMusicVideoInfo() : CVideoInfo(MediaTypeMusicVideo) {}
 };
 
-struct CMovieInfo : CVideoInfoBase
+struct CMovieInfo : CVideoInfo
 {
-  CMovieInfo() : CVideoInfoBase(MediaTypeMovie) {}
+  CMovieInfo() : CVideoInfo(MediaTypeMovie) {}
 };
 
-struct CMovieSetInfo : CVideoInfoBase
+struct CMovieSetInfo : CVideoInfo
 {
-  CMovieSetInfo() : CVideoInfoBase(MediaTypeVideoCollection) {}
+  CMovieSetInfo() : CVideoInfo(MediaTypeVideoCollection) {}
 };
 
 struct CVideoRemoveResumePoint : CStaticContextMenuAction
