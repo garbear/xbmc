@@ -864,13 +864,6 @@ bool IsNonExistingUserPartyModePlaylist(const CFileItem& item)
   const auto profileManager{CServiceBroker::GetSettingsComponent()->GetProfileManager()};
   return ((profileManager->GetUserDataItem("PartyMode.xsp") == path) && !CFileUtils::Exists(path));
 }
-
-bool IsEmptyMusicItem(const CFileItem& item)
-{
-  //! @todo Poor man's way to detect empty music info tags (inspired by CVideoInfoTag::IsEmpty())
-  return item.HasMusicInfoTag() && item.GetMusicInfoTag()->GetTitle().empty();
-}
-
 } // unnamed namespace
 
 bool IsItemPlayable(const CFileItem& item)
@@ -884,7 +877,7 @@ bool IsItemPlayable(const CFileItem& item)
     return false;
 
   // Exclude other components
-  if (item.IsPVR() || item.IsAddonsPath())
+  if (item.IsPVR() || item.IsPlugin() || item.IsScript() || item.IsAddonsPath())
     return false;
 
   // Exclude special items
@@ -931,20 +924,11 @@ bool IsItemPlayable(const CFileItem& item)
     return true;
   }
 
-  if (item.IsPlugin() && item.IsAudio() && !IsEmptyMusicItem(item) &&
-      item.GetProperty("isplayable").asBoolean(false))
-  {
+  if (item.HasMusicInfoTag() && item.CanQueue())
     return true;
-  }
-  else if (item.HasMusicInfoTag() && item.CanQueue() && !item.IsPlugin() && !item.IsScript())
-  {
+  else if (!item.m_bIsFolder && item.IsAudio())
     return true;
-  }
-  else if (!item.m_bIsFolder && item.IsAudio() && !IsEmptyMusicItem(item))
-  {
-    return true;
-  }
-  else if (item.m_bIsFolder && !item.IsPlugin() && !item.IsScript())
+  else if (item.m_bIsFolder)
   {
     // Not a music-specific folder (just file:// or nfs://). Allow play if context is Music window.
     if (CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindow() == WINDOW_MUSIC_NAV &&
