@@ -28,12 +28,6 @@ private:
   const MediaType m_mediaType;
 };
 
-struct CMusicInfo : CMusicInfoBase
-{
-  CMusicInfo() : CMusicInfoBase(MediaTypeMusic) {}
-  bool IsVisible(const CFileItem& item) const override;
-};
-
 struct CAlbumInfo : CMusicInfoBase
 {
   CAlbumInfo() : CMusicInfoBase(MediaTypeAlbum) {}
