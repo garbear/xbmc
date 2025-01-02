@@ -237,11 +237,12 @@ bool CShaderPresetGL::CreateShaderTextures()
         scaledSize.x = static_cast<float>(pass.fbo.scaleX.abs);
         break;
       case SCALE_TYPE_VIEWPORT:
-        scaledSize.x = m_outputSize.x * pass.fbo.scaleX.scale;
+        scaledSize.x =
+            pass.fbo.scaleX.scale ? pass.fbo.scaleX.scale * m_outputSize.x : m_outputSize.x;
         break;
       case SCALE_TYPE_INPUT:
       default:
-        scaledSize.x = prevSize.x * pass.fbo.scaleX.scale;
+        scaledSize.x = pass.fbo.scaleX.scale ? pass.fbo.scaleX.scale * prevSize.x : prevSize.x;
         break;
     }
     switch (pass.fbo.scaleY.type)
@@ -250,11 +251,12 @@ bool CShaderPresetGL::CreateShaderTextures()
         scaledSize.y = static_cast<float>(pass.fbo.scaleY.abs);
         break;
       case SCALE_TYPE_VIEWPORT:
-        scaledSize.y = m_outputSize.y * pass.fbo.scaleY.scale;
+        scaledSize.y =
+            pass.fbo.scaleY.scale ? pass.fbo.scaleY.scale * m_outputSize.y : m_outputSize.y;
         break;
       case SCALE_TYPE_INPUT:
       default:
-        scaledSize.y = prevSize.y * pass.fbo.scaleY.scale;
+        scaledSize.y = pass.fbo.scaleY.scale ? pass.fbo.scaleY.scale * prevSize.y : prevSize.y;
         break;
     }
 
