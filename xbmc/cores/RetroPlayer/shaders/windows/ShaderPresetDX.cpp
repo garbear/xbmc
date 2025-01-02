@@ -267,7 +267,8 @@ bool CShaderPresetDX::CreateShaderTextures()
         textureFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
     }
 
-    float2 textureSize = CShaderUtils::GetOptimalTextureSize(scaledSize);
+    //! @todo Enable usage of optimal texture sizes when all issues are fixed
+    float2 textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
 
     CD3DTexture* texture(new CD3DTexture());
     if (!texture->Create(static_cast<UINT>(textureSize.x), static_cast<UINT>(textureSize.y), 1,
