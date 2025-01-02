@@ -296,7 +296,8 @@ bool CShaderPresetGL::CreateShaderTextures()
       }
     }
 
-    float2 textureSize = CShaderUtils::GetOptimalTextureSize(scaledSize);
+    //! @todo Enable usage of optimal texture sizes when all issues are fixed
+    float2 textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
 
 #ifndef HAS_GLES
     auto textureGL = new CGLTexture(static_cast<unsigned int>(textureSize.x),
