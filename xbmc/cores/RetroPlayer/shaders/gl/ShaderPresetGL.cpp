@@ -161,6 +161,7 @@ bool CShaderPresetGL::Update()
     DisposeShaders();
 
     if (m_presetPath.empty())
+      // No preset should load, just return false, we shouldn't add "" to the failed paths
       return false;
 
     if (!ReadPresetFile(m_presetPath))
@@ -184,7 +185,7 @@ bool CShaderPresetGL::Update()
     return false;
 
   // Each pass except the last one must have its own texture and the opposite is also true
-  if (m_pShaders.size() - 1 != m_pShaderTextures.size())
+  if (m_pShaders.size() != m_pShaderTextures.size() + 1)
     return updateFailed("A shader or texture failed to init");
 
   m_bPresetNeedsUpdate = false;
@@ -224,13 +225,12 @@ bool CShaderPresetGL::CreateShaderTextures()
 
   unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
 
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses - 1; ++shaderIdx)
+  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     ShaderPass& pass = m_passes[shaderIdx];
-    ShaderPass& nextPass = m_passes[shaderIdx + 1];
 
     // Resolve final texture resolution, taking scale type and scale multiplier into account
-    float2 scaledSize;
+    float2 scaledSize, textureSize;
     switch (pass.fbo.scaleX.type)
     {
       case SCALE_TYPE_ABSOLUTE:
@@ -260,27 +260,39 @@ bool CShaderPresetGL::CreateShaderTextures()
         break;
     }
 
-    // Determine the framebuffer data format
-    GLint internalformat;
-    GLenum pixelformat;
-    if (pass.fbo.floatFramebuffer && major >= 3)
+    if (shaderIdx == numPasses - 1)
     {
-      // Give priority to float framebuffer parameter (we can't use both float and sRGB)
-      internalformat = GL_RGBA32F;
-      pixelformat = GL_RGBA;
+      // If the last shader has the scale unspecified
+      if (pass.fbo.scaleX.scale == 0 && pass.fbo.scaleY.scale == 0)
+      {
+        // We're supposed to output at full (viewport) resolution
+        scaledSize.x = m_outputSize.x;
+        scaledSize.y = m_outputSize.y;
+      }
     }
     else
     {
-      if (pass.fbo.sRgbFramebuffer)
+      // Determine the framebuffer data format
+      GLint internalformat;
+      GLenum pixelformat;
+      if (pass.fbo.floatFramebuffer && major >= 3)
       {
-        internalformat = GL_SRGB8_ALPHA8;
+        // Give priority to float framebuffer parameter (we can't use both float and sRGB)
+        internalformat = GL_RGBA32F;
         pixelformat = GL_RGBA;
       }
       else
       {
+        if (pass.fbo.sRgbFramebuffer)
+        {
+          internalformat = GL_SRGB8_ALPHA8;
+          pixelformat = GL_RGBA;
+        }
+        else
+        {
 #ifndef HAS_GLES
-        internalformat = GL_RGBA8;
-        pixelformat = GL_BGRA;
+          internalformat = GL_RGBA8;
+          pixelformat = GL_BGRA;
 #else
 #ifndef GL_BGRA_EXT
 #define GL_BGRA_EXT 0x80E1
@@ -289,65 +301,68 @@ bool CShaderPresetGL::CreateShaderTextures()
 #define GL_BGRA8_EXT 0x93A1
 #endif
 #ifdef TARGET_DARWIN
-        internalformat = GL_RGBA;
+          internalformat = GL_RGBA;
 #else
-        internalformat = GL_BGRA_EXT;
+          internalformat = GL_BGRA_EXT;
 #endif
-        pixelformat = GL_BGRA_EXT;
+          pixelformat = GL_BGRA_EXT;
 #endif
+        }
       }
-    }
 
-    //! @todo Enable usage of optimal texture sizes when all issues are fixed
-    float2 textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
+      //! @todo Enable usage of optimal texture sizes when all issues are fixed
+      textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
 
 #ifndef HAS_GLES
-    auto textureGL = new CGLTexture(static_cast<unsigned int>(textureSize.x),
-                                    static_cast<unsigned int>(textureSize.y),
-                                    XB_FMT_A8R8G8B8); // Format is not used
-#else
-    auto textureGL = new CGLESTexture(static_cast<unsigned int>(textureSize.x),
+      auto textureGL = new CGLTexture(static_cast<unsigned int>(textureSize.x),
                                       static_cast<unsigned int>(textureSize.y),
                                       XB_FMT_A8R8G8B8); // Format is not used
-#endif
-
-    textureGL->CreateTextureObject();
-
-    if (textureGL->getMTexture() <= 0)
-    {
-      CLog::Log(LOGERROR, "Couldn't create a texture for video shader {}.", pass.sourcePath);
-      return false;
-    }
-
-    auto wrapType = CShaderUtilsGL::TranslateWrapType(nextPass.wrap);
-    auto magFilterType = (nextPass.filter == FILTER_TYPE_LINEAR ? GL_LINEAR : GL_NEAREST);
-    auto minFilterType =
-        (nextPass.mipmap ? (nextPass.filter == FILTER_TYPE_LINEAR ? GL_LINEAR_MIPMAP_LINEAR
-                                                                  : GL_NEAREST_MIPMAP_NEAREST)
-                         : magFilterType);
-
-    glBindTexture(GL_TEXTURE_2D, textureGL->getMTexture());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterType);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterType);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
-    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrapType);
-    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NEVER);
-    //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0);
-    //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, MAX_FLOAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, internalformat, textureSize.x, textureSize.y, 0, pixelformat,
-                 internalformat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
-
-#ifndef HAS_GLES
-    GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
-#endif
-
-#ifndef HAS_GLES
-    m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL));
 #else
-    m_pShaderTextures.emplace_back(new CShaderTextureGLES(*textureGL));
+      auto textureGL = new CGLESTexture(static_cast<unsigned int>(textureSize.x),
+                                        static_cast<unsigned int>(textureSize.y),
+                                        XB_FMT_A8R8G8B8); // Format is not used
 #endif
+
+      textureGL->CreateTextureObject();
+
+      if (textureGL->getMTexture() <= 0)
+      {
+        CLog::Log(LOGERROR, "Couldn't create a texture for video shader {}.", pass.sourcePath);
+        return false;
+      }
+
+      ShaderPass& nextPass = m_passes[shaderIdx + 1];
+
+      auto wrapType = CShaderUtilsGL::TranslateWrapType(nextPass.wrap);
+      auto magFilterType = (nextPass.filter == FILTER_TYPE_LINEAR ? GL_LINEAR : GL_NEAREST);
+      auto minFilterType =
+          (nextPass.mipmap ? (nextPass.filter == FILTER_TYPE_LINEAR ? GL_LINEAR_MIPMAP_LINEAR
+                                                                    : GL_NEAREST_MIPMAP_NEAREST)
+                           : magFilterType);
+
+      glBindTexture(GL_TEXTURE_2D, textureGL->getMTexture());
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterType);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterType);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
+      //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrapType);
+      //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NEVER);
+      //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0);
+      //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, MAX_FLOAT);
+      glTexImage2D(GL_TEXTURE_2D, 0, internalformat, textureSize.x, textureSize.y, 0, pixelformat,
+                   internalformat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
+
+#ifndef HAS_GLES
+      GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+      glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
+#endif
+
+#ifndef HAS_GLES
+      m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL));
+#else
+      m_pShaderTextures.emplace_back(new CShaderTextureGLES(*textureGL));
+#endif
+    }
 
     // Notify shader of its source and dest size
     m_pShaders[shaderIdx]->SetSizes(prevSize, prevTextureSize, scaledSize);
@@ -355,9 +370,6 @@ bool CShaderPresetGL::CreateShaderTextures()
     prevSize = scaledSize;
     prevTextureSize = textureSize;
   }
-
-  // The last shader pass is supposed to output at full resolution
-  m_pShaders[numPasses - 1]->SetSizes(prevSize, prevTextureSize, m_outputSize);
 
   // Update MVPs
   UpdateMVPs();

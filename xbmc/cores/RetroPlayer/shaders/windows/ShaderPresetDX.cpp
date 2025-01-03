@@ -178,8 +178,8 @@ bool CShaderPresetDX::Update()
   if (m_pShaders.empty())
     return false;
 
-  // Each pass must have its own texture and the opposite is also true
-  if (m_pShaders.size() != m_pShaderTextures.size())
+  // Each pass except the last one must have its own texture and the opposite is also true
+  if (m_pShaders.size() != m_pShaderTextures.size() + 1)
     return updateFailed("A shader or texture failed to init");
 
   m_bPresetNeedsUpdate = false;
@@ -189,16 +189,6 @@ bool CShaderPresetDX::Update()
 bool CShaderPresetDX::CreateShaderTextures()
 {
   m_pShaderTextures.clear();
-
-  // CD3DTexture* fTexture(new CD3DTexture());
-  // auto res = fTexture->Create(m_outputSize.x, m_outputSize.y, 1,
-  //  D3D11_USAGE_DEFAULT, DXGI_FORMAT_B8G8R8A8_UNORM, nullptr, 0);
-  // if (!res)
-  //{
-  //  CLog::Log(LOGERROR, "Couldn't create a intial video shader texture");
-  //  return false;
-  //}
-  // firstTexture.reset(new CShaderTextureDX(fTexture));
 
   float2 prevSize = m_videoSize;
   float2 prevTextureSize = m_videoSize;
@@ -210,7 +200,7 @@ bool CShaderPresetDX::CreateShaderTextures()
     ShaderPass& pass = m_passes[shaderIdx];
 
     // Resolve final texture resolution, taking scale type and scale multiplier into account
-    float2 scaledSize;
+    float2 scaledSize, textureSize;
     switch (pass.fbo.scaleX.type)
     {
       case SCALE_TYPE_ABSOLUTE:
@@ -240,46 +230,47 @@ bool CShaderPresetDX::CreateShaderTextures()
         break;
     }
 
-    // If the scale was unspecified
-    if (pass.fbo.scaleX.scale == 0 && pass.fbo.scaleY.scale == 0)
+    if (shaderIdx == numPasses - 1)
     {
       // If the last shader has the scale unspecified
-      if (shaderIdx == numPasses - 1)
+      if (pass.fbo.scaleX.scale == 0 && pass.fbo.scaleY.scale == 0)
       {
         // We're supposed to output at full (viewport) resolution
-        //! @todo Thus, we can also (maybe) bypass rendering to an intermediate render target (on the
-        // last pass)
         scaledSize.x = m_outputSize.x;
         scaledSize.y = m_outputSize.y;
       }
     }
-
-    // Determine the framebuffer data format
-    DXGI_FORMAT textureFormat;
-    if (pass.fbo.floatFramebuffer)
-    {
-      // Give priority to float framebuffer parameter (we can't use both float and sRGB)
-      textureFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    }
     else
     {
-      if (pass.fbo.sRgbFramebuffer)
-        textureFormat = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+      // Determine the framebuffer data format
+      DXGI_FORMAT textureFormat;
+      if (pass.fbo.floatFramebuffer)
+      {
+        // Give priority to float framebuffer parameter (we can't use both float and sRGB)
+        textureFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+      }
       else
-        textureFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-    }
+      {
+        if (pass.fbo.sRgbFramebuffer)
+          textureFormat = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+        else
+          textureFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+      }
 
-    //! @todo Enable usage of optimal texture sizes when all issues are fixed
-    float2 textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
+      //! @todo Enable usage of optimal texture sizes when all issues are fixed
+      textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
 
-    CD3DTexture* texture(new CD3DTexture());
-    if (!texture->Create(static_cast<UINT>(textureSize.x), static_cast<UINT>(textureSize.y), 1,
-                         D3D11_USAGE_DEFAULT, textureFormat, nullptr, 0))
-    {
-      CLog::Log(LOGERROR, "Couldn't create a texture for video shader {}", pass.sourcePath);
-      return false;
+      CD3DTexture* texture(new CD3DTexture());
+
+      if (!texture->Create(static_cast<UINT>(textureSize.x), static_cast<UINT>(textureSize.y), 1,
+                           D3D11_USAGE_DEFAULT, textureFormat, nullptr, 0))
+      {
+        CLog::Log(LOGERROR, "Couldn't create a texture for video shader {}", pass.sourcePath);
+        return false;
+      }
+
+      m_pShaderTextures.emplace_back(new CShaderTextureCD3D(texture));
     }
-    m_pShaderTextures.emplace_back(new CShaderTextureCD3D(texture));
 
     // Notify shader of its source and dest size
     m_pShaders[shaderIdx]->SetSizes(prevSize, prevTextureSize, scaledSize);
@@ -435,11 +426,6 @@ void CShaderPresetDX::DisposeShaders()
   m_passes.clear();
   m_bPresetNeedsUpdate = true;
 }
-
-// CShaderTextureDX* CShaderPresetDX::GetFirstTexture()
-//{
-//  return firstTexture.get();
-//}
 
 bool CShaderPresetDX::SetShaderPreset(const std::string& shaderPresetPath)
 {
