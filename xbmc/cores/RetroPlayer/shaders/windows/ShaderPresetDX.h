@@ -56,9 +56,7 @@ public:
   bool SetShaderPreset(const std::string& shaderPresetPath) override;
   const std::string& GetShaderPreset() const override;
   ShaderPassVec& GetPasses() override { return m_passes; }
-
   bool Update();
-  // CShaderTextureDX* GetFirstTexture();
 
 private:
   bool CreateShaderTextures();
