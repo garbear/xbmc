@@ -46,4 +46,3 @@ protected:
   bool m_isOglVersion3orNewer{false};
   bool m_isOglVersion33orNewer{false};
 };
-
