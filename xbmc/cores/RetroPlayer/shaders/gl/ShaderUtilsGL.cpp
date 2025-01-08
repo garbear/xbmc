@@ -37,7 +37,6 @@ GLint CShaderUtilsGL::TranslateWrapType(WRAP_TYPE wrap)
 #endif
       break;
   }
-
   return glWrap;
 }
 

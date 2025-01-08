@@ -16,22 +16,22 @@ namespace KODI
 {
 namespace SHADER
 {
+
 class CShaderTextureGL : public IShaderTexture
 {
 public:
   CShaderTextureGL() = default;
-
   CShaderTextureGL(CGLTexture* texture) : m_texture(texture) {}
   CShaderTextureGL(CGLTexture& texture) : m_texture(&texture) {}
 
   // Destructor
-  // Don't delete texture since it wasn't created here
   ~CShaderTextureGL() override;
 
   float GetWidth() const override { return static_cast<float>(m_texture->GetWidth()); }
   float GetHeight() const override { return static_cast<float>(m_texture->GetHeight()); }
 
   CGLTexture* GetPointer() { return m_texture; }
+
   bool CreateFBO();
   bool BindFBO();
   void UnbindFBO();
