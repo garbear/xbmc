@@ -62,6 +62,22 @@ public:
                         const float2& nextSize) = 0;
 
   /*!
+   * \brief Called before rendering.
+   *        Updates any internal state needed to ensure that correct data is passed to the shader
+   *        when rendering
+   * \param dest Coordinates of the 4 corners of the output viewport/window
+   * \param isLastPass True if this shader is the last pass //! @todo This could be a member
+   * \param frameCount Number of frames that have passed
+   */
+  virtual void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) = 0;
+
+  /*!
+   * \brief Updates the model view projection matrix.
+   *        Should usually only be called when the viewport/window size changes
+   */
+  virtual void UpdateMVP() = 0;
+
+  /*!
    * \brief Construct the vertex buffer that will be used to render the shader
    * \param vertCount Number of vertices to construct. Commonly 4, for rectangular screens.
    * \param vertSize Size of each vertex's data in bytes
@@ -74,22 +90,6 @@ public:
    * shader \return False if creating the input buffer failed, true otherwise.
    */
   virtual bool CreateInputBuffer() = 0;
-
-  /*!
-   * \brief Called before rendering.
-   *        Updates any internal state needed to ensure that correct data is passed to the shader
-   *        when rendering
-   * \param dest Coordinates of the 4 corners of the output viewport/window
-   * \param isLastPass True if the current shader is last one in the pipeline // TODO: this could be
-   * a member \param frameCount Number of frames that have passed
-   */
-  virtual void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) = 0;
-
-  /*!
-   * \brief Updates the model view projection matrix.
-   *        Should usually only be called when the viewport/window size changes
-   */
-  virtual void UpdateMVP() = 0;
 
   virtual ~IShader() = default;
 };

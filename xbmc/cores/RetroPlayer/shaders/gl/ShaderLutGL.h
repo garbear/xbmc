@@ -1,4 +1,3 @@
-
 /*
  *  Copyright (C) 2019 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
@@ -19,7 +18,6 @@
 
 namespace KODI
 {
-
 namespace RETRO
 {
 class CRenderContext;
@@ -37,17 +35,16 @@ public:
   CShaderLutGL() = default;
   CShaderLutGL(const std::string& id, const std::string& path);
 
-  //Destructor
+  // Destructor
   ~CShaderLutGL() override;
 
-  //Implementation of IShaderLut
+  // Implementation of IShaderLut
+  //! @todo Remove sampler from IShaderLut.h
   bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) override;
   IShaderSampler* GetSampler() override { return nullptr; }
   IShaderTexture* GetTexture() override { return m_texture.get(); }
 
 private:
-  static std::unique_ptr<IShaderSampler> CreateLUTSampler(RETRO::CRenderContext& context,
-                                                          const ShaderLut& lut);
   static std::unique_ptr<IShaderTexture> CreateLUTTexture(RETRO::CRenderContext& context,
                                                           const ShaderLut& lut);
 
