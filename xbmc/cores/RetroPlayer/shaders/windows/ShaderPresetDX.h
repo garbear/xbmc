@@ -38,7 +38,6 @@ namespace SHADER
 {
 
 class IShaderTexture;
-
 class CShaderPresetDX : public IShaderPreset
 {
 public:
@@ -48,7 +47,7 @@ public:
                            unsigned videoHeight = 0);
   ~CShaderPresetDX() override;
 
-  // implementation of IShaderPreset
+  // Implementation of IShaderPreset
   bool ReadPresetFile(const std::string& presetPath) override;
   bool RenderUpdate(const CPoint dest[], IShaderTexture* source, IShaderTexture* target) override;
   void SetSpeed(double speed) override { m_speed = speed; }
@@ -56,9 +55,7 @@ public:
   bool SetShaderPreset(const std::string& shaderPresetPath) override;
   const std::string& GetShaderPreset() const override;
   ShaderPassVec& GetPasses() override { return m_passes; }
-
   bool Update();
-  // CShaderTextureDX* GetFirstTexture();
 
 private:
   bool CreateShaderTextures();

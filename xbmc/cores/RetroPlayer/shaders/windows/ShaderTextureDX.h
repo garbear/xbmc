@@ -16,7 +16,6 @@
 
 namespace KODI
 {
-
 namespace SHADER
 {
 
@@ -29,7 +28,7 @@ public:
   CShaderTextureDX(TextureType& texture) : m_texture(&texture) {}
 
   // Destructor
-  // Don't delete texture since it wasn't created here
+  // Don't delete the texture since it wasn't created here
   ~CShaderTextureDX() override = default;
 
   float GetWidth() const override { return static_cast<float>(m_texture->GetWidth()); }

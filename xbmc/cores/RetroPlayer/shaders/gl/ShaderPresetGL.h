@@ -36,9 +36,7 @@ namespace KODI
 {
 namespace RETRO
 {
-
 class CRenderContext;
-
 }
 
 namespace SHADER
@@ -52,17 +50,16 @@ public:
   explicit CShaderPresetGL(RETRO::CRenderContext& context,
                            unsigned videoWidth = 0,
                            unsigned videoHeight = 0);
-
   ~CShaderPresetGL() override;
 
-  // implementation of IShaderPreset
+  // Implementation of IShaderPreset
   bool ReadPresetFile(const std::string& presetPath) override;
   bool RenderUpdate(const CPoint dest[], IShaderTexture* source, IShaderTexture* target) override;
-  void SetSpeed(double speed) override;
+  void SetSpeed(double speed) override { m_speed = speed; }
   void SetVideoSize(const unsigned videoWidth, const unsigned videoHeight) override;
   bool SetShaderPreset(const std::string& shaderPresetPath) override;
   const std::string& GetShaderPreset() const override;
-  ShaderPassVec& GetPasses() override;
+  ShaderPassVec& GetPasses() override { return m_passes; }
   bool Update();
 
 private:
@@ -108,12 +105,6 @@ private:
 
   // Number of frames that have passed
   float m_frameCount = 0.0f;
-
-  // Point/nearest neighbor sampler
-  //ID3D11SamplerState* m_pSampNearest = nullptr;
-
-  // Linear sampler
-  //ID3D11SamplerState* m_pSampLinear = nullptr;
 
   // Set of paths of presets that are known to not load correctly
   // Should not contain "" (empty path) because this signifies that a preset is not loaded

@@ -25,11 +25,11 @@
 using namespace KODI;
 using namespace SHADER;
 
+CShaderLutGL::~CShaderLutGL() = default;
+
 CShaderLutGL::CShaderLutGL(const std::string& id, const std::string& path) : IShaderLut(id, path)
 {
 }
-
-CShaderLutGL::~CShaderLutGL() = default;
 
 bool CShaderLutGL::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 {
@@ -41,7 +41,6 @@ bool CShaderLutGL::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
   }
 
   m_texture = std::move(lutTexture);
-
   return true;
 }
 
