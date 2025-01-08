@@ -116,11 +116,7 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
     auto* lutTexture = dynamic_cast<CShaderTextureGLES*>(m_luts[i].get()->GetTexture());
 #endif
     if (lutTexture)
-    {
-      GLint paramLoc = glGetUniformLocation(m_shaderProgram, m_luts[i]->GetID().c_str());
-      glUniform1i(paramLoc, 1 + i);
       lutTexture->GetPointer()->BindToUnit(1 + i);
-    }
   }
 
   glUniformMatrix4fv(m_MVPMatrixLoc, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&m_MVP));
@@ -309,5 +305,19 @@ void CShaderGL::SetShaderParameters()
   {
     GLint paramLoc = glGetUniformLocation(m_shaderProgram, parameter.first.c_str());
     glUniform1f(paramLoc, parameter.second);
+  }
+
+  for (unsigned int i = 0; i < m_luts.size(); ++i)
+  {
+#ifndef HAS_GLES
+    auto* lutTexture = dynamic_cast<CShaderTextureGL*>(m_luts[i].get()->GetTexture());
+#else
+    auto* lutTexture = dynamic_cast<CShaderTextureGLES*>(m_luts[i].get()->GetTexture());
+#endif
+    if (lutTexture)
+    {
+      GLint paramLoc = glGetUniformLocation(m_shaderProgram, m_luts[i]->GetID().c_str());
+      glUniform1i(paramLoc, 1 + i);
+    }
   }
 }
