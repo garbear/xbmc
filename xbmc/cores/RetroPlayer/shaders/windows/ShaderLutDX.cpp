@@ -21,11 +21,11 @@
 using namespace KODI;
 using namespace SHADER;
 
-CShaderLutDX::~CShaderLutDX() = default;
-
 CShaderLutDX::CShaderLutDX(const std::string& id, const std::string& path) : IShaderLut(id, path)
 {
 }
+
+CShaderLutDX::~CShaderLutDX() = default;
 
 bool CShaderLutDX::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 {
@@ -86,7 +86,7 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
 
 std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& lut)
 {
-  std::unique_ptr<CTexture> texture = CDXTexture::LoadFromFile(lut.path);
+  std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
   CDXTexture* textureDX = static_cast<CDXTexture*>(texture.get());
   if (textureDX == nullptr)
   {
