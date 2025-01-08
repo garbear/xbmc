@@ -43,41 +43,9 @@ CShaderPresetGL::~CShaderPresetGL()
   m_context.ApplyStateBlock();
 }
 
-ShaderParameterMap CShaderPresetGL::GetShaderParameters(
-    const std::vector<ShaderParameter>& parameters, const std::string& sourceStr) const
+bool CShaderPresetGL::ReadPresetFile(const std::string& presetPath)
 {
-  static const std::regex pragmaParamRegex("#pragma parameter ([a-zA-Z_][a-zA-Z0-9_]*)");
-  std::smatch matches;
-
-  std::vector<std::string> validParams;
-  std::string::const_iterator searchStart(sourceStr.cbegin());
-  while (regex_search(searchStart, sourceStr.cend(), matches, pragmaParamRegex))
-  {
-    validParams.push_back(matches[1].str());
-    searchStart += matches.position() + matches.length();
-  }
-
-  ShaderParameterMap matchParams;
-
-  // For each param found in the source code
-  for (const auto& match : validParams)
-  {
-    // For each param found in the preset file
-    for (const auto& parameter : parameters)
-    {
-      // Check if they match
-      if (match == parameter.strId)
-      {
-        // The add-on has already handled parsing and overwriting default
-        // parameter values from the preset file. The final value we
-        // should use is in the 'current' field.
-        matchParams[match] = parameter.current;
-        break;
-      }
-    }
-  }
-
-  return matchParams;
+  return CServiceBroker::GetGameServices().VideoShaders().LoadPreset(presetPath, *this);
 }
 
 bool CShaderPresetGL::RenderUpdate(const CPoint dest[],
@@ -117,33 +85,28 @@ bool CShaderPresetGL::RenderUpdate(const CPoint dest[],
   lastShader->Render(source, target);
 
   m_frameCount += static_cast<float>(m_speed);
-
   return true;
 }
 
-void CShaderPresetGL::RenderShader(IShader* shader,
-                                   IShaderTexture* source,
-                                   IShaderTexture* target) const
+void CShaderPresetGL::SetVideoSize(const unsigned videoWidth, const unsigned videoHeight)
 {
-#ifndef HAS_GLES
-  if (static_cast<CShaderTextureGL*>(target)->BindFBO())
-#else
-  if (static_cast<CShaderTextureGLES*>(target)->BindFBO())
-#endif
+  if (videoWidth != m_videoSize.x || videoHeight != m_videoSize.y)
   {
-    CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
-    glViewport((GLsizei)newViewPort.x1, (GLsizei)newViewPort.y1, (GLsizei)newViewPort.x2,
-               (GLsizei)newViewPort.y2);
-    glScissor((GLsizei)newViewPort.x1, (GLsizei)newViewPort.y1, (GLsizei)newViewPort.x2,
-              (GLsizei)newViewPort.y2);
-
-    shader->Render(source, target);
-#ifndef HAS_GLES
-    static_cast<CShaderTextureGL*>(target)->UnbindFBO();
-#else
-    static_cast<CShaderTextureGLES*>(target)->UnbindFBO();
-#endif
+    m_videoSize = {videoWidth, videoHeight};
+    m_bPresetNeedsUpdate = true;
   }
+}
+
+bool CShaderPresetGL::SetShaderPreset(const std::string& shaderPresetPath)
+{
+  m_bPresetNeedsUpdate = true;
+  m_presetPath = shaderPresetPath;
+  return Update();
+}
+
+const std::string& CShaderPresetGL::GetShaderPreset() const
+{
+  return m_presetPath;
 }
 
 bool CShaderPresetGL::Update()
@@ -190,27 +153,6 @@ bool CShaderPresetGL::Update()
 
   m_bPresetNeedsUpdate = false;
   return true;
-}
-
-void CShaderPresetGL::SetVideoSize(const unsigned videoWidth, const unsigned videoHeight)
-{
-  if (videoWidth != m_videoSize.x || videoHeight != m_videoSize.y)
-  {
-    m_videoSize = {videoWidth, videoHeight};
-    m_bPresetNeedsUpdate = true;
-  }
-}
-
-bool CShaderPresetGL::SetShaderPreset(const std::string& shaderPresetPath)
-{
-  m_bPresetNeedsUpdate = true;
-  m_presetPath = shaderPresetPath;
-  return Update();
-}
-
-const std::string& CShaderPresetGL::GetShaderPreset() const
-{
-  return m_presetPath;
 }
 
 bool CShaderPresetGL::CreateShaderTextures()
@@ -369,9 +311,7 @@ bool CShaderPresetGL::CreateShaderTextures()
     prevTextureSize = textureSize;
   }
 
-  // Update MVPs
   UpdateMVPs();
-
   return true;
 }
 
@@ -379,6 +319,7 @@ bool CShaderPresetGL::CreateShaders()
 {
   auto numPasses = m_passes.size();
 
+  //! @todo Is this pass specific?
   ShaderLutVec passLUTsGL;
   for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
@@ -393,6 +334,7 @@ bool CShaderPresetGL::CreateShaders()
         passLUTsGL.emplace_back(std::move(passLut));
     }
 
+    // Create the shader
     std::unique_ptr<CShaderGL> videoShader(new CShaderGL(m_context));
 
     auto shaderSource = pass.vertexSource; // Also contains fragment source
@@ -409,6 +351,7 @@ bool CShaderPresetGL::CreateShaders()
     }
     m_pShaders.push_back(std::move(videoShader));
   }
+
   return true;
 }
 
@@ -479,22 +422,68 @@ void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPo
   m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
 }
 
-bool CShaderPresetGL::ReadPresetFile(const std::string& presetPath)
+void CShaderPresetGL::RenderShader(IShader* shader,
+                                   IShaderTexture* source,
+                                   IShaderTexture* target) const
 {
-  return CServiceBroker::GetGameServices().VideoShaders().LoadPreset(presetPath, *this);
-}
+#ifndef HAS_GLES
+  if (static_cast<CShaderTextureGL*>(target)->BindFBO())
+#else
+  if (static_cast<CShaderTextureGLES*>(target)->BindFBO())
+#endif
+  {
+    CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
+    glViewport((GLsizei)newViewPort.x1, (GLsizei)newViewPort.y1, (GLsizei)newViewPort.x2,
+               (GLsizei)newViewPort.y2);
+    glScissor((GLsizei)newViewPort.x1, (GLsizei)newViewPort.y1, (GLsizei)newViewPort.x2,
+              (GLsizei)newViewPort.y2);
 
-void CShaderPresetGL::SetSpeed(double speed)
-{
-  m_speed = speed;
-}
-
-ShaderPassVec& CShaderPresetGL::GetPasses()
-{
-  return m_passes;
+    shader->Render(source, target);
+#ifndef HAS_GLES
+    static_cast<CShaderTextureGL*>(target)->UnbindFBO();
+#else
+    static_cast<CShaderTextureGLES*>(target)->UnbindFBO();
+#endif
+  }
 }
 
 bool CShaderPresetGL::HasPathFailed(const std::string& path) const
 {
   return m_failedPaths.find(path) != m_failedPaths.end();
+}
+
+ShaderParameterMap CShaderPresetGL::GetShaderParameters(
+    const std::vector<ShaderParameter>& parameters, const std::string& sourceStr) const
+{
+  static const std::regex pragmaParamRegex("#pragma parameter ([a-zA-Z_][a-zA-Z0-9_]*)");
+  std::smatch matches;
+
+  std::vector<std::string> validParams;
+  std::string::const_iterator searchStart(sourceStr.cbegin());
+  while (regex_search(searchStart, sourceStr.cend(), matches, pragmaParamRegex))
+  {
+    validParams.push_back(matches[1].str());
+    searchStart += matches.position() + matches.length();
+  }
+
+  ShaderParameterMap matchParams;
+
+  // For each param found in the source code
+  for (const auto& match : validParams)
+  {
+    // For each param found in the preset file
+    for (const auto& parameter : parameters)
+    {
+      // Check if they match
+      if (match == parameter.strId)
+      {
+        // The add-on has already handled parsing and overwriting default
+        // parameter values from the preset file. The final value we
+        // should use is in the 'current' field.
+        matchParams[match] = parameter.current;
+        break;
+      }
+    }
+  }
+  return matchParams;
 }
