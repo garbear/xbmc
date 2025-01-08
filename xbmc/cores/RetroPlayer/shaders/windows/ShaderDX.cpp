@@ -55,14 +55,14 @@ bool CShaderDX::Create(const std::string& shaderSource,
 
   DefinesMap defines;
 
-  defines["HLSL_4"] = ""; // using Shader Model 4
-  defines["HLSL_FX"] = ""; // and the FX11 framework
+  defines["HLSL_4"] = ""; // Using Shader Model 4
+  defines["HLSL_FX"] = ""; // And the FX11 framework
 
   // We implement runtime shader parameters ("#pragma parameter")
-  // NOTICE: Runtime shader parameters allow convenient experimentation with real-time
-  //         feedback, as well as override-ability by presets, but sometimes they are
-  //         much slower because they prevent static evaluation of a lot of math.
-  //         Disabling them drastically speeds up shaders that use them heavily.
+  // @note Runtime shader parameters allow convenient experimentation with real-time
+  //       feedback, as well as override-ability by presets, but sometimes they are
+  //       much slower because they prevent static evaluation of a lot of math.
+  //       Disabling them drastically speeds up shaders that use them heavily.
   defines["PARAMETER_UNIFORM"] = "";
 
   m_effect.AddIncludePath(URIUtils::GetBasePath(m_shaderPath));
@@ -81,8 +81,8 @@ void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
   auto* sourceDX = static_cast<CShaderTextureCD3D*>(source);
   auto* targetDX = static_cast<CShaderTextureCD3D*>(target);
 
-  // TODO: Doesn't work. Another PSSetSamplers gets called by FX11 right before rendering,
-  // overriding this
+  //! @todo Doesn't work. Another PSSetSamplers gets called by FX11 right before rendering
+  // overriding this.
   /*
   CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
   renderingDx->Get3D11Context()->PSSetSamplers(2, 1, &m_pSampler);
@@ -92,21 +92,13 @@ void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
   Execute({targetDX->GetPointer()}, 4);
 }
 
-void CShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
+void CShaderDX::SetSizes(const float2& prevSize,
+                         const float2& prevTextureSize,
+                         const float2& nextSize)
 {
-  m_effect.SetTechnique("TEQ");
-  m_effect.SetResources("decal", {sourceTexture.GetAddressOfSRV()}, 1);
-  m_effect.SetMatrix("modelViewProj", reinterpret_cast<const float*>(&m_MVP));
-  // TODO(optimization): Add frame_count to separate cbuffer
-  m_effect.SetConstantBuffer("input", m_pInputBuffer);
-  for (const auto& param : m_shaderParameters)
-    m_effect.SetFloatArray(param.first.c_str(), &param.second, 1);
-  for (const auto& lut : m_luts)
-  {
-    auto* texture = dynamic_cast<CShaderTextureCDX*>(lut->GetTexture());
-    if (texture != nullptr)
-      m_effect.SetTexture(lut->GetID().c_str(), texture->GetShaderResource());
-  }
+  m_inputSize = prevSize;
+  m_inputTextureSize = prevTextureSize;
+  m_outputSize = nextSize;
 }
 
 void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount)
@@ -132,7 +124,7 @@ void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
     // Set destination rectangle size
     m_destSize = m_outputSize;
   }
-  else // last pass
+  else // Last pass
   {
     // top left
     v[0].x = dest[0].x - m_outputSize.x / 2;
@@ -173,21 +165,6 @@ void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
   UpdateInputBuffer(frameCount);
 }
 
-bool CShaderDX::CreateVertexBuffer(unsigned vertCount, unsigned vertSize)
-{
-  return CWinShader::CreateVertexBuffer(vertCount, vertSize);
-}
-
-bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements)
-{
-  return CWinShader::CreateInputLayout(layout, numElements);
-}
-
-CD3DEffect& CShaderDX::GetEffect()
-{
-  return m_effect;
-}
-
 void CShaderDX::UpdateMVP()
 {
   float xScale = 1.0f / m_outputSize.x * 2.0f;
@@ -195,6 +172,11 @@ void CShaderDX::UpdateMVP()
 
   // Update projection matrix
   m_MVP = XMFLOAT4X4(xScale, 0, 0, 0, 0, yScale, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+}
+
+bool CShaderDX::CreateVertexBuffer(unsigned vertCount, unsigned vertSize)
+{
+  return CWinShader::CreateVertexBuffer(vertCount, vertSize);
 }
 
 bool CShaderDX::CreateInputBuffer()
@@ -245,19 +227,38 @@ CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
       {m_inputTextureSize.ToDXVector()}, // texture_size
       {m_destSize.ToDXVector()}, // output_size
       // Current frame count that can be modulo'ed
-      {static_cast<float>(frameCount)}, // frame_count
+      static_cast<float>(frameCount), // frame_count
       // Time always flows forward
-      {1.0f} // frame_direction
+      1.0f // frame_direction
   };
-
   return input;
 }
 
-void CShaderDX::SetSizes(const float2& prevSize,
-                         const float2& prevTextureSize,
-                         const float2& nextSize)
+CD3DEffect& CShaderDX::GetEffect()
 {
-  m_inputSize = prevSize;
-  m_inputTextureSize = prevTextureSize;
-  m_outputSize = nextSize;
+  return m_effect;
+}
+
+bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements)
+{
+  return CWinShader::CreateInputLayout(layout, numElements);
+}
+
+void CShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
+{
+  m_effect.SetTechnique("TEQ");
+  m_effect.SetResources("decal", {sourceTexture.GetAddressOfSRV()}, 1);
+  m_effect.SetMatrix("modelViewProj", reinterpret_cast<const float*>(&m_MVP));
+  //! @todo(optimization) Add frame_count to separate cbuffer
+  m_effect.SetConstantBuffer("input", m_pInputBuffer);
+
+  for (const auto& param : m_shaderParameters)
+    m_effect.SetFloatArray(param.first.c_str(), &param.second, 1);
+
+  for (const auto& lut : m_luts)
+  {
+    auto* texture = dynamic_cast<CShaderTextureCDX*>(lut->GetTexture());
+    if (texture != nullptr)
+      m_effect.SetTexture(lut->GetID().c_str(), texture->GetShaderResource());
+  }
 }

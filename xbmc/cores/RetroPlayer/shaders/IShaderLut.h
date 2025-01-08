@@ -16,7 +16,6 @@
 
 namespace KODI
 {
-
 namespace RETRO
 {
 class CRenderContext;

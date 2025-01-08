@@ -15,6 +15,7 @@
 
 namespace KODI
 {
+
 namespace SHADER
 {
 

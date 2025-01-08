@@ -13,6 +13,12 @@
 using namespace KODI;
 using namespace SHADER;
 
+CShaderTextureGL::~CShaderTextureGL()
+{
+  if (FBO != 0)
+    glDeleteFramebuffers(1, &FBO);
+}
+
 bool CShaderTextureGL::CreateFBO()
 {
   if (FBO == 0)
@@ -48,10 +54,4 @@ bool CShaderTextureGL::BindFBO()
 void CShaderTextureGL::UnbindFBO()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-CShaderTextureGL::~CShaderTextureGL()
-{
-  if (FBO != 0)
-    glDeleteFramebuffers(1, &FBO);
 }

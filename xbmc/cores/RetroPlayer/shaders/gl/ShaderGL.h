@@ -21,9 +21,7 @@ namespace KODI
 {
 namespace RETRO
 {
-
 class CRenderContext;
-
 }
 
 namespace SHADER
@@ -34,9 +32,8 @@ public:
   CShaderGL(RETRO::CRenderContext& context);
   ~CShaderGL() override = default;
 
-  bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) override;
-
-  // implementation of IShader
+  // Implementation of IShader
+  //! @todo Remove sampler from IShader.h
   bool Create(const std::string& shaderSource,
               const std::string& shaderPath,
               ShaderParameterMap shaderParameters,
@@ -50,6 +47,7 @@ public:
                 const float2& nextSize) override;
   void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) override;
   void UpdateMVP() override;
+  bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) override;
   bool CreateInputBuffer() override;
   void UpdateInputBuffer(uint64_t frameCount);
   void GetUniformLocs();
@@ -94,19 +92,19 @@ private:
   // Resolution of the viewport/window
   float2 m_viewportSize;
 
-  GLuint m_shaderProgram = 0;
-
   // Projection matrix
   std::array<std::array<GLfloat, 4>, 4> m_MVP;
+
+  // Value to modulo (%) frame count with
+  // Unused if 0
+  unsigned m_frameCountMod = 0;
 
   float m_VertexCoords[4][3];
   float m_colors[4][3];
   float m_TexCoords[4][2];
   unsigned int m_indices[2][3];
 
-  // Value to modulo (%) frame count with
-  // Unused if 0
-  unsigned m_frameCountMod = 0;
+  GLuint m_shaderProgram = 0;
 
   GLint m_FrameDirectionLoc = -1;
   GLint m_FrameCountLoc = -1;
