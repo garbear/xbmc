@@ -111,7 +111,7 @@ bool CVideoMarkWatched::IsVisible(const CFileItem& item) const
     {
       return item.GetProperty("watched").asInteger() < item.GetProperty("total").asInteger();
     }
-    else if (item.IsVideoDb())
+    else if (VIDEO::IsVideoDb(item))
       return true;
     else if (StringUtils::StartsWithNoCase(item.GetPath(), "library://video/"))
       return true;
@@ -150,7 +150,7 @@ bool CVideoMarkUnWatched::IsVisible(const CFileItem& item) const
     {
       return item.GetProperty("watched").asInteger() > 0;
     }
-    else if (item.IsVideoDb())
+    else if (VIDEO::IsVideoDb(item))
       return true;
     else if (StringUtils::StartsWithNoCase(item.GetPath(), "library://video/"))
       return true;
