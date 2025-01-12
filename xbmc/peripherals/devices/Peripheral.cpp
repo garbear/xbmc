@@ -486,6 +486,10 @@ bool CPeripheral::SetSetting(const std::string& strKey, const std::string& strVa
 
 void CPeripheral::PersistSettings(bool bExiting /* = false */)
 {
+  // No need to persist empty settings
+  if (m_settings.empty())
+    return;
+
   CXBMCTinyXML2 doc;
   auto* node = doc.NewElement("settings");
   if (node == nullptr)
