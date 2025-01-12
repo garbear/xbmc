@@ -28,9 +28,6 @@
 using namespace KODI;
 using namespace PERIPHERALS;
 
-// Settings for peripherals
-constexpr std::string_view SETTING_APPEARANCE = "appearance";
-
 CGUIDialogPeripheralSettings::CGUIDialogPeripheralSettings()
   : CGUIDialogSettingsManualBase(WINDOW_DIALOG_PERIPHERAL_SETTINGS, "DialogSettings.xml"),
     m_item(NULL)
@@ -104,26 +101,12 @@ void CGUIDialogPeripheralSettings::OnSettingChanged(const std::shared_ptr<const 
   if (!peripheral)
     return;
 
-  if (settingId == SETTING_APPEARANCE)
-  {
-    // Get the controller profile of the new appearance
-    GAME::ControllerPtr controller;
-
-    if (setting->GetType() == SettingType::String)
-    {
-      std::shared_ptr<const CSettingString> settingString =
-          std::static_pointer_cast<const CSettingString>(setting);
-      const std::string& addonId = settingString->GetValue();
-
-      if (m_manager != nullptr)
-        controller = m_manager->GetControllerProfiles().GetController(addonId);
-    }
-
-    if (controller)
-      peripheral->SetControllerProfile(controller);
-  }
+  peripheral->SetSetting(settingId, setting->ToString());
 
   peripheral->OnSettingChanged(settingId);
+
+  // Persist settings so that the new setting takes effect immediately
+  Save();
 }
 
 bool CGUIDialogPeripheralSettings::Save()
@@ -157,6 +140,9 @@ void CGUIDialogPeripheralSettings::OnResetSettings()
 
   // re-create all settings and their controls
   SetupView();
+
+  // Persist settings so that resetting takes effect immediately
+  Save();
 }
 
 void CGUIDialogPeripheralSettings::SetupView()

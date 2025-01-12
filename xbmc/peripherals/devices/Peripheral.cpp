@@ -487,10 +487,16 @@ bool CPeripheral::SetSetting(const std::string& strKey, const std::string& strVa
   {
     if ((*it).second.m_setting->GetType() == SettingType::String)
     {
-      std::shared_ptr<CSettingString> stringSetting =
-          std::static_pointer_cast<CSettingString>((*it).second.m_setting);
-      if (stringSetting)
+      // Handle add-on settings specifically
+      if (std::dynamic_pointer_cast<CSettingAddon>((*it).second.m_setting))
       {
+        SetAddonSetting(strKey, strValue);
+      }
+      else
+      {
+        std::shared_ptr<CSettingString> stringSetting =
+            std::static_pointer_cast<CSettingString>((*it).second.m_setting);
+
         bChanged = !StringUtils::EqualsNoCase(stringSetting->GetValue(), strValue);
         stringSetting->SetValue(strValue);
         if (bChanged && m_bInitialised)
@@ -512,6 +518,17 @@ bool CPeripheral::SetSetting(const std::string& strKey, const std::string& strVa
       bChanged = SetSetting(strKey, strValue == "1" || StringUtils::EqualsNoCase(strValue, "true"));
   }
   return bChanged;
+}
+
+void CPeripheral::SetAddonSetting(const std::string& strKey, const std::string& addonId)
+{
+  if (strKey == SETTING_APPEARANCE)
+  {
+    GAME::ControllerPtr controllerProfile =
+        CServiceBroker::GetGameControllerManager().GetController(addonId);
+    if (controllerProfile)
+      SetControllerProfile(controllerProfile);
+  }
 }
 
 void CPeripheral::PersistSettings(bool bExiting /* = false */)
@@ -600,6 +617,8 @@ void CPeripheral::LoadPersistedSettings(void)
 
 void CPeripheral::ResetDefaultSettings(void)
 {
+  m_controllerProfile.reset();
+
   ClearSettings();
   m_manager.GetSettingsFromMapping(*this);
 
@@ -609,8 +628,6 @@ void CPeripheral::ResetDefaultSettings(void)
     m_changedSettings.insert((*it).first);
     ++it;
   }
-
-  PersistSettings();
 }
 
 void CPeripheral::ClearSettings(void)
@@ -855,5 +872,27 @@ void CPeripheral::SetLastActive(const CDateTime& lastActive)
       m_manager.NotifyObservers(ObservableMessagePeripheralsChanged);
       PersistSettings();
     }
+  }
+}
+
+void CPeripheral::SetControllerProfile(const GAME::ControllerPtr& controller)
+{
+  m_controllerProfile = controller;
+
+  // Update appearance setting, if available
+  const std::string strKey{SETTING_APPEARANCE};
+
+  auto it = m_settings.find(strKey);
+  if (it != m_settings.end() && it->second.m_setting->GetType() == SettingType::String)
+  {
+    std::shared_ptr<CSettingString> stringSetting =
+        std::static_pointer_cast<CSettingString>(it->second.m_setting);
+
+    const std::string newControllerId = m_controllerProfile ? m_controllerProfile->ID() : "";
+
+    const bool bChanged = !StringUtils::EqualsNoCase(stringSetting->GetValue(), newControllerId);
+    stringSetting->SetValue(newControllerId);
+    if (bChanged)
+      m_changedSettings.insert(strKey);
   }
 }
