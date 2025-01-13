@@ -32,7 +32,6 @@
 #include "utils/log.h"
 
 #include <algorithm>
-#include <memory>
 #include <mutex>
 
 using namespace KODI;
@@ -136,14 +135,27 @@ void CPeripheralJoystick::InitializeDeadzoneFiltering(IButtonMap& buttonMap)
 
 void CPeripheralJoystick::InitializeControllerProfile(IButtonMap& buttonMap)
 {
-  const std::string controllerId = buttonMap.GetAppearance();
-  if (controllerId.empty())
-    return;
+  GAME::ControllerPtr controller;
 
-  auto controller = m_manager.GetControllerProfiles().GetController(controllerId);
-  if (controller)
-    CPeripheral::SetControllerProfile(controller);
+  // Button map has the freshest state
+  std::string controllerId = buttonMap.GetAppearance();
+  if (!controllerId.empty())
+  {
+    // Use the controller from the buttonmap
+    controller = m_manager.GetControllerProfiles().GetController(controllerId);
+  }
   else
+  {
+    // Next try our current state
+    if (m_controllerProfile)
+    {
+      controller = m_controllerProfile;
+      controllerId = m_controllerProfile->ID();
+    }
+  }
+
+  // If controller is not available, try to install it now
+  if (!controllerId.empty() && !controller)
   {
     std::unique_lock<CCriticalSection> lock(m_controllerInstallMutex);
 
@@ -177,12 +189,21 @@ void CPeripheralJoystick::InitializeControllerProfile(IButtonMap& buttonMap)
                      // Do the install
                      GAME::ControllerPtr controller = InstallAsync(controllerToInstall);
                      if (controller)
+                     {
+                       // Success
                        CPeripheral::SetControllerProfile(controller);
+                     }
                    });
 
     // Hold the task to prevent the destructor from completing during an install
     m_installTasks.emplace_back(std::move(installTask));
+
+    // Nothing left to do
+    return;
   }
+
+  // Initialize state with desired controller
+  CPeripheral::SetControllerProfile(controller);
 }
 
 void CPeripheralJoystick::OnUserNotification()
@@ -258,6 +279,15 @@ KEYMAP::IKeymap* CPeripheralJoystick::GetKeymap(const std::string& controllerId)
   return m_appInput->GetKeymap(controllerId);
 }
 
+void CPeripheralJoystick::SetLastActive(const CDateTime& lastActive)
+{
+  // Update state
+  m_lastActive = lastActive;
+
+  // Update ancestor
+  CPeripheral::SetLastActive(lastActive);
+}
+
 GAME::ControllerPtr CPeripheralJoystick::ControllerProfile() const
 {
   // Button map has the freshest state
@@ -273,44 +303,22 @@ GAME::ControllerPtr CPeripheralJoystick::ControllerProfile() const
   }
 
   // Fall back to last set controller profile
-  if (m_controllerProfile)
-    return m_controllerProfile;
-
-  // Fall back to default controller
-  return m_manager.GetControllerProfiles().GetDefaultController();
+  return m_controllerProfile;
 }
 
 void CPeripheralJoystick::SetControllerProfile(const KODI::GAME::ControllerPtr& controller)
 {
   CPeripheral::SetControllerProfile(controller);
 
-  const std::string controllerId = controller ? controller->ID() : "";
-  const bool providesInput = controller ? controller->Layout().Topology().ProvidesInput() : true;
-
   // Save preference to buttonmap
   if (m_buttonMap)
   {
+    const std::string controllerId = controller ? controller->ID() : "";
     if (m_buttonMap->SetAppearance(controllerId))
       m_buttonMap->SaveButtonMap();
   }
 
-  // Update settings
-  for (const auto& it : m_settings)
-  {
-    std::shared_ptr<CSetting> setting = it.second.m_setting;
-    if (!setting)
-      continue;
-
-    if (setting->GetId() == CDeadzoneFilter::SETTING_LEFT_STICK_DEADZONE ||
-        setting->GetId() == CDeadzoneFilter::SETTING_RIGHT_STICK_DEADZONE)
-    {
-      if (controllerId == GAME::DEFAULT_KEYBOARD_ID || controllerId == GAME::DEFAULT_MOUSE_ID ||
-          controllerId == GAME::DEFAULT_REMOTE_ID || !providesInput)
-        setting->SetVisible(false);
-      else
-        setting->SetVisible(true);
-    }
-  }
+  UpdateSettings(controller);
 }
 
 bool CPeripheralJoystick::OnButtonMotion(unsigned int buttonIndex, bool bPressed)
@@ -326,9 +334,10 @@ bool CPeripheralJoystick::OnButtonMotion(unsigned int buttonIndex, bool bPressed
   if (bPressed && !g_application.IsAppFocused())
     return false;
 
-  m_lastActive = CDateTime::GetCurrentDateTime();
-
   std::unique_lock<CCriticalSection> lock(m_handlerMutex);
+
+  // Update state
+  SetLastActive(CDateTime::GetCurrentDateTime());
 
   // Check GUI setting and send button release if controllers are disabled
   if (!m_manager.GetInputManager().IsControllerEnabled())
@@ -382,7 +391,8 @@ bool CPeripheralJoystick::OnHatMotion(unsigned int hatIndex, HAT_STATE state)
   if (state != HAT_STATE::NONE && !g_application.IsAppFocused())
     return false;
 
-  m_lastActive = CDateTime::GetCurrentDateTime();
+  // Update state
+  SetLastActive(CDateTime::GetCurrentDateTime());
 
   std::unique_lock<CCriticalSection> lock(m_handlerMutex);
 
@@ -479,8 +489,9 @@ bool CPeripheralJoystick::OnAxisMotion(unsigned int axisIndex, float position)
     }
   }
 
+  // Update state
   if (bHandled)
-    m_lastActive = CDateTime::GetCurrentDateTime();
+    SetLastActive(CDateTime::GetCurrentDateTime());
 
   return bHandled;
 }
@@ -567,4 +578,34 @@ bool CPeripheralJoystick::InstallSync(const std::string& controllerId)
   }
 
   return installed;
+}
+
+void CPeripheralJoystick::UpdateSettings(const GAME::ControllerPtr& controller)
+{
+  const std::string controllerId = controller ? controller->ID() : "";
+  const bool providesInput = controller ? controller->Layout().Topology().ProvidesInput() : true;
+
+  for (auto it : m_settings)
+  {
+    std::shared_ptr<CSetting> setting = it.second.m_setting;
+    if (!setting)
+      continue;
+
+    if (setting->GetId() == CDeadzoneFilter::SETTING_LEFT_STICK_DEADZONE ||
+        setting->GetId() == CDeadzoneFilter::SETTING_RIGHT_STICK_DEADZONE)
+    {
+      // Disable deadzone configuration for:
+      //
+      //   * keyboards
+      //   * mice
+      //   * remotes
+      //   * hubs
+      //
+      if (controllerId == GAME::DEFAULT_KEYBOARD_ID || controllerId == GAME::DEFAULT_MOUSE_ID ||
+          controllerId == GAME::DEFAULT_REMOTE_ID || !providesInput)
+        setting->SetVisible(false);
+      else
+        setting->SetVisible(true);
+    }
+  }
 }
