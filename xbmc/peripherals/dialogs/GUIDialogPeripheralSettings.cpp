@@ -13,7 +13,9 @@
 #include "addons/Skin.h"
 #include "dialogs/GUIDialogYesNo.h"
 #include "games/controllers/Controller.h"
+#include "games/controllers/ControllerLayout.h"
 #include "games/controllers/ControllerManager.h"
+#include "games/controllers/guicontrols/GUIGameController.h"
 #include "guilib/GUIMessage.h"
 #include "peripherals/Peripherals.h"
 #include "settings/SettingAddon.h"
@@ -31,6 +33,7 @@ using namespace PERIPHERALS;
 namespace
 {
 constexpr const int CONTROL_ID_SETTINGS_LIST = 5;
+constexpr const int CONTROL_ID_PERIPHERAL_ICON = 100;
 } // namespace
 
 CGUIDialogPeripheralSettings::CGUIDialogPeripheralSettings()
@@ -162,6 +165,24 @@ void CGUIDialogPeripheralSettings::SetupView()
   SET_CONTROL_LABEL(CONTROL_SETTINGS_OKAY_BUTTON, 186);
   SET_CONTROL_LABEL(CONTROL_SETTINGS_CANCEL_BUTTON, 222);
   SET_CONTROL_LABEL(CONTROL_SETTINGS_CUSTOM_BUTTON, 409);
+
+  // Set peripheral icon
+  GAME::ControllerPtr controller;
+
+  if (m_item != nullptr)
+  {
+    PeripheralPtr peripheral = CServiceBroker::GetPeripherals().GetByPath(m_item->GetPath());
+    if (peripheral)
+      controller = peripheral->ControllerProfile();
+  }
+
+  if (controller)
+  {
+    GAME::CGUIGameController* control =
+        dynamic_cast<GAME::CGUIGameController*>(GetControl(CONTROL_ID_PERIPHERAL_ICON));
+    if (control != nullptr)
+      control->SetFileName(controller->Layout().ImagePath());
+  }
 }
 
 void CGUIDialogPeripheralSettings::InitializeSettings()
