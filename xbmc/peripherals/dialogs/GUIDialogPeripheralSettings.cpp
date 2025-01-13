@@ -28,6 +28,11 @@
 using namespace KODI;
 using namespace PERIPHERALS;
 
+namespace
+{
+constexpr const int CONTROL_ID_SETTINGS_LIST = 5;
+} // namespace
+
 CGUIDialogPeripheralSettings::CGUIDialogPeripheralSettings()
   : CGUIDialogSettingsManualBase(WINDOW_DIALOG_PERIPHERAL_SETTINGS, "DialogSettings.xml"),
     m_item(NULL)
@@ -104,6 +109,12 @@ void CGUIDialogPeripheralSettings::OnSettingChanged(const std::shared_ptr<const 
   peripheral->SetSetting(settingId, setting->ToString());
 
   peripheral->OnSettingChanged(settingId);
+
+  // Re-create all settings and their controls
+  SetupView();
+
+  // Refocus the list
+  SET_CONTROL_FOCUS(CONTROL_ID_SETTINGS_LIST, 0);
 
   // Persist settings so that the new setting takes effect immediately
   Save();
