@@ -11,6 +11,7 @@
 #include "ServiceBroker.h"
 #include "Util.h"
 #include "XBDateTime.h"
+#include "games/agents/input/AgentController.h"
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerLayout.h"
 #include "games/controllers/ControllerManager.h"
@@ -42,6 +43,7 @@ namespace
 {
 // Settings for peripherals
 constexpr std::string_view SETTING_APPEARANCE = "appearance";
+constexpr std::string_view SETTING_LAST_ACTIVE = "last_active";
 
 struct SortBySettingsOrder
 {
@@ -84,6 +86,12 @@ CPeripheral::CPeripheral(CPeripherals& manager,
 
 CPeripheral::~CPeripheral(void)
 {
+  if (m_contorllerInput)
+  {
+    m_contorllerInput->Deinitialize();
+    m_contorllerInput.reset();
+  }
+
   PersistSettings(true);
 
   m_subDevices.clear();
@@ -176,8 +184,10 @@ bool CPeripheral::Initialise(void)
           CUtil::MakeLegalFileName(std::move(safeDeviceName), LEGAL_WIN32_COMPAT));
   }
 
+  // Load settings and initialize state
   LoadPersistedSettings();
 
+  // Initialize features
   for (unsigned int iFeaturePtr = 0; iFeaturePtr < m_features.size(); iFeaturePtr++)
   {
     PeripheralFeature feature = m_features.at(iFeaturePtr);
@@ -192,6 +202,13 @@ bool CPeripheral::Initialise(void)
     CLog::Log(LOGDEBUG, "{} - initialised peripheral on '{}' with {} features and {} sub devices",
               __FUNCTION__, m_strLocation, (int)m_features.size(), (int)m_subDevices.size());
     m_bInitialised = true;
+  }
+
+  // Initialize controller input
+  if (m_bInitialised)
+  {
+    m_contorllerInput = std::make_unique<GAME::CAgentController>(shared_from_this());
+    m_contorllerInput->Initialize();
   }
 
   return bReturn;
@@ -485,6 +502,13 @@ bool CPeripheral::SetSetting(const std::string& strKey, const std::string& strVa
         stringSetting->SetValue(strValue);
         if (bChanged && m_bInitialised)
           m_changedSettings.insert(strKey);
+
+        if (strKey == SETTING_LAST_ACTIVE && !strValue.empty())
+        {
+          CDateTime lastActive;
+          lastActive.SetFromW3CDateTime(strValue, false);
+          SetLastActive(lastActive);
+        }
       }
     }
     else if ((*it).second.m_setting->GetType() == SettingType::Integer)
@@ -821,7 +845,43 @@ bool CPeripheral::operator!=(const PeripheralScanResult& right) const
 
 CDateTime CPeripheral::LastActive() const
 {
-  return CDateTime();
+  // By default, peripherals are fully-activated
+  return CDateTime::GetCurrentDateTime();
+}
+
+void CPeripheral::SetLastActive(const CDateTime& lastActive)
+{
+  // Update last active setting
+  const std::string strKey{SETTING_LAST_ACTIVE};
+
+  auto it = m_settings.find(strKey);
+  if (it != m_settings.end() && it->second.m_setting->GetType() == SettingType::String)
+  {
+    std::shared_ptr<CSettingString> stringSetting =
+        std::static_pointer_cast<CSettingString>(it->second.m_setting);
+
+    const bool wasActive = !stringSetting->GetValue().empty();
+
+    const std::string lastActiveStr = lastActive.IsValid() ? lastActive.GetAsW3CDateTime() : "";
+
+    stringSetting->SetValue(lastActiveStr);
+
+    // Notify listeners if a peripheral was activated for the first time
+    if (!wasActive & lastActive.IsValid())
+    {
+      m_manager.SetChanged(true);
+      m_manager.NotifyObservers(ObservableMessagePeripheralsChanged);
+      PersistSettings();
+    }
+  }
+}
+
+float CPeripheral::GetActivation() const
+{
+  if (m_contorllerInput)
+    return m_contorllerInput->GetActivation();
+
+  return 0.0;
 }
 
 void CPeripheral::SetControllerProfile(const GAME::ControllerPtr& controller)
