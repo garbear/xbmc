@@ -42,7 +42,6 @@ namespace
 {
 // Settings for peripherals
 constexpr std::string_view SETTING_APPEARANCE = "appearance";
-} // namespace
 
 struct SortBySettingsOrder
 {
@@ -51,6 +50,7 @@ struct SortBySettingsOrder
     return left.m_order < right.m_order;
   }
 };
+} // namespace
 
 CPeripheral::CPeripheral(CPeripherals& manager,
                          const PeripheralScanResult& scanResult,
