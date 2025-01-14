@@ -434,7 +434,7 @@ void CAgentInput::ProcessAgentControllers(const PERIPHERALS::PeripheralVector& p
     // Check if controller already exists
     auto it = std::find_if(m_controllers.begin(), m_controllers.end(),
                            [&peripheral](const std::shared_ptr<CAgentController>& controller) {
-                             return controller->GetPeripheralLocation() == peripheral->Location();
+                             return controller->GetPeripheralLocation() == peripheral->FileLocation();
                            });
 
     if (it == m_controllers.end())
@@ -484,7 +484,7 @@ void CAgentInput::ProcessAgentControllers(const PERIPHERALS::PeripheralVector& p
       auto it =
           std::find_if(peripherals.begin(), peripherals.end(),
                        [&agentController](const PERIPHERALS::PeripheralPtr& peripheral) {
-                         return agentController->GetPeripheralLocation() == peripheral->Location();
+                         return agentController->GetPeripheralLocation() == peripheral->FileLocation();
                        });
 
       if (it == peripherals.end())
@@ -822,7 +822,7 @@ void CAgentInput::LogPeripheralMap(
       if (line != 0)
         CLog::Log(LOGDEBUG, "");
       CLog::Log(LOGDEBUG, "{}:", controllerAddress);
-      CLog::Log(LOGDEBUG, "    {} [{}]", peripheral->Location(), peripheral->DeviceName());
+      CLog::Log(LOGDEBUG, "    {} [{}]", peripheral->FileLocation(), peripheral->DeviceName());
 
       ++line;
     }
@@ -837,7 +837,7 @@ void CAgentInput::LogPeripheralMap(
     // Sort by peripheral location
     std::map<std::string, std::string> disconnectedPeripheralMap;
     for (const auto& peripheral : disconnectedPeripherals)
-      disconnectedPeripheralMap[peripheral->Location()] = peripheral->DeviceName();
+      disconnectedPeripheralMap[peripheral->FileLocation()] = peripheral->DeviceName();
 
     // Log location and device name for disconnected peripherals
     for (const auto& [location, deviceName] : disconnectedPeripheralMap)
