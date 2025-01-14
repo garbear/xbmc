@@ -87,7 +87,7 @@ std::string CAgentController::GetPeripheralName() const
 
 const std::string& CAgentController::GetPeripheralLocation() const
 {
-  return m_peripheral->FileLocation();
+  return m_peripheral->Location();
 }
 
 ControllerPtr CAgentController::GetController() const
