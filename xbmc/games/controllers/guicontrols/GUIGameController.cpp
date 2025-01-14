@@ -16,6 +16,7 @@
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerLayout.h"
 #include "guilib/GUIListItem.h"
+#include "utils/StringUtils.h"
 #include "utils/log.h"
 
 #include <algorithm>
@@ -77,7 +78,7 @@ void CGUIGameController::DoProcess(unsigned int currentTime, CDirtyRegionList& d
   if (!portAddress.empty())
     activation = agentInput.GetGamePortActivation(portAddress);
 
-  if (!peripheralLocation.empty())
+  if (StringUtils::StartsWith(peripheralLocation, "peripherals://"))
     activation = std::max(agentInput.GetPeripheralActivation(peripheralLocation), activation);
 
   SetActivation(activation);
