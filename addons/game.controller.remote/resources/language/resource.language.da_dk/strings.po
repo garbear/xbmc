@@ -1,0 +1,58 @@
+# Kodi Media Center language file
+# Addon Name: TV Remote
+# Addon id: game.controller.remote
+# Addon Provider: Team Kodi
+msgid ""
+msgstr ""
+"Project-Id-Version: game.controller.remote\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"POT-Creation-Date: 2014-05-30 17:00+8\n"
+"PO-Revision-Date: 2021-08-19 23:36+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-game/game-controller-remote/da_dk/>\n"
+"Language: da_dk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.7.2\n"
+
+msgctxt "Addon Summary"
+msgid "TV Remote"
+msgstr "Tv-fjernbetjening"
+
+msgctxt "Addon Description"
+msgid "A TV remote with basic navigational capabilities."
+msgstr "En tv-fjernbetjening med grundlæggende navigationsmuligheder."
+
+msgctxt "#30000"
+msgid "TV Remote"
+msgstr "Tv-fjernbetjening"
+
+msgctxt "#30001"
+msgid "Select"
+msgstr "Vælg"
+
+msgctxt "#30002"
+msgid "Back"
+msgstr "Tilbage"
+
+msgctxt "#30003"
+msgid "Home"
+msgstr "Hjem"
+
+msgctxt "#30004"
+msgid "Up"
+msgstr "Op"
+
+msgctxt "#30005"
+msgid "Right"
+msgstr "Højre"
+
+msgctxt "#30006"
+msgid "Down"
+msgstr "Ned"
+
+msgctxt "#30007"
+msgid "Left"
+msgstr "Venstre"
