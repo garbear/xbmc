@@ -259,11 +259,12 @@ CAxisDetector& CButtonMapping::GetAxis(
     // analog stick axes are always late due to zeroed events not always being
     // sent
 #if defined(TARGET_DARWIN)
-    const std::string peripheralPath = m_buttonMap->Location();
+    const std::string peripheralLocation = m_buttonMap->Location();
 
     PERIPHERALS::CPeripherals& peripheralManager = CServiceBroker::GetPeripherals();
 
-    const PERIPHERALS::PeripheralPtr peripheral = peripheralManager.GetByPath(peripheralPath);
+    const PERIPHERALS::PeripheralPtr peripheral =
+        peripheralManager.GetPeripheralAtLocation(peripheralLocation);
 
     if (peripheral &&
         peripheral->GetBusType() == PERIPHERALS::PeripheralBusType::PERIPHERAL_BUS_GCCONTROLLER)
