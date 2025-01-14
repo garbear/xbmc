@@ -15,7 +15,7 @@
 #include <type_traits>
 #include <vector>
 
-//! @todo Remove (see below)
+// TODO: remove (see below)
 #ifdef _WIN32
 #include <DirectXMath.h>
 #endif
@@ -126,7 +126,7 @@ struct float2
     return static_cast<T>(std::min(x, y));
   }
 
-  //! @todo Move to CShaderUtilsDX
+  // TODO: move to CShaderUtilsDX
 #ifdef _WIN32
   DirectX::XMFLOAT2 ToDXVector() const
   {

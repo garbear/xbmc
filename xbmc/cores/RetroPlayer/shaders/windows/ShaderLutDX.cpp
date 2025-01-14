@@ -45,6 +45,7 @@ bool CShaderLutDX::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 
   m_sampler = std::move(lutSampler);
   m_texture = std::move(lutTexture);
+
   return true;
 }
 
@@ -69,7 +70,7 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
   sampDesc.MinLOD = 0;
   sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-  FLOAT blackBorder[4] = {0, 1, 0, 1}; //! @todo Turn this back to black
+  FLOAT blackBorder[4] = {0, 1, 0, 1}; // TODO: turn this back to black
   memcpy(sampDesc.BorderColor, &blackBorder, 4 * sizeof(FLOAT));
 
   ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
@@ -80,13 +81,13 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
     return std::unique_ptr<IShaderSampler>();
   }
 
-  //! @todo Take care of allocation(?)
+  // todo: take care of allocation(?)
   return std::unique_ptr<IShaderSampler>(new CShaderSamplerDX(samp));
 }
 
 std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& lut)
 {
-  std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
+  std::unique_ptr<CTexture> texture = CDXTexture::LoadFromFile(lut.path);
   CDXTexture* textureDX = static_cast<CDXTexture*>(texture.get());
   if (textureDX == nullptr)
   {
@@ -99,7 +100,7 @@ std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& l
 
   textureDX->LoadToGPU();
 
-  //! @todo Take care of allocation(?)
+  // todo: take care of allocation(?)
   return std::unique_ptr<IShaderTexture>(
       new CShaderTextureCDX(static_cast<CDXTexture*>(texture.release())));
 }

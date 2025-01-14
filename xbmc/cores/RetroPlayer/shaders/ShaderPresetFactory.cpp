@@ -75,17 +75,6 @@ bool CShaderPresetFactory::LoadPreset(const std::string& presetPath, IShaderPres
   return bSuccess;
 }
 
-bool CShaderPresetFactory::CanLoadPreset(const std::string& presetPath)
-{
-  bool bSuccess = false;
-
-  std::string extension = URIUtils::GetExtension(presetPath);
-  if (!extension.empty())
-    bSuccess = (m_loaders.find(extension) != m_loaders.end());
-
-  return bSuccess;
-}
-
 void CShaderPresetFactory::OnEvent(const ADDON::AddonEvent& event)
 {
   if (typeid(event) == typeid(ADDON::AddonEvents::Enabled) ||
@@ -146,4 +135,15 @@ void CShaderPresetFactory::UpdateAddons()
       m_shaderAddons.emplace(std::move(addonId), std::move(addonPtr));
     }
   }
+}
+
+bool CShaderPresetFactory::CanLoadPreset(const std::string& presetPath)
+{
+  bool bSuccess = false;
+
+  std::string extension = URIUtils::GetExtension(presetPath);
+  if (!extension.empty())
+    bSuccess = (m_loaders.find(extension) != m_loaders.end());
+
+  return bSuccess;
 }

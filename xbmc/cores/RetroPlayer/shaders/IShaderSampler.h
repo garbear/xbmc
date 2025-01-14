@@ -12,7 +12,6 @@ namespace KODI
 {
 namespace SHADER
 {
-
 class IShaderSampler
 {
 public:
