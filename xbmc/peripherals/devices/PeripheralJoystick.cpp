@@ -258,15 +258,6 @@ KEYMAP::IKeymap* CPeripheralJoystick::GetKeymap(const std::string& controllerId)
   return m_appInput->GetKeymap(controllerId);
 }
 
-void CPeripheralJoystick::SetLastActive(const CDateTime& lastActive)
-{
-  // Update state
-  m_lastActive = lastActive;
-
-  // Update ancestor
-  CPeripheral::SetLastActive(lastActive);
-}
-
 GAME::ControllerPtr CPeripheralJoystick::ControllerProfile() const
 {
   // Button map has the freshest state
@@ -335,10 +326,9 @@ bool CPeripheralJoystick::OnButtonMotion(unsigned int buttonIndex, bool bPressed
   if (bPressed && !g_application.IsAppFocused())
     return false;
 
-  std::unique_lock<CCriticalSection> lock(m_handlerMutex);
+  m_lastActive = CDateTime::GetCurrentDateTime();
 
-  // Update state
-  SetLastActive(CDateTime::GetCurrentDateTime());
+  std::unique_lock<CCriticalSection> lock(m_handlerMutex);
 
   // Check GUI setting and send button release if controllers are disabled
   if (!m_manager.GetInputManager().IsControllerEnabled())
@@ -392,8 +382,7 @@ bool CPeripheralJoystick::OnHatMotion(unsigned int hatIndex, HAT_STATE state)
   if (state != HAT_STATE::NONE && !g_application.IsAppFocused())
     return false;
 
-  // Update state
-  SetLastActive(CDateTime::GetCurrentDateTime());
+  m_lastActive = CDateTime::GetCurrentDateTime();
 
   std::unique_lock<CCriticalSection> lock(m_handlerMutex);
 
@@ -490,9 +479,8 @@ bool CPeripheralJoystick::OnAxisMotion(unsigned int axisIndex, float position)
     }
   }
 
-  // Update state
   if (bHandled)
-    SetLastActive(CDateTime::GetCurrentDateTime());
+    m_lastActive = CDateTime::GetCurrentDateTime();
 
   return bHandled;
 }

@@ -362,8 +362,6 @@ public:
     return m_addonInstallMutex;
   }
 
-  float GetPeripheralActivation(const std::string& peripheralPath) const;
-
 private:
   bool LoadMappings();
   bool GetMappingForDevice(const CPeripheralBus& bus, PeripheralScanResult& result) const;

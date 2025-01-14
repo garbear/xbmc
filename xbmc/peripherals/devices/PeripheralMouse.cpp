@@ -72,15 +72,6 @@ void CPeripheralMouse::UnregisterMouseDriverHandler(MOUSE::IMouseDriverHandler* 
     m_mouseHandlers.erase(it);
 }
 
-void CPeripheralMouse::SetLastActive(const CDateTime& lastActive)
-{
-  // Update state
-  m_lastActive = lastActive;
-
-  // Update ancestor
-  CPeripheral::SetLastActive(lastActive);
-}
-
 GAME::ControllerPtr CPeripheralMouse::ControllerProfile() const
 {
   if (m_controllerProfile)
@@ -113,19 +104,17 @@ bool CPeripheralMouse::OnPosition(int x, int y)
     }
   }
 
-  // Update state
   if (bHandled)
-    SetLastActive(CDateTime::GetCurrentDateTime());
+    m_lastActive = CDateTime::GetCurrentDateTime();
 
   return bHandled;
 }
 
 bool CPeripheralMouse::OnButtonPress(MOUSE::BUTTON_ID button)
 {
-  std::unique_lock<CCriticalSection> lock(m_mutex);
+  m_lastActive = CDateTime::GetCurrentDateTime();
 
-  // Update state
-  SetLastActive(CDateTime::GetCurrentDateTime());
+  std::unique_lock<CCriticalSection> lock(m_mutex);
 
   bool bHandled = false;
 

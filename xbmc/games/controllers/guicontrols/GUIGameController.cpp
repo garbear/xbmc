@@ -16,7 +16,6 @@
 #include "games/controllers/Controller.h"
 #include "games/controllers/ControllerLayout.h"
 #include "guilib/GUIListItem.h"
-#include "peripherals/Peripherals.h"
 #include "utils/log.h"
 #include "utils/StringUtils.h"
 
@@ -72,7 +71,6 @@ void CGUIGameController::DoProcess(unsigned int currentTime, CDirtyRegionList& d
   }
 
   const GAME::CAgentInput& agentInput = CServiceBroker::GetGameServices().AgentInput();
-  const PERIPHERALS::CPeripherals& peripheralManager = CServiceBroker::GetPeripherals();
 
   // Highlight the controller if it is active
   float activation = 0.0f;
@@ -81,7 +79,7 @@ void CGUIGameController::DoProcess(unsigned int currentTime, CDirtyRegionList& d
     activation = agentInput.GetGamePortActivation(portAddress);
 
   if (StringUtils::StartsWith(peripheralLocation, "peripherals://"))
-    activation = std::max(peripheralManager.GetPeripheralActivation(peripheralLocation), activation);
+    activation = std::max(agentInput.GetPeripheralActivation(peripheralLocation), activation);
 
   SetActivation(activation);
 

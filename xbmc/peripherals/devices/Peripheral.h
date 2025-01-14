@@ -15,7 +15,6 @@
 #include "peripherals/PeripheralTypes.h"
 
 #include <map>
-#include <memory>
 #include <set>
 #include <string>
 #include <vector>
@@ -25,11 +24,6 @@ class CSetting;
 
 namespace KODI
 {
-namespace GAME
-{
-class CAgentController;
-}
-
 namespace JOYSTICK
 {
 class IButtonMapper;
@@ -76,8 +70,7 @@ typedef enum
  */
 class CPeripheral : public KODI::JOYSTICK::IInputProvider,
                     public KODI::KEYBOARD::IKeyboardInputProvider,
-                    public KODI::MOUSE::IMouseInputProvider,
-                    public std::enable_shared_from_this<CPeripheral>
+                    public KODI::MOUSE::IMouseInputProvider
 {
   friend class CGUIDialogPeripheralSettings;
 
@@ -274,20 +267,6 @@ public:
   virtual CDateTime LastActive() const;
 
   /*!
-   * \brief Set the last time this peripheral was active
-   *
-   * \param lastActive The time of last activation, or invalid if unknown/never active
-   */
-  virtual void SetLastActive(const CDateTime& lastActive);
-
-  /*!
-   * \brief Return the current activity level of the peripheral
-   *
-   * \return The activity level, on a scale of 0.0 to 1.0
-   */
-  virtual float GetActivation() const;
-
-  /*!
    * \brief Get the controller profile that best represents this peripheral
    *
    * \return The controller profile, or empty if unknown
@@ -334,6 +313,5 @@ protected:
       m_mouseHandlers;
   std::map<KODI::JOYSTICK::IButtonMapper*, std::unique_ptr<CAddonButtonMapping>> m_buttonMappers;
   KODI::GAME::ControllerPtr m_controllerProfile;
-  std::unique_ptr<KODI::GAME::CAgentController> m_contorllerInput;
 };
 } // namespace PERIPHERALS
