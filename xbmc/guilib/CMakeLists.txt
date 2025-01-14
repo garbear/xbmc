@@ -164,10 +164,8 @@ set(HEADERS DDSImage.h
             XBTFReader.h)
 
 if(TARGET ${APP_NAME_LC}::OpenGl OR TARGET ${APP_NAME_LC}::OpenGLES)
-  list(APPEND SOURCES Shader.cpp
-                      TextureGLES.cpp)
-  list(APPEND HEADERS Shader.h
-                      TextureGLES.h)
+  list(APPEND SOURCES Shader.cpp)
+  list(APPEND HEADERS Shader.h)
 
   if(TARGET ${APP_NAME_LC}::OpenGl)
     list(APPEND SOURCES GUIFontTTFGL.cpp
@@ -180,9 +178,11 @@ if(TARGET ${APP_NAME_LC}::OpenGl OR TARGET ${APP_NAME_LC}::OpenGLES)
 
   if(TARGET ${APP_NAME_LC}::OpenGLES)
     list(APPEND SOURCES GUIFontTTFGLES.cpp
-                        GUITextureGLES.cpp)
+                        GUITextureGLES.cpp
+                        TextureGLES.cpp)
     list(APPEND HEADERS GUIFontTTFGLES.h
-                        GUITextureGLES.h)
+                        GUITextureGLES.h
+                        TextureGLES.h)
   endif()
 
 endif()
