@@ -230,8 +230,8 @@ void CPeripheralAddon::UnregisterRemovedDevices(const PeripheralScanResults& res
   {
     auto it = m_peripherals.find(index);
     const PeripheralPtr& peripheral = it->second;
-    CLog::Log(LOGINFO, "{} - device removed from {}/{}: {} ({}:{})", __FUNCTION__,
-              PeripheralTypeTranslator::TypeToString(peripheral->Type()), peripheral->Location(),
+    CLog::Log(LOGINFO, "{} - {} device removed from {}: {} ({}:{})", __FUNCTION__,
+              PeripheralTypeTranslator::TypeToString(peripheral->Type()), peripheral->FileLocation(),
               peripheral->DeviceName(), peripheral->VendorIdAsString(),
               peripheral->ProductIdAsString());
     UnregisterButtonMap(peripheral.get());
