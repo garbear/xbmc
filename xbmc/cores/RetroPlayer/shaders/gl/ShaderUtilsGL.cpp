@@ -8,8 +8,12 @@
 
 #include "ShaderUtilsGL.h"
 
-#include <fstream>
-#include <sstream>
+#include "ServiceBroker.h"
+#ifndef HAS_GLES
+#include "rendering/gl/RenderSystemGL.h"
+#else
+#include "rendering/gles/RenderSystemGLES.h"
+#endif
 
 using namespace KODI;
 using namespace SHADER;
@@ -30,36 +34,80 @@ GLint CShaderUtilsGL::TranslateWrapType(WRAP_TYPE wrap)
       break;
     case WRAP_TYPE_BORDER:
     default:
-#ifdef HAS_GLES
-      glWrap = GL_CLAMP_TO_EDGE;
-#else
+#ifndef HAS_GLES
       glWrap = GL_CLAMP_TO_BORDER;
+#else
+      glWrap = GL_CLAMP_TO_EDGE;
 #endif
       break;
   }
   return glWrap;
 }
 
-void CShaderUtilsGL::MoveVersionToFirstLine(std::string& source,
-                                            std::string& defineVertex,
-                                            std::string& defineFragment)
+std::string CShaderUtilsGL::GetGLSLVersion(std::string& source)
 {
-  std::istringstream str_stream(source);
-  source.clear();
+  unsigned int version;
+  std::string versionString;
 
-  std::string line;
-  bool firstLine = true;
-  while (std::getline(str_stream, line))
+  size_t sourceVersionPosition = source.find("#version ");
+
+  // Extract the version from the source
+  if (sourceVersionPosition != std::string::npos)
   {
-    if (!firstLine)
-    {
-      source += line;
-    }
+    size_t sourceVersionSize;
+    std::string sourceVersion = source.substr(sourceVersionPosition + 9);
+
+    version = std::stoul(sourceVersion, &sourceVersionSize, 10);
+
+    // Keep only source code after the version define
+    source = sourceVersion.substr(sourceVersionSize);
+
+#ifndef HAS_GLES
+    versionString = "#version " + std::to_string(version) + "\n";
+#else
+    if (version >= 130 && version < 330)
+      versionString = "300 es";
+    else if (version == 330)
+      versionString = "310 es";
+    else if (version > 330)
+      versionString = "320 es";
     else
-    {
-      defineVertex = line + "\n" + defineVertex;
-      defineFragment = line + "\n" + defineFragment;
-      firstLine = false;
-    }
+      versionString = "100";
+
+    versionString = "#version " + versionString + "\n";
+#endif
   }
+  // Set GLSL version according to GL version
+  else
+  {
+    unsigned int major, minor;
+    CServiceBroker::GetRenderSystem()->GetRenderVersion(major, minor);
+    version = major * 100 + minor * 10;
+
+#ifndef HAS_GLES
+    if (version == 200)
+      versionString = "110";
+    else if (version == 210)
+      versionString = "120";
+    else if (version == 300)
+      versionString = "130";
+    else if (version == 310)
+      versionString = "140";
+    else if (version == 320)
+      versionString = "150";
+    else
+      versionString = std::to_string(version);
+
+    versionString = "#version " + versionString + "\n";
+#else
+    if (version == 200)
+      versionString = "100";
+    else
+      versionString = std::to_string(version) + " es";
+
+    // Do not force GLSL version for OpenGL ES
+    versionString = "\n";
+#endif
+  }
+  return versionString;
 }
