@@ -43,7 +43,7 @@ CAddonButtonMap::~CAddonButtonMap(void)
 
 std::string CAddonButtonMap::Location(void) const
 {
-  return m_device->FileLocation();
+  return m_device->Location();
 }
 
 bool CAddonButtonMap::Load(void)
