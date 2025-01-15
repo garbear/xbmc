@@ -102,7 +102,7 @@ private:
   float m_VertexCoords[4][3];
   float m_colors[4][3];
   float m_TexCoords[4][2];
-  unsigned int m_indices[2][3];
+  GLubyte m_indices[4];
 
   GLuint m_shaderProgram = 0;
 

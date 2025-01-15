@@ -134,7 +134,7 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_indices), m_indices, GL_STATIC_DRAW);
 
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, 0);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -217,12 +217,11 @@ void CShaderGL::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
   m_TexCoords[3][0] = 0.0f;
   m_TexCoords[3][1] = 0.0f;
 
-  m_indices[0][0] = 0;
-  m_indices[0][1] = 1;
-  m_indices[0][2] = 3;
-  m_indices[1][0] = 1;
-  m_indices[1][1] = 2;
-  m_indices[1][2] = 3;
+  // Determines order of triangle strip
+  m_indices[0] = 0;
+  m_indices[1] = 1;
+  m_indices[2] = 3;
+  m_indices[3] = 2;
 
   UpdateInputBuffer(frameCount);
 }
