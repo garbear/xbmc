@@ -72,8 +72,8 @@ bool CShaderGL::Create(const std::string& shaderSource,
   glAttachShader(m_shaderProgram, vShader);
   glAttachShader(m_shaderProgram, fShader);
   glBindAttribLocation(m_shaderProgram, 0, "VertexCoord");
-  glBindAttribLocation(m_shaderProgram, 1, "TexCoord");
-  glBindAttribLocation(m_shaderProgram, 2, "COLOR");
+  glBindAttribLocation(m_shaderProgram, 1, "COLOR");
+  glBindAttribLocation(m_shaderProgram, 2, "TexCoord");
 
   glLinkProgram(m_shaderProgram);
   glDeleteShader(vShader);
@@ -123,13 +123,13 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(m_colors), m_colors, GL_STATIC_DRAW);
-  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(2);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(m_TexCoords), m_TexCoords, GL_STATIC_DRAW);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(2);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_indices), m_indices, GL_STATIC_DRAW);
@@ -190,32 +190,32 @@ void CShaderGL::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
 
   // bottom left z, tu, tv, r, g, b
   m_VertexCoords[0][2] = 0;
-  m_TexCoords[0][0] = 0.0f;
-  m_TexCoords[0][1] = 1.0f;
   m_colors[0][0] = 0.0f;
   m_colors[0][1] = 0.0f;
   m_colors[0][2] = 0.0f;
+  m_TexCoords[0][0] = 0.0f;
+  m_TexCoords[0][1] = 1.0f;
   // bottom right z, tu, tv, r, g, b
   m_VertexCoords[1][2] = 0;
-  m_TexCoords[1][0] = 1.0f;
-  m_TexCoords[1][1] = 1.0f;
   m_colors[1][0] = 0.0f;
   m_colors[1][1] = 0.0f;
   m_colors[1][2] = 0.0f;
+  m_TexCoords[1][0] = 1.0f;
+  m_TexCoords[1][1] = 1.0f;
   // top right z, tu, tv, r, g, b
   m_VertexCoords[2][2] = 0;
-  m_TexCoords[2][0] = 1.0f;
-  m_TexCoords[2][1] = 0.0f;
   m_colors[2][0] = 0.0f;
   m_colors[2][1] = 0.0f;
   m_colors[2][2] = 0.0f;
+  m_TexCoords[2][0] = 1.0f;
+  m_TexCoords[2][1] = 0.0f;
   // top left z, tu, tv, r, g, b
   m_VertexCoords[3][2] = 0;
-  m_TexCoords[3][0] = 0.0f;
-  m_TexCoords[3][1] = 0.0f;
   m_colors[3][0] = 0.0f;
   m_colors[3][1] = 0.0f;
   m_colors[3][2] = 0.0f;
+  m_TexCoords[3][0] = 0.0f;
+  m_TexCoords[3][1] = 0.0f;
 
   m_indices[0][0] = 0;
   m_indices[0][1] = 1;

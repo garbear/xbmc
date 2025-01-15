@@ -116,8 +116,8 @@ private:
 #ifndef HAS_GLES
   GLuint VAO = 0;
 #endif
-  GLuint EBO = 0;
   GLuint VBO[3] = {};
+  GLuint EBO = 0;
 
 private:
   uniformInputs GetInputData(uint64_t frameCount = 0);
