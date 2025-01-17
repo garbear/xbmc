@@ -79,7 +79,7 @@ bool CShaderGL::Create(const std::string& shaderSource,
   glDeleteShader(vShader);
   glDeleteShader(fShader);
 
-  SetShaderParameters();
+  GetUniformLocs();
 
 #ifndef HAS_GLES
   glGenVertexArrays(1, &VAO);
@@ -91,6 +91,8 @@ bool CShaderGL::Create(const std::string& shaderSource,
 
 void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 {
+  glUseProgram(m_shaderProgram);
+
 #ifndef HAS_GLES
   CShaderTextureGL* sourceGL = static_cast<CShaderTextureGL*>(source);
 #else
@@ -98,18 +100,7 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 #endif
   sourceGL->GetPointer()->BindToUnit(0);
 
-  for (unsigned int i = 0; i < m_luts.size(); ++i)
-  {
-#ifndef HAS_GLES
-    auto* lutTexture = dynamic_cast<CShaderTextureGL*>(m_luts[i].get()->GetTexture());
-#else
-    auto* lutTexture = dynamic_cast<CShaderTextureGLES*>(m_luts[i].get()->GetTexture());
-#endif
-    if (lutTexture)
-      lutTexture->GetPointer()->BindToUnit(1 + i);
-  }
-
-  glUseProgram(m_shaderProgram);
+  SetShaderParameters();
 
   glUniformMatrix4fv(m_MVPMatrixLoc, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&m_MVP));
 
@@ -246,7 +237,6 @@ bool CShaderGL::CreateVertexBuffer(unsigned vertCount, unsigned vertSize)
 //! @todo Change name of this method in IShader.h to CreateInputs
 bool CShaderGL::CreateInputBuffer()
 {
-  GetUniformLocs();
   UpdateInputBuffer(0);
   return true;
 }
@@ -296,27 +286,27 @@ void CShaderGL::GetUniformLocs()
 
 void CShaderGL::SetShaderParameters()
 {
-  glUseProgram(m_shaderProgram);
+  unsigned int textureUnit = 1; // GL_TEXTURE0 is used by source texture
 
-  for (const auto& parameter : m_shaderParameters)
+  for (const auto& param : m_shaderParameters)
   {
-    GLint paramLoc = glGetUniformLocation(m_shaderProgram, parameter.first.c_str());
-    glUniform1f(paramLoc, parameter.second);
+    GLint paramLoc = glGetUniformLocation(m_shaderProgram, param.first.c_str());
+    glUniform1f(paramLoc, param.second);
   }
 
-  for (unsigned int i = 0; i < m_luts.size(); ++i)
+  for (const auto& lut : m_luts)
   {
 #ifndef HAS_GLES
-    auto* lutTexture = dynamic_cast<CShaderTextureGL*>(m_luts[i].get()->GetTexture());
+    auto* texture = dynamic_cast<CShaderTextureGL*>(lut->GetTexture());
 #else
-    auto* lutTexture = dynamic_cast<CShaderTextureGLES*>(m_luts[i].get()->GetTexture());
+    auto* texture = dynamic_cast<CShaderTextureGLES*>(lut->GetTexture());
 #endif
-    if (lutTexture)
+    if (texture != nullptr)
     {
-      GLint paramLoc = glGetUniformLocation(m_shaderProgram, m_luts[i]->GetID().c_str());
-      glUniform1i(paramLoc, 1 + i);
+      GLint paramLoc = glGetUniformLocation(m_shaderProgram, lut->GetID().c_str());
+      glUniform1i(paramLoc, textureUnit);
+      texture->GetPointer()->BindToUnit(textureUnit);
+      textureUnit++;
     }
   }
-
-  glUseProgram(0);
 }
