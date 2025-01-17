@@ -97,7 +97,6 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
   CShaderTextureGLES* sourceGL = static_cast<CShaderTextureGLES*>(source);
 #endif
   sourceGL->GetPointer()->BindToUnit(0);
-  glUseProgram(m_shaderProgram);
 
   for (unsigned int i = 0; i < m_luts.size(); ++i)
   {
@@ -109,6 +108,8 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
     if (lutTexture)
       lutTexture->GetPointer()->BindToUnit(1 + i);
   }
+
+  glUseProgram(m_shaderProgram);
 
   glUniformMatrix4fv(m_MVPMatrixLoc, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&m_MVP));
 
@@ -138,6 +139,8 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  glUseProgram(0);
 }
 
 void CShaderGL::SetSizes(const float2& prevSize,
@@ -252,12 +255,16 @@ bool CShaderGL::CreateInputBuffer()
 void CShaderGL::UpdateInputBuffer(uint64_t frameCount)
 {
   glUseProgram(m_shaderProgram);
+
   uniformInputs inputInitData = GetInputData(frameCount);
+
   glUniform1f(m_FrameDirectionLoc, inputInitData.frame_direction);
   glUniform1i(m_FrameCountLoc, inputInitData.frame_count);
   glUniform2f(m_OutputSizeLoc, inputInitData.output_size.x, inputInitData.output_size.y);
   glUniform2f(m_TextureSizeLoc, inputInitData.texture_size.x, inputInitData.texture_size.y);
   glUniform2f(m_InputSizeLoc, inputInitData.video_size.x, inputInitData.video_size.y);
+
+  glUseProgram(0);
 }
 
 CShaderGL::uniformInputs CShaderGL::GetInputData(uint64_t frameCount)
@@ -310,4 +317,6 @@ void CShaderGL::SetShaderParameters()
       glUniform1i(paramLoc, 1 + i);
     }
   }
+
+  glUseProgram(0);
 }

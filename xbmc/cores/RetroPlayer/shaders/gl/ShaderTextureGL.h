@@ -21,8 +21,8 @@ class CShaderTextureGL : public IShaderTexture
 {
 public:
   CShaderTextureGL() = default;
-  CShaderTextureGL(CGLTexture* texture) : m_texture(texture) {}
-  CShaderTextureGL(CGLTexture& texture) : m_texture(&texture) {}
+  CShaderTextureGL(CGLTexture* texture, GLint internalFormat = 0) : m_texture(texture), m_internalFormat(internalFormat) {}
+  CShaderTextureGL(CGLTexture& texture, GLint internalFormat = 0) : m_texture(&texture), m_internalFormat(internalFormat) {}
 
   // Destructor
   ~CShaderTextureGL() override;
@@ -38,6 +38,7 @@ public:
 
 private:
   CGLTexture* m_texture = nullptr;
+  GLint m_internalFormat = 0;
   GLuint FBO = 0;
 };
 } // namespace SHADER
