@@ -21,8 +21,8 @@ class CShaderTextureGLES : public IShaderTexture
 {
 public:
   CShaderTextureGLES() = default;
-  CShaderTextureGLES(CGLESTexture* texture) : m_texture(texture) {}
-  CShaderTextureGLES(CGLESTexture& texture) : m_texture(&texture) {}
+  CShaderTextureGLES(CGLESTexture* texture, GLint internalFormat = 0) : m_texture(texture), m_internalFormat(internalFormat) {}
+  CShaderTextureGLES(CGLESTexture& texture, GLint internalFormat = 0) : m_texture(&texture), m_internalFormat(internalFormat) {}
 
   // Destructor
   ~CShaderTextureGLES() override;
@@ -38,6 +38,7 @@ public:
 
 private:
   CGLESTexture* m_texture = nullptr;
+  GLint m_internalFormat = 0;
   GLuint FBO = 0;
 };
 } // namespace SHADER

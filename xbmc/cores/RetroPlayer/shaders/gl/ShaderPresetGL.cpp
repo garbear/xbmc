@@ -213,39 +213,29 @@ bool CShaderPresetGL::CreateShaderTextures()
     else
     {
       // Determine the framebuffer data format
-      GLint internalformat;
-      GLenum pixelformat;
+      GLint internalFormat;
+      GLenum pixelFormat;
       if (pass.fbo.floatFramebuffer && major >= 3)
       {
         // Give priority to float framebuffer parameter (we can't use both float and sRGB)
-        internalformat = GL_RGBA32F;
-        pixelformat = GL_RGBA;
+        internalFormat = GL_RGBA32F;
+        pixelFormat = GL_RGBA;
       }
       else
       {
-        if (pass.fbo.sRgbFramebuffer)
+        if (pass.fbo.sRgbFramebuffer && major >= 3)
         {
-          internalformat = GL_SRGB8_ALPHA8;
-          pixelformat = GL_RGBA;
+          internalFormat = GL_SRGB8_ALPHA8;
+          pixelFormat = GL_RGBA;
         }
         else
         {
 #ifndef HAS_GLES
-          internalformat = GL_RGBA8;
-          pixelformat = GL_BGRA;
+          internalFormat = GL_RGBA8;
+          pixelFormat = GL_BGRA;
 #else
-#ifndef GL_BGRA_EXT
-#define GL_BGRA_EXT 0x80E1
-#endif
-#ifndef GL_BGRA8_EXT
-#define GL_BGRA8_EXT 0x93A1
-#endif
-#ifdef TARGET_DARWIN
-          internalformat = GL_RGBA;
-#else
-          internalformat = GL_BGRA_EXT;
-#endif
-          pixelformat = GL_BGRA_EXT;
+          internalFormat = GL_RGBA;
+          pixelFormat = GL_RGBA;
 #endif
         }
       }
@@ -289,8 +279,8 @@ bool CShaderPresetGL::CreateShaderTextures()
       //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NEVER);
       //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0);
       //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, MAX_FLOAT);
-      glTexImage2D(GL_TEXTURE_2D, 0, internalformat, textureSize.x, textureSize.y, 0, pixelformat,
-                   internalformat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
+      glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, textureSize.x, textureSize.y, 0, pixelFormat,
+                   internalFormat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
 
 #ifndef HAS_GLES
       GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -298,9 +288,9 @@ bool CShaderPresetGL::CreateShaderTextures()
 #endif
 
 #ifndef HAS_GLES
-      m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL));
+      m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL, internalFormat));
 #else
-      m_pShaderTextures.emplace_back(new CShaderTextureGLES(*textureGL));
+      m_pShaderTextures.emplace_back(new CShaderTextureGLES(*textureGL, internalFormat));
 #endif
     }
 
