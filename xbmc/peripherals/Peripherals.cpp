@@ -1069,3 +1069,12 @@ void CPeripherals::Announce(ANNOUNCEMENT::AnnouncementFlag flag,
     }
   }
 }
+
+float CPeripherals::GetPeripheralActivation(const std::string& peripheralPath) const
+{
+  PeripheralPtr periphreal = GetByPath(peripheralPath);
+  if (periphreal)
+    return periphreal->GetActivation();
+
+  return 0.0f;
+}
