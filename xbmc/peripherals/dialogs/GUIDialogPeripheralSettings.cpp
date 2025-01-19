@@ -32,7 +32,6 @@ using namespace PERIPHERALS;
 
 namespace
 {
-constexpr const int CONTROL_ID_SETTINGS_LIST = 5;
 constexpr const int CONTROL_ID_PERIPHERAL_ICON = 100;
 } // namespace
 
@@ -60,6 +59,12 @@ bool CGUIDialogPeripheralSettings::OnMessage(CGUIMessage& message)
   }
 
   return CGUIDialogSettingsManualBase::OnMessage(message);
+}
+
+void CGUIDialogPeripheralSettings::OnDeinitWindow(int nextWindowID)
+{
+  UpdateIcon({});
+  CGUIDialogSettingsManualBase::OnDeinitWindow(nextWindowID);
 }
 
 void CGUIDialogPeripheralSettings::RegisterPeripheralManager(CPeripherals& manager)
@@ -116,11 +121,19 @@ void CGUIDialogPeripheralSettings::OnSettingChanged(const std::shared_ptr<const 
   // Re-create all settings and their controls
   SetupView();
 
-  // Refocus the list
-  SET_CONTROL_FOCUS(CONTROL_ID_SETTINGS_LIST, 0);
+  // Refresh peripheral icon
+  UpdateIcon(peripheral->ControllerProfile());
 
   // Persist settings so that the new setting takes effect immediately
   Save();
+}
+
+void CGUIDialogPeripheralSettings::UpdateIcon(const GAME::ControllerPtr& controller)
+{
+  GAME::CGUIGameController* control =
+      dynamic_cast<GAME::CGUIGameController*>(GetControl(CONTROL_ID_PERIPHERAL_ICON));
+  if (control != nullptr)
+    control->SetFileName(controller ? controller->Layout().ImagePath() : "");
 }
 
 bool CGUIDialogPeripheralSettings::Save()
@@ -178,13 +191,7 @@ void CGUIDialogPeripheralSettings::SetupView()
       controller = peripheral->ControllerProfile();
   }
 
-  if (controller)
-  {
-    GAME::CGUIGameController* control =
-        dynamic_cast<GAME::CGUIGameController*>(GetControl(CONTROL_ID_PERIPHERAL_ICON));
-    if (control != nullptr)
-      control->SetFileName(controller->Layout().ImagePath());
-  }
+  UpdateIcon(controller);
 }
 
 void CGUIDialogPeripheralSettings::InitializeSettings()
