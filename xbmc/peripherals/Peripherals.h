@@ -369,6 +369,15 @@ public:
     return m_addonInstallMutex;
   }
 
+  /*!
+   * \brief Get the current activation of a peripheral
+   *
+   * \param peripheralPath The peripherals:// URI of the peripheral's location
+   *
+   * \return The current activation, on a scale of 0.0 to 1.0
+   */
+  float GetPeripheralActivation(const std::string& peripheralPath) const;
+
   // GUI functions
   bool WaitForGUI();
 
