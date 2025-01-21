@@ -48,10 +48,14 @@ public:
                 const float2& nextSize) override;
   void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) override;
   void UpdateMVP() override;
-  bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) override;
-  bool CreateInputBuffer() override;
-  void UpdateInputBuffer(uint64_t frameCount);
-  CD3DEffect& GetEffect();
+
+  /*!
+   * \brief Construct the vertex buffer that will be used to render the shader
+   * \param vertCount Number of vertices to construct. Commonly 4, for rectangular screens.
+   * \param vertSize Size of each vertex's data in bytes
+   * \return False if creating the vertex buffer failed, true otherwise.
+   */
+  bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize);
 
   /*!
    * \brief Creates the data layout of the input-assembler stage
@@ -61,8 +65,11 @@ public:
    */
   bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements);
 
-protected:
-  void SetShaderParameters(CD3DTexture& sourceTexture);
+  /*!
+   * \brief Creates the buffer that will be used to send "input" (as per the spec) data to the
+   * shader \return False if creating the input buffer failed, true otherwise.
+   */
+  bool CreateInputBuffer();
 
 private:
   struct cbInput
@@ -73,6 +80,10 @@ private:
     float frame_count;
     float frame_direction;
   };
+
+  void UpdateInputBuffer(uint64_t frameCount);
+  cbInput GetInputData(uint64_t frameCount = 0);
+  void SetShaderParameters(CD3DTexture& sourceTexture);
 
   // Currently loaded shader's source code
   std::string m_shaderSource;
@@ -113,9 +124,6 @@ private:
 
   // Holds the data bound to the input cbuffer (cbInput here)
   ID3D11Buffer* m_pInputBuffer = nullptr;
-
-private:
-  cbInput GetInputData(uint64_t frameCount = 0);
 
   // Construction parameters
   RETRO::CRenderContext& m_context;

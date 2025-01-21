@@ -217,7 +217,7 @@ void CShaderGL::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
   m_indices[2] = 3;
   m_indices[3] = 2;
 
-  UpdateInputBuffer(frameCount);
+  UpdateInputs(frameCount);
 }
 
 void CShaderGL::UpdateMVP()
@@ -229,20 +229,7 @@ void CShaderGL::UpdateMVP()
   m_MVP = {{{xScale, 0, 0, 0}, {0, yScale, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}};
 }
 
-bool CShaderGL::CreateVertexBuffer(unsigned vertCount, unsigned vertSize)
-{
-  return false;
-}
-
-//! @todo Change name of this method in IShader.h to CreateInputs
-bool CShaderGL::CreateInputBuffer()
-{
-  UpdateInputBuffer(0);
-  return true;
-}
-
-//! @todo Change name of this method in IShader.h to UpdateInputs
-void CShaderGL::UpdateInputBuffer(uint64_t frameCount)
+void CShaderGL::UpdateInputs(uint64_t frameCount)
 {
   glUseProgram(m_shaderProgram);
 

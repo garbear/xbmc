@@ -41,8 +41,13 @@ public:
 
   // Implementation of IShaderLut
   bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) override;
-  IShaderSampler* GetSampler() override { return m_sampler.get(); }
   IShaderTexture* GetTexture() override { return m_texture.get(); }
+
+  /*!
+   * \brief Gets sampler of LUT
+   * \return Pointer to the sampler associated with the LUT
+   */
+  IShaderSampler* GetSampler() { return m_sampler.get(); }
 
 private:
   static std::unique_ptr<IShaderSampler> CreateLUTSampler(

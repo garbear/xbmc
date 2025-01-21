@@ -47,13 +47,6 @@ public:
                 const float2& nextSize) override;
   void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) override;
   void UpdateMVP() override;
-  bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) override;
-  bool CreateInputBuffer() override;
-  void UpdateInputBuffer(uint64_t frameCount);
-  void GetUniformLocs();
-
-protected:
-  void SetShaderParameters();
 
 private:
   struct uniformInputs
@@ -64,6 +57,11 @@ private:
     GLint frame_count;
     GLfloat frame_direction;
   };
+
+  void UpdateInputs(uint64_t frameCount);
+  uniformInputs GetInputData(uint64_t frameCount = 0);
+  void GetUniformLocs();
+  void SetShaderParameters();
 
   // Currently loaded shader's source code
   std::string m_shaderSource;
@@ -118,9 +116,6 @@ private:
 #endif
   GLuint VBO[3] = {};
   GLuint EBO = 0;
-
-private:
-  uniformInputs GetInputData(uint64_t frameCount = 0);
 };
 } // namespace SHADER
 } // namespace KODI

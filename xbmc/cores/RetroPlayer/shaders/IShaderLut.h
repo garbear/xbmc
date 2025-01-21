@@ -58,13 +58,7 @@ public:
   const std::string& GetPath() const { return m_path; }
 
   /*!
-   * \brief Gets sampler of LUT
-   * \return Pointer to the sampler associated with the LUT
-   */
-  virtual IShaderSampler* GetSampler() = 0;
-
-  /*!
-   * \brief Gets sampler of LUT
+   * \brief Gets texture of LUT
    * \return Pointer to the texture where the LUT data is stored in
    */
   virtual IShaderTexture* GetTexture() = 0;

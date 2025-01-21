@@ -137,9 +137,6 @@ bool CShaderPresetGL::Update()
     if (!CreateShaders())
       return updateFailed("Failed to initialize shaders");
 
-    if (!CreateBuffers())
-      return updateFailed("Failed to initialize buffers");
-
     if (!CreateShaderTextures())
       return updateFailed("A shader texture failed to init");
   }
@@ -152,6 +149,46 @@ bool CShaderPresetGL::Update()
     return updateFailed("A shader or texture failed to init");
 
   m_bPresetNeedsUpdate = false;
+  return true;
+}
+
+bool CShaderPresetGL::CreateShaders()
+{
+  auto numPasses = m_passes.size();
+
+  //! @todo Is this pass specific?
+  ShaderLutVec passLUTsGL;
+  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
+  {
+    const auto& pass = m_passes[shaderIdx];
+
+    for (unsigned i = 0; i < pass.luts.size(); ++i)
+    {
+      auto& lutStruct = pass.luts[i];
+
+      ShaderLutPtr passLut(new CShaderLutGL(lutStruct.strId, lutStruct.path));
+      if (passLut->Create(m_context, lutStruct))
+        passLUTsGL.emplace_back(std::move(passLut));
+    }
+
+    // Create the shader
+    std::unique_ptr<CShaderGL> videoShader(new CShaderGL(m_context));
+
+    auto shaderSource = pass.vertexSource; // Also contains fragment source
+    auto shaderPath = pass.sourcePath;
+
+    // Get only the parameters belonging to this specific shader
+    ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
+
+    if (!videoShader->Create(shaderSource, shaderPath, passParameters, nullptr, passLUTsGL,
+                             m_outputSize, pass.frameCountMod))
+    {
+      CLog::Log(LOGERROR, "Couldn't create a video shader");
+      return false;
+    }
+    m_pShaders.push_back(std::move(videoShader));
+  }
+
   return true;
 }
 
@@ -302,54 +339,6 @@ bool CShaderPresetGL::CreateShaderTextures()
   }
 
   UpdateMVPs();
-  return true;
-}
-
-bool CShaderPresetGL::CreateShaders()
-{
-  auto numPasses = m_passes.size();
-
-  //! @todo Is this pass specific?
-  ShaderLutVec passLUTsGL;
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
-  {
-    const auto& pass = m_passes[shaderIdx];
-
-    for (unsigned i = 0; i < pass.luts.size(); ++i)
-    {
-      auto& lutStruct = pass.luts[i];
-
-      ShaderLutPtr passLut(new CShaderLutGL(lutStruct.strId, lutStruct.path));
-      if (passLut->Create(m_context, lutStruct))
-        passLUTsGL.emplace_back(std::move(passLut));
-    }
-
-    // Create the shader
-    std::unique_ptr<CShaderGL> videoShader(new CShaderGL(m_context));
-
-    auto shaderSource = pass.vertexSource; // Also contains fragment source
-    auto shaderPath = pass.sourcePath;
-
-    // Get only the parameters belonging to this specific shader
-    ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
-
-    if (!videoShader->Create(shaderSource, shaderPath, passParameters, nullptr, passLUTsGL,
-                             m_outputSize, pass.frameCountMod))
-    {
-      CLog::Log(LOGERROR, "Couldn't create a video shader");
-      return false;
-    }
-    m_pShaders.push_back(std::move(videoShader));
-  }
-
-  return true;
-}
-
-bool CShaderPresetGL::CreateBuffers()
-{
-  for (auto& videoShader : m_pShaders)
-    videoShader->CreateInputBuffer();
-
   return true;
 }
 

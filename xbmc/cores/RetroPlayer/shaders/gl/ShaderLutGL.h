@@ -39,9 +39,7 @@ public:
   ~CShaderLutGL() override;
 
   // Implementation of IShaderLut
-  //! @todo Remove sampler from IShaderLut.h
   bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) override;
-  IShaderSampler* GetSampler() override { return nullptr; }
   IShaderTexture* GetTexture() override { return m_texture.get(); }
 
 private:

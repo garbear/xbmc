@@ -63,9 +63,8 @@ public:
   bool Update();
 
 private:
-  bool CreateShaderTextures();
   bool CreateShaders();
-  bool CreateBuffers();
+  bool CreateShaderTextures();
   void UpdateViewPort();
   void UpdateViewPort(CRect viewPort);
   void UpdateMVPs();

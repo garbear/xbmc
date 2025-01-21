@@ -58,11 +58,11 @@ public:
   bool Update();
 
 private:
-  bool CreateShaderTextures();
   bool CreateShaders();
-  bool CreateSamplers();
   bool CreateLayouts();
   bool CreateBuffers();
+  bool CreateShaderTextures();
+  bool CreateSamplers();
   void UpdateViewPort();
   void UpdateViewPort(CRect viewPort);
   void UpdateMVPs();

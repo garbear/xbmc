@@ -162,6 +162,80 @@ bool CShaderPresetDX::Update()
   return true;
 }
 
+bool CShaderPresetDX::CreateShaders()
+{
+  auto numPasses = m_passes.size();
+
+  //! @todo Is this pass specific?
+  ShaderLutVec passLUTsDX;
+  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
+  {
+    const auto& pass = m_passes[shaderIdx];
+
+    for (unsigned i = 0; i < pass.luts.size(); ++i)
+    {
+      auto& lutStruct = pass.luts[i];
+
+      ShaderLutPtr passLut(new CShaderLutDX(lutStruct.strId, lutStruct.path));
+      if (passLut->Create(m_context, lutStruct))
+        passLUTsDX.emplace_back(std::move(passLut));
+    }
+
+    // Create the shader
+    std::unique_ptr<CShaderDX> videoShader(new CShaderDX(m_context));
+
+    auto shaderSource = pass.vertexSource; // Also contains fragment source
+    auto shaderPath = pass.sourcePath;
+
+    // Get only the parameters belonging to this specific shader
+    ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
+    IShaderSampler* passSampler = reinterpret_cast<IShaderSampler*>(
+        pass.filter == FILTER_TYPE_LINEAR
+            ? m_pSampLinear
+            : m_pSampNearest); //! @todo Wrap in CShaderSamplerDX instead of reinterpret_cast
+
+    if (!videoShader->Create(shaderSource, shaderPath, passParameters, passSampler, passLUTsDX,
+                             m_outputSize, pass.frameCountMod))
+    {
+      CLog::Log(LOGERROR, "Couldn't create a video shader");
+      return false;
+    }
+    m_pShaders.push_back(std::move(videoShader));
+  }
+
+  return true;
+}
+
+bool CShaderPresetDX::CreateLayouts()
+{
+  for (auto& videoShader : m_pShaders)
+  {
+    videoShader->CreateVertexBuffer(4, sizeof(CUSTOMVERTEX));
+
+    // Create input layout
+    D3D11_INPUT_ELEMENT_DESC layout[] = {
+        {"SV_POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0}};
+
+    if (!videoShader->CreateInputLayout(layout, ARRAYSIZE(layout)))
+    {
+      CLog::Log(LOGERROR, __FUNCTION__ ": Failed to create input layout for Input Assembler.");
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool CShaderPresetDX::CreateBuffers()
+{
+  for (auto& videoShader : m_pShaders)
+    videoShader->CreateInputBuffer();
+
+  return true;
+}
+
 bool CShaderPresetDX::CreateShaderTextures()
 {
   m_pShaderTextures.clear();
@@ -257,50 +331,6 @@ bool CShaderPresetDX::CreateShaderTextures()
   return true;
 }
 
-bool CShaderPresetDX::CreateShaders()
-{
-  auto numPasses = m_passes.size();
-
-  //! @todo Is this pass specific?
-  ShaderLutVec passLUTsDX;
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
-  {
-    const auto& pass = m_passes[shaderIdx];
-
-    for (unsigned i = 0; i < pass.luts.size(); ++i)
-    {
-      auto& lutStruct = pass.luts[i];
-
-      ShaderLutPtr passLut(new CShaderLutDX(lutStruct.strId, lutStruct.path));
-      if (passLut->Create(m_context, lutStruct))
-        passLUTsDX.emplace_back(std::move(passLut));
-    }
-
-    // Create the shader
-    std::unique_ptr<CShaderDX> videoShader(new CShaderDX(m_context));
-
-    auto shaderSource = pass.vertexSource; // Also contains fragment source
-    auto shaderPath = pass.sourcePath;
-
-    // Get only the parameters belonging to this specific shader
-    ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
-    IShaderSampler* passSampler = reinterpret_cast<IShaderSampler*>(
-        pass.filter == FILTER_TYPE_LINEAR
-            ? m_pSampLinear
-            : m_pSampNearest); //! @todo Wrap in CShaderSamplerDX instead of reinterpret_cast
-
-    if (!videoShader->Create(shaderSource, shaderPath, passParameters, passSampler, passLUTsDX,
-                             m_outputSize, pass.frameCountMod))
-    {
-      CLog::Log(LOGERROR, "Couldn't create a video shader");
-      return false;
-    }
-    m_pShaders.push_back(std::move(videoShader));
-  }
-
-  return true;
-}
-
 bool CShaderPresetDX::CreateSamplers()
 {
   CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
@@ -328,36 +358,6 @@ bool CShaderPresetDX::CreateSamplers()
   sampDescLinear.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
   if (FAILED(pDevice->CreateSamplerState(&sampDescLinear, &m_pSampLinear)))
     return false;
-
-  return true;
-}
-
-bool CShaderPresetDX::CreateLayouts()
-{
-  for (auto& videoShader : m_pShaders)
-  {
-    videoShader->CreateVertexBuffer(4, sizeof(CUSTOMVERTEX));
-
-    // Create input layout
-    D3D11_INPUT_ELEMENT_DESC layout[] = {
-        {"SV_POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0}};
-
-    if (!videoShader->CreateInputLayout(layout, ARRAYSIZE(layout)))
-    {
-      CLog::Log(LOGERROR, __FUNCTION__ ": Failed to create input layout for Input Assembler.");
-      return false;
-    }
-  }
-
-  return true;
-}
-
-bool CShaderPresetDX::CreateBuffers()
-{
-  for (auto& videoShader : m_pShaders)
-    videoShader->CreateInputBuffer();
 
   return true;
 }

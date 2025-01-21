@@ -179,6 +179,11 @@ bool CShaderDX::CreateVertexBuffer(unsigned vertCount, unsigned vertSize)
   return CWinShader::CreateVertexBuffer(vertCount, vertSize);
 }
 
+bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements)
+{
+  return CWinShader::CreateInputLayout(layout, numElements);
+}
+
 bool CShaderDX::CreateInputBuffer()
 {
   CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
@@ -232,16 +237,6 @@ CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
       1.0f // frame_direction
   };
   return input;
-}
-
-CD3DEffect& CShaderDX::GetEffect()
-{
-  return m_effect;
-}
-
-bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements)
-{
-  return CWinShader::CreateInputLayout(layout, numElements);
 }
 
 void CShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)

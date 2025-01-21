@@ -77,20 +77,6 @@ public:
    */
   virtual void UpdateMVP() = 0;
 
-  /*!
-   * \brief Construct the vertex buffer that will be used to render the shader
-   * \param vertCount Number of vertices to construct. Commonly 4, for rectangular screens.
-   * \param vertSize Size of each vertex's data in bytes
-   * \return False if creating the vertex buffer failed, true otherwise.
-   */
-  virtual bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize) = 0;
-
-  /*!
-   * \brief Creates the buffer that will be used to send "input" (as per the spec) data to the
-   * shader \return False if creating the input buffer failed, true otherwise.
-   */
-  virtual bool CreateInputBuffer() = 0;
-
   virtual ~IShader() = default;
 };
 } // namespace SHADER
