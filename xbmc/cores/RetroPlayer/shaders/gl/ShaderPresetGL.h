@@ -63,15 +63,17 @@ public:
   bool Update();
 
 private:
-  bool CreateShaders();
-  bool CreateShaderTextures();
   void UpdateViewPort();
   void UpdateViewPort(CRect viewPort);
   void UpdateMVPs();
-  void DisposeShaders();
   void PrepareParameters(const IShaderTexture* texture, const CPoint dest[]);
+  bool CreateShaders();
+  bool CreateShaderTextures();
   void RenderShader(IShader* shader, IShaderTexture* source, IShaderTexture* target) const;
+  void DisposeShaders();
   bool HasPathFailed(const std::string& path) const;
+  ShaderParameterMap GetShaderParameters(const std::vector<ShaderParameter>& parameters,
+                                         const std::string& sourceStr) const;
 
   // Construction parameters
   RETRO::CRenderContext& m_context;
@@ -79,6 +81,13 @@ private:
   // Relative path of the currently loaded shader preset
   // If empty, it means that a preset is not currently loaded
   std::string m_presetPath;
+
+  // Set of paths of presets that are known to not load correctly
+  // Should not contain "" (empty path) because this signifies that a preset is not loaded
+  std::set<std::string> m_failedPaths;
+
+  // All video shader passes of the currently loaded preset
+  ShaderPassVec m_passes;
 
   // Video shaders for the shader passes
   std::vector<std::unique_ptr<IShader>> m_pShaders;
@@ -90,9 +99,6 @@ private:
   std::vector<std::unique_ptr<CShaderTextureGLES>> m_pShaderTextures;
 #endif
 
-  // First texture (this won't be needed when we have RGB rendering
-  //std::unique_ptr<CShaderTextureCD3D> firstTexture;
-
   // Was the shader preset changed during the last frame?
   bool m_bPresetNeedsUpdate = true;
 
@@ -102,23 +108,14 @@ private:
   // Size of the actual source video data (ie. 160x144 for the Game Boy)
   float2 m_videoSize;
 
-  // Number of frames that have passed
-  float m_frameCount = 0.0f;
-
-  // Set of paths of presets that are known to not load correctly
-  // Should not contain "" (empty path) because this signifies that a preset is not loaded
-  std::set<std::string> m_failedPaths;
-
   // Array of vertices that comprise the full viewport
   CPoint m_dest[4];
 
+  // Number of frames that have passed
+  float m_frameCount = 0.0f;
+
   // Playback speed
   double m_speed = 0.0;
-
-  ShaderParameterMap GetShaderParameters(const std::vector<ShaderParameter>& parameters,
-                                         const std::string& sourceStr) const;
-
-  ShaderPassVec m_passes;
 };
 
 } // namespace SHADER

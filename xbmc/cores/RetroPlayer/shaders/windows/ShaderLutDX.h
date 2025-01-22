@@ -25,7 +25,6 @@ class CRenderContext;
 
 namespace SHADER
 {
-
 class IShaderSampler;
 class IShaderTexture;
 struct ShaderLut;

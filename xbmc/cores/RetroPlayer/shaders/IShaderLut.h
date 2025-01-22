@@ -23,7 +23,6 @@ class CRenderContext;
 
 namespace SHADER
 {
-class IShaderSampler;
 class IShaderTexture;
 
 /*!
@@ -41,25 +40,25 @@ public:
    * \brief Create the LUT and allocate resources
    * \param context The render context
    * \param lut The LUT information structure
-   * \return True if successful and the LUT can be used, false otherwise
+   * \return Returns true if successful and the LUT can be used, false otherwise
    */
   virtual bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) = 0;
 
   /*!
    * \brief Gets ID of LUT
-   * \return Unique name (ID) of look up texture
+   * \return Returns unique name (ID) of look up texture
    */
   const std::string& GetID() const { return m_id; }
 
   /*!
    * \brief Gets full path of LUT
-   * \return Full path of look up texture
+   * \return Returns full path of look up texture
    */
   const std::string& GetPath() const { return m_path; }
 
   /*!
    * \brief Gets texture of LUT
-   * \return Pointer to the texture where the LUT data is stored in
+   * \return Returns pointer to the texture where the LUT data is stored in
    */
   virtual IShaderTexture* GetTexture() = 0;
 

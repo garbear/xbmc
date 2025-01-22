@@ -58,18 +58,20 @@ public:
   bool Update();
 
 private:
+  void UpdateViewPort();
+  void UpdateViewPort(CRect viewPort);
+  void UpdateMVPs();
+  void PrepareParameters(const IShaderTexture* texture, const CPoint dest[]);
   bool CreateShaders();
   bool CreateLayouts();
   bool CreateBuffers();
   bool CreateShaderTextures();
   bool CreateSamplers();
-  void UpdateViewPort();
-  void UpdateViewPort(CRect viewPort);
-  void UpdateMVPs();
-  void DisposeShaders();
-  void PrepareParameters(const IShaderTexture* texture, const CPoint dest[]);
   void RenderShader(IShader* shader, IShaderTexture* source, IShaderTexture* target) const;
+  void DisposeShaders();
   bool HasPathFailed(const std::string& path) const;
+  ShaderParameterMap GetShaderParameters(const std::vector<ShaderParameter>& parameters,
+                                         const std::string& sourceStr) const;
 
   // Construction parameters
   RETRO::CRenderContext& m_context;
@@ -78,14 +80,18 @@ private:
   // If empty, it means that a preset is not currently loaded
   std::string m_presetPath;
 
+  // Set of paths of presets that are known to not load correctly
+  // Should not contain "" (empty path) because this signifies that a preset is not loaded
+  std::set<std::string> m_failedPaths;
+
+  // All video shader passes of the currently loaded preset
+  ShaderPassVec m_passes;
+
   // Video shaders for the shader passes
   std::vector<std::unique_ptr<CShaderDX>> m_pShaders;
 
   // Intermediate textures used for pixel shader passes
   std::vector<std::unique_ptr<CShaderTextureCD3D>> m_pShaderTextures;
-
-  // First texture (this won't be needed when we have RGB rendering
-  std::unique_ptr<CShaderTextureCD3D> firstTexture;
 
   // Was the shader preset changed during the last frame?
   bool m_bPresetNeedsUpdate = true;
@@ -96,29 +102,20 @@ private:
   // Size of the actual source video data (ie. 160x144 for the Game Boy)
   float2 m_videoSize;
 
+  // Array of vertices that comprise the full viewport
+  CPoint m_dest[4];
+
   // Number of frames that have passed
   float m_frameCount = 0.0f;
+
+  // Playback speed
+  double m_speed = 0.0;
 
   // Point/nearest neighbor sampler
   ID3D11SamplerState* m_pSampNearest = nullptr;
 
   // Linear sampler
   ID3D11SamplerState* m_pSampLinear = nullptr;
-
-  // Set of paths of presets that are known to not load correctly
-  // Should not contain "" (empty path) because this signifies that a preset is not loaded
-  std::set<std::string> m_failedPaths;
-
-  // Array of vertices that comprise the full viewport
-  CPoint m_dest[4];
-
-  // Playback speed
-  double m_speed = 0.0;
-
-  ShaderParameterMap GetShaderParameters(const std::vector<ShaderParameter>& parameters,
-                                         const std::string& sourceStr) const;
-
-  ShaderPassVec m_passes;
 };
 
 } // namespace SHADER

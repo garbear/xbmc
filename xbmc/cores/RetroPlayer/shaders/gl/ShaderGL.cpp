@@ -31,9 +31,9 @@ CShaderGL::CShaderGL(RETRO::CRenderContext& context)
 bool CShaderGL::Create(const std::string& shaderSource,
                        const std::string& shaderPath,
                        ShaderParameterMap shaderParameters,
-                       IShaderSampler* sampler,
                        ShaderLutVec luts,
                        float2 viewPortSize,
+                       unsigned passIdx,
                        unsigned frameCountMod)
 {
   if (shaderPath.empty())
@@ -47,6 +47,7 @@ bool CShaderGL::Create(const std::string& shaderSource,
   m_shaderParameters = shaderParameters;
   m_luts = luts;
   m_viewportSize = viewPortSize;
+  m_passIdx = passIdx;
   m_frameCountMod = frameCountMod;
 
   std::string defineVersion = CShaderUtilsGL::GetGLSLVersion(m_shaderSource);

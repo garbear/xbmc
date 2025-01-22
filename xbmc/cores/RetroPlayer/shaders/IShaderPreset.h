@@ -25,12 +25,12 @@ class IShaderPreset
 public:
   virtual ~IShaderPreset() = default;
 
-  // todo: impl once and for all
+  //! @todo Implement once and for all
   /*!
    * \brief Reads/Parses a shader preset file and loads its state to the
-   *        object. What this state is is implementation specific.
-   * \param presetPath Full path of the preset file.
-   * \return True on successful parsing, false on failed.
+   *        object. The state is implementation specific.
+   * \param presetPath Full path of the preset file
+   * \return Returns true on successful parsing, false on failed
    */
   virtual bool ReadPresetFile(const std::string& presetPath) = 0;
 
@@ -39,7 +39,7 @@ public:
    * \param dest Coordinates of the 4 corners of the output viewport/window
    * \param source Input texture. The source of the video frame, in is original resolution
    * (unscaled) \param target The target texture. The texture that the final result will be rendered
-   * in. \return Returns false if updating or rendering failed, true if both succeeded.
+   * in. \return Returns false if updating or rendering failed, true if both succeeded
    */
   virtual bool RenderUpdate(const CPoint dest[],
                             IShaderTexture* source,
@@ -61,7 +61,7 @@ public:
   /*!
    * \brief Set the preset to be rendered on the next frame
    * \param shaderPresetPath Full path to the preset file to be loaded
-   * \return Returns false if loading the preset failed, true otherwise.
+   * \return Returns false if loading the preset failed, true otherwise
    */
   virtual bool SetShaderPreset(const std::string& shaderPresetPath) = 0;
 

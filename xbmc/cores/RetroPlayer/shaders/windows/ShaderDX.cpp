@@ -34,9 +34,9 @@ CShaderDX::~CShaderDX()
 bool CShaderDX::Create(const std::string& shaderSource,
                        const std::string& shaderPath,
                        ShaderParameterMap shaderParameters,
-                       IShaderSampler* sampler,
                        ShaderLutVec luts,
                        float2 viewPortSize,
+                       unsigned passIdx,
                        unsigned frameCountMod)
 {
   if (shaderPath.empty())
@@ -48,10 +48,11 @@ bool CShaderDX::Create(const std::string& shaderSource,
   m_shaderSource = shaderSource;
   m_shaderPath = shaderPath;
   m_shaderParameters = shaderParameters;
-  m_pSampler = reinterpret_cast<ID3D11SamplerState*>(sampler);
   m_luts = luts;
   m_viewportSize = viewPortSize;
+  m_passIdx = passIdx;
   m_frameCountMod = frameCountMod;
+  //m_pSampler = reinterpret_cast<ID3D11SamplerState*>(sampler);
 
   DefinesMap defines;
 
@@ -69,7 +70,7 @@ bool CShaderDX::Create(const std::string& shaderSource,
 
   if (!m_effect.Create(shaderSource, &defines))
   {
-    CLog::LogF(LOGERROR, "Failed to load video shader: {}", shaderPath);
+    CLog::LogF(LOGERROR, "Failed to load video shader: {}", m_shaderPath);
     return false;
   }
 

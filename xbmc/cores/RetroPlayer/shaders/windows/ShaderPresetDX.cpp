@@ -67,9 +67,10 @@ bool CShaderPresetDX::RenderUpdate(const CPoint dest[],
 
   PrepareParameters(target, dest);
 
+  auto numPasses = m_pShaders.size();
+
   // Apply all passes except the last one (which needs to be applied to the backbuffer)
-  for (unsigned int shaderIdx = 0; shaderIdx < static_cast<unsigned int>(m_pShaders.size()) - 1;
-       ++shaderIdx)
+  for (unsigned shaderIdx = 0; shaderIdx < numPasses - 1; ++shaderIdx)
   {
     IShader* shader = m_pShaders[shaderIdx].get();
     IShaderTexture* texture = m_pShaderTextures[shaderIdx].get();
@@ -115,7 +116,7 @@ bool CShaderPresetDX::Update()
   auto updateFailed = [this](const std::string& msg)
   {
     m_failedPaths.insert(m_presetPath);
-    CLog::Log(LOGWARNING, "CShaderPresetDX::Update: {}. Disabling video shaders.", msg);
+    CLog::Log(LOGWARNING, "CShaderPresetDX::Update: {}", msg);
     DisposeShaders();
     return false;
   };
@@ -162,6 +163,59 @@ bool CShaderPresetDX::Update()
   return true;
 }
 
+void CShaderPresetDX::UpdateViewPort()
+{
+  CRect viewPort;
+  m_context.GetViewPort(viewPort);
+  UpdateViewPort(viewPort);
+}
+
+void CShaderPresetDX::UpdateViewPort(CRect viewPort)
+{
+  float2 currentViewPortSize = {viewPort.Width(), viewPort.Height()};
+  if (currentViewPortSize != m_outputSize)
+  {
+    m_outputSize = currentViewPortSize;
+    m_bPresetNeedsUpdate = true;
+    Update();
+  }
+}
+
+void CShaderPresetDX::UpdateMVPs()
+{
+  for (auto& videoShader : m_pShaders)
+    videoShader->UpdateMVP();
+}
+
+void CShaderPresetDX::PrepareParameters(const IShaderTexture* texture, const CPoint dest[])
+{
+  if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
+      m_dest[3] != dest[3] || texture->GetWidth() != m_outputSize.x ||
+      texture->GetHeight() != m_outputSize.y)
+  {
+    for (size_t i = 0; i < 4; ++i)
+      m_dest[i] = dest[i];
+
+    m_outputSize = {texture->GetWidth(), texture->GetHeight()};
+
+    // Update projection matrix and update video shaders
+    UpdateMVPs();
+    UpdateViewPort();
+  }
+
+  auto numPasses = m_pShaders.size();
+
+  // Prepare params for all shaders except the last (needs special flag)
+  for (unsigned shaderIdx = 0; shaderIdx < numPasses - 1; ++shaderIdx)
+  {
+    auto& videoShader = m_pShaders[shaderIdx];
+    videoShader->PrepareParameters(m_dest, false, static_cast<uint64_t>(m_frameCount));
+  }
+
+  // Prepare params for last shader
+  m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
+}
+
 bool CShaderPresetDX::CreateShaders()
 {
   auto numPasses = m_passes.size();
@@ -171,8 +225,9 @@ bool CShaderPresetDX::CreateShaders()
   for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     const auto& pass = m_passes[shaderIdx];
+    auto numPassLuts = pass.luts.size();
 
-    for (unsigned i = 0; i < pass.luts.size(); ++i)
+    for (unsigned i = 0; i < numPassLuts; ++i)
     {
       auto& lutStruct = pass.luts[i];
 
@@ -189,18 +244,24 @@ bool CShaderPresetDX::CreateShaders()
 
     // Get only the parameters belonging to this specific shader
     ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
-    IShaderSampler* passSampler = reinterpret_cast<IShaderSampler*>(
-        pass.filter == FILTER_TYPE_LINEAR
-            ? m_pSampLinear
-            : m_pSampNearest); //! @todo Wrap in CShaderSamplerDX instead of reinterpret_cast
 
-    if (!videoShader->Create(shaderSource, shaderPath, passParameters, passSampler, passLUTsDX,
-                             m_outputSize, pass.frameCountMod))
+    if (!videoShader->Create(shaderSource, shaderPath, passParameters, passLUTsDX, m_outputSize,
+                             shaderIdx, pass.frameCountMod))
     {
       CLog::Log(LOGERROR, "Couldn't create a video shader");
       return false;
     }
     m_pShaders.push_back(std::move(videoShader));
+
+    /*
+    IShaderSampler* passSampler = reinterpret_cast<IShaderSampler*>(
+        pass.filter == FILTER_TYPE_LINEAR
+            ? m_pSampLinear
+            : m_pSampNearest); //! @todo Wrap in CShaderSamplerDX instead of reinterpret_cast
+
+    //! @todo Set passSampler to m_pSampler in the videoShader
+    videoShader->SetSampler(passSampler);
+    */
   }
 
   return true;
@@ -243,7 +304,7 @@ bool CShaderPresetDX::CreateShaderTextures()
   float2 prevSize = m_videoSize;
   float2 prevTextureSize = m_videoSize;
 
-  unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
+  auto numPasses = m_passes.size();
 
   for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
@@ -362,65 +423,6 @@ bool CShaderPresetDX::CreateSamplers()
   return true;
 }
 
-void CShaderPresetDX::UpdateViewPort()
-{
-  CRect viewPort;
-  m_context.GetViewPort(viewPort);
-  UpdateViewPort(viewPort);
-}
-
-void CShaderPresetDX::UpdateViewPort(CRect viewPort)
-{
-  float2 currentViewPortSize = {viewPort.Width(), viewPort.Height()};
-  if (currentViewPortSize != m_outputSize)
-  {
-    m_outputSize = currentViewPortSize;
-    m_bPresetNeedsUpdate = true;
-    Update();
-  }
-}
-
-void CShaderPresetDX::UpdateMVPs()
-{
-  for (auto& videoShader : m_pShaders)
-    videoShader->UpdateMVP();
-}
-
-void CShaderPresetDX::DisposeShaders()
-{
-  m_pShaders.clear();
-  m_pShaderTextures.clear();
-  m_passes.clear();
-  m_bPresetNeedsUpdate = true;
-}
-
-void CShaderPresetDX::PrepareParameters(const IShaderTexture* texture, const CPoint dest[])
-{
-  if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
-      m_dest[3] != dest[3] || texture->GetWidth() != m_outputSize.x ||
-      texture->GetHeight() != m_outputSize.y)
-  {
-    for (size_t i = 0; i < 4; ++i)
-      m_dest[i] = dest[i];
-
-    m_outputSize = {texture->GetWidth(), texture->GetHeight()};
-
-    // Update projection matrix and update video shaders
-    UpdateMVPs();
-    UpdateViewPort();
-  }
-
-  // Prepare params for all shaders except the last (needs special flag)
-  for (unsigned shaderIdx = 0; shaderIdx < m_pShaders.size() - 1; ++shaderIdx)
-  {
-    auto& videoShader = m_pShaders[shaderIdx];
-    videoShader->PrepareParameters(m_dest, false, static_cast<uint64_t>(m_frameCount));
-  }
-
-  // Prepare params for last shader
-  m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
-}
-
 void CShaderPresetDX::RenderShader(IShader* shader,
                                    IShaderTexture* source,
                                    IShaderTexture* target) const
@@ -430,6 +432,14 @@ void CShaderPresetDX::RenderShader(IShader* shader,
   m_context.SetScissors(newViewPort);
 
   shader->Render(source, target);
+}
+
+void CShaderPresetDX::DisposeShaders()
+{
+  m_pShaders.clear();
+  m_pShaderTextures.clear();
+  m_passes.clear();
+  m_bPresetNeedsUpdate = true;
 }
 
 bool CShaderPresetDX::HasPathFailed(const std::string& path) const

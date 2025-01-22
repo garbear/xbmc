@@ -19,29 +19,28 @@ namespace KODI
 {
 namespace SHADER
 {
-class IShaderSampler;
 class IShaderTexture;
 
 class IShader
 {
 public:
   /*!
-   * \brief Construct the vidoe shader instance
+   * \brief Construct the video shader instance
    * \param shaderSource Source code of the shader (both vertex and pixel/fragment)
    * \param shaderPath Full path to the shader file
    * \param shaderParameters Struct with all parameters pertaining to the shader
-   * \param sampler Pointer to the sampler that the will be used when sampling textures
-   * \param luts Look-up textures pertaining to shader
+   * \param luts Look-up textures pertaining to the shader
    * \param viewPortSize Size of the window/viewport
-   * \param frameCountMod Modulo that must be applied to the frame count before sendign it to the
-   * shader \return False if creating the shader failed, true otherwise.
+   * \param passIdx Index of the video shader pass
+   * \param frameCountMod Modulo applied to the frame count before sendign it to the shader
+   * \return Returns false if creating the shader failed, true otherwise
    */
   virtual bool Create(const std::string& shaderSource,
                       const std::string& shaderPath,
                       ShaderParameterMap shaderParameters,
-                      IShaderSampler* sampler,
                       ShaderLutVec luts,
                       float2 viewPortSize,
+                      unsigned passIdx,
                       unsigned frameCountMod = 0) = 0;
 
   /*!
@@ -64,7 +63,7 @@ public:
   /*!
    * \brief Called before rendering.
    *        Updates any internal state needed to ensure that correct data is passed to the shader
-   *        when rendering
+   *        when rendering.
    * \param dest Coordinates of the 4 corners of the output viewport/window
    * \param isLastPass True if this shader is the last pass //! @todo This could be a member
    * \param frameCount Number of frames that have passed
@@ -73,7 +72,7 @@ public:
 
   /*!
    * \brief Updates the model view projection matrix.
-   *        Should usually only be called when the viewport/window size changes
+   *        Should usually only be called when the viewport/window size changes.
    */
   virtual void UpdateMVP() = 0;
 

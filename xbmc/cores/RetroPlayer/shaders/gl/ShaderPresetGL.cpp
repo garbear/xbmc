@@ -65,9 +65,10 @@ bool CShaderPresetGL::RenderUpdate(const CPoint dest[],
 
   PrepareParameters(target, dest);
 
+  auto numPasses = m_pShaders.size();
+
   // Apply all passes except the last one (which needs to be applied to the backbuffer)
-  for (unsigned int shaderIdx = 0; shaderIdx < static_cast<unsigned int>(m_pShaders.size()) - 1;
-       ++shaderIdx)
+  for (unsigned shaderIdx = 0; shaderIdx < numPasses - 1; ++shaderIdx)
   {
     IShader* shader = m_pShaders[shaderIdx].get();
     IShaderTexture* texture = m_pShaderTextures[shaderIdx].get();
@@ -114,7 +115,7 @@ bool CShaderPresetGL::Update()
   auto updateFailed = [this](const std::string& msg)
   {
     m_failedPaths.insert(m_presetPath);
-    CLog::Log(LOGWARNING, "CShaderPresetGL::Update: {}. Disabling video shaders.", msg);
+    CLog::Log(LOGWARNING, "CShaderPresetGL::Update: {}", msg);
     DisposeShaders();
     return false;
   };
@@ -152,6 +153,59 @@ bool CShaderPresetGL::Update()
   return true;
 }
 
+void CShaderPresetGL::UpdateViewPort()
+{
+  CRect viewPort;
+  m_context.GetViewPort(viewPort);
+  UpdateViewPort(viewPort);
+}
+
+void CShaderPresetGL::UpdateViewPort(CRect viewPort)
+{
+  float2 currentViewPortSize = {viewPort.Width(), viewPort.Height()};
+  if (currentViewPortSize != m_outputSize)
+  {
+    m_outputSize = currentViewPortSize;
+    m_bPresetNeedsUpdate = true;
+    Update();
+  }
+}
+
+void CShaderPresetGL::UpdateMVPs()
+{
+  for (auto& videoShader : m_pShaders)
+    videoShader->UpdateMVP();
+}
+
+void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPoint dest[])
+{
+  if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
+      m_dest[3] != dest[3] || texture->GetWidth() != m_outputSize.x ||
+      texture->GetHeight() != m_outputSize.y)
+  {
+    for (size_t i = 0; i < 4; ++i)
+      m_dest[i] = dest[i];
+
+    m_outputSize = {texture->GetWidth(), texture->GetHeight()};
+
+    // Update projection matrix and update video shaders
+    UpdateMVPs();
+    UpdateViewPort();
+  }
+
+  auto numPasses = m_pShaders.size();
+
+  // Prepare params for all shaders except the last (needs special flag)
+  for (unsigned shaderIdx = 0; shaderIdx < numPasses - 1; ++shaderIdx)
+  {
+    auto& videoShader = m_pShaders[shaderIdx];
+    videoShader->PrepareParameters(m_dest, false, static_cast<uint64_t>(m_frameCount));
+  }
+
+  // Prepare params for last shader
+  m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
+}
+
 bool CShaderPresetGL::CreateShaders()
 {
   auto numPasses = m_passes.size();
@@ -161,8 +215,9 @@ bool CShaderPresetGL::CreateShaders()
   for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     const auto& pass = m_passes[shaderIdx];
+    auto numPassLuts = pass.luts.size();
 
-    for (unsigned i = 0; i < pass.luts.size(); ++i)
+    for (unsigned i = 0; i < numPassLuts; ++i)
     {
       auto& lutStruct = pass.luts[i];
 
@@ -180,8 +235,8 @@ bool CShaderPresetGL::CreateShaders()
     // Get only the parameters belonging to this specific shader
     ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
 
-    if (!videoShader->Create(shaderSource, shaderPath, passParameters, nullptr, passLUTsGL,
-                             m_outputSize, pass.frameCountMod))
+    if (!videoShader->Create(shaderSource, shaderPath, passParameters, passLUTsGL, m_outputSize,
+                             shaderIdx, pass.frameCountMod))
     {
       CLog::Log(LOGERROR, "Couldn't create a video shader");
       return false;
@@ -202,7 +257,7 @@ bool CShaderPresetGL::CreateShaderTextures()
   float2 prevSize = m_videoSize;
   float2 prevTextureSize = m_videoSize;
 
-  unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
+  auto numPasses = m_passes.size();
 
   for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
@@ -342,65 +397,6 @@ bool CShaderPresetGL::CreateShaderTextures()
   return true;
 }
 
-void CShaderPresetGL::UpdateViewPort()
-{
-  CRect viewPort;
-  m_context.GetViewPort(viewPort);
-  UpdateViewPort(viewPort);
-}
-
-void CShaderPresetGL::UpdateViewPort(CRect viewPort)
-{
-  float2 currentViewPortSize = {viewPort.Width(), viewPort.Height()};
-  if (currentViewPortSize != m_outputSize)
-  {
-    m_outputSize = currentViewPortSize;
-    m_bPresetNeedsUpdate = true;
-    Update();
-  }
-}
-
-void CShaderPresetGL::UpdateMVPs()
-{
-  for (auto& videoShader : m_pShaders)
-    videoShader->UpdateMVP();
-}
-
-void CShaderPresetGL::DisposeShaders()
-{
-  m_pShaders.clear();
-  m_pShaderTextures.clear();
-  m_passes.clear();
-  m_bPresetNeedsUpdate = true;
-}
-
-void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPoint dest[])
-{
-  if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
-      m_dest[3] != dest[3] || texture->GetWidth() != m_outputSize.x ||
-      texture->GetHeight() != m_outputSize.y)
-  {
-    for (size_t i = 0; i < 4; ++i)
-      m_dest[i] = dest[i];
-
-    m_outputSize = {texture->GetWidth(), texture->GetHeight()};
-
-    // Update projection matrix and update video shaders
-    UpdateMVPs();
-    UpdateViewPort();
-  }
-
-  // Prepare params for all shaders except the last (needs special flag)
-  for (unsigned shaderIdx = 0; shaderIdx < m_pShaders.size() - 1; ++shaderIdx)
-  {
-    auto& videoShader = m_pShaders[shaderIdx];
-    videoShader->PrepareParameters(m_dest, false, static_cast<uint64_t>(m_frameCount));
-  }
-
-  // Prepare params for last shader
-  m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
-}
-
 void CShaderPresetGL::RenderShader(IShader* shader,
                                    IShaderTexture* source,
                                    IShaderTexture* target) const
@@ -424,6 +420,14 @@ void CShaderPresetGL::RenderShader(IShader* shader,
     static_cast<CShaderTextureGLES*>(target)->UnbindFBO();
 #endif
   }
+}
+
+void CShaderPresetGL::DisposeShaders()
+{
+  m_pShaders.clear();
+  m_pShaderTextures.clear();
+  m_passes.clear();
+  m_bPresetNeedsUpdate = true;
 }
 
 bool CShaderPresetGL::HasPathFailed(const std::string& path) const

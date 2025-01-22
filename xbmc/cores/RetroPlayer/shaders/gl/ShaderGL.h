@@ -33,13 +33,12 @@ public:
   ~CShaderGL() override = default;
 
   // Implementation of IShader
-  //! @todo Remove sampler from IShader.h
   bool Create(const std::string& shaderSource,
               const std::string& shaderPath,
               ShaderParameterMap shaderParameters,
-              IShaderSampler* sampler,
               ShaderLutVec luts,
               float2 viewPortSize,
+              unsigned passIdx,
               unsigned frameCountMod = 0) override;
   void Render(IShaderTexture* source, IShaderTexture* target) override;
   void SetSizes(const float2& prevSize,
@@ -69,11 +68,11 @@ private:
   // Currently loaded shader's relative path
   std::string m_shaderPath;
 
-  // Array of shader parameters
+  // Struct with all parameters pertaining to the shader
   ShaderParameterMap m_shaderParameters;
 
-  // Look-up textures that the shader uses
-  ShaderLutVec m_luts; // todo: back to DX maybe
+  // Look-up textures pertaining to the shader
+  ShaderLutVec m_luts; //! @todo Back to DX maybe
 
   // Resolution of the input of the shader
   float2 m_inputSize;
@@ -92,6 +91,9 @@ private:
 
   // Projection matrix
   std::array<std::array<GLfloat, 4>, 4> m_MVP;
+
+  // Index of the video shader pass
+  unsigned m_passIdx;
 
   // Value to modulo (%) frame count with
   // Unused if 0
