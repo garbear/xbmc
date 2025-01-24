@@ -85,8 +85,8 @@ void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
   //! @todo Doesn't work. Another PSSetSamplers gets called by FX11 right before rendering
   // overriding this.
   /*
-  CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
-  renderingDx->Get3D11Context()->PSSetSamplers(2, 1, &m_pSampler);
+  CRenderSystemDX *renderingDX = static_cast<CRenderSystemDX*>(m_context.Rendering());
+  renderingDX->Get3D11Context()->PSSetSamplers(2, 1, &m_pSampler);
   */
 
   SetShaderParameters(*sourceDX->GetPointer());
@@ -102,12 +102,16 @@ void CShaderDX::SetSizes(const float2& prevSize,
   m_outputSize = nextSize;
 }
 
-void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount)
+void CShaderDX::PrepareParameters(CPoint dest[4],
+                                  IShaderTexture* sourceTexture,
+                                  const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+                                  const std::vector<std::unique_ptr<IShader>>& pShaders,
+                                  uint64_t frameCount)
 {
   CUSTOMVERTEX* v;
   LockVertexBuffer(reinterpret_cast<void**>(&v));
 
-  if (!isLastPass)
+  if (m_passIdx + 1 != pShaders.size()) // Not last pass
   {
     // top left
     v[0].x = -m_outputSize.x / 2;
@@ -162,8 +166,7 @@ void CShaderDX::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
   v[3].tv = 1;
 
   UnlockVertexBuffer();
-
-  UpdateInputBuffer(frameCount);
+  UpdateInputBuffer(sourceTexture, pShaderTextures, pShaders, frameCount);
 }
 
 void CShaderDX::UpdateMVP()
@@ -187,14 +190,13 @@ bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned num
 
 bool CShaderDX::CreateInputBuffer()
 {
-  CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
-
-  ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
+  auto* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
   cbInput inputInitData = GetInputData();
   UINT inputBufSize = static_cast<UINT>((sizeof(cbInput) + 15) & ~15);
   CD3D11_BUFFER_DESC cbInputDesc(inputBufSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC,
                                  D3D11_CPU_ACCESS_WRITE);
   D3D11_SUBRESOURCE_DATA initInputSubresource = {&inputInitData, 0, 0};
+
   if (FAILED(pDevice->CreateBuffer(&cbInputDesc, &initInputSubresource, &m_pInputBuffer)))
   {
     CLog::Log(LOGERROR,
@@ -205,19 +207,20 @@ bool CShaderDX::CreateInputBuffer()
   return true;
 }
 
-void CShaderDX::UpdateInputBuffer(uint64_t frameCount)
+void CShaderDX::UpdateInputBuffer(IShaderTexture* sourceTexture, 
+                                  const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+                                  const std::vector<std::unique_ptr<IShader>>& pShaders,
+                                  uint64_t frameCount)
 {
-  ID3D11DeviceContext1* pContext = DX::DeviceResources::Get()->GetD3DContext();
-
+  auto* pContext = DX::DeviceResources::Get()->GetD3DContext();
   cbInput input = GetInputData(frameCount);
   cbInput* pData;
   void** ppData = reinterpret_cast<void**>(&pData);
-
   D3D11_MAPPED_SUBRESOURCE resource;
+
   if (SUCCEEDED(pContext->Map(m_pInputBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource)))
   {
     *ppData = resource.pData;
-
     memcpy(*ppData, &input, sizeof(cbInput));
     pContext->Unmap(m_pInputBuffer, 0);
   }

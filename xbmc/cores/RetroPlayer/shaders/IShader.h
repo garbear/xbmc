@@ -65,10 +65,16 @@ public:
    *        Updates any internal state needed to ensure that correct data is passed to the shader
    *        when rendering.
    * \param dest Coordinates of the 4 corners of the output viewport/window
-   * \param isLastPass True if this shader is the last pass //! @todo This could be a member
+   * \param sourceTexture Source texture of the first shader pass
+   * \param pShaderTextures Intermediate textures used for all shader passes
+   * \param pShaders All shader passes
    * \param frameCount Number of frames that have passed
    */
-  virtual void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) = 0;
+  virtual void PrepareParameters(CPoint dest[4],
+                                 IShaderTexture* sourceTexture,
+                                 const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+                                 const std::vector<std::unique_ptr<IShader>>& pShaders,
+                                 uint64_t frameCount) = 0;
 
   /*!
    * \brief Updates the model view projection matrix.

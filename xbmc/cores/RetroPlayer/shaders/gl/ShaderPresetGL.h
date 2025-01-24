@@ -66,7 +66,9 @@ private:
   void UpdateViewPort();
   void UpdateViewPort(CRect viewPort);
   void UpdateMVPs();
-  void PrepareParameters(const IShaderTexture* texture, const CPoint dest[]);
+  void PrepareParameters(const CPoint dest[],
+                         IShaderTexture* source,
+                         IShaderTexture* target);
   bool CreateShaders();
   bool CreateShaderTextures();
   void RenderShader(IShader* shader, IShaderTexture* source, IShaderTexture* target) const;
@@ -93,11 +95,7 @@ private:
   std::vector<std::unique_ptr<IShader>> m_pShaders;
 
   // Intermediate textures used for pixel shader passes
-#ifndef HAS_GLES
-  std::vector<std::unique_ptr<CShaderTextureGL>> m_pShaderTextures;
-#else
-  std::vector<std::unique_ptr<CShaderTextureGLES>> m_pShaderTextures;
-#endif
+  std::vector<std::unique_ptr<IShaderTexture>> m_pShaderTextures;
 
   // Was the shader preset changed during the last frame?
   bool m_bPresetNeedsUpdate = true;

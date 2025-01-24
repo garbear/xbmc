@@ -95,19 +95,19 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
   glUseProgram(m_shaderProgram);
 
 #ifndef HAS_GLES
-  CShaderTextureGL* sourceGL = static_cast<CShaderTextureGL*>(source);
+  auto* sourceGL = static_cast<CShaderTextureGL*>(source);
 #else
-  CShaderTextureGLES* sourceGL = static_cast<CShaderTextureGLES*>(source);
+  auto* sourceGL = static_cast<CShaderTextureGLES*>(source);
 #endif
   sourceGL->GetPointer()->BindToUnit(0);
-
-  SetShaderParameters();
-
-  glUniformMatrix4fv(m_MVPMatrixLoc, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&m_MVP));
 
 #ifndef HAS_GLES
   glBindVertexArray(VAO);
 #endif
+
+  SetShaderParameters();
+
+  glUniformMatrix4fv(m_MVPMatrixLoc, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&m_MVP));
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(m_VertexCoords), m_VertexCoords, GL_STATIC_DRAW);
@@ -144,9 +144,13 @@ void CShaderGL::SetSizes(const float2& prevSize,
   m_outputSize = nextSize;
 }
 
-void CShaderGL::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount)
+void CShaderGL::PrepareParameters(CPoint dest[4],
+                                  IShaderTexture* sourceTexture,
+                                  const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+                                  const std::vector<std::unique_ptr<IShader>>& pShaders,
+                                  uint64_t frameCount)
 {
-  if (!isLastPass)
+  if (m_passIdx + 1 != pShaders.size()) // Not last pass
   {
     // bottom left x,y
     m_VertexCoords[0][0] = -m_outputSize.x / 2;
@@ -218,7 +222,7 @@ void CShaderGL::PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t fram
   m_indices[2] = 3;
   m_indices[3] = 2;
 
-  UpdateInputs(frameCount);
+  UpdateUniformInputs(sourceTexture, pShaderTextures, pShaders, frameCount);
 }
 
 void CShaderGL::UpdateMVP()
@@ -230,19 +234,41 @@ void CShaderGL::UpdateMVP()
   m_MVP = {{{xScale, 0, 0, 0}, {0, yScale, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}};
 }
 
-void CShaderGL::UpdateInputs(uint64_t frameCount)
+void CShaderGL::UpdateUniformInputs(IShaderTexture* sourceTexture,
+                                    const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+                                    const std::vector<std::unique_ptr<IShader>>& pShaders,
+                                    uint64_t frameCount)
 {
-  glUseProgram(m_shaderProgram);
+  m_uniformInputs = GetInputData(frameCount);
 
-  uniformInputs inputInitData = GetInputData(frameCount);
+  if (m_passIdx) // Not first pass
+  {
+#ifndef HAS_GLES
+    auto* shaderTextureGL = static_cast<CShaderTextureGL*>(pShaderTextures[m_passIdx - 1].get());
+#else
+    auto* shaderTextureGL = static_cast<CShaderTextureGLES*>(pShaderTextures[m_passIdx - 1].get());
+#endif
+    m_uniformFrameInputs = GetFrameInputData(shaderTextureGL->GetPointer()->getMTexture());
+  }
+  else // First pass
+  {
+#ifndef HAS_GLES
+    auto* sourceTextureGL = static_cast<CShaderTextureGL*>(sourceTexture);
+#else
+    auto* sourceTextureGL = static_cast<CShaderTextureGLES*>(sourceTexture);
+#endif
+    m_uniformFrameInputs = GetFrameInputData(sourceTextureGL->GetPointer()->getMTexture());
+  }
 
-  glUniform1f(m_FrameDirectionLoc, inputInitData.frame_direction);
-  glUniform1i(m_FrameCountLoc, inputInitData.frame_count);
-  glUniform2f(m_OutputSizeLoc, inputInitData.output_size.x, inputInitData.output_size.y);
-  glUniform2f(m_TextureSizeLoc, inputInitData.texture_size.x, inputInitData.texture_size.y);
-  glUniform2f(m_InputSizeLoc, inputInitData.video_size.x, inputInitData.video_size.y);
+  // Set frame uniforms of previous passes
+  m_passesUniformFrameInputs.clear();
 
-  glUseProgram(0);
+  for (unsigned i = 0; i < m_passIdx + 1; ++i)
+  {
+    auto* shader = static_cast<CShaderGL*>(pShaders[i].get());
+    uniformFrameInputs frameInput = shader->GetFrameUniformInputs();
+    m_passesUniformFrameInputs.emplace_back(frameInput);
+  }
 }
 
 CShaderGL::uniformInputs CShaderGL::GetInputData(uint64_t frameCount)
@@ -262,6 +288,16 @@ CShaderGL::uniformInputs CShaderGL::GetInputData(uint64_t frameCount)
   return input;
 }
 
+CShaderGL::uniformFrameInputs CShaderGL::GetFrameInputData(GLuint texture)
+{
+  uniformFrameInputs frameInput = {
+      {m_inputSize}, // input_size
+      {m_inputTextureSize}, // texture_size
+      texture // texture
+  };
+  return frameInput;
+}
+
 void CShaderGL::GetUniformLocs()
 {
   m_FrameDirectionLoc = glGetUniformLocation(m_shaderProgram, "FrameDirection");
@@ -276,18 +312,20 @@ void CShaderGL::SetShaderParameters()
 {
   unsigned int textureUnit = 1; // GL_TEXTURE0 is used by source texture
 
-  for (const auto& param : m_shaderParameters)
-  {
-    GLint paramLoc = glGetUniformLocation(m_shaderProgram, param.first.c_str());
-    glUniform1f(paramLoc, param.second);
-  }
+  // Set shader uniforms
+  glUniform1f(m_FrameDirectionLoc, m_uniformInputs.frame_direction);
+  glUniform1i(m_FrameCountLoc, m_uniformInputs.frame_count);
+  glUniform2f(m_OutputSizeLoc, m_uniformInputs.output_size.x, m_uniformInputs.output_size.y);
+  glUniform2f(m_TextureSizeLoc, m_uniformInputs.texture_size.x, m_uniformInputs.texture_size.y);
+  glUniform2f(m_InputSizeLoc, m_uniformInputs.video_size.x, m_uniformInputs.video_size.y);
 
+  // Set lookup textures
   for (const auto& lut : m_luts)
   {
 #ifndef HAS_GLES
-    auto* texture = dynamic_cast<CShaderTextureGL*>(lut->GetTexture());
+    auto* texture = static_cast<CShaderTextureGL*>(lut->GetTexture());
 #else
-    auto* texture = dynamic_cast<CShaderTextureGLES*>(lut->GetTexture());
+    auto* texture = static_cast<CShaderTextureGLES*>(lut->GetTexture());
 #endif
     if (texture != nullptr)
     {
@@ -296,5 +334,38 @@ void CShaderGL::SetShaderParameters()
       texture->GetPointer()->BindToUnit(textureUnit);
       textureUnit++;
     }
+  }
+
+  // Set FBO textures
+  for (unsigned i = 0; i < m_passIdx + 1; ++i)
+  {
+    GLint paramLoc;
+    std::string paramPass = i ? "Pass" + std::to_string(i) : "Orig";
+    std::string paramPassPrev = "PassPrev" + std::to_string(m_passIdx + 1 - i);
+
+    paramLoc = glGetUniformLocation(m_shaderProgram, (paramPass + "Texture").c_str());
+    glUniform1i(paramLoc, textureUnit);
+    paramLoc = glGetUniformLocation(m_shaderProgram, (paramPassPrev + "Texture").c_str());
+    glUniform1i(paramLoc, textureUnit);
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    glBindTexture(GL_TEXTURE_2D, m_passesUniformFrameInputs[i].texture);
+    textureUnit++;
+
+    paramLoc = glGetUniformLocation(m_shaderProgram, (paramPass + "TextureSize").c_str());
+    glUniform2f(paramLoc, m_passesUniformFrameInputs[i].texture_size.x, m_passesUniformFrameInputs[i].texture_size.y);
+    paramLoc = glGetUniformLocation(m_shaderProgram, (paramPassPrev + "TextureSize").c_str());
+    glUniform2f(paramLoc, m_passesUniformFrameInputs[i].texture_size.x, m_passesUniformFrameInputs[i].texture_size.y);
+
+    paramLoc = glGetUniformLocation(m_shaderProgram, (paramPass + "InputSize").c_str());
+    glUniform2f(paramLoc, m_passesUniformFrameInputs[i].input_size.x, m_passesUniformFrameInputs[i].input_size.y);
+    paramLoc = glGetUniformLocation(m_shaderProgram, (paramPassPrev + "InputSize").c_str());
+    glUniform2f(paramLoc, m_passesUniformFrameInputs[i].input_size.x, m_passesUniformFrameInputs[i].input_size.y);
+  }
+
+  // Set #pragma parameters
+  for (const auto& param : m_shaderParameters)
+  {
+    GLint paramLoc = glGetUniformLocation(m_shaderProgram, param.first.c_str());
+    glUniform1f(paramLoc, param.second);
   }
 }

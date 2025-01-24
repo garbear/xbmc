@@ -47,7 +47,11 @@ public:
   void SetSizes(const float2& prevSize,
                 const float2& prevTextureSize,
                 const float2& nextSize) override;
-  void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) override;
+  void PrepareParameters(CPoint dest[4],
+                         IShaderTexture* sourceTexture,
+                         const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+                         const std::vector<std::unique_ptr<IShader>>& pShaders,
+                         uint64_t frameCount) override;
   void UpdateMVP() override;
 
   /*!
@@ -82,7 +86,10 @@ private:
     float frame_direction;
   };
 
-  void UpdateInputBuffer(uint64_t frameCount);
+  void UpdateInputBuffer(IShaderTexture* sourceTexture, 
+                         const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+                         const std::vector<std::unique_ptr<IShader>>& pShaders,
+                         uint64_t frameCount);
   cbInput GetInputData(uint64_t frameCount = 0);
   void SetShaderParameters(CD3DTexture& sourceTexture);
 

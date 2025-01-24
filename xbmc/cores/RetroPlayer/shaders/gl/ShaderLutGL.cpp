@@ -49,9 +49,9 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
 {
   std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
 #ifndef HAS_GLES
-  CGLTexture* textureGL = static_cast<CGLTexture*>(texture.get());
+  auto* textureGL = static_cast<CGLTexture*>(texture.get());
 #else
-  CGLESTexture* textureGL = static_cast<CGLESTexture*>(texture.get());
+  auto* textureGL = static_cast<CGLESTexture*>(texture.get());
 #endif
 
   if (textureGL == nullptr)

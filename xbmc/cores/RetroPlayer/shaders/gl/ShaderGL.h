@@ -44,7 +44,11 @@ public:
   void SetSizes(const float2& prevSize,
                 const float2& prevTextureSize,
                 const float2& nextSize) override;
-  void PrepareParameters(CPoint dest[4], bool isLastPass, uint64_t frameCount) override;
+  void PrepareParameters(CPoint dest[4],
+                         IShaderTexture* sourceTexture,
+                         const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+                         const std::vector<std::unique_ptr<IShader>>& pShaders,
+                         uint64_t frameCount) override;
   void UpdateMVP() override;
 
 private:
@@ -57,8 +61,20 @@ private:
     GLfloat frame_direction;
   };
 
-  void UpdateInputs(uint64_t frameCount);
+  struct uniformFrameInputs
+  {
+    float2 input_size;
+    float2 texture_size;
+    GLuint texture;
+  };
+
+  void UpdateUniformInputs(IShaderTexture* sourceTexture,
+                           const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+                           const std::vector<std::unique_ptr<IShader>>& pShaders,
+                           uint64_t frameCount);
   uniformInputs GetInputData(uint64_t frameCount = 0);
+  uniformFrameInputs GetFrameInputData(GLuint texture);
+  uniformFrameInputs GetFrameUniformInputs() { return m_uniformFrameInputs; }
   void GetUniformLocs();
   void SetShaderParameters();
 
@@ -99,12 +115,15 @@ private:
   // Unused if 0
   unsigned m_frameCountMod = 0;
 
+  GLuint m_shaderProgram = 0;
+  GLubyte m_indices[4];
   float m_VertexCoords[4][3];
   float m_colors[4][3];
   float m_TexCoords[4][2];
-  GLubyte m_indices[4];
 
-  GLuint m_shaderProgram = 0;
+  uniformInputs m_uniformInputs;
+  uniformFrameInputs m_uniformFrameInputs;
+  std::vector<uniformFrameInputs> m_passesUniformFrameInputs;
 
   GLint m_FrameDirectionLoc = -1;
   GLint m_FrameCountLoc = -1;

@@ -63,7 +63,7 @@ bool CShaderPresetGL::RenderUpdate(const CPoint dest[],
   if (!Update())
     return false;
 
-  PrepareParameters(target, dest);
+  PrepareParameters(dest, source, target);
 
   auto numPasses = m_pShaders.size();
 
@@ -72,8 +72,7 @@ bool CShaderPresetGL::RenderUpdate(const CPoint dest[],
   {
     IShader* shader = m_pShaders[shaderIdx].get();
     IShaderTexture* texture = m_pShaderTextures[shaderIdx].get();
-    RenderShader(shader, source,
-                 texture); // The target is used for setting the viewport and binding the FBO
+    RenderShader(shader, source, texture);
     source = texture;
   }
 
@@ -177,16 +176,18 @@ void CShaderPresetGL::UpdateMVPs()
     videoShader->UpdateMVP();
 }
 
-void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPoint dest[])
+void CShaderPresetGL::PrepareParameters(const CPoint dest[],
+                                        IShaderTexture* source,
+                                        IShaderTexture* target)
 {
   if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
-      m_dest[3] != dest[3] || texture->GetWidth() != m_outputSize.x ||
-      texture->GetHeight() != m_outputSize.y)
+      m_dest[3] != dest[3] || target->GetWidth() != m_outputSize.x ||
+      target->GetHeight() != m_outputSize.y)
   {
     for (size_t i = 0; i < 4; ++i)
       m_dest[i] = dest[i];
 
-    m_outputSize = {texture->GetWidth(), texture->GetHeight()};
+    m_outputSize = {target->GetWidth(), target->GetHeight()};
 
     // Update projection matrix and update video shaders
     UpdateMVPs();
@@ -195,15 +196,13 @@ void CShaderPresetGL::PrepareParameters(const IShaderTexture* texture, const CPo
 
   auto numPasses = m_pShaders.size();
 
-  // Prepare params for all shaders except the last (needs special flag)
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses - 1; ++shaderIdx)
+  // Prepare parameters for all shader passes
+  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     auto& videoShader = m_pShaders[shaderIdx];
-    videoShader->PrepareParameters(m_dest, false, static_cast<uint64_t>(m_frameCount));
+    videoShader->PrepareParameters(m_dest, source, m_pShaderTextures, m_pShaders,
+                                   static_cast<uint64_t>(m_frameCount));
   }
-
-  // Prepare params for last shader
-  m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
 }
 
 bool CShaderPresetGL::CreateShaders()
@@ -261,7 +260,7 @@ bool CShaderPresetGL::CreateShaderTextures()
 
   for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
-    ShaderPass& pass = m_passes[shaderIdx];
+    const auto& pass = m_passes[shaderIdx];
 
     // Resolve final texture resolution, taking scale type and scale multiplier into account
     float2 scaledSize, textureSize;
@@ -435,8 +434,8 @@ bool CShaderPresetGL::HasPathFailed(const std::string& path) const
   return m_failedPaths.find(path) != m_failedPaths.end();
 }
 
-ShaderParameterMap CShaderPresetGL::GetShaderParameters(
-    const std::vector<ShaderParameter>& parameters, const std::string& sourceStr) const
+ShaderParameterMap CShaderPresetGL::GetShaderParameters(const std::vector<ShaderParameter>& parameters,
+                                                        const std::string& sourceStr) const
 {
   static const std::regex pragmaParamRegex("#pragma parameter ([a-zA-Z_][a-zA-Z0-9_]*)");
   std::smatch matches;

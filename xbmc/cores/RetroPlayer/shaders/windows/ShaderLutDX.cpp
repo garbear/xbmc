@@ -51,8 +51,6 @@ bool CShaderLutDX::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderContext& context,
                                                                const ShaderLut& lut)
 {
-  CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(context.Rendering());
-
   ID3D11SamplerState* samp;
   D3D11_SAMPLER_DESC sampDesc;
 
@@ -72,7 +70,7 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
   FLOAT blackBorder[4] = {0, 1, 0, 1}; //! @todo Turn this back to black
   memcpy(sampDesc.BorderColor, &blackBorder, 4 * sizeof(FLOAT));
 
-  ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
+  auto* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
 
   if (FAILED(pDevice->CreateSamplerState(&sampDesc, &samp)))
   {
@@ -87,7 +85,8 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
 std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& lut)
 {
   std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
-  CDXTexture* textureDX = static_cast<CDXTexture*>(texture.get());
+  auto* textureDX = static_cast<CDXTexture*>(texture.get());
+
   if (textureDX == nullptr)
   {
     CLog::Log(LOGERROR, "Couldn't open LUT {}", lut.path);

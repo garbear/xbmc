@@ -65,7 +65,7 @@ bool CShaderPresetDX::RenderUpdate(const CPoint dest[],
   if (!Update())
     return false;
 
-  PrepareParameters(target, dest);
+  PrepareParameters(dest, source, target);
 
   auto numPasses = m_pShaders.size();
 
@@ -187,16 +187,18 @@ void CShaderPresetDX::UpdateMVPs()
     videoShader->UpdateMVP();
 }
 
-void CShaderPresetDX::PrepareParameters(const IShaderTexture* texture, const CPoint dest[])
+void CShaderPresetDX::PrepareParameters(const CPoint dest[],
+                                        IShaderTexture* source,
+                                        IShaderTexture* target)
 {
   if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
-      m_dest[3] != dest[3] || texture->GetWidth() != m_outputSize.x ||
-      texture->GetHeight() != m_outputSize.y)
+      m_dest[3] != dest[3] || target->GetWidth() != m_outputSize.x ||
+      target->GetHeight() != m_outputSize.y)
   {
     for (size_t i = 0; i < 4; ++i)
       m_dest[i] = dest[i];
 
-    m_outputSize = {texture->GetWidth(), texture->GetHeight()};
+    m_outputSize = {target->GetWidth(), target->GetHeight()};
 
     // Update projection matrix and update video shaders
     UpdateMVPs();
@@ -205,15 +207,13 @@ void CShaderPresetDX::PrepareParameters(const IShaderTexture* texture, const CPo
 
   auto numPasses = m_pShaders.size();
 
-  // Prepare params for all shaders except the last (needs special flag)
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses - 1; ++shaderIdx)
+  // Prepare parameters for all shader passes
+  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     auto& videoShader = m_pShaders[shaderIdx];
-    videoShader->PrepareParameters(m_dest, false, static_cast<uint64_t>(m_frameCount));
+    videoShader->PrepareParameters(m_dest, source, m_pShaderTextures, m_pShaders,
+                                   static_cast<uint64_t>(m_frameCount));
   }
-
-  // Prepare params for last shader
-  m_pShaders.back()->PrepareParameters(m_dest, true, static_cast<uint64_t>(m_frameCount));
 }
 
 bool CShaderPresetDX::CreateShaders()
@@ -271,7 +271,8 @@ bool CShaderPresetDX::CreateLayouts()
 {
   for (auto& videoShader : m_pShaders)
   {
-    videoShader->CreateVertexBuffer(4, sizeof(CUSTOMVERTEX));
+    auto* videoShaderDX = static_cast<CShaderDX*>(videoShader.get());
+    videoShaderDX->CreateVertexBuffer(4, sizeof(CUSTOMVERTEX));
 
     // Create input layout
     D3D11_INPUT_ELEMENT_DESC layout[] = {
@@ -279,7 +280,7 @@ bool CShaderPresetDX::CreateLayouts()
         {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0}};
 
-    if (!videoShader->CreateInputLayout(layout, ARRAYSIZE(layout)))
+    if (!videoShaderDX->CreateInputLayout(layout, ARRAYSIZE(layout)))
     {
       CLog::Log(LOGERROR, __FUNCTION__ ": Failed to create input layout for Input Assembler.");
       return false;
@@ -292,7 +293,10 @@ bool CShaderPresetDX::CreateLayouts()
 bool CShaderPresetDX::CreateBuffers()
 {
   for (auto& videoShader : m_pShaders)
-    videoShader->CreateInputBuffer();
+  {
+    auto* videoShaderDX = static_cast<CShaderDX*>(videoShader.get());
+    videoShaderDX->CreateInputBuffer();
+  }
 
   return true;
 }
@@ -308,7 +312,7 @@ bool CShaderPresetDX::CreateShaderTextures()
 
   for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
-    ShaderPass& pass = m_passes[shaderIdx];
+    const auto& pass = m_passes[shaderIdx];
 
     // Resolve final texture resolution, taking scale type and scale multiplier into account
     float2 scaledSize, textureSize;
@@ -369,16 +373,16 @@ bool CShaderPresetDX::CreateShaderTextures()
       //! @todo Enable usage of optimal texture sizes when all issues are fixed
       textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
 
-      CD3DTexture* texture(new CD3DTexture());
+      auto* textureDX(new CD3DTexture());
 
-      if (!texture->Create(static_cast<UINT>(textureSize.x), static_cast<UINT>(textureSize.y), 1,
+      if (!textureDX->Create(static_cast<UINT>(textureSize.x), static_cast<UINT>(textureSize.y), 1,
                            D3D11_USAGE_DEFAULT, textureFormat, nullptr, 0))
       {
         CLog::Log(LOGERROR, "Couldn't create a texture for video shader {}", pass.sourcePath);
         return false;
       }
 
-      m_pShaderTextures.emplace_back(new CShaderTextureCD3D(texture));
+      m_pShaderTextures.emplace_back(new CShaderTextureCD3D(textureDX));
     }
 
     // Notify shader of its source and dest size
@@ -394,8 +398,6 @@ bool CShaderPresetDX::CreateShaderTextures()
 
 bool CShaderPresetDX::CreateSamplers()
 {
-  CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
-
   // Describe the Sampler States
   // As specified in the common-shaders spec
   D3D11_SAMPLER_DESC sampDesc;
@@ -410,7 +412,7 @@ bool CShaderPresetDX::CreateSamplers()
   FLOAT blackBorder[4] = {1, 0, 0, 1}; //! @todo Turn this back to black
   memcpy(sampDesc.BorderColor, &blackBorder, 4 * sizeof(FLOAT));
 
-  ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
+  auto* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
 
   if (FAILED(pDevice->CreateSamplerState(&sampDesc, &m_pSampNearest)))
     return false;
@@ -447,8 +449,8 @@ bool CShaderPresetDX::HasPathFailed(const std::string& path) const
   return m_failedPaths.find(path) != m_failedPaths.end();
 }
 
-ShaderParameterMap CShaderPresetDX::GetShaderParameters(
-    const std::vector<ShaderParameter>& parameters, const std::string& sourceStr) const
+ShaderParameterMap CShaderPresetDX::GetShaderParameters(const std::vector<ShaderParameter>& parameters,
+                                                        const std::string& sourceStr) const
 {
   static const std::regex pragmaParamRegex("#pragma parameter ([a-zA-Z_][a-zA-Z0-9_]*)");
   std::smatch matches;
