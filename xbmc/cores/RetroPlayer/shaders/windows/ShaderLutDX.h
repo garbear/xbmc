@@ -44,6 +44,7 @@ public:
 
   /*!
    * \brief Gets sampler of LUT
+   *
    * \return Pointer to the sampler associated with the LUT
    */
   IShaderSampler* GetSampler() { return m_sampler.get(); }

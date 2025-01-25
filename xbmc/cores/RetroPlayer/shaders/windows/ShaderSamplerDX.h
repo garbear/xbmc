@@ -24,7 +24,7 @@ public:
   ~CShaderSamplerDX() override;
 
 private:
-  ID3D11SamplerState* m_sampler;
+  ID3D11SamplerState* const m_sampler;
 };
 
 } // namespace SHADER

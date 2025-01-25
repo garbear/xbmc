@@ -11,23 +11,29 @@
 using namespace KODI;
 using namespace SHADER;
 
-D3D11_TEXTURE_ADDRESS_MODE CShaderUtilsDX::TranslateWrapType(WRAP_TYPE wrap)
+D3D11_TEXTURE_ADDRESS_MODE CShaderUtilsDX::TranslateWrapType(WrapType wrapType)
 {
   D3D11_TEXTURE_ADDRESS_MODE dxWrap;
-  switch (wrap)
+  switch (wrapType)
   {
-    case WRAP_TYPE_EDGE:
+    case WrapType::EDGE:
       dxWrap = D3D11_TEXTURE_ADDRESS_CLAMP;
       break;
-    case WRAP_TYPE_REPEAT:
+    case WrapType::REPEAT:
       dxWrap = D3D11_TEXTURE_ADDRESS_WRAP;
       break;
-    case WRAP_TYPE_MIRRORED_REPEAT:
+    case WrapType::MIRRORED_REPEAT:
       dxWrap = D3D11_TEXTURE_ADDRESS_MIRROR;
       break;
-    case WRAP_TYPE_BORDER:
+    case WrapType::BORDER:
     default:
       dxWrap = D3D11_TEXTURE_ADDRESS_BORDER;
+      break;
   }
   return dxWrap;
+}
+
+DirectX::XMFLOAT2 CShaderUtilsDX::ToDXVector(const float2& vec)
+{
+  return DirectX::XMFLOAT2(static_cast<float>(vec.x), static_cast<float>(vec.y));
 }

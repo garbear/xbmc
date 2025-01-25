@@ -29,14 +29,14 @@ CShaderLutDX::~CShaderLutDX() = default;
 
 bool CShaderLutDX::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 {
-  std::unique_ptr<IShaderSampler> lutSampler(CreateLUTSampler(context, lut));
+  std::unique_ptr<IShaderSampler> lutSampler{CreateLUTSampler(context, lut)};
   if (!lutSampler)
   {
     CLog::LogF(LOGWARNING, "Couldn't create a LUT sampler for LUT {}", lut.strId);
     return false;
   }
 
-  std::unique_ptr<IShaderTexture> lutTexture(CreateLUTexture(lut));
+  std::unique_ptr<IShaderTexture> lutTexture{CreateLUTexture(lut)};
   if (!lutTexture)
   {
     CLog::LogF(LOGWARNING, "Couldn't create a LUT texture for LUT {}", lut.strId);
@@ -54,9 +54,8 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
   ID3D11SamplerState* samp;
   D3D11_SAMPLER_DESC sampDesc;
 
-  auto wrapType = CShaderUtilsDX::TranslateWrapType(lut.wrap);
-  auto filterType = lut.filter == FILTER_TYPE_LINEAR ? D3D11_FILTER_MIN_MAG_MIP_LINEAR
-                                                     : D3D11_FILTER_MIN_MAG_MIP_POINT;
+  D3D11_TEXTURE_ADDRESS_MODE wrapType = CShaderUtilsDX::TranslateWrapType(lut.wrapType);
+  D3D11_FILTER filterType = lut.filterType == FilterType::LINEAR ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
 
   ZeroMemory(&sampDesc, sizeof(D3D11_SAMPLER_DESC));
   sampDesc.Filter = filterType;
@@ -70,7 +69,7 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
   FLOAT blackBorder[4] = {0, 1, 0, 1}; //! @todo Turn this back to black
   memcpy(sampDesc.BorderColor, &blackBorder, 4 * sizeof(FLOAT));
 
-  auto* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
+  ID3D11Device1* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
 
   if (FAILED(pDevice->CreateSamplerState(&sampDesc, &samp)))
   {
@@ -79,13 +78,13 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
   }
 
   //! @todo Take care of allocation(?)
-  return std::unique_ptr<IShaderSampler>(new CShaderSamplerDX(samp));
+  return std::make_unique<CShaderSamplerDX>(samp);
 }
 
 std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& lut)
 {
   std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
-  auto* textureDX = static_cast<CDXTexture*>(texture.get());
+  CDXTexture* textureDX = static_cast<CDXTexture*>(texture.get());
 
   if (textureDX == nullptr)
   {
@@ -99,6 +98,5 @@ std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& l
   textureDX->LoadToGPU();
 
   //! @todo Take care of allocation(?)
-  return std::unique_ptr<IShaderTexture>(
-      new CShaderTextureCDX(static_cast<CDXTexture*>(texture.release())));
+  return std::make_unique<CShaderTextureCDX>(static_cast<CDXTexture*>(texture.release()));
 }

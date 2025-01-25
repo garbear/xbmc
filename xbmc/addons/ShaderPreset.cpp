@@ -207,14 +207,14 @@ void CShaderPresetAddon::TranslateShaderPass(const video_shader_pass& pass,
   shaderPass.sourcePath = pass.source_path ? pass.source_path : "";
   shaderPass.vertexSource = pass.vertex_source ? pass.vertex_source : "";
   shaderPass.fragmentSource = pass.fragment_source ? pass.fragment_source : "";
-  shaderPass.filter = TranslateFilterType(pass.filter);
-  shaderPass.wrap = TranslateWrapType(pass.wrap);
+  shaderPass.filterType = TranslateFilterType(pass.filter);
+  shaderPass.wrapType = TranslateWrapType(pass.wrap);
   shaderPass.frameCountMod = pass.frame_count_mod;
 
   const auto& fbo = pass.fbo;
   auto& shaderFbo = shaderPass.fbo;
 
-  shaderFbo.scaleX.type = TranslateScaleType(fbo.scale_x.type);
+  shaderFbo.scaleX.scaleType = TranslateScaleType(fbo.scale_x.type);
   switch (fbo.scale_x.type)
   {
     case SHADER_SCALE_TYPE_ABSOLUTE:
@@ -224,7 +224,7 @@ void CShaderPresetAddon::TranslateShaderPass(const video_shader_pass& pass,
       shaderFbo.scaleX.scale = fbo.scale_x.scale;
       break;
   }
-  shaderFbo.scaleY.type = TranslateScaleType(fbo.scale_y.type);
+  shaderFbo.scaleY.scaleType = TranslateScaleType(fbo.scale_y.type);
   switch (fbo.scale_y.type)
   {
     case SHADER_SCALE_TYPE_ABSOLUTE:
@@ -246,8 +246,8 @@ void CShaderPresetAddon::TranslateShaderLut(const video_shader_lut& lut,
 {
   shaderLut.strId = lut.id ? lut.id : "";
   shaderLut.path = lut.path ? lut.path : "";
-  shaderLut.filter = TranslateFilterType(lut.filter);
-  shaderLut.wrap = TranslateWrapType(lut.wrap);
+  shaderLut.filterType = TranslateFilterType(lut.filter);
+  shaderLut.wrapType = TranslateWrapType(lut.wrap);
   shaderLut.mipmap = lut.mipmap;
 }
 
@@ -263,53 +263,53 @@ void CShaderPresetAddon::TranslateShaderParameter(const video_shader_parameter& 
   shaderParam.step = param.step;
 }
 
-SHADER::FILTER_TYPE CShaderPresetAddon::TranslateFilterType(SHADER_FILTER_TYPE type)
+SHADER::FilterType CShaderPresetAddon::TranslateFilterType(SHADER_FILTER_TYPE type)
 {
   switch (type)
   {
     case SHADER_FILTER_TYPE_LINEAR:
-      return SHADER::FILTER_TYPE_LINEAR;
+      return SHADER::FilterType::LINEAR;
     case SHADER_FILTER_TYPE_NEAREST:
-      return SHADER::FILTER_TYPE_NEAREST;
+      return SHADER::FilterType::NEAREST;
     default:
       break;
   }
 
-  return SHADER::FILTER_TYPE_NONE;
+  return SHADER::FilterType::NONE;
 }
 
-SHADER::WRAP_TYPE CShaderPresetAddon::TranslateWrapType(SHADER_WRAP_TYPE type)
+SHADER::WrapType CShaderPresetAddon::TranslateWrapType(SHADER_WRAP_TYPE type)
 {
   switch (type)
   {
     case SHADER_WRAP_TYPE_BORDER:
-      return SHADER::WRAP_TYPE_BORDER;
+      return SHADER::WrapType::BORDER;
     case SHADER_WRAP_TYPE_EDGE:
-      return SHADER::WRAP_TYPE_EDGE;
+      return SHADER::WrapType::EDGE;
     case SHADER_WRAP_TYPE_REPEAT:
-      return SHADER::WRAP_TYPE_REPEAT;
+      return SHADER::WrapType::REPEAT;
     case SHADER_WRAP_TYPE_MIRRORED_REPEAT:
-      return SHADER::WRAP_TYPE_MIRRORED_REPEAT;
+      return SHADER::WrapType::MIRRORED_REPEAT;
     default:
       break;
   }
 
-  return SHADER::WRAP_TYPE_BORDER;
+  return SHADER::WrapType::BORDER;
 }
 
-SHADER::SCALE_TYPE CShaderPresetAddon::TranslateScaleType(SHADER_SCALE_TYPE type)
+SHADER::ScaleType CShaderPresetAddon::TranslateScaleType(SHADER_SCALE_TYPE type)
 {
   switch (type)
   {
     case SHADER_SCALE_TYPE_INPUT:
-      return SHADER::SCALE_TYPE_INPUT;
+      return SHADER::ScaleType::INPUT;
     case SHADER_SCALE_TYPE_ABSOLUTE:
-      return SHADER::SCALE_TYPE_ABSOLUTE;
+      return SHADER::ScaleType::ABSOLUTE_SCALE;
     case SHADER_SCALE_TYPE_VIEWPORT:
-      return SHADER::SCALE_TYPE_VIEWPORT;
+      return SHADER::ScaleType::VIEWPORT;
     default:
       break;
   }
 
-  return SHADER::SCALE_TYPE_INPUT;
+  return SHADER::ScaleType::INPUT;
 }
