@@ -21,8 +21,12 @@ class CShaderTextureGLES : public IShaderTexture
 {
 public:
   CShaderTextureGLES() = default;
-  CShaderTextureGLES(CGLESTexture* texture, GLint internalFormat = 0) : m_texture(texture), m_internalFormat(internalFormat) {}
-  CShaderTextureGLES(CGLESTexture& texture, GLint internalFormat = 0) : m_texture(&texture), m_internalFormat(internalFormat) {}
+  CShaderTextureGLES(CGLESTexture* texture, bool mipmap = 0, bool sRgbFramebuffer = 0)
+    : m_texture(texture), m_mipmap(mipmap), m_sRgbFramebuffer(sRgbFramebuffer)
+  {}
+  CShaderTextureGLES(CGLESTexture& texture, bool mipmap = 0, bool sRgbFramebuffer = 0)
+    : m_texture(&texture), m_mipmap(mipmap), m_sRgbFramebuffer(sRgbFramebuffer)
+  {}
 
   // Destructor
   ~CShaderTextureGLES() override;
@@ -31,6 +35,8 @@ public:
   float GetHeight() const override { return static_cast<float>(m_texture->GetHeight()); }
 
   CGLESTexture* GetPointer() { return m_texture; }
+  bool IsMipmapped() { return m_mipmap; }
+  bool IsSRGBFramebuffer() { return m_sRgbFramebuffer; }
 
   bool CreateFBO();
   bool BindFBO();
@@ -38,7 +44,8 @@ public:
 
 private:
   CGLESTexture* m_texture = nullptr;
-  GLint m_internalFormat = 0;
+  bool m_mipmap = 0;
+  bool m_sRgbFramebuffer = 0;
   GLuint FBO = 0;
 };
 } // namespace SHADER

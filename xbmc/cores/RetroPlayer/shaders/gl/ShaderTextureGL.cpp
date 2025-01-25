@@ -48,7 +48,7 @@ bool CShaderTextureGL::BindFBO()
     return false;
   }
 
-  if (m_internalFormat == GL_SRGB8_ALPHA8)
+  if (IsSRGBFramebuffer())
     glEnable(GL_FRAMEBUFFER_SRGB);
 
   return true;
@@ -56,7 +56,7 @@ bool CShaderTextureGL::BindFBO()
 
 void CShaderTextureGL::UnbindFBO()
 {
-  if (m_internalFormat == GL_SRGB8_ALPHA8)
+  if (IsSRGBFramebuffer())
     glDisable(GL_FRAMEBUFFER_SRGB);
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);

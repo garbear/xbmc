@@ -20,8 +20,6 @@
 
 #include <regex>
 
-#define MAX_FLOAT 3.402823466E+38
-
 using namespace KODI;
 using namespace SHADER;
 
@@ -366,10 +364,6 @@ bool CShaderPresetGL::CreateShaderTextures()
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterType);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
-      //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrapType);
-      //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NEVER);
-      //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0);
-      //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, MAX_FLOAT);
       glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, textureSize.x, textureSize.y, 0, pixelFormat,
                    internalFormat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
 
@@ -379,9 +373,9 @@ bool CShaderPresetGL::CreateShaderTextures()
 #endif
 
 #ifndef HAS_GLES
-      m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL, internalFormat));
+      m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL, nextPass.mipmap, pass.fbo.sRgbFramebuffer));
 #else
-      m_pShaderTextures.emplace_back(new CShaderTextureGLES(*textureGL, internalFormat));
+      m_pShaderTextures.emplace_back(new CShaderTextureGLES(*textureGL, nextPass.mipmap, pass.fbo.sRgbFramebuffer));
 #endif
     }
 

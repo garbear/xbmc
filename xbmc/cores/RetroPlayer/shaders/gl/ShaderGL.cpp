@@ -92,8 +92,6 @@ bool CShaderGL::Create(const std::string& shaderSource,
 
 void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 {
-  glUseProgram(m_shaderProgram);
-
 #ifndef HAS_GLES
   auto* sourceGL = static_cast<CShaderTextureGL*>(source);
 #else
@@ -101,9 +99,14 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 #endif
   sourceGL->GetPointer()->BindToUnit(0);
 
+  if (sourceGL->IsMipmapped())
+    glGenerateMipmap(GL_TEXTURE_2D);
+
 #ifndef HAS_GLES
   glBindVertexArray(VAO);
 #endif
+
+  glUseProgram(m_shaderProgram);
 
   SetShaderParameters();
 

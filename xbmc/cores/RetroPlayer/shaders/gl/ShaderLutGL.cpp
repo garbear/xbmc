@@ -20,7 +20,6 @@
 #include "utils/log.h"
 
 #include <utility>
-#define MAX_FLOAT 3.402823466E+38
 
 using namespace KODI;
 using namespace SHADER;
@@ -72,10 +71,6 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
   glBindTexture(GL_TEXTURE_2D, textureGL->getMTexture());
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrapType);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NEVER);
-  //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0);
-  //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, MAX_FLOAT);
 
 #ifndef HAS_GLES
   GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
