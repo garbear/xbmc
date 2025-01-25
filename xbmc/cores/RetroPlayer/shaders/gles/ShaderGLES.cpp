@@ -30,10 +30,10 @@ CShaderGLES::~CShaderGLES()
   glDeleteBuffers(3, VBO);
 }
 
-bool CShaderGLES::Create(const std::string& shaderSource,
-                         const std::string& shaderPath,
+bool CShaderGLES::Create(std::string shaderSource,
+                         std::string shaderPath,
                          ShaderParameterMap shaderParameters,
-                         ShaderLutVec luts,
+                         std::vector<std::shared_ptr<IShaderLut>> luts,
                          float2 viewPortSize,
                          unsigned passIdx,
                          unsigned frameCountMod)
@@ -44,10 +44,10 @@ bool CShaderGLES::Create(const std::string& shaderSource,
     return false;
   }
 
-  m_shaderSource = shaderSource;
-  m_shaderPath = shaderPath;
-  m_shaderParameters = shaderParameters;
-  m_luts = luts;
+  m_shaderSource = std::move(shaderSource);
+  m_shaderPath = std::move(shaderPath);
+  m_shaderParameters = std::move(shaderParameters);
+  m_luts = std::move(luts);
   m_viewportSize = viewPortSize;
   m_passIdx = passIdx;
   m_frameCountMod = frameCountMod;

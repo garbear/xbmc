@@ -63,7 +63,7 @@ bool CShaderPresetGL::RenderUpdate(const CPoint dest[],
 
   PrepareParameters(dest, source, target);
 
-  auto numPasses = m_pShaders.size();
+  const unsigned int numPasses = static_cast<unsigned int>(m_pShaders.size());
 
   // Apply all passes except the last one (which needs to be applied to the backbuffer)
   for (unsigned shaderIdx = 0; shaderIdx < numPasses - 1; ++shaderIdx)
@@ -205,20 +205,20 @@ void CShaderPresetGL::PrepareParameters(const CPoint dest[],
 
 bool CShaderPresetGL::CreateShaders()
 {
-  auto numPasses = m_passes.size();
+  unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
 
   //! @todo Is this pass specific?
-  ShaderLutVec passLUTsGL;
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
+  std::vector<std::shared_ptr<IShaderLut>> passLUTsGL;
+  for (unsigned int shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     const auto& pass = m_passes[shaderIdx];
-    auto numPassLuts = pass.luts.size();
+    const unsigned int numPassLuts = static_cast<unsigned int>(pass.luts.size());
 
     for (unsigned i = 0; i < numPassLuts; ++i)
     {
       auto& lutStruct = pass.luts[i];
 
-      ShaderLutPtr passLut(new CShaderLutGL(lutStruct.strId, lutStruct.path));
+      std::shared_ptr<CShaderLutGL> passLut = std::make_shared<CShaderLutGL>(lutStruct.strId, lutStruct.path);
       if (passLut->Create(m_context, lutStruct))
         passLUTsGL.emplace_back(std::move(passLut));
     }
@@ -226,8 +226,8 @@ bool CShaderPresetGL::CreateShaders()
     // Create the shader
     std::unique_ptr<CShaderGL> videoShader(new CShaderGL(m_context));
 
-    auto shaderSource = pass.vertexSource; // Also contains fragment source
-    auto shaderPath = pass.sourcePath;
+    const std::string& shaderSource = pass.vertexSource; // Also contains fragment source
+    const std::string& shaderPath = pass.sourcePath;
 
     // Get only the parameters belonging to this specific shader
     ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);

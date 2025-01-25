@@ -21,7 +21,7 @@ class CShaderUtilsGLES
 {
 public:
   static GLint TranslateWrapType(WRAP_TYPE wrap);
-  static std::string GetGLSLVersion(std::string& source);
+  static std::string GetGLSLVersion(const std::string& source);
 };
 
 } // namespace SHADER

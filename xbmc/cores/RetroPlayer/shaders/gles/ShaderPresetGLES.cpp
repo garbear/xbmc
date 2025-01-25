@@ -205,11 +205,11 @@ void CShaderPresetGLES::PrepareParameters(const CPoint dest[],
 
 bool CShaderPresetGLES::CreateShaders()
 {
-  auto numPasses = m_passes.size();
+  unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
 
   //! @todo Is this pass specific?
-  ShaderLutVec passLUTsGL;
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
+  std::vector<std::shared_ptr<CShaderLutGL>> passLUTsGL;
+  for (unsigned int shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     const auto& pass = m_passes[shaderIdx];
     auto numPassLuts = pass.luts.size();

@@ -36,7 +36,7 @@ GLint CShaderUtilsGLES::TranslateWrapType(WRAP_TYPE wrap)
   return glWrap;
 }
 
-std::string CShaderUtilsGLES::GetGLSLVersion(std::string& source)
+std::string CShaderUtilsGLES::GetGLSLVersion(const std::string& source)
 {
   unsigned int version;
   std::string versionString;

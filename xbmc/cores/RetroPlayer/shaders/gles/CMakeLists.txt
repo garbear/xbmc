@@ -9,7 +9,6 @@ if(TARGET ${APP_NAME_LC}::OpenGLES)
                       ShaderLutGLES.h
                       ShaderPresetGLES.h
                       ShaderTextureGLES.h
-                      ShaderTypesGLES.h
                       ShaderUtilsGLES.cpp
   )
 
