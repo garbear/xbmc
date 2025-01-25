@@ -13,8 +13,8 @@ using namespace SHADER;
 
 float2 CShaderUtils::GetOptimalTextureSize(float2 videoSize)
 {
-  unsigned textureWidth = 1;
-  unsigned textureHeight = 1;
+  unsigned int textureWidth = 1;
+  unsigned int textureHeight = 1;
 
   // Find smallest possible power-of-two sized width that can contain the input texture
   while (true)

@@ -56,7 +56,7 @@ public:
    * \param videoWidth Height of the source frame in pixels
    * \param videoHeight Height of the source frame in pixels
    */
-  virtual void SetVideoSize(const unsigned videoWidth, const unsigned videoHeight) = 0;
+  virtual void SetVideoSize(unsigned int videoWidth, unsigned int videoHeight) = 0;
 
   /*!
    * \brief Set the preset to be rendered on the next frame
@@ -75,7 +75,7 @@ public:
    * \brief Gets the passes of the loaded preset
    * \return All the video shader passes of the currently loaded preset
    */
-  virtual ShaderPassVec& GetPasses() = 0;
+  virtual std::vector<ShaderPass>& GetPasses() = 0;
 };
 } // namespace SHADER
 } // namespace KODI

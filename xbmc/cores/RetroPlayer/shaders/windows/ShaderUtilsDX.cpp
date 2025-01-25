@@ -31,3 +31,8 @@ D3D11_TEXTURE_ADDRESS_MODE CShaderUtilsDX::TranslateWrapType(WRAP_TYPE wrap)
   }
   return dxWrap;
 }
+
+DirectX::XMFLOAT2 CShaderUtilsDX::ToDXVector(const float2& vec)
+{
+  return DirectX::XMFLOAT2(static_cast<float>(vec.x), static_cast<float>(vec.y));
+}

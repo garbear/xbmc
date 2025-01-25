@@ -15,22 +15,10 @@
 #include <type_traits>
 #include <vector>
 
-//! @todo Remove (see below)
-#ifdef _WIN32
-#include <DirectXMath.h>
-#endif
-
 namespace KODI
 {
 namespace SHADER
 {
-struct ShaderPass;
-using ShaderPassVec = std::vector<ShaderPass>;
-
-class IShaderLut;
-using ShaderLutPtr = std::shared_ptr<IShaderLut>;
-using ShaderLutVec = std::vector<ShaderLutPtr>;
-
 using ShaderParameterMap = std::map<std::string, float>;
 
 enum FILTER_TYPE
@@ -57,15 +45,15 @@ enum SCALE_TYPE
 
 struct FboScaleAxis
 {
-  SCALE_TYPE type = SCALE_TYPE_INPUT;
-  float scale = 1.0;
-  unsigned int abs = 1;
+  SCALE_TYPE type{SCALE_TYPE_INPUT};
+  float scale{1.0};
+  unsigned int abs{1};
 };
 
 struct FboScale
 {
-  bool sRgbFramebuffer = false;
-  bool floatFramebuffer = false;
+  bool sRgbFramebuffer{false};
+  bool floatFramebuffer{false};
   FboScaleAxis scaleX;
   FboScaleAxis scaleY;
 };
@@ -74,20 +62,20 @@ struct ShaderLut
 {
   std::string strId;
   std::string path;
-  FILTER_TYPE filter = FILTER_TYPE_NONE;
-  WRAP_TYPE wrap = WRAP_TYPE_BORDER;
-  bool mipmap = false;
+  FILTER_TYPE filter{FILTER_TYPE_NONE};
+  WRAP_TYPE wrap{WRAP_TYPE_BORDER};
+  bool mipmap{false};
 };
 
 struct ShaderParameter
 {
   std::string strId;
   std::string description;
-  float current = 0.0f;
-  float minimum = 0.0f;
-  float initial = 0.0f;
-  float maximum = 0.0f;
-  float step = 0.0f;
+  float current{0.0f};
+  float minimum{0.0f};
+  float initial{0.0f};
+  float maximum{0.0f};
+  float step{0.0f};
 };
 
 struct ShaderPass
@@ -95,11 +83,11 @@ struct ShaderPass
   std::string sourcePath;
   std::string vertexSource;
   std::string fragmentSource;
-  FILTER_TYPE filter = FILTER_TYPE_NONE;
-  WRAP_TYPE wrap = WRAP_TYPE_BORDER;
-  unsigned int frameCountMod = 0;
+  FILTER_TYPE filter{FILTER_TYPE_NONE};
+  WRAP_TYPE wrap{WRAP_TYPE_BORDER};
+  unsigned int frameCountMod{0};
   FboScale fbo;
-  bool mipmap = false;
+  bool mipmap{false};
 
   std::vector<ShaderLut> luts;
   std::vector<ShaderParameter> parameters;
@@ -107,7 +95,7 @@ struct ShaderPass
 
 struct float2
 {
-  float2() : x(0), y(0) {}
+  float2() : x(0.0f), y(0.0f) {}
 
   template<typename T>
   float2(T x_, T y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_))
@@ -125,14 +113,6 @@ struct float2
   {
     return static_cast<T>(std::min(x, y));
   }
-
-  //! @todo Move to CShaderUtilsDX
-#ifdef _WIN32
-  DirectX::XMFLOAT2 ToDXVector() const
-  {
-    return DirectX::XMFLOAT2(static_cast<float>(x), static_cast<float>(y));
-  }
-#endif
 
   float x;
   float y;

@@ -10,24 +10,18 @@
 
 #include "cores/RetroPlayer/shaders/ShaderTypes.h"
 
+#include <DirectXMath.h>
 #include <d3d11.h>
 
 namespace KODI
 {
 namespace SHADER
 {
-
 class CShaderUtilsDX
 {
 public:
   static D3D11_TEXTURE_ADDRESS_MODE TranslateWrapType(WRAP_TYPE wrap);
+  static DirectX::XMFLOAT2 ToDXVector(const float2& vec);
 };
-
-/*! @todo
-operator DirectX::XMFLOAT2(const float2& f) const
-{
-  return DirectX::XMFLOAT2(static_cast<float>(f.x), static_cast<float>(f.y));
-}
-*/
 } // namespace SHADER
 } // namespace KODI

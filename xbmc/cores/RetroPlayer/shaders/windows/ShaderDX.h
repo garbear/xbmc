@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ShaderTextureDX.h"
+#include "ShaderTypesDX.h"
 #include "cores/RetroPlayer/shaders/IShader.h"
 #include "cores/VideoPlayer/VideoRenderers/VideoShaders/WinVideoFilter.h"
 #include "guilib/D3DResource.h"
@@ -24,6 +25,7 @@ class CRenderContext;
 
 namespace SHADER
 {
+class IShaderLut;
 class IShaderSampler;
 
 //! @todo Make renderer independent
@@ -36,10 +38,10 @@ public:
   ~CShaderDX() override;
 
   // Implementation of IShader
-  bool Create(const std::string& shaderSource,
-              const std::string& shaderPath,
+  bool Create(std::string shaderSource,
+              std::string shaderPath,
               ShaderParameterMap shaderParameters,
-              ShaderLutVec luts,
+              std::vector<std::shared_ptr<IShaderLut>> luts,
               float2 viewPortSize,
               unsigned passIdx,
               unsigned frameCountMod = 0) override;
@@ -60,7 +62,7 @@ public:
    * \param vertSize Size of each vertex's data in bytes
    * \return False if creating the vertex buffer failed, true otherwise.
    */
-  bool CreateVertexBuffer(unsigned vertCount, unsigned vertSize);
+  bool CreateVertexBuffer(unsigned int vertCount, unsigned int vertSize);
 
   /*!
    * \brief Creates the data layout of the input-assembler stage
@@ -68,7 +70,7 @@ public:
    * \param numElements Number of inputs to the vertex shader
    * \return False if creating the input layout failed, true otherwise.
    */
-  bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements);
+  bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned int numElements);
 
   /*!
    * \brief Creates the buffer that will be used to send "input" (as per the spec) data to the
@@ -106,7 +108,7 @@ private:
   ShaderParameterMap m_shaderParameters;
 
   // Look-up textures pertaining to the shader
-  ShaderLutVec m_luts; //! @todo Back to DX maybe
+  std::vector<std::shared_ptr<IShaderLut>> m_luts; //! @todo Back to DX maybe
 
   // Resolution of the input of the shader
   float2 m_inputSize;
@@ -127,14 +129,14 @@ private:
   XMFLOAT4X4 m_MVP;
 
   // Index of the video shader pass
-  unsigned m_passIdx;
+  unsigned int m_passIdx{0};
 
   // Value to modulo (%) frame count with
   // Unused if 0
-  unsigned m_frameCountMod = 0;
+  unsigned int m_frameCountMod{0};
 
   // Holds the data bound to the input cbuffer (cbInput here)
-  ID3D11Buffer* m_pInputBuffer = nullptr;
+  ID3D11Buffer* m_pInputBuffer{nullptr};
 
   // Sampler state
   //ID3D11SamplerState* m_pSampler = nullptr;
