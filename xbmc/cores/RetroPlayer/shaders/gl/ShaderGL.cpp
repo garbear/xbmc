@@ -28,6 +28,15 @@ CShaderGL::CShaderGL(RETRO::CRenderContext& context)
 {
 }
 
+CShaderGL::~CShaderGL()
+{
+  glDeleteBuffers(1, &EBO);
+  glDeleteBuffers(3, VBO);
+#ifndef HAS_GLES
+  glDeleteVertexArrays(1, &VAO);
+#endif
+}
+
 bool CShaderGL::Create(const std::string& shaderSource,
                        const std::string& shaderPath,
                        ShaderParameterMap shaderParameters,
@@ -102,11 +111,11 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
   if (sourceGL->IsMipmapped())
     glGenerateMipmap(GL_TEXTURE_2D);
 
+  glUseProgram(m_shaderProgram);
+
 #ifndef HAS_GLES
   glBindVertexArray(VAO);
 #endif
-
-  glUseProgram(m_shaderProgram);
 
   SetShaderParameters();
 
@@ -132,8 +141,15 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 
   glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, 0);
 
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
+
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+#ifndef HAS_GLES
+  glBindVertexArray(0);
+#endif
 
   glUseProgram(0);
 }

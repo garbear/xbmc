@@ -30,7 +30,7 @@ class CShaderGL : public IShader
 {
 public:
   CShaderGL(RETRO::CRenderContext& context);
-  ~CShaderGL() override = default;
+  ~CShaderGL() override;
 
   // Implementation of IShader
   bool Create(const std::string& shaderSource,
