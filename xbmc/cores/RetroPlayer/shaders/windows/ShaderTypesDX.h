@@ -8,21 +8,12 @@
 
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include <minwindef.h>
 
 namespace KODI
 {
-
 namespace SHADER
 {
-
-class CShaderLutDX;
-using ShaderLutPtrDX = std::shared_ptr<CShaderLutDX>;
-using ShaderLutVecDX = std::vector<ShaderLutPtrDX>;
-
 struct CUSTOMVERTEX
 {
   FLOAT x;
@@ -32,6 +23,5 @@ struct CUSTOMVERTEX
   FLOAT tu;
   FLOAT tv;
 };
-
 } // namespace SHADER
 } // namespace KODI

@@ -42,7 +42,7 @@ public:
   TextureType* GetPointer() { return m_texture; }
 
 private:
-  TextureType* m_texture = nullptr;
+  TextureType* m_texture{nullptr};
 };
 
 using CShaderTextureCD3D = CShaderTextureDX<CD3DTexture>;

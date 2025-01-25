@@ -9,6 +9,7 @@
 #include "ShaderDX.h"
 
 #include "ShaderTextureDX.h"
+#include "ShaderUtilsDX.h"
 #include "application/Application.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/IShaderLut.h"
@@ -31,13 +32,13 @@ CShaderDX::~CShaderDX()
     m_pInputBuffer->Release();
 }
 
-bool CShaderDX::Create(const std::string& shaderSource,
-                       const std::string& shaderPath,
+bool CShaderDX::Create(std::string shaderSource,
+                       std::string shaderPath,
                        ShaderParameterMap shaderParameters,
-                       ShaderLutVec luts,
+                       std::vector<std::shared_ptr<IShaderLut>> luts,
                        float2 viewPortSize,
-                       unsigned passIdx,
-                       unsigned frameCountMod)
+                       unsigned int passIdx,
+                       unsigned int frameCountMod)
 {
   if (shaderPath.empty())
   {
@@ -45,10 +46,10 @@ bool CShaderDX::Create(const std::string& shaderSource,
     return false;
   }
 
-  m_shaderSource = shaderSource;
-  m_shaderPath = shaderPath;
-  m_shaderParameters = shaderParameters;
-  m_luts = luts;
+  m_shaderSource = std::move(shaderSource);
+  m_shaderPath = std::move(shaderPath);
+  m_shaderParameters = std::move(shaderParameters);
+  m_luts = std::move(luts);
   m_viewportSize = viewPortSize;
   m_passIdx = passIdx;
   m_frameCountMod = frameCountMod;
@@ -68,7 +69,7 @@ bool CShaderDX::Create(const std::string& shaderSource,
 
   m_effect.AddIncludePath(URIUtils::GetBasePath(m_shaderPath));
 
-  if (!m_effect.Create(shaderSource, &defines))
+  if (!m_effect.Create(m_shaderSource, &defines))
   {
     CLog::LogF(LOGERROR, "Failed to load video shader: {}", m_shaderPath);
     return false;
@@ -79,8 +80,8 @@ bool CShaderDX::Create(const std::string& shaderSource,
 
 void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
 {
-  auto* sourceDX = static_cast<CShaderTextureCD3D*>(source);
-  auto* targetDX = static_cast<CShaderTextureCD3D*>(target);
+  CShaderTextureCD3D* sourceDX = static_cast<CShaderTextureCD3D*>(source);
+  CShaderTextureCD3D* targetDX = static_cast<CShaderTextureCD3D*>(target);
 
   //! @todo Doesn't work. Another PSSetSamplers gets called by FX11 right before rendering
   // overriding this.
@@ -112,7 +113,7 @@ void CShaderDX::PrepareParameters(
   CUSTOMVERTEX* v;
   LockVertexBuffer(reinterpret_cast<void**>(&v));
 
-  if (m_passIdx + 1 != pShaders.size()) // Not last pass
+  if (m_passIdx + 1 != static_cast<unsigned int>(pShaders.size())) // Not last pass
   {
     // top left
     v[0].x = -m_outputSize.x / 2;
@@ -172,26 +173,26 @@ void CShaderDX::PrepareParameters(
 
 void CShaderDX::UpdateMVP()
 {
-  float xScale = 1.0f / m_outputSize.x * 2.0f;
-  float yScale = -1.0f / m_outputSize.y * 2.0f;
+  const float xScale = 1.0f / m_outputSize.x * 2.0f;
+  const float yScale = -1.0f / m_outputSize.y * 2.0f;
 
   // Update projection matrix
   m_MVP = XMFLOAT4X4(xScale, 0, 0, 0, 0, yScale, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 }
 
-bool CShaderDX::CreateVertexBuffer(unsigned vertCount, unsigned vertSize)
+bool CShaderDX::CreateVertexBuffer(unsigned int vertCount, unsigned int vertSize)
 {
   return CWinShader::CreateVertexBuffer(vertCount, vertSize);
 }
 
-bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements)
+bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned int numElements)
 {
   return CWinShader::CreateInputLayout(layout, numElements);
 }
 
 bool CShaderDX::CreateInputBuffer()
 {
-  auto* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
+  ID3D11Device1* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
   cbInput inputInitData = GetInputData();
   UINT inputBufSize = static_cast<UINT>((sizeof(cbInput) + 15) & ~15);
   CD3D11_BUFFER_DESC cbInputDesc(inputBufSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC,
@@ -214,7 +215,7 @@ void CShaderDX::UpdateInputBuffer(
     const std::vector<std::unique_ptr<IShader>>& pShaders,
     uint64_t frameCount)
 {
-  auto* pContext = DX::DeviceResources::Get()->GetD3DContext();
+  ID3D11DeviceContext1* pContext = DX::DeviceResources::Get()->GetD3DContext();
   cbInput input = GetInputData(frameCount);
   cbInput* pData;
   void** ppData = reinterpret_cast<void**>(&pData);
@@ -234,9 +235,9 @@ CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
     frameCount %= m_frameCountMod;
 
   cbInput input = {
-      {m_inputSize.ToDXVector()}, // video_size
-      {m_inputTextureSize.ToDXVector()}, // texture_size
-      {m_destSize.ToDXVector()}, // output_size
+      {CShaderUtilsDX::ToDXVector(m_inputSize)}, // video_size
+      {CShaderUtilsDX::ToDXVector(m_destSize)}, // texture_size
+      {CShaderUtilsDX::ToDXVector(m_destSize)}, // output_size
       // Current frame count that can be modulo'ed
       static_cast<float>(frameCount), // frame_count
       // Time always flows forward
@@ -253,12 +254,12 @@ void CShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
   //! @todo(optimization) Add frame_count to separate cbuffer
   m_effect.SetConstantBuffer("input", m_pInputBuffer);
 
-  for (const auto& param : m_shaderParameters)
-    m_effect.SetFloatArray(param.first.c_str(), &param.second, 1);
+  for (const auto& paramIt : m_shaderParameters)
+    m_effect.SetFloatArray(paramIt.first.c_str(), &paramIt.second, 1);
 
-  for (const auto& lut : m_luts)
+  for (const std::shared_ptr<IShaderLut>& lut : m_luts)
   {
-    auto* texture = dynamic_cast<CShaderTextureCDX*>(lut->GetTexture());
+    CShaderTextureCDX* texture = dynamic_cast<CShaderTextureCDX*>(lut->GetTexture());
     if (texture != nullptr)
       m_effect.SetTexture(lut->GetID().c_str(), texture->GetShaderResource());
   }

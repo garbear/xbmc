@@ -14,18 +14,23 @@
 #include <map>
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 namespace KODI
 {
 namespace SHADER
 {
+class IShaderLut;
 class IShaderTexture;
 
 class IShader
 {
 public:
+  virtual ~IShader() = default;
+
   /*!
    * \brief Construct the video shader instance
+   *
    * \param shaderSource Source code of the shader (both vertex and pixel/fragment)
    * \param shaderPath Full path to the shader file
    * \param shaderParameters Struct with all parameters pertaining to the shader
@@ -33,18 +38,20 @@ public:
    * \param viewPortSize Size of the window/viewport
    * \param passIdx Index of the video shader pass
    * \param frameCountMod Modulo applied to the frame count before sendign it to the shader
+   *
    * \return Returns false if creating the shader failed, true otherwise
    */
-  virtual bool Create(const std::string& shaderSource,
-                      const std::string& shaderPath,
+  virtual bool Create(std::string shaderSource,
+                      std::string shaderPath,
                       ShaderParameterMap shaderParameters,
-                      ShaderLutVec luts,
+                      std::vector<std::shared_ptr<IShaderLut>> luts,
                       float2 viewPortSize,
-                      unsigned passIdx,
-                      unsigned frameCountMod = 0) = 0;
+                      unsigned int passIdx,
+                      unsigned int frameCountMod = 0) = 0;
 
   /*!
    * \brief Renders the video shader to the target texture
+   *
    * \param source Source texture to pass to the shader as input
    * \param target Target texture to render the shader to
    */
@@ -52,6 +59,7 @@ public:
 
   /*!
    * \brief Sets the input and output sizes in pixels
+   *
    * \param prevSize Input image size of the shader in pixels
    * \param prevTextureSize Power-of-two input texture size in pixels
    * \param nextSize Output image size of the shader in pixels
@@ -61,9 +69,11 @@ public:
                         const float2& nextSize) = 0;
 
   /*!
-   * \brief Called before rendering.
-   *        Updates any internal state needed to ensure that correct data is passed to the shader
-   *        when rendering.
+   * \brief Called before rendering
+   *
+   * Updates any internal state needed to ensure that correct data is passed to
+   * the shader when rendering.
+   *
    * \param dest Coordinates of the 4 corners of the output viewport/window
    * \param sourceTexture Source texture of the first shader pass
    * \param pShaderTextures Intermediate textures used for all shader passes
@@ -78,12 +88,11 @@ public:
       uint64_t frameCount) = 0;
 
   /*!
-   * \brief Updates the model view projection matrix.
-   *        Should usually only be called when the viewport/window size changes.
+   * \brief Updates the model view projection matrix
+   *
+   * Should usually only be called when the viewport/window size changes.
    */
   virtual void UpdateMVP() = 0;
-
-  virtual ~IShader() = default;
 };
 } // namespace SHADER
 } // namespace KODI

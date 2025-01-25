@@ -1,5 +1,4 @@
-set(SOURCES IShaderTexture.cpp
-            ShaderPresetFactory.cpp
+set(SOURCES ShaderPresetFactory.cpp
             ShaderUtils.cpp
 )
 

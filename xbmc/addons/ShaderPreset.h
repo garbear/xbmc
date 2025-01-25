@@ -107,9 +107,9 @@ private:
   static void TranslateShaderLut(const video_shader_lut& lut, KODI::SHADER::ShaderLut& shaderLut);
   static void TranslateShaderParameter(const video_shader_parameter& param,
                                        KODI::SHADER::ShaderParameter& shaderParam);
-  static KODI::SHADER::FILTER_TYPE TranslateFilterType(SHADER_FILTER_TYPE type);
-  static KODI::SHADER::WRAP_TYPE TranslateWrapType(SHADER_WRAP_TYPE type);
-  static KODI::SHADER::SCALE_TYPE TranslateScaleType(SHADER_SCALE_TYPE type);
+  static KODI::SHADER::FilterType TranslateFilterType(SHADER_FILTER_TYPE type);
+  static KODI::SHADER::WrapType TranslateWrapType(SHADER_WRAP_TYPE type);
+  static KODI::SHADER::ScaleType TranslateScaleType(SHADER_SCALE_TYPE type);
 
   // Cache for const char* members in AddonProps_ShaderPreset
   std::string m_strUserPath; /*!< \brief Translated path to the user profile */

@@ -12,11 +12,10 @@ namespace KODI
 {
 namespace SHADER
 {
-
 class IShaderTexture
 {
 public:
-  virtual ~IShaderTexture();
+  virtual ~IShaderTexture() = default;
 
   /*!
    * \brief Return width of texture
