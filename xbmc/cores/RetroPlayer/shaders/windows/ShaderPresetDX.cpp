@@ -345,13 +345,9 @@ bool CShaderPresetDX::CreateShaderTextures()
 
     if (shaderIdx == numPasses - 1)
     {
-      // If the last shader has the scale unspecified
-      if (pass.fbo.scaleX.scale == 0 && pass.fbo.scaleY.scale == 0)
-      {
-        // We're supposed to output at full (viewport) resolution
-        scaledSize.x = m_outputSize.x;
-        scaledSize.y = m_outputSize.y;
-      }
+      // We're supposed to output at full (viewport) resolution
+      scaledSize.x = m_outputSize.x;
+      scaledSize.y = m_outputSize.y;
     }
     else
     {

@@ -44,6 +44,21 @@ GLint CShaderUtilsGL::TranslateWrapType(WRAP_TYPE wrap)
   return glWrap;
 }
 
+std::string CShaderUtilsGL::StripParameterPragmas(std::string source)
+{
+  size_t pragmaPosition, newlinePosition;
+
+  while ((pragmaPosition = source.find("#pragma parameter")) != std::string::npos)
+  {
+    newlinePosition = source.find_first_of("\n", pragmaPosition + 17);
+
+    if (newlinePosition != std::string::npos)
+      source.erase(pragmaPosition, newlinePosition - pragmaPosition + 1);
+  }
+
+  return source;
+}
+
 std::string CShaderUtilsGL::GetGLSLVersion(std::string& source)
 {
   unsigned int version;
@@ -57,10 +72,17 @@ std::string CShaderUtilsGL::GetGLSLVersion(std::string& source)
     size_t sourceVersionSize;
     std::string sourceVersion = source.substr(sourceVersionPosition + 9);
 
-    version = std::stoul(sourceVersion, &sourceVersionSize, 10);
+    if (std::isdigit(sourceVersion.at(0)))
+    {
+      version = std::stoul(sourceVersion, &sourceVersionSize, 10);
 
-    // Keep only source code after the version define
-    source = sourceVersion.substr(sourceVersionSize);
+      // Keep only source code after the version define
+      source = sourceVersion.substr(sourceVersionSize);
+    }
+    else
+    {
+      return "\n";
+    }
 
 #ifndef HAS_GLES
     versionString = "#version " + std::to_string(version) + "\n";
@@ -98,7 +120,9 @@ std::string CShaderUtilsGL::GetGLSLVersion(std::string& source)
     else
       versionString = std::to_string(version);
 
-    versionString = "#version " + versionString + "\n";
+    // Do not force GLSL version for OpenGL
+    //versionString = "#version " + versionString + "\n";
+    versionString = "\n";
 #else
     if (version == 200)
       versionString = "100";
@@ -106,6 +130,7 @@ std::string CShaderUtilsGL::GetGLSLVersion(std::string& source)
       versionString = std::to_string(version) + " es";
 
     // Do not force GLSL version for OpenGL ES
+    //versionString = "#version " + versionString + "\n";
     versionString = "\n";
 #endif
   }
