@@ -21,6 +21,7 @@ class CShaderUtilsGL
 {
 public:
   static GLint TranslateWrapType(WRAP_TYPE wrap);
+  static std::string StripParameterPragmas(std::string source);
   static std::string GetGLSLVersion(std::string& source);
 };
 

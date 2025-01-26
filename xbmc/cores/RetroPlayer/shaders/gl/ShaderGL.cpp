@@ -45,7 +45,7 @@ bool CShaderGL::Create(const std::string& shaderSource,
     return false;
   }
 
-  m_shaderSource = shaderSource;
+  m_shaderSource = CShaderUtilsGL::StripParameterPragmas(shaderSource);
   m_shaderPath = shaderPath;
   m_shaderParameters = shaderParameters;
   m_luts = luts;
@@ -82,6 +82,11 @@ bool CShaderGL::Create(const std::string& shaderSource,
   glLinkProgram(m_shaderProgram);
   glDeleteShader(vShader);
   glDeleteShader(fShader);
+
+  glUseProgram(m_shaderProgram);
+  GLint paramLoc = glGetUniformLocation(m_shaderProgram, "Texture");
+  glUniform1i(paramLoc, 0);
+  glUseProgram(0);
 
   GetUniformLocs();
 
