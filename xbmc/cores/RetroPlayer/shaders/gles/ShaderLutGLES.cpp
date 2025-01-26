@@ -44,7 +44,7 @@ std::unique_ptr<IShaderTexture> CShaderLutGLES::CreateLUTTexture(RETRO::CRenderC
                                                                  const ShaderLut& lut)
 {
   std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
-  auto* textureGL = static_cast<CGLESTexture*>(texture.get());
+  CGLESTexture* textureGL = static_cast<CGLESTexture*>(texture.get());
 
   if (textureGL == nullptr)
   {
@@ -55,11 +55,11 @@ std::unique_ptr<IShaderTexture> CShaderLutGLES::CreateLUTTexture(RETRO::CRenderC
   if (lut.mipmap)
     textureGL->SetMipmapping();
 
-  textureGL->SetScalingMethod(lut.filter == FILTER_TYPE_LINEAR ? TEXTURE_SCALING::LINEAR
-                                                               : TEXTURE_SCALING::NEAREST);
+  textureGL->SetScalingMethod(lut.filterType == FilterType::LINEAR ? TEXTURE_SCALING::LINEAR
+                                                                   : TEXTURE_SCALING::NEAREST);
   textureGL->LoadToGPU();
 
-  auto wrapType = CShaderUtilsGLES::TranslateWrapType(lut.wrap);
+  const GLint wrapType = CShaderUtilsGLES::TranslateWrapType(lut.wrapType);
 
   glBindTexture(GL_TEXTURE_2D, textureGL->getMTexture());
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);

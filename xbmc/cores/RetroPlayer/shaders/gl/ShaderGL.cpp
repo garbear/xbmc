@@ -31,13 +31,13 @@ CShaderGL::~CShaderGL()
   glDeleteVertexArrays(1, &VAO);
 }
 
-bool CShaderGL::Create(const std::string& shaderSource,
-                       const std::string& shaderPath,
+bool CShaderGL::Create(std::string shaderSource,
+                       std::string shaderPath,
                        ShaderParameterMap shaderParameters,
-                       ShaderLutVec luts,
+                       std::vector<std::shared_ptr<IShaderLut>> luts,
                        float2 viewPortSize,
-                       unsigned passIdx,
-                       unsigned frameCountMod)
+                       unsigned int passIdx,
+                       unsigned int frameCountMod)
 {
   if (shaderPath.empty())
   {
@@ -45,10 +45,10 @@ bool CShaderGL::Create(const std::string& shaderSource,
     return false;
   }
 
-  m_shaderSource = CShaderUtilsGL::StripParameterPragmas(shaderSource);
-  m_shaderPath = shaderPath;
-  m_shaderParameters = shaderParameters;
-  m_luts = luts;
+  m_shaderSource = CShaderUtilsGL::StripParameterPragmas(std::move(shaderSource));
+  m_shaderPath = std::move(shaderPath);
+  m_shaderParameters = std::move(shaderParameters);
+  m_luts = std::move(luts);
   m_viewportSize = viewPortSize;
   m_passIdx = passIdx;
   m_frameCountMod = frameCountMod;
@@ -98,7 +98,7 @@ bool CShaderGL::Create(const std::string& shaderSource,
 
 void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 {
-  auto* sourceGL = static_cast<CShaderTextureGL*>(source);
+  CShaderTextureGL* sourceGL = static_cast<CShaderTextureGL*>(source);
   sourceGL->GetPointer()->BindToUnit(0);
 
   if (sourceGL->IsMipmapped())
@@ -251,23 +251,24 @@ void CShaderGL::UpdateUniformInputs(
 {
   m_uniformInputs = GetInputData(frameCount);
 
-  if (m_passIdx) // Not first pass
+  if (m_passIdx > 0) // Not first pass
   {
-    auto* shaderTextureGL = static_cast<CShaderTextureGL*>(pShaderTextures[m_passIdx - 1].get());
+    CShaderTextureGL* shaderTextureGL =
+        static_cast<CShaderTextureGL*>(pShaderTextures[m_passIdx - 1].get());
     m_uniformFrameInputs = GetFrameInputData(shaderTextureGL->GetPointer()->getMTexture());
   }
   else // First pass
   {
-    auto* sourceTextureGL = static_cast<CShaderTextureGL*>(sourceTexture);
+    CShaderTextureGL* sourceTextureGL = static_cast<CShaderTextureGL*>(sourceTexture);
     m_uniformFrameInputs = GetFrameInputData(sourceTextureGL->GetPointer()->getMTexture());
   }
 
   // Set frame uniforms of previous passes
   m_passesUniformFrameInputs.clear();
 
-  for (unsigned i = 0; i < m_passIdx + 1; ++i)
+  for (unsigned int i = 0; i < m_passIdx + 1; ++i)
   {
-    auto* shader = static_cast<CShaderGL*>(pShaders[i].get());
+    CShaderGL* shader = static_cast<CShaderGL*>(pShaders[i].get());
     UniformFrameInputs frameInput = shader->GetFrameUniformInputs();
     m_passesUniformFrameInputs.emplace_back(frameInput);
   }
@@ -278,7 +279,7 @@ CShaderGL::UniformInputs CShaderGL::GetInputData(uint64_t frameCount)
   if (m_frameCountMod != 0)
     frameCount %= m_frameCountMod;
 
-  UniformInputs input = {
+  const UniformInputs input = {
       {m_inputSize}, // video_size
       {m_inputTextureSize}, // texture_size
       {m_destSize}, // output_size
@@ -292,7 +293,7 @@ CShaderGL::UniformInputs CShaderGL::GetInputData(uint64_t frameCount)
 
 CShaderGL::UniformFrameInputs CShaderGL::GetFrameInputData(GLuint texture)
 {
-  UniformFrameInputs frameInput = {
+  const UniformFrameInputs frameInput = {
       {m_inputSize}, // input_size
       {m_inputTextureSize}, // texture_size
       texture // texture
@@ -322,12 +323,12 @@ void CShaderGL::SetShaderParameters()
   glUniform2f(m_InputSizeLoc, m_uniformInputs.video_size.x, m_uniformInputs.video_size.y);
 
   // Set lookup textures
-  for (const auto& lut : m_luts)
+  for (const std::shared_ptr<IShaderLut>& lut : m_luts)
   {
-    auto* texture = static_cast<CShaderTextureGL*>(lut->GetTexture());
+    CShaderTextureGL* texture = static_cast<CShaderTextureGL*>(lut->GetTexture());
     if (texture != nullptr)
     {
-      GLint paramLoc = glGetUniformLocation(m_shaderProgram, lut->GetID().c_str());
+      const GLint paramLoc = glGetUniformLocation(m_shaderProgram, lut->GetID().c_str());
       glUniform1i(paramLoc, textureUnit);
       texture->GetPointer()->BindToUnit(textureUnit);
       textureUnit++;
@@ -335,7 +336,7 @@ void CShaderGL::SetShaderParameters()
   }
 
   // Set FBO textures
-  for (unsigned i = 0; i < m_passIdx + 1; ++i)
+  for (unsigned int i = 0; i < m_passIdx + 1; ++i)
   {
     GLint paramLoc;
     std::string paramPass = i ? "Pass" + std::to_string(i) : "Orig";

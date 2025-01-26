@@ -29,7 +29,7 @@ bool CShaderTextureGLES::CreateFBO()
 
 bool CShaderTextureGLES::BindFBO()
 {
-  GLuint renderTargetID = GetPointer()->getMTexture();
+  const GLuint renderTargetID = GetPointer()->getMTexture();
   if (renderTargetID == 0)
     return false;
 
