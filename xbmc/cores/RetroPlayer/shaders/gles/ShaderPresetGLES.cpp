@@ -63,10 +63,10 @@ bool CShaderPresetGLES::RenderUpdate(const CPoint dest[],
 
   PrepareParameters(dest, source, target);
 
-  auto numPasses = m_pShaders.size();
+  const unsigned int numPasses = static_cast<unsigned int>(m_pShaders.size());
 
   // Apply all passes except the last one (which needs to be applied to the backbuffer)
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses - 1; ++shaderIdx)
+  for (unsigned int shaderIdx = 0; shaderIdx + 1 < numPasses; ++shaderIdx)
   {
     IShader* shader = m_pShaders[shaderIdx].get();
     IShaderTexture* texture = m_pShaderTextures[shaderIdx].get();
@@ -86,9 +86,10 @@ bool CShaderPresetGLES::RenderUpdate(const CPoint dest[],
   return true;
 }
 
-void CShaderPresetGLES::SetVideoSize(const unsigned videoWidth, const unsigned videoHeight)
+void CShaderPresetGLES::SetVideoSize(unsigned int videoWidth, unsigned int videoHeight)
 {
-  if (videoWidth != m_videoSize.x || videoHeight != m_videoSize.y)
+  if (videoWidth != static_cast<unsigned int>(m_videoSize.x) ||
+      videoHeight != static_cast<unsigned int>(m_videoSize.y))
   {
     m_videoSize = {videoWidth, videoHeight};
     m_bPresetNeedsUpdate = true;
@@ -192,10 +193,10 @@ void CShaderPresetGLES::PrepareParameters(const CPoint dest[],
     UpdateViewPort();
   }
 
-  auto numPasses = m_pShaders.size();
+  const unsigned int numPasses = static_cast<unsigned int>(m_pShaders.size());
 
   // Prepare parameters for all shader passes
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
+  for (unsigned int shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     auto& videoShader = m_pShaders[shaderIdx];
     videoShader->PrepareParameters(m_dest, source, m_pShaderTextures, m_pShaders,
@@ -205,29 +206,30 @@ void CShaderPresetGLES::PrepareParameters(const CPoint dest[],
 
 bool CShaderPresetGLES::CreateShaders()
 {
-  auto numPasses = m_passes.size();
+  const unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
 
   //! @todo Is this pass specific?
-  ShaderLutVec passLUTsGL;
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
+  std::vector<std::shared_ptr<IShaderLut>> passLUTsGL;
+  for (unsigned int shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
-    const auto& pass = m_passes[shaderIdx];
-    auto numPassLuts = pass.luts.size();
+    const ShaderPass& pass = m_passes[shaderIdx];
+    const unsigned int numPassLuts = static_cast<unsigned int>(pass.luts.size());
 
-    for (unsigned i = 0; i < numPassLuts; ++i)
+    for (unsigned int i = 0; i < numPassLuts; ++i)
     {
-      auto& lutStruct = pass.luts[i];
+      const ShaderLut& lutStruct = pass.luts[i];
 
-      ShaderLutPtr passLut(new CShaderLutGLES(lutStruct.strId, lutStruct.path));
+      std::shared_ptr<CShaderLutGLES> passLut =
+          std::make_shared<CShaderLutGLES>(lutStruct.strId, lutStruct.path);
       if (passLut->Create(m_context, lutStruct))
         passLUTsGL.emplace_back(std::move(passLut));
     }
 
     // Create the shader
-    std::unique_ptr<CShaderGLES> videoShader(new CShaderGLES(m_context));
+    std::unique_ptr<CShaderGLES> videoShader = std::make_unique<CShaderGLES>(m_context);
 
-    auto shaderSource = pass.vertexSource; // Also contains fragment source
-    auto shaderPath = pass.sourcePath;
+    const std::string& shaderSource = pass.vertexSource; // Also contains fragment source
+    const std::string& shaderPath = pass.sourcePath;
 
     // Get only the parameters belonging to this specific shader
     ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
@@ -262,36 +264,36 @@ bool CShaderPresetGLES::CreateShaderTextures()
 
     // Resolve final texture resolution, taking scale type and scale multiplier into account
     float2 scaledSize, textureSize;
-    switch (pass.fbo.scaleX.type)
+    switch (pass.fbo.scaleX.scaleType)
     {
-      case SCALE_TYPE_ABSOLUTE:
+      case ScaleType::ABSOLUTE_SCALE:
         scaledSize.x = static_cast<float>(pass.fbo.scaleX.abs);
         break;
-      case SCALE_TYPE_VIEWPORT:
+      case ScaleType::VIEWPORT:
         scaledSize.x =
             pass.fbo.scaleX.scale ? pass.fbo.scaleX.scale * m_outputSize.x : m_outputSize.x;
         break;
-      case SCALE_TYPE_INPUT:
+      case ScaleType::INPUT:
       default:
         scaledSize.x = pass.fbo.scaleX.scale ? pass.fbo.scaleX.scale * prevSize.x : prevSize.x;
         break;
     }
-    switch (pass.fbo.scaleY.type)
+    switch (pass.fbo.scaleY.scaleType)
     {
-      case SCALE_TYPE_ABSOLUTE:
+      case ScaleType::ABSOLUTE_SCALE:
         scaledSize.y = static_cast<float>(pass.fbo.scaleY.abs);
         break;
-      case SCALE_TYPE_VIEWPORT:
+      case ScaleType::VIEWPORT:
         scaledSize.y =
             pass.fbo.scaleY.scale ? pass.fbo.scaleY.scale * m_outputSize.y : m_outputSize.y;
         break;
-      case SCALE_TYPE_INPUT:
+      case ScaleType::INPUT:
       default:
         scaledSize.y = pass.fbo.scaleY.scale ? pass.fbo.scaleY.scale * prevSize.y : prevSize.y;
         break;
     }
 
-    if (shaderIdx == numPasses - 1)
+    if (shaderIdx + 1 == numPasses)
     {
       // We're supposed to output at full (viewport) resolution
       scaledSize.x = m_outputSize.x;
@@ -325,9 +327,9 @@ bool CShaderPresetGLES::CreateShaderTextures()
       //! @todo Enable usage of optimal texture sizes when all issues are fixed
       textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
 
-      auto textureGL = new CGLESTexture(static_cast<unsigned int>(textureSize.x),
-                                        static_cast<unsigned int>(textureSize.y),
-                                        XB_FMT_A8R8G8B8); // Format is not used
+      CGLESTexture* textureGL = new CGLESTexture(static_cast<unsigned int>(textureSize.x),
+                                                 static_cast<unsigned int>(textureSize.y),
+                                                 XB_FMT_A8R8G8B8); // Format is not used
 
       textureGL->CreateTextureObject();
 
@@ -339,11 +341,12 @@ bool CShaderPresetGLES::CreateShaderTextures()
 
       ShaderPass& nextPass = m_passes[shaderIdx + 1];
 
-      auto wrapType = CShaderUtilsGLES::TranslateWrapType(nextPass.wrap);
-      auto magFilterType = (nextPass.filter == FILTER_TYPE_LINEAR ? GL_LINEAR : GL_NEAREST);
-      auto minFilterType =
-          (nextPass.mipmap ? (nextPass.filter == FILTER_TYPE_LINEAR ? GL_LINEAR_MIPMAP_LINEAR
-                                                                    : GL_NEAREST_MIPMAP_NEAREST)
+      const GLint wrapType = CShaderUtilsGLES::TranslateWrapType(nextPass.wrapType);
+      const GLuint magFilterType =
+          (nextPass.filterType == FilterType::LINEAR ? GL_LINEAR : GL_NEAREST);
+      const GLuint minFilterType =
+          (nextPass.mipmap ? (nextPass.filterType == FilterType::LINEAR ? GL_LINEAR_MIPMAP_LINEAR
+                                                                        : GL_NEAREST_MIPMAP_NEAREST)
                            : magFilterType);
 
       glBindTexture(GL_TEXTURE_2D, textureGL->getMTexture());
@@ -375,7 +378,7 @@ void CShaderPresetGLES::RenderShader(IShader* shader,
 {
   if (static_cast<CShaderTextureGLES*>(target)->BindFBO())
   {
-    CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
+    const CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
     glViewport((GLsizei)newViewPort.x1, (GLsizei)newViewPort.y1, (GLsizei)newViewPort.x2,
                (GLsizei)newViewPort.y2);
     glScissor((GLsizei)newViewPort.x1, (GLsizei)newViewPort.y1, (GLsizei)newViewPort.x2,
@@ -419,7 +422,7 @@ ShaderParameterMap CShaderPresetGLES::GetShaderParameters(
   for (const auto& match : validParams)
   {
     // For each param found in the preset file
-    for (const auto& parameter : parameters)
+    for (const ShaderParameter& parameter : parameters)
     {
       // Check if they match
       if (match == parameter.strId)

@@ -90,7 +90,7 @@ void CRPRendererDMAOpenGL::Render(uint8_t alpha)
   if (m_bUseShaderPreset)
   {
     GLint filter = GL_NEAREST;
-    if (m_shaderPreset->GetPasses()[0].filter == SHADER::FILTER_TYPE_LINEAR)
+    if (m_shaderPreset->GetPasses()[0].filterType == SHADER::FilterType::LINEAR)
       filter = GL_LINEAR;
 
     glBindTexture(m_textureTarget, sourceTexture->getMTexture());

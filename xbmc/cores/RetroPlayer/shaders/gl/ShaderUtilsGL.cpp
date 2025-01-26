@@ -14,31 +14,34 @@
 using namespace KODI;
 using namespace SHADER;
 
-GLint CShaderUtilsGL::TranslateWrapType(WRAP_TYPE wrap)
+GLint CShaderUtilsGL::TranslateWrapType(WrapType wrapType)
 {
   GLint glWrap;
-  switch (wrap)
+
+  switch (wrapType)
   {
-    case WRAP_TYPE_EDGE:
+    case WrapType::EDGE:
       glWrap = GL_CLAMP_TO_EDGE;
       break;
-    case WRAP_TYPE_REPEAT:
+    case WrapType::REPEAT:
       glWrap = GL_REPEAT;
       break;
-    case WRAP_TYPE_MIRRORED_REPEAT:
+    case WrapType::MIRRORED_REPEAT:
       glWrap = GL_MIRRORED_REPEAT;
       break;
-    case WRAP_TYPE_BORDER:
+    case WrapType::BORDER:
     default:
       glWrap = GL_CLAMP_TO_BORDER;
       break;
   }
+
   return glWrap;
 }
 
 std::string CShaderUtilsGL::StripParameterPragmas(std::string source)
 {
-  size_t pragmaPosition, newlinePosition;
+  size_t pragmaPosition;
+  size_t newlinePosition;
 
   while ((pragmaPosition = source.find("#pragma parameter")) != std::string::npos)
   {
@@ -56,7 +59,7 @@ std::string CShaderUtilsGL::GetGLSLVersion(std::string& source)
   unsigned int version;
   std::string versionString;
 
-  size_t sourceVersionPosition = source.find("#version ");
+  const size_t sourceVersionPosition = source.find("#version ");
 
   // Extract the version from the source
   if (sourceVersionPosition != std::string::npos)

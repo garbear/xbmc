@@ -247,7 +247,8 @@ bool CShaderPresetDX::CreateShaders()
     // Get only the parameters belonging to this specific shader
     ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
 
-    if (!videoShader->Create(shaderSource, shaderPath, std::move(passParameters), std::move(passLUTsDX), m_outputSize, shaderIdx, pass.frameCountMod))
+    if (!videoShader->Create(shaderSource, shaderPath, std::move(passParameters),
+                             std::move(passLUTsDX), m_outputSize, shaderIdx, pass.frameCountMod))
     {
       CLog::Log(LOGERROR, "Couldn't create a video shader");
       return false;

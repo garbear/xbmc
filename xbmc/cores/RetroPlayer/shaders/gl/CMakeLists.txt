@@ -9,7 +9,6 @@ if(TARGET ${APP_NAME_LC}::OpenGl)
                       ShaderLutGL.h
                       ShaderPresetGL.h
                       ShaderTextureGL.h
-                      ShaderTypesGL.h
                       ShaderUtilsGL.h
   )
 

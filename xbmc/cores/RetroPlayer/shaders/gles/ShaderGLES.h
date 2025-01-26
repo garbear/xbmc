@@ -9,7 +9,6 @@
 #pragma once
 
 #include "ShaderTextureGLES.h"
-#include "ShaderTypesGLES.h"
 #include "cores/RetroPlayer/shaders/IShader.h"
 #include "rendering/gl/GLShader.h"
 
@@ -32,13 +31,13 @@ public:
   ~CShaderGLES() override;
 
   // Implementation of IShader
-  bool Create(const std::string& shaderSource,
-              const std::string& shaderPath,
+  bool Create(std::string shaderSource,
+              std::string shaderPath,
               ShaderParameterMap shaderParameters,
-              ShaderLutVec luts,
+              std::vector<std::shared_ptr<IShaderLut>> luts,
               float2 viewPortSize,
-              unsigned passIdx,
-              unsigned frameCountMod = 0) override;
+              unsigned int passIdx,
+              unsigned int frameCountMod = 0) override;
   void Render(IShaderTexture* source, IShaderTexture* target) override;
   void SetSizes(const float2& prevSize,
                 const float2& prevTextureSize,
@@ -87,7 +86,7 @@ private:
   ShaderParameterMap m_shaderParameters;
 
   // Look-up textures pertaining to the shader
-  ShaderLutVec m_luts; //! @todo Back to DX maybe
+  std::vector<std::shared_ptr<IShaderLut>> m_luts; //! @todo Back to DX maybe
 
   // Resolution of the input of the shader
   float2 m_inputSize;

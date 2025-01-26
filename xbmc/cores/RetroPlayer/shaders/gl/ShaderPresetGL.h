@@ -51,10 +51,11 @@ public:
   bool ReadPresetFile(const std::string& presetPath) override;
   bool RenderUpdate(const CPoint dest[], IShaderTexture* source, IShaderTexture* target) override;
   void SetSpeed(double speed) override { m_speed = speed; }
-  void SetVideoSize(const unsigned videoWidth, const unsigned videoHeight) override;
+  void SetVideoSize(unsigned int videoWidth, unsigned int videoHeight) override;
   bool SetShaderPreset(const std::string& shaderPresetPath) override;
   const std::string& GetShaderPreset() const override;
-  ShaderPassVec& GetPasses() override { return m_passes; }
+  std::vector<ShaderPass>& GetPasses() override { return m_passes; }
+
   bool Update();
 
 private:
@@ -82,7 +83,7 @@ private:
   std::set<std::string> m_failedPaths;
 
   // All video shader passes of the currently loaded preset
-  ShaderPassVec m_passes;
+  std::vector<ShaderPass> m_passes;
 
   // Video shaders for the shader passes
   std::vector<std::unique_ptr<IShader>> m_pShaders;

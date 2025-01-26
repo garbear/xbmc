@@ -20,7 +20,7 @@ namespace SHADER
 class CShaderUtilsGLES
 {
 public:
-  static GLint TranslateWrapType(WRAP_TYPE wrap);
+  static GLint TranslateWrapType(WrapType wrapType);
   static std::string StripParameterPragmas(std::string source);
   static std::string GetGLSLVersion(std::string& source);
 };
