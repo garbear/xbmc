@@ -58,6 +58,7 @@ bool CShaderGL::Create(const std::string& shaderSource,
   m_viewportSize = viewPortSize;
   m_passIdx = passIdx;
   m_frameCountMod = frameCountMod;
+  m_shaderProgram = glCreateProgram();
 
   std::string defineVersion = CShaderUtilsGL::GetGLSLVersion(m_shaderSource);
   std::string defineVertex = "#define VERTEX\n#define PARAMETER_UNIFORM\n";
@@ -65,27 +66,31 @@ bool CShaderGL::Create(const std::string& shaderSource,
 
   std::string vertexShaderSourceStr = defineVersion + defineVertex + m_shaderSource;
   std::string fragmentShaderSourceStr = defineVersion + defineFragment + m_shaderSource;
-  const char* vertexShaderSource = vertexShaderSourceStr.c_str();
-  const char* fragmentShaderSource = fragmentShaderSourceStr.c_str();
+  const GLchar* vertexShaderSource = vertexShaderSourceStr.c_str();
+  const GLchar* fragmentShaderSource = fragmentShaderSourceStr.c_str();
+
+  GLint status;
 
   GLuint vShader;
   vShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vShader, 1, &vertexShaderSource, NULL);
   glCompileShader(vShader);
+  glGetShaderiv(vShader, GL_COMPILE_STATUS, &status);
+  glAttachShader(m_shaderProgram, vShader);
 
   GLuint fShader;
   fShader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fShader, 1, &fragmentShaderSource, NULL);
   glCompileShader(fShader); //! @todo Make this good
-
-  m_shaderProgram = glCreateProgram();
-  glAttachShader(m_shaderProgram, vShader);
+  glGetShaderiv(fShader, GL_COMPILE_STATUS, &status);
   glAttachShader(m_shaderProgram, fShader);
+
   glBindAttribLocation(m_shaderProgram, 0, "VertexCoord");
   glBindAttribLocation(m_shaderProgram, 1, "COLOR");
   glBindAttribLocation(m_shaderProgram, 2, "TexCoord");
 
   glLinkProgram(m_shaderProgram);
+  glGetProgramiv(m_shaderProgram, GL_LINK_STATUS, &status);
   glDeleteShader(vShader);
   glDeleteShader(fShader);
 
@@ -128,18 +133,18 @@ void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(m_VertexCoords), m_VertexCoords, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(m_colors), m_colors, GL_STATIC_DRAW);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(m_TexCoords), m_TexCoords, GL_STATIC_DRAW);
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(2);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_indices), m_indices, GL_STATIC_DRAW);
@@ -385,6 +390,8 @@ void CShaderGL::SetShaderParameters()
     paramLoc = glGetUniformLocation(m_shaderProgram, (paramPassPrev + "InputSize").c_str());
     glUniform2f(paramLoc, m_passesUniformFrameInputs[i].input_size.x, m_passesUniformFrameInputs[i].input_size.y);
   }
+
+  glActiveTexture(GL_TEXTURE0);
 
   // Set #pragma parameters
   for (const auto& param : m_shaderParameters)
