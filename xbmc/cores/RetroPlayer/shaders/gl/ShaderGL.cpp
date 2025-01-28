@@ -41,7 +41,7 @@ bool CShaderGL::Create(std::string shaderSource,
 {
   if (shaderPath.empty())
   {
-    CLog::Log(LOGERROR, "ShaderGL: Can't load empty shader path");
+    CLog::Log(LOGERROR, "CShaderGL::Create: Can't load empty shader path");
     return false;
   }
 
@@ -64,29 +64,61 @@ bool CShaderGL::Create(std::string shaderSource,
   const GLchar* fragmentShaderSource = fragmentShaderSourceStr.c_str();
 
   GLint status;
-
   GLuint vShader;
+  GLuint fShader;
+
   vShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vShader, 1, &vertexShaderSource, NULL);
   glCompileShader(vShader);
   glGetShaderiv(vShader, GL_COMPILE_STATUS, &status);
-  glAttachShader(m_shaderProgram, vShader);
 
-  GLuint fShader;
+  if (status == GL_FALSE)
+  {
+    GLint maxLength = 0;
+    glGetShaderiv(vShader, GL_INFO_LOG_LENGTH, &maxLength);
+    std::vector<GLchar> errorLog(maxLength);
+    glGetShaderInfoLog(vShader, maxLength, &maxLength, &errorLog[0]);
+    CLog::Log(LOGERROR, "CShaderGL::Create: Vertex shader compile error:\n{}",
+              std::string(errorLog.begin(), errorLog.end()));
+  }
+
   fShader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fShader, 1, &fragmentShaderSource, NULL);
-  glCompileShader(fShader); //! @todo Make this good
+  glCompileShader(fShader);
   glGetShaderiv(fShader, GL_COMPILE_STATUS, &status);
-  glAttachShader(m_shaderProgram, fShader);
+
+  if (status == GL_FALSE)
+  {
+    GLint maxLength = 0;
+    glGetShaderiv(fShader, GL_INFO_LOG_LENGTH, &maxLength);
+    std::vector<GLchar> errorLog(maxLength);
+    glGetShaderInfoLog(fShader, maxLength, &maxLength, &errorLog[0]);
+    CLog::Log(LOGERROR, "CShaderGL::Create: Fragment shader compile error:\n{}",
+              std::string(errorLog.begin(), errorLog.end()));
+  }
 
   glBindAttribLocation(m_shaderProgram, 0, "VertexCoord");
   glBindAttribLocation(m_shaderProgram, 1, "COLOR");
   glBindAttribLocation(m_shaderProgram, 2, "TexCoord");
 
+  glAttachShader(m_shaderProgram, vShader);
+  glAttachShader(m_shaderProgram, fShader);
   glLinkProgram(m_shaderProgram);
-  glGetProgramiv(m_shaderProgram, GL_LINK_STATUS, &status);
   glDeleteShader(vShader);
   glDeleteShader(fShader);
+  glGetProgramiv(m_shaderProgram, GL_LINK_STATUS, &status);
+
+  if (status == GL_FALSE)
+  {
+    GLint maxLength = 0;
+    glGetProgramiv(m_shaderProgram, GL_INFO_LOG_LENGTH, &maxLength);
+    std::vector<GLchar> errorLog(maxLength);
+    glGetProgramInfoLog(m_shaderProgram, maxLength, &maxLength, &errorLog[0]);
+    CLog::Log(LOGERROR, "CShaderGL::Create: Shader program link error:\n{}",
+              std::string(errorLog.begin(), errorLog.end()));
+    CLog::Log(LOGERROR, "CShaderGL::Create: Failed to load video shader: {}", m_shaderPath);
+    return false;
+  }
 
   glUseProgram(m_shaderProgram);
   GLint paramLoc = glGetUniformLocation(m_shaderProgram, "Texture");

@@ -42,7 +42,7 @@ bool CShaderDX::Create(std::string shaderSource,
 {
   if (shaderPath.empty())
   {
-    CLog::Log(LOGERROR, "ShaderDX: Can't load empty shader path");
+    CLog::Log(LOGERROR, "CShaderDX::Create: Can't load empty shader path");
     return false;
   }
 
@@ -71,7 +71,7 @@ bool CShaderDX::Create(std::string shaderSource,
 
   if (!m_effect.Create(m_shaderSource, &defines))
   {
-    CLog::LogF(LOGERROR, "Failed to load video shader: {}", m_shaderPath);
+    CLog::Log(LOGERROR, "CShaderDX::Create: Failed to load video shader: {}", m_shaderPath);
     return false;
   }
 
@@ -202,7 +202,7 @@ bool CShaderDX::CreateInputBuffer()
   if (FAILED(pDevice->CreateBuffer(&cbInputDesc, &initInputSubresource, &m_pInputBuffer)))
   {
     CLog::Log(LOGERROR,
-              __FUNCTION__ " - Failed to create constant buffer for video shader input data.");
+              "CShaderDX::CreateInputBuffer: Failed to create constant buffer for video shader input data");
     return false;
   }
 
