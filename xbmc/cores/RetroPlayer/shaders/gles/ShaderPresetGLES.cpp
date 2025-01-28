@@ -128,8 +128,9 @@ bool CShaderPresetGLES::Update()
 
     if (!ReadPresetFile(m_presetPath))
     {
-      CLog::LogF(LOGERROR, "Couldn't load shader preset {} or the shaders it references",
-                 m_presetPath);
+      CLog::Log(LOGERROR,
+                "CShaderPresetGLES::Update: Couldn't load shader preset {} or the shaders it references",
+                m_presetPath);
       return false;
     }
 
@@ -237,7 +238,7 @@ bool CShaderPresetGLES::CreateShaders()
     if (!videoShader->Create(shaderSource, shaderPath, passParameters, passLUTsGL, m_outputSize,
                              shaderIdx, pass.frameCountMod))
     {
-      CLog::Log(LOGERROR, "Couldn't create a video shader");
+      CLog::Log(LOGERROR, "CShaderPresetGLES::CreateShaders: Couldn't create a video shader");
       return false;
     }
     m_pShaders.push_back(std::move(videoShader));
@@ -335,7 +336,9 @@ bool CShaderPresetGLES::CreateShaderTextures()
 
       if (textureGL->getMTexture() <= 0)
       {
-        CLog::Log(LOGERROR, "Couldn't create a texture for video shader {}.", pass.sourcePath);
+        CLog::Log(LOGERROR,
+                  "CShaderPresetGLES::CreateShaderTextures: Couldn't create a texture for video shader {}.",
+                  pass.sourcePath);
         return false;
       }
 

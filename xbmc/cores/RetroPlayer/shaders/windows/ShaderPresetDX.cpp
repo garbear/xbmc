@@ -132,8 +132,9 @@ bool CShaderPresetDX::Update()
 
     if (!ReadPresetFile(m_presetPath))
     {
-      CLog::LogF(LOGERROR, "Couldn't load shader preset {} or the shaders it references",
-                 m_presetPath);
+      CLog::Log(LOGERROR,
+                "CShaderPresetDX::Update: Couldn't load shader preset {} or the shaders it references",
+                m_presetPath);
       return false;
     }
 
@@ -250,7 +251,7 @@ bool CShaderPresetDX::CreateShaders()
     if (!videoShader->Create(shaderSource, shaderPath, std::move(passParameters),
                              std::move(passLUTsDX), m_outputSize, shaderIdx, pass.frameCountMod))
     {
-      CLog::Log(LOGERROR, "Couldn't create a video shader");
+      CLog::Log(LOGERROR, "CShaderPresetDX::CreateShaders: Couldn't create a video shader");
       return false;
     }
     m_pShaders.push_back(std::move(videoShader));
@@ -284,7 +285,7 @@ bool CShaderPresetDX::CreateLayouts()
 
     if (!videoShaderDX->CreateInputLayout(layout, ARRAYSIZE(layout)))
     {
-      CLog::Log(LOGERROR, __FUNCTION__ ": Failed to create input layout for Input Assembler.");
+      CLog::Log(LOGERROR, "CShaderPresetDX::CreateLayouts: Failed to create input layout for Input Assembler.");
       return false;
     }
   }
@@ -379,7 +380,9 @@ bool CShaderPresetDX::CreateShaderTextures()
       if (!textureDX->Create(static_cast<UINT>(textureSize.x), static_cast<UINT>(textureSize.y), 1,
                              D3D11_USAGE_DEFAULT, textureFormat, nullptr, 0))
       {
-        CLog::Log(LOGERROR, "Couldn't create a texture for video shader {}", pass.sourcePath);
+        CLog::Log(LOGERROR,
+                  "CShaderPresetDX::CreateShaderTextures: Couldn't create a texture for video shader {}",
+                  pass.sourcePath);
         return false;
       }
 
