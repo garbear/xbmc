@@ -63,27 +63,66 @@ bool CShaderGLES::Create(std::string shaderSource,
   const GLchar* fragmentShaderSource = fragmentShaderSourceStr.c_str();
 
   GLint status;
-
   GLuint vShader;
+  GLuint fShader;
+
   vShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vShader, 1, &vertexShaderSource, NULL);
   glCompileShader(vShader);
   glGetShaderiv(vShader, GL_COMPILE_STATUS, &status);
-  glAttachShader(m_shaderProgram, vShader);
 
-  GLuint fShader;
+  if (status == GL_FALSE)
+  {
+    GLint maxLength = 0;
+    glGetShaderiv(vShader, GL_INFO_LOG_LENGTH, &maxLength);
+    std::vector<GLchar> errorLog(maxLength);
+    glGetShaderInfoLog(vShader, maxLength, &maxLength, &errorLog[0]);
+    CLog::Log(LOGERROR, "ShaderGLES: Vertex shader compile error:\n{}\n{}",
+              m_shaderPath, std::string(errorLog.begin(), errorLog.end()));
+    glDeleteShader(vShader);
+    return false;
+  }
+
   fShader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fShader, 1, &fragmentShaderSource, NULL);
-  glCompileShader(fShader); //! @todo Make this good
+  glCompileShader(fShader);
   glGetShaderiv(fShader, GL_COMPILE_STATUS, &status);
-  glAttachShader(m_shaderProgram, fShader);
+
+  if (status == GL_FALSE)
+  {
+    GLint maxLength = 0;
+    glGetShaderiv(fShader, GL_INFO_LOG_LENGTH, &maxLength);
+    std::vector<GLchar> errorLog(maxLength);
+    glGetShaderInfoLog(fShader, maxLength, &maxLength, &errorLog[0]);
+    CLog::Log(LOGERROR, "ShaderGLES: Fragment shader compile error:\n{}\n{}",
+              m_shaderPath, std::string(errorLog.begin(), errorLog.end()));
+    glDeleteShader(vShader);
+    glDeleteShader(fShader);
+    return false;
+  }
 
   glBindAttribLocation(m_shaderProgram, 0, "VertexCoord");
   glBindAttribLocation(m_shaderProgram, 1, "COLOR");
   glBindAttribLocation(m_shaderProgram, 2, "TexCoord");
 
+  glAttachShader(m_shaderProgram, vShader);
+  glAttachShader(m_shaderProgram, fShader);
   glLinkProgram(m_shaderProgram);
   glGetProgramiv(m_shaderProgram, GL_LINK_STATUS, &status);
+
+  if (status == GL_FALSE)
+  {
+    GLint maxLength = 0;
+    glGetProgramiv(m_shaderProgram, GL_INFO_LOG_LENGTH, &maxLength);
+    std::vector<GLchar> errorLog(maxLength);
+    glGetProgramInfoLog(m_shaderProgram, maxLength, &maxLength, &errorLog[0]);
+    CLog::Log(LOGERROR, "ShaderGLES: Shader program link error:\n{}\n{}",
+              m_shaderPath, std::string(errorLog.begin(), errorLog.end()));
+    glDeleteShader(vShader);
+    glDeleteShader(fShader);
+    return false;
+  }
+
   glDeleteShader(vShader);
   glDeleteShader(fShader);
 
