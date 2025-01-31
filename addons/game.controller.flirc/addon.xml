@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="game.controller.flirc"
+        name="Flirc USB Receiver"
+        version="1.0.0"
+        provider-name="Flirc.tv">
+    <extension point="kodi.game.controller" library="resources/layout.xml"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
+        <summary lang="en_GB">Flirc USB Receiver</summary>
+        <description lang="en_GB">The Flirc USB receiver lets you use any remote control with Kodi. Find out more at flirc.tv!</description>
+    </extension>
+</addon>
