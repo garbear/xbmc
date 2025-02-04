@@ -32,14 +32,14 @@ bool CShaderLutDX::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
   std::unique_ptr<IShaderSampler> lutSampler{CreateLUTSampler(context, lut)};
   if (!lutSampler)
   {
-    CLog::LogF(LOGWARNING, "Couldn't create a LUT sampler for LUT {}", lut.strId);
+    CLog::LogF(LOGWARNING, "CShaderLutDX::Create: Couldn't create sampler for LUT: {}", lut.strId);
     return false;
   }
 
   std::unique_ptr<IShaderTexture> lutTexture{CreateLUTexture(lut)};
   if (!lutTexture)
   {
-    CLog::LogF(LOGWARNING, "Couldn't create a LUT texture for LUT {}", lut.strId);
+    CLog::LogF(LOGWARNING, "CShaderLutDX::Create: Couldn't create texture for LUT: {}", lut.strId);
     return false;
   }
 
@@ -74,7 +74,7 @@ std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderCon
 
   if (FAILED(pDevice->CreateSamplerState(&sampDesc, &samp)))
   {
-    CLog::LogF(LOGWARNING, "Failed to create LUT sampler for LUT {}", lut.path);
+    CLog::LogF(LOGWARNING, "CShaderLutDX::CreateLUTSampler: Failed to create sampler for LUT: {}", lut.path);
     return std::unique_ptr<IShaderSampler>();
   }
 
@@ -89,7 +89,7 @@ std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& l
 
   if (textureDX == nullptr)
   {
-    CLog::Log(LOGERROR, "Couldn't open LUT {}", lut.path);
+    CLog::Log(LOGERROR, "CShaderLutDX::CreateLUTexture: Couldn't open LUT: {}", lut.path);
     return std::unique_ptr<IShaderTexture>();
   }
 

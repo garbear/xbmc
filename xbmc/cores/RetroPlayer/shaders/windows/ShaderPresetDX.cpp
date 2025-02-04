@@ -285,7 +285,7 @@ bool CShaderPresetDX::CreateLayouts()
 
     if (!videoShaderDX->CreateInputLayout(layout, ARRAYSIZE(layout)))
     {
-      CLog::Log(LOGERROR, "CShaderPresetDX::CreateLayouts: Failed to create input layout for Input Assembler.");
+      CLog::Log(LOGERROR, "CShaderPresetDX::CreateLayouts: Failed to create input layout for Input Assembler");
       return false;
     }
   }
@@ -381,7 +381,7 @@ bool CShaderPresetDX::CreateShaderTextures()
                              D3D11_USAGE_DEFAULT, textureFormat, nullptr, 0))
       {
         CLog::Log(LOGERROR,
-                  "CShaderPresetDX::CreateShaderTextures: Couldn't create a texture for video shader {}",
+                  "CShaderPresetDX::CreateShaderTextures: Couldn't create texture for video shader: {}",
                   pass.sourcePath);
         return false;
       }

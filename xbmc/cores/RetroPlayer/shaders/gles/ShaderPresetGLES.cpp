@@ -257,9 +257,9 @@ bool CShaderPresetGLES::CreateShaderTextures()
   float2 prevSize = m_videoSize;
   float2 prevTextureSize = m_videoSize;
 
-  auto numPasses = m_passes.size();
+  const unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
 
-  for (unsigned shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
+  for (unsigned int shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     const auto& pass = m_passes[shaderIdx];
 
@@ -337,7 +337,7 @@ bool CShaderPresetGLES::CreateShaderTextures()
       if (textureGL->getMTexture() <= 0)
       {
         CLog::Log(LOGERROR,
-                  "CShaderPresetGLES::CreateShaderTextures: Couldn't create a texture for video shader {}.",
+                  "CShaderPresetGLES::CreateShaderTextures: Couldn't create texture for video shader: {}",
                   pass.sourcePath);
         return false;
       }
