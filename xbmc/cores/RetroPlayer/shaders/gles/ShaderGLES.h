@@ -10,6 +10,7 @@
 
 #include "ShaderTextureGLES.h"
 #include "cores/RetroPlayer/shaders/IShader.h"
+#include "guilib/TextureGLES.h"
 #include "rendering/gl/GLShader.h"
 
 #include <array>
@@ -74,7 +75,7 @@ private:
   UniformFrameInputs GetFrameInputData(GLuint texture);
   UniformFrameInputs GetFrameUniformInputs() { return m_uniformFrameInputs; }
   void GetUniformLocs();
-  void SetShaderParameters();
+  void SetShaderParameters(CGLESTexture& sourceTexture);
 
   // Currently loaded shader's source code
   std::string m_shaderSource;
