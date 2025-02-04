@@ -344,6 +344,12 @@ bool CShaderPresetGL::CreateShaderTextures()
 
       ShaderPass& nextPass = m_passes[shaderIdx + 1];
 
+      if (nextPass.mipmap)
+        textureGL->SetMipmapping();
+
+      textureGL->SetScalingMethod(nextPass.filterType == FilterType::LINEAR ? TEXTURE_SCALING::LINEAR
+                                                                            : TEXTURE_SCALING::NEAREST);
+
       const GLint wrapType = CShaderUtilsGL::TranslateWrapType(nextPass.wrapType);
       const GLuint magFilterType =
           (nextPass.filterType == FilterType::LINEAR ? GL_LINEAR : GL_NEAREST);
@@ -364,7 +370,7 @@ bool CShaderPresetGL::CreateShaderTextures()
       glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
 
       m_pShaderTextures.emplace_back(
-          new CShaderTextureGL(*textureGL, nextPass.mipmap, pass.fbo.sRgbFramebuffer));
+          new CShaderTextureGL(*textureGL, pass.fbo.sRgbFramebuffer));
     }
 
     // Notify shader of its source and dest size

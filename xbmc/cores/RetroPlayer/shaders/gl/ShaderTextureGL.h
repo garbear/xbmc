@@ -21,12 +21,12 @@ class CShaderTextureGL : public IShaderTexture
 {
 public:
   CShaderTextureGL() = default;
-  CShaderTextureGL(CGLTexture* texture, bool mipmap = 0, bool sRgbFramebuffer = 0)
-    : m_texture(texture), m_mipmap(mipmap), m_sRgbFramebuffer(sRgbFramebuffer)
+  CShaderTextureGL(CGLTexture* texture, bool sRgbFramebuffer = 0)
+    : m_texture(texture), m_sRgbFramebuffer(sRgbFramebuffer)
   {
   }
-  CShaderTextureGL(CGLTexture& texture, bool mipmap = 0, bool sRgbFramebuffer = 0)
-    : m_texture(&texture), m_mipmap(mipmap), m_sRgbFramebuffer(sRgbFramebuffer)
+  CShaderTextureGL(CGLTexture& texture, bool sRgbFramebuffer = 0)
+    : m_texture(&texture), m_sRgbFramebuffer(sRgbFramebuffer)
   {
   }
 
@@ -37,7 +37,6 @@ public:
   float GetHeight() const override { return static_cast<float>(m_texture->GetHeight()); }
 
   CGLTexture* GetPointer() { return m_texture; }
-  bool IsMipmapped() { return m_mipmap; }
   bool IsSRGBFramebuffer() { return m_sRgbFramebuffer; }
 
   bool CreateFBO();
@@ -46,7 +45,6 @@ public:
 
 private:
   CGLTexture* m_texture{nullptr};
-  bool m_mipmap{0};
   bool m_sRgbFramebuffer{0};
   GLuint FBO{0};
 };

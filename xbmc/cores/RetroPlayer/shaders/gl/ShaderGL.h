@@ -75,7 +75,7 @@ private:
   UniformFrameInputs GetFrameInputData(GLuint texture);
   UniformFrameInputs GetFrameUniformInputs() { return m_uniformFrameInputs; }
   void GetUniformLocs();
-  void SetShaderParameters();
+  void SetShaderParameters(CGLTexture& sourceTexture);
 
   // Currently loaded shader's source code
   std::string m_shaderSource;

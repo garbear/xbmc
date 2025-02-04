@@ -344,6 +344,12 @@ bool CShaderPresetGLES::CreateShaderTextures()
 
       ShaderPass& nextPass = m_passes[shaderIdx + 1];
 
+      if (nextPass.mipmap)
+        textureGL->SetMipmapping();
+
+      textureGL->SetScalingMethod(nextPass.filterType == FilterType::LINEAR ? TEXTURE_SCALING::LINEAR
+                                                                            : TEXTURE_SCALING::NEAREST);
+
       const GLint wrapType = CShaderUtilsGLES::TranslateWrapType(nextPass.wrapType);
       const GLuint magFilterType =
           (nextPass.filterType == FilterType::LINEAR ? GL_LINEAR : GL_NEAREST);
@@ -361,7 +367,7 @@ bool CShaderPresetGLES::CreateShaderTextures()
                    internalFormat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
 
       m_pShaderTextures.emplace_back(
-          new CShaderTextureGLES(*textureGL, nextPass.mipmap, pass.fbo.sRgbFramebuffer));
+          new CShaderTextureGLES(*textureGL, pass.fbo.sRgbFramebuffer));
     }
 
     // Notify shader of its source and dest size
