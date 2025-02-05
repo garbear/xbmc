@@ -8,11 +8,12 @@
 
 #include "ShaderLutGL.h"
 
-#include "ShaderTextureGL.h"
 #include "ShaderUtilsGL.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/IShaderPreset.h"
 #include "rendering/gl/RenderSystemGL.h"
+#include "guilib/Texture.h"
+#include "guilib/TextureGL.h"
 #include "utils/log.h"
 
 #include <utility>
@@ -28,7 +29,7 @@ CShaderLutGL::~CShaderLutGL() = default;
 
 bool CShaderLutGL::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 {
-  std::unique_ptr<IShaderTexture> lutTexture(CreateLUTTexture(context, lut));
+  std::unique_ptr<CTexture> lutTexture(CreateLUTTexture(context, lut));
   if (!lutTexture)
   {
     CLog::Log(LOGWARNING, "CShaderLutGL::Create: Couldn't create texture for LUT: {}", lut.strId);
@@ -39,7 +40,7 @@ bool CShaderLutGL::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
   return true;
 }
 
-std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderContext& context,
+std::unique_ptr<CTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderContext& context,
                                                                const ShaderLut& lut)
 {
   std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
@@ -48,7 +49,7 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
   if (textureGL == nullptr)
   {
     CLog::Log(LOGERROR, "CShaderLutGL::CreateLUTTexture: Couldn't open LUT: {}", lut.path);
-    return std::unique_ptr<IShaderTexture>();
+    return std::unique_ptr<CTexture>();
   }
 
   if (lut.mipmap)
@@ -67,6 +68,5 @@ std::unique_ptr<IShaderTexture> CShaderLutGL::CreateLUTTexture(RETRO::CRenderCon
   const GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
   glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
 
-  return std::unique_ptr<IShaderTexture>(
-      new CShaderTextureGL(static_cast<CGLTexture*>(texture.release())));
+  return texture;
 }
