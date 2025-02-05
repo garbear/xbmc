@@ -8,7 +8,6 @@
 
 #include "ShaderLutDX.h"
 
-#include "ShaderSamplerDX.h"
 #include "ShaderTextureDX.h"
 #include "ShaderUtilsDX.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
@@ -29,13 +28,6 @@ CShaderLutDX::~CShaderLutDX() = default;
 
 bool CShaderLutDX::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 {
-  std::unique_ptr<IShaderSampler> lutSampler{CreateLUTSampler(context, lut)};
-  if (!lutSampler)
-  {
-    CLog::LogF(LOGWARNING, "CShaderLutDX::Create: Couldn't create sampler for LUT: {}", lut.strId);
-    return false;
-  }
-
   std::unique_ptr<IShaderTexture> lutTexture{CreateLUTexture(lut)};
   if (!lutTexture)
   {
@@ -43,43 +35,8 @@ bool CShaderLutDX::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
     return false;
   }
 
-  m_sampler = std::move(lutSampler);
   m_texture = std::move(lutTexture);
   return true;
-}
-
-std::unique_ptr<IShaderSampler> CShaderLutDX::CreateLUTSampler(RETRO::CRenderContext& context,
-                                                               const ShaderLut& lut)
-{
-  ID3D11SamplerState* samp;
-  D3D11_SAMPLER_DESC sampDesc;
-
-  D3D11_TEXTURE_ADDRESS_MODE wrapType = CShaderUtilsDX::TranslateWrapType(lut.wrapType);
-  D3D11_FILTER filterType = lut.filterType == FilterType::LINEAR ? D3D11_FILTER_MIN_MAG_MIP_LINEAR
-                                                                 : D3D11_FILTER_MIN_MAG_MIP_POINT;
-
-  ZeroMemory(&sampDesc, sizeof(D3D11_SAMPLER_DESC));
-  sampDesc.Filter = filterType;
-  sampDesc.AddressU = wrapType;
-  sampDesc.AddressV = wrapType;
-  sampDesc.AddressW = wrapType;
-  sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-  sampDesc.MinLOD = 0;
-  sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-  FLOAT blackBorder[4] = {0, 1, 0, 1}; //! @todo Turn this back to black
-  memcpy(sampDesc.BorderColor, &blackBorder, 4 * sizeof(FLOAT));
-
-  ID3D11Device1* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
-
-  if (FAILED(pDevice->CreateSamplerState(&sampDesc, &samp)))
-  {
-    CLog::LogF(LOGWARNING, "CShaderLutDX::CreateLUTSampler: Failed to create sampler for LUT: {}", lut.path);
-    return std::unique_ptr<IShaderSampler>();
-  }
-
-  //! @todo Take care of allocation(?)
-  return std::make_unique<CShaderSamplerDX>(samp);
 }
 
 std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& lut)
@@ -96,7 +53,12 @@ std::unique_ptr<IShaderTexture> CShaderLutDX::CreateLUTexture(const ShaderLut& l
   if (lut.mipmap)
     textureDX->SetMipmapping();
 
+  textureDX->SetScalingMethod(lut.filterType == FilterType::LINEAR ? TEXTURE_SCALING::LINEAR
+                                                                   : TEXTURE_SCALING::NEAREST);
   textureDX->LoadToGPU();
+
+  //! @todo Set LUT wrap type
+  //D3D11_TEXTURE_ADDRESS_MODE wrapType = CShaderUtilsDX::TranslateWrapType(lut.wrapType);
 
   //! @todo Take care of allocation(?)
   return std::make_unique<CShaderTextureCDX>(static_cast<CDXTexture*>(texture.release()));
