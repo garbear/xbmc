@@ -25,7 +25,7 @@ class CRenderContext;
 
 namespace SHADER
 {
-class IShaderTexture;
+class CTextureBase;
 struct ShaderLut;
 
 class CShaderLutGLES : public IShaderLut
@@ -39,13 +39,13 @@ public:
 
   // Implementation of IShaderLut
   bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) override;
-  IShaderTexture* GetTexture() override { return m_texture.get(); }
+  CTexture* GetTexture() override { return m_texture.get(); }
 
 private:
-  static std::unique_ptr<IShaderTexture> CreateLUTTexture(RETRO::CRenderContext& context,
+  static std::unique_ptr<CTexture> CreateLUTTexture(RETRO::CRenderContext& context,
                                                           const ShaderLut& lut);
 
-  std::unique_ptr<IShaderTexture> m_texture;
+  std::unique_ptr<CTexture> m_texture;
 };
 
 } // namespace SHADER

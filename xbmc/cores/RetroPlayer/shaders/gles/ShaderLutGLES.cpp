@@ -8,11 +8,12 @@
 
 #include "ShaderLutGLES.h"
 
-#include "ShaderTextureGLES.h"
 #include "ShaderUtilsGLES.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/IShaderPreset.h"
 #include "rendering/gl/RenderSystemGL.h"
+#include "guilib/Texture.h"
+#include "guilib/TextureGLES.h"
 #include "utils/log.h"
 
 #include <utility>
@@ -29,7 +30,7 @@ CShaderLutGLES::~CShaderLutGLES() = default;
 
 bool CShaderLutGLES::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 {
-  std::unique_ptr<IShaderTexture> lutTexture(CreateLUTTexture(context, lut));
+  std::unique_ptr<CTexture> lutTexture(CreateLUTTexture(context, lut));
   if (!lutTexture)
   {
     CLog::Log(LOGWARNING, "CShaderLutGLES::Create: Couldn't create texture for LUT: {}", lut.strId);
@@ -40,7 +41,7 @@ bool CShaderLutGLES::Create(RETRO::CRenderContext& context, const ShaderLut& lut
   return true;
 }
 
-std::unique_ptr<IShaderTexture> CShaderLutGLES::CreateLUTTexture(RETRO::CRenderContext& context,
+std::unique_ptr<CTexture> CShaderLutGLES::CreateLUTTexture(RETRO::CRenderContext& context,
                                                                  const ShaderLut& lut)
 {
   std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
@@ -49,7 +50,7 @@ std::unique_ptr<IShaderTexture> CShaderLutGLES::CreateLUTTexture(RETRO::CRenderC
   if (textureGL == nullptr)
   {
     CLog::Log(LOGERROR, "CShaderLutGLES::CreateLUTTexture: Couldn't open LUT: {}", lut.path);
-    return std::unique_ptr<IShaderTexture>();
+    return std::unique_ptr<CTexture>();
   }
 
   if (lut.mipmap)
@@ -65,6 +66,5 @@ std::unique_ptr<IShaderTexture> CShaderLutGLES::CreateLUTTexture(RETRO::CRenderC
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
 
-  return std::unique_ptr<IShaderTexture>(
-      new CShaderTextureGLES(static_cast<CGLESTexture*>(texture.release())));
+  return texture;
 }

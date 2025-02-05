@@ -370,12 +370,12 @@ void CShaderGL::SetShaderParameters(CGLTexture& sourceTexture)
   // Set lookup textures
   for (const std::shared_ptr<IShaderLut>& lut : m_luts)
   {
-    CShaderTextureGL* texture = static_cast<CShaderTextureGL*>(lut->GetTexture());
+    CGLTexture* texture = static_cast<CGLTexture*>(lut->GetTexture());
     if (texture != nullptr)
     {
       const GLint paramLoc = glGetUniformLocation(m_shaderProgram, lut->GetID().c_str());
       glUniform1i(paramLoc, textureUnit);
-      texture->GetPointer()->BindToUnit(textureUnit);
+      texture->BindToUnit(textureUnit);
       textureUnit++;
     }
   }

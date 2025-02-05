@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ShaderTypes.h"
+#include "guilib/Texture.h"
 
 #include <memory>
 #include <string>
@@ -23,7 +24,7 @@ class CRenderContext;
 
 namespace SHADER
 {
-class IShaderTexture;
+class CTextureBase;
 
 /*!
  * \brief A lookup table to apply color transforms in a shader
@@ -60,7 +61,7 @@ public:
    * \brief Gets texture of LUT
    * \return Returns pointer to the texture where the LUT data is stored in
    */
-  virtual IShaderTexture* GetTexture() = 0;
+  virtual CTexture* GetTexture() = 0;
 
 protected:
   std::string m_id;

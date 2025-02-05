@@ -259,7 +259,7 @@ void CShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
 
   for (const std::shared_ptr<IShaderLut>& lut : m_luts)
   {
-    CShaderTextureCDX* texture = dynamic_cast<CShaderTextureCDX*>(lut->GetTexture());
+    CDXTexture* texture = dynamic_cast<CDXTexture*>(lut->GetTexture());
     if (texture != nullptr)
       m_effect.SetTexture(lut->GetID().c_str(), texture->GetShaderResource());
   }
