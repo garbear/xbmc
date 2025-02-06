@@ -78,9 +78,9 @@ bool CShaderDX::Create(std::string shaderSource,
   return true;
 }
 
-void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
+void CShaderDX::Render(IShaderTexture& source, IShaderTexture* target)
 {
-  CShaderTextureDX* sourceDX = static_cast<CShaderTextureDX*>(source);
+  CShaderTextureDX& sourceDX = static_cast<CShaderTextureDX&>(source);
   CShaderTextureDX* targetDX = static_cast<CShaderTextureDX*>(target);
 
   //! @todo Doesn't work. Another PSSetSamplers gets called by FX11 right before rendering
@@ -90,7 +90,7 @@ void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
   renderingDX->Get3D11Context()->PSSetSamplers(2, 1, &m_pSampler);
   */
 
-  SetShaderParameters(*sourceDX->GetPointer());
+  SetShaderParameters(*sourceDX.GetPointer());
   Execute({targetDX->GetPointer()}, 4);
 }
 
@@ -105,7 +105,7 @@ void CShaderDX::SetSizes(const float2& prevSize,
 
 void CShaderDX::PrepareParameters(
     CPoint dest[4],
-    IShaderTexture* sourceTexture,
+    IShaderTexture& sourceTexture,
     const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
     const std::vector<std::unique_ptr<IShader>>& pShaders,
     uint64_t frameCount)
@@ -210,7 +210,7 @@ bool CShaderDX::CreateInputBuffer()
 }
 
 void CShaderDX::UpdateInputBuffer(
-    IShaderTexture* sourceTexture,
+    IShaderTexture& sourceTexture,
     const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
     const std::vector<std::unique_ptr<IShader>>& pShaders,
     uint64_t frameCount)

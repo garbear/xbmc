@@ -243,7 +243,7 @@ bool CShaderPresetDX::CreateSamplers()
 }
 
 void CShaderPresetDX::RenderShader(IShader* shader,
-                                   IShaderTexture* source,
+                                   IShaderTexture& source,
                                    IShaderTexture* target)
 {
   const CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());

@@ -47,7 +47,7 @@ public:
    * \return Returns false if updating or rendering failed, true if both succeeded
    */
   virtual bool RenderUpdate(const CPoint dest[],
-                            IShaderTexture* source,
+                            IShaderTexture& source,
                             IShaderTexture* target) = 0;
 
   /*!
