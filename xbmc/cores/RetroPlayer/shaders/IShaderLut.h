@@ -39,26 +39,31 @@ public:
 
   /*!
    * \brief Create the LUT and allocate resources
+   *
    * \param context The render context
    * \param lut The LUT information structure
+   *
    * \return Returns true if successful and the LUT can be used, false otherwise
    */
   virtual bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) = 0;
 
   /*!
    * \brief Gets ID of LUT
+   *
    * \return Returns unique name (ID) of look up texture
    */
   const std::string& GetID() const { return m_id; }
 
   /*!
    * \brief Gets full path of LUT
+   *
    * \return Returns full path of look up texture
    */
   const std::string& GetPath() const { return m_path; }
 
   /*!
    * \brief Gets texture of LUT
+   *
    * \return Returns pointer to the texture where the LUT data is stored in
    */
   virtual CTexture* GetTexture() = 0;
