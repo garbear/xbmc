@@ -14,16 +14,6 @@ namespace KODI
 {
 namespace SHADER
 {
-inline bool operator==(const float2& lhs, const float2& rhs)
-{
-  return lhs.x == rhs.x && lhs.y == rhs.y;
-}
-
-inline bool operator!=(const float2& lhs, const float2& rhs)
-{
-  return !(lhs == rhs);
-}
-
 class CShaderUtils
 {
 public:

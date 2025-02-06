@@ -12,7 +12,6 @@
 #include "IShaderTexture.h"
 #include "ServiceBroker.h"
 #include "ShaderPresetFactory.h"
-#include "ShaderUtils.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "games/GameServices.h"
 #include "utils/URIUtils.h"
