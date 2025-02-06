@@ -80,8 +80,8 @@ bool CShaderDX::Create(std::string shaderSource,
 
 void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
 {
-  CShaderTextureCD3D* sourceDX = static_cast<CShaderTextureCD3D*>(source);
-  CShaderTextureCD3D* targetDX = static_cast<CShaderTextureCD3D*>(target);
+  CShaderTextureDX* sourceDX = static_cast<CShaderTextureDX*>(source);
+  CShaderTextureDX* targetDX = static_cast<CShaderTextureDX*>(target);
 
   //! @todo Doesn't work. Another PSSetSamplers gets called by FX11 right before rendering
   // overriding this.

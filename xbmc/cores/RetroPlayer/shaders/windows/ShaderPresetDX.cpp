@@ -199,7 +199,7 @@ bool CShaderPresetDX::CreateShaderTextures()
         return false;
       }
 
-      m_pShaderTextures.emplace_back(std::make_unique<CShaderTextureCD3D>(textureDX));
+      m_pShaderTextures.emplace_back(std::make_unique<CShaderTextureDX>(textureDX));
     }
 
     // Notify shader of its source and dest size

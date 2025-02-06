@@ -113,7 +113,7 @@ bool CWinRenderBuffer::UploadTexture()
   // Create intermediate texture
   if (!m_intermediateTarget)
   {
-    m_intermediateTarget.reset(new SHADER::CShaderTextureCD3D(new CD3DTexture));
+    m_intermediateTarget.reset(new SHADER::CShaderTextureDX(new CD3DTexture));
     if (!CreateTexture())
     {
       m_intermediateTarget.reset();
@@ -296,7 +296,7 @@ void CRPWinRenderer::Render(CD3DTexture& target)
   if (renderBuffer == nullptr)
     return;
 
-  SHADER::CShaderTextureCD3D* renderBufferTarget = renderBuffer->GetTarget();
+  SHADER::CShaderTextureDX* renderBufferTarget = renderBuffer->GetTarget();
   if (renderBufferTarget == nullptr)
     return;
 

@@ -54,7 +54,7 @@ public:
   // implementation of IRenderBuffer via CRenderBufferSysMem
   bool UploadTexture() override;
 
-  SHADER::CShaderTextureCD3D* GetTarget() { return m_intermediateTarget.get(); }
+  SHADER::CShaderTextureDX* GetTarget() { return m_intermediateTarget.get(); }
 
 private:
   bool CreateTexture();
@@ -74,7 +74,7 @@ private:
   const DXGI_FORMAT m_targetDxFormat;
 
   AVPixelFormat m_targetPixFormat;
-  std::unique_ptr<SHADER::CShaderTextureCD3D> m_intermediateTarget;
+  std::unique_ptr<SHADER::CShaderTextureDX> m_intermediateTarget;
 
   SwsContext* m_swsContext = nullptr;
 };
@@ -131,7 +131,7 @@ protected:
 private:
   void Render(CD3DTexture& target);
 
-  SHADER::CShaderTextureCD3D m_targetTexture;
+  SHADER::CShaderTextureDX m_targetTexture;
 };
 } // namespace RETRO
 } // namespace KODI

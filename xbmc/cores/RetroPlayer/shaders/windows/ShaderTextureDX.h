@@ -19,13 +19,12 @@ namespace KODI
 namespace SHADER
 {
 
-template<typename TextureType>
 class CShaderTextureDX : public IShaderTexture
 {
 public:
   CShaderTextureDX() = default;
-  CShaderTextureDX(TextureType* texture) : m_texture(texture) {}
-  CShaderTextureDX(TextureType& texture) : m_texture(&texture) {}
+  CShaderTextureDX(CD3DTexture* texture) : m_texture(texture) {}
+  CShaderTextureDX(CD3DTexture& texture) : m_texture(&texture) {}
 
   // Destructor
   // Don't delete the texture since it wasn't created here
@@ -34,19 +33,16 @@ public:
   float GetWidth() const override { return static_cast<float>(m_texture->GetWidth()); }
   float GetHeight() const override { return static_cast<float>(m_texture->GetHeight()); }
 
-  void SetTexture(TextureType* newTexture) { m_texture = newTexture; }
-  void SetTexture(TextureType& newTexture) { m_texture = &newTexture; }
+  void SetTexture(CD3DTexture* newTexture) { m_texture = newTexture; }
+  void SetTexture(CD3DTexture& newTexture) { m_texture = &newTexture; }
 
   ID3D11ShaderResourceView* GetShaderResource() const { return m_texture->GetShaderResource(); }
 
-  TextureType* GetPointer() { return m_texture; }
+  CD3DTexture* GetPointer() { return m_texture; }
 
 private:
-  TextureType* m_texture{nullptr};
+  CD3DTexture* m_texture{nullptr};
 };
-
-using CShaderTextureCD3D = CShaderTextureDX<CD3DTexture>;
-using CShaderTextureCDX = CShaderTextureDX<CDXTexture>;
 
 } // namespace SHADER
 } // namespace KODI
