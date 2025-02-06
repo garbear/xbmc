@@ -9,14 +9,153 @@
 #include "RPWinOutputShader.h"
 
 #include "ShaderTypesDX.h"
+#include "filesystem/File.h"
+#include "rendering/dx/DeviceResources.h"
 #include "utils/log.h"
 
 using namespace KODI;
 using namespace SHADER;
 
+bool CRPWinShader::CreateVertexBuffer(unsigned int count, unsigned int size)
+{
+  if (!m_vb.Create(D3D11_BIND_VERTEX_BUFFER, count, size, DXGI_FORMAT_UNKNOWN, D3D11_USAGE_DYNAMIC))
+    return false;
+
+  uint16_t id[4] = {3, 0, 2, 1};
+  if (!m_ib.Create(D3D11_BIND_INDEX_BUFFER, ARRAYSIZE(id), sizeof(uint16_t), DXGI_FORMAT_R16_UINT,
+                   D3D11_USAGE_IMMUTABLE, id))
+    return false;
+
+  m_vbsize = count * size;
+  m_vertsize = size;
+
+  return true;
+}
+
+bool CRPWinShader::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements)
+{
+  D3DX11_PASS_DESC desc = {};
+  if (FAILED(m_effect.Get()->GetTechniqueByIndex(0)->GetPassByIndex(0)->GetDesc(&desc)))
+  {
+    CLog::LogF(LOGERROR, "Failed to get first pass description.");
+    return false;
+  }
+
+  Microsoft::WRL::ComPtr<ID3D11Device> pDevice = DX::DeviceResources::Get()->GetD3DDevice();
+  return SUCCEEDED(pDevice->CreateInputLayout(layout, numElements, desc.pIAInputSignature,
+                                              desc.IAInputSignatureSize, &m_inputLayout));
+}
+
+bool CRPWinShader::LockVertexBuffer(void** data)
+{
+  if (!m_vb.Map(data))
+  {
+    CLog::LogF(LOGERROR, "failed to lock vertex buffer");
+    return false;
+  }
+
+  return true;
+}
+
+bool CRPWinShader::UnlockVertexBuffer()
+{
+  if (!m_vb.Unmap())
+  {
+    CLog::LogF(LOGERROR, "failed to unlock vertex buffer");
+    return false;
+  }
+
+  return true;
+}
+
+bool CRPWinShader::LoadEffect(const std::string& filename, DefinesMap* defines)
+{
+  CLog::LogF(LOGDEBUG, "loading shader {}", filename);
+
+  XFILE::CFileStream file;
+  if (!file.Open(filename))
+  {
+    CLog::LogF(LOGERROR, "failed to open file {}", filename);
+    return false;
+  }
+
+  std::string pStrEffect;
+  getline(file, pStrEffect, '\0');
+
+  if (!m_effect.Create(pStrEffect, defines))
+  {
+    CLog::LogF(LOGERROR, "{} failed", pStrEffect);
+    return false;
+  }
+
+  return true;
+}
+
+bool CRPWinShader::Execute(const std::vector<CD3DTexture*>& targets, unsigned int vertexIndexStep)
+{
+  ID3D11DeviceContext* pContext = DX::DeviceResources::Get()->GetD3DContext();
+  Microsoft::WRL::ComPtr<ID3D11RenderTargetView> oldRT;
+
+  // The render target will be overridden: save the caller's original RT
+  if (!targets.empty())
+    pContext->OMGetRenderTargets(1, &oldRT, nullptr);
+
+  unsigned int cPasses;
+  if (!m_effect.Begin(&cPasses, 0))
+  {
+    CLog::LogF(LOGERROR, "failed to begin d3d effect");
+    return false;
+  }
+
+  ID3D11Buffer* vertexBuffer = m_vb.Get();
+  ID3D11Buffer* indexBuffer = m_ib.Get();
+  unsigned int stride = m_vb.GetStride();
+  unsigned int offset = 0;
+  pContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+  pContext->IASetIndexBuffer(indexBuffer, m_ib.GetFormat(), 0);
+  pContext->IASetInputLayout(m_inputLayout.Get());
+  pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+  for (unsigned int iPass = 0; iPass < cPasses; ++iPass)
+  {
+    SetTarget(targets.size() > iPass ? targets.at(iPass) : nullptr);
+    SetStepParams(iPass);
+
+    if (!m_effect.BeginPass(iPass))
+    {
+      CLog::LogF(LOGERROR, "failed to begin d3d effect pass");
+      break;
+    }
+
+    pContext->DrawIndexed(4, 0, iPass * vertexIndexStep);
+
+    if (!m_effect.EndPass())
+      CLog::LogF(LOGERROR, "failed to end d3d effect pass");
+
+    CD3DHelper::PSClearShaderResources(pContext);
+  }
+  if (!m_effect.End())
+    CLog::LogF(LOGERROR, "failed to end d3d effect");
+
+  if (oldRT)
+    pContext->OMSetRenderTargets(1, oldRT.GetAddressOf(), nullptr);
+
+  return true;
+}
+
+void CRPWinShader::SetTarget(CD3DTexture* target)
+{
+  m_target = target;
+  if (m_target)
+  {
+    DX::DeviceResources::Get()->GetD3DContext()->OMSetRenderTargets(1, target->GetAddressOfRTV(),
+                                                                    nullptr);
+  }
+}
+
 bool CRPWinOutputShader::Create(RETRO::SCALINGMETHOD scalingMethod)
 {
-  CWinShader::CreateVertexBuffer(4, sizeof(CUSTOMVERTEX));
+  CreateVertexBuffer(4, sizeof(CUSTOMVERTEX));
 
   DefinesMap defines;
   switch (scalingMethod)
@@ -42,7 +181,7 @@ bool CRPWinOutputShader::Create(RETRO::SCALINGMETHOD scalingMethod)
       {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
       {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
   };
-  return CWinShader::CreateInputLayout(layout, ARRAYSIZE(layout));
+  return CreateInputLayout(layout, ARRAYSIZE(layout));
 }
 
 void CRPWinOutputShader::Render(CD3DTexture& sourceTexture,
@@ -50,7 +189,7 @@ void CRPWinOutputShader::Render(CD3DTexture& sourceTexture,
                                 const CPoint points[4],
                                 CRect& viewPort,
                                 CD3DTexture& target,
-                                unsigned range)
+                                unsigned int range /* = 0 */)
 {
   PrepareParameters(sourceTexture.GetWidth(), sourceTexture.GetHeight(), sourceRect, points);
   SetShaderParameters(sourceTexture, range, viewPort);
@@ -77,7 +216,7 @@ void CRPWinOutputShader::PrepareParameters(unsigned int sourceWidth,
       m_destPoints[i] = points[i];
 
     CUSTOMVERTEX* v = nullptr;
-    CWinShader::LockVertexBuffer(static_cast<void**>(static_cast<void*>(&v)));
+    LockVertexBuffer(static_cast<void**>(static_cast<void*>(&v)));
 
     v[0].x = m_destPoints[0].x;
     v[0].y = m_destPoints[0].y;
@@ -103,7 +242,7 @@ void CRPWinOutputShader::PrepareParameters(unsigned int sourceWidth,
     v[3].tu = m_sourceRect.x1 / m_sourceWidth;
     v[3].tv = m_sourceRect.y2 / m_sourceHeight;
 
-    CWinShader::UnlockVertexBuffer();
+    UnlockVertexBuffer();
   }
 }
 

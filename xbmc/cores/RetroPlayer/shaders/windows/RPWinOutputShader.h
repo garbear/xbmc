@@ -9,17 +9,52 @@
 #pragma once
 
 #include "cores/GameSettings.h"
-#include "cores/VideoPlayer/VideoRenderers/VideoShaders/WinVideoFilter.h"
+#include "guilib/D3DResource.h"
+#include "utils/Geometry.h"
+
+#include <memory>
+#include <string>
+#include <vector>
+
+#include <d3d11.h>
+#include <wrl/client.h>
 
 namespace KODI
 {
 namespace SHADER
 {
 
-class CRPWinOutputShader : public CWinShader
+class CRPWinShader
 {
 public:
-  ~CRPWinOutputShader() = default;
+  virtual ~CRPWinShader() = default;
+
+protected:
+  virtual bool CreateVertexBuffer(unsigned int vertCount, unsigned int vertSize);
+  virtual bool CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned numElements);
+  virtual bool LockVertexBuffer(void** data);
+  virtual bool UnlockVertexBuffer();
+  virtual bool LoadEffect(const std::string& filename, DefinesMap* defines);
+  virtual bool Execute(const std::vector<CD3DTexture*>& targets, unsigned int vertexIndexStep);
+  virtual void SetStepParams(unsigned stepIndex) {}
+
+  CD3DEffect m_effect;
+  CD3DTexture* m_target{nullptr};
+
+private:
+  void SetTarget(CD3DTexture* target);
+
+  CD3DBuffer m_vb;
+  CD3DBuffer m_ib;
+  unsigned int m_vbsize{0};
+  unsigned int m_vertsize{0};
+  Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
+};
+
+class CRPWinOutputShader : protected CRPWinShader
+{
+public:
+  ~CRPWinOutputShader() override = default;
 
   bool Create(RETRO::SCALINGMETHOD scalingMethod);
   void Render(CD3DTexture& sourceTexture,
