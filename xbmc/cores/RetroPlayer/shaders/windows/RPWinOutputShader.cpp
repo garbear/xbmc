@@ -49,12 +49,12 @@ void CRPWinOutputShader::Render(CD3DTexture& sourceTexture,
                                 CRect sourceRect,
                                 const CPoint points[4],
                                 CRect& viewPort,
-                                CD3DTexture& target,
+                                CD3DTexture* target,
                                 unsigned range)
 {
   PrepareParameters(sourceTexture.GetWidth(), sourceTexture.GetHeight(), sourceRect, points);
   SetShaderParameters(sourceTexture, range, viewPort);
-  Execute({&target}, 4);
+  Execute({target}, 4);
 }
 
 void CRPWinOutputShader::PrepareParameters(unsigned int sourceWidth,

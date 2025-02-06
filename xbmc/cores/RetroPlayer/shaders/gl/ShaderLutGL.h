@@ -31,8 +31,11 @@ struct ShaderLut;
 class CShaderLutGL : public IShaderLut
 {
 public:
-  CShaderLutGL(std::string id, std::string path);
-  ~CShaderLutGL() override = default;
+  CShaderLutGL() = default;
+  CShaderLutGL(const std::string& id, const std::string& path);
+
+  // Destructor
+  ~CShaderLutGL() override;
 
   // Implementation of IShaderLut
   bool Create(RETRO::CRenderContext& context, const ShaderLut& lut) override;

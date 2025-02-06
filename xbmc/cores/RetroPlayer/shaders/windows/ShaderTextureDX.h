@@ -9,39 +9,39 @@
 #pragma once
 
 #include "cores/RetroPlayer/shaders/IShaderTexture.h"
-
-#include <memory>
+#include "guilib/D3DResource.h"
+#include "guilib/TextureDX.h"
 
 #include <d3d11.h>
-
-class CD3DTexture;
 
 namespace KODI
 {
 namespace SHADER
 {
 
-/*!
- * \brief Shader texture that manages the lifetime of its texture object
- */
 class CShaderTextureDX : public IShaderTexture
 {
 public:
-  explicit CShaderTextureDX(std::shared_ptr<CD3DTexture> texture);
+  CShaderTextureDX() = default;
+  CShaderTextureDX(CD3DTexture* texture) : m_texture(texture) {}
+  CShaderTextureDX(CD3DTexture& texture) : m_texture(&texture) {}
+
+  // Destructor
+  // Don't delete the texture since it wasn't created here
   ~CShaderTextureDX() override = default;
 
-  // Implementation of IShaderTexture
-  float GetWidth() const override;
-  float GetHeight() const override;
+  float GetWidth() const override { return static_cast<float>(m_texture->GetWidth()); }
+  float GetHeight() const override { return static_cast<float>(m_texture->GetHeight()); }
 
-  // DirectX interface
-  CD3DTexture& GetTexture() { return *m_texture; }
-  const CD3DTexture& GetTexture() const { return *m_texture; }
-  ID3D11ShaderResourceView* GetShaderResource() const;
+  void SetTexture(CD3DTexture* newTexture) { m_texture = newTexture; }
+  void SetTexture(CD3DTexture& newTexture) { m_texture = &newTexture; }
+
+  ID3D11ShaderResourceView* GetShaderResource() const { return m_texture->GetShaderResource(); }
+
+  CD3DTexture* GetPointer() { return m_texture; }
 
 private:
-  // Construction parameter
-  const std::shared_ptr<CD3DTexture> m_texture;
+  CD3DTexture* m_texture{nullptr};
 };
 
 } // namespace SHADER

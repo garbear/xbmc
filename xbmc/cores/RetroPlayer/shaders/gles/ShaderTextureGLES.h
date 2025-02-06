@@ -9,12 +9,8 @@
 #pragma once
 
 #include "cores/RetroPlayer/shaders/IShaderTexture.h"
-
-#include <memory>
-
-#include "system_gl.h"
-
-class CGLESTexture;
+#include "guilib/Texture.h"
+#include "guilib/TextureGLES.h"
 
 namespace KODI
 {
@@ -24,26 +20,32 @@ namespace SHADER
 class CShaderTextureGLES : public IShaderTexture
 {
 public:
-  CShaderTextureGLES(std::shared_ptr<CGLESTexture> texture, bool sRgbFramebuffer);
+  CShaderTextureGLES() = default;
+  CShaderTextureGLES(CGLESTexture* texture, bool sRgbFramebuffer = 0)
+    : m_texture(texture), m_sRgbFramebuffer(sRgbFramebuffer)
+  {
+  }
+  CShaderTextureGLES(CGLESTexture& texture, bool sRgbFramebuffer = 0)
+    : m_texture(&texture), m_sRgbFramebuffer(sRgbFramebuffer)
+  {
+  }
+
+  // Destructor
   ~CShaderTextureGLES() override;
 
-  // Implementation of IShaderTexture
-  float GetWidth() const override;
-  float GetHeight() const override;
+  float GetWidth() const override { return static_cast<float>(m_texture->GetWidth()); }
+  float GetHeight() const override { return static_cast<float>(m_texture->GetHeight()); }
 
-  // OpenGLES interface
-  CGLESTexture& GetTexture() { return *m_texture; }
-  const CGLESTexture& GetTexture() const { return *m_texture; }
-  bool IsSRGBFramebuffer() const { return m_sRgbFramebuffer; }
+  CGLESTexture* GetPointer() { return m_texture; }
+  bool IsSRGBFramebuffer() { return m_sRgbFramebuffer; }
 
-  // Frame buffer interface
   bool CreateFBO();
   bool BindFBO();
   void UnbindFBO();
 
 private:
-  std::shared_ptr<CGLESTexture> m_texture;
-  bool m_sRgbFramebuffer{false};
+  CGLESTexture* m_texture{nullptr};
+  bool m_sRgbFramebuffer{0};
   GLuint FBO{0};
 };
 } // namespace SHADER

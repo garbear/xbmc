@@ -21,10 +21,11 @@
 using namespace KODI;
 using namespace SHADER;
 
-CShaderLutGL::CShaderLutGL(std::string id, std::string path)
-: IShaderLut(std::move(id), std::move(path))
+CShaderLutGL::CShaderLutGL(const std::string& id, const std::string& path) : IShaderLut(id, path)
 {
 }
+
+CShaderLutGL::~CShaderLutGL() = default;
 
 bool CShaderLutGL::Create(RETRO::CRenderContext& context, const ShaderLut& lut)
 {

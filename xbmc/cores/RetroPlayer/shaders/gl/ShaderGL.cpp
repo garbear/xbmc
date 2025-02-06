@@ -133,13 +133,13 @@ bool CShaderGL::Create(std::string shaderSource,
   return true;
 }
 
-void CShaderGL::Render(IShaderTexture& source, IShaderTexture& target)
+void CShaderGL::Render(IShaderTexture* source, IShaderTexture* target)
 {
-  const CShaderTextureGL& sourceGL = static_cast<const CShaderTextureGL&>(source);
+  CShaderTextureGL* sourceGL = static_cast<CShaderTextureGL*>(source);
 
   glUseProgram(m_shaderProgram);
 
-  SetShaderParameters(const_cast<CShaderTextureGL&>(sourceGL).GetTexture());
+  SetShaderParameters(*sourceGL->GetPointer());
 
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
@@ -184,7 +184,7 @@ void CShaderGL::SetSizes(const float2& prevSize,
 
 void CShaderGL::PrepareParameters(
     CPoint dest[4],
-    IShaderTexture& sourceTexture,
+    IShaderTexture* sourceTexture,
     const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
     const std::vector<std::unique_ptr<IShader>>& pShaders,
     uint64_t frameCount)
@@ -274,7 +274,7 @@ void CShaderGL::UpdateMVP()
 }
 
 void CShaderGL::UpdateUniformInputs(
-    IShaderTexture& sourceTexture,
+    IShaderTexture* sourceTexture,
     const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
     const std::vector<std::unique_ptr<IShader>>& pShaders,
     uint64_t frameCount)
@@ -283,14 +283,14 @@ void CShaderGL::UpdateUniformInputs(
 
   if (m_passIdx > 0) // Not first pass
   {
-    CShaderTextureGL& shaderTextureGL =
-        static_cast<CShaderTextureGL&>(*pShaderTextures[m_passIdx - 1]);
-    m_uniformFrameInputs = GetFrameInputData(shaderTextureGL.GetTexture().getMTexture());
+    CShaderTextureGL* shaderTextureGL =
+        static_cast<CShaderTextureGL*>(pShaderTextures[m_passIdx - 1].get());
+    m_uniformFrameInputs = GetFrameInputData(shaderTextureGL->GetPointer()->getMTexture());
   }
   else // First pass
   {
-    CShaderTextureGL& shaderTextureGL = static_cast<CShaderTextureGL&>(sourceTexture);
-    m_uniformFrameInputs = GetFrameInputData(shaderTextureGL.GetTexture().getMTexture());
+    CShaderTextureGL* sourceTextureGL = static_cast<CShaderTextureGL*>(sourceTexture);
+    m_uniformFrameInputs = GetFrameInputData(sourceTextureGL->GetPointer()->getMTexture());
   }
 
   // Set frame uniforms of previous passes
@@ -298,13 +298,13 @@ void CShaderGL::UpdateUniformInputs(
 
   for (unsigned int i = 0; i < m_passIdx + 1; ++i)
   {
-    CShaderGL& shader = static_cast<CShaderGL&>(*pShaders[i]);
-    UniformFrameInputs frameInput = shader.GetFrameUniformInputs();
+    CShaderGL* shader = static_cast<CShaderGL*>(pShaders[i].get());
+    UniformFrameInputs frameInput = shader->GetFrameUniformInputs();
     m_passesUniformFrameInputs.emplace_back(frameInput);
   }
 }
 
-CShaderGL::UniformInputs CShaderGL::GetInputData(uint64_t frameCount) const
+CShaderGL::UniformInputs CShaderGL::GetInputData(uint64_t frameCount)
 {
   if (m_frameCountMod != 0)
     frameCount %= m_frameCountMod;
@@ -321,7 +321,7 @@ CShaderGL::UniformInputs CShaderGL::GetInputData(uint64_t frameCount) const
   return input;
 }
 
-CShaderGL::UniformFrameInputs CShaderGL::GetFrameInputData(GLuint texture) const
+CShaderGL::UniformFrameInputs CShaderGL::GetFrameInputData(GLuint texture)
 {
   const UniformFrameInputs frameInput = {
       {m_inputSize}, // input_size

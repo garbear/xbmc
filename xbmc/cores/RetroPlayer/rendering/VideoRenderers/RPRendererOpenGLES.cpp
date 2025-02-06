@@ -14,8 +14,6 @@
 #include "cores/RetroPlayer/rendering/RenderVideoSettings.h"
 #include "cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h"
 #include "cores/RetroPlayer/shaders/gles/ShaderTextureGLES.h"
-#include "guilib/TextureFormats.h"
-#include "guilib/TextureGLES.h"
 #include "utils/GLUtils.h"
 #include "utils/log.h"
 
@@ -53,7 +51,7 @@ CRPRendererOpenGLES::CRPRendererOpenGLES(const CRenderSettings& renderSettings,
   : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
   // Initialize CRPBaseRenderer
-  m_shaderPreset = std::make_unique<SHADER::CShaderPresetGLES>(m_context);
+  m_shaderPreset.reset(new SHADER::CShaderPresetGLES(m_context));
 
   glGenBuffers(1, &m_mainIndexVBO);
   glGenBuffers(1, &m_mainVertexVBO);
@@ -256,18 +254,23 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
     // We can't copy or move CGLESTexture, so construct source/target in-place
     rbTextures = new RenderBufferTextures{
         // Source texture
-        std::make_shared<CGLESTexture>(static_cast<unsigned int>(renderBuffer->GetWidth()),
-                                       static_cast<unsigned int>(renderBuffer->GetHeight()),
-                                       XB_FMT_RGB8, renderBuffer->TextureID()),
+        {
+            static_cast<unsigned int>(renderBuffer->GetWidth()),
+            static_cast<unsigned int>(renderBuffer->GetHeight()),
+            XB_FMT_RGB8,
+            renderBuffer->TextureID(),
+        },
         // Target texture
-        std::make_shared<CGLESTexture>(static_cast<unsigned int>(m_context.GetScreenWidth()),
-                                       static_cast<unsigned int>(m_context.GetScreenHeight())),
+        {
+            static_cast<unsigned int>(m_context.GetScreenWidth()),
+            static_cast<unsigned int>(m_context.GetScreenHeight()),
+        },
     };
     m_RBTexturesMap.emplace(renderBuffer, rbTextures);
   }
 
-  std::shared_ptr<CGLESTexture> sourceTexture = rbTextures->source;
-  std::shared_ptr<CGLESTexture> targetTexture = rbTextures->target;
+  const auto sourceTexture = &rbTextures->source;
+  const auto targetTexture = &rbTextures->target;
 
   Updateshaders();
 
@@ -286,9 +289,9 @@ void CRPRendererOpenGLES::Render(uint8_t alpha)
     const CPoint destPoints[4] = {m_rotatedDestCoords[0], m_rotatedDestCoords[1],
                                   m_rotatedDestCoords[2], m_rotatedDestCoords[3]};
 
-    SHADER::CShaderTextureGLES source(sourceTexture, false);
-    SHADER::CShaderTextureGLES target(targetTexture, false);
-    if (!m_shaderPreset->RenderUpdate(destPoints, source, target))
+    SHADER::CShaderTextureGLES source(*sourceTexture);
+    SHADER::CShaderTextureGLES target(*targetTexture);
+    if (!m_shaderPreset->RenderUpdate(destPoints, &source, &target))
     {
       m_bShadersNeedUpdate = false;
       m_bUseShaderPreset = false;

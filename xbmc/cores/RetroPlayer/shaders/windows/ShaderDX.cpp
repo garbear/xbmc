@@ -9,14 +9,12 @@
 #include "ShaderDX.h"
 
 #include "ShaderTextureDX.h"
-#include "ShaderTextureDXRef.h"
-#include "ShaderTypesDX.h"
 #include "ShaderUtilsDX.h"
 #include "application/Application.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/IShaderLut.h"
 #include "cores/RetroPlayer/shaders/ShaderUtils.h"
-#include "guilib/TextureDX.h"
+#include "cores/RetroPlayer/shaders/windows/ShaderTypesDX.h"
 #include "rendering/dx/RenderSystemDX.h"
 #include "utils/URIUtils.h"
 #include "utils/log.h"
@@ -80,19 +78,10 @@ bool CShaderDX::Create(std::string shaderSource,
   return true;
 }
 
-void CShaderDX::Render(IShaderTexture& source, IShaderTexture& target)
+void CShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
 {
-  const CShaderTextureDX& sourceDX = static_cast<const CShaderTextureDX&>(source);
-
-  // Get source texture object
-  const CD3DTexture& sourceTexture = sourceDX.GetTexture();
-
-  //! @todo Handle ref textures better
-  CShaderTextureDX* targetDX = dynamic_cast<CShaderTextureDX*>(&target);
-  CShaderTextureDXRef* targetDXRef = dynamic_cast<CShaderTextureDXRef*>(&target);
-
-  CD3DTexture& targetTexture =
-      targetDX != nullptr ? targetDX->GetTexture() : targetDXRef->GetTexture();
+  CShaderTextureDX* sourceDX = static_cast<CShaderTextureDX*>(source);
+  CShaderTextureDX* targetDX = static_cast<CShaderTextureDX*>(target);
 
   //! @todo Doesn't work. Another PSSetSamplers gets called by FX11 right before rendering
   // overriding this.
@@ -101,9 +90,8 @@ void CShaderDX::Render(IShaderTexture& source, IShaderTexture& target)
   renderingDX->Get3D11Context()->PSSetSamplers(2, 1, &m_pSampler);
   */
 
-  //! @todo Check for nullptr
-  SetShaderParameters(sourceTexture);
-  Execute({&targetTexture}, 4);
+  SetShaderParameters(*sourceDX->GetPointer());
+  Execute({targetDX->GetPointer()}, 4);
 }
 
 void CShaderDX::SetSizes(const float2& prevSize,
@@ -117,7 +105,7 @@ void CShaderDX::SetSizes(const float2& prevSize,
 
 void CShaderDX::PrepareParameters(
     CPoint dest[4],
-    IShaderTexture& sourceTexture,
+    IShaderTexture* sourceTexture,
     const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
     const std::vector<std::unique_ptr<IShader>>& pShaders,
     uint64_t frameCount)
@@ -180,7 +168,7 @@ void CShaderDX::PrepareParameters(
   v[3].tv = 1;
 
   UnlockVertexBuffer();
-  UpdateInputBuffer(frameCount);
+  UpdateInputBuffer(sourceTexture, pShaderTextures, pShaders, frameCount);
 }
 
 void CShaderDX::UpdateMVP()
@@ -221,7 +209,11 @@ bool CShaderDX::CreateInputBuffer()
   return true;
 }
 
-void CShaderDX::UpdateInputBuffer(uint64_t frameCount)
+void CShaderDX::UpdateInputBuffer(
+    IShaderTexture* sourceTexture,
+    const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
+    const std::vector<std::unique_ptr<IShader>>& pShaders,
+    uint64_t frameCount)
 {
   ID3D11DeviceContext1* pContext = DX::DeviceResources::Get()->GetD3DContext();
   cbInput input = GetInputData(frameCount);
@@ -237,7 +229,7 @@ void CShaderDX::UpdateInputBuffer(uint64_t frameCount)
   }
 }
 
-CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount) const
+CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
 {
   if (m_frameCountMod != 0)
     frameCount %= m_frameCountMod;
@@ -254,10 +246,10 @@ CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount) const
   return input;
 }
 
-void CShaderDX::SetShaderParameters(const CD3DTexture& sourceTexture)
+void CShaderDX::SetShaderParameters(CD3DTexture& sourceTexture)
 {
   m_effect.SetTechnique("TEQ");
-  m_effect.SetResources("decal", {const_cast<CD3DTexture&>(sourceTexture).GetAddressOfSRV()}, 1);
+  m_effect.SetResources("decal", {sourceTexture.GetAddressOfSRV()}, 1);
   m_effect.SetMatrix("modelViewProj", reinterpret_cast<const float*>(&m_MVP));
   //! @todo(optimization) Add frame_count to separate cbuffer
   m_effect.SetConstantBuffer("input", m_pInputBuffer);

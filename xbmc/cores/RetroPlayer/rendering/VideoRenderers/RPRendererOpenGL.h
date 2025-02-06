@@ -10,13 +10,12 @@
 
 #include "RPBaseRenderer.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
+#include "guilib/TextureGL.h"
 
 #include <map>
 #include <memory>
 
 #include "system_gl.h"
-
-class CGLTexture;
 
 namespace KODI
 {
@@ -66,8 +65,8 @@ protected:
   };
   struct RenderBufferTextures
   {
-    std::shared_ptr<CGLTexture> source;
-    std::shared_ptr<CGLTexture> target;
+    CGLTexture source;
+    CGLTexture target;
   };
 
   // implementation of CRPBaseRenderer

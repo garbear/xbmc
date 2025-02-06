@@ -26,7 +26,7 @@ public:
               CRect sourceRect,
               const CPoint points[4],
               CRect& viewPort,
-              CD3DTexture& target,
+              CD3DTexture* target,
               unsigned int range = 0);
 
 private:

@@ -151,9 +151,9 @@ bool CShaderPresetGLES::CreateShaderTextures()
       //! @todo Enable usage of optimal texture sizes when all issues are fixed
       textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
 
-      std::shared_ptr<CGLESTexture> textureGL = std::make_shared<CGLESTexture>(
-          static_cast<unsigned int>(textureSize.x), static_cast<unsigned int>(textureSize.y),
-          XB_FMT_A8R8G8B8); // Format is not used
+      CGLESTexture* textureGL = new CGLESTexture(static_cast<unsigned int>(textureSize.x),
+                                                 static_cast<unsigned int>(textureSize.y),
+                                                 XB_FMT_A8R8G8B8); // Format is not used
 
       textureGL->CreateTextureObject();
 
@@ -191,8 +191,7 @@ bool CShaderPresetGLES::CreateShaderTextures()
       glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, textureSize.x, textureSize.y, 0, pixelFormat,
                    internalFormat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
 
-      m_pShaderTextures.emplace_back(
-          std::make_unique<CShaderTextureGLES>(std::move(textureGL), pass.fbo.sRgbFramebuffer));
+      m_pShaderTextures.emplace_back(new CShaderTextureGLES(*textureGL, pass.fbo.sRgbFramebuffer));
     }
 
     // Notify shader of its source and dest size
@@ -206,18 +205,18 @@ bool CShaderPresetGLES::CreateShaderTextures()
   return true;
 }
 
-void CShaderPresetGLES::RenderShader(IShader& shader,
-                                     IShaderTexture& source,
-                                     IShaderTexture& target)
+void CShaderPresetGLES::RenderShader(IShader* shader,
+                                     IShaderTexture* source,
+                                     IShaderTexture* target)
 {
-  if (static_cast<CShaderTextureGLES&>(target).BindFBO())
+  if (static_cast<CShaderTextureGLES*>(target)->BindFBO())
   {
-    const CRect newViewPort(0.f, 0.f, target.GetWidth(), target.GetHeight());
+    const CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
     glViewport((GLsizei)newViewPort.x1, (GLsizei)newViewPort.y1, (GLsizei)newViewPort.x2,
                (GLsizei)newViewPort.y2);
     glScissor((GLsizei)newViewPort.x1, (GLsizei)newViewPort.y1, (GLsizei)newViewPort.x2,
               (GLsizei)newViewPort.y2);
-    shader.Render(source, target);
-    static_cast<CShaderTextureGLES&>(target).UnbindFBO();
+    shader->Render(source, target);
+    static_cast<CShaderTextureGLES*>(target)->UnbindFBO();
   }
 }

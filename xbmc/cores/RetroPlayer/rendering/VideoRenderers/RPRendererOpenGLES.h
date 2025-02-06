@@ -13,6 +13,7 @@
 #include "cores/RetroPlayer/buffers/BaseRenderBufferPool.h"
 #include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
+#include "guilib/TextureGLES.h"
 
 #include <atomic>
 #include <map>
@@ -21,8 +22,6 @@
 #include <vector>
 
 #include "system_gl.h"
-
-class CGLESTexture;
 
 namespace KODI
 {
@@ -85,8 +84,8 @@ protected:
 
   struct RenderBufferTextures
   {
-    std::shared_ptr<CGLESTexture> source;
-    std::shared_ptr<CGLESTexture> target;
+    CGLESTexture source;
+    CGLESTexture target;
   };
 
   std::map<CRenderBufferOpenGLES*, std::unique_ptr<RenderBufferTextures>> m_RBTexturesMap;
