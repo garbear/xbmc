@@ -10,7 +10,6 @@
 
 #include "controllers/Controller.h"
 #include "controllers/ControllerManager.h"
-#include "cores/RetroPlayer/shaders/ShaderPresetFactory.h"
 #include "games/GameSettings.h"
 #include "games/GameUtils.h"
 #include "games/agents/input/AgentInput.h"
@@ -23,14 +22,12 @@ CGameServices::CGameServices(CControllerManager& controllerManager,
                              RETRO::CGUIGameRenderManager& renderManager,
                              PERIPHERALS::CPeripherals& peripheralManager,
                              const CProfileManager& profileManager,
-                             CInputManager& inputManager,
-                             ADDON::CAddonMgr& addons)
+                             CInputManager& inputManager)
   : m_controllerManager(controllerManager),
     m_gameRenderManager(renderManager),
     m_profileManager(profileManager),
     m_gameSettings(new CGameSettings()),
-    m_agentInput(std::make_unique<CAgentInput>(peripheralManager, inputManager)),
-    m_videoShaders(new SHADER::CShaderPresetFactory(addons))
+    m_agentInput(std::make_unique<CAgentInput>(peripheralManager, inputManager))
 {
   // Load the add-ons from the database asynchronously
   m_initializationTask =
