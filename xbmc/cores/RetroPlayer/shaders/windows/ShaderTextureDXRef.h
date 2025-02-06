@@ -22,26 +22,28 @@ namespace SHADER
 {
 
 /*!
- * \brief Shader texture that manages the lifetime of its texture object
+ * \brief Shader texture that wraps an external texture object
+ *
+ * NOTE: The lifetime of the external texture object must outlast this class.
  */
-class CShaderTextureDX : public IShaderTexture
+class CShaderTextureDXRef : public IShaderTexture
 {
 public:
-  explicit CShaderTextureDX(std::shared_ptr<CD3DTexture> texture);
-  ~CShaderTextureDX() override = default;
+  explicit CShaderTextureDXRef(CD3DTexture& texture);
+  ~CShaderTextureDXRef() override = default;
 
   // Implementation of IShaderTexture
   float GetWidth() const override;
   float GetHeight() const override;
 
   // DirectX interface
-  CD3DTexture& GetTexture() { return *m_texture; }
-  const CD3DTexture& GetTexture() const { return *m_texture; }
+  CD3DTexture& GetTexture() { return m_texture; }
+  const CD3DTexture& GetTexture() const { return m_texture; }
   ID3D11ShaderResourceView* GetShaderResource() const;
 
 private:
   // Construction parameter
-  const std::shared_ptr<CD3DTexture> m_texture;
+  CD3DTexture& m_texture;
 };
 
 } // namespace SHADER
