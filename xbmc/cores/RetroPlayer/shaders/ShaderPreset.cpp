@@ -46,7 +46,7 @@ bool CShaderPreset::ReadPresetFile(const std::string& presetPath)
 }
 
 bool CShaderPreset::RenderUpdate(const CPoint dest[],
-                                 IShaderTexture* source,
+                                 IShaderTexture& source,
                                  IShaderTexture* target)
 {
   // Save the viewport
@@ -65,12 +65,13 @@ bool CShaderPreset::RenderUpdate(const CPoint dest[],
   const unsigned int numPasses = static_cast<unsigned int>(m_pShaders.size());
 
   // Apply all passes except the last one (which needs to be applied to the backbuffer)
+  IShaderTexture* sourceTexture = &source;
   for (unsigned shaderIdx = 0; shaderIdx + 1 < numPasses; ++shaderIdx)
   {
     IShader* shader = m_pShaders[shaderIdx].get();
     IShaderTexture* texture = m_pShaderTextures[shaderIdx].get();
-    RenderShader(shader, source, texture);
-    source = texture;
+    RenderShader(shader, *sourceTexture, texture);
+    sourceTexture = texture;
   }
 
   // Restore our viewport
@@ -79,7 +80,7 @@ bool CShaderPreset::RenderUpdate(const CPoint dest[],
 
   // Apply the last pass and write to target (backbuffer) instead of the last texture
   IShader* lastShader = m_pShaders.back().get();
-  lastShader->Render(source, target);
+  lastShader->Render(*sourceTexture, target);
 
   m_frameCount += static_cast<float>(m_speed);
   return true;
@@ -186,7 +187,7 @@ void CShaderPreset::UpdateMVPs()
 }
 
 void CShaderPreset::PrepareParameters(const CPoint dest[],
-                                      IShaderTexture* source,
+                                      IShaderTexture& source,
                                       IShaderTexture* target)
 {
   if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
