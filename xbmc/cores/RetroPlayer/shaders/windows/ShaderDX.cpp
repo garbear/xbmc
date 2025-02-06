@@ -236,7 +236,7 @@ CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount)
 
   cbInput input = {
       {CShaderUtilsDX::ToDXVector(m_inputSize)}, // video_size
-      {CShaderUtilsDX::ToDXVector(m_destSize)}, // texture_size
+      {CShaderUtilsDX::ToDXVector(m_inputTextureSize)}, // texture_size
       {CShaderUtilsDX::ToDXVector(m_destSize)}, // output_size
       // Current frame count that can be modulo'ed
       static_cast<float>(frameCount), // frame_count

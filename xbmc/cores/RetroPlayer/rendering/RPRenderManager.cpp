@@ -610,7 +610,7 @@ std::shared_ptr<CRPBaseRenderer> CRPRenderManager::GetRendererForPool(
     else
       renderer.reset();
 
-    // If we failed to create a renderer, blacklist the shader preset
+    // If we failed to create a renderer, blocklist the shader preset
     if (!renderer && !shaderPreset.empty())
       m_failedShaderPresets.insert(shaderPreset);
   }

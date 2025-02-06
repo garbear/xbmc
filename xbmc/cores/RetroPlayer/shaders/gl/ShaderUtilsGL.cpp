@@ -101,9 +101,7 @@ std::string CShaderUtilsGL::GetGLSLVersion(std::string& source)
     else
       versionString = std::to_string(version);
 
-    // Do not force GLSL version for OpenGL
-    //versionString = "#version " + versionString + "\n";
-    versionString = "\n";
+    versionString = "#version " + versionString + "\n";
   }
   return versionString;
 }

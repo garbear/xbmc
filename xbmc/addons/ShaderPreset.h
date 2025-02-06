@@ -1,21 +1,9 @@
 /*
- *      Copyright (C) 2017 Team Kodi
- *      http://kodi.tv
+ *  Copyright (C) 2017-2025 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this Program; see the file COPYING.  If not, see
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
 #pragma once
 
@@ -40,23 +28,23 @@ public:
   ~CShaderPreset();
 
   /*!
-     * \brief @todo document
-     */
+   * \brief @todo document
+   */
   bool ReadShaderPreset(video_shader& shader);
 
   /*!
-     * \brief @todo document
-     */
+   * \brief @todo document
+   */
   void WriteShaderPreset(const video_shader& shader);
 
   /*
-    void ResolveRelative(video_shader &shader, const std::string &ref_path);
-    bool ResolveCurrentParameters(video_shader &shader);
-    */
+  void ResolveRelative(video_shader &shader, const std::string &ref_path);
+  bool ResolveCurrentParameters(video_shader &shader);
+  */
 
   /*!
-     * \brief @todo document
-     */
+   * \brief @todo document
+   */
   bool ResolveParameters(video_shader& shader);
 
   void FreeShaderPreset(video_shader& shader);
@@ -67,8 +55,8 @@ private:
 };
 
 /*!
-   * \brief Wrapper class that wraps the shader presets add-on
-   */
+ * \brief Wrapper class that wraps the shader presets add-on
+ */
 class CShaderPresetAddon : public IAddonInstanceHandler, public KODI::SHADER::IShaderPresetLoader
 {
 public:
@@ -76,18 +64,18 @@ public:
   ~CShaderPresetAddon() override;
 
   /*!
-     * \brief Initialise the instance of this add-on
-     */
+   * \brief Initialise the instance of this add-on
+   */
   bool CreateAddon();
 
   /*!
-     * \brief Deinitialize the instance of this add-on
-     */
+   * \brief Deinitialize the instance of this add-on
+   */
   void DestroyAddon();
 
   /*!
-     * \brief Get the shader preset extensions supported by this add-on
-     */
+   * \brief Get the shader preset extensions supported by this add-on
+   */
   const std::vector<std::string>& GetExtensions() const { return m_extensions; }
 
   // implementation of IShaderPresetLoader
@@ -96,8 +84,8 @@ public:
 
 private:
   /*!
-     * \brief Reset all class members to their defaults. Called by the constructors
-     */
+   * \brief Reset all class members to their defaults. Called by the constructors
+   */
   void ResetProperties(void);
 
   static void TranslateShaderPreset(const video_shader& shader,

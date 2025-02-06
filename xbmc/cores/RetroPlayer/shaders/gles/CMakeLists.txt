@@ -1,4 +1,5 @@
-if(TARGET ${APP_NAME_LC}::OpenGLES)
+#if(TARGET ${APP_NAME_LC}::OpenGLES)
+if(TARGET OpenGL::GLES)
   list(APPEND SOURCES ShaderGLES.cpp
                       ShaderLutGLES.cpp
                       ShaderPresetGLES.cpp

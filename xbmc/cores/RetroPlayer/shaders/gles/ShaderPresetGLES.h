@@ -107,7 +107,7 @@ private:
   float m_frameCount = 0.0f;
 
   // Playback speed
-  double m_speed = 0.0;
+  double m_speed = 1.0;
 };
 
 } // namespace SHADER
