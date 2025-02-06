@@ -8,15 +8,34 @@
 
 #include "ShaderTextureGLES.h"
 
+#include "guilib/TextureGLES.h"
 #include "utils/log.h"
+
+#include <cassert>
 
 using namespace KODI;
 using namespace SHADER;
+
+CShaderTextureGLES::CShaderTextureGLES(std::shared_ptr<CGLESTexture> texture, bool sRgbFramebuffer)
+  : m_texture(std::move(texture)), m_sRgbFramebuffer(sRgbFramebuffer)
+{
+  assert(m_texture.get() != nullptr);
+}
 
 CShaderTextureGLES::~CShaderTextureGLES()
 {
   if (FBO != 0)
     glDeleteFramebuffers(1, &FBO);
+}
+
+float CShaderTextureGLES::GetWidth() const
+{
+  return static_cast<float>(m_texture->GetWidth());
+}
+
+float CShaderTextureGLES::GetHeight() const
+{
+  return static_cast<float>(m_texture->GetHeight());
 }
 
 bool CShaderTextureGLES::CreateFBO()
@@ -29,7 +48,7 @@ bool CShaderTextureGLES::CreateFBO()
 
 bool CShaderTextureGLES::BindFBO()
 {
-  const GLuint renderTargetID = GetPointer()->getMTexture();
+  const GLuint renderTargetID = m_texture->getMTexture();
   if (renderTargetID == 0)
     return false;
 

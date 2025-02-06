@@ -47,7 +47,7 @@ bool CShaderPreset::ReadPresetFile(const std::string& presetPath)
 
 bool CShaderPreset::RenderUpdate(const CPoint dest[],
                                  IShaderTexture& source,
-                                 IShaderTexture* target)
+                                 IShaderTexture& target)
 {
   // Save the viewport
   CRect viewPort;
@@ -68,10 +68,10 @@ bool CShaderPreset::RenderUpdate(const CPoint dest[],
   IShaderTexture* sourceTexture = &source;
   for (unsigned shaderIdx = 0; shaderIdx + 1 < numPasses; ++shaderIdx)
   {
-    IShader* shader = m_pShaders[shaderIdx].get();
-    IShaderTexture* texture = m_pShaderTextures[shaderIdx].get();
+    IShader& shader = *m_pShaders[shaderIdx];
+    IShaderTexture& texture = *m_pShaderTextures[shaderIdx];
     RenderShader(shader, *sourceTexture, texture);
-    sourceTexture = texture;
+    sourceTexture = &texture;
   }
 
   // Restore our viewport
@@ -80,7 +80,7 @@ bool CShaderPreset::RenderUpdate(const CPoint dest[],
 
   // Apply the last pass and write to target (backbuffer) instead of the last texture
   IShader* lastShader = m_pShaders.back().get();
-  lastShader->Render(*sourceTexture, target);
+  lastShader->Render(source, target);
 
   m_frameCount += static_cast<float>(m_speed);
   return true;
@@ -188,16 +188,16 @@ void CShaderPreset::UpdateMVPs()
 
 void CShaderPreset::PrepareParameters(const CPoint dest[],
                                       IShaderTexture& source,
-                                      IShaderTexture* target)
+                                      IShaderTexture& target)
 {
   if (m_dest[0] != dest[0] || m_dest[1] != dest[1] || m_dest[2] != dest[2] ||
-      m_dest[3] != dest[3] || target->GetWidth() != m_outputSize.x ||
-      target->GetHeight() != m_outputSize.y)
+      m_dest[3] != dest[3] || target.GetWidth() != m_outputSize.x ||
+      target.GetHeight() != m_outputSize.y)
   {
     for (size_t i = 0; i < 4; ++i)
       m_dest[i] = dest[i];
 
-    m_outputSize = {target->GetWidth(), target->GetHeight()};
+    m_outputSize = {target.GetWidth(), target.GetHeight()};
 
     // Update projection matrix and update video shaders
     UpdateMVPs();

@@ -48,7 +48,7 @@ public:
    */
   virtual bool RenderUpdate(const CPoint dest[],
                             IShaderTexture& source,
-                            IShaderTexture* target) = 0;
+                            IShaderTexture& target) = 0;
 
   /*!
    * \brief Informs about the speed of playback

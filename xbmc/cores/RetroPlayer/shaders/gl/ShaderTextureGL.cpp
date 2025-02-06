@@ -8,15 +8,34 @@
 
 #include "ShaderTextureGL.h"
 
+#include "guilib/TextureGL.h"
 #include "utils/log.h"
+
+#include <cassert>
 
 using namespace KODI;
 using namespace SHADER;
+
+CShaderTextureGL::CShaderTextureGL(std::shared_ptr<CGLTexture> texture, bool sRgbFramebuffer)
+  : m_texture(std::move(texture)), m_sRgbFramebuffer(sRgbFramebuffer)
+{
+  assert(m_texture.get() != nullptr);
+}
 
 CShaderTextureGL::~CShaderTextureGL()
 {
   if (FBO != 0)
     glDeleteFramebuffers(1, &FBO);
+}
+
+float CShaderTextureGL::GetWidth() const
+{
+  return static_cast<float>(m_texture->GetWidth());
+}
+
+float CShaderTextureGL::GetHeight() const
+{
+  return static_cast<float>(m_texture->GetHeight());
 }
 
 bool CShaderTextureGL::CreateFBO()
@@ -29,7 +48,7 @@ bool CShaderTextureGL::CreateFBO()
 
 bool CShaderTextureGL::BindFBO()
 {
-  const GLuint renderTargetID = GetPointer()->getMTexture();
+  const GLuint renderTargetID = m_texture->getMTexture();
   if (renderTargetID == 0)
     return false;
 

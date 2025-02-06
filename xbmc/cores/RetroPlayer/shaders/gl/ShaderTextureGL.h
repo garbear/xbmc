@@ -9,8 +9,12 @@
 #pragma once
 
 #include "cores/RetroPlayer/shaders/IShaderTexture.h"
-#include "guilib/Texture.h"
-#include "guilib/TextureGL.h"
+
+#include <memory>
+
+#include "system_gl.h"
+
+class CGLTexture;
 
 namespace KODI
 {
@@ -20,32 +24,26 @@ namespace SHADER
 class CShaderTextureGL : public IShaderTexture
 {
 public:
-  CShaderTextureGL() = default;
-  CShaderTextureGL(CGLTexture* texture, bool sRgbFramebuffer = 0)
-    : m_texture(texture), m_sRgbFramebuffer(sRgbFramebuffer)
-  {
-  }
-  CShaderTextureGL(CGLTexture& texture, bool sRgbFramebuffer = 0)
-    : m_texture(&texture), m_sRgbFramebuffer(sRgbFramebuffer)
-  {
-  }
-
-  // Destructor
+  CShaderTextureGL(std::shared_ptr<CGLTexture> texture, bool sRgbFramebuffer);
   ~CShaderTextureGL() override;
 
-  float GetWidth() const override { return static_cast<float>(m_texture->GetWidth()); }
-  float GetHeight() const override { return static_cast<float>(m_texture->GetHeight()); }
+  // Implementation of IShaderTexture
+  float GetWidth() const override;
+  float GetHeight() const override;
 
-  CGLTexture* GetPointer() { return m_texture; }
-  bool IsSRGBFramebuffer() { return m_sRgbFramebuffer; }
+  // OpenGL interface
+  CGLTexture& GetTexture() { return *m_texture; }
+  const CGLTexture& GetTexture() const { return *m_texture; }
+  bool IsSRGBFramebuffer() const { return m_sRgbFramebuffer; }
 
+  // Frame buffer interface
   bool CreateFBO();
   bool BindFBO();
   void UnbindFBO();
 
 private:
-  CGLTexture* m_texture{nullptr};
-  bool m_sRgbFramebuffer{0};
+  std::shared_ptr<CGLTexture> m_texture;
+  bool m_sRgbFramebuffer{false};
   GLuint FBO{0};
 };
 } // namespace SHADER

@@ -13,6 +13,8 @@
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/gl/ShaderPresetGL.h"
 #include "cores/RetroPlayer/shaders/gl/ShaderTextureGL.h"
+#include "guilib/TextureFormats.h"
+#include "guilib/TextureGL.h"
 #include "utils/GLUtils.h"
 #include "utils/log.h"
 
@@ -49,7 +51,7 @@ CRPRendererOpenGL::CRPRendererOpenGL(const CRenderSettings& renderSettings,
   : CRPBaseRenderer(renderSettings, context, std::move(bufferPool))
 {
   // Initialize CRPBaseRenderer
-  m_shaderPreset.reset(new SHADER::CShaderPresetGL(m_context));
+  m_shaderPreset = std::make_unique<SHADER::CShaderPresetGL>(m_context);
 
   // Initialize CRPRendererOpenGL
   m_clearColour = m_context.UseLimitedColor() ? (16.0f / 0xff) : 0.0f;
@@ -285,23 +287,18 @@ void CRPRendererOpenGL::Render(uint8_t alpha)
     // We can't copy or move CGLTexture, so construct source/target in-place
     rbTextures = new RenderBufferTextures{
         // Source texture
-        {
-            static_cast<unsigned int>(renderBuffer->GetWidth()),
-            static_cast<unsigned int>(renderBuffer->GetHeight()),
-            XB_FMT_RGB8,
-            renderBuffer->TextureID(),
-        },
+        std::make_shared<CGLTexture>(static_cast<unsigned int>(renderBuffer->GetWidth()),
+                                     static_cast<unsigned int>(renderBuffer->GetHeight()),
+                                     XB_FMT_RGB8, renderBuffer->TextureID()),
         // Target texture
-        {
-            static_cast<unsigned int>(m_context.GetScreenWidth()),
-            static_cast<unsigned int>(m_context.GetScreenHeight()),
-        },
+        std::make_shared<CGLTexture>(static_cast<unsigned int>(m_context.GetScreenWidth()),
+                                     static_cast<unsigned int>(m_context.GetScreenHeight())),
     };
     m_RBTexturesMap.emplace(renderBuffer, rbTextures);
   }
 
-  const auto sourceTexture = &rbTextures->source;
-  const auto targetTexture = &rbTextures->target;
+  std::shared_ptr<CGLTexture> sourceTexture = rbTextures->source;
+  std::shared_ptr<CGLTexture> targetTexture = rbTextures->target;
 
   Updateshaders();
 
@@ -320,9 +317,9 @@ void CRPRendererOpenGL::Render(uint8_t alpha)
     const CPoint destPoints[4] = {m_rotatedDestCoords[0], m_rotatedDestCoords[1],
                                   m_rotatedDestCoords[2], m_rotatedDestCoords[3]};
 
-    SHADER::CShaderTextureGL source(*sourceTexture);
-    SHADER::CShaderTextureGL target(*targetTexture);
-    if (!m_shaderPreset->RenderUpdate(destPoints, &source, &target))
+    SHADER::CShaderTextureGL source(sourceTexture, false);
+    SHADER::CShaderTextureGL target(targetTexture, false);
+    if (!m_shaderPreset->RenderUpdate(destPoints, source, target))
     {
       m_bShadersNeedUpdate = false;
       m_bUseShaderPreset = false;
