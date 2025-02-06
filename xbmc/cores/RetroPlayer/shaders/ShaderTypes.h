@@ -103,6 +103,9 @@ struct float2
     static_assert(std::is_arithmetic<T>::value, "Not an arithmetic type");
   }
 
+  bool operator==(const float2& rhs) const { return x == rhs.x && y == rhs.y; }
+  bool operator!=(const float2& rhs) const { return !(*this == rhs); }
+
   template<typename T>
   T Max()
   {
