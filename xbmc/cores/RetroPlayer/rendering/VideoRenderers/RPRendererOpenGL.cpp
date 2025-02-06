@@ -12,6 +12,7 @@
 #include "cores/RetroPlayer/buffers/RenderBufferPoolOpenGL.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/gl/ShaderPresetGL.h"
+#include "cores/RetroPlayer/shaders/gl/ShaderTextureGL.h"
 #include "utils/GLUtils.h"
 #include "utils/log.h"
 
