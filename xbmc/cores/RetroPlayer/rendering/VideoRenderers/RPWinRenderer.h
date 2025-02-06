@@ -13,7 +13,6 @@
 #include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
 #include "cores/RetroPlayer/shaders/windows/RPWinOutputShader.h"
-#include "cores/RetroPlayer/shaders/windows/ShaderTextureDX.h"
 
 #include <map>
 #include <memory>
@@ -27,6 +26,11 @@ struct SwsContext;
 
 namespace KODI
 {
+namespace SHADER
+{
+class CShaderTextureDX;
+} // namespace SHADER
+
 namespace RETRO
 {
 class CRenderContext;
@@ -130,8 +134,6 @@ protected:
 
 private:
   void Render(CD3DTexture& target);
-
-  SHADER::CShaderTextureDX m_targetTexture;
 };
 } // namespace RETRO
 } // namespace KODI

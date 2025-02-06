@@ -3,6 +3,8 @@ set(SOURCES RPWinOutputShader.cpp
             ShaderLutDX.cpp
             ShaderPresetDX.cpp
             ShaderSamplerDX.cpp
+            ShaderTextureDX.cpp
+            ShaderTextureDXRef.cpp
             ShaderUtilsDX.cpp)
 
 set(HEADERS RPWinOutputShader.h
@@ -11,6 +13,7 @@ set(HEADERS RPWinOutputShader.h
             ShaderPresetDX.h
             ShaderSamplerDX.h
             ShaderTextureDX.h
+            ShaderTextureDXRef.h
             ShaderTypesDX.h
             ShaderUtilsDX.h)
 

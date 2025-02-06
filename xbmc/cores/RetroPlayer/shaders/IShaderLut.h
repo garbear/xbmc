@@ -9,11 +9,13 @@
 #pragma once
 
 #include "ShaderTypes.h"
-#include "guilib/Texture.h"
 
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
+
+class CTexture;
 
 namespace KODI
 {
@@ -24,17 +26,13 @@ class CRenderContext;
 
 namespace SHADER
 {
-class CTextureBase;
-
 /*!
  * \brief A lookup table to apply color transforms in a shader
  */
 class IShaderLut
 {
 public:
-  IShaderLut() = default;
-  IShaderLut(const std::string& id, const std::string& path) : m_id(id), m_path(path) {}
-
+  IShaderLut(std::string id, std::string path) : m_id(std::move(id)), m_path(std::move(path)) {}
   virtual ~IShaderLut() = default;
 
   /*!

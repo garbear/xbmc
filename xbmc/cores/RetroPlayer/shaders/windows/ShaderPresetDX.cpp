@@ -33,9 +33,10 @@ bool CShaderPresetDX::CreateShaders()
   const unsigned int numPasses = static_cast<unsigned int>(m_passes.size());
 
   //! @todo Is this pass specific?
-  std::vector<std::shared_ptr<IShaderLut>> passLUTsDX;
   for (unsigned int shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
+    std::vector<std::shared_ptr<IShaderLut>> passLUTsDX;
+
     const ShaderPass& pass = m_passes[shaderIdx];
     const unsigned int numPassLuts = static_cast<unsigned int>(pass.luts.size());
 
@@ -187,7 +188,7 @@ bool CShaderPresetDX::CreateShaderTextures()
       //! @todo Enable usage of optimal texture sizes when all issues are fixed
       textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
 
-      CD3DTexture* textureDX = new CD3DTexture();
+      std::shared_ptr<CD3DTexture> textureDX = std::make_shared<CD3DTexture>();
 
       if (!textureDX->Create(static_cast<UINT>(textureSize.x), static_cast<UINT>(textureSize.y), 1,
                              D3D11_USAGE_DEFAULT, textureFormat, nullptr, 0))
@@ -199,7 +200,7 @@ bool CShaderPresetDX::CreateShaderTextures()
         return false;
       }
 
-      m_pShaderTextures.emplace_back(std::make_unique<CShaderTextureDX>(textureDX));
+      m_pShaderTextures.emplace_back(std::make_unique<CShaderTextureDX>(std::move(textureDX)));
     }
 
     // Notify shader of its source and dest size
@@ -242,13 +243,11 @@ bool CShaderPresetDX::CreateSamplers()
   return true;
 }
 
-void CShaderPresetDX::RenderShader(IShader* shader,
-                                   IShaderTexture* source,
-                                   IShaderTexture* target)
+void CShaderPresetDX::RenderShader(IShader& shader, IShaderTexture& source, IShaderTexture& target)
 {
-  const CRect newViewPort(0.f, 0.f, target->GetWidth(), target->GetHeight());
+  const CRect newViewPort(0.f, 0.f, target.GetWidth(), target.GetHeight());
   m_context.SetViewPort(newViewPort);
   m_context.SetScissors(newViewPort);
 
-  shader->Render(source, target);
+  shader.Render(source, target);
 }

@@ -40,7 +40,7 @@ protected:
   bool CreateBuffers() override;
   bool CreateShaderTextures() override;
   bool CreateSamplers() override;
-  void RenderShader(IShader* shader, IShaderTexture* source, IShaderTexture* target) override;
+  void RenderShader(IShader& shader, IShaderTexture& source, IShaderTexture& target) override;
 
 private:
   // Point/nearest neighbor sampler

@@ -32,7 +32,7 @@ class CShaderLutDX : public IShaderLut
 {
 public:
   CShaderLutDX() = default;
-  CShaderLutDX(const std::string& id, const std::string& path);
+  CShaderLutDX(std::string id, std::string path);
 
   // Destructor
   ~CShaderLutDX() override;

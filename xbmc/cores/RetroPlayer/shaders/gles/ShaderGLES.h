@@ -39,12 +39,12 @@ public:
               float2 viewPortSize,
               unsigned int passIdx,
               unsigned int frameCountMod = 0) override;
-  void Render(IShaderTexture* source, IShaderTexture* target) override;
+  void Render(IShaderTexture& source, IShaderTexture& target) override;
   void SetSizes(const float2& prevSize,
                 const float2& prevTextureSize,
                 const float2& nextSize) override;
   void PrepareParameters(CPoint dest[4],
-                         IShaderTexture* sourceTexture,
+                         IShaderTexture& sourceTexture,
                          const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
                          const std::vector<std::unique_ptr<IShader>>& pShaders,
                          uint64_t frameCount) override;
@@ -67,7 +67,7 @@ private:
     GLuint texture;
   };
 
-  void UpdateUniformInputs(IShaderTexture* sourceTexture,
+  void UpdateUniformInputs(IShaderTexture& sourceTexture,
                            const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
                            const std::vector<std::unique_ptr<IShader>>& pShaders,
                            uint64_t frameCount);

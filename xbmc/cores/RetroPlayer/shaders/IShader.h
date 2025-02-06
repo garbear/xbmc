@@ -55,7 +55,7 @@ public:
    * \param source Source texture to pass to the shader as input
    * \param target Target texture to render the shader to
    */
-  virtual void Render(IShaderTexture* source, IShaderTexture* target) = 0;
+  virtual void Render(IShaderTexture& source, IShaderTexture& target) = 0;
 
   /*!
    * \brief Sets the input and output sizes in pixels
@@ -82,7 +82,7 @@ public:
    */
   virtual void PrepareParameters(
       CPoint dest[4],
-      IShaderTexture* sourceTexture,
+      IShaderTexture& sourceTexture,
       const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
       const std::vector<std::unique_ptr<IShader>>& pShaders,
       uint64_t frameCount) = 0;

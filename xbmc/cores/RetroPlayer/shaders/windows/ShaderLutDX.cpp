@@ -20,7 +20,8 @@
 using namespace KODI;
 using namespace SHADER;
 
-CShaderLutDX::CShaderLutDX(const std::string& id, const std::string& path) : IShaderLut(id, path)
+CShaderLutDX::CShaderLutDX(std::string id, std::string path)
+  : IShaderLut(std::move(id), std::move(path))
 {
 }
 
