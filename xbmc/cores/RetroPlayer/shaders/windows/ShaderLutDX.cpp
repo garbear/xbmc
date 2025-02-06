@@ -11,8 +11,8 @@
 #include "ShaderUtilsDX.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/IShaderPreset.h"
-#include "rendering/dx/RenderSystemDX.h"
 #include "guilib/TextureDX.h"
+#include "rendering/dx/RenderSystemDX.h"
 #include "utils/log.h"
 
 #include <utility>

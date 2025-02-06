@@ -201,8 +201,8 @@ bool CShaderDX::CreateInputBuffer()
 
   if (FAILED(pDevice->CreateBuffer(&cbInputDesc, &initInputSubresource, &m_pInputBuffer)))
   {
-    CLog::Log(LOGERROR,
-              "CShaderDX::CreateInputBuffer: Failed to create constant buffer for video shader input data");
+    CLog::Log(LOGERROR, "CShaderDX::CreateInputBuffer: Failed to create constant buffer for video "
+                        "shader input data");
     return false;
   }
 
