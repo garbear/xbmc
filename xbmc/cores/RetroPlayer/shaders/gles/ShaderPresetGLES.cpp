@@ -128,9 +128,10 @@ bool CShaderPresetGLES::Update()
 
     if (!ReadPresetFile(m_presetPath))
     {
-      CLog::Log(LOGERROR,
-                "CShaderPresetGLES::Update: Couldn't load shader preset {} or the shaders it references",
-                m_presetPath);
+      CLog::Log(
+          LOGERROR,
+          "CShaderPresetGLES::Update: Couldn't load shader preset {} or the shaders it references",
+          m_presetPath);
       return false;
     }
 
@@ -336,9 +337,10 @@ bool CShaderPresetGLES::CreateShaderTextures()
 
       if (textureGL->getMTexture() <= 0)
       {
-        CLog::Log(LOGERROR,
-                  "CShaderPresetGLES::CreateShaderTextures: Couldn't create texture for video shader: {}",
-                  pass.sourcePath);
+        CLog::Log(
+            LOGERROR,
+            "CShaderPresetGLES::CreateShaderTextures: Couldn't create texture for video shader: {}",
+            pass.sourcePath);
         return false;
       }
 
@@ -347,8 +349,9 @@ bool CShaderPresetGLES::CreateShaderTextures()
       if (nextPass.mipmap)
         textureGL->SetMipmapping();
 
-      textureGL->SetScalingMethod(nextPass.filterType == FilterType::LINEAR ? TEXTURE_SCALING::LINEAR
-                                                                            : TEXTURE_SCALING::NEAREST);
+      textureGL->SetScalingMethod(nextPass.filterType == FilterType::LINEAR
+                                      ? TEXTURE_SCALING::LINEAR
+                                      : TEXTURE_SCALING::NEAREST);
 
       const GLint wrapType = CShaderUtilsGLES::TranslateWrapType(nextPass.wrapType);
       const GLuint magFilterType =
@@ -366,8 +369,7 @@ bool CShaderPresetGLES::CreateShaderTextures()
       glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, textureSize.x, textureSize.y, 0, pixelFormat,
                    internalFormat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE, (void*)0);
 
-      m_pShaderTextures.emplace_back(
-          new CShaderTextureGLES(*textureGL, pass.fbo.sRgbFramebuffer));
+      m_pShaderTextures.emplace_back(new CShaderTextureGLES(*textureGL, pass.fbo.sRgbFramebuffer));
     }
 
     // Notify shader of its source and dest size

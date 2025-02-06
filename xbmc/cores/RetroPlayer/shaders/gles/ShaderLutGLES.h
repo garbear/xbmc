@@ -43,7 +43,7 @@ public:
 
 private:
   static std::unique_ptr<CTexture> CreateLUTTexture(RETRO::CRenderContext& context,
-                                                          const ShaderLut& lut);
+                                                    const ShaderLut& lut);
 
   std::unique_ptr<CTexture> m_texture;
 };

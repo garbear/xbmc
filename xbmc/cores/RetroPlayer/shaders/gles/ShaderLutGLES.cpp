@@ -11,9 +11,9 @@
 #include "ShaderUtilsGLES.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/IShaderPreset.h"
-#include "rendering/gl/RenderSystemGL.h"
 #include "guilib/Texture.h"
 #include "guilib/TextureGLES.h"
+#include "rendering/gl/RenderSystemGL.h"
 #include "utils/log.h"
 
 #include <utility>
@@ -42,7 +42,7 @@ bool CShaderLutGLES::Create(RETRO::CRenderContext& context, const ShaderLut& lut
 }
 
 std::unique_ptr<CTexture> CShaderLutGLES::CreateLUTTexture(RETRO::CRenderContext& context,
-                                                                 const ShaderLut& lut)
+                                                           const ShaderLut& lut)
 {
   std::unique_ptr<CTexture> texture = CTexture::LoadFromFile(lut.path);
   CGLESTexture* textureGL = static_cast<CGLESTexture*>(texture.get());

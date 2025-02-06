@@ -128,9 +128,10 @@ bool CShaderPresetGL::Update()
 
     if (!ReadPresetFile(m_presetPath))
     {
-      CLog::Log(LOGERROR,
-                "CShaderPresetGL::Update: Couldn't load shader preset {} or the shaders it references",
-                m_presetPath);
+      CLog::Log(
+          LOGERROR,
+          "CShaderPresetGL::Update: Couldn't load shader preset {} or the shaders it references",
+          m_presetPath);
       return false;
     }
 
@@ -336,9 +337,10 @@ bool CShaderPresetGL::CreateShaderTextures()
 
       if (textureGL->getMTexture() <= 0)
       {
-        CLog::Log(LOGERROR,
-                  "CShaderPresetGL::CreateShaderTextures: Couldn't create texture for video shader: {}",
-                  pass.sourcePath);
+        CLog::Log(
+            LOGERROR,
+            "CShaderPresetGL::CreateShaderTextures: Couldn't create texture for video shader: {}",
+            pass.sourcePath);
         return false;
       }
 
@@ -347,8 +349,9 @@ bool CShaderPresetGL::CreateShaderTextures()
       if (nextPass.mipmap)
         textureGL->SetMipmapping();
 
-      textureGL->SetScalingMethod(nextPass.filterType == FilterType::LINEAR ? TEXTURE_SCALING::LINEAR
-                                                                            : TEXTURE_SCALING::NEAREST);
+      textureGL->SetScalingMethod(nextPass.filterType == FilterType::LINEAR
+                                      ? TEXTURE_SCALING::LINEAR
+                                      : TEXTURE_SCALING::NEAREST);
 
       const GLint wrapType = CShaderUtilsGL::TranslateWrapType(nextPass.wrapType);
       const GLuint magFilterType =
@@ -369,8 +372,7 @@ bool CShaderPresetGL::CreateShaderTextures()
       GLfloat blackBorder[4] = {0.0f, 0.0f, 0.0f, 0.0f};
       glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, blackBorder);
 
-      m_pShaderTextures.emplace_back(
-          new CShaderTextureGL(*textureGL, pass.fbo.sRgbFramebuffer));
+      m_pShaderTextures.emplace_back(new CShaderTextureGL(*textureGL, pass.fbo.sRgbFramebuffer));
     }
 
     // Notify shader of its source and dest size
