@@ -1,4 +1,5 @@
-set(SOURCES ShaderPresetFactory.cpp
+set(SOURCES ShaderPreset.cpp
+            ShaderPresetFactory.cpp
             ShaderUtils.cpp
 )
 
@@ -8,6 +9,7 @@ set(HEADERS IShader.h
             IShaderPresetLoader.h
             IShaderSampler.h
             IShaderTexture.h
+            ShaderPreset.h
             ShaderPresetFactory.h
             ShaderTypes.h
             ShaderUtils.h
