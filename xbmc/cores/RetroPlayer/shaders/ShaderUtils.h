@@ -18,6 +18,11 @@ class CShaderUtils
 {
 public:
   /*!
+   * \brief Strip shader parameter pragmas from the source code
+   */
+  static std::string StripParameterPragmas(std::string source);
+
+  /*!
    * \brief Returns smallest possible power-of-two sized texture
    */
   static float2 GetOptimalTextureSize(float2 videoSize);

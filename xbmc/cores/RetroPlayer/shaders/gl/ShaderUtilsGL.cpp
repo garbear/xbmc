@@ -38,22 +38,6 @@ GLint CShaderUtilsGL::TranslateWrapType(WrapType wrapType)
   return glWrap;
 }
 
-std::string CShaderUtilsGL::StripParameterPragmas(std::string source)
-{
-  size_t pragmaPosition;
-  size_t newlinePosition;
-
-  while ((pragmaPosition = source.find("#pragma parameter")) != std::string::npos)
-  {
-    newlinePosition = source.find_first_of("\n", pragmaPosition + 17);
-
-    if (newlinePosition != std::string::npos)
-      source.erase(pragmaPosition, newlinePosition - pragmaPosition + 1);
-  }
-
-  return source;
-}
-
 std::string CShaderUtilsGL::GetGLSLVersion(std::string& source)
 {
   unsigned int version;

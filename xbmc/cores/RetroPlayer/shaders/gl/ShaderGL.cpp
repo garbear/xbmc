@@ -13,6 +13,7 @@
 #include "application/Application.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "cores/RetroPlayer/shaders/IShaderLut.h"
+#include "cores/RetroPlayer/shaders/ShaderUtils.h"
 #include "rendering/gl/RenderSystemGL.h"
 #include "utils/URIUtils.h"
 #include "utils/log.h"
@@ -45,7 +46,7 @@ bool CShaderGL::Create(std::string shaderSource,
     return false;
   }
 
-  m_shaderSource = CShaderUtilsGL::StripParameterPragmas(std::move(shaderSource));
+  m_shaderSource = CShaderUtils::StripParameterPragmas(std::move(shaderSource));
   m_shaderPath = std::move(shaderPath);
   m_shaderParameters = std::move(shaderParameters);
   m_luts = std::move(luts);

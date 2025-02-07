@@ -11,6 +11,22 @@
 using namespace KODI;
 using namespace SHADER;
 
+std::string CShaderUtils::StripParameterPragmas(std::string source)
+{
+  size_t pragmaPosition;
+  size_t newlinePosition;
+
+  while ((pragmaPosition = source.find("#pragma parameter")) != std::string::npos)
+  {
+    newlinePosition = source.find_first_of("\n", pragmaPosition + 17);
+
+    if (newlinePosition != std::string::npos)
+      source.erase(pragmaPosition, newlinePosition - pragmaPosition + 1);
+  }
+
+  return source;
+}
+
 float2 CShaderUtils::GetOptimalTextureSize(float2 videoSize)
 {
   unsigned int textureWidth = 1;
