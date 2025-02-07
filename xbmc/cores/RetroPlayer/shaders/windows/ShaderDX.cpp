@@ -194,12 +194,12 @@ void CShaderDX::UpdateMVP()
 
 bool CShaderDX::CreateVertexBuffer(unsigned int vertCount, unsigned int vertSize)
 {
-  return CWinShader::CreateVertexBuffer(vertCount, vertSize);
+  return CRPWinShader::CreateVertexBuffer(vertCount, vertSize);
 }
 
 bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned int numElements)
 {
-  return CWinShader::CreateInputLayout(layout, numElements);
+  return CRPWinShader::CreateInputLayout(layout, numElements);
 }
 
 bool CShaderDX::CreateInputBuffer()

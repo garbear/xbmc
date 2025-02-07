@@ -37,7 +37,7 @@ bool CRPWinShader::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned 
   D3DX11_PASS_DESC desc = {};
   if (FAILED(m_effect.Get()->GetTechniqueByIndex(0)->GetPassByIndex(0)->GetDesc(&desc)))
   {
-    CLog::LogF(LOGERROR, "Failed to get first pass description.");
+    CLog::LogF(LOGERROR, "Failed to get description");
     return false;
   }
 
@@ -50,7 +50,7 @@ bool CRPWinShader::LockVertexBuffer(void** data)
 {
   if (!m_vb.Map(data))
   {
-    CLog::LogF(LOGERROR, "failed to lock vertex buffer");
+    CLog::LogF(LOGERROR, "Failed to lock vertex buffer");
     return false;
   }
 
@@ -61,7 +61,7 @@ bool CRPWinShader::UnlockVertexBuffer()
 {
   if (!m_vb.Unmap())
   {
-    CLog::LogF(LOGERROR, "failed to unlock vertex buffer");
+    CLog::LogF(LOGERROR, "Failed to unlock vertex buffer");
     return false;
   }
 
@@ -70,12 +70,12 @@ bool CRPWinShader::UnlockVertexBuffer()
 
 bool CRPWinShader::LoadEffect(const std::string& filename, DefinesMap* defines)
 {
-  CLog::LogF(LOGDEBUG, "loading shader {}", filename);
+  CLog::LogF(LOGDEBUG, "Loading shader: {}", filename);
 
   XFILE::CFileStream file;
   if (!file.Open(filename))
   {
-    CLog::LogF(LOGERROR, "failed to open file {}", filename);
+    CLog::LogF(LOGERROR, "Failed to open file: {}", filename);
     return false;
   }
 
@@ -103,7 +103,7 @@ bool CRPWinShader::Execute(const std::vector<CD3DTexture*>& targets, unsigned in
   unsigned int cPasses;
   if (!m_effect.Begin(&cPasses, 0))
   {
-    CLog::LogF(LOGERROR, "failed to begin d3d effect");
+    CLog::LogF(LOGERROR, "Failed to begin D3D effect");
     return false;
   }
 
@@ -123,19 +123,19 @@ bool CRPWinShader::Execute(const std::vector<CD3DTexture*>& targets, unsigned in
 
     if (!m_effect.BeginPass(iPass))
     {
-      CLog::LogF(LOGERROR, "failed to begin d3d effect pass");
+      CLog::LogF(LOGERROR, "Failed to begin D3D effect pass");
       break;
     }
 
     pContext->DrawIndexed(4, 0, iPass * vertexIndexStep);
 
     if (!m_effect.EndPass())
-      CLog::LogF(LOGERROR, "failed to end d3d effect pass");
+      CLog::LogF(LOGERROR, "Failed to end D3D effect pass");
 
     CD3DHelper::PSClearShaderResources(pContext);
   }
   if (!m_effect.End())
-    CLog::LogF(LOGERROR, "failed to end d3d effect");
+    CLog::LogF(LOGERROR, "Failed to end D3D effect");
 
   if (oldRT)
     pContext->OMSetRenderTargets(1, oldRT.GetAddressOf(), nullptr);
@@ -172,7 +172,7 @@ bool CRPWinOutputShader::Create(RETRO::SCALINGMETHOD scalingMethod)
 
   if (!LoadEffect(effectPath, &defines))
   {
-    CLog::LogF(LOGERROR, "Failed to load shader {}.", effectPath);
+    CLog::LogF(LOGERROR, "Failed to load shader: {}", effectPath);
     return false;
   }
 

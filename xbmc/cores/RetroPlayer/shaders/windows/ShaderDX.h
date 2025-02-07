@@ -11,10 +11,11 @@
 #include "ShaderTextureDX.h"
 #include "ShaderTypesDX.h"
 #include "cores/RetroPlayer/shaders/IShader.h"
-#include "cores/VideoPlayer/VideoRenderers/VideoShaders/WinVideoFilter.h"
+#include "cores/RetroPlayer/shaders/windows/RPWinOutputShader.h"
 #include "guilib/D3DResource.h"
 
 #include <stdint.h>
+#include <DirectXMath.h>
 
 namespace KODI
 {
@@ -28,10 +29,12 @@ namespace SHADER
 class IShaderLut;
 class IShaderSampler;
 
+using namespace DirectX;
+
 //! @todo Make renderer independent
 // Libretro's "Common shaders"
 // Spec here: https://github.com/libretro/common-shaders/blob/master/docs/README
-class CShaderDX : public CWinShader, public IShader
+class CShaderDX : public CRPWinShader, public IShader
 {
 public:
   CShaderDX(RETRO::CRenderContext& context);
