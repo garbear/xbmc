@@ -135,11 +135,11 @@ bool CShaderGL::Create(std::string shaderSource,
 
 void CShaderGL::Render(IShaderTexture& source, IShaderTexture& target)
 {
-  const CShaderTextureGL& sourceGL = static_cast<const CShaderTextureGL&>(source);
+  CShaderTextureGL& sourceGL = static_cast<CShaderTextureGL&>(source);
 
   glUseProgram(m_shaderProgram);
 
-  SetShaderParameters(const_cast<CShaderTextureGL&>(sourceGL).GetTexture());
+  SetShaderParameters(sourceGL.GetTexture());
 
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
