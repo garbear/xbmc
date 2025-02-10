@@ -189,7 +189,7 @@ void CShaderDX::UpdateMVP()
   const float yScale = -1.0f / m_outputSize.y * 2.0f;
 
   // Update projection matrix
-  m_MVP = XMFLOAT4X4(xScale, 0, 0, 0, 0, yScale, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  m_MVP = DirectX::XMFLOAT4X4(xScale, 0, 0, 0, 0, yScale, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 }
 
 bool CShaderDX::CreateVertexBuffer(unsigned int vertCount, unsigned int vertSize)

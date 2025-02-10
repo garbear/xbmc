@@ -15,6 +15,7 @@
 #include "guilib/D3DResource.h"
 
 #include <stdint.h>
+
 #include <DirectXMath.h>
 
 namespace KODI
@@ -28,8 +29,6 @@ namespace SHADER
 {
 class IShaderLut;
 class IShaderSampler;
-
-using namespace DirectX;
 
 //! @todo Make renderer independent
 // Libretro's "Common shaders"
@@ -90,9 +89,9 @@ public:
 private:
   struct cbInput
   {
-    XMFLOAT2 video_size;
-    XMFLOAT2 texture_size;
-    XMFLOAT2 output_size;
+    DirectX::XMFLOAT2 video_size;
+    DirectX::XMFLOAT2 texture_size;
+    DirectX::XMFLOAT2 output_size;
     float frame_count;
     float frame_direction;
   };
@@ -132,7 +131,7 @@ private:
   float2 m_viewportSize;
 
   // Projection matrix
-  XMFLOAT4X4 m_MVP{};
+  DirectX::XMFLOAT4X4 m_MVP{};
 
   // Index of the video shader pass
   unsigned int m_passIdx{0};
