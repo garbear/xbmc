@@ -49,9 +49,8 @@ private:
   struct VideoFilterProperties
   {
     std::string path;
-    int nameIndex;
-    int categoryIndex;
-    int descriptionIndex;
+    std::string name;
+    std::string folder;
   };
 
   //! \brief Set to true when a description has first been set

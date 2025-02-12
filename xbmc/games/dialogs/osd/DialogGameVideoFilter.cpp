@@ -157,18 +157,14 @@ void CDialogGameVideoFilter::InitVideoFilters()
       if ((pathNode = pathNode->FirstChild()))
         videoFilter.path =
             URIUtils::AddFileToFolder(URIUtils::GetBasePath(xmlPath), pathNode->Value());
-    TiXmlNode* nameIndexNode;
-    if ((nameIndexNode = child->FirstChild("name")))
-      if ((nameIndexNode = nameIndexNode->FirstChild()))
-        videoFilter.nameIndex = atoi(nameIndexNode->Value());
-    TiXmlNode* categoryIndexNode;
-    if ((categoryIndexNode = child->FirstChild("category")))
-      if ((categoryIndexNode = categoryIndexNode->FirstChild()))
-        videoFilter.categoryIndex = atoi(categoryIndexNode->Value());
-    TiXmlNode* descriptionNode;
-    if ((descriptionNode = child->FirstChild("description")))
-      if ((descriptionNode = descriptionNode->FirstChild()))
-        videoFilter.descriptionIndex = atoi(descriptionNode->Value());
+    TiXmlNode* nameNode;
+    if ((nameNode = child->FirstChild("name")))
+      if ((nameNode = nameNode->FirstChild()))
+        videoFilter.name = nameNode->Value();
+    TiXmlNode* folderNode;
+    if ((folderNode = child->FirstChild("folder")))
+      if ((folderNode = folderNode->FirstChild()))
+        videoFilter.folder = folderNode->Value();
 
     videoFilters.emplace_back(videoFilter);
   }
@@ -184,14 +180,9 @@ void CDialogGameVideoFilter::InitVideoFilters()
     if (!canLoadPreset)
       continue;
 
-    auto localizedName = GetLocalizedString(videoFilter.nameIndex);
-    auto localizedCategory = GetLocalizedString(videoFilter.categoryIndex);
-    auto localizedDescription = GetLocalizedString(videoFilter.descriptionIndex);
-
-    CFileItem item{localizedName};
-    item.SetLabel2(localizedCategory);
+    CFileItem item{videoFilter.name};
+    item.SetLabel2(videoFilter.folder);
     item.SetProperty("game.videofilter", CVariant{videoFilter.path});
-    item.SetProperty("game.videofilterdescription", CVariant{localizedDescription});
 
     m_items.Add(std::move(item));
   }
