@@ -174,7 +174,6 @@ public:
   std::string GetUserDataFolder() const;
   std::string GetProfileUserDataFolder() const;
   std::string GetDatabaseFolder() const;
-  std::string GetDataStoreFolder() const;
   std::string GetCDDBFolder() const;
   std::string GetThumbnailsFolder() const;
   std::string GetVideoThumbFolder() const;
