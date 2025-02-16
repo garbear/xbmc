@@ -49,7 +49,6 @@ set(SOURCES ActorProtocol.cpp
             Observer.cpp
             POUtils.cpp
             PlayerUtils.cpp
-            QRUtils.cpp
             RecentlyAddedJob.cpp
             RegExp.cpp
             RingBuffer.cpp
@@ -152,7 +151,6 @@ set(HEADERS ActorProtocol.h
             POUtils.h
             PlayerUtils.h
             ProgressJob.h
-            QRUtils.h
             RecentlyAddedJob.h
             RegExp.h
             RingBuffer.h
