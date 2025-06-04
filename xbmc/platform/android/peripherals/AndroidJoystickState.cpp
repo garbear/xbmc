@@ -385,6 +385,13 @@ bool CAndroidJoystickState::ProcessEvent(const AInputEvent* event)
     case AINPUT_EVENT_TYPE_MOTION:
     {
       size_t count = AMotionEvent_getPointerCount(event);
+      if (count == 0)
+      {
+        CLog::Log(LOGWARNING,
+                  "CAndroidJoystickState: motion event with no active pointers from device {}",
+                  m_deviceId);
+        return false;
+      }
 
       bool success = false;
       for (size_t pointer = 0; pointer < count; ++pointer)
