@@ -44,12 +44,17 @@ CGameServices::~CGameServices() = default;
 
 void CGameServices::Initialize()
 {
+  // Must not call this from the constructor because the controller tree
+  // calls back into CGameServices to get controller profiles
+  m_agentInput->Initialize();
+
   // Update game extensions
   m_fileExtensionProvider.RegisterGameExtensions(CGameUtils::GetGameExtensions());
 }
 
 void CGameServices::Deinitialize()
 {
+  m_agentInput->Deinitialize();
 }
 
 ControllerPtr CGameServices::GetController(const std::string& controllerId)
