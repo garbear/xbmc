@@ -65,6 +65,7 @@ public:
   void Initialize();
   void Deinitialize();
 
+  // Controller accessors
   ControllerPtr GetController(const std::string& controllerId);
   ControllerPtr GetDefaultController();
   ControllerPtr GetDefaultKeyboard();
