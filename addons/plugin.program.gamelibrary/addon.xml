@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="plugin.program.gamelibrary" name="Game Library" version="1.0.0" provider-name="Team Kodi">
+  <requires>
+    <import addon="xbmc.python" version="3.0.1"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py" provides="game" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">Simple game library viewer</summary>
+    <description lang="en_GB">Lists games from a folder and allows launching them.</description>
+    <platform>all</platform>
+  </extension>
+</addon>
