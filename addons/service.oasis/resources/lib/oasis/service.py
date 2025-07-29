@@ -16,6 +16,7 @@ from oasis.windows.camera_view import CameraView
 from oasis.windows.fireworks_hud import FireworksHUD
 from oasis.windows.ocean_hud import OceanHUD
 from oasis.windows.station_hud import StationHUD
+from oasis.windows.swellpatrol_hud import SwellPatrolHUD
 from oasis.windows.ventura_hud import VenturaHUD
 
 
@@ -44,23 +45,11 @@ class OasisService:
         HAS_CAMERA: bool = False
         if hostname == "bar":
             HAS_CAMERA = True
-        elif hostname == "cinder":
-            HAS_CAMERA = True
-        elif hostname == "kitchen":
-            HAS_CAMERA = True
-        elif hostname == "megapegasus":
-            HAS_CAMERA = True
 
         if HAS_CAMERA:
             window = CameraView("CameraView1.xml", addon_path, "default", "1080i", False)
-        elif hostname == "desk":
-            window = VenturaHUD("DeskHUD.xml", addon_path, "default", "1080i", False)
-        elif hostname == "hallway":
-            window = CameraView("HallwayHUD.xml", addon_path, "default", "1080i", False)
-        elif hostname == "patio" or hostname == "macbook_vm":
-            window = CameraView("PoseViewPatio.xml", addon_path, "default", "1080i", False)
         else:
-            window = VenturaHUD("VenturaHUD.xml", addon_path, "default", "1080i", False)
+            window = SwellPatrolHUD("VideoHUD.xml", addon_path, "default", "1080i", False)
 
         window.doModal()
         xbmc.sleep(100)
