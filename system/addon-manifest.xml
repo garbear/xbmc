@@ -57,6 +57,7 @@
   <addon optional="true">inputstream.adaptive</addon>
   <addon optional="true">peripheral.joystick</addon>
   <addon optional="true">resource.images.weathericons.hd.animated</addon>
+  <addon optional="true">screensaver.matrixtrails</addon>
   <addon optional="true">script.module.certifi</addon>
   <addon optional="true">script.module.chardet</addon>
   <addon optional="true">script.module.dateutil</addon>
