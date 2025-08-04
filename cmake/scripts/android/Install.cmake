@@ -153,7 +153,7 @@ endif()
 
 find_program(MAKE_EXECUTABLE make REQUIRED)
 
-foreach(target apk apk-clean interim-aab-libs aab)
+foreach(target apk apk-clean)
   add_custom_target(${target}
       COMMAND env PATH=${NATIVEPREFIX}/bin:$ENV{PATH} ${MAKE_EXECUTABLE} -j1
               -C ${CMAKE_BINARY_DIR}/tools/android/packaging
