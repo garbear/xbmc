@@ -310,7 +310,7 @@ void CInputManager::ProcessQueuedActions()
   }
 
   for (const CAction& action : queuedActions)
-    g_application.OnAction(action);
+    ExecuteInputAction(action);
 }
 
 void CInputManager::QueueAction(const CAction& action)
