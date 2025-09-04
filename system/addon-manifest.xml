@@ -62,5 +62,14 @@
   <addon optional="true">repository.osmcskin</addon>
   <addon optional="true">repository.teeedubb</addon>
   <addon optional="true">repository.zachmorris</addon>
+  <addon optional="true">script.module.certifi</addon>
+  <addon optional="true">script.module.chardet</addon>
+  <addon optional="true">script.module.dateutil</addon>
+  <addon optional="true">script.module.idna</addon>
+  <addon optional="true">script.module.pytz</addon>
+  <addon optional="true">script.module.requests</addon>
+  <addon optional="true">script.module.six</addon>
+  <addon optional="true">script.module.urllib3</addon>
   <addon optional="true">service.xbmc.versioncheck</addon>
+  <addon optional="true">weather.openmeteo</addon>
 </addons>
