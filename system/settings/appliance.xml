@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<settings version="1">
+  <section id="player">
+    <category id="musicplayer">
+      <group id="2">
+        <setting id="musicplayer.visualisation">
+          <default>visualization.projectm</default>
+        </setting>
+      </group>
+    </category>
+  </section>
+  <section id="services">
+    <category id="weather">
+      <group id="1">
+        <setting id="weather.addon">
+          <default>weather.openmeteo</default>
+        </setting>
+      </group>
+    </category>
+  </section>
+</settings>
