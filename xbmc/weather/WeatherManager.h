@@ -72,7 +72,7 @@ public:
   /*!
    \brief The intervall for refreshing weather data.
    */
-  static constexpr int WEATHER_REFRESH_INTERVAL_MS = 30 * 60 * 1000; // 30 minutes
+  static constexpr int WEATHER_REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
   /*!
    \brief Retrieve the value for the given weather property
