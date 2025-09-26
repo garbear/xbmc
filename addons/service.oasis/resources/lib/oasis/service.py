@@ -63,7 +63,7 @@ class OasisService:
             window = SwellPatrolHUD(
                 "WeatherHUD.xml", addon_path, "default", "1080i", False
             )
-        elif hostname == "megapegasus":
+        elif hostname == "megapegasus" or hostname == "macbook_vm":
             window = SwellPatrolHUD(
                 "StationHUD.xml", addon_path, "default", "1080i", False
             )
