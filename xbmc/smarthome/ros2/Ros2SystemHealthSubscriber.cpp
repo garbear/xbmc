@@ -21,6 +21,7 @@ using std::placeholders::_1;
 namespace
 {
 constexpr const char* SUBSCRIBE_TELEMETRY_TOPIC = "system_telemetry";
+constexpr const char* SUBSCRIBE_UPS_STATUS_TOPIC = "ups_status";
 } // namespace
 
 CRos2SystemHealthSubscriber::CRos2SystemHealthSubscriber(std::string rosNamespace)
@@ -40,14 +41,19 @@ void CRos2SystemHealthSubscriber::Initialize(std::shared_ptr<rclcpp::Node> node,
   // Calculate topic name
   const std::string subscribeTelemetryTopic =
       std::string("/") + m_rosNamespace + "/" + systemName + "/" + SUBSCRIBE_TELEMETRY_TOPIC;
+  const std::string subscribeUPSStatusTopic =
+      std::string("/") + m_rosNamespace + "/" + systemName + "/" + SUBSCRIBE_UPS_STATUS_TOPIC;
 
   // Initialize ROS
   CLog::Log(LOGDEBUG, "ROS2: Subscribing to {}", subscribeTelemetryTopic);
+  CLog::Log(LOGDEBUG, "ROS2: Subscribing to {}", subscribeUPSStatusTopic);
 
   // Subscribers
   m_telemetrySubscriber = node->create_subscription<SystemTelemetry>(
       subscribeTelemetryTopic, 1,
       std::bind(&CRos2SystemHealthSubscriber::OnSystemTelemetry, this, _1));
+  m_upsStatusSubscriber = node->create_subscription<UPSStatus>(
+      subscribeUPSStatusTopic, 1, std::bind(&CRos2SystemHealthSubscriber::OnUPSStatus, this, _1));
 }
 
 void CRos2SystemHealthSubscriber::Deinitialize()
@@ -102,6 +108,20 @@ float CRos2SystemHealthSubscriber::MemoryUtilization() const
   return m_memoryUtilization;
 }
 
+unsigned int CRos2SystemHealthSubscriber::BatteryCharge() const
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  return m_batteryCharge;
+}
+
+float CRos2SystemHealthSubscriber::BatteryLoad() const
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  return m_batteryLoadWatts;
+}
+
 void CRos2SystemHealthSubscriber::OnSystemTelemetry(const SystemTelemetry::SharedPtr msg)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
@@ -114,4 +134,14 @@ void CRos2SystemHealthSubscriber::OnSystemTelemetry(const SystemTelemetry::Share
   m_cpuUtilization = msg->cpu_utilization;
   m_cpuFrequencyHz = msg->cpu_frequency_ghz * 1'000'000'000.0;
   m_memoryUtilization = msg->memory_utilization;
+}
+
+void CRos2SystemHealthSubscriber::OnUPSStatus(const UPSStatus::SharedPtr msg)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  m_lastActive = std::chrono::steady_clock::now();
+
+  m_batteryCharge = static_cast<unsigned int>(msg->battery_charge);
+  m_batteryLoadWatts = msg->load;
 }

@@ -538,6 +538,8 @@ constexpr uint32_t SMARTHOME_CPU_TEMPERATURE         = 851;
 constexpr uint32_t SMARTHOME_CPU_UTILIZATION         = 852;
 constexpr uint32_t SMARTHOME_CPU_FREQUENCY           = 853;
 constexpr uint32_t SMARTHOME_RAM_UTILIZATION         = 854;
+constexpr uint32_t SMARTHOME_BATTERY_CHARGE          = 855;
+constexpr uint32_t SMARTHOME_BATTERY_LOAD            = 856;
 
 constexpr int      SLIDESHOW_LABELS_START            = 900;
 constexpr uint32_t SLIDESHOW_FILE_NAME               = SLIDESHOW_LABELS_START;

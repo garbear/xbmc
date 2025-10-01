@@ -118,6 +118,29 @@ bool CSmartHomeGuiInfo::GetLabel(std::string& value,
       }
       break;
     }
+    case SMARTHOME_BATTERY_CHARGE:
+    {
+      const std::string systemName = info.GetData3();
+      if (!systemName.empty())
+      {
+        const unsigned int batteryCharge = m_systemHealthHud.BatteryCharge(systemName);
+        value = StringUtils::Format("{} %", batteryCharge);
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_BATTERY_LOAD:
+    {
+      const std::string systemName = info.GetData3();
+      if (!systemName.empty())
+      {
+        const float batteryLoadWatts = m_systemHealthHud.BatteryLoad(systemName);
+        value =
+            StringUtils::Format("{} W", static_cast<unsigned int>(std::round(batteryLoadWatts)));
+        return true;
+      }
+      break;
+    }
     default:
       break;
   }

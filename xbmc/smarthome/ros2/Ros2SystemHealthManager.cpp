@@ -97,6 +97,30 @@ float CRos2SystemHealthManager::MemoryUtilization(const std::string& systemName)
   return it->second.MemoryUtilization();
 }
 
+unsigned int CRos2SystemHealthManager::BatteryCharge(const std::string& systemName)
+{
+  auto it = m_systemHealths.find(systemName);
+  if (it == m_systemHealths.end())
+  {
+    AddSystem(systemName);
+    it = m_systemHealths.find(systemName);
+  }
+
+  return it->second.BatteryCharge();
+}
+
+float CRos2SystemHealthManager::BatteryLoad(const std::string& systemName)
+{
+  auto it = m_systemHealths.find(systemName);
+  if (it == m_systemHealths.end())
+  {
+    AddSystem(systemName);
+    it = m_systemHealths.find(systemName);
+  }
+
+  return it->second.BatteryLoad();
+}
+
 void CRos2SystemHealthManager::AddSystem(const std::string& systemName)
 {
   if (!m_node)

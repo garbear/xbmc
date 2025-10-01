@@ -101,6 +101,29 @@ public:
    * \return The RAM utilization, as a percent
    */
   virtual float MemoryUtilization(const std::string& systemName) = 0;
+
+  /*!
+   * \brief Get the battery's current charge, as a percent
+   *
+   * The system will be subscribed to if not already subscribed.
+   *
+   * \param systemName The name of the system
+   *
+   * \return The battery charge, as a percent
+   */
+  virtual unsigned int BatteryCharge(const std::string& systemName) = 0;
+
+  /*!
+   * \brief Get the current load provided by the battery, in Watts
+   *
+   * The system will be subscribed to if not already subscribed.
+   *
+   * \param systemName The name of the system
+   *
+   * \return The battery load, in Watts
+   *
+   */
+  virtual float BatteryLoad(const std::string& systemName) = 0;
 };
 } // namespace SMART_HOME
 } // namespace KODI
