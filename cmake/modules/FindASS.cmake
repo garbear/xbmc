@@ -58,6 +58,13 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
           set(DISABLE_ASM "--disable-asm")
       endif()
 
+      # macOS aarch64 toolchains sometimes fail to assemble libass in the
+      # ExternalProject. Force a pure-C build here to avoid missing aarch64/*.o
+      # during libtool archive.
+      if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND ARCH STREQUAL aarch64)
+        set(DISABLE_ASM "--disable-asm")
+      endif()
+
       set(CONFIGURE_COMMAND ${AUTORECONF} -vif
                     COMMAND ./configure
                               --prefix=${DEPENDS_PATH}
