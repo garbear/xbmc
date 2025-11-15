@@ -126,19 +126,34 @@ void CRos2Node::Deinitialize()
   m_node.reset();
 }
 
-void CRos2Node::RegisterImageTopic(CSmartHomeGuiBridge& guiBridge, const std::string& topic)
+namespace
 {
-  if (m_videoSubs.find(topic) == m_videoSubs.end())
+std::string MakeSubscriptionKey(const std::string& topic, const std::string& imageTransport)
+{
+  return topic + "|" + imageTransport;
+}
+} // namespace
+
+void CRos2Node::RegisterImageTopic(CSmartHomeGuiBridge& guiBridge,
+                                   const std::string& topic,
+                                   const std::string& imageTransport)
+{
+  const std::string subscriptionKey = MakeSubscriptionKey(topic, imageTransport);
+
+  if (m_videoSubs.find(subscriptionKey) == m_videoSubs.end())
   {
-    auto subscription = std::make_unique<CRos2VideoSubscription>(m_node, guiBridge, topic);
+    auto subscription =
+        std::make_unique<CRos2VideoSubscription>(m_node, guiBridge, topic, imageTransport);
     subscription->Initialize();
-    m_videoSubs.insert(std::make_pair(std::move(topic), std::move(subscription)));
+    m_videoSubs.insert(std::make_pair(subscriptionKey, std::move(subscription)));
   }
 }
 
-void CRos2Node::UnregisterImageTopic(const std::string& topic)
+void CRos2Node::UnregisterImageTopic(const std::string& topic, const std::string& imageTransport)
 {
-  auto it = m_videoSubs.find(topic);
+  const std::string subscriptionKey = MakeSubscriptionKey(topic, imageTransport);
+
+  auto it = m_videoSubs.find(subscriptionKey);
   if (it != m_videoSubs.end())
     m_videoSubs.erase(it);
 }

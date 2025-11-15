@@ -14,9 +14,18 @@
 using namespace KODI;
 using namespace SMART_HOME;
 
-CGUICameraConfig::CGUICameraConfig() = default;
+namespace
+{
+constexpr const char* DEFAULT_IMAGE_TRANSPORT = "compressed";
+} // namespace
 
-CGUICameraConfig::CGUICameraConfig(const CGUICameraConfig& other) : m_topic(other.m_topic)
+CGUICameraConfig::CGUICameraConfig() : m_topic(), m_imageTransport(DEFAULT_IMAGE_TRANSPORT)
+{
+}
+
+CGUICameraConfig::CGUICameraConfig(const CGUICameraConfig& other)
+  : m_topic(other.m_topic),
+    m_imageTransport(other.m_imageTransport)
 {
 }
 
@@ -25,4 +34,5 @@ CGUICameraConfig::~CGUICameraConfig() = default;
 void CGUICameraConfig::Reset()
 {
   m_topic.clear();
+  m_imageTransport = DEFAULT_IMAGE_TRANSPORT;
 }

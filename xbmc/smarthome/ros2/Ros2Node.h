@@ -52,8 +52,10 @@ public:
   void Deinitialize();
 
   // GUI interface
-  void RegisterImageTopic(CSmartHomeGuiBridge& guiBridge, const std::string& topic);
-  void UnregisterImageTopic(const std::string& topic);
+  void RegisterImageTopic(CSmartHomeGuiBridge& guiBridge,
+                          const std::string& topic,
+                          const std::string& imageTransport);
+  void UnregisterImageTopic(const std::string& topic, const std::string& imageTransport);
   ISystemHealthHUD* GetSystemHealthHUD() const;
   IVehicleHUD* GetVehicleHUD() const;
   IStationHUD* GetStationHUD() const;
