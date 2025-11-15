@@ -34,19 +34,14 @@ extern "C"
 using namespace KODI;
 using namespace SMART_HOME;
 
-namespace
-{
-// Default image transport
-constexpr std::string_view DEFAULT_IMAGE_TRANSPORT = "compressed";
-} // namespace
-
 CRos2VideoSubscription::CRos2VideoSubscription(std::shared_ptr<rclcpp::Node> node,
                                                CSmartHomeGuiBridge& guiBridge,
-                                               const std::string& topic)
+                                               const std::string& topic,
+                                               const std::string& imageTransport)
   : m_node(std::move(node)),
     m_guiBridge(guiBridge),
     m_topic(topic),
-    m_imageTransport(DEFAULT_IMAGE_TRANSPORT), //! @todo Pass through constructor
+    m_imageTransport(imageTransport),
     m_streamManager(std::make_unique<CSmartHomeStreamManager>()),
     m_renderer(std::make_unique<CSmartHomeRenderer>(m_guiBridge, *m_streamManager))
 {
