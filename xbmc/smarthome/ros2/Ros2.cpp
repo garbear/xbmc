@@ -62,15 +62,15 @@ void CRos2::Deinitialize()
   rclcpp::shutdown();
 }
 
-void CRos2::RegisterImageTopic(const std::string& topic, const std::string& imageTransport)
+void CRos2::RegisterImageTopic(const std::string& topic)
 {
   CSmartHomeGuiBridge& guiBridge = m_guiManager.GetGuiBridge(topic);
-  m_node->RegisterImageTopic(guiBridge, topic, imageTransport);
+  m_node->RegisterImageTopic(guiBridge, topic);
 }
 
-void CRos2::UnregisterImageTopic(const std::string& topic, const std::string& imageTransport)
+void CRos2::UnregisterImageTopic(const std::string& topic)
 {
-  m_node->UnregisterImageTopic(topic, imageTransport);
+  m_node->UnregisterImageTopic(topic);
 }
 
 ISystemHealthHUD* CRos2::GetSystemHealthHUD() const

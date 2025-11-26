@@ -34,9 +34,8 @@ public:
   virtual void Deinitialize() = 0;
 
   // GUI interface
-  virtual void RegisterImageTopic(const std::string& topic, const std::string& imageTransport) = 0;
-  virtual void UnregisterImageTopic(const std::string& topic,
-                                    const std::string& imageTransport) = 0;
+  virtual void RegisterImageTopic(const std::string& topic) = 0;
+  virtual void UnregisterImageTopic(const std::string& topic) = 0;
   virtual ISystemHealthHUD* GetSystemHealthHUD() const = 0;
   virtual ILabHUD* GetLabHUD() const = 0;
   virtual IStationHUD* GetStationHUD() const = 0;
