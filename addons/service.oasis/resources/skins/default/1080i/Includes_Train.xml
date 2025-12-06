@@ -171,7 +171,7 @@
             <property name="smarthome.isactive">$VAR[SmartHomeSystemOceanPlatformIsActive]</property>
         </item>
         <item>
-            <label>Vision</label>
+            <label>Server</label>
             <label2>$INFO[SmartHome.System(hallway).BatteryLoad]</label2> <!-- 100 W -->
             <property name="smarthome.isactive">$VAR[SmartHomeSystemNasIsActive]</property>
         </item>
@@ -185,6 +185,10 @@
         </control>
     </include>
     <include name="OasisTrainCameraContent">
+        <item>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemStationIsActive]</property>
+            <property name="smarthome.cameratopic">/oasis/station/sd/calibration_image</property>
+        </item>
         <item>
             <property name="smarthome.isactive">$VAR[SmartHomeSystemFalconIsActive]</property>
             <property name="smarthome.cameratopic">/oasis/falcon/hd/apriltags_image</property>
