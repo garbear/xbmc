@@ -96,18 +96,18 @@
         </item>
         <item>
             <label>Nervous System</label>
-            <property name="smarthome.isactive">$VAR[SmartHomeSystemVisionIsActive]</property>
-            <property name="smarthome.cpuutilization">$INFO[SmartHome.System(vision).CPUUtilization]</property>
-            <property name="smarthome.cputemperature">$INFO[SmartHome.System(vision).CPUTemperature]</property>
-            <property name="smarthome.ramutilization">$INFO[SmartHome.System(vision).RAMUtilization]</property>
-            <property name="smarthome.ramtotal">32 GB</property>
-        </item>
-        <item>
-            <label>Visual Cortex</label>
             <property name="smarthome.isactive">$VAR[SmartHomeSystemNasIsActive]</property>
             <property name="smarthome.cpuutilization">$INFO[SmartHome.System(nas).CPUUtilization]</property>
             <property name="smarthome.cputemperature">$INFO[SmartHome.System(nas).CPUTemperature]</property>
             <property name="smarthome.ramutilization">$INFO[SmartHome.System(nas).RAMUtilization]</property>
+            <property name="smarthome.ramtotal">32 GB</property>
+        </item>
+        <item>
+            <label>Visual Cortex</label>
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemVisionIsActive]</property>
+            <property name="smarthome.cpuutilization">$INFO[SmartHome.System(vision).CPUUtilization]</property>
+            <property name="smarthome.cputemperature">$INFO[SmartHome.System(vision).CPUTemperature]</property>
+            <property name="smarthome.ramutilization">$INFO[SmartHome.System(vision).RAMUtilization]</property>
             <property name="smarthome.ramtotal">128 GB</property>
         </item>
         <item>
