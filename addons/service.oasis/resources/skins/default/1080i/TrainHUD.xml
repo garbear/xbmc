@@ -28,7 +28,7 @@
 		<control type="group">
 			<description>Train system area</description>
 			<top>20</top>
-			<height>390</height>
+			<height>458</height>
 			<left>20</left>
 			<right>20</right>
 			<control type="image">
@@ -46,10 +46,10 @@
 				<top>10</top>
 				<bottom>10</bottom>
 				<orientation>vertical</orientation>
-				<itemlayout width="1860" height="75">
+				<itemlayout width="1860" height="73">
 					<include content="OasisTrainSystemListItem" />
 				</itemlayout>
-				<focusedlayout width="1860" height="75">
+				<focusedlayout width="1860" height="73">
 					<include content="OasisTrainSystemListItem" />
 				</focusedlayout>
 				<content>
@@ -127,8 +127,8 @@
 			<height>600</height>
 			<right>0</right>
 			<width>560</width>
-			<visible>SmartHome.System(falcon).IsActive(2)</visible>
 			<animation effect="fade" time="1500">VisibleChange</animation>
+			<!--
 			<control type="image">
 				<description>Train camera content area background</description>
 				<top>-20</top>
@@ -139,6 +139,7 @@
 				<visible>!SmartHome.System(falcon).IsActive(2)</visible>
 				<animation effect="fade" time="1500">VisibleChange</animation>
 			</control>
+			-->
 			<!--
 			<control type="label">
 				<description>Camera title</description>
@@ -153,12 +154,12 @@
 			<control type="list">
 				<description>Camera data list</description>
 				<bottom>0</bottom>
-				<height>600</height>
+				<height>620</height>
 				<orientation>vertical</orientation>
-				<itemlayout width="560" height="300">
+				<itemlayout width="560" height="310">
 					<include content="OasisTrainCameraListItem" />
 				</itemlayout>
-				<focusedlayout width="560" height="300">
+				<focusedlayout width="560" height="310">
 					<include content="OasisTrainCameraListItem" />
 				</focusedlayout>
 				<content>

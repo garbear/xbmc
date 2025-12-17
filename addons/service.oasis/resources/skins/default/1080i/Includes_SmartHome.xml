@@ -15,6 +15,9 @@
     <variable name="SmartHomeSystemFalconIsActive">
         <value condition="SmartHome.System(falcon).IsActive(2)">true</value>
     </variable>
+    <variable name="SmartHomeSystemFalconIsInactive">
+        <value condition="!SmartHome.System(falcon).IsActive(2)">true</value>
+    </variable>
     <variable name="SmartHomeSystemGateIsActive">
         <value condition="SmartHome.System(gate).IsActive(2)">true</value>
     </variable>
@@ -35,6 +38,9 @@
     </variable>
     <variable name="SmartHomeSystemStationIsActive">
         <value condition="SmartHome.System(station).IsActive(2)">true</value>
+    </variable>
+    <variable name="SmartHomeSystemVisionIsActive">
+        <value condition="SmartHome.System(vision).IsActive(2)">true</value>
     </variable>
     <include name="UnclickableVideoWindow">
 		<control type="group">
