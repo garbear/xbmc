@@ -26,12 +26,6 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
   macro(buildBoost)
     set(${${CMAKE_FIND_PACKAGE_NAME}_MODULE}_VERSION ${${${CMAKE_FIND_PACKAGE_NAME}_MODULE}_VER})
 
-    set(patches "${CORE_SOURCE_DIR}/tools/depends/target/${${CMAKE_FIND_PACKAGE_NAME}_MODULE_LC}/0001-Conditionally-define-BOOST_ALL_NO_EMBEDDED_GDB_SCRIP.patch"
-                "${CORE_SOURCE_DIR}/tools/depends/target/${${CMAKE_FIND_PACKAGE_NAME}_MODULE_LC}/0001-CMake-Set-correct-assembler-for-MSVC-ARM-targets.patch"
-    )
-
-    generate_patchcommand("${patches}")
-
     # Boost libs used by libtorrent
     set(BOOST_LIBS container
                    context
