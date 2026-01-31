@@ -11,6 +11,8 @@ if (ENABLE_ROS2)
                       Ros2SystemHealthManager.cpp
                       Ros2SystemHealthSubscriber.cpp
                       Ros2Translator.cpp
+                      Ros2VehicleManager.cpp
+                      Ros2VehicleSubscriber.cpp
                       Ros2VideoSubscription.cpp
   )
   list(APPEND HEADERS Ros2.h
@@ -23,6 +25,8 @@ if (ENABLE_ROS2)
                       Ros2SystemHealthManager.h
                       Ros2SystemHealthSubscriber.h
                       Ros2Translator.h
+                      Ros2VehicleManager.h
+                      Ros2VehicleSubscriber.h
                       Ros2VideoSubscription.h
   )
 

@@ -18,13 +18,15 @@ namespace SMART_HOME
 {
 class IPowerMeterHUD;
 class ISystemHealthHUD;
+class IVehicleHUD;
 
 class CSmartHomeGuiInfo : public GUILIB::GUIINFO::IGUIInfoProvider
 {
 public:
   CSmartHomeGuiInfo(CGUIInfoManager& infoManager,
                     ISystemHealthHUD& systemHealthHud,
-                    IPowerMeterHUD& powerMeterHud);
+                    IPowerMeterHUD& powerMeterHud,
+                    IVehicleHUD& vehicleHud);
   ~CSmartHomeGuiInfo() override;
 
   void Initialize();
@@ -64,6 +66,7 @@ private:
   CGUIInfoManager& m_infoManager;
   ISystemHealthHUD& m_systemHealthHud;
   IPowerMeterHUD& m_powerMeterHud;
+  IVehicleHUD& m_vehicleHud;
 };
 } // namespace SMART_HOME
 } // namespace KODI

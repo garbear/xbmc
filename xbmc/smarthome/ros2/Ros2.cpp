@@ -87,6 +87,11 @@ IPowerMeterHUD* CRos2::GetPowerMeterHUD() const
   return m_node->GetPowerMeterHUD();
 }
 
+IVehicleHUD* CRos2::GetVehicleHUD() const
+{
+  return m_node->GetVehicleHUD();
+}
+
 void CRos2::FrameMove()
 {
   //! @todo Remove GUI dependency

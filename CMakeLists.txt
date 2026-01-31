@@ -296,12 +296,15 @@ set(optional_deps Alsa>=1.0.27
 # ROS dependencies. Keep in alphabetical order please
 list(APPEND optional_deps
   ament_cmake
+  builtin_interfaces
+  geometry_msgs
   image_transport
   oasis_msgs
   rcl_interfaces
   rclcpp
   rmw
   sensor_msgs
+  std_msgs
 )
 
 # Remove excluded platform specific optional_deps

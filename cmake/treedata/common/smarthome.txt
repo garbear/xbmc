@@ -5,4 +5,5 @@ xbmc/smarthome/guiinfo smarthome/guiinfo
 xbmc/smarthome/input smarthome/input
 xbmc/smarthome/rendering smarthome/rendering
 xbmc/smarthome/ros2 smarthome/ros2
+xbmc/smarthome/utils smarthome/utils
 xbmc/smarthome/streams smarthome/streams

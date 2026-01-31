@@ -33,11 +33,13 @@ namespace SMART_HOME
 class CRos2InputPublisher;
 class CRos2PowerMeterManager;
 class CRos2SystemHealthManager;
+class CRos2VehicleManager;
 class CRos2VideoSubscription;
 class CSmartHomeGuiBridge;
 class CSmartHomeInputManager;
 class IPowerMeterHUD;
 class ISystemHealthHUD;
+class IVehicleHUD;
 
 class CRos2Node : public IRunnable
 {
@@ -54,6 +56,7 @@ public:
   void UnregisterImageTopic(const ImageSubscriptionKey& subscription);
   ISystemHealthHUD* GetSystemHealthHUD() const;
   IPowerMeterHUD* GetPowerMeterHUD() const;
+  IVehicleHUD* GetVehicleHUD() const;
 
   //! @todo Remove GUI dependency
   void FrameMove();
@@ -80,6 +83,7 @@ private:
   std::unique_ptr<CRos2InputPublisher> m_peripheralPublisher;
   std::unique_ptr<CRos2SystemHealthManager> m_systemHealthManager;
   std::unique_ptr<CRos2PowerMeterManager> m_powerMeterManager;
+  std::unique_ptr<CRos2VehicleManager> m_vehicleManager;
 
   // Threading parameters
   std::unique_ptr<CThread> m_thread;

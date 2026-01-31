@@ -567,6 +567,16 @@ constexpr uint32_t SMARTHOME_POWER_METER_VOLTAGE     = 858;
 constexpr uint32_t SMARTHOME_POWER_METER_CURRENT     = 859;
 constexpr uint32_t SMARTHOME_POWER_METER_POWER       = 860;
 constexpr uint32_t SMARTHOME_POWER_METER_CURRENT_SHARE = 861;
+constexpr uint32_t SMARTHOME_FORWARD_SPEED           = 862;
+constexpr uint32_t SMARTHOME_FORWARD_SPEED_STD_DEV   = 863;
+constexpr uint32_t SMARTHOME_ROLL                    = 864;
+constexpr uint32_t SMARTHOME_ROLL_STD_DEV            = 865;
+constexpr uint32_t SMARTHOME_PITCH                   = 866;
+constexpr uint32_t SMARTHOME_PITCH_STD_DEV           = 867;
+constexpr uint32_t SMARTHOME_YAW                     = 868;
+constexpr uint32_t SMARTHOME_YAW_STD_DEV             = 869;
+constexpr uint32_t SMARTHOME_TILT                    = 870;
+constexpr uint32_t SMARTHOME_TILT_STD_DEV            = 871;
 
 constexpr int      SLIDESHOW_LABELS_START            = 900;
 constexpr uint32_t SLIDESHOW_FILE_NAME               = SLIDESHOW_LABELS_START;

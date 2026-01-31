@@ -11,6 +11,7 @@
 #include "Ros2InputPublisher.h"
 #include "Ros2PowerMeterManager.h"
 #include "Ros2SystemHealthManager.h"
+#include "Ros2VehicleManager.h"
 #include "Ros2VideoSubscription.h"
 #include "ServiceBroker.h"
 #include "network/Network.h"
@@ -43,7 +44,8 @@ CRos2Node::CRos2Node(CSmartHomeInputManager& inputManager)
     m_systemHealthManager(std::make_unique<CRos2SystemHealthManager>(ROS_NAMESPACE)),
     m_powerMeterManager(std::make_unique<CRos2PowerMeterManager>(
         ROS_NAMESPACE,
-        [this](const std::string& systemName) { m_systemHealthManager->MarkActive(systemName); }))
+        [this](const std::string& systemName) { m_systemHealthManager->MarkActive(systemName); })),
+    m_vehicleManager(std::make_unique<CRos2VehicleManager>(ROS_NAMESPACE))
 {
 }
 
@@ -67,6 +69,7 @@ void CRos2Node::Initialize()
   // Managers
   m_systemHealthManager->Initialize(m_node);
   m_powerMeterManager->Initialize(m_node);
+  m_vehicleManager->Initialize(m_node);
 
   // Publishers
   m_peripheralPublisher =
@@ -147,6 +150,11 @@ ISystemHealthHUD* CRos2Node::GetSystemHealthHUD() const
 IPowerMeterHUD* CRos2Node::GetPowerMeterHUD() const
 {
   return m_powerMeterManager.get();
+}
+
+IVehicleHUD* CRos2Node::GetVehicleHUD() const
+{
+  return m_vehicleManager.get();
 }
 
 void CRos2Node::FrameMove()

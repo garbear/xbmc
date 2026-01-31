@@ -14,6 +14,7 @@
 #include "guilib/guiinfo/GUIInfoLabels.h"
 #include "smarthome/guiinfo/IPowerMeterHUD.h"
 #include "smarthome/guiinfo/ISystemHealthHUD.h"
+#include "smarthome/guiinfo/IVehicleHUD.h"
 #include "smarthome/guiinfo/SmartHomeProperty.h"
 #include "utils/StringUtils.h"
 
@@ -45,14 +46,28 @@ std::string FormatFrequency(double frequencyHz)
 
   return StringUtils::Format("{:.0f} Hz", frequencyHz);
 }
+
+std::string FormatSpeed(double speedMps)
+{
+  if (!std::isfinite(speedMps))
+    return "";
+
+  const CSpeed speed = CSpeed::CreateFromMetresPerSecond(speedMps);
+  if (!speed.IsValid())
+    return "";
+
+  return g_langInfo.GetSpeedAsString(speed, 1);
+}
 } // namespace
 
 CSmartHomeGuiInfo::CSmartHomeGuiInfo(CGUIInfoManager& infoManager,
                                      ISystemHealthHUD& systemHealthHud,
-                                     IPowerMeterHUD& powerMeterHud)
+                                     IPowerMeterHUD& powerMeterHud,
+                                     IVehicleHUD& vehicleHud)
   : m_infoManager(infoManager),
     m_systemHealthHud(systemHealthHud),
-    m_powerMeterHud(powerMeterHud)
+    m_powerMeterHud(powerMeterHud),
+    m_vehicleHud(vehicleHud)
 {
 }
 
@@ -200,6 +215,116 @@ bool CSmartHomeGuiInfo::GetLabel(std::string& value,
         const float batteryLoadWatts = m_systemHealthHud.BatteryLoad(systemName);
         value =
             StringUtils::Format("{} W", static_cast<unsigned int>(std::round(batteryLoadWatts)));
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_FORWARD_SPEED:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float speedMps = m_vehicleHud.ForwardSpeed(vehicleName);
+        value = FormatSpeed(static_cast<double>(speedMps));
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_FORWARD_SPEED_STD_DEV:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float speedStdDevMps = m_vehicleHud.ForwardSpeedStdDev(vehicleName);
+        value = FormatSpeed(static_cast<double>(speedStdDevMps));
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_ROLL:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float rollDegrees = m_vehicleHud.Roll(vehicleName);
+        value = StringUtils::Format("{:.1f} °", rollDegrees);
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_ROLL_STD_DEV:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float rollStdDevDegrees = m_vehicleHud.RollStdDev(vehicleName);
+        value = StringUtils::Format("{:.1f} °", rollStdDevDegrees);
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_PITCH:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float pitchDegrees = m_vehicleHud.Pitch(vehicleName);
+        value = StringUtils::Format("{:.1f} °", pitchDegrees);
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_PITCH_STD_DEV:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float pitchStdDevDegrees = m_vehicleHud.PitchStdDev(vehicleName);
+        value = StringUtils::Format("{:.1f} °", pitchStdDevDegrees);
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_YAW:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float yawDegrees = m_vehicleHud.Yaw(vehicleName);
+        value = StringUtils::Format("{:.1f} °", yawDegrees);
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_YAW_STD_DEV:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float yawStdDevDegrees = m_vehicleHud.YawStdDev(vehicleName);
+        value = StringUtils::Format("{:.1f} °", yawStdDevDegrees);
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_TILT:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float tiltDegrees = m_vehicleHud.Tilt(vehicleName);
+        value = StringUtils::Format("{:.1f} °", tiltDegrees);
+        return true;
+      }
+      break;
+    }
+    case SMARTHOME_TILT_STD_DEV:
+    {
+      const std::string vehicleName = info.GetData3();
+      if (!vehicleName.empty())
+      {
+        const float tiltStdDevDegrees = m_vehicleHud.TiltStdDev(vehicleName);
+        value = StringUtils::Format("{:.1f} °", tiltStdDevDegrees);
         return true;
       }
       break;

@@ -47,7 +47,8 @@ void CSmartHomeServices::Initialize(GAME::CGameServices& gameServices,
     if (guiInfoManager != nullptr)
     {
       m_guiInfo = std::make_unique<CSmartHomeGuiInfo>(
-          *guiInfoManager, *m_ros2->GetSystemHealthHUD(), *m_ros2->GetPowerMeterHUD());
+          *guiInfoManager, *m_ros2->GetSystemHealthHUD(), *m_ros2->GetPowerMeterHUD(),
+          *m_ros2->GetVehicleHUD());
       m_guiInfo->Initialize();
     }
   }

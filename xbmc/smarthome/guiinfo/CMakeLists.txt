@@ -4,6 +4,7 @@ set(SOURCES SmartHomeGuiInfo.cpp
 
 set(HEADERS IPowerMeterHUD.h
             ISystemHealthHUD.h
+            IVehicleHUD.h
             SmartHomeGuiInfo.h
             SmartHomeProperty.h
 )

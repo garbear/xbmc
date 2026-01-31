@@ -25,6 +25,7 @@ xbmc/playlists/test               test/playlists
 xbmc/pvr/channels/test            test/pvrchannels
 xbmc/settings/test                test/settings
 xbmc/smarthome/test               test/smarthome
+xbmc/smarthome/utils/test         test/smarthome/utils
 xbmc/test                         test
 xbmc/threads/test                 test/threads
 xbmc/utils/i18n/test              test/utils/i18n
