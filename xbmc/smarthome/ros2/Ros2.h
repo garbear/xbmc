@@ -37,6 +37,7 @@ public:
   void RegisterImageTopic(const std::string& topic) override;
   void UnregisterImageTopic(const std::string& topic) override;
   ISystemHealthHUD* GetSystemHealthHUD() const override;
+  virtual IVehicleHUD* GetVehicleHUD() const override;
   IStationHUD* GetStationHUD() const override;
   void FrameMove() override;
 

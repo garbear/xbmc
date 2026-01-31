@@ -18,12 +18,14 @@ namespace SMART_HOME
 {
 class IStationHUD;
 class ISystemHealthHUD;
+class IVehicleHUD;
 
 class CSmartHomeGuiInfo : public GUILIB::GUIINFO::IGUIInfoProvider
 {
 public:
   CSmartHomeGuiInfo(CGUIInfoManager& infoManager,
                     ISystemHealthHUD& systemHealthHud,
+                    IVehicleHUD& vehicleHud,
                     IStationHUD& stationHud);
   ~CSmartHomeGuiInfo() override;
 
@@ -66,6 +68,7 @@ private:
   // Construction parameters
   CGUIInfoManager& m_infoManager;
   ISystemHealthHUD& m_systemHealthHud;
+  IVehicleHUD& m_vehicleHud;
   IStationHUD& m_stationHud;
 };
 } // namespace SMART_HOME

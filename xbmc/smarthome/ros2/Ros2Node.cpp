@@ -12,6 +12,7 @@
 #include "Ros2NowPlayingPublisher.h"
 #include "Ros2StationSubscriber.h"
 #include "Ros2SystemHealthManager.h"
+#include "Ros2VehicleManager.h"
 #include "Ros2VideoSubscription.h"
 #include "ServiceBroker.h"
 #include "network/Network.h"
@@ -41,7 +42,8 @@ constexpr const char* HOSTNAME_UNKNOWN = "unknown";
 
 CRos2Node::CRos2Node(CSmartHomeInputManager& inputManager)
   : m_inputManager(inputManager),
-    m_systemHealthManager(std::make_unique<CRos2SystemHealthManager>(ROS_NAMESPACE))
+    m_systemHealthManager(std::make_unique<CRos2SystemHealthManager>(ROS_NAMESPACE)),
+    m_vehicleManager(std::make_unique<CRos2VehicleManager>(ROS_NAMESPACE))
 {
 }
 
@@ -64,6 +66,7 @@ void CRos2Node::Initialize()
 
   // Managers
   m_systemHealthManager->Initialize(m_node);
+  m_vehicleManager->Initialize(m_node);
 
   // Publishers
   m_peripheralPublisher = std::make_unique<CRos2InputPublisher>(m_node, m_inputManager, hostname);
@@ -143,6 +146,11 @@ void CRos2Node::UnregisterImageTopic(const std::string& topic)
 ISystemHealthHUD* CRos2Node::GetSystemHealthHUD() const
 {
   return m_systemHealthManager.get();
+}
+
+IVehicleHUD* CRos2Node::GetVehicleHUD() const
+{
+  return m_vehicleManager.get();
 }
 
 IStationHUD* CRos2Node::GetStationHUD() const

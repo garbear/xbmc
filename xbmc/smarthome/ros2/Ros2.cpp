@@ -78,6 +78,11 @@ ISystemHealthHUD* CRos2::GetSystemHealthHUD() const
   return m_node->GetSystemHealthHUD();
 }
 
+IVehicleHUD* CRos2::GetVehicleHUD() const
+{
+  return m_node->GetVehicleHUD();
+}
+
 IStationHUD* CRos2::GetStationHUD() const
 {
   return m_node->GetStationHUD();

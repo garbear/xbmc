@@ -16,6 +16,7 @@ namespace SMART_HOME
 {
 class IStationHUD;
 class ISystemHealthHUD;
+class IVehicleHUD;
 
 class IRos2
 {
@@ -36,6 +37,7 @@ public:
   virtual void RegisterImageTopic(const std::string& topic) = 0;
   virtual void UnregisterImageTopic(const std::string& topic) = 0;
   virtual ISystemHealthHUD* GetSystemHealthHUD() const = 0;
+  virtual IVehicleHUD* GetVehicleHUD() const = 0;
   virtual IStationHUD* GetStationHUD() const = 0;
 
   //! @todo Remove GUI dependency

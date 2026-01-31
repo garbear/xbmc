@@ -33,11 +33,13 @@ class CRos2InputPublisher;
 class CRos2NowPlayingPublisher;
 class CRos2StationSubscriber;
 class CRos2SystemHealthManager;
+class CRos2VehicleManager;
 class CRos2VideoSubscription;
 class CSmartHomeGuiBridge;
 class CSmartHomeInputManager;
 class IStationHUD;
 class ISystemHealthHUD;
+class IVehicleHUD;
 
 class CRos2Node : public IRunnable
 {
@@ -53,6 +55,7 @@ public:
   void RegisterImageTopic(CSmartHomeGuiBridge& guiBridge, const std::string& topic);
   void UnregisterImageTopic(const std::string& topic);
   ISystemHealthHUD* GetSystemHealthHUD() const;
+  IVehicleHUD* GetVehicleHUD() const;
   IStationHUD* GetStationHUD() const;
 
   //! @todo Remove GUI dependency
@@ -69,6 +72,8 @@ private:
   std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> m_executor;
   std::shared_ptr<rclcpp::Node> m_node;
   std::unique_ptr<CRos2SystemHealthManager> m_systemHealthManager;
+  std::unique_ptr<CRos2VehicleManager> m_vehicleManager;
+
   std::map<std::string, std::unique_ptr<CRos2VideoSubscription>> m_videoSubs; // Topic -> subscriber
   std::unique_ptr<CRos2InputPublisher> m_peripheralPublisher;
   std::unique_ptr<CRos2NowPlayingPublisher> m_nowPlayingPublisher;
