@@ -185,7 +185,7 @@ public:
   void SetSpeedUnit(const std::string& speedUnit);
   const std::string& GetSpeedUnitString() const;
   static const std::string& GetSpeedUnitString(CSpeed::Unit speedUnit);
-  std::string GetSpeedAsString(const CSpeed& speed) const;
+  std::string GetSpeedAsString(const CSpeed& speed, unsigned int decimals = 0) const;
 
   void GetRegionNames(std::vector<std::string>& array);
   void SetCurrentRegion(const std::string& strName);
