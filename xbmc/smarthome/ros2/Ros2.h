@@ -34,8 +34,8 @@ public:
   // Implementation of IRos2
   void Initialize() override;
   void Deinitialize() override;
-  void RegisterImageTopic(const std::string& topic, const std::string& imageTransport) override;
-  void UnregisterImageTopic(const std::string& topic, const std::string& imageTransport) override;
+  void RegisterImageTopic(const std::string& topic) override;
+  void UnregisterImageTopic(const std::string& topic) override;
   ISystemHealthHUD* GetSystemHealthHUD() const override;
   virtual IVehicleHUD* GetVehicleHUD() const override;
   IStationHUD* GetStationHUD() const override;

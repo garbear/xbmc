@@ -41,7 +41,6 @@ public:
   void SetPubSubTopic(const GUILIB::GUIINFO::CGUIInfoLabel& topic);
   void SetStretchMode(const GUILIB::GUIINFO::CGUIInfoLabel& stretchMode);
   void SetRotation(const GUILIB::GUIINFO::CGUIInfoLabel& rotation);
-  void SetImageTransport(const GUILIB::GUIINFO::CGUIInfoLabel& imageTransport);
 
   // Rendering functions
   bool HasStretchMode() const { return m_bHasStretchMode; }
@@ -69,10 +68,9 @@ private:
   void UpdateTopic(const std::string& topic);
   void UpdateStretchMode(const std::string& strStretchMode);
   void UpdateRotation(const std::string& strRotation);
-  void UpdateImageTransport(const std::string& imageTransport);
   void ResetInfo();
 
-  void RegisterControl(const std::string& topic, const std::string& imageTransport);
+  void RegisterControl(const std::string& topic);
   void UnregisterControl();
 
   // Camera properties
@@ -88,7 +86,6 @@ private:
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_topicInfo;
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_stretchModeInfo;
   KODI::GUILIB::GUIINFO::CGUIInfoLabel m_rotationInfo;
-  KODI::GUILIB::GUIINFO::CGUIInfoLabel m_imageTransportInfo;
 };
 
 } // namespace SMART_HOME

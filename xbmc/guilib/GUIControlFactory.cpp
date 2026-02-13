@@ -1773,10 +1773,6 @@ CGUIControl* CGUIControlFactory::Create(int parentID,
       GetInfoLabel(pControlNode, "rotation", rotation, parentID);
       ccontrol->SetRotation(rotation);
 
-      GUIINFO::CGUIInfoLabel imageTransport;
-      GetInfoLabel(pControlNode, "imagetransport", imageTransport, parentID);
-      ccontrol->SetImageTransport(imageTransport);
-
       control = ccontrol;
 
       break;

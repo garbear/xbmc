@@ -27,12 +27,8 @@ public:
   const std::string& GetTopic() const { return m_topic; }
   void SetTopic(const std::string& topic) { m_topic = topic; }
 
-  const std::string& GetImageTransport() const { return m_imageTransport; }
-  void SetImageTransport(const std::string& imageTransport) { m_imageTransport = imageTransport; }
-
 private:
   std::string m_topic;
-  std::string m_imageTransport;
 };
 } // namespace SMART_HOME
 } // namespace KODI
