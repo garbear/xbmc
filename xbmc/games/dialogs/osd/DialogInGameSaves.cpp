@@ -36,6 +36,9 @@ using namespace RETRO;
 
 namespace
 {
+
+constexpr const char* ICON_VIDEO = "";
+
 CFileItemPtr CreateNewSaveItem()
 {
   CFileItemPtr item = std::make_shared<CFileItem>(
@@ -116,8 +119,12 @@ void CDialogInGameSaves::InitSavedGames()
 void CDialogInGameSaves::GetItems(CFileItemList& items)
 {
   items.Add(m_newSaveItem);
-  std::for_each(m_savestateItems.cbegin(), m_savestateItems.cend(),
-                [&items](const auto& item) { items.Add(item); });
+
+  for (const auto& item : m_savestateItems)
+  {
+    item->SetArt("icon", ICON_VIDEO);
+    items.Add(item);
+  }
 }
 
 void CDialogInGameSaves::OnItemFocus(unsigned int index)

@@ -34,14 +34,17 @@ void CRenderBufferOpenGL::CreateTexture()
   glGenTextures(1, &m_textureId);
 
   glBindTexture(m_textureTarget, m_textureId);
-
-  glTexImage2D(m_textureTarget, 0, m_internalformat, m_width, m_height, 0, m_pixelformat,
-               m_pixeltype, NULL);
-
   glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  // Force alpha to 1, because game client can leave it undefined
+  if (m_internalformat == GL_RGBA8)
+    glTexParameteri(m_textureTarget, GL_TEXTURE_SWIZZLE_A, GL_ONE);
+
+  glTexImage2D(m_textureTarget, 0, m_internalformat, m_width, m_height, 0, m_pixelformat,
+               m_pixeltype, NULL);
 
   glBindTexture(m_textureTarget, 0);
 }
@@ -65,8 +68,8 @@ bool CRenderBufferOpenGL::UploadTexture()
   //! to remove GL dependencies on GLES.
   glTexSubImage2D(m_textureTarget, 0, 0, 0, m_width, m_height, m_pixelformat, m_pixeltype,
                   m_data.data());
-  glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
+  glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
   return true;
 }
 

@@ -50,7 +50,9 @@ protected:
   // Implementation of CRPRendererOpenGL
   void Render(uint8_t alpha) override;
 
-  std::map<CRenderBufferDMA*, std::unique_ptr<RenderBufferTextures>> m_RBTexturesMap;
+  std::map<std::tuple<CRenderBufferDMA*, unsigned int, unsigned int>,
+           std::unique_ptr<RenderBufferTextures>>
+      m_RBTexturesMap;
 };
 } // namespace RETRO
 } // namespace KODI

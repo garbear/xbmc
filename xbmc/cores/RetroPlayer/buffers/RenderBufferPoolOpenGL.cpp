@@ -29,13 +29,13 @@ IRenderBuffer* CRenderBufferPoolOpenGL::CreateRenderBuffer(void* header /* = nul
 
 bool CRenderBufferPoolOpenGL::ConfigureInternal()
 {
-  // Configure CRenderBufferPoolOpenGLES
+  // Configure CRenderBufferPoolOpenGL
   switch (m_format)
   {
     case AV_PIX_FMT_0RGB32:
     {
       m_pixeltype = GL_UNSIGNED_BYTE;
-      m_internalformat = GL_RGBA;
+      m_internalformat = GL_RGBA8;
       m_pixelformat = GL_BGRA;
       m_bpp = sizeof(uint32_t);
       return true;
@@ -51,7 +51,7 @@ bool CRenderBufferPoolOpenGL::ConfigureInternal()
     case AV_PIX_FMT_RGB565:
     {
       m_pixeltype = GL_UNSIGNED_SHORT_5_6_5;
-      m_internalformat = GL_RGB;
+      m_internalformat = GL_RGB565;
       m_pixelformat = GL_RGB;
       m_bpp = sizeof(uint16_t);
       return true;

@@ -10,8 +10,6 @@
 
 #include "utils/log.h"
 
-#include <cassert>
-
 using namespace KODI::SHADER;
 
 CShaderTextureGL::CShaderTextureGL(uint32_t textureWidth, uint32_t textureHeight)
@@ -79,6 +77,7 @@ bool CShaderTextureGL::BindFBO()
 
   glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
   glBindTexture(GL_TEXTURE_2D, m_texture);
+
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
