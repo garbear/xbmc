@@ -61,6 +61,7 @@ private:
   void OnControllerFocus(const std::string& focusedAgent);
   void OnItemSelect(unsigned int itemIndex);
   void OnControllerSelect(const CFileItem& selectedAgentItem);
+  void OnKeyboardSelect();
   void ShowControllerDialog(const CAgentController& agentController);
 
   // Construction parameters
