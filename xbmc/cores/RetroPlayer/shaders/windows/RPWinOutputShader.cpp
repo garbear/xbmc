@@ -188,10 +188,11 @@ void CRPWinOutputShader::Render(CD3DTexture& sourceTexture,
                                 const KODI::RETRO::ViewportCoordinates& points,
                                 CRect& viewPort,
                                 CD3DTexture& target,
-                                unsigned int range /* = 0 */)
+                                unsigned int range /* = 0 */,
+                                uint8_t alpha /* = 0xFF */)
 {
   PrepareParameters(sourceTexture.GetWidth(), sourceTexture.GetHeight(), sourceRect, points);
-  SetShaderParameters(sourceTexture, range, viewPort);
+  SetShaderParameters(sourceTexture, range, alpha, viewPort);
   Execute({&target}, 4);
 }
 
@@ -247,6 +248,7 @@ void CRPWinOutputShader::PrepareParameters(unsigned int sourceWidth,
 
 void CRPWinOutputShader::SetShaderParameters(CD3DTexture& sourceTexture,
                                              unsigned int range,
+                                             uint8_t alpha,
                                              CRect& viewPort)
 {
   m_effect.SetTechnique("OUTPUT_T");
@@ -255,6 +257,9 @@ void CRPWinOutputShader::SetShaderParameters(CD3DTexture& sourceTexture,
   const float viewPortArray[2] = {viewPort.Width(), viewPort.Height()};
   m_effect.SetFloatArray("g_viewPort", viewPortArray, 2);
 
-  const float params[3] = {static_cast<float>(range)};
+  const float params[1] = {static_cast<float>(range)};
   m_effect.SetFloatArray("m_params", params, 1);
+
+  const float outputAlpha = static_cast<float>(alpha) / 255.0f;
+  m_effect.SetFloatArray("g_alpha", &outputAlpha, 1);
 }

@@ -46,7 +46,7 @@ namespace
 {
 
 constexpr const char* PRESETS_ADDON_NAME = "game.shader.presets";
-constexpr const char* ICON_VIDEO = "DefaultVideo.png";
+constexpr const char* ICON_VIDEO = "";
 constexpr const char* ICON_GET_MORE = "DefaultAddSource.png";
 
 struct ScalingMethodProperties

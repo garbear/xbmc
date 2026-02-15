@@ -119,6 +119,8 @@ bool CShaderPresetDX::CreateShaderTextures()
 {
   DisposeShaderTextures();
 
+  m_bTexturesNeedSizeUpdate = false;
+
   float2 prevSize = m_videoSize;
   float2 prevTextureSize = m_videoSize;
 
@@ -131,6 +133,24 @@ bool CShaderPresetDX::CreateShaderTextures()
     float2 scaledSize;
     float2 textureSize;
     CalculateScaledSize(pass, prevSize, scaledSize);
+
+    //! @todo Enable usage of optimal texture sizes once multi-pass preset
+    // geometry and LUT rendering are fixed.
+    //
+    // Current issues:
+    //   - Enabling optimal texture sizes breaks geometry for many multi-pass
+    //     presets
+    //   - LUTs render incorrectly due to missing per-pass and per-LUT
+    //     TexCoord attributes.
+    //
+    // Planned solution:
+    //   - Implement additional TexCoord attributes for each pass and LUT,
+    //     setting coordinates to `xamt` and `yamt` instead of 1
+    //
+    // Reference implementation in RetroArch:
+    //   https://github.com/libretro/RetroArch/blob/09a59edd6b415b7bd124b03bda68ccc4d60b0ea8/gfx/drivers/gl2.c#L3018
+    //
+    textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
 
     if (shaderIdx + 1 == numPasses)
     {
@@ -155,24 +175,6 @@ bool CShaderPresetDX::CreateShaderTextures()
           textureFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
       }
 
-      //! @todo Enable usage of optimal texture sizes once multi-pass preset
-      // geometry and LUT rendering are fixed.
-      //
-      // Current issues:
-      //   - Enabling optimal texture sizes breaks geometry for many multi-pass
-      //     presets
-      //   - LUTs render incorrectly due to missing per-pass and per-LUT
-      //     TexCoord attributes.
-      //
-      // Planned solution:
-      //   - Implement additional TexCoord attributes for each pass and LUT,
-      //     setting coordinates to `xamt` and `yamt` instead of 1
-      //
-      // Reference implementation in RetroArch:
-      //   https://github.com/libretro/RetroArch/blob/09a59edd6b415b7bd124b03bda68ccc4d60b0ea8/gfx/drivers/gl2.c#L3018
-      //
-      textureSize = scaledSize; // CShaderUtils::GetOptimalTextureSize(scaledSize)
-
       auto textureDX = std::make_shared<CD3DTexture>();
 
       if (!textureDX->Create(static_cast<UINT>(textureSize.x), static_cast<UINT>(textureSize.y), 1,
@@ -188,8 +190,8 @@ bool CShaderPresetDX::CreateShaderTextures()
       m_pShaderTextures.emplace_back(std::make_unique<CShaderTextureDX>(std::move(textureDX)));
     }
 
-    // Notify shader of its source and dest size
-    m_pShaders[shaderIdx]->SetSizes(prevSize, prevTextureSize, scaledSize);
+    // Notify shader of its target and source sizes
+    m_pShaders[shaderIdx]->SetSizes(scaledSize, prevSize, prevTextureSize);
 
     prevSize = scaledSize;
     prevTextureSize = textureSize;
@@ -234,5 +236,11 @@ void CShaderPresetDX::RenderShader(IShader& shader,
   const CRect newViewPort(0.f, 0.f, targetTexture.GetWidth(), targetTexture.GetHeight());
   m_context.SetViewPort(newViewPort);
   m_context.SetScissors(newViewPort);
+
+  auto& targetDX = static_cast<CShaderTextureDX&>(targetTexture);
+  const FLOAT clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+  DX::DeviceResources::Get()->GetD3DContext()->ClearRenderTargetView(
+      targetDX.GetTexture().GetRenderTarget(), clearColor);
+
   shader.Render(sourceTexture, targetTexture);
 }
