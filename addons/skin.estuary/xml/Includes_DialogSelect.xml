@@ -994,10 +994,13 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
+							<texture colordiffuse="border_alpha">colors/black.png</texture>
+						</control>
+						<control type="image">
+							<width>444</width>
+							<height>250</height>
+							<aspectratio>keep</aspectratio>
 							<texture>$INFO[ListItem.Icon]</texture>
-							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
-							<bordersize>4</bordersize>
 						</control>
 						<control type="gamewindow">
 							<visible>!String.IsEmpty(ListItem.Property(game.videofilter))</visible>
@@ -1026,10 +1029,13 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
+							<texture colordiffuse="border_alpha">colors/black.png</texture>
+						</control>
+						<control type="image">
+							<width>444</width>
+							<height>250</height>
+							<aspectratio>keep</aspectratio>
 							<texture>$INFO[ListItem.Icon]</texture>
-							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
-							<bordersize>4</bordersize>
 						</control>
 						<control type="gamewindow">
 							<visible>!String.IsEmpty(ListItem.Property(game.videofilter))</visible>
@@ -1091,10 +1097,13 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
-							<texture border="4">DefaultVideo.png</texture>
-							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
-							<bordersize>4</bordersize>
+							<texture colordiffuse="border_alpha">colors/black.png</texture>
+						</control>
+						<control type="image">
+							<width>444</width>
+							<height>250</height>
+							<aspectratio>keep</aspectratio>
+							<texture>$INFO[ListItem.Icon]</texture>
 						</control>
 						<control type="gamewindow">
 							<width>444</width>
@@ -1122,10 +1131,13 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
-							<texture border="4">DefaultVideo.png</texture>
-							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
-							<bordersize>4</bordersize>
+							<texture colordiffuse="border_alpha">colors/black.png</texture>
+						</control>
+						<control type="image">
+							<width>444</width>
+							<height>250</height>
+							<aspectratio>keep</aspectratio>
+							<texture>$INFO[ListItem.Icon]</texture>
 						</control>
 						<control type="gamewindow">
 							<width>444</width>
@@ -1186,18 +1198,13 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
-							<texture border="4">$INFO[ListItem.Icon]</texture>
-							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
-							<bordersize>4</bordersize>
+							<texture colordiffuse="border_alpha">colors/black.png</texture>
 						</control>
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
-							<texture border="4">$INFO[ListItem.Art(screenshot)]</texture>
-							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
-							<bordersize>4</bordersize>
+							<aspectratio>keep</aspectratio>
+							<texture>$INFO[ListItem.Icon]</texture>
 						</control>
 						<control type="gamewindow">
 							<width>444</width>
@@ -1223,18 +1230,13 @@
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
-							<texture border="4">$INFO[ListItem.Icon]</texture>
-							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
-							<bordersize>4</bordersize>
+							<texture colordiffuse="border_alpha">colors/black.png</texture>
 						</control>
 						<control type="image">
 							<width>444</width>
 							<height>250</height>
-							<aspectratio>scale</aspectratio>
-							<texture border="4">$INFO[ListItem.Art(screenshot)]</texture>
-							<bordertexture colordiffuse="border_alpha">colors/black.png</bordertexture>
-							<bordersize>4</bordersize>
+							<aspectratio>keep</aspectratio>
+							<texture>$INFO[ListItem.Icon]</texture>
 						</control>
 						<control type="gamewindow">
 							<width>444</width>
@@ -1254,6 +1256,7 @@
 							<width>444</width>
 							<height>250</height>
 							<texture border="4" infill="false" colordiffuse="button_focus">colors/white.png</texture>
+							<visible>Control.HasFocus(10811)</visible>
 						</control>
 					</control>
 				</focusedlayout>
