@@ -272,7 +272,11 @@ void CGUIAgentControllerList::OnControllerSelect(const CFileItem& selectedAgentI
     PERIPHERALS::PeripheralPtr peripheral = agentController->GetPeripheral();
     if (peripheral && peripheral->FileLocation() == selectedAgentItem.GetPath())
     {
-      if (!peripheral->HasConfigurableSettings())
+      if (peripheral->Type() == PERIPHERALS::PeripheralType::PERIPHERAL_KEYBOARD)
+      {
+        OnKeyboardSelect();
+      }
+      else if (!peripheral->HasConfigurableSettings())
       {
         // Show an error if the peripheral doesn't have any settings
         CLog::Log(LOGERROR, "Peripheral has no settings");
@@ -288,6 +292,14 @@ void CGUIAgentControllerList::OnControllerSelect(const CFileItem& selectedAgentI
       break;
     }
   }
+}
+
+void CGUIAgentControllerList::OnKeyboardSelect()
+{
+  // Handle keyboard selection here
+  // "Peripherals"
+  // "There are no settings available for this peripheral"
+  MESSAGING::HELPERS::ShowOKDialogText(CVariant{35000}, CVariant{"Here"});
 }
 
 void CGUIAgentControllerList::ShowControllerDialog(const CAgentController& agentController)
