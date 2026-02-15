@@ -40,10 +40,7 @@ public:
 
   // Implementation of IShaderPreset
   bool ReadPresetFile(const std::string& presetPath) override;
-  bool RenderUpdate(const RETRO::ViewportCoordinates& dest,
-                    const float2 fullDestSize,
-                    IShaderTexture& sourceTexture,
-                    IShaderTexture& targetTexture) override;
+  bool RenderUpdate(IShaderTexture& sourceTexture, IShaderTexture& targetTexture) override;
   void SetSpeed(double speed) override { m_speed = speed; }
   void SetVideoSize(unsigned int videoWidth, unsigned int videoHeight) override;
   bool SetShaderPreset(const std::string& shaderPresetPath) override;
@@ -63,9 +60,9 @@ protected:
 
   // Helper functions
   bool Update();
-  void UpdateViewPort(CRect viewPort, const float2 fullDestSize);
+  void UpdateOutputSize(const float2 outputSize);
   void UpdateMVPs();
-  void PrepareParameters(const RETRO::ViewportCoordinates& dest, IShaderTexture& sourceTexture);
+  void PrepareParameters(IShaderTexture& sourceTexture);
   void CalculateScaledSize(const KODI::SHADER::ShaderPass& pass,
                            const float2& prevSize,
                            float2& scaledSize);
@@ -98,11 +95,11 @@ protected:
   // Was the shader preset changed during the last frame?
   bool m_bPresetNeedsUpdate = true;
 
-  // Resolution of the output viewport
-  float2 m_outputSize;
+  // Do we need to update the intermediate shader textures when the output size is changed?
+  bool m_bTexturesNeedSizeUpdate = false;
 
-  // Resolution of the destination rectangle for the fullscreen game window
-  float2 m_fullDestSize;
+  // Resolution of the output
+  float2 m_outputSize;
 
   // Size of the actual source video data (ie. 160x144 for the Game Boy)
   float2 m_videoSize;

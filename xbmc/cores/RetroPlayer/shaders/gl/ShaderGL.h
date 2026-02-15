@@ -39,19 +39,17 @@ public:
               std::vector<std::shared_ptr<IShaderLut>> luts,
               unsigned int frameCountMod = 0) override;
   void Render(IShaderTexture& sourceTexture, IShaderTexture& targetTexture) override;
-  void SetSizes(const float2& prevSize,
-                const float2& prevTextureSize,
-                const float2& nextSize) override;
-  void PrepareParameters(const RETRO::ViewportCoordinates& dest,
-                         const float2 fullDestSize,
-                         IShaderTexture& sourceTexture,
+  void SetSizes(const float2& nextSize,
+                const float2& prevSize = float2{},
+                const float2& prevTextureSize = float2{}) override;
+  void PrepareParameters(IShaderTexture& sourceTexture,
                          const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
                          const std::vector<std::unique_ptr<IShader>>& pShaders,
                          uint64_t frameCount) override;
   void UpdateMVP() override;
 
   // OpenGL interface
-  void Destroy();
+  void Delete();
 
 private:
   struct UniformInputs
@@ -79,7 +77,7 @@ private:
   UniformFrameInputs GetFrameInputData(GLuint texture) const;
   UniformFrameInputs GetFrameUniformInputs() const { return m_uniformFrameInputs; }
   void GetUniformLocs();
-  void SetShaderParameters(CShaderTextureGL& sourceTexture);
+  void SetShaderParameters(IShaderTexture& sourceTexture);
 
   // Index of the video shader pass in the preset
   unsigned int m_passIdx{0};

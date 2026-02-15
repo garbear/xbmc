@@ -133,7 +133,14 @@ protected:
   void RenderInternal(bool clear, uint8_t alpha) override;
 
 private:
-  void Render(CD3DTexture& target);
+  struct RenderBufferTextures
+  {
+    std::shared_ptr<SHADER::CShaderTextureDX> target;
+  };
+
+  void Render(CD3DTexture& target, uint8_t alpha);
+
+  std::map<CWinRenderBuffer*, std::unique_ptr<RenderBufferTextures>> m_RBTexturesMap;
 };
 } // namespace RETRO
 } // namespace KODI
