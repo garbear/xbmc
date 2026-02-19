@@ -9,11 +9,15 @@
 #pragma once
 
 #include "controllers/ControllerTypes.h"
+#include "guilib/IMsgTargetCallback.h"
 
+#include <atomic>
 #include <future>
 #include <memory>
+#include <mutex>
 #include <string>
 
+class CEvent;
 class CInputManager;
 class CProfileManager;
 
@@ -48,7 +52,7 @@ class CGameSettings;
 /*!
  * \ingroup games
  */
-class CGameServices
+class CGameServices : public IMsgTargetCallback
 {
 public:
   CGameServices(CControllerManager& controllerManager,
@@ -57,7 +61,7 @@ public:
                 const CProfileManager& profileManager,
                 CInputManager& inputManager,
                 ADDON::CAddonMgr& addons);
-  ~CGameServices();
+  ~CGameServices() override;
 
   // Lifecycle functions
   void Initialize();
@@ -99,7 +103,16 @@ public:
    */
   void OnAddonRepoInstalled();
 
+  // Implementation of IMsgTargetCallback
+  bool OnMessage(CGUIMessage& message) override;
+
 private:
+  // GUI interface
+  bool WaitForGUI();
+
+  // Controller functions
+  void InstallControllerProfiles();
+
   // Construction parameters
   CControllerManager& m_controllerManager;
   RETRO::CGUIGameRenderManager& m_gameRenderManager;
@@ -112,6 +125,15 @@ private:
 
   // Game threads
   std::future<void> m_initializationTask;
+  std::future<void> m_installationTask;
+
+  // Controller parameters
+  std::mutex m_controllerInstallMutex;
+  std::vector<std::future<void>> m_controllerInstallTasks;
+
+  // GUI parameters
+  std::atomic<bool> m_guiReady{false};
+  std::unique_ptr<CEvent> m_guiReadyEvent;
 };
 } // namespace GAME
 } // namespace KODI
