@@ -10,7 +10,9 @@ else()
   message(STATUS "Addon source tarball caching is disabled")
 endif()
 
-set(CMAKE_BUILD_TYPE Debug)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
 
 if(NOT CORE_SYSTEM_NAME)
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
