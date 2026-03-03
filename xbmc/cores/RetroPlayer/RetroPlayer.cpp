@@ -159,7 +159,7 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
       CLog::Log(LOGERROR, "RetroPlayer[PLAYER]: Failed to initialize {}", gameClientId);
   }
 
-  if (bSuccess && !bStandalone)
+  if (bSuccess && !bStandalone && !savestatePath.empty())
   {
     CSavestateDatabase savestateDb;
 
