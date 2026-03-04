@@ -5,6 +5,14 @@
 # This will define the following target:
 #
 #   ${APP_NAME_LC}::GBM   - The GBM library
+#
+# It will also define:
+#
+#   GBM_FOUND             - TRUE if GBM was found
+#
+# Notes:
+# - This module must either create the target when found, or fail cleanly
+#   when REQUIRED is used, instead of letting generation fail later.
 
 if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
   include(cmake/scripts/common/ModuleHelpers.cmake)
@@ -17,6 +25,8 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
   SETUP_FIND_SPECS()
 
   SEARCH_EXISTING_PACKAGES()
+
+  set(_gbm_found FALSE)
 
   if(${${CMAKE_FIND_PACKAGE_NAME}_SEARCH_NAME}_FOUND)
 
@@ -52,5 +62,17 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
     endif()
 
     ADD_TARGET_COMPILE_DEFINITION()
+
+    set(_gbm_found TRUE)
   endif()
+
+  # Proper REQUIRED / QUIET behavior for find_package(GBM [REQUIRED])
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(${CMAKE_FIND_PACKAGE_NAME}
+    REQUIRED_VARS _gbm_found
+  )
+
+  set(${CMAKE_FIND_PACKAGE_NAME}_FOUND ${_gbm_found})
+  unset(_gbm_found)
+
 endif()
