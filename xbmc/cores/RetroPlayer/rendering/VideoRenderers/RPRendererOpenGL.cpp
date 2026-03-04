@@ -64,8 +64,8 @@ CRPRendererOpenGL::CRPRendererOpenGL(const CRenderSettings& renderSettings,
   const GLubyte idx[4] = {0, 1, 3, 2}; // Determines order of triangle strip
 
   // Set up main screen VAO/VBO
-  KODI::UTILS::GL::GLGenVertexArrays(1, &m_mainVAO);
-  KODI::UTILS::GL::GLBindVertexArray(m_mainVAO);
+  glGenVertexArrays(1, &m_mainVAO);
+  glBindVertexArray(m_mainVAO);
 
   glGenBuffers(1, &m_mainVertexVBO);
   glBindBuffer(GL_ARRAY_BUFFER, m_mainVertexVBO);
@@ -91,8 +91,8 @@ CRPRendererOpenGL::CRPRendererOpenGL(const CRenderSettings& renderSettings,
   GLint blackbarsPosLoc = m_context.GUIShaderGetPos();
 
   // Set up black bars VAO/VBO
-  KODI::UTILS::GL::GLGenVertexArrays(1, &m_blackbarsVAO);
-  KODI::UTILS::GL::GLBindVertexArray(m_blackbarsVAO);
+  glGenVertexArrays(1, &m_blackbarsVAO);
+  glBindVertexArray(m_blackbarsVAO);
 
   glGenBuffers(1, &m_blackbarsVertexVBO);
   glBindBuffer(GL_ARRAY_BUFFER, m_blackbarsVertexVBO);
@@ -100,7 +100,7 @@ CRPRendererOpenGL::CRPRendererOpenGL(const CRenderSettings& renderSettings,
   glVertexAttribPointer(blackbarsPosLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Svertex), 0);
   glEnableVertexAttribArray(blackbarsPosLoc);
 
-  KODI::UTILS::GL::GLBindVertexArray(0);
+  glBindVertexArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   m_context.DisableGUIShader();
@@ -114,8 +114,8 @@ CRPRendererOpenGL::~CRPRendererOpenGL()
   glDeleteBuffers(1, &m_mainVertexVBO);
   glDeleteBuffers(1, &m_blackbarsVertexVBO);
 
-  KODI::UTILS::GL::GLDeleteVertexArrays(1, &m_mainVAO);
-  KODI::UTILS::GL::GLDeleteVertexArrays(1, &m_blackbarsVAO);
+  glDeleteVertexArrays(1, &m_mainVAO);
+  glDeleteVertexArrays(1, &m_blackbarsVAO);
 }
 
 void CRPRendererOpenGL::RenderInternal(bool clear, uint8_t alpha)
@@ -267,14 +267,14 @@ void CRPRendererOpenGL::DrawBlackBars()
     count += 6;
   }
 
-  KODI::UTILS::GL::GLBindVertexArray(m_blackbarsVAO);
+  glBindVertexArray(m_blackbarsVAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, m_blackbarsVertexVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Svertex) * count, &vertices[0], GL_DYNAMIC_DRAW);
 
   glDrawArrays(GL_TRIANGLES, 0, count);
 
-  KODI::UTILS::GL::GLBindVertexArray(0);
+  glBindVertexArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   m_context.DisableGUIShader();
@@ -385,14 +385,14 @@ void CRPRendererOpenGL::Render(uint8_t alpha)
     vertex[1].u1 = vertex[2].u1 = rect.x2;
     vertex[2].v1 = vertex[3].v1 = rect.y2;
 
-    KODI::UTILS::GL::GLBindVertexArray(m_mainVAO);
+    glBindVertexArray(m_mainVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_mainVertexVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_DYNAMIC_DRAW);
 
     glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, nullptr);
 
-    KODI::UTILS::GL::GLBindVertexArray(0);
+    glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     m_context.DisableGUIShader();
