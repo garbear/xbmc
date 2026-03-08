@@ -1,6 +1,7 @@
 xbmc/games                         games
 xbmc/games/addons                  games/addons
 xbmc/games/addons/cheevos          games/addons/cheevos
+xbmc/games/addons/disc             games/addons/disc
 xbmc/games/addons/input            games/addons/input
 xbmc/games/addons/streams          games/addons/streams
 xbmc/games/agents/input            games/agents/input
