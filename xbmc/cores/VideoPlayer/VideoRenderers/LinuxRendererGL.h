@@ -236,9 +236,6 @@ protected:
   int m_cmsToken;
   bool m_cmsOn;
 
-  GLuint m_vaoBlackBars;
-  GLuint m_vao;
-
   bool LoadCLUT();
   void DeleteCLUT();
 };

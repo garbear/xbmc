@@ -15,12 +15,9 @@ class CTexture;
 class CSlideShowPicGL : public CSlideShowPic
 {
 public:
-  CSlideShowPicGL();
-  ~CSlideShowPicGL() override;
+  CSlideShowPicGL() = default;
+  ~CSlideShowPicGL() override = default;
 
 protected:
   void Render(float* x, float* y, CTexture* pTexture, KODI::UTILS::COLOR::Color color) override;
-
-private:
-  uint32_t m_vao;
 };
