@@ -19224,6 +19224,7 @@ msgid "This game requires OpenGL support for 3D rendering. OpenGL support is sti
 msgstr ""
 
 #. Label for the "Disc menu" button to open the Disc Manager when playing a game
+#: addons/skin.estuary/xml/GameOSD.xml
 #: addons/skin.estuary/xml/Includes_Games.xml
 #: addons/skin.estuary/xml/Includes_SettingsDialog.xml
 #: xbmc/games/dialogs/osd/DialogGameDiscChanger.cpp
