@@ -26,13 +26,13 @@ namespace KODI
 namespace GAME
 {
 
-class CGameClientDiscXML : protected CGameClientDiscPlaylist
+class CGameClientDiscXML : public CGameClientDiscPlaylist
 {
 public:
-  bool Load(const std::string& gamePath, CGameClientDiscModel& model) const;
-  bool Save(const std::string& gamePath, const CGameClientDiscModel& model) const;
-
   static std::string GetXMLPath(const std::string& gamePath);
+
+  static bool Load(const std::string& gamePath, CGameClientDiscModel& model);
+  static bool Save(const std::string& gamePath, const CGameClientDiscModel& model);
 
 private:
   static std::vector<GameClientDiscEntry> ReadSlotsFromXML(const tinyxml2::XMLElement* rootElement);

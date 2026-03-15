@@ -1,5 +1,4 @@
-set(SOURCES DialogGameDiscChanger.cpp
-            DialogGameDiscManager.cpp
+set(SOURCES DialogGameDiscManager.cpp
             DiscManagerActions.cpp
             DiscManagerButtons.cpp
             DiscManagerDiscList.cpp
@@ -7,8 +6,7 @@ set(SOURCES DialogGameDiscChanger.cpp
             DiscManagerMenu.cpp
 )
 
-set(HEADERS DialogGameDiscChanger.h
-            DialogGameDiscManager.h
+set(HEADERS DialogGameDiscManager.h
             DiscManagerActions.h
             DiscManagerButtons.h
             DiscManagerDiscList.h

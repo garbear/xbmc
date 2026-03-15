@@ -47,7 +47,7 @@ std::string CGameClientDiscXML::GetXMLPath(const std::string& gamePath)
   return GetStateFilePath(gamePath, ".xml");
 }
 
-bool CGameClientDiscXML::Load(const std::string& gamePath, CGameClientDiscModel& model) const
+bool CGameClientDiscXML::Load(const std::string& gamePath, CGameClientDiscModel& model)
 {
   model.Clear();
 
@@ -89,7 +89,7 @@ bool CGameClientDiscXML::Load(const std::string& gamePath, CGameClientDiscModel&
   return true;
 }
 
-bool CGameClientDiscXML::Save(const std::string& gamePath, const CGameClientDiscModel& model) const
+bool CGameClientDiscXML::Save(const std::string& gamePath, const CGameClientDiscModel& model)
 {
   if (gamePath.empty())
     return true;

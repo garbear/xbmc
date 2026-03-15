@@ -617,15 +617,14 @@
 	</include>
 	<include name="GameDialogDiscManager">
 		<control type="group">
-			<visible>!Window.IsActive(GameDiscChanger)</visible>
 			<animation effect="fade" time="200">VisibleChange</animation>
 			<centertop>50%</centertop>
 			<centerleft>50%</centerleft>
 			<width>1480</width>
-			<height>730</height>
+			<height>630</height>
 			<include content="DialogBackgroundCommons">
 				<param name="width" value="1480" />
-				<param name="height" value="730" />
+				<param name="height" value="630" />
 				<param name="header_label" value="$LOCALIZE[35272]" />
 			</include>
 			<control type="group">
@@ -637,7 +636,7 @@
 				<control type="group">
 					<description>List area</description>
 					<width>1430</width>
-					<height>600</height>
+					<height>500</height>
 					<control type="image">
 						<description>Background for list area</description>
 						<top>-20</top>
@@ -693,11 +692,6 @@
 									<label>$LOCALIZE[1210]</label>
 									<icon>DefaultAddonNone.png</icon>
 									<property name="EnableOnEject">true</property>
-								</item>
-								<item>
-									<description>"Apply disc change" item. Plays the game for a few seconds for the disc change to take effect.</description>
-									<label>$LOCALIZE[35281]</label>
-									<icon>icons/check.png</icon>
 								</item>
 								<item>
 									<description>"Resume game" item for resuming the game</description>

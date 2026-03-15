@@ -25,8 +25,7 @@ constexpr int CONTROL_BUTTON_SELECT_DISC = 108323;
 constexpr int CONTROL_BUTTON_EJECT_INSERT = 108324;
 constexpr int CONTROL_BUTTON_ADD = 108325;
 constexpr int CONTROL_BUTTON_REMOVE = 108326;
-constexpr int CONTROL_BUTTON_APPLY_DISC_CHANGE = 108327;
-constexpr int CONTROL_BUTTON_RESUME_GAME = 108328;
+constexpr int CONTROL_BUTTON_RESUME_GAME = 108327;
 } // namespace
 
 CDiscManagerButtons::CDiscManagerButtons(CDialogGameDiscManager& discManager,
@@ -58,11 +57,6 @@ bool CDiscManagerButtons::OnClick(int controlId)
     case CONTROL_BUTTON_REMOVE:
     {
       m_discActions.OnRemove();
-      return true;
-    }
-    case CONTROL_BUTTON_APPLY_DISC_CHANGE:
-    {
-      m_discActions.OnApplyDiscChange();
       return true;
     }
     case CONTROL_BUTTON_RESUME_GAME:

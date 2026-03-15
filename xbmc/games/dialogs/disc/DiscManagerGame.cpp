@@ -15,7 +15,6 @@
 #include "cores/RetroPlayer/guibridge/GUIGameRenderManager.h"
 #include "cores/RetroPlayer/guibridge/GUIGameSettingsHandle.h"
 #include "games/addons/GameClient.h"
-#include "games/addons/disc/GameClientDiscModel.h"
 #include "games/addons/disc/GameClientDiscs.h"
 #include "resources/LocalizeStrings.h"
 #include "resources/ResourcesComponent.h"
@@ -27,6 +26,7 @@ using namespace GAME;
 void CDiscManagerGame::Initialize(GameClientPtr gameClient)
 {
   m_gameClient = std::move(gameClient);
+  m_initialDiscModel.Clear();
 
   if (m_gameClient)
   {
@@ -34,6 +34,9 @@ void CDiscManagerGame::Initialize(GameClientPtr gameClient)
     {
       // Refresh discs from live core state
       m_gameClient->Discs().RefreshDiscState();
+
+      // Store initial disc state
+      m_initialDiscModel = m_gameClient->Discs().GetDiscs();
     }
     else
     {
@@ -50,7 +53,20 @@ void CDiscManagerGame::Initialize(GameClientPtr gameClient)
 
 void CDiscManagerGame::Deinitialize()
 {
+  // Handle disc state transitions
+  if (m_gameClient && m_gameClient->SupportsDiscControl())
+  {
+    // If selected disc changed, commit that change by forcing tray closed
+    const std::string& initialSelectedDisc = m_initialDiscModel.GetSelectedDiscPath();
+    const std::string& currentSelectedDisc = m_gameClient->Discs().GetDiscs().GetSelectedDiscPath();
+    const bool selectedDiscChanged = (initialSelectedDisc != currentSelectedDisc);
+
+    if (selectedDiscChanged && m_gameClient->Discs().IsEjected())
+      m_gameClient->Discs().SetEjected(false);
+  }
+
   m_gameClient.reset();
+  m_initialDiscModel.Clear();
 }
 
 bool CDiscManagerGame::IsEjected() const

@@ -15,8 +15,6 @@
 #include "games/addons/disc/GameClientDiscModel.h"
 #include "games/addons/disc/GameClientDiscs.h"
 #include "games/dialogs/disc/DialogGameDiscManager.h"
-#include "guilib/GUIComponent.h"
-#include "guilib/GUIWindowManager.h"
 #include "messaging/ApplicationMessenger.h"
 #include "messaging/helpers/DialogOKHelper.h"
 #include "resources/LocalizeStrings.h"
@@ -177,11 +175,6 @@ void CDiscManagerActions::OnRemove()
 
         m_discManager.UpdateMenu();
       });
-}
-
-void CDiscManagerActions::OnApplyDiscChange()
-{
-  CServiceBroker::GetGUI()->GetWindowManager().ActivateWindow(WINDOW_DIALOG_GAME_DISC_CHANGER);
 }
 
 void CDiscManagerActions::OnResumeGame()

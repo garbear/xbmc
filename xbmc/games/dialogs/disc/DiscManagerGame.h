@@ -9,8 +9,10 @@
 #pragma once
 
 #include "games/GameTypes.h"
+#include "games/addons/disc/GameClientDiscModel.h"
 
 #include <cstddef>
+#include <memory>
 #include <optional>
 #include <string>
 
@@ -18,8 +20,6 @@ namespace KODI
 {
 namespace GAME
 {
-class CGameClientDiscModel;
-
 /*!
  * \ingroup games
  */
@@ -44,6 +44,7 @@ public:
 private:
   // Game parameters
   GameClientPtr m_gameClient;
+  CGameClientDiscModel m_initialDiscModel;
 };
 } // namespace GAME
 } // namespace KODI

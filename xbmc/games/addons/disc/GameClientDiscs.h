@@ -62,6 +62,7 @@ public:
 
   // Disc interface
   void Initialize(const std::string& gamePath);
+  void Deinitialize();
   void RestoreDiscList();
   void RefreshDiscState();
   const CGameClientDiscModel& GetDiscs() const { return *m_discModel; }
@@ -74,6 +75,16 @@ public:
   bool InsertDiscByIndex(size_t index);
 
 private:
+  /*!
+   * \brief Clear in-memory disc state that is scoped to a single running
+   * game session
+   *
+   * Persisted disc state is keyed by game path and remains on disk. This
+   * reset is only for the live frontend model so state from a previous game
+   * cannot leak into a new one.
+   */
+  void ResetSessionState();
+
   void LoadModelFromCore(CGameClientDiscModel& model) const;
   void SaveDiscState() const;
 

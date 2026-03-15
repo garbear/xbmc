@@ -26,10 +26,9 @@ constexpr unsigned int INDEX_SELECT_DISC = 0;
 constexpr unsigned int INDEX_EJECT_INSERT = 1;
 constexpr unsigned int INDEX_ADD_DISC = 2;
 constexpr unsigned int INDEX_REMOVE_DISC = 3;
-constexpr unsigned int INDEX_APPLY_DISC_CHANGE = 4;
-constexpr unsigned int INDEX_RESUME_GAME = 5;
+constexpr unsigned int INDEX_RESUME_GAME = 4;
 
-constexpr unsigned int MENU_ITEM_COUNT = 6;
+constexpr unsigned int MENU_ITEM_COUNT = 5;
 } // namespace
 
 CDiscManagerMenu::CDiscManagerMenu(CDiscManagerActions& discActions,
@@ -90,11 +89,6 @@ bool CDiscManagerMenu::OnClick(const std::shared_ptr<CGUIListItem>& item)
   else if (item == m_items[INDEX_REMOVE_DISC])
   {
     m_discActions.OnRemove();
-    return true;
-  }
-  else if (item == m_items[INDEX_APPLY_DISC_CHANGE])
-  {
-    m_discActions.OnApplyDiscChange();
     return true;
   }
   else if (item == m_items[INDEX_RESUME_GAME])

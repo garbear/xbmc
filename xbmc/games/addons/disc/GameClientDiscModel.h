@@ -80,6 +80,7 @@ public:
 
   std::string GetPathByIndex(size_t index) const;
   std::string GetLabelByIndex(size_t index) const;
+  std::string GetLabelByPath(const std::string& path) const;
 
   bool IsRemovedSlotByIndex(size_t index) const;
   bool IsSelectableSlotByIndex(size_t index) const;

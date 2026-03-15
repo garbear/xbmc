@@ -21,7 +21,7 @@ namespace GAME
  */
 class CGameClientDiscPlaylist
 {
-protected:
+public:
   /*!
    * \brief Root location where RetroPlayer stores per-game disc-state data
    */

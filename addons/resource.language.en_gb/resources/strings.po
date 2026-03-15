@@ -19226,8 +19226,6 @@ msgstr ""
 #. Label for the "Disc menu" button to open the Disc Manager when playing a game
 #: addons/skin.estuary/xml/GameOSD.xml
 #: addons/skin.estuary/xml/Includes_Games.xml
-#: addons/skin.estuary/xml/Includes_SettingsDialog.xml
-#: xbmc/games/dialogs/osd/DialogGameDiscChanger.cpp
 msgctxt "#35272"
 msgid "Disc menu"
 msgstr ""
@@ -19285,19 +19283,7 @@ msgctxt "#35280"
 msgid "Select disc"
 msgstr ""
 
-#. The "Apply disc change" button is shown in the Disc Manager. It plays the game for a few seconds for the disc to take effect.
-#: addons/skin.estuary/xml/Includes_Games.xml
-msgctxt "#35281"
-msgid "Apply disc change"
-msgstr ""
-
-#. Text shown while the game is running in the background
-#: xbmc/games/dialogs/osd/DialogGameDiscChanger.cp
-msgctxt "#35282"
-msgid "Running game..."
-msgstr ""
-
-#empty strings from id 35283 to 35504
+#empty strings from id 35281 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/pvr/addons/PVRClients.cpp

@@ -234,6 +234,15 @@ std::string CGameClientDiscModel::GetLabelByIndex(size_t index) const
   return disc->path;
 }
 
+std::string CGameClientDiscModel::GetLabelByPath(const std::string& path) const
+{
+  const auto index = GetDiscIndexByPath(path);
+  if (!index.has_value())
+    return "";
+
+  return GetLabelByIndex(*index);
+}
+
 bool CGameClientDiscModel::IsRemovedSlotByIndex(size_t index) const
 {
   const GameClientDiscEntry* disc = GetDiscByIndex(index);

@@ -15,6 +15,7 @@
 #include "games/addons/disc/GameClientDiscModel.h"
 #include "games/addons/disc/GameClientDiscTransport.h"
 #include "games/addons/disc/GameClientDiscXML.h"
+#include "utils/URIUtils.h"
 
 #include <algorithm>
 #include <vector>
@@ -42,6 +43,10 @@ bool CGameClientDiscs::SupportsDiskControl() const
 
 void CGameClientDiscs::Initialize(const std::string& gamePath)
 {
+  // Disc state is per running game session. Always reset the in-memory model
+  // before loading persisted state for the game being started.
+  ResetSessionState();
+
   CGameClientDiscModel restoredModel;
   if (m_discXml->Load(gamePath, restoredModel) && !restoredModel.Empty())
   {
@@ -62,9 +67,21 @@ void CGameClientDiscs::Initialize(const std::string& gamePath)
     }
   }
 
-  // Avoid launching with an empty disc list
+  // If launching a playlist directly, seed the disc model from that playlist
+  // file path
+  if (m_discModel->Empty() && URIUtils::HasExtension(gamePath, ".m3u"))
+    m_discM3u->Load(gamePath, *m_discModel);
+
+  // If the model is still empty, seed it with the game path as the initial disc
   if (m_discModel->Empty())
     m_discModel->AddDisc(gamePath);
+}
+
+void CGameClientDiscs::Deinitialize()
+{
+  // Stopping a game must discard all live disc UI/model state. Persisted state
+  // remains keyed by game path and will be loaded explicitly for the next game.
+  ResetSessionState();
 }
 
 void CGameClientDiscs::RestoreDiscList()
@@ -107,6 +124,12 @@ void CGameClientDiscs::RestoreDiscList()
       if (i >= imageCount && imageCount == 0)
         return;
     }
+
+    // Check what path is currently at the target index in the core before
+    // attempting to replace it
+    const std::string currentPath = m_transport->GetImagePath(static_cast<unsigned int>(i));
+    if (!currentPath.empty() && URIUtils::PathEquals(currentPath, imagePath))
+      continue;
 
     if (!m_transport->ReplaceImageIndex(static_cast<unsigned int>(i), imagePath))
       return;
@@ -299,6 +322,12 @@ bool CGameClientDiscs::InsertDiscByIndex(size_t index)
   RefreshDiscState();
 
   return true;
+}
+
+void CGameClientDiscs::ResetSessionState()
+{
+  m_discModel->Clear();
+  m_isEjected = false;
 }
 
 void CGameClientDiscs::LoadModelFromCore(CGameClientDiscModel& model) const

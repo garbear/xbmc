@@ -514,6 +514,9 @@ void CGameClient::CloseFile()
 
     Input().Stop();
 
+    if (SupportsDiscControl())
+      Discs().Deinitialize();
+
     try
     {
       LogError(m_ifc.game->toAddon->UnloadGame(m_ifc.game), "UnloadGame()");
