@@ -9,6 +9,7 @@
 #include "GameClientDiscs.h"
 
 #include "addons/kodi-dev-kit/include/kodi/c-api/addon-instance/game.h"
+#include "games/GameUtils.h"
 #include "games/addons/GameClient.h"
 #include "games/addons/disc/GameClientDiscM3U.h"
 #include "games/addons/disc/GameClientDiscMergeUtils.h"
@@ -47,6 +48,10 @@ void CGameClientDiscs::Initialize(const std::string& gamePath)
   // before loading persisted state for the game being started.
   ResetSessionState();
 
+  std::set<std::string> supportedExtensions = m_gameClient.GetExtensions();
+  if (supportedExtensions.empty())
+    supportedExtensions = CGameUtils::GetGameExtensions();
+
   CGameClientDiscModel restoredModel;
   if (m_discXml->Load(gamePath, restoredModel) && !restoredModel.Empty())
   {
@@ -56,6 +61,9 @@ void CGameClientDiscs::Initialize(const std::string& gamePath)
 
     // Prune removed discs when the core is newly loaded
     PruneRemovedDiscs(*m_discModel);
+
+    // Prune unsupported extensions
+    PruneExtensions(*m_discModel, supportedExtensions);
 
     // Set the initial disc index, if supported by libretro
     const std::optional<size_t> selectedIndex = m_discModel->GetSelectedDiscIndex();
@@ -70,9 +78,14 @@ void CGameClientDiscs::Initialize(const std::string& gamePath)
   // If launching a playlist directly, seed the disc model from that playlist
   // file path
   if (m_discModel->Empty() && URIUtils::HasExtension(gamePath, ".m3u"))
+  {
     m_discM3u->Load(gamePath, *m_discModel);
 
-  // If the model is still empty, seed it with the game path as the initial disc
+    // Prune unsupported extensions
+    PruneExtensions(*m_discModel, supportedExtensions);
+  }
+
+  // If the model is empty, seed it with the game path as the initial disc
   if (m_discModel->Empty())
     m_discModel->AddDisc(gamePath);
 }
@@ -89,14 +102,12 @@ void CGameClientDiscs::RestoreDiscList()
   if (m_discModel->Empty())
     return;
 
-  if (!m_transport->GetEjectState())
-  {
-    if (!m_transport->SetEjectState(true))
-      return;
+  // Force eject of disc, to clear emulator state
+  if (!m_transport->SetEjectState(true))
+    return;
 
-    if (!m_transport->GetEjectState())
-      return;
-  }
+  if (!m_transport->GetEjectState())
+    return;
 
   unsigned int imageCount = m_transport->GetImageCount();
 
@@ -159,6 +170,16 @@ void CGameClientDiscs::RefreshDiscState()
   m_isEjected = m_discModel->IsEjected();
 
   SaveDiscState();
+}
+
+std::string CGameClientDiscs::GetDiscLabel() const
+{
+  return m_discModel->GetSelectedDiscLabel();
+}
+
+bool CGameClientDiscs::IsTrayEmpty() const
+{
+  return m_discModel->IsSelectedNoDisc();
 }
 
 bool CGameClientDiscs::SetEjected(bool ejected)
@@ -382,5 +403,31 @@ void CGameClientDiscs::PruneRemovedDiscs(CGameClientDiscModel& model)
     }
 
     model.EraseDiscByIndex(i);
+  }
+}
+
+void CGameClientDiscs::PruneExtensions(CGameClientDiscModel& model,
+                                       const std::set<std::string>& supportedExtensions)
+{
+  for (size_t i = 0; i < model.Size();)
+  {
+    const std::string discPath = model.GetPathByIndex(i);
+    if (discPath.empty())
+    {
+      ++i;
+      continue;
+    }
+
+    const bool isSupported =
+        std::any_of(supportedExtensions.begin(), supportedExtensions.end(),
+                    [&discPath](const std::string& ext) { return URIUtils::HasExtension(discPath, ext); });
+
+    if (!isSupported)
+    {
+      model.EraseDiscByIndex(i);
+      continue;
+    }
+
+    ++i;
   }
 }

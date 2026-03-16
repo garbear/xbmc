@@ -35,7 +35,7 @@ public:
   void OnSelectDisc();
   void OnEjectInsert();
   void OnAdd();
-  void OnRemove();
+  void OnDelete();
   void OnResumeGame();
 
 private:

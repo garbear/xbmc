@@ -12,6 +12,7 @@
 #include "ServiceBroker.h"
 #include "games/dialogs/disc/DiscManagerActions.h"
 #include "games/dialogs/disc/DiscManagerGame.h"
+#include "games/dialogs/disc/DiscManagerIDs.h"
 #include "guilib/GUIListItem.h"
 #include "resources/LocalizeStrings.h"
 #include "resources/ResourcesComponent.h"
@@ -19,17 +20,6 @@
 
 using namespace KODI;
 using namespace GAME;
-
-namespace
-{
-constexpr unsigned int INDEX_SELECT_DISC = 0;
-constexpr unsigned int INDEX_EJECT_INSERT = 1;
-constexpr unsigned int INDEX_ADD_DISC = 2;
-constexpr unsigned int INDEX_REMOVE_DISC = 3;
-constexpr unsigned int INDEX_RESUME_GAME = 4;
-
-constexpr unsigned int MENU_ITEM_COUNT = 5;
-} // namespace
 
 CDiscManagerMenu::CDiscManagerMenu(CDiscManagerActions& discActions,
                                    CDiscManagerGame& discGame,
@@ -71,27 +61,27 @@ bool CDiscManagerMenu::OnClick(const std::shared_ptr<CGUIListItem>& item)
   if (m_items.size() < MENU_ITEM_COUNT)
     return false;
 
-  if (item == m_items[INDEX_SELECT_DISC])
+  if (item == m_items[MENU_INDEX_SELECT_DISC])
   {
     m_discActions.OnSelectDisc();
     return true;
   }
-  else if (item == m_items[INDEX_EJECT_INSERT])
+  else if (item == m_items[MENU_INDEX_EJECT_INSERT])
   {
     m_discActions.OnEjectInsert();
     return true;
   }
-  else if (item == m_items[INDEX_ADD_DISC])
+  else if (item == m_items[MENU_INDEX_ADD_DISC])
   {
     m_discActions.OnAdd();
     return true;
   }
-  else if (item == m_items[INDEX_REMOVE_DISC])
+  else if (item == m_items[MENU_INDEX_DELETE_DISC])
   {
-    m_discActions.OnRemove();
+    m_discActions.OnDelete();
     return true;
   }
-  else if (item == m_items[INDEX_RESUME_GAME])
+  else if (item == m_items[MENU_INDEX_RESUME_GAME])
   {
     m_discActions.OnResumeGame();
     return true;
@@ -130,7 +120,7 @@ void CDiscManagerMenu::UpdateItems()
   std::string selectedDisc;
   m_discGame.GetState(ejected, selectedDisc);
 
-  m_items[INDEX_SELECT_DISC]->SetLabel2(selectedDisc);
+  m_items[MENU_INDEX_SELECT_DISC]->SetLabel2(selectedDisc);
 
   // Set eject/insert item labels
   UpdateEjectButton(ejected);
@@ -142,12 +132,12 @@ void CDiscManagerMenu::UpdateEjectButton(bool ejected)
 
   if (ejected)
   {
-    m_items[INDEX_EJECT_INSERT]->SetLabel(strings.Get(35276)); // "Insert"
-    m_items[INDEX_EJECT_INSERT]->SetLabel2(strings.Get(162)); // "Tray open"
+    m_items[MENU_INDEX_EJECT_INSERT]->SetLabel(strings.Get(35276)); // "Insert"
+    m_items[MENU_INDEX_EJECT_INSERT]->SetLabel2(strings.Get(162)); // "Tray open"
   }
   else
   {
-    m_items[INDEX_EJECT_INSERT]->SetLabel(strings.Get(35275)); // "Eject"
-    m_items[INDEX_EJECT_INSERT]->SetLabel2("");
+    m_items[MENU_INDEX_EJECT_INSERT]->SetLabel(strings.Get(35275)); // "Eject"
+    m_items[MENU_INDEX_EJECT_INSERT]->SetLabel2("");
   }
 }

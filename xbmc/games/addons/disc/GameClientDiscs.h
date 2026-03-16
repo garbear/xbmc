@@ -14,6 +14,7 @@
 #include <cstddef>
 #include <memory>
 #include <optional>
+#include <set>
 #include <string>
 
 struct AddonInstance_Game;
@@ -60,13 +61,17 @@ public:
   // Game client capabilities
   bool SupportsDiskControl() const;
 
-  // Disc interface
+  // Lifecycle interface
   void Initialize(const std::string& gamePath);
   void Deinitialize();
+
+  // Disc interface
   void RestoreDiscList();
   void RefreshDiscState();
   const CGameClientDiscModel& GetDiscs() const { return *m_discModel; }
   bool IsEjected() const { return m_isEjected; }
+  std::string GetDiscLabel() const;
+  bool IsTrayEmpty() const;
   bool SetEjected(bool ejected);
   bool AddDisc(const std::string& filePath);
   bool RemoveDisc(const std::string& filePath);
@@ -89,6 +94,8 @@ private:
   void SaveDiscState() const;
 
   static void PruneRemovedDiscs(CGameClientDiscModel& model);
+  static void PruneExtensions(CGameClientDiscModel& model,
+                              const std::set<std::string>& supportedExtensions);
 
   // Add-on parameters
   std::unique_ptr<CGameClientDiscTransport> m_transport;

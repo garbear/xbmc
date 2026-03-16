@@ -26,6 +26,8 @@ struct GameClientDiscEntry
     RemovedSlot,
   };
 
+  bool operator==(const GameClientDiscEntry& rhs) const;
+
   DiscSlotType slotType{DiscSlotType::Disc};
   std::string path;
   std::string basename;
@@ -76,6 +78,7 @@ public:
   void SetEjected(bool ejected) { m_isEjected = ejected; }
 
   std::string GetSelectedDiscPath() const;
+  std::string GetSelectedDiscLabel() const;
   bool UpdateCachedLabel(const std::string& path, const std::string& label);
 
   std::string GetPathByIndex(size_t index) const;

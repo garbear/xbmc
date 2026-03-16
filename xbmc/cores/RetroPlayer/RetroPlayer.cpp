@@ -534,6 +534,22 @@ bool CRetroPlayer::IsDiscEjected() const
   return false;
 }
 
+std::string CRetroPlayer::DiscLabel() const
+{
+  if (m_gameClient)
+    return m_gameClient->Discs().GetDiscLabel();
+
+  return "";
+}
+
+bool CRetroPlayer::IsTrayEmpty() const
+{
+  if (m_gameClient)
+    return m_gameClient->Discs().IsTrayEmpty();
+
+  return false;
+}
+
 std::string CRetroPlayer::GameClientID() const
 {
   if (m_gameClient)

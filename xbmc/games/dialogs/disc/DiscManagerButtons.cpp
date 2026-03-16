@@ -11,6 +11,7 @@
 #include "ServiceBroker.h"
 #include "games/dialogs/disc/DialogGameDiscManager.h"
 #include "games/dialogs/disc/DiscManagerActions.h"
+#include "games/dialogs/disc/DiscManagerIDs.h"
 #include "guilib/GUIMessage.h"
 #include "guilib/GUIMessageIDs.h"
 #include "resources/LocalizeStrings.h"
@@ -18,15 +19,6 @@
 
 using namespace KODI;
 using namespace GAME;
-
-namespace
-{
-constexpr int CONTROL_BUTTON_SELECT_DISC = 108323;
-constexpr int CONTROL_BUTTON_EJECT_INSERT = 108324;
-constexpr int CONTROL_BUTTON_ADD = 108325;
-constexpr int CONTROL_BUTTON_REMOVE = 108326;
-constexpr int CONTROL_BUTTON_RESUME_GAME = 108327;
-} // namespace
 
 CDiscManagerButtons::CDiscManagerButtons(CDialogGameDiscManager& discManager,
                                          CDiscManagerActions& discActions)
@@ -54,9 +46,9 @@ bool CDiscManagerButtons::OnClick(int controlId)
       m_discActions.OnAdd();
       return true;
     }
-    case CONTROL_BUTTON_REMOVE:
+    case CONTROL_BUTTON_DELETE:
     {
-      m_discActions.OnRemove();
+      m_discActions.OnDelete();
       return true;
     }
     case CONTROL_BUTTON_RESUME_GAME:

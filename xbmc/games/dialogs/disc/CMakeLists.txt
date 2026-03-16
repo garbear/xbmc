@@ -7,6 +7,7 @@ set(SOURCES DialogGameDiscManager.cpp
 )
 
 set(HEADERS DialogGameDiscManager.h
+            DiscManagerIDs.h
             DiscManagerActions.h
             DiscManagerButtons.h
             DiscManagerDiscList.h

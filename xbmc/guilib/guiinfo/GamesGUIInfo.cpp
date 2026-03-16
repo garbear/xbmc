@@ -79,6 +79,16 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
       value = std::to_string(rotationDegCCW);
       return true;
     }
+    case RETROPLAYER_DISC_LABEL:
+    {
+      const auto& components = CServiceBroker::GetAppComponents();
+      const auto appPlayer = components.GetComponent<CApplicationPlayer>();
+
+      if (appPlayer)
+        value = appPlayer->DiscLabel();
+
+      return true;
+    }
     default:
       break;
   }
@@ -119,6 +129,15 @@ bool CGamesGUIInfo::GetBool(bool& value,
       const auto appPlayer = components.GetComponent<CApplicationPlayer>();
 
       value = appPlayer && appPlayer->IsDiscEjected();
+
+      return true;
+    }
+    case RETROPLAYER_EMPTY_TRAY:
+    {
+      const auto& components = CServiceBroker::GetAppComponents();
+      const auto appPlayer = components.GetComponent<CApplicationPlayer>();
+
+      value = appPlayer && appPlayer->IsTrayEmpty();
 
       return true;
     }

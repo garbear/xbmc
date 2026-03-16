@@ -669,31 +669,31 @@
 								<include content="GameDiscManagerMenuItem"/>
 							</focusedlayout>
 							<content>
-								<item>
+								<item id="108323">
 									<description>"Selected disc" item. Label2 is the inserted disc's label (or "No disc" if no disc is inserted).</description>
 									<label>$LOCALIZE[35273]</label>
 									<label2>$LOCALIZE[35274]</label2>
 									<icon>DefaultSets.png</icon>
 									<property name="EnableOnEject">true</property>
 								</item>
-								<item>
+								<item id="108324">
 									<description>"Eject"/"Insert" item. Label2 is the tray status (only "Tray open" is shown).</description>
 									<label>$LOCALIZE[35275]</label>
-									<icon>DefaultAddonsUpdates.png</icon>
+									<icon>icons/eject_256.png</icon>
 								</item>
-								<item>
-									<description>"Add" item for adding another disc to the game</description>
+								<item id="108325">
+									<description>"Add" item for adding another disc to the disc playlist</description>
 									<label>$LOCALIZE[15019]</label>
 									<icon>DefaultAddSource.png</icon>
 									<property name="EnableOnEject">true</property>
 								</item>
-								<item>
-									<description>"Remove" item for removing a disc from the game</description>
-									<label>$LOCALIZE[1210]</label>
+								<item id="108326">
+									<description>"Delete" item for deleting a disc from the disc playlist</description>
+									<label>$LOCALIZE[117]</label>
 									<icon>DefaultAddonNone.png</icon>
 									<property name="EnableOnEject">true</property>
 								</item>
-								<item>
+								<item id="108327">
 									<description>"Resume game" item for resuming the game</description>
 									<label>$LOCALIZE[35277]</label>
 									<icon>osd/fullscreen/buttons/play.png</icon>

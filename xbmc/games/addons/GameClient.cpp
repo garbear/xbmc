@@ -589,6 +589,10 @@ bool CGameClient::Deserialize(const uint8_t* data, size_t size)
   bool bSuccess = false;
   if (m_bIsPlaying)
   {
+    // Deserialization may result in stale disc state, so insert disc now
+    if (SupportsDiscControl())
+      Discs().SetEjected(false);
+
     std::unique_lock lock(m_critSection);
 
     try

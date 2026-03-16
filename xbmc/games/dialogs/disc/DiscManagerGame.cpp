@@ -56,12 +56,20 @@ void CDiscManagerGame::Deinitialize()
   // Handle disc state transitions
   if (m_gameClient && m_gameClient->SupportsDiscControl())
   {
+    const CGameClientDiscModel& currentModel = m_gameClient->Discs().GetDiscs();
+
     // If selected disc changed, commit that change by forcing tray closed
-    const std::string& initialSelectedDisc = m_initialDiscModel.GetSelectedDiscPath();
-    const std::string& currentSelectedDisc = m_gameClient->Discs().GetDiscs().GetSelectedDiscPath();
+    const std::string initialSelectedDisc = m_initialDiscModel.GetSelectedDiscPath();
+    const std::string currentSelectedDisc = currentModel.GetSelectedDiscPath();
     const bool selectedDiscChanged = (initialSelectedDisc != currentSelectedDisc);
 
-    if (selectedDiscChanged && m_gameClient->Discs().IsEjected())
+    // If the disc list has changed (a disc was added, removed or swapped),
+    // force the tray closed
+    const std::vector<GameClientDiscEntry>& initialDiscs = m_initialDiscModel.GetDiscs();
+    const std::vector<GameClientDiscEntry>& currentDiscs = currentModel.GetDiscs();
+    bool discListChanged = (initialDiscs != currentDiscs);
+
+    if ((selectedDiscChanged || discListChanged) && m_gameClient->Discs().IsEjected())
       m_gameClient->Discs().SetEjected(false);
   }
 
@@ -91,9 +99,7 @@ void CDiscManagerGame::GetState(bool& ejected, std::string& selectedDisc) const
     }
     else
     {
-      const auto selectedIndex = discModel.GetSelectedDiscIndex();
-      if (selectedIndex.has_value())
-        selectedDisc = discModel.GetLabelByIndex(*selectedIndex);
+      selectedDisc = discModel.GetSelectedDiscLabel();
     }
   }
 }
@@ -110,7 +116,7 @@ unsigned int CDiscManagerGame::GetSelectedIndex(std::optional<size_t> selectedIn
 
   for (size_t i = 0; i < discList.Size(); ++i)
   {
-    // Hidden from the visible list, so it does not consume a UI row.
+    // Hidden from the visible list, so it does not consume a UI row
     if (discList.IsRemovedSlotByIndex(i))
       continue;
 
@@ -120,11 +126,11 @@ unsigned int CDiscManagerGame::GetSelectedIndex(std::optional<size_t> selectedIn
     ++itemIndex;
   }
 
-  // If no real slot matched, select the appended "No disc" row when present.
+  // If no real slot matched, select the appended "No disc" row when present
   if (allowSelectNoDisc)
     return itemIndex;
 
-  // Fallback for remove flow or invalid selection.
+  // Fallback for delete flow or invalid selection
   return 0;
 }
 

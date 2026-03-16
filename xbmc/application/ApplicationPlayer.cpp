@@ -1095,6 +1095,24 @@ bool CApplicationPlayer::IsDiscEjected() const
   return false;
 }
 
+std::string CApplicationPlayer::DiscLabel() const
+{
+  const std::shared_ptr<const IPlayer> player = GetInternal();
+  if (player)
+    return player->DiscLabel();
+
+  return "";
+}
+
+bool CApplicationPlayer::IsTrayEmpty() const
+{
+  const std::shared_ptr<const IPlayer> player = GetInternal();
+  if (player)
+    return player->IsTrayEmpty();
+
+  return false;
+}
+
 int CApplicationPlayer::GetSubtitleDelay() const
 {
   // converts subtitle delay to a percentage

@@ -54,11 +54,13 @@ public:
 
   // Dialog interface
   void UpdateMenu();
+  void FocusMainMenuItem(unsigned int itemIndex);
+  void SetMenuFocusIndex(unsigned int itemIndex);
 
   // Disc menu interface
   void SelectDiscToInsert(std::optional<size_t> selectedIndex,
                           std::function<void(std::optional<size_t>)> callback);
-  void SelectDiscToRemove(std::function<void(size_t)> callback);
+  void SelectDiscToDelete(std::function<void(size_t)> callback);
   void OnDiscSelect(size_t discIndex, bool isNoDisc);
   bool AllowSelectNoDisc() const;
 
@@ -87,7 +89,8 @@ private:
 
   // Dialog parameters
   std::function<void(std::optional<size_t>)> m_insertCallback;
-  std::function<void(size_t)> m_removeCallback;
+  std::function<void(size_t)> m_deleteCallback;
+  std::optional<unsigned int> m_menuFocusIndex;
 };
 } // namespace GAME
 } // namespace KODI

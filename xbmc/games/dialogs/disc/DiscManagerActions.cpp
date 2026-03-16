@@ -15,6 +15,7 @@
 #include "games/addons/disc/GameClientDiscModel.h"
 #include "games/addons/disc/GameClientDiscs.h"
 #include "games/dialogs/disc/DialogGameDiscManager.h"
+#include "games/dialogs/disc/DiscManagerIDs.h"
 #include "messaging/ApplicationMessenger.h"
 #include "messaging/helpers/DialogOKHelper.h"
 #include "resources/LocalizeStrings.h"
@@ -77,6 +78,7 @@ void CDiscManagerActions::OnSelectDisc()
                                      }
 
                                      m_discManager.UpdateMenu();
+                                     m_discManager.SetMenuFocusIndex(MENU_INDEX_SELECT_DISC);
                                    });
 }
 
@@ -148,15 +150,24 @@ void CDiscManagerActions::OnAdd()
 
   std::string filePath;
   if (!BrowseForDiscImage(startingPath, filePath) || filePath.empty())
+  {
+    m_discManager.FocusMainMenuItem(MENU_INDEX_ADD_DISC);
     return;
+  }
 
-  if (!discs.AddDisc(filePath))
+  const bool success = discs.AddDisc(filePath);
+  if (!success)
     ShowInternalError();
 
   m_discManager.UpdateMenu();
+
+  if (success)
+    m_discManager.FocusMainMenuItem(MENU_INDEX_SELECT_DISC);
+  else
+    m_discManager.FocusMainMenuItem(MENU_INDEX_ADD_DISC);
 }
 
-void CDiscManagerActions::OnRemove()
+void CDiscManagerActions::OnDelete()
 {
   if (!m_gameClient)
     return;
@@ -167,13 +178,19 @@ void CDiscManagerActions::OnRemove()
   if (!discs.IsEjected())
     return;
 
-  m_discManager.SelectDiscToRemove(
+  m_discManager.SelectDiscToDelete(
       [this](size_t discIndex)
       {
-        if (!m_gameClient->Discs().RemoveDiscByIndex(discIndex))
+        const bool success = m_gameClient->Discs().RemoveDiscByIndex(discIndex);
+        if (!success)
           ShowInternalError();
 
         m_discManager.UpdateMenu();
+
+        if (success)
+          m_discManager.SetMenuFocusIndex(MENU_INDEX_SELECT_DISC);
+        else
+          m_discManager.SetMenuFocusIndex(MENU_INDEX_DELETE_DISC);
       });
 }
 

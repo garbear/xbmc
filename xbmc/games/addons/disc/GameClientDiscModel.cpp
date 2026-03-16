@@ -8,10 +8,18 @@
 
 #include "GameClientDiscModel.h"
 
+#include "utils/URIUtils.h"
+
 #include <algorithm>
 
 using namespace KODI;
 using namespace GAME;
+
+bool GameClientDiscEntry::operator==(const GameClientDiscEntry& rhs) const
+{
+  return slotType == rhs.slotType && URIUtils::PathEquals(path, rhs.path) &&
+         cachedLabel == rhs.cachedLabel;
+}
 
 size_t CGameClientDiscModel::Size() const
 {
@@ -187,6 +195,14 @@ std::string CGameClientDiscModel::GetSelectedDiscPath() const
     return "";
 
   return GetPathByIndex(*m_selectedDiscIndex);
+}
+
+std::string CGameClientDiscModel::GetSelectedDiscLabel() const
+{
+  if (!m_selectedDiscIndex.has_value())
+    return "";
+
+  return GetLabelByIndex(*m_selectedDiscIndex);
 }
 
 bool CGameClientDiscModel::UpdateCachedLabel(const std::string& path, const std::string& label)

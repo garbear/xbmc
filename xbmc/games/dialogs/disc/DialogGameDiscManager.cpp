@@ -14,6 +14,7 @@
 #include "games/dialogs/disc/DiscManagerButtons.h"
 #include "games/dialogs/disc/DiscManagerDiscList.h"
 #include "games/dialogs/disc/DiscManagerGame.h"
+#include "games/dialogs/disc/DiscManagerIDs.h"
 #include "games/dialogs/disc/DiscManagerMenu.h"
 #include "guilib/GUIBaseContainer.h"
 #include "guilib/GUIMessage.h"
@@ -25,15 +26,6 @@
 
 using namespace KODI;
 using namespace GAME;
-
-namespace
-{
-constexpr int CONTROL_DISC_MANAGER_MENU = 3;
-constexpr int CONTROL_DISC_MANAGER_DISC_LIST = 108321;
-
-constexpr auto PROPERTY_SHOW_MENU = "GameDiscManager.ShowMenu";
-constexpr auto PROPERTY_SHOW_DISC_LIST = "GameDiscManager.ShowDiscList";
-} // namespace
 
 CDialogGameDiscManager::CDialogGameDiscManager()
   : CGUIDialog(WINDOW_DIALOG_GAME_DISC_MANAGER, "DialogGameControllers.xml"),
@@ -122,10 +114,18 @@ bool CDialogGameDiscManager::OnAction(const CAction& action)
     case ACTION_NAV_BACK:
     {
       // Check if the disc list is visible
-      if (GetProperty(PROPERTY_SHOW_DISC_LIST).asBoolean())
+      if (GetProperty(std::string{PROPERTY_SHOW_DISC_LIST}).asBoolean())
       {
+        // Select the appropriate item based on whether we're selecting or
+        // deleting a disc
+        if (m_deleteCallback)
+          SetMenuFocusIndex(MENU_INDEX_DELETE_DISC);
+        else
+          SetMenuFocusIndex(MENU_INDEX_SELECT_DISC);
+
         // Return to the main menu
         ShowControl(CONTROL_DISC_MANAGER_MENU);
+
         return true;
       }
       break;
@@ -169,6 +169,33 @@ void CDialogGameDiscManager::UpdateMenu()
   m_discButtons->UpdateButtons(ejected, selectedDisc);
 }
 
+void CDialogGameDiscManager::FocusMainMenuItem(unsigned int itemIndex)
+{
+  if (GetMainMenu() == nullptr)
+  {
+    m_discButtons->SetFocus();
+    return;
+  }
+
+  if (itemIndex >= MENU_ITEM_COUNT)
+    itemIndex = MENU_INDEX_SELECT_DISC;
+
+  CGUIMessage msgFocus(GUI_MSG_SETFOCUS, GetID(), CONTROL_DISC_MANAGER_MENU, 0);
+  OnMessage(msgFocus);
+
+  CGUIMessage msgSelectItem(GUI_MSG_ITEM_SELECT, GetID(), CONTROL_DISC_MANAGER_MENU,
+                            static_cast<int64_t>(itemIndex));
+  OnMessage(msgSelectItem);
+}
+
+void CDialogGameDiscManager::SetMenuFocusIndex(unsigned int itemIndex)
+{
+  if (itemIndex >= MENU_ITEM_COUNT)
+    itemIndex = MENU_INDEX_SELECT_DISC;
+
+  m_menuFocusIndex = itemIndex;
+}
+
 void CDialogGameDiscManager::SelectDiscToInsert(std::optional<size_t> selectedIndex,
                                                 std::function<void(std::optional<size_t>)> callback)
 {
@@ -190,9 +217,9 @@ void CDialogGameDiscManager::SelectDiscToInsert(std::optional<size_t> selectedIn
   OnMessage(msgSelectDisc);
 }
 
-void CDialogGameDiscManager::SelectDiscToRemove(std::function<void(size_t)> callback)
+void CDialogGameDiscManager::SelectDiscToDelete(std::function<void(size_t)> callback)
 {
-  m_removeCallback = callback;
+  m_deleteCallback = callback;
 
   // Clear the disc list
   ClearDiscList();
@@ -209,8 +236,8 @@ void CDialogGameDiscManager::OnDiscSelect(size_t discIndex, bool isNoDisc)
 {
   if (m_insertCallback)
     m_insertCallback(isNoDisc ? std::nullopt : std::optional<size_t>{discIndex});
-  else if (m_removeCallback && !isNoDisc)
-    m_removeCallback(discIndex);
+  else if (m_deleteCallback && !isNoDisc)
+    m_deleteCallback(discIndex);
 
   // Return to the main menu
   ShowControl(CONTROL_DISC_MANAGER_MENU);
@@ -238,20 +265,20 @@ void CDialogGameDiscManager::ShowControl(int controlId)
 {
   if (controlId == CONTROL_DISC_MANAGER_MENU)
   {
-    SetProperty(PROPERTY_SHOW_MENU, true);
-    SetProperty(PROPERTY_SHOW_DISC_LIST, false);
+    SetProperty(std::string{PROPERTY_SHOW_MENU}, true);
+    SetProperty(std::string{PROPERTY_SHOW_DISC_LIST}, false);
 
     // Give focus to main menu
     FocusMainMenu();
 
     // If we're leaving the disc list, reset the callbacks
     m_insertCallback = {};
-    m_removeCallback = {};
+    m_deleteCallback = {};
   }
   else if (controlId == CONTROL_DISC_MANAGER_DISC_LIST)
   {
-    SetProperty(PROPERTY_SHOW_MENU, false);
-    SetProperty(PROPERTY_SHOW_DISC_LIST, true);
+    SetProperty(std::string{PROPERTY_SHOW_MENU}, false);
+    SetProperty(std::string{PROPERTY_SHOW_DISC_LIST}, true);
 
     // Give focus to disc list
     CGUIMessage msgSetFocus(GUI_MSG_SETFOCUS, GetID(), CONTROL_DISC_MANAGER_DISC_LIST);
@@ -261,20 +288,10 @@ void CDialogGameDiscManager::ShowControl(int controlId)
 
 void CDialogGameDiscManager::FocusMainMenu()
 {
-  if (GetMainMenu() != nullptr)
-  {
-    // Focus main menu
-    CGUIMessage msgFocus(GUI_MSG_SETFOCUS, GetID(), CONTROL_DISC_MANAGER_MENU, 0);
-    OnMessage(msgFocus);
+  const unsigned int itemIndex = m_menuFocusIndex.value_or(MENU_INDEX_SELECT_DISC);
+  m_menuFocusIndex.reset();
 
-    // Select first "Select disc" item in the menu
-    CGUIMessage msgSelectFirst(GUI_MSG_ITEM_SELECT, GetID(), CONTROL_DISC_MANAGER_MENU, 0);
-    OnMessage(msgSelectFirst);
-  }
-  else
-  {
-    m_discButtons->SetFocus();
-  }
+  FocusMainMenuItem(itemIndex);
 }
 
 CGUIBaseContainer* CDialogGameDiscManager::GetMainMenu()

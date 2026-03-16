@@ -224,18 +224,22 @@ TEST(TestGameClientDiscM3U, LoadProducesStableAbsolutePathsForRestore)
   CGameClientDiscModel loadedModel;
   ASSERT_TRUE(discM3U.Load(playlistPath, loadedModel));
 
+  const std::string expectedDisc1 =
+      URIUtils::AddFileToFolder(playlistDirectory, "Disc 1/Metal Gear Solid (Disc 1).cue");
+  const std::string expectedDisc2 =
+      URIUtils::AddFileToFolder(playlistDirectory, "Disc 2/Metal Gear Solid (Disc 2).cue");
+
   ASSERT_EQ(loadedModel.Size(), 2U);
-  EXPECT_TRUE(URIUtils::IsAbsolutePOSIXPath(loadedModel.GetPathByIndex(0)));
-  EXPECT_TRUE(URIUtils::IsAbsolutePOSIXPath(loadedModel.GetPathByIndex(1)));
+  // CI may keep special://temp paths as URL-style absolute paths, while local runs can
+  // materialize plain POSIX paths. Validate the actual contract: entries are stably
+  // resolved against the playlist directory (i.e. not left as raw relative paths).
+  EXPECT_EQ(loadedModel.GetPathByIndex(0), expectedDisc1);
+  EXPECT_EQ(loadedModel.GetPathByIndex(1), expectedDisc2);
 
   ASSERT_TRUE(discM3U.Save(GAME_PATH, loadedModel));
   const std::string persistedM3U = ReadStateM3U();
 
-  EXPECT_EQ(
-      persistedM3U,
-      URIUtils::AddFileToFolder(playlistDirectory, "Disc 1/Metal Gear Solid (Disc 1).cue") + "\n" +
-          URIUtils::AddFileToFolder(playlistDirectory, "Disc 2/Metal Gear Solid (Disc 2).cue") +
-          "\n");
+  EXPECT_EQ(persistedM3U, expectedDisc1 + "\n" + expectedDisc2 + "\n");
 
   DeletePlaylistFile(playlistPath);
   CleanupPlaylistDirectory();
