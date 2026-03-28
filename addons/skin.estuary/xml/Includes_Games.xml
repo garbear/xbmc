@@ -653,7 +653,7 @@
 							Note to skinners: the list of buttons below can also be implemented
 							using individual radiobutton controls. A commented-out example is
 							given following the list implementation.
-						-->
+						
 
 						<control type="list" id="3">
 							<description>Disc manager menu. The content is a template from which the menu items are generated.</description>
@@ -706,7 +706,7 @@
 							</content>
 						</control>
 
-						<!--
+						
 							Example of how the above list could be implemented using
 							radiobuttons instead. Note that the list implementation is
 							generally preferable, as it allows for easier navigation
@@ -714,7 +714,6 @@
 							left here for reference.
 						-->
 
-						<!--
 						<control type="radiobutton" id="108323">
 							<top>-20</top>
 							<left>-20</left>
@@ -849,7 +848,6 @@
 							<label>$LOCALIZE[35277]</label>
 							<onup>108326</onup>
 						</control>
-						-->
 					</control>
 					<control type="group">
 						<description>Visibility group for disc list</description>
