@@ -212,7 +212,7 @@ bool CWinSystemGbmGLESContext::BeginGuiComposite(bool guiWillRender)
       CServiceBroker::GetGUI()->GetWindowManager().MarkDirty();
   }
 
-  return m_guiComposite.Begin(guiWillRender, m_nWidth, m_nHeight, GetEnabledFrontToBackRendering());
+  return m_guiComposite.Begin(guiWillRender, m_nWidth, m_nHeight, true);
 }
 
 void CWinSystemGbmGLESContext::EndGuiComposite()
