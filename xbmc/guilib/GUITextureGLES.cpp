@@ -11,6 +11,8 @@
 #include "ServiceBroker.h"
 #include "Texture.h"
 #include "guilib/TextureFormats.h"
+#include "rendering/MatrixGL.h"
+#include "rendering/gles/GUIStencilGLES.h"
 #include "rendering/gles/RenderSystemGLES.h"
 #include "utils/GLUtils.h"
 #include "utils/MathUtils.h"
@@ -22,13 +24,47 @@
 
 void CGUITextureGLES::Register()
 {
-  CGUITexture::Register(CGUITextureGLES::CreateTexture, CGUITextureGLES::DrawQuad);
+  CGUITexture::Register(CGUITextureGLES::CreateTexture, CGUITextureGLES::DrawQuad,
+                        CGUITextureGLES::DrawStencilQuad);
 }
 
 CGUITexture* CGUITextureGLES::CreateTexture(
     float posX, float posY, float width, float height, const CTextureInfo& texture)
 {
   return new CGUITextureGLES(posX, posY, width, height, texture);
+}
+
+void CGUITextureGLES::DrawStencilQuad(const CRect& rect, STENCIL_LAYER mask)
+{
+  CGraphicContext& context = CServiceBroker::GetWinSystem()->GetGfxContext();
+  CGUIStencilGLES stencil;
+  if (!stencil.Mask(mask, context.GetStencilLayer()))
+    return;
+
+  const GLboolean depthTestEnabled = glIsEnabled(GL_DEPTH_TEST);
+  GLboolean colorMask[4];
+  glGetBooleanv(GL_COLOR_WRITEMASK, colorMask);
+  glDisable(GL_DEPTH_TEST);
+  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+  auto* renderSystem = dynamic_cast<CRenderSystemGLES*>(CServiceBroker::GetRenderSystem());
+  renderSystem->EnableGUIShader(ShaderMethodGLES::SM_DEFAULT);
+  CMatrixGL matrix = glMatrixModview.Get();
+  matrix.MultMatrixf(CMatrixGL(context.GetGUIMatrix()));
+  glUniformMatrix4fv(renderSystem->GUIShaderGetModel(), 1, GL_FALSE, matrix);
+  glUniform1f(renderSystem->GUIShaderGetDepth(), 0.0f);
+  const GLfloat vertices[4][2] = {
+      {rect.x1, rect.y1}, {rect.x2, rect.y1}, {rect.x1, rect.y2}, {rect.x2, rect.y2}};
+  const GLint posLoc = renderSystem->GUIShaderGetPos();
+  glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, vertices);
+  glEnableVertexAttribArray(posLoc);
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+  glDisableVertexAttribArray(posLoc);
+  renderSystem->DisableGUIShader();
+
+  glColorMask(colorMask[0], colorMask[1], colorMask[2], colorMask[3]);
+  if (depthTestEnabled)
+    glEnable(GL_DEPTH_TEST);
 }
 
 CGUITextureGLES::CGUITextureGLES(
@@ -140,7 +176,9 @@ void CGUITextureGLES::Begin(KODI::UTILS::COLOR::Color color)
 
 void CGUITextureGLES::End()
 {
-  if (!m_packedVertices.empty())
+  CGUIStencilGLES stencil;
+  if (!m_packedVertices.empty() &&
+      stencil.Clip(CServiceBroker::GetWinSystem()->GetGfxContext().GetStencilLayer()))
   {
     GLint posLoc  = m_renderSystem->GUIShaderGetPos();
     GLint tex0Loc = m_renderSystem->GUIShaderGetCoord0();
@@ -286,6 +324,10 @@ void CGUITextureGLES::DrawQuad(const CRect& rect,
                                const float depth,
                                const bool blending)
 {
+  CGUIStencilGLES stencil;
+  if (!stencil.Clip(CServiceBroker::GetWinSystem()->GetGfxContext().GetStencilLayer()))
+    return;
+
   CRenderSystemGLES *renderSystem = dynamic_cast<CRenderSystemGLES*>(CServiceBroker::GetRenderSystem());
   if (texture)
   {
