@@ -23,6 +23,7 @@
 #include "input/cec/ICecInputProvider.h"
 #include "input/keyboard/Key.h"
 #include "input/keyboard/KeyboardEasterEgg.h"
+#include "input/keyboard/KeyboardTypes.h"
 #include "input/keyboard/XBMC_vkeys.h"
 #include "input/keyboard/interfaces/IKeyboardDriverHandler.h"
 #include "input/keymaps/ButtonTranslator.h"
@@ -57,11 +58,19 @@ const std::string CInputManager::SETTING_INPUT_ENABLE_CONTROLLER = "input.enable
 
 namespace
 {
+constexpr std::chrono::milliseconds REMOTE_LONGPRESS_RELEASE_TIMEOUT{
+    2 * KEYBOARD::KEY_HOLD_TRESHOLD};
+
 constexpr auto keyComposeactionEventMap = make_map<uint8_t, int>({
     {XBMC_KEYCOMPOSING_COMPOSING, ACTION_KEYBOARD_COMPOSING_KEY},
     {XBMC_KEYCOMPOSING_CANCELLED, ACTION_KEYBOARD_COMPOSING_KEY_CANCELLED},
     {XBMC_KEYCOMPOSING_FINISHED, ACTION_KEYBOARD_COMPOSING_KEY_FINISHED},
 });
+
+uint32_t GetRemoteButtonCode(const CKey& key)
+{
+  return key.GetButtonCode() & ~CKey::MODIFIER_LONG;
+}
 }
 
 CInputManager::CInputManager()
@@ -357,6 +366,7 @@ bool CInputManager::Process(int windowId, float frameTime)
   // process input actions
   ProcessEventServer(windowId, frameTime);
   ProcessQueuedActions();
+  ProcessRemoteLongpressTimeout();
 
   // Inform the environment of the new active window ID
   m_keymapEnvironment->SetWindowID(windowId);
@@ -483,7 +493,7 @@ bool CInputManager::OnEvent(XBMC_Event& newEvent)
     } // case
     case XBMC_BUTTON:
     {
-      HandleKey(
+      OnKey(
           m_buttonStat.TranslateKey(CKey(newEvent.keybutton.button, newEvent.keybutton.holdtime)));
       break;
     }
@@ -500,6 +510,9 @@ bool CInputManager::OnEvent(XBMC_Event& newEvent)
 bool CInputManager::OnKey(const CKey& key)
 {
   bool bHandled = false;
+
+  if (ProcessRemoteLongpress(key, bHandled))
+    return bHandled;
 
   for (auto handler : m_keyboardHandlers)
   {
@@ -547,6 +560,94 @@ bool CInputManager::OnKey(const CKey& key)
   }
 
   return bHandled;
+}
+
+bool CInputManager::ProcessRemoteLongpress(const CKey& key, bool& handled)
+{
+  handled = false;
+
+  if (!key.IsIRRemote())
+    return false;
+
+  const uint32_t buttonCode = GetRemoteButtonCode(key);
+  const auto now = std::chrono::steady_clock::now();
+
+  if (m_remoteLongpressActive &&
+      now - m_remoteLongpressLast >= REMOTE_LONGPRESS_RELEASE_TIMEOUT)
+    ReleaseRemoteLongpress();
+
+  CKey baseKey(buttonCode, key.GetHeld());
+  baseKey.SetFromEventServer(key.GetFromEventServer());
+
+  if (m_remoteLongpressActive && buttonCode != m_remoteLongpressKey.GetButtonCode())
+    ReleaseRemoteLongpress();
+
+  const int activeWindow = CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindowOrDialog();
+
+  if (!m_buttonTranslator->HasLongpressMapping(activeWindow, baseKey))
+    return false;
+
+  if (!m_remoteLongpressActive)
+  {
+    m_remoteLongpressActive = true;
+    m_remoteLongpressKey = baseKey;
+    m_remoteLongpressStart = now - std::chrono::milliseconds(key.GetHeld());
+  }
+
+  m_remoteLongpressLast = now;
+
+  const auto elapsed =
+      std::chrono::duration_cast<std::chrono::milliseconds>(now - m_remoteLongpressStart);
+  const unsigned int holdTimeMs =
+      std::max(key.GetHeld(), static_cast<unsigned int>(elapsed.count()));
+
+  if (!m_remoteLongpressHandled &&
+      (key.IsLongPress() || holdTimeMs > KEYBOARD::KEY_HOLD_TRESHOLD))
+  {
+    CKey longpressKey(buttonCode | CKey::MODIFIER_LONG, holdTimeMs, CKey::MODIFIER_LONG);
+    longpressKey.SetFromEventServer(key.GetFromEventServer());
+
+    m_remoteLongpressHandled = true;
+    m_LastKey.Reset();
+    handled = HandleKey(longpressKey);
+  }
+
+  return true;
+}
+
+void CInputManager::ProcessRemoteLongpressTimeout()
+{
+  if (!m_remoteLongpressActive)
+    return;
+
+  const auto now = std::chrono::steady_clock::now();
+  if (now - m_remoteLongpressLast < REMOTE_LONGPRESS_RELEASE_TIMEOUT)
+    return;
+
+  ReleaseRemoteLongpress();
+}
+
+void CInputManager::ReleaseRemoteLongpress()
+{
+  CKey key = m_remoteLongpressKey;
+  const bool handledLongpress = m_remoteLongpressHandled;
+
+  ResetRemoteLongpress();
+
+  if (!handledLongpress)
+  {
+    m_LastKey.Reset();
+    HandleKey(key);
+  }
+}
+
+void CInputManager::ResetRemoteLongpress()
+{
+  m_remoteLongpressKey.Reset();
+  m_remoteLongpressStart = {};
+  m_remoteLongpressLast = {};
+  m_remoteLongpressActive = false;
+  m_remoteLongpressHandled = false;
 }
 
 bool CInputManager::HandleKey(const CKey& key)

@@ -50,6 +50,7 @@ public:
   bool FromKeyboard() const;
   bool IsAnalogButton() const;
   bool IsIRRemote() const;
+  bool IsLongPress() const;
   void SetFromEventServer(bool fromEventServer);
   bool GetFromEventServer() const { return m_fromEventServer; }
 
