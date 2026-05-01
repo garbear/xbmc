@@ -19,6 +19,7 @@
 #include "utils/Observer.h"
 #include "windowing/XBMC_events.h"
 
+#include <chrono>
 #include <map>
 #include <memory>
 #include <string>
@@ -254,6 +255,30 @@ private:
    */
   bool OnKey(const CKey& key);
 
+  /*!
+   * \brief Process remotes that report a held button as a stream of presses.
+   *
+   * \param key keypress details
+   * \param handled true if a longpress action was executed
+   * \return true if the key was consumed by the remote longpress detector
+   */
+  bool ProcessRemoteLongpress(const CKey& key, bool& handled);
+
+  /*!
+   * \brief Release a pending remote longpress when the press stream stops
+   */
+  void ProcessRemoteLongpressTimeout();
+
+  /*!
+   * \brief Release the pending remote longpress candidate
+   */
+  void ReleaseRemoteLongpress();
+
+  /*!
+   * \brief Reset the remote longpress detector
+   */
+  void ResetRemoteLongpress();
+
   /*! \brief Process key up event
    *
    * \param key details of released key
@@ -299,6 +324,11 @@ private:
   KODI::KEYMAP::CButtonStat m_buttonStat;
   CMouseStat m_Mouse;
   CKey m_LastKey;
+  CKey m_remoteLongpressKey;
+  std::chrono::steady_clock::time_point m_remoteLongpressStart;
+  std::chrono::steady_clock::time_point m_remoteLongpressLast;
+  bool m_remoteLongpressActive = false;
+  bool m_remoteLongpressHandled = false;
 
   std::map<std::string, std::map<int, float>> m_lastAxisMap;
 

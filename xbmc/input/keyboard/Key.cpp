@@ -169,9 +169,15 @@ bool CKey::IsAnalogButton() const
 
 bool CKey::IsIRRemote() const
 {
-  if (GetButtonCode() < 256)
+  if ((GetButtonCode() & ~CKey::MODIFIER_LONG) < 256)
     return true;
   return false;
+}
+
+bool CKey::IsLongPress() const
+{
+  return (GetButtonCode() & CKey::MODIFIER_LONG) ||
+         (GetModifiers() & CKey::MODIFIER_LONG);
 }
 
 float CKey::GetRepeat() const
