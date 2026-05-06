@@ -175,7 +175,7 @@ IF DEFINED BUILDDIR (
     IF %buildmode%==clean (
       call make-addons.bat clean
     )
-    CALL make-addons.bat game.libretro game.shader.presets peripheral.joystick screensaver.matrixtrails vfs.libarchive vfs.rar
+    CALL make-addons.bat game.libretro game.shader.presets peripheral.joystick screensaver.matrixtrails visualization.projectm vfs.libarchive vfs.rar
     IF %errorlevel%==1 (
       set DIETEXT="failed to build addons"
       cd %build_path%
