@@ -96,18 +96,20 @@ void CShaderDX::Render(IShaderTexture& source, IShaderTexture& target)
   Execute({&targetTexture}, 4);
 }
 
-void CShaderDX::SetSizes(const float2& prevSize,
-                         const float2& prevTextureSize,
-                         const float2& nextSize)
+void CShaderDX::SetSizes(const float2& nextSize,
+                         const float2& prevSize,
+                         const float2& prevTextureSize)
 {
-  m_inputSize = prevSize;
-  m_inputTextureSize = prevTextureSize;
   m_outputSize = nextSize;
+
+  if (prevSize.x > 0 && prevSize.y > 0)
+    m_inputSize = prevSize;
+
+  if (prevTextureSize.x > 0 && prevTextureSize.y > 0)
+    m_inputTextureSize = prevTextureSize;
 }
 
 void CShaderDX::PrepareParameters(
-    const RETRO::ViewportCoordinates& dest,
-    const float2 fullDestSize,
     IShaderTexture& sourceTexture,
     const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
     const std::vector<std::unique_ptr<IShader>>& pShaders,
@@ -116,42 +118,21 @@ void CShaderDX::PrepareParameters(
   CUSTOMVERTEX* v;
   LockVertexBuffer(reinterpret_cast<void**>(&v));
 
-  if (m_passIdx + 1 != static_cast<unsigned int>(pShaders.size())) // Not last pass
-  {
-    // top left
-    v[0].x = -m_outputSize.x / 2;
-    v[0].y = -m_outputSize.y / 2;
-    // top right
-    v[1].x = m_outputSize.x / 2;
-    v[1].y = -m_outputSize.y / 2;
-    // bottom right
-    v[2].x = m_outputSize.x / 2;
-    v[2].y = m_outputSize.y / 2;
-    // bottom left
-    v[3].x = -m_outputSize.x / 2;
-    v[3].y = m_outputSize.y / 2;
+  // top left
+  v[0].x = -m_outputSize.x / 2;
+  v[0].y = -m_outputSize.y / 2;
+  // top right
+  v[1].x = m_outputSize.x / 2;
+  v[1].y = -m_outputSize.y / 2;
+  // bottom right
+  v[2].x = m_outputSize.x / 2;
+  v[2].y = m_outputSize.y / 2;
+  // bottom left
+  v[3].x = -m_outputSize.x / 2;
+  v[3].y = m_outputSize.y / 2;
 
-    // Set destination rectangle size
-    m_destSize = m_outputSize;
-  }
-  else // Last pass
-  {
-    // top left
-    v[0].x = dest[0].x - m_outputSize.x / 2;
-    v[0].y = dest[0].y - m_outputSize.y / 2;
-    // top right
-    v[1].x = dest[1].x - m_outputSize.x / 2;
-    v[1].y = dest[1].y - m_outputSize.y / 2;
-    // bottom right
-    v[2].x = dest[2].x - m_outputSize.x / 2;
-    v[2].y = dest[2].y - m_outputSize.y / 2;
-    // bottom left
-    v[3].x = dest[3].x - m_outputSize.x / 2;
-    v[3].y = dest[3].y - m_outputSize.y / 2;
-
-    // Set destination rectangle size for the last pass
-    m_destSize = fullDestSize;
-  }
+  // Set destination rectangle size
+  m_destSize = m_outputSize;
 
   // top left
   v[0].z = 0;
