@@ -271,10 +271,7 @@ void CRPWinRenderer::RenderInternal(bool clear, uint8_t alpha)
 {
   CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
 
-  // Set alpha blend state
-  renderingDx->SetAlphaBlendEnable(alpha < 0xFF);
-
-  Render(renderingDx->GetBackBuffer());
+  Render(renderingDx->GetBackBuffer(), alpha);
 }
 
 bool CRPWinRenderer::Supports(RENDERFEATURE feature) const
@@ -295,8 +292,9 @@ bool CRPWinRenderer::SupportsScalingMethod(SCALINGMETHOD method)
   return false;
 }
 
-void CRPWinRenderer::Render(CD3DTexture& target)
+void CRPWinRenderer::Render(CD3DTexture& target, uint8_t alpha)
 {
+  CRenderSystemDX* renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
   const ViewportCoordinates dest{m_rotatedDestCoords};
 
   auto renderBuffer = static_cast<CWinRenderBuffer*>(m_renderBuffer);
@@ -309,24 +307,69 @@ void CRPWinRenderer::Render(CD3DTexture& target)
 
   Updateshaders();
 
+  CD3DTexture* outputTexture = &renderBufferTarget->GetTexture();
+  CRect sourceRect = m_sourceRect;
+
   // Use video shader preset
   if (m_bUseShaderPreset)
   {
-    SHADER::CShaderTextureDXRef targetTexture{target};
+    RenderBufferTextures* rbTextures = nullptr;
 
-    // Render shaders and ouput to display
-    if (!m_shaderPreset->RenderUpdate(dest, {m_fullDestWidth, m_fullDestHeight},
-                                      *renderBufferTarget, targetTexture))
+    // Drop cached textures if target size is changed
+    if (m_fullDestWidth != m_lastTargetWidth || m_fullDestHeight != m_lastTargetHeight)
     {
-      m_bShadersNeedUpdate = false;
-      m_bUseShaderPreset = false;
+      m_RBTexturesMap.clear();
+      m_lastTargetWidth = m_fullDestWidth;
+      m_lastTargetHeight = m_fullDestHeight;
+    }
+
+    const auto it = m_RBTexturesMap.find(renderBuffer);
+    if (it != m_RBTexturesMap.end())
+    {
+      rbTextures = it->second.get();
+    }
+    else
+    {
+      auto presetTargetTexture = std::make_shared<CD3DTexture>();
+      if (!presetTargetTexture->Create(static_cast<UINT>(m_fullDestWidth),
+                                       static_cast<UINT>(m_fullDestHeight), 1,
+                                       D3D11_USAGE_DEFAULT, DXGI_FORMAT_B8G8R8A8_UNORM))
+      {
+        CLog::Log(LOGERROR, "RPWinRenderer: Shader preset target texture creation failed");
+        m_bShadersNeedUpdate = false;
+        m_bUseShaderPreset = false;
+      }
+      else
+      {
+        rbTextures = new RenderBufferTextures{
+            std::make_shared<SHADER::CShaderTextureDX>(std::move(presetTargetTexture))};
+        m_RBTexturesMap.emplace(renderBuffer, rbTextures);
+      }
+    }
+
+    if (m_bUseShaderPreset && rbTextures != nullptr)
+    {
+      std::shared_ptr<SHADER::CShaderTextureDX> presetTarget = rbTextures->target;
+
+      renderingDx->SetAlphaBlendEnable(false);
+
+      // Render shaders to an intermediate texture. The output shader handles
+      // the final transform and alpha.
+      if (!m_shaderPreset->RenderUpdate(*renderBufferTarget, *presetTarget))
+      {
+        m_bShadersNeedUpdate = false;
+        m_bUseShaderPreset = false;
+      }
+      else
+      {
+        outputTexture = &presetTarget->GetTexture();
+        sourceRect = CRect(0.0f, 0.0f, presetTarget->GetWidth(), presetTarget->GetHeight());
+      }
     }
   }
-  // Use output shader
-  else
-  {
-    CD3DTexture& intermediateTarget = renderBufferTarget->GetTexture();
 
+  // Use output shader
+  {
     CRect viewPort;
     m_context.GetViewPort(viewPort);
 
@@ -339,8 +382,9 @@ void CRPWinRenderer::Render(CD3DTexture& target)
     // Use the picked output shader to render to the target
     if (outputShader != nullptr)
     {
-      outputShader->Render(intermediateTarget, m_sourceRect, dest, viewPort, target,
-                           m_context.UseLimitedColor() ? 1 : 0);
+      renderingDx->SetAlphaBlendEnable(alpha < 0xFF);
+      outputShader->Render(*outputTexture, sourceRect, dest, viewPort, target,
+                           m_context.UseLimitedColor() ? 1 : 0, alpha);
     }
   }
 }

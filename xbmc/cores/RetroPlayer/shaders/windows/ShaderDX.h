@@ -38,12 +38,10 @@ public:
               std::vector<std::shared_ptr<IShaderLut>> luts,
               unsigned int frameCountMod = 0) override;
   void Render(IShaderTexture& source, IShaderTexture& target) override;
-  void SetSizes(const float2& prevSize,
-                const float2& prevTextureSize,
-                const float2& nextSize) override;
-  void PrepareParameters(const RETRO::ViewportCoordinates& dest,
-                         const float2 fullDestSize,
-                         IShaderTexture& sourceTexture,
+  void SetSizes(const float2& nextSize,
+                const float2& prevSize = float2{},
+                const float2& prevTextureSize = float2{}) override;
+  void PrepareParameters(IShaderTexture& source,
                          const std::vector<std::unique_ptr<IShaderTexture>>& pShaderTextures,
                          const std::vector<std::unique_ptr<IShader>>& pShaders,
                          uint64_t frameCount) override;
@@ -89,7 +87,7 @@ private:
 
   void UpdateInputBuffer(uint64_t frameCount);
   cbInput GetInputData(uint64_t frameCount = 0) const;
-  void SetShaderParameters(const CD3DTexture& sourceTexture);
+  void SetShaderParameters(const CD3DTexture& source);
 
   // Index of the video shader pass
   unsigned int m_passIdx{0};
