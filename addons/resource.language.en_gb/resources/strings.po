@@ -19115,10 +19115,10 @@ msgctxt "#35236"
 msgid "In this release, only controllers can be used to play games."
 msgstr ""
 
-#. Label of thumbnail in the in-game menu for normal size with 1:1 pixel aspect ratio (PAR)
+#. Label of thumbnail in the in-game menu for normal size with square pixels
 #: xbmc/games/dialogs/osd/DialogGameStretchMode.cpp
 msgctxt "#35237"
-msgid "Normal (1:1 PAR)"
+msgid "Square pixels"
 msgstr ""
 
 #. Label of thumbnail in the in-game menu for integer underscaling
@@ -19127,10 +19127,10 @@ msgctxt "#35238"
 msgid "Integer"
 msgstr ""
 
-#. Label of thumbnail in the in-game menu for integer underscaling with 1:1 pixel aspect ratio (PAR)
+#. Label of thumbnail in the in-game menu for integer underscaling with square pixels
 #: xbmc/games/dialogs/osd/DialogGameStretchMode.cpp
 msgctxt "#35239"
-msgid "Integer (1:1 PAR)"
+msgid "Integer (square pixels)"
 msgstr ""
 
 #empty strings from id 35240 to 35248
