@@ -11,6 +11,11 @@
 #include "ShaderTypes.h"
 #include "cores/RetroPlayer/RetroPlayerTypes.h"
 
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <vector>
+
 namespace KODI::SHADER
 {
 class IShaderLut;
