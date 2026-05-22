@@ -10,18 +10,25 @@
 
 #include "guilib/guiinfo/GUIInfoProvider.h"
 
-namespace KODI::GUILIB::GUIINFO
+namespace KODI
 {
+namespace GAME
+{
+class CGameSettings;
+}
 
+namespace GUILIB::GUIINFO
+{
 class CGUIInfo;
 
 class CGamesGUIInfo : public CGUIInfoProvider
 {
 public:
   CGamesGUIInfo() = default;
+  explicit CGamesGUIInfo(const GAME::CGameSettings& gameSettings) : m_gameSettings(&gameSettings) {}
   ~CGamesGUIInfo() override = default;
 
-  // KODI::GUILIB::GUIINFO::IGUIInfoProvider implementation
+  // IGUIInfoProvider implementation
   bool InitCurrentItem(CFileItem* item) override;
   bool GetLabel(std::string& value,
                 const CFileItem* item,
@@ -36,6 +43,11 @@ public:
                const CGUIListItem* item,
                int contextWindow,
                const CGUIInfo& info) const override;
-};
 
-} // namespace KODI::GUILIB::GUIINFO
+private:
+  const GAME::CGameSettings& GameSettings() const;
+
+  const GAME::CGameSettings* m_gameSettings{nullptr};
+};
+} // namespace GUILIB::GUIINFO
+} // namespace KODI
