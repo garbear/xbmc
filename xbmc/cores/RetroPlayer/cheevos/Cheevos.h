@@ -42,6 +42,7 @@ public:
 
   void ActivateAchievement();
   static void CallbackUrlId(const std::string& achievementUrl, unsigned int cheevoId);
+  void CheckTriggeredAchievement();
 
   /*!
    * \brief Perform the actual HTTP login exchange with RetroAchievements
