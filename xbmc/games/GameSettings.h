@@ -66,6 +66,37 @@ public:
     bool loaded{false};
   };
 
+  struct LeaderboardEntry
+  {
+    unsigned int rank{0};
+    std::string username;
+    std::string score;
+    std::string date;
+    bool isPlayer{false};
+  };
+
+  struct LeaderboardInfo
+  {
+    unsigned int id{0};
+    std::string title;
+    std::string description;
+    std::string format;
+    bool lowerIsBetter{false};
+    unsigned int totalEntries{0};
+    unsigned int playerRank{0};
+    std::string playerScore;
+    std::string topUsername;
+    std::string topScore;
+    std::vector<LeaderboardEntry> entries;
+  };
+
+  struct LeaderboardState
+  {
+    std::string gameTitle;
+    std::vector<LeaderboardInfo> leaderboards;
+    bool loaded{false};
+  };
+
   void SetAchievementState(const AchievementState& state)
   {
     std::lock_guard<std::mutex> lock(m_achievementMutex);
@@ -84,10 +115,67 @@ public:
     return m_achievementState;
   }
 
+  void SetLeaderboardState(const LeaderboardState& state)
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    m_leaderboardState = state;
+  }
+
+  void ClearLeaderboardState()
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    m_leaderboardState = LeaderboardState{};
+  }
+
+  LeaderboardState GetLeaderboardState() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_leaderboardState;
+  }
+
+  void SetSelectedLeaderboardId(unsigned int id)
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    m_selectedLeaderboardId = id;
+  }
+
+  unsigned int GetSelectedLeaderboardId() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_selectedLeaderboardId;
+  }
+
+  bool GetLeaderboardsLoaded() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_leaderboardState.loaded;
+  }
+
+  // Targeted getters for frequently-queried fields — avoids copying
+  // the full AchievementState struct on every InfoLabel query
+
+  unsigned int GetAchievementTotal() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_achievementState.totalAchievements;
+  }
+
+  unsigned int GetAchievementUnlocked() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_achievementState.unlockedAchievements;
+  }
+
   std::string GetAchievementRichPresence() const
   {
     std::lock_guard<std::mutex> lock(m_achievementMutex);
     return m_achievementState.richPresence;
+  }
+
+  bool GetAchievementsLoaded() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_achievementState.loaded;
   }
 
   bool GetAchievementsLoggedIn() const;
@@ -103,6 +191,9 @@ private:
 
   // Construction parameters
   std::shared_ptr<CSettings> m_settings;
+
+  LeaderboardState m_leaderboardState;
+  unsigned int m_selectedLeaderboardId{0};
 
   // Current achievement state (mutex protects cross-thread access)
   mutable std::mutex m_achievementMutex;

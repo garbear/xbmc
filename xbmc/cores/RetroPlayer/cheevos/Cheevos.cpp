@@ -102,6 +102,14 @@ constexpr auto CHEEVO_RARITY = "Rarity";
 
 // Flags == 3: active/published achievement (confusingly, NOT 5)
 constexpr auto RICH_PRESENCE_PATCH = "RichPresencePatch";
+constexpr auto LEADERBOARDS = "Leaderboards";
+constexpr auto LB_ID = "ID";
+constexpr auto LB_TITLE = "Title";
+constexpr auto LB_DESCRIPTION = "Description";
+constexpr auto LB_FORMAT = "Format";
+constexpr auto LB_LOWER_IS_BETTER = "LowerIsBetter";
+constexpr auto LB_HIDDEN = "Hidden";
+
 // Flags == 5: unofficial/demoted/test — these should be skipped
 constexpr unsigned int FLAGS_CORE = 3;
 
@@ -196,6 +204,10 @@ CCheevos::~CCheevos()
   m_richPresenceRunning = false;
   if (m_richPresenceThread.joinable())
     m_richPresenceThread.join();
+
+  CServiceBroker::GetGameServices().GameSettings().ClearLeaderboardState();
+
+  CLog::Log(LOGDEBUG, "CCheevos::~CCheevos -- cleaned up");
 }
 
 // ===========================================================================
@@ -476,6 +488,30 @@ bool CCheevos::LoadData()
     achieveState.achievements.push_back(std::move(info));
   }
 
+  // Load leaderboards from patch data
+  {
+    KODI::GAME::CGameSettings::LeaderboardState lbState;
+    lbState.gameTitle = m_gameTitle;
+    lbState.loaded = true;
+    const CVariant& leaderboards = data[PATCH_DATA][LEADERBOARDS];
+    for (auto it = leaderboards.begin_array(); it != leaderboards.end_array(); ++it)
+    {
+      const CVariant& lb = *it;
+      if (lb[LB_HIDDEN].asBoolean())
+        continue;
+      KODI::GAME::CGameSettings::LeaderboardInfo info;
+      info.id = static_cast<unsigned int>(lb[LB_ID].asUnsignedInteger());
+      info.title = lb[LB_TITLE].asString();
+      info.description = lb[LB_DESCRIPTION].asString();
+      info.format = lb[LB_FORMAT].asString();
+      info.lowerIsBetter = lb[LB_LOWER_IS_BETTER].asBoolean();
+      lbState.leaderboards.push_back(std::move(info));
+    }
+    CServiceBroker::GetGameServices().GameSettings().SetLeaderboardState(lbState);
+    CLog::Log(LOGINFO, "CCheevos::LoadData -- {} leaderboards loaded for game {}",
+              lbState.leaderboards.size(), gameId);
+  }
+
   // State set after session ping below with correct unlock count
 
   // Load and enable rich presence script if present
@@ -641,6 +677,8 @@ void CCheevos::EnableRichPresence()
   m_richPresenceRunning = false;
   if (m_richPresenceThread.joinable())
     m_richPresenceThread.join();
+
+  CServiceBroker::GetGameServices().GameSettings().ClearLeaderboardState();
 
   m_richPresenceLoaded = false;
   m_richPresenceScript.clear();
@@ -947,6 +985,17 @@ void CCheevos::CallbackUrlId(const std::string& achievementUrl, unsigned int che
       }
     }
   }
+}
+
+void CCheevos::CheckTriggeredAchievement()
+{
+  // Callback for triggered achievement URL and ID
+  m_gameClient->Cheevos().GetAchievementUrlId(
+      [](const std::string& achievementUrl, unsigned int cheevoId)
+  {
+    CLog::Log(LOGDEBUG, "CCheevos::CheckTriggeredAchievement -- achievement triggered: id={} url={}", cheevoId, achievementUrl);
+    CallbackUrlId(achievementUrl, cheevoId);
+  });
 }
 
 // ===========================================================================

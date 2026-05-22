@@ -9,6 +9,8 @@
 #include "FileItem.h"
 #include "GUIInfoManager.h"
 #include "ServiceBroker.h"
+#include "games/GameServices.h"
+#include "games/GameSettings.h"
 #include "games/tags/GameInfoTag.h"
 #include "guilib/guiinfo/GUIInfo.h"
 #include "guilib/guiinfo/GUIInfoLabels.h"
@@ -60,6 +62,14 @@ TEST_F(TestGamesGUIInfo, TranslatesRetroPlayerLabels)
             RETROPLAYER_GAME_CLIENT_NAME);
   EXPECT_EQ(infoManager.TranslateString("RetroPlayer.GameClientPlatforms"),
             RETROPLAYER_GAME_CLIENT_PLATFORMS);
+
+  // Achievement aggregate InfoLabels
+  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.Total"),
+            RETROPLAYER_ACHIEVEMENTS_TOTAL);
+  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.Unlocked"),
+            RETROPLAYER_ACHIEVEMENTS_UNLOCKED);
+  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.RichPresence"),
+            RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE);
 }
 
 TEST_F(TestGamesGUIInfo, GetLabelRequiresCurrentGameInGUIInfoManager)
@@ -86,6 +96,110 @@ TEST_F(TestGamesGUIInfo, InitCurrentItemSetsTitleFromFilesystemPath)
   const CGameInfoTag* tag = item.GetGameInfoTag();
   ASSERT_NE(tag, nullptr);
   EXPECT_EQ(tag->GetTitle(), "test");
+}
+
+TEST_F(TestGamesGUIInfo, AchievementStateInfoLabelsReturnEmptyWhenNotLoaded)
+{
+  CFileItem item{"/roms/test.rom", false};
+  CGameSettings gameSettings;
+  CGamesGUIInfo gamesGUIInfo{gameSettings};
+  std::string value;
+
+  // With no achievement state loaded, labels should return true but with empty values
+  EXPECT_TRUE(
+      gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_TOTAL), nullptr));
+  EXPECT_EQ(value, "0");
+}
+
+TEST_F(TestGamesGUIInfo, AchievementStateInfoLabelsReturnDataWhenLoaded)
+{
+  CFileItem item{"/roms/test.rom", false};
+  CGameSettings gameSettings;
+  CGamesGUIInfo gamesGUIInfo{gameSettings};
+  std::string value;
+
+  // Set up achievement state
+  KODI::GAME::CGameSettings::AchievementState state;
+  state.gameTitle = "Super Mario Bros.";
+  state.totalAchievements = 77;
+  state.unlockedAchievements = 2;
+  state.loaded = true;
+
+  gameSettings.SetAchievementState(state);
+
+  EXPECT_TRUE(
+      gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_TOTAL), nullptr));
+  EXPECT_EQ(value, "77");
+
+  EXPECT_TRUE(
+      gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_UNLOCKED), nullptr));
+  EXPECT_EQ(value, "2");
+
+  // Check bool
+  bool bValue = false;
+  EXPECT_TRUE(gamesGUIInfo.GetBool(bValue, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_LOADED)));
+  EXPECT_TRUE(bValue);
+
+  // Clean up
+  gameSettings.ClearAchievementState();
+}
+
+TEST_F(TestGamesGUIInfo, PerAchievementInfoLabelsReturnDataByIndex)
+{
+  CFileItem item{"/roms/test.rom", false};
+  CGameSettings gameSettings;
+  CGamesGUIInfo gamesGUIInfo{gameSettings};
+  std::string value;
+
+  KODI::GAME::CGameSettings::AchievementState state;
+  state.loaded = true;
+
+  KODI::GAME::CGameSettings::AchievementInfo info1;
+  info1.title = "First Achievement";
+  info1.description = "Do something";
+  info1.points = 10;
+  info1.earned = true;
+  state.achievements.push_back(info1);
+
+  KODI::GAME::CGameSettings::AchievementInfo info2;
+  info2.title = "Second Achievement";
+  info2.description = "Do something else";
+  info2.points = 25;
+  info2.earned = false;
+  state.achievements.push_back(info2);
+
+  gameSettings.SetAchievementState(state);
+
+  // Test title by index
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, 0),
+                                    nullptr));
+  EXPECT_EQ(value, "First Achievement");
+
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, 1),
+                                    nullptr));
+  EXPECT_EQ(value, "Second Achievement");
+
+  // Test points by index
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_POINTS, 0, 0),
+                                    nullptr));
+  EXPECT_EQ(value, "10");
+
+  // Test earned bool by index
+  bool bValue = false;
+  EXPECT_TRUE(
+      gamesGUIInfo.GetBool(bValue, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, 0)));
+  EXPECT_TRUE(bValue);
+
+  EXPECT_TRUE(
+      gamesGUIInfo.GetBool(bValue, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, 1)));
+  EXPECT_FALSE(bValue);
+
+  // Out of bounds should return true but empty value
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, 99),
+                                    nullptr));
+
+  // Clean up
+  gameSettings.ClearAchievementState();
 }
 
 TEST_F(TestGamesGUIInfo, InitCurrentItemSetsTitleFromVfsHostnamePath)
