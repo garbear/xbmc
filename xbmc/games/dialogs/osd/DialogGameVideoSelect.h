@@ -11,6 +11,7 @@
 #include "guilib/GUIDialog.h"
 
 #include <memory>
+#include <string>
 
 class CFileItemList;
 class CGUIViewControl;
@@ -40,7 +41,7 @@ public:
   void OnDeinitWindow(int nextWindowID) override;
 
 protected:
-  CDialogGameVideoSelect(int windowId);
+  CDialogGameVideoSelect(int windowId, const std::string& xmlFile = "");
 
   // implementation of CGUIWindow via CGUIDialog
   void OnWindowUnload() override;

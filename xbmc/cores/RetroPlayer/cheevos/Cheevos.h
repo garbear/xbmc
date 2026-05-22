@@ -83,6 +83,8 @@ public:
 
   void CallbackUrlId(const std::string& achievementUrl, unsigned int cheevoId);
 
+  void CheckTriggeredAchievement();
+
 private:
   /*!
    * \brief Rich presence periodic ping thread
