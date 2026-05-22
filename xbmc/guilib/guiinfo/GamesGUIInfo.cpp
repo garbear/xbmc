@@ -237,6 +237,90 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
       value = GameSettings().GetAchievementRichPresence();
       return true;
     }
+    case RETROPLAYER_ACHIEVEMENTS_TOTAL:
+    {
+      value = std::to_string(GameSettings().GetAchievementTotal());
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_UNLOCKED:
+    {
+      value = std::to_string(GameSettings().GetAchievementUnlocked());
+      return true;
+    }
+    case RETROPLAYER_LEADERBOARDS_STATUS:
+    {
+      const auto& gs = GameSettings();
+
+      if (!gs.GetAchievementsLoggedIn() || !gs.GetLeaderboardsLoaded())
+        value = "N/A";
+      else
+      {
+        const int count = static_cast<int>(gs.GetLeaderboardState().leaderboards.size());
+        value = std::to_string(count) + (count == 1 ? " board" : " boards");
+      }
+
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_STATUS:
+    {
+      const auto& gs = GameSettings();
+
+      if (!gs.GetAchievementsLoggedIn() || !gs.GetAchievementsLoaded())
+        value = "N/A";
+      else
+        value = std::to_string(gs.GetAchievementUnlocked()) + " / " +
+                std::to_string(gs.GetAchievementTotal());
+
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_TITLE:
+    {
+      const auto state = GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = state.achievements[idx].title;
+      else
+        value.clear();
+
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_DESCRIPTION:
+    {
+      const auto state = GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = state.achievements[idx].description;
+      else
+        value.clear();
+
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_BADGE_URL:
+    {
+      const auto state = GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = state.achievements[idx].badgeUrl;
+      else
+        value.clear();
+
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_POINTS:
+    {
+      const auto state = GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = std::to_string(state.achievements[idx].points);
+      else
+        value.clear();
+
+      return true;
+    }
     default:
       break;
   }
@@ -292,6 +376,23 @@ bool CGamesGUIInfo::GetBool(bool& value,
     case RETROPLAYER_ACHIEVEMENTS_LOGGED_IN:
     {
       value = GameSettings().GetAchievementsLoggedIn();
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_LOADED:
+    {
+      value = GameSettings().GetAchievementsLoaded();
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_EARNED:
+    {
+      const auto state = GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = state.achievements[idx].earned;
+      else
+        value = false;
+
       return true;
     }
     default:
