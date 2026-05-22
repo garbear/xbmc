@@ -105,13 +105,9 @@ CNetworkServices::CNetworkServices()
 #endif
     ,
     m_httpWebinterfaceHandler(*new CHTTPWebinterfaceHandler),
-    m_httpWebinterfaceAddonsHandler(*new CHTTPWebinterfaceAddonsHandler)
+    m_httpWebinterfaceAddonsHandler(*new CHTTPWebinterfaceAddonsHandler),
 #endif // HAS_WEB_INTERFACE
 #endif // HAS_WEB_SERVER
-#ifdef HAS_LIBTORRENT
-    ,
-    m_libtorrent(std::make_unique<CLibtorrent>())
-#endif
 {
 #ifdef HAS_WEB_SERVER
   m_webserver.RegisterRequestHandler(&m_httpImageHandler);

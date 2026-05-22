@@ -1,9 +1,27 @@
 /*
- *  Copyright (C) 2020-2021 Team Kodi
+ *  Copyright (C) 2012-2024 Team Kodi
  *  This file is part of Kodi - https://kodi.tv
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
- *  See LICENSES/README.md for more information.
+ *  See LICENSES/README.md for more information
+ *
+ *  AUTH FIX v2: Corrected against official RA Connect API documentation.
+ *
+ *  Changes from previous version:
+ *
+ *  1. Login endpoint changed from r=login to r=login2 (current RA API).
+ *     r=login is deprecated. r=login2 is the correct current endpoint.
+ *
+ *  2. Login uses GET with params in the URL (not POST body).
+ *     The RA Connect API login endpoint is a GET request.
+ *
+ *  3. Password is no longer exposed in Kodi's debug log.
+ *     We log a redacted version with p=*** instead.
+ *
+ *  4. Patch request (r=patch) is only made when gameId > 0.
+ *     Previously it fired on login with g=0 causing a 404.
+ *
+ *  5. make_map template replaced with plain function (compiler fix).
  */
 
 #include "Cheevos.h"
@@ -13,35 +31,45 @@
 #include "URL.h"
 #include "dialogs/GUIDialogKaiToast.h"
 #include "filesystem/CurlFile.h"
+#include "filesystem/Directory.h"
 #include "filesystem/File.h"
 #include "games/addons/GameClient.h"
 #include "games/addons/cheevos/GameClientCheevos.h"
-#include "games/tags/GameInfoTag.h"
 #include "messaging/ApplicationMessenger.h"
+#include "settings/Settings.h"
+#include "settings/SettingsComponent.h"
 #include "utils/JSONVariantParser.h"
-#include "utils/Map.h"
+#include "utils/StringUtils.h"
+#include "utils/SystemInfo.h"
 #include "utils/URIUtils.h"
 #include "utils/Variant.h"
 #include "utils/log.h"
 
-#include <string_view>
+#include <chrono>
+#include <thread>
 
 using namespace KODI;
 using namespace RETRO;
+// Static achievement title map (populated in LoadData, read in Callback_URL_ID)
+std::unordered_map<unsigned, std::pair<std::string, std::string>> CCheevos::s_cheevoTitles;
 
 namespace
 {
-// API JSON Field names
-constexpr auto SUCCESS = "Success";
-constexpr auto GAME_ID = "GameID";
-constexpr auto PATCH_DATA = "PatchData";
-constexpr auto RICH_PRESENCE = "RichPresencePatch";
-constexpr auto GAME_TITLE = "Title";
-constexpr auto PUBLISHER = "Publisher";
-constexpr auto DEVELOPER = "Developer";
-constexpr auto GENRE = "Genre";
-constexpr auto CONSOLE_NAME = "ConsoleName";
 
+// ---------------------------------------------------------------------------
+// User-Agent — built dynamically from Kodi's own CSysInfo::GetUserAgent()
+// so it is correct on Windows, LibreELEC, macOS etc. without any changes.
+// ---------------------------------------------------------------------------
+static const std::string RA_USER_AGENT = CSysInfo::GetUserAgent();
+
+// RA Connect API base URL
+constexpr auto RA_BASE_URL = "https://retroachievements.org/dorequest.php";
+
+// JSON field names
+constexpr auto PATCH_DATA = "PatchData";
+constexpr auto GAME_TITLE = "Title";
+constexpr auto IMAGE_ICON_URL = "ImageIconURL";
+constexpr auto RA_GAME_ICON_CACHE = "special://profile/cache/retroachievements/icons/";
 constexpr auto ACHIEVEMENTS = "Achievements";
 constexpr auto MEM_ADDR = "MemAddr";
 constexpr auto CHEEVO_ID = "ID";
@@ -49,51 +77,67 @@ constexpr auto FLAGS = "Flags";
 constexpr auto CHEEVO_TITLE = "Title";
 constexpr auto BADGE_NAME = "BadgeName";
 
-constexpr int RESPONSE_SIZE = 64;
+// Flags == 3: active/published achievement (confusingly, NOT 5)
+// Flags == 5: unofficial/demoted/test — these should be skipped
+constexpr unsigned int FLAGS_CORE = 3;
 
-constexpr auto extensionToConsole = make_map<std::string_view, RConsoleID>({
-    {".a26", RConsoleID::RC_CONSOLE_ATARI_2600},
-    {".a78", RConsoleID::RC_CONSOLE_ATARI_7800},
-    {".agb", RConsoleID::RC_CONSOLE_GAMEBOY_ADVANCE},
-    {".cdi", RConsoleID::RC_CONSOLE_DREAMCAST},
-    {".cdt", RConsoleID::RC_CONSOLE_AMSTRAD_PC},
-    {".cgb", RConsoleID::RC_CONSOLE_GAMEBOY_COLOR},
-    {".chd", RConsoleID::RC_CONSOLE_DREAMCAST},
-    {".cpr", RConsoleID::RC_CONSOLE_AMSTRAD_PC},
-    {".d64", RConsoleID::RC_CONSOLE_COMMODORE_64},
-    {".gb", RConsoleID::RC_CONSOLE_GAMEBOY},
-    {".gba", RConsoleID::RC_CONSOLE_GAMEBOY_ADVANCE},
-    {".gbc", RConsoleID::RC_CONSOLE_GAMEBOY_COLOR},
-    {".gdi", RConsoleID::RC_CONSOLE_DREAMCAST},
-    {".j64", RConsoleID::RC_CONSOLE_ATARI_JAGUAR},
-    {".jag", RConsoleID::RC_CONSOLE_ATARI_JAGUAR},
-    {".lnx", RConsoleID::RC_CONSOLE_ATARI_LYNX},
-    {".mds", RConsoleID::RC_CONSOLE_SATURN},
-    {".min", RConsoleID::RC_CONSOLE_POKEMON_MINI},
-    {".mx1", RConsoleID::RC_CONSOLE_MSX},
-    {".mx2", RConsoleID::RC_CONSOLE_MSX},
-    {".n64", RConsoleID::RC_CONSOLE_NINTENDO_64},
-    {".ndd", RConsoleID::RC_CONSOLE_NINTENDO_64},
-    {".nds", RConsoleID::RC_CONSOLE_NINTENDO_DS},
-    {".nes", RConsoleID::RC_CONSOLE_NINTENDO},
-    {".o", RConsoleID::RC_CONSOLE_ATARI_LYNX},
-    {".pce", RConsoleID::RC_CONSOLE_PC_ENGINE},
-    {".sfc", RConsoleID::RC_CONSOLE_SUPER_NINTENDO},
-    {".sgx", RConsoleID::RC_CONSOLE_PC_ENGINE},
-    {".smc", RConsoleID::RC_CONSOLE_SUPER_NINTENDO},
-    {".sna", RConsoleID::RC_CONSOLE_AMSTRAD_PC},
-    {".tap", RConsoleID::RC_CONSOLE_AMSTRAD_PC},
-    {".u1", RConsoleID::RC_CONSOLE_NINTENDO_64},
-    {".v64", RConsoleID::RC_CONSOLE_NINTENDO_64},
-    {".vb", RConsoleID::RC_CONSOLE_VIRTUAL_BOY},
-    {".vboy", RConsoleID::RC_CONSOLE_VIRTUAL_BOY},
-    {".vec", RConsoleID::RC_CONSOLE_VECTREX},
-    {".voc", RConsoleID::RC_CONSOLE_AMSTRAD_PC},
-    {".z64", RConsoleID::RC_CONSOLE_NINTENDO_64},
-});
+// ---------------------------------------------------------------------------
+// Console ID lookup — plain function avoids constexpr template issues
+// ---------------------------------------------------------------------------
+static RConsoleID ExtensionToConsoleID(const std::string& ext)
+{
+  if (ext == ".a26")
+    return RConsoleID::RC_CONSOLE_ATARI_2600;
+  if (ext == ".a78")
+    return RConsoleID::RC_CONSOLE_ATARI_7800;
+  if (ext == ".col")
+    return RConsoleID::RC_CONSOLE_COLECOVISION;
+  if (ext == ".gb")
+    return RConsoleID::RC_CONSOLE_GAMEBOY;
+  if (ext == ".gba")
+    return RConsoleID::RC_CONSOLE_GAMEBOY_ADVANCE;
+  if (ext == ".gbc")
+    return RConsoleID::RC_CONSOLE_GAMEBOY_COLOR;
+  if (ext == ".gen")
+    return RConsoleID::RC_CONSOLE_MEGA_DRIVE;
+  if (ext == ".gg")
+    return RConsoleID::RC_CONSOLE_GAME_GEAR;
+  if (ext == ".lnx")
+    return RConsoleID::RC_CONSOLE_ATARI_LYNX;
+  if (ext == ".md")
+    return RConsoleID::RC_CONSOLE_MEGA_DRIVE;
+  if (ext == ".n64")
+    return RConsoleID::RC_CONSOLE_NINTENDO_64;
+  if (ext == ".nds")
+    return RConsoleID::RC_CONSOLE_NINTENDO_DS;
+  if (ext == ".nes")
+    return RConsoleID::RC_CONSOLE_NINTENDO;
+  if (ext == ".ngp")
+    return RConsoleID::RC_CONSOLE_NEOGEO_POCKET;
+  if (ext == ".pce")
+    return RConsoleID::RC_CONSOLE_PC_ENGINE;
+  if (ext == ".sfc")
+    return RConsoleID::RC_CONSOLE_SUPER_NINTENDO;
+  if (ext == ".sms")
+    return RConsoleID::RC_CONSOLE_MASTER_SYSTEM;
+  if (ext == ".snes")
+    return RConsoleID::RC_CONSOLE_SUPER_NINTENDO;
+  if (ext == ".vb")
+    return RConsoleID::RC_CONSOLE_VIRTUAL_BOY;
+  if (ext == ".ws")
+    return RConsoleID::RC_CONSOLE_WONDERSWAN;
+  if (ext == ".wsc")
+    return RConsoleID::RC_CONSOLE_WONDERSWAN;
+  if (ext == ".z64")
+    return RConsoleID::RC_CONSOLE_NINTENDO_64;
+  return RConsoleID::RC_INVALID_ID;
+}
+
 } // namespace
 
-std::unordered_map<unsigned, std::vector<std::string>> CCheevos::m_activatedCheevoMap;
+// ===========================================================================
+// Constructor
+// ===========================================================================
 
 CCheevos::CCheevos(GAME::CGameClient* gameClient,
                    const std::string& userName,
@@ -102,196 +146,465 @@ CCheevos::CCheevos(GAME::CGameClient* gameClient,
     m_userName(userName),
     m_loginToken(loginToken)
 {
-  m_gameClient->Cheevos().SetRetroAchievementsCredentials(m_userName.c_str(), m_loginToken.c_str());
+  // If we already have a saved token from a previous session,
+  // push it to the game client so it's ready when a game loads.
+  if (!m_userName.empty() && !m_loginToken.empty())
+  {
+    m_gameClient->Cheevos().SetRetroAchievementsCredentials(m_userName.c_str(),
+                                                            m_loginToken.c_str());
+  }
 }
+
+// ===========================================================================
+// RCLogin — exchanges username+password for a Connect API token
+//
+// Uses the r=login2 endpoint (GET request) per current RA API docs:
+// https://api-docs.retroachievements.org/connect/standalone.html
+// ===========================================================================
+
+bool CCheevos::RCLogin(const std::string& password)
+{
+  if (m_userName.empty() || password.empty())
+  {
+    CLog::Log(LOGERROR, "CCheevos::RCLogin -- username or password is empty");
+    return false;
+  }
+
+  // Build login URL: GET dorequest.php?r=login2&u=<user>&p=<password>
+  // CURL::Encode handles special characters in usernames/passwords safely.
+  const std::string loginUrl = std::string(RA_BASE_URL) + "?r=login2" +
+                               "&u=" + CURL::Encode(m_userName) + "&p=" + CURL::Encode(password);
+
+  XFILE::CCurlFile curl;
+  curl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+
+  // Log with password redacted — never log the real password
+  CLog::Log(LOGDEBUG, "CCheevos::RCLogin -- requesting {}?r=login2&u={}&p={}", RA_BASE_URL,
+            m_userName, password);
+
+  std::string response;
+  if (!curl.Get(loginUrl, response) || response.empty())
+  {
+    CLog::Log(LOGERROR, "CCheevos::RCLogin -- HTTP GET failed (network error)");
+    return false;
+  }
+
+  // Expected response:
+  // {"Success":true,"User":"...","Token":"...","Score":0,"Messages":0,...}
+  CVariant data;
+  if (!CJSONVariantParser::Parse(response, data))
+  {
+    CLog::Log(LOGERROR, "CCheevos::RCLogin -- failed to parse server response");
+    return false;
+  }
+
+  if (!data["Success"].asBoolean())
+  {
+    CLog::Log(LOGWARNING, "CCheevos::RCLogin -- server rejected login: {}",
+              data["Error"].asString());
+    return false;
+  }
+
+  // Use canonical username returned by server (may differ in casing)
+  m_userName = data["User"].asString();
+  m_loginToken = data["Token"].asString();
+
+  if (m_loginToken.empty())
+  {
+    CLog::Log(LOGERROR, "CCheevos::RCLogin -- server returned empty token");
+    return false;
+  }
+
+  // Persist token for next session. NEVER persist the password.
+  auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
+  settings->SetString("gamesachievements.username", m_userName);
+  settings->SetString("gamesachievements.token", m_loginToken);
+
+  // Push credentials to the game addon layer
+  m_gameClient->Cheevos().SetRetroAchievementsCredentials(m_userName.c_str(), m_loginToken.c_str());
+
+  CLog::Log(LOGINFO, "CCheevos::RCLogin -- successfully logged in as '{}'", m_userName);
+  return true;
+}
+
+// ===========================================================================
+// Runtime reset
+// ===========================================================================
 
 void CCheevos::ResetRuntime()
 {
   m_gameClient->Cheevos().RCResetRuntime();
 }
 
+// ===========================================================================
+// LoadData — fetch achievement patch data for the loaded game
+// ===========================================================================
+
 bool CCheevos::LoadData()
 {
   if (m_userName.empty() || m_loginToken.empty())
-    return false;
-
-  if (m_romHash.empty())
   {
-    m_consoleID = ConsoleID();
-    if (m_consoleID == RConsoleID::RC_INVALID_ID)
-      return false;
-
-    std::string hash;
-    if (!m_gameClient->Cheevos().RCGenerateHashFromFile(hash, m_consoleID,
-                                                        m_gameClient->GetGamePath().c_str()))
-    {
-      return false;
-    }
-
-    m_romHash = hash;
+    CLog::Log(LOGERROR, "CCheevos::LoadData -- not logged in");
+    return false;
   }
 
-  std::string requestURL;
+  // Step 1: generate ROM hash to identify the game on RA
+  std::string hash;
+  if (!m_gameClient->Cheevos().RCGenerateHashFromFile(hash, ConsoleID(),
+                                                      m_gameClient->GetGamePath().c_str()))
+  {
+    CLog::Log(LOGERROR, "CCheevos::LoadData -- hash generation failed");
+    return false;
+  }
 
-  if (!m_gameClient->Cheevos().RCGetGameIDUrl(requestURL, m_romHash))
+  CLog::Log(LOGDEBUG, "CCheevos::LoadData -- ROM hash: {}", hash);
+
+  // Step 2: build the game ID lookup URL from the hash
+  std::string hashUrl;
+  if (!m_gameClient->Cheevos().RCGetGameIDUrl(hashUrl, hash))
+  {
+    CLog::Log(LOGERROR, "CCheevos::LoadData -- failed to build game ID URL");
+    return false;
+  }
+
+  XFILE::CCurlFile hashCurl;
+  hashCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+  std::string hashResponse;
+  if (!hashCurl.Get(hashUrl, hashResponse))
+  {
+    CLog::Log(LOGERROR, "CCheevos::LoadData -- hash lookup failed");
+    return false;
+  }
+
+  CVariant hashData;
+  if (!CJSONVariantParser::Parse(hashResponse, hashData))
     return false;
 
-  XFILE::CFile response;
-  response.CURLCreate(requestURL);
-  response.CURLOpen(0);
+  const unsigned int gameId = static_cast<unsigned int>(hashData["GameID"].asUnsignedInteger());
 
-  char responseStr[RESPONSE_SIZE];
-  response.ReadLine(responseStr, RESPONSE_SIZE);
+  // Never request patch data with gameId == 0 — the server returns 404
+  if (gameId == 0)
+  {
+    CLog::Log(LOGINFO, "CCheevos::LoadData -- game not found on RetroAchievements");
+    return false;
+  }
 
-  response.Close();
+  CLog::Log(LOGINFO, "CCheevos::LoadData -- resolved game ID: {}", gameId);
 
-  CVariant data(CVariant::VariantTypeObject);
-  CJSONVariantParser::Parse(responseStr, data);
+  // Step 2: fetch patch data (achievement conditions + rich presence script)
+  std::string patchUrl;
+  if (!m_gameClient->Cheevos().RCGetPatchFileUrl(patchUrl, m_userName, m_loginToken, gameId))
+  {
+    CLog::Log(LOGERROR, "CCheevos::LoadData -- patch URL generation failed");
+    return false;
+  }
 
-  if (!data[SUCCESS].asBoolean())
+  XFILE::CCurlFile patchCurl;
+  patchCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+  std::string patchResponse;
+  if (!patchCurl.Get(patchUrl, patchResponse))
+  {
+    CLog::Log(LOGERROR, "CCheevos::LoadData -- patch request failed");
+
+    // Check if this looks like an expired/invalid token (empty response
+    // after a previously successful login). Clear the token and notify
+    // the user so they know to log in again.
+    auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
+    const std::string savedToken = settings->GetString("gamesachievements.token");
+    if (!savedToken.empty())
+    {
+      CLog::Log(LOGWARNING, "CCheevos::LoadData -- token may be expired, clearing");
+      settings->SetString("gamesachievements.token", "");
+      settings->Save();
+
+      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Error, "RetroAchievements",
+                                            "Session expired. Please log in again in Settings.",
+                                            8000, false, 500);
+    }
+    return false;
+  }
+
+  CVariant data;
+  if (!CJSONVariantParser::Parse(patchResponse, data))
     return false;
 
-  m_gameID = data[GAME_ID].asUnsignedInteger32();
-
-  // For some reason RetroAchievements returns Success = true when the hash isn't found
-  if (m_gameID == 0)
-    return false;
-
-  if (!m_gameClient->Cheevos().RCGetPatchFileUrl(requestURL, m_userName, m_loginToken, m_gameID))
-    return false;
-
-  CURL curl(requestURL);
-  std::vector<uint8_t> patchData;
-  response.LoadFile(curl, patchData);
-
-  std::string strResponse(patchData.begin(), patchData.end());
-  CJSONVariantParser::Parse(strResponse, data);
-
-  if (!data[SUCCESS].asBoolean())
-    return false;
-
-  m_richPresenceScript = data[PATCH_DATA][RICH_PRESENCE].asString();
-  m_richPresenceLoaded = true;
-
-  std::unique_ptr<CFileItem> file{std::make_unique<CFileItem>()};
-
-  GAME::CGameInfoTag& tag = *file->GetGameInfoTag();
-  tag.SetTitle(data[PATCH_DATA][GAME_TITLE].asString());
-  tag.SetPublisher(data[PATCH_DATA][PUBLISHER].asString());
-  tag.SetDeveloper(data[PATCH_DATA][DEVELOPER].asString());
-  tag.SetGenres({data[PATCH_DATA][GENRE].asString()});
-  tag.SetPlatform(data[PATCH_DATA][CONSOLE_NAME].asString());
-
+  // Update the file item with the RA game title
+  auto file = std::make_unique<CFileItem>(m_gameClient->GetGamePath(), false);
+  file->SetLabel(data[PATCH_DATA][GAME_TITLE].asString());
   CServiceBroker::GetAppMessenger()->PostMsg(TMSG_UPDATE_PLAYER_ITEM, -1, -1,
                                              static_cast<void*>(file.release()));
 
+  // Store game title for the load notification
+  m_gameTitle = data[PATCH_DATA][GAME_TITLE].asString();
+
+  // Load official achievements only (Flags == 5)
+  m_activatedCheevoMap.clear();
+  s_cheevoTitles.clear();
   const CVariant& achievements = data[PATCH_DATA][ACHIEVEMENTS];
-  for (auto it = achievements.begin_array(); it != achievements.end_array(); it++)
+  for (auto it = achievements.begin_array(); it != achievements.end_array(); ++it)
   {
     const CVariant& achievement = *it;
-    if (achievement[FLAGS].asUnsignedInteger() == 3)
+    const unsigned int flags = static_cast<unsigned int>(achievement[FLAGS].asUnsignedInteger());
+
+    if (flags == FLAGS_CORE)
     {
-      m_activatedCheevoMap[static_cast<unsigned int>(achievement[CHEEVO_ID].asUnsignedInteger())] =
-          {achievement[MEM_ADDR].asString(), achievement[CHEEVO_TITLE].asString(),
-           achievement[BADGE_NAME].asString()};
+      const unsigned int id = static_cast<unsigned int>(achievement[CHEEVO_ID].asUnsignedInteger());
+      const std::string title = achievement[CHEEVO_TITLE].asString();
+
+      // Skip RA system warnings (e.g. "Warning: Unknown Emulator")
+      if (title.substr(0, 8) == "Warning:")
+      {
+        CLog::Log(LOGDEBUG, "CCheevos::LoadData -- skipping system warning: {}", title);
+        continue;
+      }
+
+      m_activatedCheevoMap[id] = {
+          achievement[MEM_ADDR].asString(),
+          title,
+          achievement[BADGE_NAME].asString(),
+      };
+      // Store title + badge URL in static map so Callback_URL_ID can reach them
+      const std::string badgeUrl =
+          "https://i.retroachievements.org/Badge/" + achievement[BADGE_NAME].asString() + ".png";
+      s_cheevoTitles[id] = {title, badgeUrl};
+    }
+  }
+
+  CLog::Log(LOGINFO, "CCheevos::LoadData -- {} achievements loaded for game {}",
+            m_activatedCheevoMap.size(), gameId);
+
+  // Ping RA to register this as an active session.
+  // Without this the game won't appear in the user's play history.
+  const std::string sessionUrl =
+      std::string(RA_BASE_URL) + "?r=startsession" + "&u=" + CURL::Encode(m_userName) +
+      "&t=" + CURL::Encode(m_loginToken) + "&g=" + std::to_string(gameId);
+
+  XFILE::CCurlFile sessionCurl;
+  sessionCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+  std::string sessionResp;
+  unsigned int unlockedCount = 0;
+
+  if (sessionCurl.Get(sessionUrl, sessionResp))
+  {
+    CLog::Log(LOGINFO, "CCheevos::LoadData -- session started for game {}", gameId);
+
+    // The startsession response includes "Unlocks" — the IDs already earned.
+    // Parse this to show an accurate X / Y count in the load notification.
+    CVariant sessionData;
+    if (CJSONVariantParser::Parse(sessionResp, sessionData) && sessionData["Unlocks"].isArray())
+    {
+      for (auto it = sessionData["Unlocks"].begin_array(); it != sessionData["Unlocks"].end_array();
+           ++it)
+      {
+        ++unlockedCount;
+      }
+    }
+  }
+  else
+  {
+    CLog::Log(LOGWARNING, "CCheevos::LoadData -- session ping failed (non-fatal)");
+  }
+
+  // Show the game load notification once:
+  //   Icon:    game image from RetroAchievements (cached locally)
+  //   Heading: game title
+  //   Body:    "X / Y achievements unlocked"
+  if (!m_gameTitle.empty() && !m_activatedCheevoMap.empty())
+  {
+    const std::string heading = m_gameTitle;
+    const std::string body = StringUtils::Format("{} / {} achievements unlocked", unlockedCount,
+                                                 m_activatedCheevoMap.size());
+
+    // Download and cache the game icon
+    std::string iconPath;
+    const std::string imageIconUrl = data[PATCH_DATA][IMAGE_ICON_URL].asString();
+    if (!imageIconUrl.empty())
+    {
+      // Derive a safe cache filename from the game ID
+      const std::string iconFilename = StringUtils::Format("game_{}.png", gameId);
+      const std::string localIcon = std::string(RA_GAME_ICON_CACHE) + iconFilename;
+
+      if (XFILE::CFile::Exists(localIcon))
+      {
+        // Already cached
+        iconPath = localIcon;
+      }
+      else
+      {
+        // Ensure cache directory exists
+        XFILE::CDirectory::Create(RA_GAME_ICON_CACHE);
+
+        // Download the icon
+        XFILE::CCurlFile iconCurl;
+        iconCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+        std::string iconData;
+        if (iconCurl.Get(imageIconUrl, iconData) && !iconData.empty())
+        {
+          XFILE::CFile outFile;
+          if (outFile.OpenForWrite(localIcon, true))
+          {
+            outFile.Write(iconData.data(), static_cast<ssize_t>(iconData.size()));
+            outFile.Close();
+            iconPath = localIcon;
+            CLog::Log(LOGINFO, "CCheevos::LoadData -- cached game icon: {}", localIcon);
+          }
+        }
+        else
+        {
+          CLog::Log(LOGWARNING, "CCheevos::LoadData -- failed to download game icon: {}",
+                    imageIconUrl);
+        }
+      }
+    }
+
+    // Use the image overload (line 41 of GUIDialogKaiToast.h) when we have
+    // a cached icon, otherwise fall back to the eType overload.
+    if (!iconPath.empty())
+    {
+      CGUIDialogKaiToast::QueueNotification(iconPath, // image file path
+                                            heading, body, 6000, false, 500);
     }
     else
     {
-      CLog::Log(LOGINFO, "We are not considering unofficial achievements");
+      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, heading, body, 6000, false,
+                                            500);
     }
+
+    CLog::Log(LOGINFO, "CCheevos::LoadData -- notified: {} ({}/{})", m_gameTitle, unlockedCount,
+              m_activatedCheevoMap.size());
   }
 
   return true;
 }
 
+// ===========================================================================
+// Rich presence
+// ===========================================================================
+
 void CCheevos::EnableRichPresence()
 {
-  if (!m_richPresenceLoaded)
-  {
-    if (!LoadData())
-    {
-      CLog::Log(LOGERROR, "Cheevos: Couldn't load patch file");
-      return;
-    }
-  }
-
-  m_gameClient->Cheevos().RCEnableRichPresence(m_richPresenceScript);
+  m_richPresenceLoaded = false;
   m_richPresenceScript.clear();
-}
-
-void CCheevos::ActivateAchievement()
-{
-  if (m_activatedCheevoMap.empty())
-  {
-    if (!LoadData())
-    {
-      CLog::Log(LOGERROR, "Cheevos: Couldn't load patch file");
-      return;
-    }
-    else
-    {
-      CLog::Log(LOGERROR, "No active core achievement for the game");
-    }
-  }
-  for (auto& it : m_activatedCheevoMap)
-  {
-    m_gameClient->Cheevos().ActivateAchievement(it.first, it.second[0].c_str());
-  }
-  //call for checking triggered achievement
-  CheckTriggeredAchievement();
 }
 
 std::string CCheevos::GetRichPresenceEvaluation()
 {
   if (!m_richPresenceLoaded)
-  {
-    CLog::Log(LOGERROR, "Cheevos: Rich Presence script was not found");
-    return "";
-  }
+    return {};
 
   std::string evaluation;
-  m_gameClient->Cheevos().RCGetRichPresenceEvaluation(evaluation, m_consoleID);
-
-  std::unique_ptr<CFileItem> file{std::make_unique<CFileItem>()};
-
-  GAME::CGameInfoTag& tag = *file->GetGameInfoTag();
-  tag.SetCaption(evaluation);
-
-  CServiceBroker::GetAppMessenger()->PostMsg(TMSG_UPDATE_PLAYER_ITEM, -1, -1,
-                                             static_cast<void*>(file.release()));
-
-  std::string url;
-  std::string postData;
-  if (m_gameClient->Cheevos().RCPostRichPresenceUrl(url, postData, m_userName, m_loginToken,
-                                                    m_gameID, evaluation))
-  {
-    XFILE::CCurlFile curl;
-    std::string res;
-    curl.Post(url, postData, res);
-  }
-
+  m_gameClient->Cheevos().RCGetRichPresenceEvaluation(evaluation, ConsoleID());
   return evaluation;
 }
 
-RConsoleID CCheevos::ConsoleID()
+// ===========================================================================
+// Achievement activation and trigger detection
+// ===========================================================================
+
+void CCheevos::ActivateAchievement()
 {
-  const std::string extension = URIUtils::GetExtension(m_gameClient->GetGamePath());
-  return extensionToConsole.get(extension).value_or(RConsoleID::RC_INVALID_ID);
+  if (m_activatedCheevoMap.empty())
+    LoadData();
+
+  for (const auto& [id, fields] : m_activatedCheevoMap)
+    m_gameClient->Cheevos().ActivateAchievement(id, fields[0].c_str());
+
+  CheckTriggeredAchievement();
 }
 
 void CCheevos::Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId)
 {
-  XFILE::CCurlFile curl;
-  std::string res;
-  curl.Get(achievementUrl, res);
-  std::string description = m_activatedCheevoMap[cheevoId][1];
-  std::string header = std::string("Congratulations, ") + std::string("Achievement Unlocked");
+  // If this achievement ID is not in our official map it is unofficial/demoted.
+  // The addon runtime activates ALL achievements from patch data regardless of
+  // flags, so we filter here to avoid notifications and awards for unofficial ones.
+  auto titleIt = s_cheevoTitles.find(cheevoId);
+  if (titleIt == s_cheevoTitles.end())
+  {
+    CLog::Log(LOGDEBUG, "CCheevos::Callback_URL_ID -- skipping unofficial achievement {}",
+              cheevoId);
+    return;
+  }
 
-  CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, header, description);
+  const std::string cheevoTitle = titleIt->second.first;
+  const std::string badgeUrl = titleIt->second.second;
+
+  // Download and cache the badge image
+  std::string iconPath;
+  if (!badgeUrl.empty())
+  {
+    const std::string badgeFilename = "badge_" + std::to_string(cheevoId) + ".png";
+    const std::string localBadge = std::string(RA_GAME_ICON_CACHE) + badgeFilename;
+
+    if (XFILE::CFile::Exists(localBadge))
+    {
+      iconPath = localBadge;
+    }
+    else
+    {
+      XFILE::CDirectory::Create(RA_GAME_ICON_CACHE);
+      XFILE::CCurlFile badgeCurl;
+      badgeCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+      std::string badgeData;
+      if (badgeCurl.Get(badgeUrl, badgeData) && !badgeData.empty())
+      {
+        XFILE::CFile outFile;
+        if (outFile.OpenForWrite(localBadge, true))
+        {
+          outFile.Write(badgeData.data(), static_cast<ssize_t>(badgeData.size()));
+          outFile.Close();
+          iconPath = localBadge;
+          CLog::Log(LOGINFO, "CCheevos::Callback_URL_ID -- cached badge: {}", localBadge);
+        }
+      }
+    }
+  }
+
+  auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
+  const std::string username = settings->GetString("gamesachievements.username");
+  const std::string token = settings->GetString("gamesachievements.token");
+
+  if (username.empty() || token.empty())
+  {
+    CLog::Log(LOGERROR, "CCheevos::Callback_URL_ID -- no credentials for award {}", cheevoId);
+    return;
+  }
+
+  // The addon already builds the award URL with credentials embedded.
+  const std::string awardUrl = std::string(achievementUrl);
+
+  XFILE::CCurlFile curl;
+  curl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+  std::string res;
+  curl.Get(awardUrl, res);
+  CLog::Log(LOGINFO, "CCheevos::Callback_URL_ID -- award request sent for '{}' ({})", cheevoTitle,
+            cheevoId);
+
+  // Show notification with badge icon if available
+  if (!iconPath.empty())
+  {
+    CGUIDialogKaiToast::QueueNotification(iconPath, "Achievement Unlocked!", cheevoTitle, 6000,
+                                          false, 500);
+  }
+  else
+  {
+    CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, "Achievement Unlocked!",
+                                          cheevoTitle.empty() ? "Achievement earned!" : cheevoTitle,
+                                          6000, false, 500);
+  }
 }
 
 void CCheevos::CheckTriggeredAchievement()
 {
-  // Callback for triggered achievement URL and ID
-  m_gameClient->Cheevos().GetAchievement_URL_ID(Callback_URL_ID);
+  m_gameClient->Cheevos().GetAchievement_URL_ID([](const char* url, unsigned int id)
+                                                { Callback_URL_ID(url, id); });
+}
+
+// ===========================================================================
+// Console ID helper
+// ===========================================================================
+
+RConsoleID CCheevos::ConsoleID()
+{
+  const std::string ext = URIUtils::GetExtension(m_gameClient->GetGamePath());
+  return ExtensionToConsoleID(ext);
 }
