@@ -30,8 +30,8 @@
 using namespace KODI;
 using namespace GAME;
 
-CDialogGameVideoSelect::CDialogGameVideoSelect(int windowId)
-  : CGUIDialog(windowId, "DialogSelect.xml"),
+CDialogGameVideoSelect::CDialogGameVideoSelect(int windowId, const std::string& xmlFile)
+  : CGUIDialog(windowId, xmlFile.empty() ? "DialogSelect.xml" : xmlFile),
     m_viewControl(new CGUIViewControl),
     m_vecItems(new CFileItemList)
 {
