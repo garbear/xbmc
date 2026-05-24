@@ -72,6 +72,7 @@ constexpr auto PATCH_DATA = "PatchData";
 constexpr auto GAME_TITLE = "Title";
 constexpr auto IMAGE_ICON_URL = "ImageIconURL";
 constexpr auto RA_GAME_ICON_CACHE = "special://profile/cache/retroachievements/icons/";
+constexpr auto RA_AWARD_QUEUE_FILE = "special://profile/cache/retroachievements/pending_awards.txt";
 constexpr auto ACHIEVEMENTS = "Achievements";
 constexpr auto MEM_ADDR = "MemAddr";
 constexpr auto CHEEVO_ID = "ID";
@@ -572,6 +573,72 @@ void CCheevos::ActivateAchievement()
   CheckTriggeredAchievement();
 }
 
+// ---------------------------------------------------------------------------
+// Offline award queue helpers
+// ---------------------------------------------------------------------------
+static void FlushAwardQueue()
+{
+  if (!XFILE::CFile::Exists(RA_AWARD_QUEUE_FILE))
+    return;
+
+  XFILE::CFile queueFile;
+  std::vector<uint8_t> data;
+  if (queueFile.LoadFile(CURL(RA_AWARD_QUEUE_FILE), data) <= 0)
+    return;
+
+  const std::string queueData(data.begin(), data.end());
+  std::vector<std::string> urls = StringUtils::Split(queueData, "\n");
+
+
+  std::vector<std::string> remaining;
+  for (const auto& url : urls)
+  {
+    if (url.empty())
+      continue;
+
+    XFILE::CCurlFile curl;
+    curl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+    std::string response;
+    if (curl.Get(url, response))
+      CLog::Log(LOGINFO, "CCheevos: flushed queued award: {}", url);
+    else
+    {
+      CLog::Log(LOGWARNING, "CCheevos: queued award still failing, keeping: {}", url);
+      remaining.push_back(url);
+    }
+  }
+
+  // Rewrite queue with only the still-failing ones
+  if (remaining.empty())
+  {
+    XFILE::CFile::Delete(RA_AWARD_QUEUE_FILE);
+  }
+  else
+  {
+    XFILE::CFile outFile;
+    if (outFile.OpenForWrite(CURL(RA_AWARD_QUEUE_FILE), true))
+    {
+      const std::string newData = StringUtils::Join(remaining, "\n") + "\n";
+      outFile.Write(newData.data(), static_cast<ssize_t>(newData.size()));
+      outFile.Close();
+    }
+  }
+}
+
+static void QueueAward(const std::string& url)
+{
+  XFILE::CDirectory::Create("special://profile/cache/retroachievements/");
+  XFILE::CFile outFile;
+  if (outFile.OpenForWrite(CURL(RA_AWARD_QUEUE_FILE), false))
+  {
+    const std::string line = url + "\n";
+    outFile.Seek(0, SEEK_END);
+    outFile.Write(line.data(), static_cast<ssize_t>(line.size()));
+    outFile.Close();
+    CLog::Log(LOGWARNING, "CCheevos: award queued for retry: {}", url);
+  }
+}
+
 void CCheevos::Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId)
 {
   // If this achievement ID is not in our official map it is unofficial/demoted.
@@ -587,6 +654,28 @@ void CCheevos::Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId
 
   const std::string cheevoTitle = titleIt->second.first;
   const std::string badgeUrl = titleIt->second.second;
+
+  // The addon already builds the award URL with credentials embedded.
+  const std::string awardUrl = std::string(achievementUrl);
+
+  // Flush any previously queued awards first
+  FlushAwardQueue();
+
+  // Send award to RA server
+  XFILE::CCurlFile curl;
+  curl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+  std::string res;
+  if (curl.Get(awardUrl, res))
+  {
+    CLog::Log(LOGINFO, "CCheevos::Callback_URL_ID -- award sent for '{}' ({})",
+              cheevoTitle, cheevoId);
+  }
+  else
+  {
+    CLog::Log(LOGWARNING, "CCheevos::Callback_URL_ID -- award failed, queuing for retry: {}",
+              cheevoId);
+    QueueAward(awardUrl);
+  }
 
   // Check if badge is already cached; download in background if not
   std::string iconPath;
@@ -621,7 +710,7 @@ void CCheevos::Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId
       }).detach();
     }
   }
-    // Show notification with badge icon if available
+  // Show notification with badge icon if available
   if (!iconPath.empty())
   {
     CGUIDialogKaiToast::QueueNotification(iconPath, "Achievement Unlocked!", cheevoTitle, 6000,
@@ -632,6 +721,53 @@ void CCheevos::Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId
     CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, "Achievement Unlocked!",
                                           cheevoTitle.empty() ? "Achievement earned!" : cheevoTitle,
                                           6000, false, 500);
+  }
+
+  // Update unlocked count in shared state and check for mastery
+  {
+    auto state = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
+    state.unlockedAchievements++;
+
+    // Mark this achievement as earned in the per-achievement list
+    for (auto& info : state.achievements)
+    {
+      if (info.title == cheevoTitle)
+      {
+        info.earned = true;
+        break;
+      }
+    }
+
+    CServiceBroker::GetGameServices().GameSettings().SetAchievementState(state);
+
+    // Mastery notification — all achievements unlocked
+    if (state.totalAchievements > 0 &&
+        state.unlockedAchievements >= state.totalAchievements)
+    {
+      CLog::Log(LOGINFO, "CCheevos::Callback_URL_ID -- mastery achieved for '{}'",
+                state.gameTitle);
+
+      // Use the cached game icon for the mastery notification
+      const std::string masteryIcon = std::string(RA_GAME_ICON_CACHE)
+          + StringUtils::Format("game_{}.png", state.gameId);
+
+      if (XFILE::CFile::Exists(masteryIcon))
+      {
+        CGUIDialogKaiToast::QueueNotification(
+            masteryIcon,
+            "Mastered!",
+            state.gameTitle,
+            8000, false, 500);
+      }
+      else
+      {
+        CGUIDialogKaiToast::QueueNotification(
+            CGUIDialogKaiToast::Info,
+            "Mastered!",
+            state.gameTitle,
+            8000, false, 500);
+      }
+    }
   }
 }
 
