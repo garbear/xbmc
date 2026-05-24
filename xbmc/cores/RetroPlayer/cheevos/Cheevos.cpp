@@ -33,6 +33,8 @@
 #include "filesystem/CurlFile.h"
 #include "filesystem/Directory.h"
 #include "filesystem/File.h"
+#include "games/GameServices.h"
+#include "games/GameSettings.h"
 #include "games/addons/GameClient.h"
 #include "games/addons/cheevos/GameClientCheevos.h"
 #include "messaging/ApplicationMessenger.h"
@@ -154,6 +156,20 @@ CCheevos::CCheevos(GAME::CGameClient* gameClient,
     m_gameClient->Cheevos().SetRetroAchievementsCredentials(m_userName.c_str(),
                                                             m_loginToken.c_str());
   }
+}
+
+// ===========================================================================
+// Destructor — stop rich presence thread cleanly
+// ===========================================================================
+
+CCheevos::~CCheevos()
+{
+  m_richPresenceRunning = false;
+  if (m_richPresenceThread.joinable())
+    m_richPresenceThread.join();
+
+  CServiceBroker::GetGameServices().GameSettings().ClearAchievementState();
+  CLog::Log(LOGDEBUG, "CCheevos::~CCheevos -- cleaned up");
 }
 
 // ===========================================================================
@@ -375,6 +391,22 @@ bool CCheevos::LoadData()
   CLog::Log(LOGINFO, "CCheevos::LoadData -- {} achievements loaded for game {}",
             m_activatedCheevoMap.size(), gameId);
 
+  // Update achievement state in GameSettings so GamesGUIInfo InfoLabels can access it
+  KODI::GAME::CGameSettings::AchievementState achieveState;
+  achieveState.gameTitle         = m_gameTitle;
+  achieveState.gameId            = gameId;
+  achieveState.totalAchievements = static_cast<unsigned int>(m_activatedCheevoMap.size());
+  achieveState.loaded            = true;
+  for (const auto& [id, fields] : m_activatedCheevoMap)
+  {
+    KODI::GAME::CGameSettings::AchievementInfo info;
+    info.title    = fields[1];
+    info.badgeUrl = "https://i.retroachievements.org/Badge/" + fields[2] + ".png";
+    info.earned   = false;
+    achieveState.achievements.push_back(std::move(info));
+  }
+  // State set after session ping below with correct unlock count
+
   // Load and enable rich presence script if present
   const std::string richPresenceScript = data[PATCH_DATA][RICH_PRESENCE_PATCH].asString();
   if (!richPresenceScript.empty())
@@ -419,6 +451,16 @@ bool CCheevos::LoadData()
   else
   {
     CLog::Log(LOGWARNING, "CCheevos::LoadData -- session ping failed (non-fatal)");
+  }
+
+  // Push unlock count into shared state via a fresh set call
+  {
+    auto stateCopy = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
+    achieveState.unlockedAchievements = unlockedCount;
+    CServiceBroker::GetGameServices().GameSettings().SetAchievementState(achieveState);
+    CLog::Log(LOGINFO, "CCheevos::LoadData -- achievement state set: title='{}' total={} unlocked={}",
+              achieveState.gameTitle, achieveState.totalAchievements, unlockedCount);
+    CServiceBroker::GetGameServices().GameSettings().SetAchievementState(stateCopy);
   }
 
   // Show the game load notification once:
@@ -507,6 +549,9 @@ void CCheevos::EnableRichPresence()
   m_richPresenceLoaded = false;
   m_richPresenceScript.clear();
   m_gameId = 0;
+
+  // Clear achievement state when game unloads
+  CServiceBroker::GetGameServices().GameSettings().ClearAchievementState();
 }
 
 std::string CCheevos::GetRichPresenceEvaluation()
@@ -631,9 +676,9 @@ void CCheevos::RichPresencePingThread()
 
   while (m_richPresenceRunning)
   {
-    // Wait 2 minutes between pings per RA spec, checking stop flag each second
-    for (int i = 0; i < 120 && m_richPresenceRunning; ++i)
-      std::this_thread::sleep_for(std::chrono::seconds(1));
+    // Wait 2 minutes between pings per RA spec, checking stop flag every 100ms
+    for (int i = 0; i < 1200 && m_richPresenceRunning; ++i)
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     if (!m_richPresenceRunning)
       break;

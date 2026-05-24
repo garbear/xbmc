@@ -7,7 +7,6 @@
  */
 
 #include "guilib/guiinfo/GamesGUIInfo.h"
-
 #include "FileItem.h"
 #include "GUIInfoManager.h"
 #include "ServiceBroker.h"
@@ -18,6 +17,8 @@
 #include "application/ApplicationComponents.h"
 #include "application/ApplicationPlayer.h"
 #include "cores/RetroPlayer/RetroPlayerUtils.h"
+#include "games/GameServices.h"
+#include "games/GameSettings.h"
 #include "games/addons/GameClient.h"
 #include "games/tags/GameInfoTag.h"
 #include "guilib/GUIComponent.h"
@@ -35,57 +36,29 @@ using namespace KODI::RETRO;
 
 namespace
 {
-/*!
- * \brief Helper to get the currently-playing game tag
- *
- * This bypasses the global application player by using GUIInfoManager instead.
- *
- * The currently-playing item flow:
- *
- *   - Arrives via play command
- *   - Sent to the application player, which copies the item for itself
- *   - Sent to the GUIInfoManager via GUI_MSG_PLAYBACK_STARTED from the player
- *     calling CApplicationPlayerCallback::OnPlayBackStarted(). Also copies any
- *     updates back to the player.
- *   - The item can be updated at runtime via TMSG_UPDATE_PLAYER_ITEM, which
- *     updates the application's item silently and GUIInfoManager directly
- */
 const CGameInfoTag* GetGUIGameTag()
 {
-  // Use const access because infotags can accidentally be created
-  // when querying a tag that isn't set, which can completely break
-  // all downstream is-video/audio/game checks
   if (const auto* gui = CServiceBroker::GetGUIConst(); gui != nullptr)
     return gui->GetInfoManager().GetCurrentGameTag();
-
   return nullptr;
 }
 } // namespace
-
-//! @todo Savestates were removed from v18
-//#define FILEITEM_PROPERTY_SAVESTATE_DURATION  "duration"
 
 bool CGamesGUIInfo::InitCurrentItem(CFileItem* item)
 {
   if (item && item->IsGame())
   {
     CLog::Log(LOGDEBUG, "CGamesGUIInfo::InitCurrentItem({})", item->GetPath());
-
     item->LoadGameTag();
-    CGameInfoTag* tag =
-        item->GetGameInfoTag(); // creates item if not yet set, so no nullptr checks needed
-
+    CGameInfoTag* tag = item->GetGameInfoTag();
     if (tag->GetTitle().empty())
     {
-      // No title in tag, derive one from the item path
       std::string title = CUtil::GetTitleFromPath(item->GetPath(), item->IsFolder());
       if (!title.empty())
         tag->SetTitle(title);
     }
-
     if (tag->GetPlatform().empty())
     {
-      // No platform in tag, get the platform from its game client if possible
       if (const std::string& gameClient = tag->GetGameClient(); !gameClient.empty())
       {
         ADDON::AddonPtr addon;
@@ -99,10 +72,8 @@ bool CGamesGUIInfo::InitCurrentItem(CFileItem* item)
         }
       }
     }
-
     return true;
   }
-
   return false;
 }
 
@@ -114,9 +85,6 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
 {
   switch (info.GetInfo())
   {
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // RETROPLAYER_*
-    ///////////////////////////////////////////////////////////////////////////////////////////////
     case RETROPLAYER_VIDEO_FILTER:
     {
       value = CMediaSettings::GetInstance().GetCurrentGameSettings().VideoFilter();
@@ -124,15 +92,13 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
     }
     case RETROPLAYER_STRETCH_MODE:
     {
-      STRETCHMODE stretchMode =
-          CMediaSettings::GetInstance().GetCurrentGameSettings().StretchMode();
+      STRETCHMODE stretchMode = CMediaSettings::GetInstance().GetCurrentGameSettings().StretchMode();
       value = CRetroPlayerUtils::StretchModeToIdentifier(stretchMode);
       return true;
     }
     case RETROPLAYER_VIDEO_ROTATION:
     {
-      const unsigned int rotationDegCCW =
-          CMediaSettings::GetInstance().GetCurrentGameSettings().RotationDegCCW();
+      const unsigned int rotationDegCCW = CMediaSettings::GetInstance().GetCurrentGameSettings().RotationDegCCW();
       value = std::to_string(rotationDegCCW);
       return true;
     }
@@ -203,16 +169,65 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
     {
       const auto& components = CServiceBroker::GetAppComponents();
       const auto appPlayer = components.GetComponent<CApplicationPlayer>();
-
       if (appPlayer)
         value = appPlayer->DiscLabel();
-
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_GAME_TITLE:
+    {
+      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementState().gameTitle;
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_TOTAL:
+    {
+      value = std::to_string(CServiceBroker::GetGameServices().GameSettings().GetAchievementState().totalAchievements);
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_UNLOCKED:
+    {
+      value = std::to_string(CServiceBroker::GetGameServices().GameSettings().GetAchievementState().unlockedAchievements);
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE:
+    {
+      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementState().richPresence;
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_TITLE:
+    {
+      const auto state = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = state.achievements[idx].title;
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_DESCRIPTION:
+    {
+      const auto state = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = state.achievements[idx].description;
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_BADGE_URL:
+    {
+      const auto state = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = state.achievements[idx].badgeUrl;
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_POINTS:
+    {
+      const auto state = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = std::to_string(state.achievements[idx].points);
       return true;
     }
     default:
       break;
   }
-
   return false;
 }
 
@@ -231,39 +246,42 @@ bool CGamesGUIInfo::GetBool(bool& value,
 {
   switch (info.GetInfo())
   {
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // RETROPLAYER_*
-    ///////////////////////////////////////////////////////////////////////////////////////////////
     case RETROPLAYER_SUPPORTS_EJECT:
     {
       const auto& components = CServiceBroker::GetAppComponents();
       const auto appPlayer = components.GetComponent<CApplicationPlayer>();
-
       value = appPlayer && appPlayer->SupportsDiscControl();
-
       return true;
     }
     case RETROPLAYER_DISC_EJECTED:
     {
       const auto& components = CServiceBroker::GetAppComponents();
       const auto appPlayer = components.GetComponent<CApplicationPlayer>();
-
       value = appPlayer && appPlayer->IsDiscEjected();
-
       return true;
     }
     case RETROPLAYER_EMPTY_TRAY:
     {
       const auto& components = CServiceBroker::GetAppComponents();
       const auto appPlayer = components.GetComponent<CApplicationPlayer>();
-
       value = appPlayer && appPlayer->IsTrayEmpty();
-
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_LOADED:
+    {
+      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementState().loaded;
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENT_EARNED:
+    {
+      const auto state = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
+      const int idx = info.GetData2();
+      if (idx >= 0 && idx < static_cast<int>(state.achievements.size()))
+        value = state.achievements[idx].earned;
       return true;
     }
     default:
       break;
   }
-
   return false;
 }

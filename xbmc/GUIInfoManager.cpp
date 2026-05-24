@@ -11066,6 +11066,18 @@ int CGUIInfoManager::TranslateSingleString(const std::string &strCondition, bool
         if (prop.Name() == i.str)
           return i.val;
       }
+
+      // Indexed achievement InfoLabels: RetroPlayer.Achievement.Title(n) etc.
+      if (prop.Name() == "achievement.title")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, atoi(prop.param().c_str())));
+      if (prop.Name() == "achievement.description")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_DESCRIPTION, 0, atoi(prop.param().c_str())));
+      if (prop.Name() == "achievement.badgeurl")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_BADGE_URL, 0, atoi(prop.param().c_str())));
+      if (prop.Name() == "achievement.earned")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, atoi(prop.param().c_str())));
+      if (prop.Name() == "achievement.points")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_POINTS, 0, atoi(prop.param().c_str())));
     }
     else if (cat.Name() == "slideshow")
     {

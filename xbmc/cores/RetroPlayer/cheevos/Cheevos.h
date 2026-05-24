@@ -32,6 +32,7 @@ namespace RETRO
 class CCheevos
 {
 public:
+  ~CCheevos();
   CCheevos(GAME::CGameClient* gameClient,
            const std::string& userName,
            const std::string& loginToken);

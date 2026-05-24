@@ -41,6 +41,31 @@ public:
   std::string GetRAUsername() const;
   std::string GetRAToken() const;
 
+  // Achievement state — updated by CCheevos when a game loads
+  struct AchievementInfo
+  {
+    std::string title;
+    std::string description;
+    std::string badgeUrl;
+    unsigned int points{0};
+    bool earned{false};
+  };
+
+  struct AchievementState
+  {
+    std::string gameTitle;
+    unsigned int gameId{0};
+    unsigned int totalAchievements{0};
+    unsigned int unlockedAchievements{0};
+    std::string richPresence;
+    std::vector<AchievementInfo> achievements;
+    bool loaded{false};
+  };
+
+  void SetAchievementState(const AchievementState& state) { m_achievementState = state; }
+  void ClearAchievementState() { m_achievementState = AchievementState{}; }
+  AchievementState GetAchievementState() const { return m_achievementState; }
+
   // Inherited from ISettingCallback
   void OnSettingChanged(const std::shared_ptr<const CSetting>& setting) override;
 
@@ -52,6 +77,9 @@ private:
 
   // Construction parameters
   std::shared_ptr<CSettings> m_settings;
+
+  // Current achievement state
+  AchievementState m_achievementState;
 };
 
 } // namespace GAME
