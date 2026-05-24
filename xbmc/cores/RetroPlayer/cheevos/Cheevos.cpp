@@ -453,15 +453,11 @@ bool CCheevos::LoadData()
     CLog::Log(LOGWARNING, "CCheevos::LoadData -- session ping failed (non-fatal)");
   }
 
-  // Push unlock count into shared state via a fresh set call
-  {
-    auto stateCopy = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
-    achieveState.unlockedAchievements = unlockedCount;
-    CServiceBroker::GetGameServices().GameSettings().SetAchievementState(achieveState);
-    CLog::Log(LOGINFO, "CCheevos::LoadData -- achievement state set: title='{}' total={} unlocked={}",
-              achieveState.gameTitle, achieveState.totalAchievements, unlockedCount);
-    CServiceBroker::GetGameServices().GameSettings().SetAchievementState(stateCopy);
-  }
+  // Set achievement state with correct unlock count from session ping
+  achieveState.unlockedAchievements = unlockedCount;
+  CServiceBroker::GetGameServices().GameSettings().SetAchievementState(achieveState);
+  CLog::Log(LOGINFO, "CCheevos::LoadData -- achievement state set: title='{}' total={} unlocked={}",
+            achieveState.gameTitle, achieveState.totalAchievements, unlockedCount);
 
   // Show the game load notification once:
   //   Icon:    game image from RetroAchievements (cached locally)
@@ -473,49 +469,46 @@ bool CCheevos::LoadData()
     const std::string body = StringUtils::Format("{} / {} achievements unlocked", unlockedCount,
                                                  m_activatedCheevoMap.size());
 
-    // Download and cache the game icon
+    // Check if icon is already cached; download in background if not
+    // so game startup is not delayed by a network request
     std::string iconPath;
     const std::string imageIconUrl = data[PATCH_DATA][IMAGE_ICON_URL].asString();
     if (!imageIconUrl.empty())
     {
-      // Derive a safe cache filename from the game ID
       const std::string iconFilename = StringUtils::Format("game_{}.png", gameId);
       const std::string localIcon = std::string(RA_GAME_ICON_CACHE) + iconFilename;
-
       if (XFILE::CFile::Exists(localIcon))
       {
-        // Already cached
         iconPath = localIcon;
       }
       else
       {
-        // Ensure cache directory exists
-        XFILE::CDirectory::Create(RA_GAME_ICON_CACHE);
-
-        // Download the icon
-        XFILE::CCurlFile iconCurl;
-        iconCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
-        std::string iconData;
-        if (iconCurl.Get(imageIconUrl, iconData) && !iconData.empty())
+        // Not cached yet - download in background, will be available on next load
+        std::thread([imageIconUrl, localIcon]()
         {
-          XFILE::CFile outFile;
-          if (outFile.OpenForWrite(localIcon, true))
+          XFILE::CDirectory::Create(RA_GAME_ICON_CACHE);
+          XFILE::CCurlFile iconCurl;
+          iconCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+          std::string iconData;
+          if (iconCurl.Get(imageIconUrl, iconData) && !iconData.empty())
           {
-            outFile.Write(iconData.data(), static_cast<ssize_t>(iconData.size()));
-            outFile.Close();
-            iconPath = localIcon;
-            CLog::Log(LOGINFO, "CCheevos::LoadData -- cached game icon: {}", localIcon);
+            XFILE::CFile outFile;
+            if (outFile.OpenForWrite(localIcon, true))
+            {
+              outFile.Write(iconData.data(), static_cast<ssize_t>(iconData.size()));
+              outFile.Close();
+              CLog::Log(LOGINFO, "CCheevos::LoadData -- cached game icon: {}", localIcon);
+            }
           }
-        }
-        else
-        {
-          CLog::Log(LOGWARNING, "CCheevos::LoadData -- failed to download game icon: {}",
-                    imageIconUrl);
-        }
+          else
+          {
+            CLog::Log(LOGWARNING, "CCheevos::LoadData -- failed to download game icon: {}",
+                      imageIconUrl);
+          }
+        }).detach();
       }
     }
-
-    // Use the image overload (line 41 of GUIDialogKaiToast.h) when we have
+        // Use the image overload (line 41 of GUIDialogKaiToast.h) when we have
     // a cached icon, otherwise fall back to the eType overload.
     if (!iconPath.empty())
     {
@@ -595,58 +588,40 @@ void CCheevos::Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId
   const std::string cheevoTitle = titleIt->second.first;
   const std::string badgeUrl = titleIt->second.second;
 
-  // Download and cache the badge image
+  // Check if badge is already cached; download in background if not
   std::string iconPath;
   if (!badgeUrl.empty())
   {
     const std::string badgeFilename = "badge_" + std::to_string(cheevoId) + ".png";
     const std::string localBadge = std::string(RA_GAME_ICON_CACHE) + badgeFilename;
-
     if (XFILE::CFile::Exists(localBadge))
     {
       iconPath = localBadge;
     }
     else
     {
-      XFILE::CDirectory::Create(RA_GAME_ICON_CACHE);
-      XFILE::CCurlFile badgeCurl;
-      badgeCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
-      std::string badgeData;
-      if (badgeCurl.Get(badgeUrl, badgeData) && !badgeData.empty())
+      // Download in background — badge will be available on next trigger
+      const std::string badgeUrlCopy = badgeUrl;
+      std::thread([badgeUrlCopy, localBadge]()
       {
-        XFILE::CFile outFile;
-        if (outFile.OpenForWrite(localBadge, true))
+        XFILE::CDirectory::Create(RA_GAME_ICON_CACHE);
+        XFILE::CCurlFile badgeCurl;
+        badgeCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+        std::string badgeData;
+        if (badgeCurl.Get(badgeUrlCopy, badgeData) && !badgeData.empty())
         {
-          outFile.Write(badgeData.data(), static_cast<ssize_t>(badgeData.size()));
-          outFile.Close();
-          iconPath = localBadge;
-          CLog::Log(LOGINFO, "CCheevos::Callback_URL_ID -- cached badge: {}", localBadge);
+          XFILE::CFile outFile;
+          if (outFile.OpenForWrite(localBadge, true))
+          {
+            outFile.Write(badgeData.data(), static_cast<ssize_t>(badgeData.size()));
+            outFile.Close();
+            CLog::Log(LOGINFO, "CCheevos::Callback_URL_ID -- cached badge: {}", localBadge);
+          }
         }
-      }
+      }).detach();
     }
   }
-
-  auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
-  const std::string username = settings->GetString("gamesachievements.username");
-  const std::string token = settings->GetString("gamesachievements.token");
-
-  if (username.empty() || token.empty())
-  {
-    CLog::Log(LOGERROR, "CCheevos::Callback_URL_ID -- no credentials for award {}", cheevoId);
-    return;
-  }
-
-  // The addon already builds the award URL with credentials embedded.
-  const std::string awardUrl = std::string(achievementUrl);
-
-  XFILE::CCurlFile curl;
-  curl.SetRequestHeader("User-Agent", RA_USER_AGENT);
-  std::string res;
-  curl.Get(awardUrl, res);
-  CLog::Log(LOGINFO, "CCheevos::Callback_URL_ID -- award request sent for '{}' ({})", cheevoTitle,
-            cheevoId);
-
-  // Show notification with badge icon if available
+    // Show notification with badge icon if available
   if (!iconPath.empty())
   {
     CGUIDialogKaiToast::QueueNotification(iconPath, "Achievement Unlocked!", cheevoTitle, 6000,
