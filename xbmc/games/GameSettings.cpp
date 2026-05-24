@@ -10,7 +10,6 @@
 
 #include "ServiceBroker.h"
 #include "URL.h"
-#include "dialogs/GUIDialogKaiToast.h"
 #include "events/EventLog.h"
 #include "events/NotificationEvent.h"
 #include "filesystem/CurlFile.h"
@@ -44,6 +43,16 @@ const std::string SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN = "gamesachievements.logg
 
 // FIX 1: Use HTTPS (not HTTP)
 // FIX 2: Use r=login2 (r=login is deprecated and may return unexpected results)
+// Localised string IDs for RetroAchievements notifications
+// 35264 = "RetroAchievements" (heading)
+// 35266 = "Failed to contact server"
+// 35267 = "Invalid response from server"
+// 35282 = "achievements unlocked"
+// 35283 = "Logged in as {0:s}"
+// 35284 = "Session expired. Please log in again in Settings."
+// 35285 = "Could not reach retroachievements.org. Check your network."
+// 35286 = "Invalid response from server."
+// 35287 = "RetroAchievements Login Failed"
 constexpr auto LOGIN_TO_RETRO_ACHIEVEMENTS_URL_TEMPLATE =
     "https://retroachievements.org/dorequest.php?r=login2&u={}&p={}";
 
@@ -214,9 +223,10 @@ std::string CGameSettings::LoginToRA(const std::string& username,
 
         CLog::Log(LOGINFO, "CGameSettings::LoginToRA -- logged in successfully as '{}'", username);
 
-        CGUIDialogKaiToast::QueueNotification("", "RetroAchievements",
-                                              StringUtils::Format("Logged in as {}", username),
-                                              5000, false, 500);
+        CServiceBroker::GetEventLog()->AddWithNotification(
+            EventPtr(new CNotificationEvent(35264,
+                StringUtils::Format("Logged in as {}", username),
+                EventLevel::Information)));
       }
       else
       {
@@ -225,26 +235,26 @@ std::string CGameSettings::LoginToRA(const std::string& username,
         const std::string errorMsg = data["Error"].asString();
         CLog::Log(LOGWARNING, "CGameSettings::LoginToRA -- server rejected: {}", errorMsg);
 
-        CGUIDialogKaiToast::QueueNotification(
-            "", "RetroAchievements Login Failed",
-            errorMsg.empty() ? "Incorrect username or password." : errorMsg, 8000, false, 500);
+        CServiceBroker::GetEventLog()->AddWithNotification(
+            EventPtr(new CNotificationEvent(35264,
+                errorMsg.empty() ? std::string("Incorrect username or password.") : errorMsg,
+                EventLevel::Error)));
       }
     }
     else
     {
       CLog::Log(LOGERROR, "CGameSettings::LoginToRA -- invalid response: {}", strResponse);
 
-      CGUIDialogKaiToast::QueueNotification("", "RetroAchievements",
-                                            "Invalid response from server.", 6000, false, 500);
+      CServiceBroker::GetEventLog()->AddWithNotification(
+          EventPtr(new CNotificationEvent(35264, 35267, EventLevel::Error)));
     }
   }
   else
   {
     CLog::Log(LOGERROR, "CGameSettings::LoginToRA -- failed to contact server");
 
-    CGUIDialogKaiToast::QueueNotification(
-        "", "RetroAchievements", "Could not reach retroachievements.org. Check your network.", 6000,
-        false, 500);
+    CServiceBroker::GetEventLog()->AddWithNotification(
+        EventPtr(new CNotificationEvent(35264, 35266, EventLevel::Error)));
   }
   return token;
 }

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "settings/lib/ISettingCallback.h"
+#include <mutex>
 #include "utils/Observer.h"
 
 #include <string>
@@ -62,9 +63,21 @@ public:
     bool loaded{false};
   };
 
-  void SetAchievementState(const AchievementState& state) { m_achievementState = state; }
-  void ClearAchievementState() { m_achievementState = AchievementState{}; }
-  AchievementState GetAchievementState() const { return m_achievementState; }
+  void SetAchievementState(const AchievementState& state)
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    m_achievementState = state;
+  }
+  void ClearAchievementState()
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    m_achievementState = AchievementState{};
+  }
+  AchievementState GetAchievementState() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_achievementState;
+  }
 
   // Inherited from ISettingCallback
   void OnSettingChanged(const std::shared_ptr<const CSetting>& setting) override;
@@ -78,7 +91,8 @@ private:
   // Construction parameters
   std::shared_ptr<CSettings> m_settings;
 
-  // Current achievement state
+  // Current achievement state (mutex protects cross-thread access)
+  mutable std::mutex m_achievementMutex;
   AchievementState m_achievementState;
 };
 
