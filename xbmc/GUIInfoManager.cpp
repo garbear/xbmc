@@ -4378,6 +4378,86 @@ constexpr std::array<InfoMap, 82> videoplayer = {{
 ///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_GameClient `RetroPlayer.GameClient`\endlink
 ///     <p>
 ///   }
+///   \table_row3{   <b>`RetroPlayer.Achievements.Loaded`</b>,
+///                  \anchor RetroPlayer_Achievements_Loaded
+///                  _boolean_,
+///     @return **True** if RetroAchievements data has been loaded for the currently-playing game.
+///     <p><hr>
+///     @skinning_v22 **[New Boolean Condition]** \link RetroPlayer_Achievements_Loaded `RetroPlayer.Achievements.Loaded`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.Achievements.GameTitle`</b>,
+///                  \anchor RetroPlayer_Achievements_GameTitle
+///                  _string_,
+///     @return The RetroAchievements title of the currently-playing game.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_Achievements_GameTitle `RetroPlayer.Achievements.GameTitle`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.Achievements.Total`</b>,
+///                  \anchor RetroPlayer_Achievements_Total
+///                  _string_,
+///     @return The total number of achievements for the currently-playing game.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_Achievements_Total `RetroPlayer.Achievements.Total`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.Achievements.Unlocked`</b>,
+///                  \anchor RetroPlayer_Achievements_Unlocked
+///                  _string_,
+///     @return The number of achievements unlocked by the current user for the currently-playing game.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_Achievements_Unlocked `RetroPlayer.Achievements.Unlocked`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.Achievements.RichPresence`</b>,
+///                  \anchor RetroPlayer_Achievements_RichPresence
+///                  _string_,
+///     @return The current rich presence string for the currently-playing game, updated every 2 minutes.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_Achievements_RichPresence `RetroPlayer.Achievements.RichPresence`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.Achievement.Title(n)`</b>,
+///                  \anchor RetroPlayer_Achievement_Title
+///                  _string_,
+///     @return The title of the nth achievement (zero-based) for the currently-playing game.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_Achievement_Title `RetroPlayer.Achievement.Title(n)`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.Achievement.Description(n)`</b>,
+///                  \anchor RetroPlayer_Achievement_Description
+///                  _string_,
+///     @return The description of the nth achievement (zero-based).
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_Achievement_Description `RetroPlayer.Achievement.Description(n)`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.Achievement.BadgeUrl(n)`</b>,
+///                  \anchor RetroPlayer_Achievement_BadgeUrl
+///                  _string_,
+///     @return The badge image URL of the nth achievement (zero-based).
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_Achievement_BadgeUrl `RetroPlayer.Achievement.BadgeUrl(n)`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.Achievement.Points(n)`</b>,
+///                  \anchor RetroPlayer_Achievement_Points
+///                  _string_,
+///     @return The point value of the nth achievement (zero-based).
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_Achievement_Points `RetroPlayer.Achievement.Points(n)`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.Achievement.Earned(n)`</b>,
+///                  \anchor RetroPlayer_Achievement_Earned
+///                  _boolean_,
+///     @return **True** if the nth achievement (zero-based) has been earned by the current user.
+///     <p><hr>
+///     @skinning_v22 **[New Boolean Condition]** \link RetroPlayer_Achievement_Earned `RetroPlayer.Achievement.Earned(n)`\endlink
+///     <p>
+///   }
 /// \table_end
 ///
 /// -----------------------------------------------------------------------------
