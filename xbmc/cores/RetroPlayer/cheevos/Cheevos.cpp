@@ -78,6 +78,7 @@ constexpr auto CHEEVO_TITLE = "Title";
 constexpr auto BADGE_NAME = "BadgeName";
 
 // Flags == 3: active/published achievement (confusingly, NOT 5)
+constexpr auto RICH_PRESENCE_PATCH = "RichPresencePatch";
 // Flags == 5: unofficial/demoted/test — these should be skipped
 constexpr unsigned int FLAGS_CORE = 3;
 
@@ -290,6 +291,7 @@ bool CCheevos::LoadData()
   }
 
   CLog::Log(LOGINFO, "CCheevos::LoadData -- resolved game ID: {}", gameId);
+  m_gameId = gameId;
 
   // Step 2: fetch patch data (achievement conditions + rich presence script)
   std::string patchUrl;
@@ -372,6 +374,20 @@ bool CCheevos::LoadData()
 
   CLog::Log(LOGINFO, "CCheevos::LoadData -- {} achievements loaded for game {}",
             m_activatedCheevoMap.size(), gameId);
+
+  // Load and enable rich presence script if present
+  const std::string richPresenceScript = data[PATCH_DATA][RICH_PRESENCE_PATCH].asString();
+  if (!richPresenceScript.empty())
+  {
+    m_richPresenceScript = richPresenceScript;
+    m_gameClient->Cheevos().RCEnableRichPresence(m_richPresenceScript);
+    m_richPresenceLoaded = true;
+    CLog::Log(LOGINFO, "CCheevos::LoadData -- rich presence script loaded for game {}", gameId);
+
+    // Start periodic rich presence ping thread (every 2 minutes per RA spec)
+    m_richPresenceRunning = true;
+    m_richPresenceThread = std::thread(&CCheevos::RichPresencePingThread, this);
+  }
 
   // Ping RA to register this as an active session.
   // Without this the game won't appear in the user's play history.
@@ -483,8 +499,14 @@ bool CCheevos::LoadData()
 
 void CCheevos::EnableRichPresence()
 {
+  // Stop any existing ping thread
+  m_richPresenceRunning = false;
+  if (m_richPresenceThread.joinable())
+    m_richPresenceThread.join();
+
   m_richPresenceLoaded = false;
   m_richPresenceScript.clear();
+  m_gameId = 0;
 }
 
 std::string CCheevos::GetRichPresenceEvaluation()
@@ -597,6 +619,50 @@ void CCheevos::CheckTriggeredAchievement()
 {
   m_gameClient->Cheevos().GetAchievement_URL_ID([](const char* url, unsigned int id)
                                                 { Callback_URL_ID(url, id); });
+}
+
+// ===========================================================================
+// Rich presence periodic ping thread
+// ===========================================================================
+
+void CCheevos::RichPresencePingThread()
+{
+  CLog::Log(LOGINFO, "CCheevos::RichPresencePingThread -- started for game {}", m_gameId);
+
+  while (m_richPresenceRunning)
+  {
+    // Wait 2 minutes between pings per RA spec, checking stop flag each second
+    for (int i = 0; i < 120 && m_richPresenceRunning; ++i)
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    if (!m_richPresenceRunning)
+      break;
+
+    const std::string evaluation = GetRichPresenceEvaluation();
+    if (evaluation.empty())
+      continue;
+
+    CLog::Log(LOGDEBUG, "CCheevos::RichPresencePingThread -- posting: {}", evaluation);
+
+    std::string url;
+    std::string postData;
+    if (!m_gameClient->Cheevos().RCPostRichPresenceUrl(
+            url, postData, m_userName, m_loginToken, m_gameId, evaluation))
+    {
+      CLog::Log(LOGWARNING, "CCheevos::RichPresencePingThread -- failed to build URL");
+      continue;
+    }
+
+    XFILE::CCurlFile curl;
+    curl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+    std::string response;
+    if (curl.Post(url, postData, response))
+      CLog::Log(LOGDEBUG, "CCheevos::RichPresencePingThread -- ping sent OK");
+    else
+      CLog::Log(LOGWARNING, "CCheevos::RichPresencePingThread -- ping failed");
+  }
+
+  CLog::Log(LOGINFO, "CCheevos::RichPresencePingThread -- stopped");
 }
 
 // ===========================================================================

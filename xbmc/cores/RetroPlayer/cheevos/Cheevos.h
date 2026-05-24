@@ -13,7 +13,9 @@
 
 #include "RConsoleIDs.h"
 
+#include <atomic>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <vector>
 
@@ -67,9 +69,14 @@ private:
   // FIX: was static in the original — state leaked between game sessions.
   std::unordered_map<unsigned, std::vector<std::string>> m_activatedCheevoMap;
   std::string m_gameTitle;
+  unsigned int m_gameId{0};
 
   // Static map so Callback_URL_ID (raw fn ptr, no capture) can look up titles
   static std::unordered_map<unsigned, std::pair<std::string, std::string>> s_cheevoTitles;
+  // Rich presence periodic ping
+  std::atomic<bool> m_richPresenceRunning{false};
+  std::thread m_richPresenceThread;
+  void RichPresencePingThread();
 };
 
 } // namespace RETRO
