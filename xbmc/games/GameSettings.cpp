@@ -223,10 +223,8 @@ std::string CGameSettings::LoginToRA(const std::string& username,
 
         CLog::Log(LOGINFO, "CGameSettings::LoginToRA -- logged in successfully as '{}'", username);
 
-        CServiceBroker::GetEventLog()->AddWithNotification(
-            EventPtr(new CNotificationEvent(35264,
-                StringUtils::Format("Logged in as {}", username),
-                EventLevel::Information)));
+        CServiceBroker::GetEventLog()->AddWithNotification(EventPtr(new CNotificationEvent(
+            35264, StringUtils::Format("Logged in as {}", username), EventLevel::Information)));
       }
       else
       {
@@ -235,10 +233,9 @@ std::string CGameSettings::LoginToRA(const std::string& username,
         const std::string errorMsg = data["Error"].asString();
         CLog::Log(LOGWARNING, "CGameSettings::LoginToRA -- server rejected: {}", errorMsg);
 
-        CServiceBroker::GetEventLog()->AddWithNotification(
-            EventPtr(new CNotificationEvent(35264,
-                errorMsg.empty() ? std::string("Incorrect username or password.") : errorMsg,
-                EventLevel::Error)));
+        CServiceBroker::GetEventLog()->AddWithNotification(EventPtr(new CNotificationEvent(
+            35264, errorMsg.empty() ? std::string("Incorrect username or password.") : errorMsg,
+            EventLevel::Error)));
       }
     }
     else

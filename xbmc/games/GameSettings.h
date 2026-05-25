@@ -9,9 +9,9 @@
 #pragma once
 
 #include "settings/lib/ISettingCallback.h"
-#include <mutex>
 #include "utils/Observer.h"
 
+#include <mutex>
 #include <string>
 
 class CSetting;
@@ -77,6 +77,34 @@ public:
   {
     std::lock_guard<std::mutex> lock(m_achievementMutex);
     return m_achievementState;
+  }
+
+  // Targeted getters for frequently-queried fields — avoids copying
+  // the full AchievementState struct on every InfoLabel query
+  std::string GetAchievementGameTitle() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_achievementState.gameTitle;
+  }
+  unsigned int GetAchievementTotal() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_achievementState.totalAchievements;
+  }
+  unsigned int GetAchievementUnlocked() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_achievementState.unlockedAchievements;
+  }
+  std::string GetAchievementRichPresence() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_achievementState.richPresence;
+  }
+  bool GetAchievementsLoaded() const
+  {
+    std::lock_guard<std::mutex> lock(m_achievementMutex);
+    return m_achievementState.loaded;
   }
 
   // Inherited from ISettingCallback

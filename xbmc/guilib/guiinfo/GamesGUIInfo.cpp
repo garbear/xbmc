@@ -7,6 +7,7 @@
  */
 
 #include "guilib/guiinfo/GamesGUIInfo.h"
+
 #include "FileItem.h"
 #include "GUIInfoManager.h"
 #include "ServiceBroker.h"
@@ -92,13 +93,15 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
     }
     case RETROPLAYER_STRETCH_MODE:
     {
-      STRETCHMODE stretchMode = CMediaSettings::GetInstance().GetCurrentGameSettings().StretchMode();
+      STRETCHMODE stretchMode =
+          CMediaSettings::GetInstance().GetCurrentGameSettings().StretchMode();
       value = CRetroPlayerUtils::StretchModeToIdentifier(stretchMode);
       return true;
     }
     case RETROPLAYER_VIDEO_ROTATION:
     {
-      const unsigned int rotationDegCCW = CMediaSettings::GetInstance().GetCurrentGameSettings().RotationDegCCW();
+      const unsigned int rotationDegCCW =
+          CMediaSettings::GetInstance().GetCurrentGameSettings().RotationDegCCW();
       value = std::to_string(rotationDegCCW);
       return true;
     }
@@ -175,22 +178,24 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
     }
     case RETROPLAYER_ACHIEVEMENTS_GAME_TITLE:
     {
-      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementState().gameTitle;
+      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementGameTitle();
       return true;
     }
     case RETROPLAYER_ACHIEVEMENTS_TOTAL:
     {
-      value = std::to_string(CServiceBroker::GetGameServices().GameSettings().GetAchievementState().totalAchievements);
+      value =
+          std::to_string(CServiceBroker::GetGameServices().GameSettings().GetAchievementTotal());
       return true;
     }
     case RETROPLAYER_ACHIEVEMENTS_UNLOCKED:
     {
-      value = std::to_string(CServiceBroker::GetGameServices().GameSettings().GetAchievementState().unlockedAchievements);
+      value =
+          std::to_string(CServiceBroker::GetGameServices().GameSettings().GetAchievementUnlocked());
       return true;
     }
     case RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE:
     {
-      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementState().richPresence;
+      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementRichPresence();
       return true;
     }
     case RETROPLAYER_ACHIEVEMENT_TITLE:
@@ -269,7 +274,7 @@ bool CGamesGUIInfo::GetBool(bool& value,
     }
     case RETROPLAYER_ACHIEVEMENTS_LOADED:
     {
-      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementState().loaded;
+      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementsLoaded();
       return true;
     }
     case RETROPLAYER_ACHIEVEMENT_EARNED:

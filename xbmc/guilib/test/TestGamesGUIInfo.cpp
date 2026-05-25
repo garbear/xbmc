@@ -60,10 +60,14 @@ TEST_F(TestGamesGUIInfo, TranslatesRetroPlayerLabels)
   EXPECT_EQ(infoManager.TranslateString("RetroPlayer.GameClient"), RETROPLAYER_GAME_CLIENT);
 
   // Achievement aggregate InfoLabels
-  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.GameTitle"), RETROPLAYER_ACHIEVEMENTS_GAME_TITLE);
-  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.Total"), RETROPLAYER_ACHIEVEMENTS_TOTAL);
-  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.Unlocked"), RETROPLAYER_ACHIEVEMENTS_UNLOCKED);
-  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.RichPresence"), RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE);
+  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.GameTitle"),
+            RETROPLAYER_ACHIEVEMENTS_GAME_TITLE);
+  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.Total"),
+            RETROPLAYER_ACHIEVEMENTS_TOTAL);
+  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.Unlocked"),
+            RETROPLAYER_ACHIEVEMENTS_UNLOCKED);
+  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.RichPresence"),
+            RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE);
 }
 
 TEST_F(TestGamesGUIInfo, GetLabelRequiresCurrentGameInGUIInfoManager)
@@ -99,12 +103,12 @@ TEST_F(TestGamesGUIInfo, AchievementStateInfoLabelsReturnEmptyWhenNotLoaded)
   std::string value;
 
   // With no achievement state loaded, labels should return true but with empty values
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENTS_GAME_TITLE), nullptr));
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_GAME_TITLE),
+                                    nullptr));
   EXPECT_TRUE(value.empty());
 
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENTS_TOTAL), nullptr));
+  EXPECT_TRUE(
+      gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_TOTAL), nullptr));
   EXPECT_EQ(value, "0");
 }
 
@@ -123,22 +127,21 @@ TEST_F(TestGamesGUIInfo, AchievementStateInfoLabelsReturnDataWhenLoaded)
 
   CServiceBroker::GetGameServices().GameSettings().SetAchievementState(state);
 
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENTS_GAME_TITLE), nullptr));
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_GAME_TITLE),
+                                    nullptr));
   EXPECT_EQ(value, "Super Mario Bros.");
 
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENTS_TOTAL), nullptr));
+  EXPECT_TRUE(
+      gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_TOTAL), nullptr));
   EXPECT_EQ(value, "77");
 
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENTS_UNLOCKED), nullptr));
+  EXPECT_TRUE(
+      gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_UNLOCKED), nullptr));
   EXPECT_EQ(value, "2");
 
   // Check bool
   bool bValue = false;
-  EXPECT_TRUE(gamesGUIInfo.GetBool(bValue, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENTS_LOADED)));
+  EXPECT_TRUE(gamesGUIInfo.GetBool(bValue, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_LOADED)));
   EXPECT_TRUE(bValue);
 
   // Clean up
@@ -171,32 +174,32 @@ TEST_F(TestGamesGUIInfo, PerAchievementInfoLabelsReturnDataByIndex)
   CServiceBroker::GetGameServices().GameSettings().SetAchievementState(state);
 
   // Test title by index
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, 0), nullptr));
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, 0),
+                                    nullptr));
   EXPECT_EQ(value, "First Achievement");
 
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, 1), nullptr));
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, 1),
+                                    nullptr));
   EXPECT_EQ(value, "Second Achievement");
 
   // Test points by index
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENT_POINTS, 0, 0), nullptr));
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_POINTS, 0, 0),
+                                    nullptr));
   EXPECT_EQ(value, "10");
 
   // Test earned bool by index
   bool bValue = false;
-  EXPECT_TRUE(gamesGUIInfo.GetBool(bValue, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, 0)));
+  EXPECT_TRUE(
+      gamesGUIInfo.GetBool(bValue, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, 0)));
   EXPECT_TRUE(bValue);
 
-  EXPECT_TRUE(gamesGUIInfo.GetBool(bValue, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, 1)));
+  EXPECT_TRUE(
+      gamesGUIInfo.GetBool(bValue, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, 1)));
   EXPECT_FALSE(bValue);
 
   // Out of bounds should return true but empty value
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0,
-      CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, 99), nullptr));
+  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, 99),
+                                    nullptr));
 
   // Clean up
   CServiceBroker::GetGameServices().GameSettings().ClearAchievementState();
