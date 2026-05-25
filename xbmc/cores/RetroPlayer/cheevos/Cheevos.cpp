@@ -88,7 +88,11 @@ constexpr auto MEM_ADDR = "MemAddr";
 constexpr auto CHEEVO_ID = "ID";
 constexpr auto FLAGS = "Flags";
 constexpr auto CHEEVO_TITLE = "Title";
+constexpr auto CHEEVO_DESCRIPTION = "Description";
+constexpr auto CHEEVO_POINTS = "Points";
 constexpr auto BADGE_NAME = "BadgeName";
+constexpr auto BADGE_LOCKED_URL = "BadgeLockedURL";
+constexpr auto CHEEVO_RARITY = "Rarity";
 
 // Flags == 3: active/published achievement (confusingly, NOT 5)
 constexpr auto RICH_PRESENCE_PATCH = "RichPresencePatch";
@@ -183,7 +187,6 @@ CCheevos::~CCheevos()
   if (m_richPresenceThread.joinable())
     m_richPresenceThread.join();
 
-  CServiceBroker::GetGameServices().GameSettings().ClearAchievementState();
   CLog::Log(LOGDEBUG, "CCheevos::~CCheevos -- cleaned up");
 }
 
@@ -279,6 +282,9 @@ bool CCheevos::LoadData()
     CLog::Log(LOGERROR, "CCheevos::LoadData -- not logged in");
     return false;
   }
+
+  // Clear previous game's achievement state before loading new one
+  CServiceBroker::GetGameServices().GameSettings().ClearAchievementState();
 
   // Clean up image cache if it has grown too large
   CleanImageCacheIfNeeded();
@@ -399,6 +405,10 @@ bool CCheevos::LoadData()
           achievement[MEM_ADDR].asString(),
           title,
           achievement[BADGE_NAME].asString(),
+          achievement[CHEEVO_DESCRIPTION].asString(),
+          std::to_string(static_cast<unsigned int>(achievement[CHEEVO_POINTS].asUnsignedInteger())),
+          achievement[BADGE_LOCKED_URL].asString(),
+          std::to_string(achievement[CHEEVO_RARITY].asDouble()),
       };
       // Store title + badge URL in static map so Callback_URL_ID can reach them
       const std::string badgeUrl =
@@ -421,6 +431,10 @@ bool CCheevos::LoadData()
     KODI::GAME::CGameSettings::AchievementInfo info;
     info.title = fields[1];
     info.badgeUrl = std::string(RA_BADGE_BASE_URL) + fields[2] + ".png";
+    info.description = fields.size() > 3 ? fields[3] : "";
+    info.points         = fields.size() > 4 ? static_cast<unsigned int>(std::stoul(fields[4])) : 0;
+    info.lockedBadgeUrl = fields.size() > 5 ? fields[5] : "";
+    info.rarity      = fields.size() > 6 ? fields[6] : "";
     info.earned = false;
     achieveState.achievements.push_back(std::move(info));
   }
@@ -460,10 +474,27 @@ bool CCheevos::LoadData()
     CVariant sessionData;
     if (CJSONVariantParser::Parse(sessionResp, sessionData) && sessionData["Unlocks"].isArray())
     {
+      // Collect earned achievement IDs
+      std::set<unsigned int> earnedIds;
       for (auto it = sessionData["Unlocks"].begin_array(); it != sessionData["Unlocks"].end_array();
            ++it)
       {
+        if ((*it)["ID"].isUnsignedInteger())
+          earnedIds.insert(static_cast<unsigned int>((*it)["ID"].asUnsignedInteger()));
         ++unlockedCount;
+      }
+      // Mark earned achievements in state
+      for (auto& info : achieveState.achievements)
+      {
+        // Match by title against s_cheevoTitles map
+        for (const auto& [id, titleBadge] : s_cheevoTitles)
+        {
+          if (titleBadge.first == info.title && earnedIds.count(id))
+          {
+            info.earned = true;
+            break;
+          }
+        }
       }
     }
   }
@@ -565,8 +596,6 @@ void CCheevos::EnableRichPresence()
   m_richPresenceScript.clear();
   m_gameId = 0;
 
-  // Clear achievement state when game unloads
-  CServiceBroker::GetGameServices().GameSettings().ClearAchievementState();
 }
 
 std::string CCheevos::GetRichPresenceEvaluation()

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "guilib/GUIDialog.h"
 
 #include <memory>
@@ -40,7 +42,7 @@ public:
   void OnDeinitWindow(int nextWindowID) override;
 
 protected:
-  CDialogGameVideoSelect(int windowId);
+  CDialogGameVideoSelect(int windowId, const std::string& xmlFile = "");
 
   // implementation of CGUIWindow via CGUIDialog
   void OnWindowUnload() override;

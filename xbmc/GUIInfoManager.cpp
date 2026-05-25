@@ -4462,7 +4462,7 @@ constexpr std::array<InfoMap, 82> videoplayer = {{
 ///
 /// -----------------------------------------------------------------------------
 // clang-format off
-constexpr std::array<InfoMap, 14> retroplayer = {{
+constexpr std::array<InfoMap, 19> retroplayer = {{
     {"videofilter",   RETROPLAYER_VIDEO_FILTER},
     {"stretchmode",   RETROPLAYER_STRETCH_MODE},
     {"videorotation", RETROPLAYER_VIDEO_ROTATION},
@@ -4477,6 +4477,11 @@ constexpr std::array<InfoMap, 14> retroplayer = {{
     {"discejected", RETROPLAYER_DISC_EJECTED},
     {"disclabel", RETROPLAYER_DISC_LABEL},
     {"emptytray", RETROPLAYER_EMPTY_TRAY},
+    {"achievementsgametitle",    RETROPLAYER_ACHIEVEMENTS_GAME_TITLE},
+    {"achievementstotal",        RETROPLAYER_ACHIEVEMENTS_TOTAL},
+    {"achievementsunlocked",     RETROPLAYER_ACHIEVEMENTS_UNLOCKED},
+    {"achievementsrichpresence", RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE},
+    {"achievementsloaded",       RETROPLAYER_ACHIEVEMENTS_LOADED},
 }};
 // clang-format on
 
@@ -11148,16 +11153,22 @@ int CGUIInfoManager::TranslateSingleString(const std::string &strCondition, bool
       }
 
       // Indexed achievement InfoLabels: RetroPlayer.Achievement.Title(n) etc.
-      if (prop.Name() == "achievement.title")
-        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, atoi(prop.param().c_str())));
-      if (prop.Name() == "achievement.description")
-        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_DESCRIPTION, 0, atoi(prop.param().c_str())));
-      if (prop.Name() == "achievement.badgeurl")
-        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_BADGE_URL, 0, atoi(prop.param().c_str())));
-      if (prop.Name() == "achievement.earned")
-        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, atoi(prop.param().c_str())));
-      if (prop.Name() == "achievement.points")
-        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_POINTS, 0, atoi(prop.param().c_str())));
+      // These are three-part labels: info[0]=retroplayer, info[1]=achievement, info[2]=title(n)
+      if (prop.Name() == "achievement" && info.size() > 2)
+      {
+        const Property& subprop = info[2];
+        const int idx = subprop.num_params() > 0 ? atoi(subprop.param().c_str()) : 0;
+        if (subprop.Name() == "title")
+          return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, idx));
+        if (subprop.Name() == "description")
+          return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_DESCRIPTION, 0, idx));
+        if (subprop.Name() == "badgeurl")
+          return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_BADGE_URL, 0, idx));
+        if (subprop.Name() == "earned")
+          return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, idx));
+        if (subprop.Name() == "points")
+          return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_POINTS, 0, idx));
+      }
     }
     else if (cat.Name() == "slideshow")
     {
@@ -11371,6 +11382,22 @@ int CGUIInfoManager::TranslateSingleString(const std::string &strCondition, bool
         return SYSTEM_PLATFORM_ANDROID;
       else if (platform == "webos")
         return SYSTEM_PLATFORM_WEBOS;
+    }
+    if (info[0].Name() == "retroplayer" && info[1].Name() == "achievement")
+    {
+      // Three-part InfoLabel: RetroPlayer.Achievement.Title(n) etc.
+      const Property& subprop = info[2];
+      const int idx = subprop.num_params() > 0 ? atoi(subprop.param().c_str()) : 0;
+      if (subprop.Name() == "title")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_TITLE, 0, idx));
+      if (subprop.Name() == "description")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_DESCRIPTION, 0, idx));
+      if (subprop.Name() == "badgeurl")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_BADGE_URL, 0, idx));
+      if (subprop.Name() == "earned")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_EARNED, 0, idx));
+      if (subprop.Name() == "points")
+        return AddMultiInfo(CGUIInfo(RETROPLAYER_ACHIEVEMENT_POINTS, 0, idx));
     }
     if (info[0].Name() == "musicplayer")
     { //! @todo these two don't allow duration(foo) and also don't allow more than this number of levels...

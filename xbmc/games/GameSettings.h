@@ -48,6 +48,8 @@ public:
     std::string title;
     std::string description;
     std::string badgeUrl;
+    std::string lockedBadgeUrl;
+    std::string rarity;
     unsigned int points{0};
     bool earned{false};
   };
