@@ -68,6 +68,12 @@ static const std::string RA_USER_AGENT = CSysInfo::GetUserAgent();
 
 // RA Connect API base URL
 constexpr auto RA_BASE_URL = "https://retroachievements.org/dorequest.php";
+constexpr auto RA_BADGE_BASE_URL = "https://i.retroachievements.org/Badge/";
+
+// KaiToast display timings (milliseconds)
+constexpr unsigned int TOAST_DISPLAY_TIME_MS = 6000;
+constexpr unsigned int TOAST_DISPLAY_TIME_LONG_MS = 8000;
+constexpr unsigned int TOAST_MESSAGE_TIME_MS = 500;
 
 // JSON field names
 constexpr auto PATCH_DATA = "PatchData";
@@ -349,7 +355,8 @@ bool CCheevos::LoadData()
 
       CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Error, "RetroAchievements",
                                             "Session expired. Please log in again in Settings.",
-                                            8000, false, 500);
+                                            TOAST_DISPLAY_TIME_LONG_MS, false,
+                                            TOAST_MESSAGE_TIME_MS);
     }
     return false;
   }
@@ -395,7 +402,7 @@ bool CCheevos::LoadData()
       };
       // Store title + badge URL in static map so Callback_URL_ID can reach them
       const std::string badgeUrl =
-          "https://i.retroachievements.org/Badge/" + achievement[BADGE_NAME].asString() + ".png";
+          std::string(RA_BADGE_BASE_URL) + achievement[BADGE_NAME].asString() + ".png";
       s_cheevoTitles[id] = {title, badgeUrl};
     }
   }
@@ -413,7 +420,7 @@ bool CCheevos::LoadData()
   {
     KODI::GAME::CGameSettings::AchievementInfo info;
     info.title = fields[1];
-    info.badgeUrl = "https://i.retroachievements.org/Badge/" + fields[2] + ".png";
+    info.badgeUrl = std::string(RA_BADGE_BASE_URL) + fields[2] + ".png";
     info.earned = false;
     achieveState.achievements.push_back(std::move(info));
   }
@@ -527,12 +534,13 @@ bool CCheevos::LoadData()
     if (!iconPath.empty())
     {
       CGUIDialogKaiToast::QueueNotification(iconPath, // image file path
-                                            heading, body, 6000, false, 500);
+                                            heading, body, TOAST_DISPLAY_TIME_MS, false,
+                                            TOAST_MESSAGE_TIME_MS);
     }
     else
     {
-      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, heading, body, 6000, false,
-                                            500);
+      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, heading, body,
+                                            TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
     }
 
     CLog::Log(LOGINFO, "CCheevos::LoadData -- notified: {} ({}/{})", m_gameTitle, unlockedCount,
@@ -765,14 +773,14 @@ void CCheevos::Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId
   // Show notification with badge icon if available
   if (!iconPath.empty())
   {
-    CGUIDialogKaiToast::QueueNotification(iconPath, "Achievement Unlocked!", cheevoTitle, 6000,
-                                          false, 500);
+    CGUIDialogKaiToast::QueueNotification(iconPath, "Achievement Unlocked!", cheevoTitle,
+                                          TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
   }
   else
   {
     CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, "Achievement Unlocked!",
                                           cheevoTitle.empty() ? "Achievement earned!" : cheevoTitle,
-                                          6000, false, 500);
+                                          TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
   }
 
   // Update unlocked count in shared state and check for mastery
@@ -803,13 +811,15 @@ void CCheevos::Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId
 
       if (XFILE::CFile::Exists(masteryIcon))
       {
-        CGUIDialogKaiToast::QueueNotification(masteryIcon, "Mastered!", state.gameTitle, 8000,
-                                              false, 500);
+        CGUIDialogKaiToast::QueueNotification(masteryIcon, "Mastered!", state.gameTitle,
+                                              TOAST_DISPLAY_TIME_LONG_MS, false,
+                                              TOAST_MESSAGE_TIME_MS);
       }
       else
       {
         CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, "Mastered!",
-                                              state.gameTitle, 8000, false, 500);
+                                              state.gameTitle, TOAST_DISPLAY_TIME_LONG_MS, false,
+                                              TOAST_MESSAGE_TIME_MS);
       }
     }
   }
