@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+        <defaultcontrol always="true">10811</defaultcontrol>
+        <include>Animation_DialogPopupOpenClose</include>
+        <controls>
+                <control type="group">
+                        <centertop>50%</centertop>
+                        <centerleft>50%</centerleft>
+                        <width>1200</width>
+                        <height>870</height>
+                        <include content="DialogBackgroundCommons">
+                                <param name="width" value="1200" />
+                                <param name="height" value="870" />
+                                <param name="header_label" value="$INFO[RetroPlayer.AchievementsGameTitle] RetroAchievements  ($INFO[RetroPlayer.AchievementsUnlocked]/$INFO[RetroPlayer.AchievementsTotal] Unlocked)" />
+                                <param name="header_id" value="2" />
+                        </include>
+                        <!-- Achievement list -->
+                        <control type="list" id="10811">
+                                <top>80</top>
+                                <left>20</left>
+                                <width>1148</width>
+                                <height>720</height>
+                                <orientation>vertical</orientation>
+                                <pagecontrol>10812</pagecontrol>
+                                <itemlayout width="1148" height="120">
+                                        <!-- Greyscale badge for unearned -->
+                                        <control type="image">
+                                                <left>0</left><top>15</top><width>80</width><height>80</height>
+                                                <texture colordiffuse="FF888888">$INFO[ListItem.Art(icon)]</texture>
+                                                <visible>!ListItem.Property(Earned)</visible>
+                                        </control>
+                                        <!-- Full colour badge for earned -->
+                                        <control type="image">
+                                                <left>0</left><top>15</top><width>80</width><height>80</height>
+                                                <texture>$INFO[ListItem.Art(icon)]</texture>
+                                                <visible>ListItem.Property(Earned)</visible>
+                                        </control>
+                                        <!-- Title -->
+                                        <control type="label">
+                                                <left>95</left><top>15</top><width>750</width><height>40</height>
+                                                <info>ListItem.Label</info>
+                                                <font>font25_title</font><align>left</align>
+                                        </control>
+                                        <!-- Description -->
+                                        <control type="label">
+                                                <left>95</left><top>55</top><width>750</width><height>28</height>
+                                                <info>ListItem.Label2</info>
+                                                <font>font12</font><align>left</align><textcolor>grey</textcolor>
+                                        </control>
+                                        <!-- Rarity -->
+                                        <control type="label">
+                                                <left>95</left><top>83</top><width>750</width><height>24</height>
+                                                <label>$INFO[ListItem.Property(Rarity)]</label>
+                                                <font>font12</font><align>left</align><textcolor>button_focus</textcolor>
+                                                
+                                        </control>
+                                        <!-- Points -->
+                                        <control type="label">
+                                                <right>10</right><top>15</top><width>230</width><height>40</height>
+                                                <label>$INFO[ListItem.Property(Points)] pts</label>
+                                                <font>font25_title</font><align>right</align><textcolor>button_focus</textcolor>
+                                        </control>
+                                        <!-- Earned label -->
+                                        <control type="label">
+                                                <right>10</right><top>58</top><width>280</width><height>28</height>
+                                                <label>$INFO[ListItem.Property(UnlockedDate)]</label><font>font12</font><align>right</align>
+                                                <textcolor>green</textcolor>
+                                                <visible>ListItem.Property(Earned)</visible>
+                                        </control>
+                                </itemlayout>
+                                <focusedlayout width="1148" height="120">
+                                        <control type="image">
+                                                <texture colordiffuse="button_focus">lists/focus.png</texture>
+                                                <visible>Control.HasFocus(10811)</visible>
+                                        </control>
+                                        <!-- Greyscale badge for unearned -->
+                                        <control type="image">
+                                                <left>0</left><top>15</top><width>80</width><height>80</height>
+                                                <texture colordiffuse="FF888888">$INFO[ListItem.Art(icon)]</texture>
+                                                <visible>!ListItem.Property(Earned)</visible>
+                                        </control>
+                                        <!-- Full colour badge for earned -->
+                                        <control type="image">
+                                                <left>0</left><top>15</top><width>80</width><height>80</height>
+                                                <texture>$INFO[ListItem.Art(icon)]</texture>
+                                                <visible>ListItem.Property(Earned)</visible>
+                                        </control>
+                                        <!-- Title -->
+                                        <control type="label">
+                                                <left>95</left><top>15</top><width>750</width><height>40</height>
+                                                <info>ListItem.Label</info>
+                                                <font>font25_title</font><align>left</align>
+                                        </control>
+                                        <!-- Description -->
+                                        <control type="label">
+                                                <left>95</left><top>55</top><width>750</width><height>28</height>
+                                                <info>ListItem.Label2</info>
+                                                <font>font12</font><align>left</align><textcolor>grey</textcolor>
+                                        </control>
+                                        <!-- Rarity -->
+                                        <control type="label">
+                                                <left>95</left><top>83</top><width>750</width><height>24</height>
+                                                <label>$INFO[ListItem.Property(Rarity)]</label>
+                                                <font>font12</font><align>left</align><textcolor>button_focus</textcolor>
+                                                
+                                        </control>
+                                        <!-- Points -->
+                                        <control type="label">
+                                                <right>10</right><top>15</top><width>230</width><height>40</height>
+                                                <label>$INFO[ListItem.Property(Points)] pts</label>
+                                                <font>font25_title</font><align>right</align><textcolor>button_focus</textcolor>
+                                        </control>
+                                        <!-- Earned label -->
+                                        <control type="label">
+                                                <right>10</right><top>58</top><width>280</width><height>28</height>
+                                                <label>$INFO[ListItem.Property(UnlockedDate)]</label><font>font12</font><align>right</align>
+                                                <textcolor>green</textcolor>
+                                                <visible>ListItem.Property(Earned)</visible>
+                                        </control>
+                                </focusedlayout>
+                        </control>
+                        <control type="scrollbar" id="10812">
+                                <top>80</top>
+                                <right>0</right>
+                                <width>12</width>
+                                <height>720</height>
+                                <orientation>vertical</orientation>
+                        </control>
+                </control>
+        </controls>
+</window>
