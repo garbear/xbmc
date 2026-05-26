@@ -108,6 +108,7 @@ public:
     std::lock_guard<std::mutex> lock(m_achievementMutex);
     return m_achievementState.loaded;
   }
+  bool GetAchievementsLoggedIn() const;
 
   // Inherited from ISettingCallback
   void OnSettingChanged(const std::shared_ptr<const CSetting>& setting) override;

@@ -16,6 +16,7 @@
 #include "guilib/GUIMessage.h"
 #include "guilib/WindowIDs.h"
 #include "utils/StringUtils.h"
+#include "dialogs/GUIDialogKaiToast.h"
 #include "utils/log.h"
 #include "view/ViewState.h"
 
@@ -41,6 +42,30 @@ void CDialogGameAchievements::OnWindowUnload()
 
 void CDialogGameAchievements::OnInitWindow()
 {
+  const auto& settings = CServiceBroker::GetGameServices().GameSettings();
+
+  if (!settings.GetAchievementsLoggedIn())
+  {
+    CGUIDialogKaiToast::QueueNotification(
+        CGUIDialogKaiToast::Warning,
+        "RetroAchievements",
+        "Please log in to RetroAchievements in Settings",
+        6000, false, 500);
+    Close();
+    return;
+  }
+
+  if (!settings.GetAchievementsLoaded() || settings.GetAchievementTotal() == 0)
+  {
+    CGUIDialogKaiToast::QueueNotification(
+        CGUIDialogKaiToast::Info,
+        "RetroAchievements",
+        "This game doesn't support RetroAchievements",
+        6000, false, 500);
+    Close();
+    return;
+  }
+
   CGUIDialog::OnInitWindow();
   PopulateList();
 }

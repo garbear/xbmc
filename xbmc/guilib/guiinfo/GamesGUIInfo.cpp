@@ -193,6 +193,17 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
           std::to_string(CServiceBroker::GetGameServices().GameSettings().GetAchievementUnlocked());
       return true;
     }
+    case RETROPLAYER_ACHIEVEMENTS_STATUS:
+    {
+      const auto& gs = CServiceBroker::GetGameServices().GameSettings();
+      CLog::Log(LOGDEBUG, "CGamesGUIInfo: AchievementsStatus called loggedIn={} loaded={}", gs.GetAchievementsLoggedIn(), gs.GetAchievementsLoaded());
+      if (!gs.GetAchievementsLoggedIn() || !gs.GetAchievementsLoaded())
+        value = "N/A";
+      else
+        value = std::to_string(gs.GetAchievementUnlocked()) + " / " +
+                std::to_string(gs.GetAchievementTotal());
+      return true;
+    }
     case RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE:
     {
       value = CServiceBroker::GetGameServices().GameSettings().GetAchievementRichPresence();
@@ -275,6 +286,11 @@ bool CGamesGUIInfo::GetBool(bool& value,
     case RETROPLAYER_ACHIEVEMENTS_LOADED:
     {
       value = CServiceBroker::GetGameServices().GameSettings().GetAchievementsLoaded();
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_LOGGED_IN:
+    {
+      value = CServiceBroker::GetGameServices().GameSettings().GetAchievementsLoggedIn();
       return true;
     }
     case RETROPLAYER_ACHIEVEMENT_EARNED:

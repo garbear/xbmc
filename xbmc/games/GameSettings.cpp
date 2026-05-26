@@ -287,3 +287,10 @@ bool CGameSettings::IsAccountVerified(const std::string& username, const std::st
   CLog::Log(LOGERROR, "CGameSettings::IsAccountVerified -- verification request failed");
   return false;
 }
+
+bool CGameSettings::GetAchievementsLoggedIn() const
+{
+  return CServiceBroker::GetSettingsComponent()
+      ->GetSettings()
+      ->GetBool(SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN);
+}

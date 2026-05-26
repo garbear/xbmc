@@ -4462,7 +4462,7 @@ constexpr std::array<InfoMap, 82> videoplayer = {{
 ///
 /// -----------------------------------------------------------------------------
 // clang-format off
-constexpr std::array<InfoMap, 19> retroplayer = {{
+constexpr std::array<InfoMap, 21> retroplayer = {{
     {"videofilter",   RETROPLAYER_VIDEO_FILTER},
     {"stretchmode",   RETROPLAYER_STRETCH_MODE},
     {"videorotation", RETROPLAYER_VIDEO_ROTATION},
@@ -4482,6 +4482,8 @@ constexpr std::array<InfoMap, 19> retroplayer = {{
     {"achievementsunlocked",     RETROPLAYER_ACHIEVEMENTS_UNLOCKED},
     {"achievementsrichpresence", RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE},
     {"achievementsloaded",       RETROPLAYER_ACHIEVEMENTS_LOADED},
+    {"achievementsloggedin",     RETROPLAYER_ACHIEVEMENTS_LOGGED_IN},
+    {"achievementsstatus",       RETROPLAYER_ACHIEVEMENTS_STATUS},
 }};
 // clang-format on
 
