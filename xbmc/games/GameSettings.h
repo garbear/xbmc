@@ -50,6 +50,7 @@ public:
     std::string badgeUrl;
     std::string lockedBadgeUrl;
     std::string rarity;
+    std::string unlockedDate;
     unsigned int points{0};
     bool earned{false};
   };

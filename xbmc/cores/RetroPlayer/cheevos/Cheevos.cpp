@@ -484,24 +484,37 @@ bool CCheevos::LoadData()
     CVariant sessionData;
     if (CJSONVariantParser::Parse(sessionResp, sessionData) && sessionData["Unlocks"].isArray())
     {
-      // Collect earned achievement IDs
-      std::set<unsigned int> earnedIds;
+      // Collect earned achievement IDs and timestamps
+      std::unordered_map<unsigned int, std::time_t> earnedMap;
       for (auto it = sessionData["Unlocks"].begin_array(); it != sessionData["Unlocks"].end_array();
            ++it)
       {
         if ((*it)["ID"].isUnsignedInteger())
-          earnedIds.insert(static_cast<unsigned int>((*it)["ID"].asUnsignedInteger()));
-        ++unlockedCount;
+        {
+          const unsigned int id = static_cast<unsigned int>((*it)["ID"].asUnsignedInteger());
+          // Only count achievements that are in our official map (skip warnings/unofficial)
+          if (s_cheevoTitles.count(id))
+          {
+            const std::time_t when = static_cast<std::time_t>((*it)["When"].asUnsignedInteger());
+            earnedMap[id] = when;
+            ++unlockedCount;
+          }
+        }
       }
-      // Mark earned achievements in state
+      // Mark earned achievements and format unlock date
       for (auto& info : achieveState.achievements)
       {
-        // Match by title against s_cheevoTitles map
         for (const auto& [id, titleBadge] : s_cheevoTitles)
         {
-          if (titleBadge.first == info.title && earnedIds.count(id))
+          if (titleBadge.first == info.title && earnedMap.count(id))
           {
             info.earned = true;
+            // Format timestamp as "Unlocked Jan 01 2026"
+            std::time_t when = earnedMap[id];
+            struct tm* tm_info = std::localtime(&when);
+            char buf[32];
+            std::strftime(buf, sizeof(buf), "Unlocked %b %d %Y", tm_info);
+            info.unlockedDate = buf;
             break;
           }
         }

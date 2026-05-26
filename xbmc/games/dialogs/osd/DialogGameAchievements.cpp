@@ -92,6 +92,8 @@ void CDialogGameAchievements::PopulateList()
     item->SetArt("icon", iconUrl);
     item->SetProperty("Points", achievement.points);
     item->SetProperty("Earned", achievement.earned ? "true" : "");
+    item->SetProperty("UnlockedDate", achievement.unlockedDate);
+    CLog::Log(LOGDEBUG, "CDialogGameAchievements: unlockedDate for '{}': '{}'", achievement.title, achievement.unlockedDate);
     std::string rarityVal;
     if (!achievement.rarity.empty())
     {
