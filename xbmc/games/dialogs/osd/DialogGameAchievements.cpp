@@ -77,57 +77,54 @@ void CDialogGameAchievements::PopulateList()
 
   const auto state = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
 
-  CLog::Log(LOGDEBUG, "CDialogGameAchievements::PopulateList -- {} achievements",
-            state.achievements.size());
 
-  for (const auto& achievement : state.achievements)
-  {
-    auto item = std::make_shared<CFileItem>(achievement.title);
-    item->SetLabel(achievement.title);
-    item->SetLabel2(achievement.description);
-    // Use locked badge for unearned, full colour for earned
-    const std::string iconUrl = achievement.earned || achievement.lockedBadgeUrl.empty()
-                                    ? achievement.badgeUrl
-                                    : achievement.lockedBadgeUrl;
-    item->SetArt("icon", iconUrl);
-    item->SetProperty("Points", achievement.points);
-    item->SetProperty("Earned", achievement.earned ? "true" : "");
-    item->SetProperty("UnlockedDate", achievement.unlockedDate);
-    CLog::Log(LOGDEBUG, "CDialogGameAchievements: unlockedDate for '{}': '{}'", achievement.title, achievement.unlockedDate);
-    std::string rarityVal;
-    if (!achievement.rarity.empty())
-    {
-      try
-      {
-        double r = std::stod(achievement.rarity);
-        char buf[32];
-        std::snprintf(buf, sizeof(buf), "%.2f%% unlock rate", r);
-        rarityVal = buf;
-      }
-      catch (...)
-      {
-      }
-    }
-    item->SetProperty("Rarity", rarityVal);
-    m_items.Add(item);
-  }
+            for (const auto& achievement : state.achievements)
+            {
+              auto item = std::make_shared<CFileItem>(achievement.title);
+              item->SetLabel(achievement.title);
+              item->SetLabel2(achievement.description);
+              // Use locked badge for unearned, full colour for earned
+              const std::string iconUrl = achievement.earned || achievement.lockedBadgeUrl.empty()
+                                              ? achievement.badgeUrl
+                                              : achievement.lockedBadgeUrl;
+              item->SetArt("icon", iconUrl);
+              item->SetProperty("Points", achievement.points);
+              item->SetProperty("Earned", achievement.earned ? "true" : "");
+              item->SetProperty("UnlockedDate", achievement.unlockedDate);
+              std::string rarityVal;
+              if (!achievement.rarity.empty())
+              {
+                try
+                {
+                  double r = std::stod(achievement.rarity);
+                  char buf[32];
+                  std::snprintf(buf, sizeof(buf), "%.2f%% unlock rate", r);
+                  rarityVal = buf;
+                }
+                catch (...)
+                {
+                }
+              }
+              item->SetProperty("Rarity", rarityVal);
+              m_items.Add(item);
+            }
 
-  // Sort: earned first, then unearned
-  CFileItemList earned, unearned;
-  for (int i = 0; i < m_items.Size(); ++i)
-  {
-    const auto item = m_items[i];
-    if (!item->GetProperty("Earned").asString().empty())
-      earned.Add(item);
-    else
-      unearned.Add(item);
-  }
-  m_items.Clear();
-  for (int i = 0; i < earned.Size(); ++i)
-    m_items.Add(earned[i]);
-  for (int i = 0; i < unearned.Size(); ++i)
-    m_items.Add(unearned[i]);
+            // Sort: earned first, then unearned
+            CFileItemList earned, unearned;
+            for (int i = 0; i < m_items.Size(); ++i)
+            {
+              const auto item = m_items[i];
+              if (!item->GetProperty("Earned").asString().empty())
+                earned.Add(item);
+              else
+                unearned.Add(item);
+            }
+            m_items.Clear();
+            for (int i = 0; i < earned.Size(); ++i)
+              m_items.Add(earned[i]);
+            for (int i = 0; i < unearned.Size(); ++i)
+              m_items.Add(unearned[i]);
 
-  m_viewControl.SetCurrentView(DEFAULT_VIEW_ICONS);
-  m_viewControl.SetItems(m_items);
+            m_viewControl.SetCurrentView(DEFAULT_VIEW_ICONS);
+            m_viewControl.SetItems(m_items);
 }
