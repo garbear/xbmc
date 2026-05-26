@@ -463,7 +463,13 @@ bool CCheevos::LoadData()
       for (auto it = sessionData["Unlocks"].begin_array(); it != sessionData["Unlocks"].end_array();
            ++it)
       {
-        ++unlockedCount;
+        // Only count achievements in our official map — skip warnings and unofficial
+        if ((*it)["ID"].isUnsignedInteger())
+        {
+          const unsigned int id = static_cast<unsigned int>((*it)["ID"].asUnsignedInteger());
+          if (s_cheevoTitles.count(id))
+            ++unlockedCount;
+        }
       }
     }
   }
