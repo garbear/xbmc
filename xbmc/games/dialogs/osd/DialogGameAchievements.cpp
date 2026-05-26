@@ -11,12 +11,12 @@
 #include "FileItem.h"
 #include "FileItemList.h"
 #include "ServiceBroker.h"
+#include "dialogs/GUIDialogKaiToast.h"
 #include "games/GameServices.h"
 #include "games/GameSettings.h"
 #include "guilib/GUIMessage.h"
 #include "guilib/WindowIDs.h"
 #include "utils/StringUtils.h"
-#include "dialogs/GUIDialogKaiToast.h"
 #include "utils/log.h"
 #include "view/ViewState.h"
 
@@ -46,22 +46,18 @@ void CDialogGameAchievements::OnInitWindow()
 
   if (!settings.GetAchievementsLoggedIn())
   {
-    CGUIDialogKaiToast::QueueNotification(
-        CGUIDialogKaiToast::Warning,
-        "RetroAchievements",
-        "Please log in to RetroAchievements in Settings",
-        6000, false, 500);
+    CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Warning, "RetroAchievements",
+                                          "Please log in to RetroAchievements in Settings", 6000,
+                                          false, 500);
     Close();
     return;
   }
 
   if (!settings.GetAchievementsLoaded() || settings.GetAchievementTotal() == 0)
   {
-    CGUIDialogKaiToast::QueueNotification(
-        CGUIDialogKaiToast::Info,
-        "RetroAchievements",
-        "This game doesn't support RetroAchievements",
-        6000, false, 500);
+    CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, "RetroAchievements",
+                                          "This game doesn't support RetroAchievements", 6000,
+                                          false, 500);
     Close();
     return;
   }
@@ -79,8 +75,7 @@ void CDialogGameAchievements::PopulateList()
 {
   m_items.Clear();
 
-  const auto state =
-      CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
+  const auto state = CServiceBroker::GetGameServices().GameSettings().GetAchievementState();
 
   CLog::Log(LOGDEBUG, "CDialogGameAchievements::PopulateList -- {} achievements",
             state.achievements.size());
@@ -92,7 +87,8 @@ void CDialogGameAchievements::PopulateList()
     item->SetLabel2(achievement.description);
     // Use locked badge for unearned, full colour for earned
     const std::string iconUrl = achievement.earned || achievement.lockedBadgeUrl.empty()
-        ? achievement.badgeUrl : achievement.lockedBadgeUrl;
+                                    ? achievement.badgeUrl
+                                    : achievement.lockedBadgeUrl;
     item->SetArt("icon", iconUrl);
     item->SetProperty("Points", achievement.points);
     item->SetProperty("Earned", achievement.earned ? "true" : "");
@@ -106,7 +102,9 @@ void CDialogGameAchievements::PopulateList()
         std::snprintf(buf, sizeof(buf), "%.2f%% unlock rate", r);
         rarityVal = buf;
       }
-      catch (...) {}
+      catch (...)
+      {
+      }
     }
     item->SetProperty("Rarity", rarityVal);
     m_items.Add(item);

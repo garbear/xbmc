@@ -290,7 +290,6 @@ bool CGameSettings::IsAccountVerified(const std::string& username, const std::st
 
 bool CGameSettings::GetAchievementsLoggedIn() const
 {
-  return CServiceBroker::GetSettingsComponent()
-      ->GetSettings()
-      ->GetBool(SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN);
+  return CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+      SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN);
 }

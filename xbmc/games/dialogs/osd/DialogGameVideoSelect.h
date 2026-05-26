@@ -8,11 +8,10 @@
 
 #pragma once
 
-#include <string>
-
 #include "guilib/GUIDialog.h"
 
 #include <memory>
+#include <string>
 
 class CFileItemList;
 class CGUIViewControl;

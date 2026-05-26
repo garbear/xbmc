@@ -74,6 +74,7 @@ private:
 
   // Static map so Callback_URL_ID (raw fn ptr, no capture) can look up titles
   static std::unordered_map<unsigned, std::pair<std::string, std::string>> s_cheevoTitles;
+  static std::mutex s_cheevoTitlesMutex;
   // Rich presence periodic ping
   std::atomic<bool> m_richPresenceRunning{false};
   std::thread m_richPresenceThread;

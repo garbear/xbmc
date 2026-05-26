@@ -56,6 +56,7 @@ using namespace KODI;
 using namespace RETRO;
 // Static achievement title map (populated in LoadData, read in Callback_URL_ID)
 std::unordered_map<unsigned, std::pair<std::string, std::string>> CCheevos::s_cheevoTitles;
+std::mutex CCheevos::s_cheevoTitlesMutex;
 
 namespace
 {
@@ -72,6 +73,7 @@ constexpr auto RA_BADGE_BASE_URL = "https://i.retroachievements.org/Badge/";
 
 // KaiToast display timings (milliseconds)
 constexpr unsigned int TOAST_DISPLAY_TIME_MS = 6000;
+constexpr int RA_CURL_TIMEOUT_SECS = 10;
 constexpr unsigned int TOAST_DISPLAY_TIME_LONG_MS = 8000;
 constexpr unsigned int TOAST_MESSAGE_TIME_MS = 500;
 
@@ -310,6 +312,7 @@ bool CCheevos::LoadData()
 
   XFILE::CCurlFile hashCurl;
   hashCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+  hashCurl.SetTimeout(RA_CURL_TIMEOUT_SECS);
   std::string hashResponse;
   if (!hashCurl.Get(hashUrl, hashResponse))
   {
@@ -343,6 +346,7 @@ bool CCheevos::LoadData()
 
   XFILE::CCurlFile patchCurl;
   patchCurl.SetRequestHeader("User-Agent", RA_USER_AGENT);
+  patchCurl.SetTimeout(RA_CURL_TIMEOUT_SECS);
   std::string patchResponse;
   if (!patchCurl.Get(patchUrl, patchResponse))
   {
@@ -382,7 +386,10 @@ bool CCheevos::LoadData()
 
   // Load official achievements only (Flags == 5)
   m_activatedCheevoMap.clear();
-  s_cheevoTitles.clear();
+  {
+    std::lock_guard<std::mutex> lock(s_cheevoTitlesMutex);
+    s_cheevoTitles.clear();
+  }
   const CVariant& achievements = data[PATCH_DATA][ACHIEVEMENTS];
   for (auto it = achievements.begin_array(); it != achievements.end_array(); ++it)
   {
@@ -413,7 +420,10 @@ bool CCheevos::LoadData()
       // Store title + badge URL in static map so Callback_URL_ID can reach them
       const std::string badgeUrl =
           std::string(RA_BADGE_BASE_URL) + achievement[BADGE_NAME].asString() + ".png";
-      s_cheevoTitles[id] = {title, badgeUrl};
+      {
+        std::lock_guard<std::mutex> lock(s_cheevoTitlesMutex);
+        s_cheevoTitles[id] = {title, badgeUrl};
+      }
     }
   }
 
@@ -432,9 +442,9 @@ bool CCheevos::LoadData()
     info.title = fields[1];
     info.badgeUrl = std::string(RA_BADGE_BASE_URL) + fields[2] + ".png";
     info.description = fields.size() > 3 ? fields[3] : "";
-    info.points         = fields.size() > 4 ? static_cast<unsigned int>(std::stoul(fields[4])) : 0;
+    info.points = fields.size() > 4 ? static_cast<unsigned int>(std::stoul(fields[4])) : 0;
     info.lockedBadgeUrl = fields.size() > 5 ? fields[5] : "";
-    info.rarity      = fields.size() > 6 ? fields[6] : "";
+    info.rarity = fields.size() > 6 ? fields[6] : "";
     info.earned = false;
     achieveState.achievements.push_back(std::move(info));
   }
@@ -595,7 +605,6 @@ void CCheevos::EnableRichPresence()
   m_richPresenceLoaded = false;
   m_richPresenceScript.clear();
   m_gameId = 0;
-
 }
 
 std::string CCheevos::GetRichPresenceEvaluation()
@@ -714,6 +723,25 @@ static void FlushAwardQueue()
 
 static void QueueAward(const std::string& url)
 {
+  // Cap queue at 50 entries to prevent unbounded growth
+  constexpr int RA_AWARD_QUEUE_MAX = 50;
+  XFILE::CFile queueFile;
+  std::vector<uint8_t> existingData;
+  if (queueFile.LoadFile(CURL(RA_AWARD_QUEUE_FILE), existingData) > 0)
+  {
+    const std::string existing(existingData.begin(), existingData.end());
+    int lineCount = 0;
+    for (char c : existing)
+      if (c == '\n')
+        lineCount++;
+    if (lineCount >= RA_AWARD_QUEUE_MAX)
+    {
+      CLog::Log(LOGWARNING, "CCheevos: award queue full ({} entries), dropping: {}", lineCount,
+                url);
+      return;
+    }
+  }
+
   XFILE::CDirectory::Create("special://profile/cache/retroachievements/");
   XFILE::CFile outFile;
   if (outFile.OpenForWrite(CURL(RA_AWARD_QUEUE_FILE), false))
@@ -731,6 +759,7 @@ void CCheevos::Callback_URL_ID(const char* achievementUrl, unsigned int cheevoId
   // If this achievement ID is not in our official map it is unofficial/demoted.
   // The addon runtime activates ALL achievements from patch data regardless of
   // flags, so we filter here to avoid notifications and awards for unofficial ones.
+  std::lock_guard<std::mutex> titleLock(s_cheevoTitlesMutex);
   auto titleIt = s_cheevoTitles.find(cheevoId);
   if (titleIt == s_cheevoTitles.end())
   {
