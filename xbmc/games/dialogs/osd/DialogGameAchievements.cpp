@@ -105,7 +105,21 @@ void CDialogGameAchievements::PopulateList()
                 {
                 }
               }
+              std::string rarityCategory;
+              if (!achievement.rarity.empty())
+              {
+                try
+                {
+                  double r = std::stod(achievement.rarity);
+                  if (r > 50.0)       rarityCategory = "\u2605 Common";
+                  else if (r > 10.0)  rarityCategory = "\u2605\u2605 Uncommon";
+                  else if (r > 2.0)   rarityCategory = "\u2605\u2605\u2605 Rare";
+                  else                rarityCategory = "\u2605\u2605\u2605\u2605 Ultra Rare";
+                }
+                catch (...) {}
+              }
               item->SetProperty("Rarity", rarityVal);
+              item->SetProperty("RarityCategory", rarityCategory);
               m_items.Add(item);
             }
 
@@ -125,6 +139,16 @@ void CDialogGameAchievements::PopulateList()
             for (int i = 0; i < unearned.Size(); ++i)
               m_items.Add(unearned[i]);
 
+            // Calculate weighted progress
+            unsigned int totalPoints = 0, earnedPoints = 0;
+            for (int i = 0; i < m_items.Size(); ++i)
+            {
+              const unsigned int pts = static_cast<unsigned int>(m_items[i]->GetProperty("Points").asInteger());
+              totalPoints += pts;
+              if (!m_items[i]->GetProperty("Earned").asString().empty()) earnedPoints += pts;
+            }
+            if (totalPoints > 0)
+              SetProperty("WeightedProgress", StringUtils::Format("{}% Complete", static_cast<int>(earnedPoints * 100.0 / totalPoints)));
             m_viewControl.SetCurrentView(DEFAULT_VIEW_ICONS);
             m_viewControl.SetItems(m_items);
 }

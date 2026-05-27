@@ -959,7 +959,7 @@
                         <include content="DialogBackgroundCommons">
                                 <param name="width" value="1200" />
                                 <param name="height" value="870" />
-                                <param name="header_label" value="$INFO[RetroPlayer.AchievementsGameTitle] RetroAchievements  ($INFO[RetroPlayer.AchievementsUnlocked]/$INFO[RetroPlayer.AchievementsTotal] Unlocked)" />
+                                <param name="header_label" value="$INFO[RetroPlayer.AchievementsGameTitle] RetroAchievements  ($INFO[Window.Property(WeightedProgress)])" />
                                 <param name="header_id" value="2" />
                         </include>
                         <!-- Achievement list -->
@@ -998,7 +998,7 @@
                                         <!-- Rarity -->
                                         <control type="label">
                                                 <left>95</left><top>83</top><width>750</width><height>24</height>
-                                                <label>$INFO[ListItem.Property(Rarity)]</label>
+                                                <label>$INFO[ListItem.Property(RarityCategory)]</label>
                                                 <font>font12</font><align>left</align><textcolor>button_focus</textcolor>
                                                 
                                         </control>
@@ -1048,7 +1048,7 @@
                                         <!-- Rarity -->
                                         <control type="label">
                                                 <left>95</left><top>83</top><width>750</width><height>24</height>
-                                                <label>$INFO[ListItem.Property(Rarity)]</label>
+                                                <label>$INFO[ListItem.Property(RarityCategory)]</label>
                                                 <font>font12</font><align>left</align><textcolor>button_focus</textcolor>
                                                 
                                         </control>
