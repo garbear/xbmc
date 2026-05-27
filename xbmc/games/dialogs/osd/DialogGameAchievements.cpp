@@ -23,7 +23,7 @@
 using namespace KODI::GAME;
 
 CDialogGameAchievements::CDialogGameAchievements()
-  : CGUIDialog(WINDOW_DIALOG_GAME_ACHIEVEMENTS, "DialogGameAchievements.xml")
+  : CGUIDialog(WINDOW_DIALOG_GAME_ACHIEVEMENTS, "DialogGameControllers.xml")
 {
 }
 
@@ -31,7 +31,7 @@ void CDialogGameAchievements::OnWindowLoaded()
 {
   CGUIDialog::OnWindowLoaded();
   m_viewControl.SetParentWindow(GetID());
-  m_viewControl.AddView(GetControl(10811));
+  m_viewControl.AddView(GetControl(3));
 }
 
 void CDialogGameAchievements::OnWindowUnload()
