@@ -404,12 +404,11 @@ void CRPRendererOpenGL::Render(uint8_t alpha)
 
   KODI::UTILS::GL::GLBindVertexArray(m_mainVAO);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_DYNAMIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_DYNAMIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, m_mainVertexVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(PackedVertex) * 4, &vertex[0], GL_DYNAMIC_DRAW);
 
   glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, nullptr);
-
 
   KODI::UTILS::GL::GLBindVertexArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
