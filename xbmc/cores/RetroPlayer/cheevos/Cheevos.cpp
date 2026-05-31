@@ -850,10 +850,11 @@ void CCheevos::CallbackUrlId(const std::string& achievementUrl, unsigned int che
     }
     else
     {
-      // Download in background — badge will be available on next trigger
+      // Download badge in background then show notification with image
       const std::string badgeUrlCopy = badgeUrl;
+      const std::string cheevoTitleCopy = cheevoTitle;
       std::thread(
-          [badgeUrlCopy, localBadge]()
+          [badgeUrlCopy, localBadge, cheevoTitleCopy]()
           {
             XFILE::CDirectory::Create(RA_GAME_ICON_CACHE);
             XFILE::CCurlFile badgeCurl;
@@ -866,23 +867,24 @@ void CCheevos::CallbackUrlId(const std::string& achievementUrl, unsigned int che
               {
                 outFile.Write(badgeData.data(), static_cast<ssize_t>(badgeData.size()));
                 outFile.Close();
-                CLog::Log(LOGINFO, "CCheevos::CallbackUrlId -- cached badge: {}", localBadge);
+                CGUIDialogKaiToast::QueueNotification(localBadge, "Achievement Unlocked!",
+                                                      cheevoTitleCopy, TOAST_DISPLAY_TIME_MS,
+                                                      false, TOAST_MESSAGE_TIME_MS);
+                return;
               }
             }
+            CGUIDialogKaiToast::QueueNotification(
+                CGUIDialogKaiToast::Info, "Achievement Unlocked!",
+                cheevoTitleCopy.empty() ? "Achievement earned!" : cheevoTitleCopy,
+                TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
           })
           .detach();
     }
   }
-  // Show notification with badge icon if available
+  // Show notification immediately if badge was already cached
   if (!iconPath.empty())
   {
     CGUIDialogKaiToast::QueueNotification(iconPath, "Achievement Unlocked!", cheevoTitle,
-                                          TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
-  }
-  else
-  {
-    CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, "Achievement Unlocked!",
-                                          cheevoTitle.empty() ? "Achievement earned!" : cheevoTitle,
                                           TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
   }
 
