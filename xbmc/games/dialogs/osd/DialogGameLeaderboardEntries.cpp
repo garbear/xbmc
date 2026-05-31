@@ -128,6 +128,17 @@ void CDialogGameLeaderboardEntries::OnInitWindow()
   m_fetchThread = std::thread(&CDialogGameLeaderboardEntries::FetchEntriesAsync, this);
 }
 
+bool CDialogGameLeaderboardEntries::OnAction(const CAction& action)
+{
+  if (m_viewControl.HasControl(GetFocusedControlID()))
+  {
+    CGUIControl* control = GetControl(GetFocusedControlID());
+    if (control && control->OnAction(action))
+      return true;
+  }
+  return CGUIDialog::OnAction(action);
+}
+
 bool CDialogGameLeaderboardEntries::OnMessage(CGUIMessage& message)
 {
   switch (message.GetMessage())

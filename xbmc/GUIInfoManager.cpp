@@ -4576,7 +4576,7 @@ constexpr std::array<InfoMap, 24> retroplayer = {{
     {"achievementsunlocked",     RETROPLAYER_ACHIEVEMENTS_UNLOCKED},
     {"achievementsrichpresence", RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE},
     {"achievementsloaded",       RETROPLAYER_ACHIEVEMENTS_LOADED},
-    {"achievementsloggedin",     RETROPLAYER_ACHIEVEMENTS_LOGGED_IN},
+    {"retroachievementsloggedin", RETROPLAYER_ACHIEVEMENTS_LOGGED_IN},
     {"achievementsstatus",       RETROPLAYER_ACHIEVEMENTS_STATUS},
     {"leaderboardsstatus",       RETROPLAYER_LEADERBOARDS_STATUS},
 }};

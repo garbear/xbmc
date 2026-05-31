@@ -7,6 +7,8 @@
  */
 #pragma once
 
+#include "input/actions/Action.h"
+
 #include "FileItemList.h"
 #include "guilib/GUIDialog.h"
 #include "view/GUIViewControl.h"
@@ -30,6 +32,7 @@ public:
   ~CDialogGameLeaderboardEntries() override = default;
 
   // Implementation of CGUIControl via CGUIDialog
+  bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
 
 protected:

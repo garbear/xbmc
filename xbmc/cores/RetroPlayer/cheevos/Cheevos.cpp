@@ -51,7 +51,9 @@
 #include "utils/Variant.h"
 #include "utils/log.h"
 
+#include <atomic>
 #include <chrono>
+#include <mutex>
 #include <thread>
 
 using namespace KODI;
@@ -361,30 +363,26 @@ bool CCheevos::LoadData()
   std::string patchResponse;
   if (!patchCurl.Get(patchUrl, patchResponse))
   {
-    CLog::Log(LOGERROR, "CCheevos::LoadData -- patch request failed");
-
-    // Check if this looks like an expired/invalid token (empty response
-    // after a previously successful login). Clear the token and notify
-    // the user so they know to log in again.
-    auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
-    const std::string savedToken = settings->GetString("gamesachievements.token");
-    if (!savedToken.empty())
-    {
-      CLog::Log(LOGWARNING, "CCheevos::LoadData -- token may be expired, clearing");
-      settings->SetString("gamesachievements.token", "");
-      settings->Save();
-
-      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Error, "RetroAchievements",
-                                            "Session expired. Please log in again in Settings.",
-                                            TOAST_DISPLAY_TIME_LONG_MS, false,
-                                            TOAST_MESSAGE_TIME_MS);
-    }
+    CLog::Log(LOGERROR, "CCheevos::LoadData -- patch request failed (network error)");
     return false;
   }
 
   CVariant data;
   if (!CJSONVariantParser::Parse(patchResponse, data))
     return false;
+  // Check for explicit auth error from RA server
+  if (!data["Success"].asBoolean() && !data["Error"].asString().empty())
+  {
+    CLog::Log(LOGWARNING, "CCheevos::LoadData -- RA auth error: {}", data["Error"].asString());
+    auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
+    settings->SetString("gamesachievements.token", "");
+    settings->Save();
+    CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Error, "RetroAchievements",
+                                          "Session expired. Please log in again in Settings.",
+                                          TOAST_DISPLAY_TIME_LONG_MS, false,
+                                          TOAST_MESSAGE_TIME_MS);
+    return false;
+  }
 
   // Update the file item with the RA game title
   auto file = std::make_unique<CFileItem>(m_gameClient->GetGamePath(), false);
@@ -591,9 +589,11 @@ bool CCheevos::LoadData()
       }
       else
       {
-        // Not cached yet - download in background, will be available on next load
+        // Download in background then show notification with image
+        const std::string headingCopy = heading;
+        const std::string bodyCopy = body;
         std::thread(
-            [imageIconUrl, localIcon]()
+            [imageIconUrl, localIcon, headingCopy, bodyCopy]()
             {
               XFILE::CDirectory::Create(RA_GAME_ICON_CACHE);
               XFILE::CCurlFile iconCurl;
@@ -607,29 +607,26 @@ bool CCheevos::LoadData()
                   outFile.Write(iconData.data(), static_cast<ssize_t>(iconData.size()));
                   outFile.Close();
                   CLog::Log(LOGINFO, "CCheevos::LoadData -- cached game icon: {}", localIcon);
+                  CGUIDialogKaiToast::QueueNotification(localIcon, headingCopy, bodyCopy,
+                                                        TOAST_DISPLAY_TIME_MS, false,
+                                                        TOAST_MESSAGE_TIME_MS);
+                  return;
                 }
               }
-              else
-              {
-                CLog::Log(LOGWARNING, "CCheevos::LoadData -- failed to download game icon: {}",
-                          imageIconUrl);
-              }
+              CLog::Log(LOGWARNING, "CCheevos::LoadData -- failed to download game icon: {}",
+                        imageIconUrl);
+              CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, headingCopy,
+                                                    bodyCopy, TOAST_DISPLAY_TIME_MS, false,
+                                                    TOAST_MESSAGE_TIME_MS);
             })
             .detach();
       }
     }
-    // Use the image overload (line 41 of GUIDialogKaiToast.h) when we have
-    // a cached icon, otherwise fall back to the eType overload.
+    // Show notification immediately if icon was already cached
     if (!iconPath.empty())
     {
-      CGUIDialogKaiToast::QueueNotification(iconPath, // image file path
-                                            heading, body, TOAST_DISPLAY_TIME_MS, false,
+      CGUIDialogKaiToast::QueueNotification(iconPath, heading, body, TOAST_DISPLAY_TIME_MS, false,
                                             TOAST_MESSAGE_TIME_MS);
-    }
-    else
-    {
-      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, heading, body,
-                                            TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
     }
 
     CLog::Log(LOGINFO, "CCheevos::LoadData -- notified: {} ({}/{})", m_gameTitle, unlockedCount,
