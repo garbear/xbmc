@@ -361,30 +361,27 @@ bool CCheevos::LoadData()
   std::string patchResponse;
   if (!patchCurl.Get(patchUrl, patchResponse))
   {
-    CLog::Log(LOGERROR, "CCheevos::LoadData -- patch request failed");
-
-    // Check if this looks like an expired/invalid token (empty response
-    // after a previously successful login). Clear the token and notify
-    // the user so they know to log in again.
-    auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
-    const std::string savedToken = settings->GetString("gamesachievements.token");
-    if (!savedToken.empty())
-    {
-      CLog::Log(LOGWARNING, "CCheevos::LoadData -- token may be expired, clearing");
-      settings->SetString("gamesachievements.token", "");
-      settings->Save();
-
-      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Error, "RetroAchievements",
-                                            "Session expired. Please log in again in Settings.",
-                                            TOAST_DISPLAY_TIME_LONG_MS, false,
-                                            TOAST_MESSAGE_TIME_MS);
-    }
+    // Transient network failure - do not clear token, just bail out
+    CLog::Log(LOGERROR, "CCheevos::LoadData -- patch request failed (network error)");
     return false;
   }
 
   CVariant data;
   if (!CJSONVariantParser::Parse(patchResponse, data))
     return false;
+  // Check for explicit auth error from RA server (invalid/expired token)
+  if (!data["Success"].asBoolean() && !data["Error"].asString().empty())
+  {
+    CLog::Log(LOGWARNING, "CCheevos::LoadData -- RA auth error: {}", data["Error"].asString());
+    auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
+    settings->SetString("gamesachievements.token", "");
+    settings->Save();
+    CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Error, "RetroAchievements",
+                                          "Session expired. Please log in again in Settings.",
+                                          TOAST_DISPLAY_TIME_LONG_MS, false,
+                                          TOAST_MESSAGE_TIME_MS);
+    return false;
+  }
 
   // Update the file item with the RA game title
   auto file = std::make_unique<CFileItem>(m_gameClient->GetGamePath(), false);
