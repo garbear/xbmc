@@ -30,6 +30,7 @@ public:
   ~CDialogGameLeaderboardEntries() override = default;
 
   // Implementation of CGUIControl via CGUIDialog
+  bool OnAction(const CAction& action) override;
   bool OnMessage(CGUIMessage& message) override;
 
 protected:
