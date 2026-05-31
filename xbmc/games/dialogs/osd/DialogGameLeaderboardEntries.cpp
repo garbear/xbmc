@@ -18,6 +18,7 @@
 #include "guilib/GUIMessage.h"
 #include "guilib/GUIWindowManager.h"
 #include "guilib/WindowIDs.h"
+#include "input/actions/Action.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
 #include "utils/JSONVariantParser.h"
@@ -126,6 +127,17 @@ void CDialogGameLeaderboardEntries::OnInitWindow()
 
   // Start background paged fetch
   m_fetchThread = std::thread(&CDialogGameLeaderboardEntries::FetchEntriesAsync, this);
+}
+
+bool CDialogGameLeaderboardEntries::OnAction(const CAction& action)
+{
+  if (m_viewControl.HasControl(GetFocusedControlID()))
+  {
+    CGUIControl* control = GetControl(GetFocusedControlID());
+    if (control && control->OnAction(action))
+      return true;
+  }
+  return CGUIDialog::OnAction(action);
 }
 
 bool CDialogGameLeaderboardEntries::OnMessage(CGUIMessage& message)
