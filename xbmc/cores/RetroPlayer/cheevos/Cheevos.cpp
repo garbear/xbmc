@@ -589,9 +589,11 @@ bool CCheevos::LoadData()
       }
       else
       {
-        // Not cached yet - download in background, will be available on next load
+        // Download in background then show notification with image
+        const std::string headingCopy = heading;
+        const std::string bodyCopy = body;
         std::thread(
-            [imageIconUrl, localIcon]()
+            [imageIconUrl, localIcon, headingCopy, bodyCopy]()
             {
               XFILE::CDirectory::Create(RA_GAME_ICON_CACHE);
               XFILE::CCurlFile iconCurl;
@@ -605,29 +607,26 @@ bool CCheevos::LoadData()
                   outFile.Write(iconData.data(), static_cast<ssize_t>(iconData.size()));
                   outFile.Close();
                   CLog::Log(LOGINFO, "CCheevos::LoadData -- cached game icon: {}", localIcon);
+                  CGUIDialogKaiToast::QueueNotification(localIcon, headingCopy, bodyCopy,
+                                                        TOAST_DISPLAY_TIME_MS, false,
+                                                        TOAST_MESSAGE_TIME_MS);
+                  return;
                 }
               }
-              else
-              {
-                CLog::Log(LOGWARNING, "CCheevos::LoadData -- failed to download game icon: {}",
-                          imageIconUrl);
-              }
+              CLog::Log(LOGWARNING, "CCheevos::LoadData -- failed to download game icon: {}",
+                        imageIconUrl);
+              CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, headingCopy,
+                                                    bodyCopy, TOAST_DISPLAY_TIME_MS, false,
+                                                    TOAST_MESSAGE_TIME_MS);
             })
             .detach();
       }
     }
-    // Use the image overload (line 41 of GUIDialogKaiToast.h) when we have
-    // a cached icon, otherwise fall back to the eType overload.
+    // Show notification immediately if icon was already cached
     if (!iconPath.empty())
     {
-      CGUIDialogKaiToast::QueueNotification(iconPath, // image file path
-                                            heading, body, TOAST_DISPLAY_TIME_MS, false,
-                                            TOAST_MESSAGE_TIME_MS);
-    }
-    else
-    {
-      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, heading, body,
-                                            TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
+      CGUIDialogKaiToast::QueueNotification(iconPath, heading, body, TOAST_DISPLAY_TIME_MS,
+                                            false, TOAST_MESSAGE_TIME_MS);
     }
 
     CLog::Log(LOGINFO, "CCheevos::LoadData -- notified: {} ({}/{})", m_gameTitle, unlockedCount,
