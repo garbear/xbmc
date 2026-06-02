@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <stddef.h> /* size_t */
 #include <functional>
 #include <string>
 
@@ -53,9 +52,8 @@ public:
   void RCGetRichPresenceEvaluation(std::string& evaluation, RETRO::RConsoleID consoleID);
 
   void ActivateAchievement(unsigned cheevoId, const std::string& memAddrExpression);
-  void GetAchievementUrlId(
-      const std::function<void(const std::string& achievementUrl, unsigned int cheevoId)>&
-          callback);
+  void GetAchievementUrlId(const std::function<void(const std::string& achievementUrl,
+                                                    unsigned int cheevoId)>& callback);
 
   // When the game is reset, the runtime should also be reset
   void RCResetRuntime();

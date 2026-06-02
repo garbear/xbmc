@@ -1057,7 +1057,8 @@ public:
   ///
   /// @return The error, or @ref GAME_ERROR_NO_ERROR if the call was successful
   ///
-  virtual GAME_ERROR GetCheevoUrlId(const std::function<void(const std::string& achievementUrl, unsigned int cheevoId)>& callback)
+  virtual GAME_ERROR GetCheevoUrlId(
+      const std::function<void(const std::string& achievementUrl, unsigned int cheevoId)>& callback)
   {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
@@ -1650,9 +1651,7 @@ private:
 
     const auto cppCallback =
         [callback, context](const std::string& achievementUrl, unsigned int cheevoId)
-    {
-      callback(context, achievementUrl.c_str(), cheevoId);
-    };
+    { callback(context, achievementUrl.c_str(), cheevoId); };
 
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
         ->GetCheevoUrlId(cppCallback);

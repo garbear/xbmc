@@ -1303,7 +1303,9 @@ extern "C"
     (const AddonInstance_Game*, char**, unsigned int);
     GAME_ERROR(__cdecl* ActivateAchievement)(const AddonInstance_Game*, unsigned int, const char*);
     GAME_ERROR(__cdecl* GetCheevoUrlId)
-    (const AddonInstance_Game*, void(__cdecl*)(const void*, const char*, unsigned int), const void*);
+    (const AddonInstance_Game*,
+     void(__cdecl*)(const void*, const char*, unsigned int),
+     const void*);
     GAME_ERROR(__cdecl* RCResetRuntime)(const AddonInstance_Game*);
     bool(__cdecl* GetEjectState)(const AddonInstance_Game*);
     GAME_ERROR(__cdecl* SetEjectState)(const AddonInstance_Game*, bool);

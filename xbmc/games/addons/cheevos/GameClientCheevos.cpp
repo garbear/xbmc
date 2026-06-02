@@ -21,7 +21,7 @@ void __cdecl GetCheevoUrlIdCallback(const void* context,
 {
   const auto* callback = static_cast<
       const std::function<void(const std::string& achievementUrl, unsigned int cheevoId)>*>(
-          context);
+      context);
   (*callback)(achievementUrl != nullptr ? std::string{achievementUrl} : std::string{}, cheevoId);
 }
 } // namespace
@@ -214,9 +214,8 @@ void CGameClientCheevos::ActivateAchievement(unsigned cheevoId,
 
   try
   {
-    m_gameClient.LogError(error =
-                              m_struct.toAddon->ActivateAchievement(&m_struct, cheevoId,
-                                                                    memAddrExpression.c_str()),
+    m_gameClient.LogError(error = m_struct.toAddon->ActivateAchievement(&m_struct, cheevoId,
+                                                                        memAddrExpression.c_str()),
                           "ActivateAchievement()");
   }
   catch (...)
@@ -226,8 +225,7 @@ void CGameClientCheevos::ActivateAchievement(unsigned cheevoId,
 }
 
 void CGameClientCheevos::GetAchievementUrlId(
-    const std::function<void(const std::string& achievementUrl, unsigned int cheevoId)>&
-        callback)
+    const std::function<void(const std::string& achievementUrl, unsigned int cheevoId)>& callback)
 {
   if (!callback)
     return;
@@ -236,10 +234,9 @@ void CGameClientCheevos::GetAchievementUrlId(
 
   try
   {
-    m_gameClient.LogError(error = m_struct.toAddon->GetCheevoUrlId(&m_struct,
-                                                                    GetCheevoUrlIdCallback,
-                                                                    &callback),
-                          "GetCheevoUrlId()");
+    m_gameClient.LogError(
+        error = m_struct.toAddon->GetCheevoUrlId(&m_struct, GetCheevoUrlIdCallback, &callback),
+        "GetCheevoUrlId()");
   }
   catch (...)
   {
