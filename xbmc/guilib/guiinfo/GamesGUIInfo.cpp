@@ -233,11 +233,6 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
 
       return true;
     }
-    case RETROPLAYER_ACHIEVEMENTS_GAME_TITLE:
-    {
-      value = GameSettings().GetAchievementGameTitle();
-      return true;
-    }
     case RETROPLAYER_ACHIEVEMENTS_TOTAL:
     {
       value = std::to_string(GameSettings().GetAchievementTotal());

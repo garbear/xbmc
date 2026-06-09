@@ -153,11 +153,6 @@ public:
 
   // Targeted getters for frequently-queried fields — avoids copying
   // the full AchievementState struct on every InfoLabel query
-  std::string GetAchievementGameTitle() const
-  {
-    std::lock_guard<std::mutex> lock(m_achievementMutex);
-    return m_achievementState.gameTitle;
-  }
 
   unsigned int GetAchievementTotal() const
   {
