@@ -79,6 +79,9 @@ constexpr unsigned int TOAST_MESSAGE_TIME_MS = 500;
 // JSON field names
 constexpr auto PATCH_DATA = "PatchData";
 constexpr auto GAME_TITLE = "Title";
+constexpr auto GAME_PUBLISHER = "Publisher";
+constexpr auto GAME_DEVELOPER = "Developer";
+constexpr auto GAME_GENRE = "Genre";
 constexpr auto IMAGE_ICON_URL = "ImageIconURL";
 constexpr auto RA_GAME_ICON_CACHE = "special://profile/cache/retroachievements/icons/";
 constexpr auto RA_AWARD_QUEUE_FILE = "special://profile/cache/retroachievements/pending_awards.txt";
@@ -378,19 +381,33 @@ bool CCheevos::LoadData()
     settings->Save();
     CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Error, "RetroAchievements",
                                           "Session expired. Please log in again in Settings.",
-                                          TOAST_DISPLAY_TIME_LONG_MS, false,
-                                          TOAST_MESSAGE_TIME_MS);
+                                          TOAST_DISPLAY_TIME_LONG_MS, false, TOAST_MESSAGE_TIME_MS);
     return false;
   }
 
-  // Update the file item with the RA game title
+  // Update the file item with metadata from RetroAchievements
   auto file = std::make_unique<CFileItem>(m_gameClient->GetGamePath(), false);
-  file->SetLabel(data[PATCH_DATA][GAME_TITLE].asString());
+  const std::string raTitle = data[PATCH_DATA][GAME_TITLE].asString();
+  file->SetLabel(raTitle);
+  GAME::CGameInfoTag* tag = file->GetGameInfoTag();
+  if (tag != nullptr)
+  {
+    tag->SetTitle(raTitle);
+    const std::string publisher = data[PATCH_DATA][GAME_PUBLISHER].asString();
+    if (!publisher.empty())
+      tag->SetPublisher(publisher);
+    const std::string developer = data[PATCH_DATA][GAME_DEVELOPER].asString();
+    if (!developer.empty())
+      tag->SetDeveloper(developer);
+    const std::string genre = data[PATCH_DATA][GAME_GENRE].asString();
+    if (!genre.empty())
+      tag->SetGenres({genre});
+  }
   CServiceBroker::GetAppMessenger()->PostMsg(TMSG_UPDATE_PLAYER_ITEM, -1, -1,
                                              static_cast<void*>(file.release()));
 
   // Store game title for the load notification
-  m_gameTitle = data[PATCH_DATA][GAME_TITLE].asString();
+  m_gameTitle = raTitle;
 
   // Load official achievements only (Flags == 5)
   m_activatedCheevoMap.clear();
@@ -615,8 +632,8 @@ bool CCheevos::LoadData()
               }
               CLog::Log(LOGWARNING, "CCheevos::LoadData -- failed to download game icon: {}",
                         imageIconUrl);
-              CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, headingCopy,
-                                                    bodyCopy, TOAST_DISPLAY_TIME_MS, false,
+              CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, headingCopy, bodyCopy,
+                                                    TOAST_DISPLAY_TIME_MS, false,
                                                     TOAST_MESSAGE_TIME_MS);
             })
             .detach();
@@ -625,8 +642,8 @@ bool CCheevos::LoadData()
     // Show notification immediately if icon was already cached
     if (!iconPath.empty())
     {
-      CGUIDialogKaiToast::QueueNotification(iconPath, heading, body, TOAST_DISPLAY_TIME_MS,
-                                            false, TOAST_MESSAGE_TIME_MS);
+      CGUIDialogKaiToast::QueueNotification(iconPath, heading, body, TOAST_DISPLAY_TIME_MS, false,
+                                            TOAST_MESSAGE_TIME_MS);
     }
 
     CLog::Log(LOGINFO, "CCheevos::LoadData -- notified: {} ({}/{})", m_gameTitle, unlockedCount,
@@ -868,8 +885,8 @@ void CCheevos::CallbackUrlId(const std::string& achievementUrl, unsigned int che
                 outFile.Write(badgeData.data(), static_cast<ssize_t>(badgeData.size()));
                 outFile.Close();
                 CGUIDialogKaiToast::QueueNotification(localBadge, "Achievement Unlocked!",
-                                                      cheevoTitleCopy, TOAST_DISPLAY_TIME_MS,
-                                                      false, TOAST_MESSAGE_TIME_MS);
+                                                      cheevoTitleCopy, TOAST_DISPLAY_TIME_MS, false,
+                                                      TOAST_MESSAGE_TIME_MS);
                 return;
               }
             }

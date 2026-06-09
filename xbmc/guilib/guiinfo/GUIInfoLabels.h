@@ -358,7 +358,6 @@ constexpr uint32_t RETROPLAYER_DISC_LABEL            = 1702;
 constexpr uint32_t RETROPLAYER_EMPTY_TRAY            = 1703;
 
 // RetroAchievements aggregate InfoLabels
-constexpr uint32_t RETROPLAYER_ACHIEVEMENTS_GAME_TITLE    = 1724;
 constexpr uint32_t RETROPLAYER_ACHIEVEMENTS_TOTAL         = 1725;
 constexpr uint32_t RETROPLAYER_ACHIEVEMENTS_UNLOCKED      = 1713;
 constexpr uint32_t RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE = 1714;
