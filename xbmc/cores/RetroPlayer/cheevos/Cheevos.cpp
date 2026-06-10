@@ -390,7 +390,7 @@ bool CCheevos::LoadData()
   auto file = std::make_unique<CFileItem>(m_gameClient->GetGamePath(), false);
   const std::string raTitle = data[PATCH_DATA][GAME_TITLE].asString();
   file->SetLabel(raTitle);
-  CGameInfoTag* tag = file->GetGameInfoTag();
+  GAME::CGameInfoTag* tag = file->GetGameInfoTag();
   if (tag != nullptr)
   {
     tag->SetTitle(raTitle);

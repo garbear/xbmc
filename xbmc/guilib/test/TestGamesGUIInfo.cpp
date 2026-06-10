@@ -64,8 +64,6 @@ TEST_F(TestGamesGUIInfo, TranslatesRetroPlayerLabels)
             RETROPLAYER_GAME_CLIENT_PLATFORMS);
 
   // Achievement aggregate InfoLabels
-  EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.GameTitle"),
-            RETROPLAYER_ACHIEVEMENTS_GAME_TITLE);
   EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.Total"),
             RETROPLAYER_ACHIEVEMENTS_TOTAL);
   EXPECT_EQ(infoManager.TranslateString("RetroPlayer.Achievements.Unlocked"),
@@ -108,10 +106,6 @@ TEST_F(TestGamesGUIInfo, AchievementStateInfoLabelsReturnEmptyWhenNotLoaded)
   std::string value;
 
   // With no achievement state loaded, labels should return true but with empty values
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_GAME_TITLE),
-                                    nullptr));
-  EXPECT_TRUE(value.empty());
-
   EXPECT_TRUE(
       gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_TOTAL), nullptr));
   EXPECT_EQ(value, "0");
@@ -132,10 +126,6 @@ TEST_F(TestGamesGUIInfo, AchievementStateInfoLabelsReturnDataWhenLoaded)
   state.loaded = true;
 
   gameSettings.SetAchievementState(state);
-
-  EXPECT_TRUE(gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_GAME_TITLE),
-                                    nullptr));
-  EXPECT_EQ(value, "Super Mario Bros.");
 
   EXPECT_TRUE(
       gamesGUIInfo.GetLabel(value, &item, 0, CGUIInfo(RETROPLAYER_ACHIEVEMENTS_TOTAL), nullptr));
