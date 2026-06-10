@@ -120,6 +120,7 @@ option(ENABLE_INTERNAL_LIBTORRENT "Enable internal libtorrent?" ON) # TODO: Chan
 option(ENABLE_INTERNAL_PLOG "Enable internal plog?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_TRY_SIGNAL "Enable internal try_signal?" ON) # TODO: Change to OFF
 option(ENABLE_INTERNAL_USRSCTP "Enable internal usrsctp?" ON) # TODO: Change to OFF
+option(ENABLE_INTERNAL_ZSTD "Enable internal Zstandard?" ON) # TODO: Change to OFF
 
 # These are required enabled for all CI platforms, and recommended for all builds
 option(ENABLE_INTERNAL_CROSSGUID "Enable internal crossguid?" ON)
