@@ -23,6 +23,7 @@
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPBaseRenderer.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
+#include "cores/RetroPlayer/savestates/SavestateWriter.h"
 #include "cores/RetroPlayer/streams/RetroPlayerVideo.h"
 #include "filesystem/File.h"
 #include "pictures/Picture.h"
@@ -827,7 +828,8 @@ CRenderVideoSettings CRPRenderManager::GetEffectiveSettings(
   return effectiveSettings;
 }
 
-void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
+std::optional<SavestateThumbnailPayload> CRPRenderManager::CaptureThumbnailPayload(
+    const std::string& thumbnailPath)
 {
   // Get a suitable render buffer for capturing the video data, or use the
   // cached frame if a readable buffer can't be found
@@ -856,26 +858,59 @@ void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
   else if (!cachedFrame.empty())
   {
     sourceFormat = m_format;
-    sourceData = m_cachedFrame.data();
-    sourceSize = m_cachedFrame.size();
+    sourceData = cachedFrame.data();
+    sourceSize = cachedFrame.size();
     width = m_cachedWidth;
     height = m_cachedHeight;
     rotationCCW = m_cachedRotationCCW;
   }
 
-  if (sourceFormat == AV_PIX_FMT_NONE)
+  if (sourceFormat == AV_PIX_FMT_NONE || sourceData == nullptr || sourceSize == 0)
   {
     CLog::Log(LOGERROR, "Failed to get a video frame for savestate thumbnail");
-    return;
+    FreeVideoFrame(renderBuffer, std::move(cachedFrame));
+    return {};
   }
 
-  std::vector<uint8_t> copiedData(sourceData, sourceData + sourceSize);
+  SavestateThumbnailPayload payload;
+  payload.thumbnailPath = thumbnailPath;
+  payload.pixels.assign(sourceData, sourceData + sourceSize);
+  payload.width = width;
+  payload.height = height;
+  payload.rotationCCW = rotationCCW;
+  payload.pixelFormat = sourceFormat;
 
-  const int stride = CRenderTranslator::TranslateWidthToBytes(width, sourceFormat);
+  FreeVideoFrame(renderBuffer, std::move(cachedFrame));
+
+  return payload;
+}
+
+bool CRPRenderManager::WriteThumbnailPayload(const SavestateThumbnailPayload& payload)
+{
+  if (payload.thumbnailPath.empty())
+  {
+    CLog::Log(LOGERROR, "RetroPlayer[SAVE]: Refusing to write thumbnail with empty path");
+    return false;
+  }
+
+  if (payload.pixelFormat == AV_PIX_FMT_NONE || payload.pixels.empty() || payload.width == 0 ||
+      payload.height == 0)
+  {
+    CLog::Log(LOGERROR, "RetroPlayer[SAVE]: Invalid savestate thumbnail payload");
+    return false;
+  }
+
+  const int stride = CRenderTranslator::TranslateWidthToBytes(payload.width, payload.pixelFormat);
+  if (stride <= 0)
+  {
+    CLog::Log(LOGERROR, "RetroPlayer[SAVE]: Invalid thumbnail stride for format {}",
+              static_cast<long int>(payload.pixelFormat));
+    return false;
+  }
 
   unsigned int scaleWidth = 400;
   unsigned int scaleHeight = 220;
-  CPicture::GetScale(width, height, scaleWidth, scaleHeight);
+  CPicture::GetScale(payload.width, payload.height, scaleWidth, scaleHeight);
 
   const int bytesPerPixel = 4;
   std::vector<uint8_t> scaledImage(scaleWidth * scaleHeight * bytesPerPixel);
@@ -883,22 +918,33 @@ void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
   const AVPixelFormat outFormat = AV_PIX_FMT_BGR0;
   const int scaleStride = CRenderTranslator::TranslateWidthToBytes(scaleWidth, outFormat);
 
-  if (CPicture::ScaleImage(copiedData.data(), width, height, stride, sourceFormat,
+  // CPicture::ScaleImage() takes a non-const source pointer, but passes it to sws_scale() as
+  // read-only input.
+  auto* sourcePixels = const_cast<uint8_t*>(payload.pixels.data());
+
+  if (CPicture::ScaleImage(sourcePixels, payload.width, payload.height, stride, payload.pixelFormat,
                            scaledImage.data(), scaleWidth, scaleHeight, scaleStride, outFormat))
   {
     //! @todo Rotate image by rotationCCW
-    (void)rotationCCW;
+    (void)payload.rotationCCW;
 
-    CPicture::CreateThumbnailFromSurface(scaledImage.data(), scaleWidth, scaleHeight, scaleStride,
-                                         thumbnailPath);
+    return CPicture::CreateThumbnailFromSurface(scaledImage.data(), scaleWidth, scaleHeight,
+                                                scaleStride, payload.thumbnailPath);
   }
   else
   {
-    CLog::Log(LOGERROR, "Failed to scale image from size {}x{} to size {}x{}", width, height,
-              scaleWidth, scaleHeight);
+    CLog::Log(LOGERROR, "Failed to scale image from size {}x{} to size {}x{}", payload.width,
+              payload.height, scaleWidth, scaleHeight);
   }
 
-  FreeVideoFrame(renderBuffer, std::move(cachedFrame));
+  return false;
+}
+
+void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
+{
+  std::optional<SavestateThumbnailPayload> payload = CaptureThumbnailPayload(thumbnailPath);
+  if (payload)
+    WriteThumbnailPayload(*payload);
 }
 
 void CRPRenderManager::CacheVideoFrame(const std::string& savestatePath)
@@ -921,6 +967,31 @@ void CRPRenderManager::CacheVideoFrame(const std::string& savestatePath)
 }
 
 void CRPRenderManager::SaveVideoFrame(const std::string& savestatePath, ISavestate& savestate)
+{
+  SavestateWritePayload payload;
+  SaveVideoFrame(savestatePath, payload);
+
+  savestate.SetPixelFormat(payload.pixelFormat);
+  savestate.SetNominalWidth(payload.nominalWidth);
+  savestate.SetNominalHeight(payload.nominalHeight);
+  savestate.SetNominalDisplayAspectRatio(payload.nominalDisplayAspectRatio);
+  savestate.SetMaxWidth(payload.maxWidth);
+  savestate.SetMaxHeight(payload.maxHeight);
+
+  savestate.SetVideoWidth(payload.videoWidth);
+  savestate.SetVideoHeight(payload.videoHeight);
+  savestate.SetDisplayAspectRatio(payload.displayAspectRatio);
+  savestate.SetRotationDegCCW(payload.rotationCCW);
+  if (!payload.videoData.empty())
+  {
+    uint8_t* const targetData = savestate.GetVideoBuffer(payload.videoData.size());
+    if (targetData != nullptr)
+      std::memcpy(targetData, payload.videoData.data(), payload.videoData.size());
+  }
+}
+
+void CRPRenderManager::SaveVideoFrame(const std::string& savestatePath,
+                                      SavestateWritePayload& payload)
 {
   // Get a suitable render buffer for capturing the video data, or use the
   // cached frame if a readable buffer can't be found
@@ -955,8 +1026,8 @@ void CRPRenderManager::SaveVideoFrame(const std::string& savestatePath, ISavesta
     height = m_cachedHeight;
     displayAspectRatio = m_cachedDisplayAspectRatio;
     rotationCCW = m_cachedRotationCCW;
-    sourceSize = m_cachedFrame.size();
-    sourceData = m_cachedFrame.data();
+    sourceSize = cachedFrame.size();
+    sourceData = cachedFrame.data();
   }
 
   if (targetFormat == AV_PIX_FMT_NONE)
@@ -966,20 +1037,20 @@ void CRPRenderManager::SaveVideoFrame(const std::string& savestatePath, ISavesta
   else
   {
     // Serialize video stream properties
-    savestate.SetPixelFormat(targetFormat);
-    savestate.SetNominalWidth(m_nominalWidth);
-    savestate.SetNominalHeight(m_nominalHeight);
-    savestate.SetNominalDisplayAspectRatio(m_nominalDisplayAspectRatio);
-    savestate.SetMaxWidth(m_maxWidth);
-    savestate.SetMaxHeight(m_maxHeight);
+    payload.pixelFormat = targetFormat;
+    payload.nominalWidth = m_nominalWidth;
+    payload.nominalHeight = m_nominalHeight;
+    payload.nominalDisplayAspectRatio = m_nominalDisplayAspectRatio;
+    payload.maxWidth = m_maxWidth;
+    payload.maxHeight = m_maxHeight;
 
     // Serialize video frame properties
-    savestate.SetVideoWidth(width);
-    savestate.SetVideoHeight(height);
-    savestate.SetDisplayAspectRatio(displayAspectRatio);
-    savestate.SetRotationDegCCW(rotationCCW);
-    uint8_t* const targetData = savestate.GetVideoBuffer(sourceSize);
-    std::memcpy(targetData, sourceData, sourceSize);
+    payload.videoWidth = width;
+    payload.videoHeight = height;
+    payload.displayAspectRatio = displayAspectRatio;
+    payload.rotationCCW = rotationCCW;
+    if (sourceData != nullptr && sourceSize > 0)
+      payload.videoData.assign(sourceData, sourceData + sourceSize);
   }
 
   FreeVideoFrame(readableBuffer, std::move(cachedFrame));
@@ -1042,12 +1113,11 @@ void CRPRenderManager::FreeVideoFrame(IRenderBuffer* readableBuffer,
 void CRPRenderManager::LoadVideoFrameAsync(const std::string& savestatePath)
 {
   // Prune any finished loader threads
-  m_savestateThreads.erase(std::remove_if(m_savestateThreads.begin(), m_savestateThreads.end(),
-                                          [](std::future<void>& task) {
-                                            return task.wait_for(std::chrono::seconds::zero()) ==
-                                                   std::future_status::ready;
-                                          }),
-                           m_savestateThreads.end());
+  m_savestateThreads.erase(
+      std::remove_if(
+          m_savestateThreads.begin(), m_savestateThreads.end(), [](std::future<void>& task)
+          { return task.wait_for(std::chrono::seconds::zero()) == std::future_status::ready; }),
+      m_savestateThreads.end());
 
   // Load the video data from the savestate asynchronously
   std::future<void> task = std::async(std::launch::async, [this, savestatePath]()

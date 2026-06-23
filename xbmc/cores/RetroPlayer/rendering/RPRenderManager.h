@@ -11,6 +11,7 @@
 #include "IRenderManager.h"
 #include "RenderVideoSettings.h"
 #include "cores/RetroPlayer/guibridge/IRenderCallback.h"
+#include "cores/RetroPlayer/savestates/SavestateThumbnail.h"
 #include "threads/CriticalSection.h"
 
 extern "C"
@@ -23,6 +24,7 @@ extern "C"
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <set>
 #include <string>
 #include <vector>
@@ -42,6 +44,7 @@ class IGUIRenderSettings;
 class IRenderBuffer;
 class IRenderBufferPool;
 class ISavestate;
+struct SavestateWritePayload;
 struct VideoStreamBuffer;
 
 /*!
@@ -131,11 +134,15 @@ public:
   bool SupportsScalingMethod(SCALINGMETHOD method) const override;
 
   // Savestate functions
+  std::optional<SavestateThumbnailPayload> CaptureThumbnailPayload(
+      const std::string& thumbnailPath);
+  static bool WriteThumbnailPayload(const SavestateThumbnailPayload& payload);
   void SaveThumbnail(const std::string& thumbnailPath);
 
   // Savestate functions
   void CacheVideoFrame(const std::string& savestatePath);
   void SaveVideoFrame(const std::string& savestatePath, ISavestate& savestate);
+  void SaveVideoFrame(const std::string& savestatePath, SavestateWritePayload& payload);
   void ClearVideoFrame(const std::string& savestatePath);
 
 private:

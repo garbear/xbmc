@@ -2,6 +2,8 @@ set(SOURCES SavestateDatabase.cpp
             SavestateBlob.cpp
             SavestateCompression.cpp
             SavestateFlatBuffer.cpp
+            SavestateWriteQueue.cpp
+            SavestateWriter.cpp
 )
 
 set(HEADERS ISavestate.h
@@ -9,6 +11,9 @@ set(HEADERS ISavestate.h
             SavestateCompression.h
             SavestateDatabase.h
             SavestateFlatBuffer.h
+            SavestateThumbnail.h
+            SavestateWriteQueue.h
+            SavestateWriter.h
             SavestateTypes.h
 )
 
