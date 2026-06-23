@@ -65,6 +65,7 @@
 #include "video/VideoLibraryQueue.h"
 #include "video/VideoManagerTypes.h"
 #include "video/VideoThumbLoader.h"
+#include "video/jobs/VideoProfileExtractionJob.h"
 
 #include <algorithm>
 #include <chrono>
@@ -3148,16 +3149,35 @@ bool CVideoDatabase::SetStreamDetailsForFileId(const CStreamDetails& details, in
 
     for (int i=1; i<=details.GetVideoStreamCount(); i++)
     {
-      m_pDS->exec(PrepareSQL(
-          "INSERT INTO streamdetails "
-          "(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, "
-          "iVideoDuration, strStereoMode, strVideoLanguage, strHdrType, strHdrDetail) "
-          "VALUES (%i,%i,'%s',%f,%i,%i,%i,'%s','%s','%s','%s')",
-          idFile, static_cast<int>(CStreamDetail::VIDEO), details.GetVideoCodec(i).c_str(),
-          static_cast<double>(details.GetVideoAspect(i)), details.GetVideoWidth(i),
-          details.GetVideoHeight(i), details.GetVideoDuration(i), details.GetStereoMode(i).c_str(),
-          details.GetVideoLanguage(i).c_str(), details.GetVideoHdrType(i).c_str(),
-          details.GetVideoHdrDetail(i).c_str()));
+      if (details.HasVideoProfileScanned(i))
+      {
+        m_pDS->exec(PrepareSQL(
+            "INSERT INTO streamdetails "
+            "(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, "
+            "strVideoProfile, iVideoDuration, strStereoMode, strVideoLanguage, strHdrType, "
+            "strHdrDetail) "
+            "VALUES (%i,%i,'%s',%f,%i,%i,'%s',%i,'%s','%s','%s','%s')",
+            idFile, static_cast<int>(CStreamDetail::VIDEO), details.GetVideoCodec(i).c_str(),
+            static_cast<double>(details.GetVideoAspect(i)), details.GetVideoWidth(i),
+            details.GetVideoHeight(i), details.GetVideoProfile(i).c_str(),
+            details.GetVideoDuration(i), details.GetStereoMode(i).c_str(),
+            details.GetVideoLanguage(i).c_str(), details.GetVideoHdrType(i).c_str(),
+            details.GetVideoHdrDetail(i).c_str()));
+      }
+      else
+      {
+        m_pDS->exec(PrepareSQL(
+            "INSERT INTO streamdetails "
+            "(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, "
+            "strVideoProfile, iVideoDuration, strStereoMode, strVideoLanguage, strHdrType, "
+            "strHdrDetail) "
+            "VALUES (%i,%i,'%s',%f,%i,%i,NULL,%i,'%s','%s','%s','%s')",
+            idFile, static_cast<int>(CStreamDetail::VIDEO), details.GetVideoCodec(i).c_str(),
+            static_cast<double>(details.GetVideoAspect(i)), details.GetVideoWidth(i),
+            details.GetVideoHeight(i), details.GetVideoDuration(i),
+            details.GetStereoMode(i).c_str(), details.GetVideoLanguage(i).c_str(),
+            details.GetVideoHdrType(i).c_str(), details.GetVideoHdrDetail(i).c_str()));
+      }
     }
     for (int i=1; i<=details.GetAudioStreamCount(); i++)
     {
@@ -4452,7 +4472,13 @@ bool CVideoDatabase::GetStreamDetails(CFileItem& item)
 
   // Have a file id, get stream details if available (creates tag either way)
   item.GetVideoInfoTag()->m_iFileId = fileId;
-  return GetStreamDetails(*item.GetVideoInfoTag());
+  if (!GetStreamDetails(*item.GetVideoInfoTag()))
+    return false;
+
+  // Queue a background probe for legacy rows missing codec profile metadata
+  CVideoProfileExtractionJob::QueueIfNeeded(item, fileId);
+
+  return true;
 }
 
 bool CVideoDatabase::GetStreamDetails(CVideoInfoTag& tag)
@@ -4471,7 +4497,12 @@ bool CVideoDatabase::GetStreamDetails(CVideoInfoTag& tag)
   std::unique_ptr<Dataset> pDS(m_pDB->CreateDataset());
   try
   {
-    std::string strSQL = PrepareSQL("SELECT * FROM streamdetails WHERE idFile = %i", fileId);
+    std::string strSQL = PrepareSQL(
+        "SELECT idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, "
+        "strAudioCodec, iAudioChannels, strAudioLanguage, strSubtitleLanguage, iVideoDuration, "
+        "strStereoMode, strVideoLanguage, strHdrType, strHdrDetail, strVideoProfile "
+        "FROM streamdetails WHERE idFile = %i",
+        fileId);
     pDS->query(strSQL);
 
     while (!pDS->eof())
@@ -4486,6 +4517,8 @@ bool CVideoDatabase::GetStreamDetails(CVideoInfoTag& tag)
           p->m_fAspect = pDS->fv(3).get_asFloat();
           p->m_iWidth = pDS->fv(4).get_asInt();
           p->m_iHeight = pDS->fv(5).get_asInt();
+          p->m_strProfile = pDS->fv(15).get_asString();
+          p->m_bProfileScanned = !pDS->fv(15).get_isNull();
           p->m_iDuration = pDS->fv(10).get_asInt();
           p->m_strStereoMode = pDS->fv(11).get_asString();
           p->m_strLanguage = pDS->fv(12).get_asString();

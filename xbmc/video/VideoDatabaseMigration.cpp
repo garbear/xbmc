@@ -1209,9 +1209,14 @@ void CVideoDatabase::UpdateTables(int iVersion)
     m_pDS->dropIndex("episode", "id_episode_file_2");
     m_pDS->dropIndex("streamdetails", "ix_streamdetails");
   }
+
+  if (iVersion < 147)
+  {
+    m_pDS->exec("ALTER TABLE streamdetails ADD strVideoProfile text");
+  }
 }
 
 int CVideoDatabase::GetSchemaVersion() const
 {
-  return 146;
+  return 147;
 }

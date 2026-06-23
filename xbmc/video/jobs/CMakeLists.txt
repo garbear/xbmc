@@ -4,7 +4,8 @@ set(SOURCES VideoLibraryCleaningJob.cpp
             VideoLibraryProgressJob.cpp
             VideoLibraryRefreshingJob.cpp
             VideoLibraryScanningJob.cpp
-            VideoLibraryResetResumePointJob.cpp)
+            VideoLibraryResetResumePointJob.cpp
+            VideoProfileExtractionJob.cpp)
 
 set(HEADERS VideoLibraryCleaningJob.h
             VideoLibraryJob.h
@@ -12,6 +13,7 @@ set(HEADERS VideoLibraryCleaningJob.h
             VideoLibraryProgressJob.h
             VideoLibraryRefreshingJob.h
             VideoLibraryScanningJob.h
-            VideoLibraryResetResumePointJob.h)
+            VideoLibraryResetResumePointJob.h
+            VideoProfileExtractionJob.h)
 
 core_add_library(video_jobs)

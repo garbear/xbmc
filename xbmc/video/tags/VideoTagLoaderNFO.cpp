@@ -12,6 +12,7 @@
 #include "FileItemList.h"
 #include "NfoFile.h"
 #include "URL.h"
+#include "cores/VideoPlayer/DVDFileInfo.h"
 #include "filesystem/Directory.h"
 #include "filesystem/StackDirectory.h"
 #include "utils/FileUtils.h"
@@ -87,7 +88,17 @@ CInfoScanner::InfoType CVideoTagLoaderNFO::Load(CVideoInfoTag& tag,
     result = nfoReader.Create(m_path, m_info, GetNfoIndex(m_item, m_info));
 
     if (result == FULL || result == COMBINED || result == OVERRIDE)
+    {
       nfoReader.GetDetails(tag, nullptr, prioritise);
+
+      if (tag.m_streamDetails.HasUnscannedVideoProfile() && CDVDFileInfo::CanExtract(m_item))
+      {
+        CFileItem scannedItem(m_item);
+        if (CDVDFileInfo::GetFileStreamDetails(&scannedItem))
+          tag.m_streamDetails.UpdateMissingVideoProfilesFrom(
+              scannedItem.GetVideoInfoTag()->m_streamDetails);
+      }
+    }
 
     if (result == URL || result == COMBINED)
     {
