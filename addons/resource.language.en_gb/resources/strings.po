@@ -19557,11 +19557,7 @@ msgctxt "#35297"
 msgid "Pending unlocks have been submitted."
 msgstr ""
 
-#. Error message shown when trying to load a compressed savestate in an unsupported version of Kodi
-#: xbmc/games/dialogs/osd/DialogInGameSaves.cpp
-msgctxt "#35298"
-msgid "This savestate is compressed and can't be loaded by this version of Kodi."
-msgstr ""
+#reserved string with id 35298
 
 #. Shown when the achievements dialog is opened before the game has been identified
 #: xbmc/games/dialogs/osd/DialogGameAchievements.cpp
