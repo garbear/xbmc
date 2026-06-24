@@ -783,6 +783,7 @@
 		<value condition="String.IsEqual(ListItem.VideoCodec,hev1) | [Window.IsActive(fullscreenvideo) + String.IsEqual(VideoPlayer.VideoCodec,hev1)]">H.265</value>
 		<value condition="String.IsEqual(ListItem.VideoCodec,hevc) | [Window.IsActive(fullscreenvideo) + String.IsEqual(VideoPlayer.VideoCodec,hevc)]">H.265</value>
 		<value condition="String.IsEqual(ListItem.VideoCodec,hvc1) | [Window.IsActive(fullscreenvideo) + String.IsEqual(VideoPlayer.VideoCodec,hvc1)]">H.265</value>
+		<value condition="String.IsEqual(ListItem.VideoCodec,mjpeg) | [Window.IsActive(fullscreenvideo) + String.IsEqual(VideoPlayer.VideoCodec,mjpeg)]">MJPEG</value>
 		<value condition="String.IsEqual(ListItem.VideoCodec,mpeg1) | [Window.IsActive(fullscreenvideo) + String.IsEqual(VideoPlayer.VideoCodec,mpeg1)]">MPEG1</value>
 		<value condition="String.IsEqual(ListItem.VideoCodec,mpeg2) | [Window.IsActive(fullscreenvideo) + String.IsEqual(VideoPlayer.VideoCodec,mpeg2)]">MPEG2</value>
 		<value condition="String.IsEqual(ListItem.VideoCodec,mpeg2video) | [Window.IsActive(fullscreenvideo) + String.IsEqual(VideoPlayer.VideoCodec,mpeg2video)]">MPEG2</value>
