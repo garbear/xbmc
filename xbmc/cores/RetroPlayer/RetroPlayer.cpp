@@ -199,6 +199,7 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
                                            m_gameServices.GameSettings().GetRAToken());
 
     m_cheevos->EnableRichPresence();
+    m_cheevos->ActivateAchievement();
 
     // Initialize gameplay
     CreatePlayback(savestatePath);

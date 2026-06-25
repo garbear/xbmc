@@ -18,6 +18,8 @@
 #include "application/ApplicationComponents.h"
 #include "application/ApplicationPlayer.h"
 #include "cores/RetroPlayer/RetroPlayerUtils.h"
+#include "games/GameServices.h"
+#include "games/GameSettings.h"
 #include "games/addons/GameClient.h"
 #include "games/tags/GameInfoTag.h"
 #include "guilib/GUIComponent.h"
@@ -64,6 +66,14 @@ const CGameInfoTag* GetGUIGameTag()
 
 //! @todo Savestates were removed from v18
 //#define FILEITEM_PROPERTY_SAVESTATE_DURATION  "duration"
+
+const KODI::GAME::CGameSettings& CGamesGUIInfo::GameSettings() const
+{
+  if (m_gameSettings)
+    return *m_gameSettings;
+
+  return CServiceBroker::GetGameServices().GameSettings();
+}
 
 bool CGamesGUIInfo::InitCurrentItem(CFileItem* item)
 {
@@ -212,6 +222,12 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
       }
       break;
     }
+
+    case RETROPLAYER_ACHIEVEMENTS_RICH_PRESENCE:
+    {
+      value = GameSettings().GetAchievementRichPresence();
+      return true;
+    }
     case RETROPLAYER_DISC_LABEL:
     {
       const auto& components = CServiceBroker::GetAppComponents();
@@ -272,6 +288,12 @@ bool CGamesGUIInfo::GetBool(bool& value,
 
       value = appPlayer && appPlayer->IsTrayEmpty();
 
+      return true;
+    }
+
+    case RETROPLAYER_ACHIEVEMENTS_LOGGED_IN:
+    {
+      value = GameSettings().GetAchievementsLoggedIn();
       return true;
     }
     default:
