@@ -24,9 +24,222 @@
 #include "video/VideoManagerTypes.h"
 
 #include <algorithm>
+#include <limits>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
+
+namespace
+{
+int CompareStringForExport(const std::string& lhs, const std::string& rhs)
+{
+  const int compare = StringUtils::CompareNoCase(lhs, rhs);
+  if (compare != 0)
+    return compare;
+
+  if (lhs < rhs)
+    return -1;
+  if (rhs < lhs)
+    return 1;
+
+  return 0;
+}
+
+bool StringLessForExport(const std::string& lhs, const std::string& rhs)
+{
+  return CompareStringForExport(lhs, rhs) < 0;
+}
+
+std::vector<std::string> SortedForExport(const std::vector<std::string>& values)
+{
+  std::vector<std::string> sortedValues{values};
+  std::ranges::stable_sort(sortedValues, StringLessForExport);
+  return sortedValues;
+}
+
+std::vector<SActorInfo> SortedCastForExport(const std::vector<SActorInfo>& cast)
+{
+  std::vector<SActorInfo> sortedCast{cast};
+  std::ranges::stable_sort(sortedCast, [](const SActorInfo& lhs, const SActorInfo& rhs) {
+    const int lhsOrder = lhs.order < 0 ? std::numeric_limits<int>::max() : lhs.order;
+    const int rhsOrder = rhs.order < 0 ? std::numeric_limits<int>::max() : rhs.order;
+    if (lhsOrder != rhsOrder)
+      return lhsOrder < rhsOrder;
+    if (const int compare = CompareStringForExport(lhs.strName, rhs.strName); compare != 0)
+      return compare < 0;
+    if (const int compare = CompareStringForExport(lhs.strRole, rhs.strRole); compare != 0)
+      return compare < 0;
+    return CompareStringForExport(lhs.thumbUrl.GetData(), rhs.thumbUrl.GetData()) < 0;
+  });
+  return sortedCast;
+}
+
+std::string XmlAttribute(const TiXmlElement& element, const char* attribute)
+{
+  return XMLUtils::GetAttribute(&element, attribute);
+}
+
+std::string XmlText(const TiXmlElement& element)
+{
+  if (element.FirstChild())
+    return element.FirstChild()->ValueStr();
+
+  return {};
+}
+
+int XmlSeason(const TiXmlElement& element)
+{
+  // Missing season uses the same sentinel as explicit all-season artwork.
+  int season{-1};
+  element.QueryIntAttribute("season", &season);
+  return season;
+}
+
+// Canonical artwork export order: primary poster/thumb artwork first,
+// season artwork next, fanart/landscape after, then other artwork.
+// Attribute/URL sorting below provides deterministic ordering within each group.
+int ArtworkRankForExport(const TiXmlElement& element)
+{
+  const std::string type = XmlAttribute(element, "type");
+  const std::string aspect = XmlAttribute(element, "aspect");
+  const bool isSeason = CompareStringForExport(type, "season") == 0;
+
+  if (!isSeason && (CompareStringForExport(aspect, "poster") == 0 ||
+                    CompareStringForExport(aspect, "thumb") == 0))
+    return 0;
+
+  if (isSeason && (CompareStringForExport(aspect, "poster") == 0 ||
+                   CompareStringForExport(aspect, "thumb") == 0))
+    return 1;
+
+  if (CompareStringForExport(type, "fanart") == 0 ||
+      CompareStringForExport(aspect, "fanart") == 0 ||
+      CompareStringForExport(aspect, "landscape") == 0)
+    return 2;
+
+  return 3;
+}
+
+template<typename Value>
+int CompareValueForExport(const Value& lhs, const Value& rhs)
+{
+  if (lhs < rhs)
+    return -1;
+  if (rhs < lhs)
+    return 1;
+
+  return 0;
+}
+
+bool ArtworkXmlLessForExport(const TiXmlElement& lhs, const TiXmlElement& rhs)
+{
+  if (const int compare = CompareValueForExport(ArtworkRankForExport(lhs), ArtworkRankForExport(rhs));
+      compare != 0)
+    return compare < 0;
+
+  if (const int compare = CompareStringForExport(XmlAttribute(lhs, "type"), XmlAttribute(rhs, "type"));
+      compare != 0)
+    return compare < 0;
+
+  if (const int compare = CompareValueForExport(XmlSeason(lhs), XmlSeason(rhs)); compare != 0)
+    return compare < 0;
+
+  if (const int compare =
+          CompareStringForExport(XmlAttribute(lhs, "aspect"), XmlAttribute(rhs, "aspect"));
+      compare != 0)
+    return compare < 0;
+
+  if (const int compare =
+          CompareStringForExport(XmlAttribute(lhs, "language"), XmlAttribute(rhs, "language"));
+      compare != 0)
+    return compare < 0;
+
+  if (const int compare =
+          CompareStringForExport(XmlAttribute(lhs, "spoof"), XmlAttribute(rhs, "spoof"));
+      compare != 0)
+    return compare < 0;
+
+  if (const int compare =
+          CompareStringForExport(XmlAttribute(lhs, "cache"), XmlAttribute(rhs, "cache"));
+      compare != 0)
+    return compare < 0;
+
+  if (const int compare = CompareStringForExport(XmlText(lhs), XmlText(rhs)); compare != 0)
+    return compare < 0;
+
+  if (const int compare =
+          CompareStringForExport(XmlAttribute(lhs, "preview"), XmlAttribute(rhs, "preview"));
+      compare != 0)
+    return compare < 0;
+
+  if (const int compare =
+          CompareStringForExport(XmlAttribute(lhs, "colors"), XmlAttribute(rhs, "colors"));
+      compare != 0)
+    return compare < 0;
+
+  if (const int compare =
+          CompareStringForExport(XmlAttribute(lhs, "post"), XmlAttribute(rhs, "post"));
+      compare != 0)
+    return compare < 0;
+
+  return CompareStringForExport(XmlAttribute(lhs, "gzip"), XmlAttribute(rhs, "gzip")) < 0;
+}
+
+std::vector<TiXmlElement> ThumbElementsForExport(const TiXmlElement* firstThumb)
+{
+  std::vector<TiXmlElement> thumbs;
+
+  const TiXmlElement* thumb = firstThumb;
+  while (thumb)
+  {
+    thumbs.emplace_back(*thumb);
+    thumb = thumb->NextSiblingElement("thumb");
+  }
+
+  return thumbs;
+}
+
+std::vector<TiXmlElement> SortedThumbsForExport(const CScraperUrl& pictureURL)
+{
+  CXBMCTinyXML doc;
+  doc.Parse(pictureURL.GetData());
+  if (doc.Error())
+    return {};
+
+  std::vector<TiXmlElement> thumbs = ThumbElementsForExport(doc.FirstChildElement("thumb"));
+  std::ranges::stable_sort(thumbs, ArtworkXmlLessForExport);
+  return thumbs;
+}
+
+std::optional<TiXmlElement> SortedFanartForExport(const std::string& fanartXml)
+{
+  TiXmlElement sortedFanart("fanart");
+
+  CXBMCTinyXML doc;
+  doc.Parse(fanartXml);
+  if (doc.Error())
+    return std::nullopt;
+
+  const TiXmlElement* fanart = doc.FirstChildElement("fanart");
+  if (!fanart)
+    return std::nullopt;
+
+  const TiXmlAttribute* attribute = fanart->FirstAttribute();
+  while (attribute)
+  {
+    sortedFanart.SetAttribute(attribute->Name(), attribute->Value());
+    attribute = attribute->Next();
+  }
+
+  std::vector<TiXmlElement> thumbs = ThumbElementsForExport(fanart->FirstChildElement("thumb"));
+  std::ranges::stable_sort(thumbs, ArtworkXmlLessForExport);
+  for (const TiXmlElement& sortedThumb : thumbs)
+    sortedFanart.InsertEndChild(sortedThumb);
+
+  return sortedFanart;
+}
+} // namespace
 
 void CVideoInfoTag::Reset()
 {
@@ -172,20 +385,13 @@ bool CVideoInfoTag::Save(TiXmlNode *node, const std::string &tag, bool savePathI
   XMLUtils::SetInt(movie, "runtime", GetDuration() / 60);
   if (m_strPictureURL.HasData())
   {
-    CXBMCTinyXML doc;
-    doc.Parse(m_strPictureURL.GetData());
-    const TiXmlNode* thumb = doc.FirstChild("thumb");
-    while (thumb)
-    {
-      movie->InsertEndChild(*thumb);
-      thumb = thumb->NextSibling("thumb");
-    }
+    for (const TiXmlElement& thumb : SortedThumbsForExport(m_strPictureURL))
+      movie->InsertEndChild(thumb);
   }
   if (!m_fanart.m_xml.empty())
   {
-    CXBMCTinyXML doc;
-    doc.Parse(m_fanart.m_xml);
-    movie->InsertEndChild(*doc.RootElement());
+    if (const std::optional<TiXmlElement> fanart = SortedFanartForExport(m_fanart.m_xml))
+      movie->InsertEndChild(*fanart);
   }
   XMLUtils::SetString(movie, "mpaa", m_strMPAARating);
   XMLUtils::SetInt(movie, "playcount", GetPlayCount());
@@ -224,8 +430,8 @@ bool CVideoInfoTag::Save(TiXmlNode *node, const std::string &tag, bool savePathI
 
     movie->InsertEndChild(uniqueID);
   }
-  XMLUtils::SetStringArray(movie, "genre", m_genre);
-  XMLUtils::SetStringArray(movie, "country", m_country);
+  XMLUtils::SetStringArray(movie, "genre", SortedForExport(m_genre));
+  XMLUtils::SetStringArray(movie, "country", SortedForExport(m_country));
   if (m_set.HasTitle())
   {
     TiXmlElement set("set");
@@ -234,13 +440,13 @@ bool CVideoInfoTag::Save(TiXmlNode *node, const std::string &tag, bool savePathI
       XMLUtils::SetString(&set, "overview", m_set.GetOverview());
     movie->InsertEndChild(set);
   }
-  XMLUtils::SetStringArray(movie, "tag", m_tags);
+  XMLUtils::SetStringArray(movie, "tag", SortedForExport(m_tags));
   m_assetInfo.Save(movie);
   XMLUtils::SetBoolean(movie, "hasvideoversions", m_hasVideoVersions);
   XMLUtils::SetBoolean(movie, "hasvideoextras", m_hasVideoExtras);
   XMLUtils::SetBoolean(movie, "isdefaultvideoversion", m_isDefaultVideoVersion);
-  XMLUtils::SetStringArray(movie, "credits", m_writingCredits);
-  XMLUtils::SetStringArray(movie, "director", m_director);
+  XMLUtils::SetStringArray(movie, "credits", SortedForExport(m_writingCredits));
+  XMLUtils::SetStringArray(movie, "director", SortedForExport(m_director));
   if (HasPremiered())
     XMLUtils::SetDate(movie, "premiered", m_premiered);
   if (HasYear())
@@ -248,7 +454,7 @@ bool CVideoInfoTag::Save(TiXmlNode *node, const std::string &tag, bool savePathI
   XMLUtils::SetString(movie, "status", m_strStatus);
   XMLUtils::SetString(movie, "code", m_strProductionCode);
   XMLUtils::SetDate(movie, "aired", m_firstAired);
-  XMLUtils::SetStringArray(movie, "studio", m_studio);
+  XMLUtils::SetStringArray(movie, "studio", SortedForExport(m_studio));
   XMLUtils::SetString(movie, "trailer", m_strTrailer);
 
   if (m_streamDetails.HasItems())
@@ -288,7 +494,8 @@ bool CVideoInfoTag::Save(TiXmlNode *node, const std::string &tag, bool savePathI
   }  /* if has stream details */
 
   // cast
-  for (auto it = m_cast.begin(); it != m_cast.end(); ++it)
+  const std::vector<SActorInfo> sortedCast = SortedCastForExport(m_cast);
+  for (auto it = sortedCast.begin(); it != sortedCast.end(); ++it)
   {
     // add a <actor> tag
     TiXmlElement cast("actor");
