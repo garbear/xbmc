@@ -251,7 +251,8 @@ public:
    * Sized by the caller from what the runtime reports, so it is not capped.
    */
   virtual uint8_t* GetAchievementBuffer(size_t size) = 0;
-  virtual void Finalize() = 0;
+
+  virtual void Finalize(bool compress) = 0;
   ///}
 
   /*!

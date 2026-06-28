@@ -772,15 +772,15 @@ uint8_t* CSavestateFlatBuffer::GetAchievementBuffer(size_t size)
   return m_achievementData.empty() ? nullptr : m_achievementData.data();
 }
 
-void CSavestateFlatBuffer::Finalize()
+void CSavestateFlatBuffer::Finalize(bool compress)
 {
   if (m_builder == nullptr)
     return;
 
   const SavestateBlobOffsets videoBlob =
-      CSavestateBlob::CreateWriteOffsets(*m_builder, m_videoData, SCHEMA_VIDEO_DATA_FIELD_NAME);
+      CSavestateBlob::CreateWriteOffsets(*m_builder, m_videoData, SCHEMA_VIDEO_DATA_FIELD_NAME, compress);
   const SavestateBlobOffsets memoryBlob =
-      CSavestateBlob::CreateWriteOffsets(*m_builder, m_memoryData, SCHEMA_MEMORY_DATA_FIELD_NAME);
+      CSavestateBlob::CreateWriteOffsets(*m_builder, m_memoryData, SCHEMA_MEMORY_DATA_FIELD_NAME, compress);
 
   flatbuffers::Offset<flatbuffers::Vector<uint8_t>> achievementBlob = 0;
   if (!m_achievementData.empty())

@@ -86,7 +86,7 @@ public:
   const uint8_t* GetAchievementData() const override;
   size_t GetAchievementSize() const override;
   uint8_t* GetAchievementBuffer(size_t size) override;
-  void Finalize() override;
+  void Finalize(bool compress) override;
   bool Deserialize(std::vector<uint8_t> data) override;
 
 private:

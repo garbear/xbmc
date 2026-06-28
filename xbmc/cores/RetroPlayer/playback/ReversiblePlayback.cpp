@@ -21,6 +21,8 @@
 #include "games/GameServices.h"
 #include "games/GameSettings.h"
 #include "games/addons/GameClient.h"
+#include "settings/Settings.h"
+#include "settings/SettingsComponent.h"
 #include "utils/MathUtils.h"
 #include "utils/URIUtils.h"
 #include "utils/log.h"
@@ -268,6 +270,10 @@ void CReversiblePlayback::CommitSavestate(bool autosave,
   m_renderManager.SaveVideoFrame(savePath, *savestate);
 
   savestate->Finalize();
+
+  //! @todo
+  const bool compressSavedGame = CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+      CSettings::SETTING_GAMES_COMPRESSSAVEDGAMES);
 
   bool success;
   {
