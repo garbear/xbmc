@@ -226,7 +226,7 @@ void CReversiblePlayback::CommitSavestate(bool autosave,
     }
   }
 
-  const std::string caption = m_cheevos->GetRichPresenceEvaluation();
+  const std::string caption = (m_cheevos != nullptr) ? m_cheevos->GetRichPresenceEvaluation() : "";
   const std::string gameFileName = URIUtils::GetFileName(m_gameClient->GetGamePath());
   const double timestampWallClock =
       (timestampFrames /
@@ -304,7 +304,6 @@ bool CReversiblePlayback::LoadSavestate(const std::string& savestatePath)
     }
   }
 
-  m_cheevos->ResetRuntime();
 
   return bSuccess;
 }
@@ -312,6 +311,8 @@ bool CReversiblePlayback::LoadSavestate(const std::string& savestatePath)
 void CReversiblePlayback::FrameEvent()
 {
   m_gameClient->RunFrame();
+  if (m_cheevos != nullptr)
+    m_cheevos->DoFrame();
 
   AddFrame();
 }
@@ -321,6 +322,8 @@ void CReversiblePlayback::RewindEvent()
   RewindFrames(1);
 
   m_gameClient->RunFrame();
+  if (m_cheevos != nullptr)
+    m_cheevos->DoFrame();
 }
 
 void CReversiblePlayback::EndEvent()

@@ -437,7 +437,6 @@ bool CRetroPlayer::OnAction(const CAction& action)
         m_playback->SetSpeed(0.0);
 
         CLog::Log(LOGDEBUG, "RetroPlayer[PLAYER]: Sending reset command via ACTION_PLAYER_RESET");
-        m_cheevos->ResetRuntime();
         m_gameClient->Input().HardwareReset();
 
         // If rewinding or paused, begin playback

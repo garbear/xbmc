@@ -37,6 +37,9 @@ void __cdecl GetCheevoUrlIdCallback(const void* context,
     // Never allow exceptions to unwind through the C ABI callback boundary
   }
 }
+
+
+
 } // namespace
 
 using namespace KODI;
@@ -269,4 +272,27 @@ void CGameClientCheevos::RCResetRuntime()
   {
     m_gameClient.LogException("RCResetRuntime()");
   }
+}
+
+bool CGameClientCheevos::GetMemory(unsigned int type, uint8_t*& data, size_t& size)
+{
+  GAME_ERROR error = GAME_ERROR_NO_ERROR;
+  uint8_t* rawData = nullptr;
+  size_t rawSize = 0;
+  try
+  {
+    error = m_struct.toAddon->GetMemory(
+        &m_struct, static_cast<GAME_MEMORY>(type), &rawData, &rawSize);
+    m_gameClient.LogError(error, "GetMemory()");
+  }
+  catch (...)
+  {
+    m_gameClient.LogException("GetMemory()");
+    return false;
+  }
+  if (error != GAME_ERROR_NO_ERROR || rawData == nullptr || rawSize == 0)
+    return false;
+  data = rawData;
+  size = rawSize;
+  return true;
 }

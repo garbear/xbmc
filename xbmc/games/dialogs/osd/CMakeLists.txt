@@ -7,6 +7,9 @@ set(SOURCES DialogGameAdvancedSettings.cpp
             DialogGameVideoRotation.cpp
             DialogGameVideoSelect.cpp
             DialogGameVolume.cpp
+            DialogGameAchievements.cpp
+            DialogGameLeaderboards.cpp
+            DialogGameLeaderboardEntries.cpp
             DialogInGameSaves.cpp
 )
 
@@ -19,6 +22,9 @@ set(HEADERS DialogGameAdvancedSettings.h
             DialogGameVideoRotation.h
             DialogGameVideoSelect.h
             DialogGameVolume.h
+            DialogGameAchievements.h
+            DialogGameLeaderboards.h
+            DialogGameLeaderboardEntries.h
             DialogInGameSaves.h
 )
 

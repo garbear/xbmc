@@ -156,6 +156,9 @@
 #include "games/dialogs/osd/DialogGameVideoFilter.h"
 #include "games/dialogs/osd/DialogGameVideoRotation.h"
 #include "games/dialogs/osd/DialogGameVolume.h"
+#include "games/dialogs/osd/DialogGameAchievements.h"
+#include "games/dialogs/osd/DialogGameLeaderboards.h"
+#include "games/dialogs/osd/DialogGameLeaderboardEntries.h"
 #include "games/dialogs/osd/DialogInGameSaves.h"
 #include "games/ports/windows/GUIPortWindow.h"
 #include "games/windows/GUIWindowGames.h"
@@ -349,6 +352,9 @@ void CGUIWindowManager::CreateWindows()
   Add(new GAME::CDialogGameVideoFilter);
   Add(new GAME::CDialogGameStretchMode);
   Add(new GAME::CDialogGameVolume);
+  Add(new GAME::CDialogGameAchievements);
+  Add(new GAME::CDialogGameLeaderboards);
+  Add(new GAME::CDialogGameLeaderboardEntries);
   Add(new GAME::CDialogGameAdvancedSettings);
   Add(new GAME::CDialogGameVideoRotation);
   Add(new GAME::CDialogInGameSaves);

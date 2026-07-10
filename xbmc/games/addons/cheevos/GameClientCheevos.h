@@ -8,6 +8,9 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
+
 #include <functional>
 #include <string>
 
@@ -57,6 +60,19 @@ public:
 
   // When the game is reset, the runtime should also be reset
   void RCResetRuntime();
+
+  /*!
+   * \brief Read a memory region from the loaded game.
+   *
+   * Wraps the game addon's GetMemory call. Used by the rc_client memory
+   * callback to give rcheevos access to the emulated system's RAM.
+   *
+   * \param type  One of GAME_MEMORY_SYSTEM_RAM, GAME_MEMORY_SAVE_RAM, etc.
+   * \param data  Set to a pointer into the core's memory (valid until UnloadGame).
+   * \param size  Set to the size of the region in bytes.
+   * \return true on success.
+   */
+  bool GetMemory(unsigned int type, uint8_t*& data, size_t& size);
 
 private:
   CGameClient& m_gameClient;
