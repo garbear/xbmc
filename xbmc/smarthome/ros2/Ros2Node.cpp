@@ -9,6 +9,7 @@
 #include "Ros2Node.h"
 
 #include "Ros2InputPublisher.h"
+#include "Ros2PowerMeterManager.h"
 #include "Ros2SystemHealthManager.h"
 #include "Ros2VideoSubscription.h"
 #include "ServiceBroker.h"
@@ -39,7 +40,10 @@ constexpr const char* HOSTNAME_UNKNOWN = "unknown";
 
 CRos2Node::CRos2Node(CSmartHomeInputManager& inputManager)
   : m_inputManager(inputManager),
-    m_systemHealthManager(std::make_unique<CRos2SystemHealthManager>(ROS_NAMESPACE))
+    m_systemHealthManager(std::make_unique<CRos2SystemHealthManager>(ROS_NAMESPACE)),
+    m_powerMeterManager(std::make_unique<CRos2PowerMeterManager>(
+        ROS_NAMESPACE,
+        [this](const std::string& systemName) { m_systemHealthManager->MarkActive(systemName); }))
 {
 }
 
@@ -62,6 +66,7 @@ void CRos2Node::Initialize()
 
   // Managers
   m_systemHealthManager->Initialize(m_node);
+  m_powerMeterManager->Initialize(m_node);
 
   // Publishers
   m_peripheralPublisher =
@@ -87,6 +92,7 @@ void CRos2Node::Deinitialize()
   if (m_executor && m_node)
     m_executor->remove_node(m_node);
 
+  m_powerMeterManager->Deinitialize();
   m_systemHealthManager->Deinitialize();
 
   for (const auto& videoSub : m_videoSubs)
@@ -136,6 +142,11 @@ void CRos2Node::UnregisterImageTopic(const ImageSubscriptionKey& subscription)
 ISystemHealthHUD* CRos2Node::GetSystemHealthHUD() const
 {
   return m_systemHealthManager.get();
+}
+
+IPowerMeterHUD* CRos2Node::GetPowerMeterHUD() const
+{
+  return m_powerMeterManager.get();
 }
 
 void CRos2Node::FrameMove()

@@ -16,12 +16,15 @@ namespace KODI
 {
 namespace SMART_HOME
 {
+class IPowerMeterHUD;
 class ISystemHealthHUD;
 
 class CSmartHomeGuiInfo : public GUILIB::GUIINFO::IGUIInfoProvider
 {
 public:
-  CSmartHomeGuiInfo(CGUIInfoManager& infoManager, ISystemHealthHUD& systemHealthHud);
+  CSmartHomeGuiInfo(CGUIInfoManager& infoManager,
+                    ISystemHealthHUD& systemHealthHud,
+                    IPowerMeterHUD& powerMeterHud);
   ~CSmartHomeGuiInfo() override;
 
   void Initialize();
@@ -45,10 +48,7 @@ public:
   bool GetInt(int& value,
               const CGUIListItem* item,
               int contextWindow,
-              const GUILIB::GUIINFO::CGUIInfo& info) const override
-  {
-    return false;
-  }
+              const GUILIB::GUIINFO::CGUIInfo& info) const override;
   bool GetBool(bool& value,
                const CGUIListItem* item,
                int contextWindow,
@@ -63,6 +63,7 @@ private:
   // Construction parameters
   CGUIInfoManager& m_infoManager;
   ISystemHealthHUD& m_systemHealthHud;
+  IPowerMeterHUD& m_powerMeterHud;
 };
 } // namespace SMART_HOME
 } // namespace KODI

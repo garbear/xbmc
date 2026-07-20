@@ -12,10 +12,12 @@
 #include "LangInfo.h"
 #include "guilib/guiinfo/GUIInfo.h"
 #include "guilib/guiinfo/GUIInfoLabels.h"
+#include "smarthome/guiinfo/IPowerMeterHUD.h"
 #include "smarthome/guiinfo/ISystemHealthHUD.h"
 #include "smarthome/guiinfo/SmartHomeProperty.h"
 #include "utils/StringUtils.h"
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 using namespace KODI;
@@ -46,8 +48,11 @@ std::string FormatFrequency(double frequencyHz)
 } // namespace
 
 CSmartHomeGuiInfo::CSmartHomeGuiInfo(CGUIInfoManager& infoManager,
-                                     ISystemHealthHUD& systemHealthHud)
-  : m_infoManager(infoManager), m_systemHealthHud(systemHealthHud)
+                                     ISystemHealthHUD& systemHealthHud,
+                                     IPowerMeterHUD& powerMeterHud)
+  : m_infoManager(infoManager),
+    m_systemHealthHud(systemHealthHud),
+    m_powerMeterHud(powerMeterHud)
 {
 }
 
@@ -88,6 +93,47 @@ bool CSmartHomeGuiInfo::GetLabel(std::string& value,
       }
 
       FormatSmartHomeProperty(*property, info.GetData7(), value);
+      return true;
+    }
+    case SMARTHOME_POWER_METER_VOLTAGE:
+    case SMARTHOME_POWER_METER_CURRENT:
+    case SMARTHOME_POWER_METER_POWER:
+    {
+      const auto reading = m_powerMeterHud.PowerMeter(info.GetData3(), info.GetData5());
+      if (!reading)
+      {
+        value.clear();
+        return true;
+      }
+
+      double number;
+      switch (info.GetInfo())
+      {
+        case SMARTHOME_POWER_METER_VOLTAGE:
+          number = reading->voltage;
+          break;
+        case SMARTHOME_POWER_METER_CURRENT:
+          number = reading->current;
+          break;
+        default:
+          number = reading->power;
+          break;
+      }
+
+      FormatSmartHomeNumber(number, info.GetData7(), value);
+      return true;
+    }
+    case SMARTHOME_POWER_METER_CURRENT_SHARE:
+    {
+      const auto share =
+          m_powerMeterHud.CurrentShare(info.GetData3(), info.GetData5(), info.GetData6());
+      if (!share)
+      {
+        value.clear();
+        return true;
+      }
+
+      FormatSmartHomeNumber(*share, info.GetData7(), value);
       return true;
     }
     case SMARTHOME_CPU_TEMPERATURE:
@@ -163,6 +209,23 @@ bool CSmartHomeGuiInfo::GetLabel(std::string& value,
   }
 
   return false;
+}
+
+bool CSmartHomeGuiInfo::GetInt(int& value,
+                               const CGUIListItem* item,
+                               int contextWindow,
+                               const GUILIB::GUIINFO::CGUIInfo& info) const
+{
+  if (info.GetInfo() != SMARTHOME_POWER_METER_CURRENT_SHARE)
+    return false;
+
+  const auto share =
+      m_powerMeterHud.CurrentShare(info.GetData3(), info.GetData5(), info.GetData6());
+  if (!share)
+    return false;
+
+  value = std::clamp(static_cast<int>(std::lround(*share)), 0, 100);
+  return true;
 }
 
 bool CSmartHomeGuiInfo::GetBool(bool& value,

@@ -82,6 +82,11 @@ ISystemHealthHUD* CRos2::GetSystemHealthHUD() const
   return m_node->GetSystemHealthHUD();
 }
 
+IPowerMeterHUD* CRos2::GetPowerMeterHUD() const
+{
+  return m_node->GetPowerMeterHUD();
+}
+
 void CRos2::FrameMove()
 {
   //! @todo Remove GUI dependency

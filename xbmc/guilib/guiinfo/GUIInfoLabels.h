@@ -563,6 +563,10 @@ constexpr uint32_t SMARTHOME_CPU_FREQUENCY           = 854;
 constexpr uint32_t SMARTHOME_RAM_UTILIZATION         = 855;
 constexpr uint32_t SMARTHOME_BATTERY_CHARGE          = 856;
 constexpr uint32_t SMARTHOME_BATTERY_LOAD            = 857;
+constexpr uint32_t SMARTHOME_POWER_METER_VOLTAGE     = 858;
+constexpr uint32_t SMARTHOME_POWER_METER_CURRENT     = 859;
+constexpr uint32_t SMARTHOME_POWER_METER_POWER       = 860;
+constexpr uint32_t SMARTHOME_POWER_METER_CURRENT_SHARE = 861;
 
 constexpr int      SLIDESHOW_LABELS_START            = 900;
 constexpr uint32_t SLIDESHOW_FILE_NAME               = SLIDESHOW_LABELS_START;

@@ -52,11 +52,11 @@ public:
   std::optional<SmartHomePropertyValue> Property(const std::string& systemName,
                                                  const std::string& propertyName,
                                                  SmartHomePropertyType type) override;
+  void MarkActive(const std::string& systemName);
 
 private:
   // Utility functions
   void AddSystem(const std::string& systemName);
-  void MarkActive(const std::string& systemName);
 
   // ROS parameters
   const std::string m_rosNamespace;

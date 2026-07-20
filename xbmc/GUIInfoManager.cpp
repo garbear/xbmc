@@ -4662,6 +4662,48 @@ constexpr std::array<InfoMap, 16> retroplayer = {{
 ///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_BatteryLoad `SmartHome.System(name).BatteryLoad`\endlink
 ///     <p>
 ///   }
+///   \table_row3{   <b>`SmartHome.System(name).PowerMeter(name).Voltage([format])`</b>,
+///                  \anchor SmartHome_System_PowerMeter_Voltage
+///                  _string_,
+///     Returns the voltage reported by the named power meter for the named smart-home system. The
+///     optional terminal parameter is an fmt format string. Units are not appended automatically;
+///     for example\, `Voltage({:.1f} V)` returns `7.2 V`.
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_PowerMeter_Voltage `SmartHome.System(name).PowerMeter(name).Voltage([format])`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).PowerMeter(name).Current([format])`</b>,
+///                  \anchor SmartHome_System_PowerMeter_Current
+///                  _string_,
+///     Returns the current reported by the named power meter for the named smart-home system. The
+///     optional terminal parameter is an fmt format string. Units are not appended automatically;
+///     for example\, `Current({:.2f} A)` returns `1.34 A`.
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_PowerMeter_Current `SmartHome.System(name).PowerMeter(name).Current([format])`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).PowerMeter(name).Power([format])`</b>,
+///                  \anchor SmartHome_System_PowerMeter_Power
+///                  _string_,
+///     Returns the power reported by the named power meter for the named smart-home system. The
+///     optional terminal parameter is an fmt format string. Units are not appended automatically;
+///     for example\, `Power({:.1f} W)` returns `3.1 W`.
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_PowerMeter_Power `SmartHome.System(name).PowerMeter(name).Power([format])`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`SmartHome.System(name).PowerMeter(name).CurrentShare(other[\,format])`</b>,
+///                  \anchor SmartHome_System_PowerMeter_CurrentShare
+///                  _string_,
+///     Returns this meter's percentage of the combined current of this meter and `other`. At or
+///     below 0.25 A combined current\, the result is 50; from 0.25 A to 0.75 A\, the measured share
+///     is progressively blended toward 50; at or above 0.75 A\, the measured share is returned.
+///     The optional terminal parameter is an fmt format string. A percent sign is not appended
+///     automatically; for example\, `CurrentShare(power_meter_1\,{:.0f} %)` returns `39 %`.
+///     <p><hr>
+///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_PowerMeter_CurrentShare `SmartHome.System(name).PowerMeter(name).CurrentShare(other[\,format])`\endlink
+///     <p>
+///   }
 /// \table_end
 ///
 /// -----------------------------------------------------------------------------
@@ -11700,6 +11742,44 @@ int CGUIInfoManager::TranslateSingleString(const std::string& strCondition, bool
 
           return AddMultiInfo(
               CGUIInfo(SMARTHOME_PROPERTY, systemName, propertyName, typeName, propertyFormat));
+        }
+
+        if (info[2].Name() == "powermeter")
+        {
+          if (info[2].num_params() != 1 || info.size() != 4)
+            return 0;
+
+          const std::string& powerMeterName = info[2].param();
+          if (powerMeterName.empty())
+            return 0;
+
+          const bool currentShare = info[3].Name() == "currentshare";
+          if ((!currentShare && info[3].num_params() > 1) ||
+              (currentShare && info[3].num_params() != 1 && info[3].num_params() != 2))
+            return 0;
+
+          const std::string otherPowerMeterName = currentShare ? info[3].param(0) : "";
+          const std::string format = currentShare
+                                         ? (info[3].num_params() == 2 ? info[3].param(1) : "")
+                                         : (info[3].num_params() == 1 ? info[3].param() : "");
+          if ((currentShare && otherPowerMeterName.empty()) ||
+              !KODI::SMART_HOME::IsValidSmartHomeNumberFormat(format))
+            return 0;
+
+          int label = 0;
+          if (info[3].Name() == "voltage")
+            label = SMARTHOME_POWER_METER_VOLTAGE;
+          else if (info[3].Name() == "current")
+            label = SMARTHOME_POWER_METER_CURRENT;
+          else if (info[3].Name() == "power")
+            label = SMARTHOME_POWER_METER_POWER;
+          else if (currentShare)
+            label = SMARTHOME_POWER_METER_CURRENT_SHARE;
+          else
+            return 0;
+
+          return AddMultiInfo(
+              CGUIInfo(label, systemName, powerMeterName, otherPowerMeterName, format));
         }
 
         // Get next info

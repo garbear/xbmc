@@ -17,6 +17,7 @@ namespace KODI
 namespace SMART_HOME
 {
 class ISystemHealthHUD;
+class IPowerMeterHUD;
 
 class IRos2
 {
@@ -37,6 +38,7 @@ public:
   virtual void RegisterImageTopic(const ImageSubscriptionKey& subscription) = 0;
   virtual void UnregisterImageTopic(const ImageSubscriptionKey& subscription) = 0;
   virtual ISystemHealthHUD* GetSystemHealthHUD() const = 0;
+  virtual IPowerMeterHUD* GetPowerMeterHUD() const = 0;
 
   //! @todo Remove GUI dependency
   virtual void FrameMove() = 0;

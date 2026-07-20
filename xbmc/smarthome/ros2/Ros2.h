@@ -37,6 +37,7 @@ public:
   void RegisterImageTopic(const ImageSubscriptionKey& subscription) override;
   void UnregisterImageTopic(const ImageSubscriptionKey& subscription) override;
   ISystemHealthHUD* GetSystemHealthHUD() const override;
+  IPowerMeterHUD* GetPowerMeterHUD() const override;
   void FrameMove() override;
 
 private:
