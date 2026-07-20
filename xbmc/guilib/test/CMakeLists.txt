@@ -1,5 +1,6 @@
 set(SOURCES TestGUIControlFactory.cpp
             TestGamesGUIInfo.cpp
+            TestGUIControlGroupMask.cpp
             TestGUILabel.cpp
             TestGUITextLayout.cpp
             TestSkinMapManager.cpp
