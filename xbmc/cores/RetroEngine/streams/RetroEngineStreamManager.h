@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "cores/RetroPlayer/streams/IStreamManager.h"
+#include "cores/RetroPlayer/streams/RetroPlayerStreamTypes.h"
 
 #include <map>
 #include <memory>
@@ -20,12 +20,17 @@ extern "C"
 
 namespace KODI
 {
+namespace RETRO
+{
+class IStreamManager;
+}
+
 namespace RETRO_ENGINE
 {
 
 class IRetroEngineStream;
 
-class CRetroEngineStreamManager : public RETRO::IStreamManager
+class CRetroEngineStreamManager
 {
 public:
   CRetroEngineStreamManager();
@@ -40,10 +45,6 @@ public:
                                                  unsigned int nominalHeight,
                                                  float nominalDisplayAspectRatio);
   void CloseStream(std::unique_ptr<IRetroEngineStream> stream);
-
-  // Implementation of IStreamManager
-  RETRO::StreamPtr CreateStream(RETRO::StreamType streamType) override { return {}; };
-  void CloseStream(RETRO::StreamPtr stream) override {}
 
 private:
   // Utility functions

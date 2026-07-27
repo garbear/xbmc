@@ -42,14 +42,3 @@ void CRetroEngine::Deinitialize()
   // Deinitialize rendering
   m_renderer->Deinitialize();
 }
-
-void CRetroEngine::AddGameClient(GAME::GameClientPtr gameClient)
-{
-  /*
-  // Create stream
-  m_stream = std::make_unique<CRetroEngineStreamSwFramebuffer>(*gameClient);
-
-  // Open stream
-  m_streamManager->OpenStream(std::move(m_stream));
-  */
-}
