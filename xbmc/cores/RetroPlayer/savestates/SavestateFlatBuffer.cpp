@@ -14,6 +14,7 @@
 #include "utils/log.h"
 #include "video_generated.h"
 
+#include <limits>
 #include <memory>
 
 using namespace KODI;
@@ -332,7 +333,10 @@ void CSavestateFlatBuffer::SetGameFileName(const std::string& gameFileName)
 
 uint64_t CSavestateFlatBuffer::TimestampFrames() const
 {
-  return m_savestate->timestamp_frames();
+  if (m_savestate != nullptr)
+    return m_savestate->timestamp_frames();
+
+  return 0;
 }
 
 void CSavestateFlatBuffer::SetTimestampFrames(uint64_t timestampFrames)
@@ -704,7 +708,10 @@ void CSavestateFlatBuffer::Finalize(bool compress)
 
   savestateBuilder.add_timestamp_frames(m_timestampFrames);
 
-  const uint64_t wallClockNs =
+  // Convert to nanoseconds with overflow protection
+  const double maxSafeSeconds = static_cast<double>(std::numeric_limits<uint64_t>::max()) / 1000.0 / 1000.0 / 1000.0;
+  const uint64_t wallClockNs = (m_timestampWallClock > maxSafeSeconds) ?
+      std::numeric_limits<uint64_t>::max() :
       static_cast<uint64_t>(m_timestampWallClock * 1000.0 * 1000.0 * 1000.0);
   savestateBuilder.add_timestamp_wall_clock_ns(wallClockNs);
 
@@ -768,7 +775,7 @@ bool CSavestateFlatBuffer::Deserialize(std::vector<uint8_t> data)
     if (savestate->version() < SCHEMA_MIN_VERSION)
     {
       CLog::Log(LOGERROR,
-                "RetroPlayer[SAVE): Schema version {} not supported, must be at least version {}",
+                "RetroPlayer[SAVE]: Schema version {} not supported, must be at least version {}",
                 savestate->version(), SCHEMA_MIN_VERSION);
     }
     else

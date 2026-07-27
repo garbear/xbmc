@@ -29,6 +29,9 @@ bool CSavestateCompression::CompressZstdIfSmaller(const uint8_t* data,
   const size_t bound = ZSTD_compressBound(size);
   std::vector<uint8_t> candidate(bound);
 
+  if (candidate.empty())
+    return false;
+
   const size_t result =
       ZSTD_compress(candidate.data(), candidate.size(), data, size, ZSTD_CLEVEL_DEFAULT);
 
