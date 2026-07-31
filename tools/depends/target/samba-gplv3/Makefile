@@ -3,6 +3,7 @@ DEPS= ../../Makefile.include Makefile SAMBA-GPLV3-VERSION ../../download-files.i
                               01-fix-dependencies.patch 02-cross_compile.patch \
                               03-builtin-heimdal.patch 04-built-static.patch \
                               05-apple-disable-zlib-pkgconfig.patch 06-apple-fix-st_atim.patch \
+                              smb-low-level-trace.patch \
                               samba_android.patch \
                               no_fork_and_exec.patch \
                               crt_extensions.patch
@@ -65,6 +66,13 @@ endif
 # LLVM 15 has raised this to error by default. drop back to warning
 CFLAGS+= -Wno-error=int-conversion
 
+# Test-only, error-path instrumentation. Set SMB_LOW_LEVEL_TRACE=0 to build
+# the patched source without emitting SMBLOWTRACE diagnostics.
+SMB_LOW_LEVEL_TRACE ?= 1
+ifeq ($(SMB_LOW_LEVEL_TRACE),1)
+  CFLAGS+= -DKODI_SMB_LOW_LEVEL_TRACE=1
+endif
+
 export PERL5LIB:=$(PERLMODULE):$(PERL5LIB)
 
 export CC CXX CPP AR RANLIB LD AS NM STRIP TOOLCHAIN
@@ -85,6 +93,7 @@ all: .installed-$(PLATFORM)
 	cd $(PLATFORM); patch -p1 -i ../02-cross_compile.patch
 	cd $(PLATFORM); patch -p1 -i ../03-builtin-heimdal.patch
 	cd $(PLATFORM); patch -p1 -i ../04-built-static.patch
+	cd $(PLATFORM); patch -p1 -i ../smb-low-level-trace.patch
 ifeq ($(OS),android)
 	cd $(PLATFORM); patch -p1 -i ../samba_android.patch
 endif

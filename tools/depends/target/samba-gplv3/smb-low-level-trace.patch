@@ -1,0 +1,1249 @@
+--- a/lib/async_req/async_sock.c
++++ b/lib/async_req/async_sock.c
+@@ -35,7 +35,308 @@
+ #include "lib/util/tevent_unix.h"
+ #include "lib/util/samba_util.h"
+ #include "lib/util/select.h"
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++#include "lib/util/debug.h"
++#include "system/threads.h"
++#include <stddef.h>
++#if defined(__linux__) || defined(__ANDROID__)
++#include <netinet/tcp.h>
++#define SMBLOWTRACE_HAVE_TCP_INFO 1
++#else
++#define SMBLOWTRACE_HAVE_TCP_INFO 0
++#endif
++#endif
+ 
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++static uint64_t smb_low_trace_mono_us(void)
++{
++	struct timespec ts = {0};
++
++	if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
++		return 0;
++	}
++	return (uint64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
++}
++
++static void smb_low_socket_trace(int fd,
++				 const char *event,
++				 const char *reason,
++				 int unix_error,
++				 uint16_t tevent_flags,
++				 int poll_revents,
++				 const char *function,
++				 unsigned int line)
++{
++	int saved_errno = errno;
++	struct sockaddr_storage local_ss = {0};
++	struct sockaddr_storage remote_ss = {0};
++	socklen_t local_len = sizeof(local_ss);
++	socklen_t remote_len = sizeof(remote_ss);
++	char local_addr[INET6_ADDRSTRLEN] = "unknown";
++	char remote_addr[INET6_ADDRSTRLEN] = "unknown";
++	uint16_t local_port = 0;
++	uint16_t remote_port = 0;
++
++	if (fd >= 0 && getsockname(fd, (struct sockaddr *)&local_ss,
++				    &local_len) == 0) {
++		print_sockaddr(local_addr, sizeof(local_addr), &local_ss);
++		local_port = get_sockaddr_port(&local_ss);
++	}
++	if (fd >= 0 && getpeername(fd, (struct sockaddr *)&remote_ss,
++				    &remote_len) == 0) {
++		print_sockaddr(remote_addr, sizeof(remote_addr), &remote_ss);
++		remote_port = get_sockaddr_port(&remote_ss);
++	}
++
++	DEBUG(0, ("SMBLOWTRACE samba event=%s reason=%s mono_us=%"PRIu64
++		  " thread=%"PRIxPTR" socket_fd=%d api_fd=-1 local=%s:%u"
++		  " remote=%s:%u conn=(nil) context=(nil) dialect=unknown"
++		  " request=transport mid=%"PRIu64" ntstatus=unavailable"
++		  " errno=%d tevent_flags=0x%04x poll_revents=0x%04x conn_state=unknown"
++		  " old_state=socket_ready new_state=socket_error source=%s:%u\n",
++		  event, reason, smb_low_trace_mono_us(),
++		  (uintptr_t)pthread_self(), fd, local_addr, local_port,
++		  remote_addr, remote_port, UINT64_MAX, unix_error,
++		  tevent_flags, poll_revents, function, line));
++	errno = saved_errno;
++}
++
++#define SMBLOW_SOCKOPT_UNSUPPORTED (-2)
++
++static int smb_low_getsockopt_int(int fd,
++				  int level,
++				  int option,
++				  int *value,
++				  int *query_errno)
++{
++	socklen_t len = sizeof(*value);
++	int result;
++
++	*value = -1;
++	*query_errno = 0;
++	if (fd < 0) {
++		*query_errno = EBADF;
++		return -1;
++	}
++
++	errno = 0;
++	result = getsockopt(fd, level, option, value, &len);
++	if (result != 0) {
++		*query_errno = errno;
++		*value = -1;
++	}
++	return result;
++}
++
++static void smb_low_tcp_snapshot(int fd,
++				 int read_errno,
++				 const char *function,
++				 unsigned int line)
++{
++	struct sockaddr_storage local_ss = {0};
++	struct sockaddr_storage remote_ss = {0};
++	socklen_t local_len = sizeof(local_ss);
++	socklen_t remote_len = sizeof(remote_ss);
++	char local_addr[INET6_ADDRSTRLEN] = "unknown";
++	char remote_addr[INET6_ADDRSTRLEN] = "unknown";
++	uint16_t local_port = 0;
++	uint16_t remote_port = 0;
++	int so_error = -1;
++	int so_error_rc = SMBLOW_SOCKOPT_UNSUPPORTED;
++	int so_error_errno = 0;
++	int keepalive = -1;
++	int keepalive_rc = SMBLOW_SOCKOPT_UNSUPPORTED;
++	int keepalive_errno = 0;
++	int keepidle = -1;
++	int keepidle_rc = SMBLOW_SOCKOPT_UNSUPPORTED;
++	int keepidle_errno = 0;
++	int keepintvl = -1;
++	int keepintvl_rc = SMBLOW_SOCKOPT_UNSUPPORTED;
++	int keepintvl_errno = 0;
++	int keepcnt = -1;
++	int keepcnt_rc = SMBLOW_SOCKOPT_UNSUPPORTED;
++	int keepcnt_errno = 0;
++	int user_timeout = -1;
++	int user_timeout_rc = SMBLOW_SOCKOPT_UNSUPPORTED;
++	int user_timeout_errno = 0;
++	int tcp_info_supported = 0;
++	int tcp_info_rc = SMBLOW_SOCKOPT_UNSUPPORTED;
++	int tcp_info_errno = 0;
++	socklen_t tcp_info_len = 0;
++	int64_t tcpi_state = -1;
++	int64_t tcpi_ca_state = -1;
++	int64_t tcpi_retransmits = -1;
++	int64_t tcpi_probes = -1;
++	int64_t tcpi_backoff = -1;
++	int64_t tcpi_options = -1;
++	int64_t tcpi_rto = -1;
++	int64_t tcpi_ato = -1;
++	int64_t tcpi_snd_mss = -1;
++	int64_t tcpi_rcv_mss = -1;
++	int64_t tcpi_unacked = -1;
++	int64_t tcpi_sacked = -1;
++	int64_t tcpi_lost = -1;
++	int64_t tcpi_retrans = -1;
++	int64_t tcpi_fackets = -1;
++	int64_t tcpi_last_data_sent = -1;
++	int64_t tcpi_last_ack_sent = -1;
++	int64_t tcpi_last_data_recv = -1;
++	int64_t tcpi_last_ack_recv = -1;
++	int64_t tcpi_pmtu = -1;
++	int64_t tcpi_rtt = -1;
++	int64_t tcpi_rttvar = -1;
++	int64_t tcpi_snd_ssthresh = -1;
++	int64_t tcpi_snd_cwnd = -1;
++	int64_t tcpi_advmss = -1;
++	int64_t tcpi_reordering = -1;
++	int64_t tcpi_total_retrans = -1;
++
++	if (fd >= 0 && getsockname(fd, (struct sockaddr *)&local_ss,
++				    &local_len) == 0) {
++		print_sockaddr(local_addr, sizeof(local_addr), &local_ss);
++		local_port = get_sockaddr_port(&local_ss);
++	}
++	if (fd >= 0 && getpeername(fd, (struct sockaddr *)&remote_ss,
++				    &remote_len) == 0) {
++		print_sockaddr(remote_addr, sizeof(remote_addr), &remote_ss);
++		remote_port = get_sockaddr_port(&remote_ss);
++	}
++
++#if SMBLOWTRACE_HAVE_TCP_INFO && defined(TCP_INFO)
++	{
++		struct tcp_info info = {0};
++
++		tcp_info_supported = 1;
++		tcp_info_len = sizeof(info);
++		errno = 0;
++		tcp_info_rc = getsockopt(fd, IPPROTO_TCP, TCP_INFO, &info,
++					 &tcp_info_len);
++		if (tcp_info_rc != 0) {
++			tcp_info_errno = errno;
++		} else {
++#define SMBLOW_TCP_INFO_VALUE(member) \
++	((tcp_info_len >= offsetof(struct tcp_info, member) + \
++			   sizeof(info.member)) \
++		 ? (int64_t)info.member \
++		 : -1)
++			tcpi_state = SMBLOW_TCP_INFO_VALUE(tcpi_state);
++			tcpi_ca_state = SMBLOW_TCP_INFO_VALUE(tcpi_ca_state);
++			tcpi_retransmits = SMBLOW_TCP_INFO_VALUE(tcpi_retransmits);
++			tcpi_probes = SMBLOW_TCP_INFO_VALUE(tcpi_probes);
++			tcpi_backoff = SMBLOW_TCP_INFO_VALUE(tcpi_backoff);
++			tcpi_options = SMBLOW_TCP_INFO_VALUE(tcpi_options);
++			tcpi_rto = SMBLOW_TCP_INFO_VALUE(tcpi_rto);
++			tcpi_ato = SMBLOW_TCP_INFO_VALUE(tcpi_ato);
++			tcpi_snd_mss = SMBLOW_TCP_INFO_VALUE(tcpi_snd_mss);
++			tcpi_rcv_mss = SMBLOW_TCP_INFO_VALUE(tcpi_rcv_mss);
++			tcpi_unacked = SMBLOW_TCP_INFO_VALUE(tcpi_unacked);
++			tcpi_sacked = SMBLOW_TCP_INFO_VALUE(tcpi_sacked);
++			tcpi_lost = SMBLOW_TCP_INFO_VALUE(tcpi_lost);
++			tcpi_retrans = SMBLOW_TCP_INFO_VALUE(tcpi_retrans);
++			tcpi_fackets = SMBLOW_TCP_INFO_VALUE(tcpi_fackets);
++			tcpi_last_data_sent = SMBLOW_TCP_INFO_VALUE(tcpi_last_data_sent);
++			tcpi_last_ack_sent = SMBLOW_TCP_INFO_VALUE(tcpi_last_ack_sent);
++			tcpi_last_data_recv = SMBLOW_TCP_INFO_VALUE(tcpi_last_data_recv);
++			tcpi_last_ack_recv = SMBLOW_TCP_INFO_VALUE(tcpi_last_ack_recv);
++			tcpi_pmtu = SMBLOW_TCP_INFO_VALUE(tcpi_pmtu);
++			tcpi_rtt = SMBLOW_TCP_INFO_VALUE(tcpi_rtt);
++			tcpi_rttvar = SMBLOW_TCP_INFO_VALUE(tcpi_rttvar);
++			tcpi_snd_ssthresh = SMBLOW_TCP_INFO_VALUE(tcpi_snd_ssthresh);
++			tcpi_snd_cwnd = SMBLOW_TCP_INFO_VALUE(tcpi_snd_cwnd);
++			tcpi_advmss = SMBLOW_TCP_INFO_VALUE(tcpi_advmss);
++			tcpi_reordering = SMBLOW_TCP_INFO_VALUE(tcpi_reordering);
++			tcpi_total_retrans = SMBLOW_TCP_INFO_VALUE(tcpi_total_retrans);
++#undef SMBLOW_TCP_INFO_VALUE
++		}
++	}
++#endif
++
++#ifdef SO_KEEPALIVE
++	keepalive_rc = smb_low_getsockopt_int(fd, SOL_SOCKET, SO_KEEPALIVE,
++					     &keepalive, &keepalive_errno);
++#endif
++#ifdef TCP_KEEPIDLE
++	keepidle_rc = smb_low_getsockopt_int(fd, IPPROTO_TCP, TCP_KEEPIDLE,
++					    &keepidle, &keepidle_errno);
++#endif
++#ifdef TCP_KEEPINTVL
++	keepintvl_rc = smb_low_getsockopt_int(fd, IPPROTO_TCP, TCP_KEEPINTVL,
++					     &keepintvl, &keepintvl_errno);
++#endif
++#ifdef TCP_KEEPCNT
++	keepcnt_rc = smb_low_getsockopt_int(fd, IPPROTO_TCP, TCP_KEEPCNT,
++					   &keepcnt, &keepcnt_errno);
++#endif
++#ifdef TCP_USER_TIMEOUT
++	user_timeout_rc = smb_low_getsockopt_int(fd, IPPROTO_TCP,
++						TCP_USER_TIMEOUT, &user_timeout,
++						&user_timeout_errno);
++#endif
++#ifdef SO_ERROR
++	/*
++	 * SO_ERROR can clear a pending error. The fatal read_errno captured by
++	 * the caller remains authoritative and is restored before returning.
++	 */
++	so_error_rc = smb_low_getsockopt_int(fd, SOL_SOCKET, SO_ERROR,
++					     &so_error, &so_error_errno);
++#endif
++
++	DEBUG(0, ("SMBLOWTRACE samba event=tcp_snapshot reason=read_error"
++		  " mono_us=%"PRIu64" thread=%"PRIxPTR" socket_fd=%d"
++		  " local=%s:%u remote=%s:%u read_errno=%d"
++		  " so_error_rc=%d so_error=%d so_error_errno=%d"
++		  " tcp_info_supported=%d tcp_info_rc=%d tcp_info_len=%u"
++		  " tcp_info_errno=%d tcpi_state=%"PRId64
++		  " tcpi_ca_state=%"PRId64" tcpi_retransmits=%"PRId64
++		  " tcpi_probes=%"PRId64" tcpi_backoff=%"PRId64
++		  " tcpi_options=%"PRId64" tcpi_rto=%"PRId64
++		  " tcpi_ato=%"PRId64" tcpi_snd_mss=%"PRId64
++		  " tcpi_rcv_mss=%"PRId64" tcpi_unacked=%"PRId64
++		  " tcpi_sacked=%"PRId64" tcpi_lost=%"PRId64
++		  " tcpi_retrans=%"PRId64" tcpi_fackets=%"PRId64
++		  " tcpi_last_data_sent=%"PRId64" tcpi_last_ack_sent=%"PRId64
++		  " tcpi_last_data_recv=%"PRId64" tcpi_last_ack_recv=%"PRId64
++		  " tcpi_pmtu=%"PRId64" tcpi_rtt=%"PRId64
++		  " tcpi_rttvar=%"PRId64" tcpi_snd_ssthresh=%"PRId64
++		  " tcpi_snd_cwnd=%"PRId64" tcpi_advmss=%"PRId64
++		  " tcpi_reordering=%"PRId64" tcpi_total_retrans=%"PRId64
++		  " keepalive=%d keepalive_rc=%d keepalive_errno=%d"
++		  " keepidle=%d keepidle_rc=%d keepidle_errno=%d"
++		  " keepintvl=%d keepintvl_rc=%d keepintvl_errno=%d"
++		  " keepcnt=%d keepcnt_rc=%d keepcnt_errno=%d"
++		  " user_timeout=%d user_timeout_rc=%d user_timeout_errno=%d"
++		  " sockopt_unsupported_rc=%d source=%s:%u\n",
++		  smb_low_trace_mono_us(), (uintptr_t)pthread_self(), fd,
++		  local_addr, local_port, remote_addr, remote_port, read_errno,
++		  so_error_rc, so_error, so_error_errno, tcp_info_supported,
++		  tcp_info_rc, (unsigned int)tcp_info_len, tcp_info_errno,
++		  tcpi_state, tcpi_ca_state, tcpi_retransmits, tcpi_probes,
++		  tcpi_backoff, tcpi_options, tcpi_rto, tcpi_ato, tcpi_snd_mss,
++		  tcpi_rcv_mss, tcpi_unacked, tcpi_sacked, tcpi_lost,
++		  tcpi_retrans, tcpi_fackets, tcpi_last_data_sent,
++		  tcpi_last_ack_sent, tcpi_last_data_recv, tcpi_last_ack_recv,
++		  tcpi_pmtu, tcpi_rtt, tcpi_rttvar, tcpi_snd_ssthresh,
++		  tcpi_snd_cwnd, tcpi_advmss, tcpi_reordering,
++		  tcpi_total_retrans, keepalive, keepalive_rc, keepalive_errno,
++		  keepidle, keepidle_rc, keepidle_errno, keepintvl,
++		  keepintvl_rc, keepintvl_errno, keepcnt, keepcnt_rc,
++		  keepcnt_errno, user_timeout, user_timeout_rc,
++		  user_timeout_errno, SMBLOW_SOCKOPT_UNSUPPORTED, function, line));
++	errno = read_errno;
++}
++
++#define SMBLOW_SOCKET_TRACE(fd, event, reason, unix_error, tevent_flags, \
++			    poll_revents) \
++	smb_low_socket_trace(fd, event, reason, unix_error, tevent_flags, \
++			     poll_revents, __func__, __LINE__)
++#define SMBLOW_TCP_SNAPSHOT(fd, read_errno) \
++	smb_low_tcp_snapshot(fd, read_errno, __func__, __LINE__)
++#else
++#define SMBLOW_SOCKET_TRACE(fd, event, reason, unix_error, tevent_flags, \
++			    poll_revents) do { } while (0)
++#define SMBLOW_TCP_SNAPSHOT(fd, read_errno) do { } while (0)
++#endif
++
+ int samba_socket_poll_error(int fd)
+ {
+ 	struct pollfd pfd = {
+@@ -52,8 +353,19 @@
+ 		return 0;
+ 	}
+ 	if (ret != 1) {
++		SMBLOW_SOCKET_TRACE(fd, "socket_poll_error", "poll_invalid",
++				    errno, 0, pfd.revents);
+ 		return POLLNVAL;
+ 	}
++
++	SMBLOW_SOCKET_TRACE(fd, "socket_poll_error",
++			    (pfd.revents & POLLERR) ? "poll_err" :
++			    (pfd.revents & POLLHUP) ? "poll_hup" :
++#ifdef POLLRDHUP
++			    (pfd.revents & POLLRDHUP) ? "poll_rdhup" :
++#endif
++			    "poll_invalid",
++			    0, 0, pfd.revents);
+ 
+ 	if (pfd.revents & POLLERR) {
+ 		return POLLERR;
+@@ -105,12 +417,16 @@
+ #ifdef POLLRDHUP
+ 	if (poll_error == POLLRDHUP) {
+ 		errno = ECONNRESET;
++		SMBLOW_SOCKET_TRACE(fd, "socket_error_mapped", "poll_rdhup",
++				    errno, 0, poll_error);
+ 		return -1;
+ 	}
+ #endif
+ 
+ 	if (poll_error == POLLHUP) {
+ 		errno = EPIPE;
++		SMBLOW_SOCKET_TRACE(fd, "socket_error_mapped", "poll_hup",
++				    errno, 0, poll_error);
+ 		return -1;
+ 	}
+ 
+@@ -129,6 +445,9 @@
+ 	if (errno == 0) {
+ 		errno = EPIPE;
+ 	}
++	SMBLOW_SOCKET_TRACE(fd, "socket_error_mapped",
++			    poll_error == POLLERR ? "poll_err" : "poll_invalid",
++			    errno, 0, poll_error);
+ 
+ 	return -1;
+ }
+@@ -464,10 +783,14 @@
+ 		return;
+ 	}
+ 	if (written == -1) {
++		SMBLOW_SOCKET_TRACE(state->fd, "socket_write_error", "write_error",
++				    errno, 0, 0);
+ 		tevent_req_error(req, errno);
+ 		return;
+ 	}
+ 	if (written == 0) {
++		SMBLOW_SOCKET_TRACE(state->fd, "socket_write_error", "write_eof",
++				    EPIPE, 0, 0);
+ 		tevent_req_error(req, EPIPE);
+ 		return;
+ 	}
+@@ -518,12 +841,16 @@
+ 		 * detailed error using
+ 		 * samba_socket_poll_or_sock_error().
+ 		 */
++		SMBLOW_SOCKET_TRACE(state->fd, "socket_write_error",
++				    "tevent_fd_error", EPIPE, flags, 0);
+ 		tevent_req_error(req, EPIPE);
+ 		return;
+ 	}
+ 
+ 	if (flags & TEVENT_FD_READ) {
+ 		/* Readable and the caller wants an error on read. */
++		SMBLOW_SOCKET_TRACE(state->fd, "socket_write_error",
++				    "unexpected_readable", EPIPE, flags, 0);
+ 		tevent_req_error(req, EPIPE);
+ 		return;
+ 	}
+@@ -672,10 +999,20 @@
+ 		return;
+ 	}
+ 	if (nread == -1) {
+-		tevent_req_error(req, errno);
++		const int saved_errno = errno;
++
++		if (state->is_sock) {
++			SMBLOW_TCP_SNAPSHOT(state->fd, saved_errno);
++		}
++		SMBLOW_SOCKET_TRACE(state->fd, "socket_read_error", "read_error",
++				    saved_errno, ready_flags, 0);
++		errno = saved_errno;
++		tevent_req_error(req, saved_errno);
+ 		return;
+ 	}
+ 	if (nread == 0) {
++		SMBLOW_SOCKET_TRACE(state->fd, "socket_read_error", "read_eof",
++				    EPIPE, ready_flags, 0);
+ 		tevent_req_error(req, EPIPE);
+ 		return;
+ 	}
+@@ -932,6 +1269,10 @@
+ 	if (errno == 0) {
+ 		errno = EPIPE;
+ 	}
++	SMBLOW_SOCKET_TRACE(state->fd, "socket_monitor_error",
++			    (flags & TEVENT_FD_ERROR) ? "tevent_fd_error" :
++			    "monitor_callback",
++			    errno, flags, 0);
+ 
+ 	tevent_req_error(req, errno);
+ }
+--- a/libcli/smb/smbXcli_base.h
++++ b/libcli/smb/smbXcli_base.h
+@@ -76,6 +76,52 @@
+ 
+ bool smbXcli_conn_is_connected(struct smbXcli_conn *conn);
+ void smbXcli_conn_disconnect(struct smbXcli_conn *conn, NTSTATUS status);
++
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++void smbXcli_conn_low_trace(struct smbXcli_conn *conn,
++			    const void *context,
++			    const char *event,
++			    const char *reason,
++			    const char *request_type,
++			    uint64_t mid,
++			    NTSTATUS status,
++			    int unix_error,
++			    uint16_t tevent_flags,
++			    int api_fd,
++			    const char *old_state,
++			    const char *new_state,
++			    const char *function,
++			    unsigned int line);
++void smbXcli_req_low_trace(struct tevent_req *req,
++			   const void *context,
++			   const char *event,
++			   const char *reason,
++			   NTSTATUS status,
++			   int unix_error,
++			   uint16_t tevent_flags,
++			   int api_fd,
++			   const char *old_state,
++			   const char *new_state,
++			   const char *function,
++			   unsigned int line);
++#define SMBLOW_CONN_TRACE(conn, context, event, reason, request_type, mid, \
++			  status, unix_error, tevent_flags, api_fd, old_state, \
++			  new_state) \
++	smbXcli_conn_low_trace(conn, context, event, reason, request_type, mid, \
++			 status, unix_error, tevent_flags, api_fd, old_state, \
++			 new_state, __func__, __LINE__)
++#define SMBLOW_REQ_TRACE(req, context, event, reason, status, unix_error, \
++			 tevent_flags, api_fd, old_state, new_state) \
++	smbXcli_req_low_trace(req, context, event, reason, status, unix_error, \
++			tevent_flags, api_fd, old_state, new_state, __func__, \
++			__LINE__)
++#else
++#define SMBLOW_CONN_TRACE(conn, context, event, reason, request_type, mid, \
++			  status, unix_error, tevent_flags, api_fd, old_state, \
++			  new_state) do { } while (0)
++#define SMBLOW_REQ_TRACE(req, context, event, reason, status, unix_error, \
++			 tevent_flags, api_fd, old_state, new_state) do { } while (0)
++#endif
+ 
+ struct tevent_req *smbXcli_conn_monitor_send(TALLOC_CTX *mem_ctx,
+ 					     struct tevent_context *ev,
+--- a/libcli/smb/smbXcli_base.c
++++ b/libcli/smb/smbXcli_base.c
+@@ -36,6 +36,9 @@
+ #include "librpc/ndr/libndr.h"
+ #include "libcli/smb/smb2_negotiate_context.h"
+ #include "libcli/smb/smb2_signing.h"
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++#include "system/threads.h"
++#endif
+ 
+ #include "lib/crypto/gnutls_helpers.h"
+ #include <gnutls/gnutls.h>
+@@ -343,8 +346,198 @@
+ 		uint16_t cancel_flags;
+ 		uint64_t cancel_mid;
+ 		uint64_t cancel_aid;
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++		bool low_trace_header_initialized;
++		bool low_trace_mid_assigned;
++#endif
+ 	} smb2;
+ };
++
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++static uint64_t smb_low_trace_mono_us(void)
++{
++	struct timespec ts = {0};
++
++	if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
++		return 0;
++	}
++	return (uint64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
++}
++
++static const char *smb_low_trace_request_name(uint16_t opcode)
++{
++	switch (opcode) {
++	case SMB2_OP_READ:
++		return "READ";
++	case SMB2_OP_WRITE:
++		return "WRITE";
++	case SMB2_OP_CANCEL:
++		return "CANCEL";
++	case SMB2_OP_KEEPALIVE:
++		return "ECHO";
++	default:
++		return "OTHER";
++	}
++}
++
++void smbXcli_conn_low_trace(struct smbXcli_conn *conn,
++			    const void *context,
++			    const char *event,
++			    const char *reason,
++			    const char *request_type,
++			    uint64_t mid,
++			    NTSTATUS status,
++			    int unix_error,
++			    uint16_t tevent_flags,
++			    int api_fd,
++			    const char *old_state,
++			    const char *new_state,
++			    const char *function,
++			    unsigned int line)
++{
++	int saved_errno = errno;
++	struct smbXcli_transport *xtp = conn != NULL ? conn->transport : NULL;
++	char local_addr[INET6_ADDRSTRLEN] = "unknown";
++	char remote_addr[INET6_ADDRSTRLEN] = "unknown";
++	uint16_t local_port = 0;
++	uint16_t remote_port = 0;
++	int socket_fd = xtp != NULL ? xtp->sock_fd : -1;
++	enum protocol_types protocol = conn != NULL ? conn->protocol : PROTOCOL_NONE;
++	const char *connection_state =
++		xtp != NULL && (xtp->sock_fd != -1 || xtp->tstream != NULL)
++			? "socket_attached" : "disconnected";
++
++	if (xtp != NULL) {
++		print_sockaddr(local_addr, sizeof(local_addr), &xtp->laddr.u.ss);
++		print_sockaddr(remote_addr, sizeof(remote_addr), &xtp->raddr.u.ss);
++		samba_sockaddr_get_port(&xtp->laddr, &local_port);
++		samba_sockaddr_get_port(&xtp->raddr, &remote_port);
++	}
++
++	DEBUG(0, ("SMBLOWTRACE samba event=%s reason=%s mono_us=%"PRIu64
++		  " thread=%"PRIxPTR" socket_fd=%d api_fd=%d local=%s:%u"
++		  " remote=%s:%u conn=%p context=%p dialect=%s request=%s"
++		  " mid=%"PRIu64" ntstatus=0x%08"PRIx32" status_name=%s"
++		  " errno=%d tevent_flags=0x%04x conn_state=%s"
++		  " old_state=%s new_state=%s"
++		  " source=%s:%u\n",
++		  event != NULL ? event : "unknown",
++		  reason != NULL ? reason : "unknown",
++		  smb_low_trace_mono_us(), (uintptr_t)pthread_self(),
++		  socket_fd, api_fd, local_addr, local_port, remote_addr,
++		  remote_port, conn, context,
++		  smb_protocol_types_string(protocol),
++		  request_type != NULL ? request_type : "unknown", mid,
++		  NT_STATUS_V(status), nt_errstr(status), unix_error,
++		  tevent_flags, connection_state,
++		  old_state != NULL ? old_state : "unknown",
++		  new_state != NULL ? new_state : "unknown",
++		  function != NULL ? function : "unknown", line));
++	errno = saved_errno;
++}
++
++void smbXcli_req_low_trace(struct tevent_req *req,
++			   const void *context,
++			   const char *event,
++			   const char *reason,
++			   NTSTATUS status,
++			   int unix_error,
++			   uint16_t tevent_flags,
++			   int api_fd,
++			   const char *old_state,
++			   const char *new_state,
++			   const char *function,
++			   unsigned int line)
++{
++	struct smbXcli_req_state *state = NULL;
++	struct smbXcli_conn *conn = NULL;
++	void *req_data = NULL;
++	const char *request_type = "unavailable";
++	uint16_t opcode = 0;
++	uint64_t mid = UINT64_MAX;
++
++	/*
++	 * This logger is called precisely on incomplete and failing paths. Do not
++	 * use tevent_req_data() here: it calls talloc_get_type_abort() and turns a
++	 * diagnostic metadata problem into a process abort.
++	 */
++	if (req == NULL) {
++		request_type = "unavailable_req_null";
++		goto trace;
++	}
++
++	req_data = _tevent_req_data(req);
++	if (req_data == NULL) {
++		request_type = "unavailable_no_state";
++		goto trace;
++	}
++
++	state = talloc_get_type(req_data, struct smbXcli_req_state);
++	if (state == NULL) {
++		request_type = "unavailable_wrong_state";
++		goto trace;
++	}
++
++	if (state->conn == NULL) {
++		request_type = "unavailable_no_conn";
++		goto trace;
++	}
++
++	conn = talloc_get_type(state->conn, struct smbXcli_conn);
++	if (conn == NULL) {
++		request_type = "unavailable_invalid_conn";
++		goto trace;
++	}
++
++	if (state->smb2.low_trace_header_initialized) {
++		opcode = SVAL(state->smb2.hdr, SMB2_HDR_OPCODE);
++		request_type = smb_low_trace_request_name(opcode);
++		if (state->smb2.low_trace_mid_assigned) {
++			/* MID 0 is valid and must be logged as 0. */
++			mid = BVAL(state->smb2.hdr, SMB2_HDR_MESSAGE_ID);
++		}
++	} else if (IVAL(state->smb1.hdr, 0) == SMB_MAGIC) {
++		request_type = "SMB1";
++		if (state->smb1.mid != 0) {
++			mid = state->smb1.mid;
++		}
++	} else {
++		request_type = "unavailable_no_request_header";
++	}
++
++trace:
++	smbXcli_conn_low_trace(conn, context != NULL ? context : req,
++		event, reason, request_type, mid, status, unix_error,
++		tevent_flags, api_fd, old_state, new_state, function, line);
++}
++
++static void smbXcli_conn_disconnect_cause(struct smbXcli_conn *conn,
++					  NTSTATUS status,
++					  const char *reason,
++					  int unix_error,
++					  uint16_t tevent_flags,
++					  const char *function,
++					  unsigned int line)
++{
++	/* Log the immutable cause before disconnect can complete callbacks. */
++	if (conn != NULL && conn->transport != NULL &&
++	    (conn->transport->sock_fd != -1 ||
++	     conn->transport->tstream != NULL)) {
++		smbXcli_conn_low_trace(conn, conn, "connection_disconnect_cause",
++			reason, "none", UINT64_MAX, status, unix_error,
++			tevent_flags, -1, "socket_attached", "disconnecting",
++			function, line);
++	}
++	smbXcli_conn_disconnect(conn, status);
++}
++
++#define SMBLOW_DISCONNECT(conn, status, reason, unix_error, tevent_flags) \
++	smbXcli_conn_disconnect_cause(conn, status, reason, unix_error, \
++				      tevent_flags, __func__, __LINE__)
++#else
++#define SMBLOW_DISCONNECT(conn, status, reason, unix_error, tevent_flags) \
++	smbXcli_conn_disconnect(conn, status)
++#endif
+ 
+ static int smbXcli_transport_destructor(struct smbXcli_transport *xtp)
+ {
+@@ -614,7 +807,7 @@
+ 	/*
+ 	 * NT_STATUS_OK, means we do not notify the callers
+ 	 */
+-	smbXcli_conn_disconnect(conn, NT_STATUS_OK);
++	SMBLOW_DISCONNECT(conn, NT_STATUS_OK, "destructor", 0, 0);
+ 
+ 	while (conn->sessions) {
+ 		conn->sessions->conn = NULL;
+@@ -757,12 +950,22 @@
+ 	}
+ 
+ 	if (conn->transport == NULL) {
++		SMBLOW_CONN_TRACE(conn, conn, "connection_check_failed",
++				  "transport_missing", "none", UINT64_MAX,
++				  NT_STATUS_CONNECTION_DISCONNECTED, 0, 0, -1,
++				  "connected", "unusable");
+ 		return false;
+ 	}
+ 
+ 	if (conn->transport->tstream != NULL) {
+ 		ret = tstream_pending_bytes(conn->transport->tstream);
+ 		if (ret < 0) {
++			int err = errno;
++			SMBLOW_CONN_TRACE(conn, conn, "connection_check_failed",
++					  "tstream_pending_error", "none",
++					  UINT64_MAX,
++					  map_nt_error_from_unix_common(err), err,
++					  0, -1, "socket_attached", "unusable");
+ 			return false;
+ 		}
+ 
+@@ -775,6 +978,11 @@
+ 
+ 	ret = samba_socket_poll_or_sock_error(conn->transport->sock_fd);
+ 	if (ret < 0) {
++		int err = errno;
++		SMBLOW_CONN_TRACE(conn, conn, "connection_check_failed",
++				  "socket_poll_error", "none", UINT64_MAX,
++				  map_nt_error_from_unix_common(err), err, 0, -1,
++				  "socket_attached", "unusable");
+ 		return false;
+ 	}
+ 
+@@ -1006,7 +1214,7 @@
+ 	if (nwritten == -1) {
+ 		/* here, we need to notify all pending requests */
+ 		NTSTATUS status = map_nt_error_from_unix_common(err);
+-		smbXcli_conn_disconnect(state->conn, status);
++		SMBLOW_DISCONNECT(state->conn, status, "write_error", err, 0);
+ 		return;
+ 	}
+ 	tevent_req_done(req);
+@@ -1312,7 +1520,8 @@
+ 			 * If the write_req cancel didn't work
+ 			 * we can't use the connection anymore.
+ 			 */
+-			smbXcli_conn_disconnect(conn, cancel_status);
++			SMBLOW_DISCONNECT(conn, cancel_status,
++					  "request_cancel_write_failure", 0, 0);
+ 			return;
+ 		}
+ 		return;
+@@ -1335,7 +1544,8 @@
+ 			 * If the write_req cancel didn't work
+ 			 * we can't use the connection anymore.
+ 			 */
+-			smbXcli_conn_disconnect(conn, cancel_status);
++			SMBLOW_DISCONNECT(conn, cancel_status,
++					  "request_cancel_write_failure", 0, 0);
+ 			return;
+ 		}
+ 		return;
+@@ -1358,7 +1568,8 @@
+ 			 * If the write_req cancel didn't work
+ 			 * we can't use the connection anymore.
+ 			 */
+-			smbXcli_conn_disconnect(conn, cancel_status);
++			SMBLOW_DISCONNECT(conn, cancel_status,
++					  "request_cancel_write_failure", 0, 0);
+ 			return;
+ 		}
+ 		return;
+@@ -1378,7 +1589,8 @@
+ 		 * If the write_req cancel didn't work
+ 		 * we can't use the connection anymore.
+ 		 */
+-		smbXcli_conn_disconnect(conn, cancel_status);
++		SMBLOW_DISCONNECT(conn, cancel_status,
++				  "request_cancel_write_failure", 0, 0);
+ 		return;
+ 	}
+ 	return;
+@@ -1406,13 +1618,30 @@
+ 		smbXcli_req_unset_pending(req);
+ 		return;
+ 	default:
++		{
++			NTSTATUS req_status = NT_STATUS_INTERNAL_ERROR;
++			const char *reason = "request_cleanup";
++
++			tevent_req_is_nterror(req, &req_status);
++			if (req_state == TEVENT_REQ_TIMED_OUT) {
++				reason = "request_timeout";
++			} else if (req_state == TEVENT_REQ_USER_ERROR) {
++				reason = "request_error_cleanup";
++			} else if (req_state == TEVENT_REQ_NO_MEMORY) {
++				reason = "request_no_memory";
++			}
++			SMBLOW_REQ_TRACE(req, conn, "tevent_request_cleanup", reason,
++					 req_status, 0, 0, -1, "pending",
++					 "cancelled");
++		}
+ 		cancel_status = smbXcli_req_cancel_write_req(req);
+ 		if (!NT_STATUS_IS_OK(cancel_status)) {
+ 			/*
+ 			 * If the write_req cancel didn't work
+ 			 * we can't use the connection anymore.
+ 			 */
+-			smbXcli_conn_disconnect(conn, cancel_status);
++			SMBLOW_DISCONNECT(conn, cancel_status,
++					  "request_cancel_write_failure", 0, 0);
+ 			return;
+ 		}
+ 		return;
+@@ -1428,6 +1657,10 @@
+ 		tevent_req_data(req,
+ 		struct smbXcli_req_state);
+ 
++	SMBLOW_REQ_TRACE(req, state->conn, "tevent_request_cancel",
++			 "explicit_cancel", NT_STATUS_CANCELLED, ECANCELED, 0,
++			 -1, "pending", "cancelling");
++
+ 	if (!smbXcli_conn_is_connected(state->conn)) {
+ 		return false;
+ 	}
+@@ -1476,7 +1709,8 @@
+ 		 * by smbXcli_conn_disconnect().
+ 		 */
+ 		smbXcli_req_unset_pending(req);
+-		smbXcli_conn_disconnect(conn, NT_STATUS_NO_MEMORY);
++		SMBLOW_DISCONNECT(conn, NT_STATUS_NO_MEMORY,
++				  "read_request_allocation_failure", ENOMEM, 0);
+ 		return false;
+ 	}
+ 
+@@ -1507,7 +1741,8 @@
+ 		 * because we are out of message ids,
+ 		 * we need to disconnect.
+ 		 */
+-		smbXcli_conn_disconnect(conn, NT_STATUS_CONNECTION_ABORTED);
++		SMBLOW_DISCONNECT(conn, NT_STATUS_CONNECTION_ABORTED,
++				  "message_id_exhausted", 0, 0);
+ 		return true;
+ 	}
+ 
+@@ -1539,6 +1774,14 @@
+ 
+ 	conn->transport->sock_fd = -1;
+ 	conn->transport->tstream = NULL;
++
++	if (sock_fd != -1 || tstream != NULL) {
++		SMBLOW_CONN_TRACE(conn, conn, "connection_state_transition",
++			NT_STATUS_IS_OK(status) ? "explicit_disconnect" :
++				"disconnect_applied",
++			"none", UINT64_MAX, status, 0, 0, -1,
++			"socket_attached", "disconnected");
++	}
+ 
+ 	session = conn->sessions;
+ 	if (talloc_array_length(conn->pending) == 0) {
+@@ -1713,8 +1956,8 @@
+ 
+ 	ok = smbXcli_conn_is_connected(conn);
+ 	if (!ok) {
+-		smbXcli_conn_disconnect(conn,
+-				NT_STATUS_CONNECTION_DISCONNECTED);
++		SMBLOW_DISCONNECT(conn, NT_STATUS_CONNECTION_DISCONNECTED,
++				  "monitor_connection_check_failed", errno, 0);
+ 		return tevent_req_post(req, ev);
+ 	}
+ 
+@@ -1763,7 +2006,7 @@
+ 	TALLOC_FREE(subreq);
+ 	/* here, we need to notify all pending requests */
+ 	status = map_nt_error_from_unix_common(err);
+-	smbXcli_conn_disconnect(state->conn, status);
++	SMBLOW_DISCONNECT(state->conn, status, "monitor_error", err, 0);
+ }
+ 
+ NTSTATUS smbXcli_conn_monitor_recv(struct tevent_req *req)
+@@ -2378,7 +2621,7 @@
+ 	if (nwritten == -1) {
+ 		/* here, we need to notify all pending requests */
+ 		NTSTATUS status = map_nt_error_from_unix_common(err);
+-		smbXcli_conn_disconnect(state->conn, status);
++		SMBLOW_DISCONNECT(state->conn, status, "write_error", err, 0);
+ 		return;
+ 	}
+ 
+@@ -2404,7 +2647,8 @@
+ 	if (subreq != conn->read_smb_req) {
+ 		DEBUG(1, ("Internal error: cli_smb_received called with "
+ 			  "unexpected subreq\n"));
+-		smbXcli_conn_disconnect(conn, NT_STATUS_INTERNAL_ERROR);
++		SMBLOW_DISCONNECT(conn, NT_STATUS_INTERNAL_ERROR,
++				  "unexpected_read_request", 0, 0);
+ 		TALLOC_FREE(frame);
+ 		return;
+ 	}
+@@ -2414,7 +2658,7 @@
+ 	TALLOC_FREE(subreq);
+ 	if (received == -1) {
+ 		status = map_nt_error_from_unix_common(err);
+-		smbXcli_conn_disconnect(conn, status);
++		SMBLOW_DISCONNECT(conn, status, "read_error", err, 0);
+ 		TALLOC_FREE(frame);
+ 		return;
+ 	}
+@@ -2434,7 +2678,7 @@
+ 		/*
+ 		 * We got an error, so notify all pending requests
+ 		 */
+-		smbXcli_conn_disconnect(conn, status);
++		SMBLOW_DISCONNECT(conn, status, "incoming_dispatch_error", 0, 0);
+ 		return;
+ 	}
+ 
+@@ -2443,7 +2687,8 @@
+ 	 * next incoming pdu.
+ 	 */
+ 	if (!smbXcli_conn_receive_next(conn)) {
+-		smbXcli_conn_disconnect(conn, NT_STATUS_NO_MEMORY);
++		SMBLOW_DISCONNECT(conn, NT_STATUS_NO_MEMORY,
++				  "next_read_allocation_failure", ENOMEM, 0);
+ 	}
+ }
+ 
+@@ -3438,6 +3683,9 @@
+ 
+ 	SIVAL(substate->smb2.hdr, SMB2_HDR_FLAGS, state->smb2.cancel_flags);
+ 	SBVAL(substate->smb2.hdr, SMB2_HDR_MESSAGE_ID, state->smb2.cancel_mid);
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++	substate->smb2.low_trace_mid_assigned = true;
++#endif
+ 	SBVAL(substate->smb2.hdr, SMB2_HDR_ASYNC_ID, state->smb2.cancel_aid);
+ 
+ 	/*
+@@ -3617,6 +3865,9 @@
+ 	SIVAL(state->smb2.hdr, SMB2_HDR_PID,		0); /* reserved */
+ 	SIVAL(state->smb2.hdr, SMB2_HDR_TID,		tid);
+ 	SBVAL(state->smb2.hdr, SMB2_HDR_SESSION_ID,	uid);
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++	state->smb2.low_trace_header_initialized = true;
++#endif
+ 
+ 	switch (cmd) {
+ 	case SMB2_OP_CANCEL:
+@@ -3837,6 +4088,9 @@
+ 		}
+ 		SSVAL(state->smb2.hdr, SMB2_HDR_CREDIT, credits);
+ 		SBVAL(state->smb2.hdr, SMB2_HDR_MESSAGE_ID, mid);
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++		state->smb2.low_trace_mid_assigned = true;
++#endif
+ 
+ 		state->smb2.cancel_flags = SVAL(state->smb2.hdr, SMB2_HDR_FLAGS);
+ 		state->smb2.cancel_flags &= ~SMB2_HDR_FLAG_CHAINED;
+@@ -4028,6 +4282,11 @@
+ 		return tevent_req_post(req, ev);
+ 	}
+ 	status = smb2cli_req_compound_submit(&req, 1);
++	if (!NT_STATUS_IS_OK(status)) {
++		SMBLOW_REQ_TRACE(req, conn, "request_submit_error",
++				 "pre_send_failure", status, 0, 0, -1,
++				 "created", "failed");
++	}
+ 	if (tevent_req_nterror(req, status)) {
+ 		return tevent_req_post(req, ev);
+ 	}
+@@ -4052,7 +4311,7 @@
+ 	if (nwritten == -1) {
+ 		/* here, we need to notify all pending requests */
+ 		NTSTATUS status = map_nt_error_from_unix_common(err);
+-		smbXcli_conn_disconnect(state->conn, status);
++		SMBLOW_DISCONNECT(state->conn, status, "write_error", err, 0);
+ 		return;
+ 	}
+ }
+@@ -4654,6 +4913,19 @@
+ 	}
+ 
+ 	if (tevent_req_is_nterror(req, &status)) {
++		enum tevent_req_state req_state = TEVENT_REQ_USER_ERROR;
++		uint64_t req_error = 0;
++		const char *reason = "propagated_child_request_failure";
++
++		tevent_req_is_error(req, &req_state, &req_error);
++		(void)req_error;
++		if (req_state == TEVENT_REQ_TIMED_OUT) {
++			reason = "request_timeout";
++		} else if (req_state == TEVENT_REQ_NO_MEMORY) {
++			reason = "request_no_memory";
++		}
++		SMBLOW_REQ_TRACE(req, state->conn, "request_recv_error", reason,
++				 status, 0, 0, -1, "pending", "failed");
+ 		for (i=0; i < num_expected; i++) {
+ 			if (NT_STATUS_EQUAL(status, expected[i].status)) {
+ 				return NT_STATUS_UNEXPECTED_NETWORK_ERROR;
+--- a/libcli/smb/smb2cli_read.c
++++ b/libcli/smb/smb2cli_read.c
+@@ -24,6 +24,7 @@
+ #include "smbXcli_base.h"
+ 
+ struct smb2cli_read_state {
++	struct smbXcli_conn *conn;
+ 	uint8_t fixed[48];
+ 	uint8_t dyn_pad[1];
+ 	struct iovec *recv_iov;
+@@ -62,6 +63,7 @@
+ 	}
+ 
+ 	fixed = state->fixed;
++	state->conn = conn;
+ 
+ 	SSVAL(fixed, 0, 49);
+ 	SIVAL(fixed, 4, length);
+@@ -95,6 +97,9 @@
+ 		req, struct smb2cli_read_state);
+ 	bool ok;
+ 
++	SMBLOW_REQ_TRACE(state->subreq, req, "read_request_cancel",
++			 "parent_request_cancelled", NT_STATUS_CANCELLED,
++			 ECANCELED, 0, -1, "pending", "cancelling");
+ 	ok = tevent_req_cancel(state->subreq);
+ 	return ok;
+ }
+@@ -139,6 +144,12 @@
+ 
+ 	status = smb2cli_req_recv(subreq, state, &iov,
+ 				  expected, ARRAY_SIZE(expected));
++	if (!NT_STATUS_IS_OK(status) &&
++	    !NT_STATUS_EQUAL(status, NT_STATUS_PENDING)) {
++		SMBLOW_REQ_TRACE(subreq, req, "read_request_error",
++				 "smb2cli_req_recv", status, 0, 0, -1,
++				 "pending", "failed");
++	}
+ 	if (NT_STATUS_EQUAL(status, NT_STATUS_PENDING) && state->notify_async) {
+ 		state->notify_async = false;
+ 		state->report_pending = true;
+@@ -171,6 +182,12 @@
+ 					 dyn_buffer.length, /* max_length */
+ 					 &next_offset,
+ 					 &data_buffer);
++	if (!NT_STATUS_IS_OK(error)) {
++		SMBLOW_CONN_TRACE(state->conn, req, "read_request_error",
++				  "response_buffer_parse", "READ", UINT64_MAX,
++				  error, 0, 0, -1, "response_received",
++				  "failed");
++	}
+ 	if (tevent_req_nterror(req, error)) {
+ 		return;
+ 	}
+--- a/source3/libsmb/cli_smb2_fnum.c
++++ b/source3/libsmb/cli_smb2_fnum.c
+@@ -3926,6 +3926,12 @@
+ 
+ 	status = smb2cli_read_recv(subreq, state,
+ 				   &state->buf, &state->received);
++	if (!NT_STATUS_IS_OK(status)) {
++		SMBLOW_CONN_TRACE(state->cli->conn, req,
++				  "read_error_propagated", "smb2cli_read_recv",
++				  "READ", UINT64_MAX, status, 0, 0, -1,
++				  "child_failed", "parent_failed");
++	}
+ 	if (tevent_req_nterror(req, status)) {
+ 		return;
+ 	}
+@@ -3947,6 +3953,10 @@
+ 				req, struct cli_smb2_read_state);
+ 
+ 	if (tevent_req_is_nterror(req, &status)) {
++		SMBLOW_CONN_TRACE(state->cli->conn, req,
++				  "read_error_propagated", "cli_smb2_read_recv",
++				  "READ", UINT64_MAX, status, 0, 0, -1,
++				  "parent_failed", "returned_error");
+ 		return status;
+ 	}
+ 	/*
+--- a/source3/libsmb/clireadwrite.c
++++ b/source3/libsmb/clireadwrite.c
+@@ -593,6 +593,13 @@
+ 		status = cli_smb2_read_recv(subreq, &received, &buf);
+ 	} else {
+ 		status = cli_read_andx_recv(subreq, &received, &buf);
++	}
++	if (!NT_STATUS_IS_OK(status) &&
++	    !NT_STATUS_EQUAL(status, NT_STATUS_END_OF_FILE)) {
++		SMBLOW_CONN_TRACE(state->cli->conn, req,
++				  "read_error_propagated", "cli_pull_chunk_done",
++				  "READ", UINT64_MAX, status, 0, 0, -1,
++				  "child_failed", "pull_failed");
+ 	}
+ 	if (NT_STATUS_EQUAL(status, NT_STATUS_END_OF_FILE)) {
+ 		received = 0;
+@@ -655,6 +662,10 @@
+ 	NTSTATUS status;
+ 
+ 	if (tevent_req_is_nterror(req, &status)) {
++		SMBLOW_CONN_TRACE(state->cli->conn, req,
++				  "read_error_propagated", "cli_pull_recv",
++				  "READ", UINT64_MAX, status, 0, 0, -1,
++				  "pull_failed", "returned_error");
+ 		tevent_req_received(req);
+ 		return status;
+ 	}
+@@ -700,6 +711,12 @@
+ 
+ 	status = cli_pull_recv(req, received);
+  fail:
++	if (!NT_STATUS_IS_OK(status)) {
++		SMBLOW_CONN_TRACE(cli->conn, cli, "read_error_propagated",
++				  "cli_pull_return", "READ", UINT64_MAX,
++				  status, 0, 0, -1, "async_failed",
++				  "sync_return_error");
++	}
+ 	TALLOC_FREE(frame);
+ 	return status;
+ }
+@@ -792,6 +809,13 @@
+ 	} else {
+ 		status = cli_read_andx_recv(subreq, &received, &buf);
+ 	}
++	if (!NT_STATUS_IS_OK(status) &&
++	    !NT_STATUS_EQUAL(status, NT_STATUS_END_OF_FILE)) {
++		SMBLOW_CONN_TRACE(state->cli->conn, req,
++				  "read_error_propagated", "cli_read_done",
++				  "READ", UINT64_MAX, status, 0, 0, -1,
++				  "child_failed", "read_failed");
++	}
+ 
+ 	if (NT_STATUS_EQUAL(status, NT_STATUS_END_OF_FILE)) {
+ 		received = 0;
+@@ -848,6 +872,10 @@
+ 	status = cli_pull(cli, fnum, offset, size, size,
+ 			  cli_read_sink, &buf, &ret);
+ 	if (!NT_STATUS_IS_OK(status)) {
++		SMBLOW_CONN_TRACE(cli->conn, cli, "read_error_propagated",
++				  "cli_read_return", "READ", UINT64_MAX,
++				  status, 0, 0, -1, "pull_failed",
++				  "cli_return_error");
+ 		return status;
+ 	}
+ 
+--- a/source3/libsmb/libsmb_file.c
++++ b/source3/libsmb/libsmb_file.c
+@@ -320,8 +320,15 @@
+ 	status = cli_read(file->targetcli, file->cli_fd, (char *)buf, offset,
+ 			  count, &ret);
+ 	if (!NT_STATUS_IS_OK(status)) {
++		int mapped_errno = cli_status_to_errno(status);
++
++		SMBLOW_CONN_TRACE(file->targetcli->conn, context,
++				  "read_error_propagated",
++				  "libsmbclient_status_to_errno", "READ",
++				  UINT64_MAX, status, mapped_errno, 0, -1,
++				  "cli_return_error", "libsmbclient_return_error");
+ 		TALLOC_FREE(frame);
+-		errno = cli_status_to_errno(status);
++		errno = mapped_errno;
+ 		return -1;
+ 	}
+ 
+--- a/source3/libsmb/libsmb_compat.c
++++ b/source3/libsmb/libsmb_compat.c
+@@ -24,6 +24,9 @@
+ 
+ #include "includes.h"
+ #include "libsmb_internal.h"
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++#include "../libcli/smb/smbXcli_base.h"
++#endif
+ 
+ struct smbc_compat_fdlist {
+ 	SMBCFILE * file;
+@@ -202,7 +205,21 @@
+           size_t bufsize)
+ {
+ 	SMBCFILE * file = find_fd(fd);
+-        return smbc_getFunctionRead(statcont)(statcont, file, buf, bufsize);
++	ssize_t ret = smbc_getFunctionRead(statcont)(statcont, file, buf, bufsize);
++
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++	int saved_errno = errno;
++
++	if (ret < 0) {
++		SMBLOW_CONN_TRACE(NULL, statcont, "libsmbclient_read_return",
++				  "public_smbc_read_error", "READ", UINT64_MAX,
++				  map_nt_error_from_unix_common(saved_errno),
++				  saved_errno, 0, fd, "libsmbclient_error",
++				  "application_return");
++	}
++	errno = saved_errno;
++#endif
++	return ret;
+ }
+ 
+ ssize_t
+@@ -576,5 +593,3 @@
+ {
+         return smbc_getFunctionUnlinkPrintJob(statcont)(statcont, purl, id);
+ }
+-
+-
+--- a/source3/libsmb/clientgen.c
++++ b/source3/libsmb/clientgen.c
+@@ -259,6 +259,9 @@
+ 		cli_tdis(cli);
+ 	}
+ 
++	SMBLOW_CONN_TRACE(cli->conn, cli, "explicit_disconnect_requested",
++			  "cli_shutdown", "none", UINT64_MAX, NT_STATUS_OK,
++			  0, 0, -1, "socket_attached", "disconnecting");
+ 	smbXcli_conn_disconnect(cli->conn, NT_STATUS_OK);
+ 
+ 	TALLOC_FREE(cli);
+
+--- a/source3/libsmb/libsmb_setget.c
++++ b/source3/libsmb/libsmb_setget.c
+@@ -26,6 +26,18 @@
+ #include "libsmb_internal.h"
+ #include "lib/param/param.h"
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++#include "system/threads.h"
++#endif
+ 
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++static pthread_once_t smb_low_trace_initialized_once = PTHREAD_ONCE_INIT;
++
++static void smb_low_trace_initialized(void)
++{
++	DEBUG(0, ("SMBLOWTRACE samba event=trace_initialized\n"));
++}
++#endif
++
+ 
+ /** Get the netbios name used for making connections */
+ const char *
+@@ -105,6 +117,11 @@
+ 		    smbc_debug_callback_fn fn)
+ {
+ 	debug_set_callback(private_ptr, fn);
++#ifdef KODI_SMB_LOW_LEVEL_TRACE
++	if (fn != NULL) {
++		pthread_once(&smb_low_trace_initialized_once, smb_low_trace_initialized);
++	}
++#endif
+ }
+ 
+ /** set configuration file */
