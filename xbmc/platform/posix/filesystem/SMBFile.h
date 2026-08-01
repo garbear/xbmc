@@ -19,6 +19,10 @@
 #include "filesystem/IFile.h"
 #include "threads/CriticalSection.h"
 
+#include <cerrno>
+#include <cstdint>
+#include <string>
+
 #define NT_STATUS_CONNECTION_REFUSED long(0xC0000000 | 0x0236)
 #define NT_STATUS_INVALID_HANDLE long(0xC0000000 | 0x0008)
 #define NT_STATUS_ACCESS_DENIED long(0xC0000000 | 0x0022)
@@ -58,6 +62,30 @@ extern CSMB smb;
 
 namespace XFILE
 {
+namespace SMBFileRecovery
+{
+constexpr bool IsReconnectableReadError(int error) noexcept
+{
+  switch (error)
+  {
+    case ENETRESET:
+    case ECONNRESET:
+    case ECONNABORTED:
+    case ENOTCONN:
+    case EPIPE:
+    case ETIMEDOUT:
+      return true;
+    default:
+      return false;
+  }
+}
+
+constexpr bool IsValidEof(int64_t offset, int64_t fileSize) noexcept
+{
+  return offset >= fileSize;
+}
+} // namespace SMBFileRecovery
+
 class CSMBFile : public IFile
 {
 public:
@@ -89,5 +117,11 @@ protected:
   int64_t m_fileSize;
   int m_fd;
   bool m_allowRetry;
+
+private:
+  bool ReopenAtPositionLocked(int64_t offset);
+
+  std::string m_reopenPath;
+  int64_t m_readPosition{0};
 };
 }

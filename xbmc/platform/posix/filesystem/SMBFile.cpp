@@ -27,12 +27,14 @@
 #include "utils/URIUtils.h"
 #include "utils/log.h"
 
+#include <array>
 #include <chrono>
 #include <cstring>
 #include <inttypes.h>
 #include <list>
 #include <mutex>
 #include <regex>
+#include <thread>
 #include <unordered_map>
 
 #include <libsmbclient.h>
@@ -69,6 +71,11 @@ namespace
 // 15 is a safe value - the total stays under 20 even with the library's
 // additional overhead.
 constexpr size_t MAX_CACHED_SERVERS = 15;
+constexpr std::array<std::chrono::milliseconds, 3> SMB_RECONNECT_BACKOFF{
+    std::chrono::milliseconds{100},
+    std::chrono::milliseconds{250},
+    std::chrono::milliseconds{500}
+};
 
 // Cached remove_unused_server function pointer, obtained once during Init.
 smbc_remove_unused_server_fn g_removeUnusedFn = nullptr;
@@ -708,7 +715,12 @@ bool CSMBFile::Open(const CURL& url)
 
   std::unique_lock lock(smb);
   if (!smb.IsSmbValid())
+  {
+    // Deinit() closes open files when destroying the SMB context, so only
+    // the now-invalid descriptor needs to be reset here.
+    m_fd = -1;
     return false;
+  }
   struct stat tmpBuffer;
   if (smbc_stat(strFileName.c_str(), &tmpBuffer) < 0)
   {
@@ -726,6 +738,10 @@ bool CSMBFile::Open(const CURL& url)
     m_fd = -1;
     return false;
   }
+
+  m_reopenPath = strFileName;
+  m_readPosition = ret;
+
   // We've successfully opened the file!
   return true;
 }
@@ -822,6 +838,43 @@ int CSMBFile::Truncate(int64_t size)
   return 0;
 }
 
+bool CSMBFile::ReopenAtPositionLocked(int64_t offset)
+{
+  if (!smb.IsSmbValid())
+  {
+    errno = ENOTCONN;
+    return false;
+  }
+
+  if (m_reopenPath.empty())
+  {
+    errno = EINVAL;
+    return false;
+  }
+
+  errno = 0;
+  const int newFd = smbc_open(m_reopenPath.c_str(), O_RDONLY, 0);
+  if (newFd < 0)
+  {
+    if (errno == 0)
+      errno = EIO;
+    return false;
+  }
+
+  errno = 0;
+  const int64_t actualOffset = smbc_lseek(newFd, offset, SEEK_SET);
+  if (actualOffset != offset)
+  {
+    const int seekErrno = actualOffset < 0 && errno != 0 ? errno : EIO;
+    smbc_close(newFd);
+    errno = seekErrno;
+    return false;
+  }
+
+  m_fd = newFd;
+  return true;
+}
+
 ssize_t CSMBFile::Read(void* lpBuf, size_t uiBufSize)
 {
   if (uiBufSize > SSIZE_MAX)
@@ -843,20 +896,114 @@ ssize_t CSMBFile::Read(void* lpBuf, size_t uiBufSize)
     return -1;
   smb.SetActivityTime();
 
-  ssize_t bytesRead = smbc_read(m_fd, lpBuf, (int)uiBufSize);
-
-  if (m_allowRetry && bytesRead < 0 && errno == EINVAL)
+  const int64_t failedReadOffset = m_readPosition;
+  auto readLocked = [&]()
   {
-    CLog::Log(LOGERROR, "{} - Error( {}, {}, {} ) - Retrying", __FUNCTION__, bytesRead, errno,
-              strerror(errno));
-    bytesRead = smbc_read(m_fd, lpBuf, (int)uiBufSize);
+    errno = 0;
+    ssize_t result = smbc_read(m_fd, lpBuf, uiBufSize);
+    int readErrno = result < 0 ? errno : 0;
+
+    if (m_allowRetry && result < 0 && readErrno == EINVAL)
+    {
+      CLog::Log(LOGERROR, "{} - Error( {}, {}, {} ) - Retrying", __FUNCTION__, result, readErrno,
+                strerror(readErrno));
+      errno = 0;
+      result = smbc_read(m_fd, lpBuf, uiBufSize);
+      readErrno = result < 0 ? errno : 0;
+    }
+
+    if (result < 0 && readErrno == 0)
+      readErrno = EIO;
+    errno = readErrno;
+    return result;
+  };
+
+  ssize_t bytesRead = readLocked();
+  if (bytesRead > 0)
+  {
+    m_readPosition += bytesRead;
+    return bytesRead;
   }
 
-  if (bytesRead < 0)
-    CLog::Log(LOGERROR, "{} - Error( {}, {}, {} )", __FUNCTION__, bytesRead, errno,
-              strerror(errno));
+  int readErrno = errno;
+  const bool unexpectedEof =
+      bytesRead == 0 && !SMBFileRecovery::IsValidEof(failedReadOffset, m_fileSize);
+  if (m_reopenPath.empty() ||
+      (!unexpectedEof && !SMBFileRecovery::IsReconnectableReadError(readErrno)))
+  {
+    if (bytesRead < 0)
+      CLog::Log(LOGERROR, "{} - Error( {}, {}, {} )", __FUNCTION__, bytesRead, readErrno,
+                strerror(readErrno));
+    errno = readErrno;
+    return bytesRead;
+  }
 
-  return bytesRead;
+  const int originalReadErrno = unexpectedEof ? EIO : readErrno;
+  int finalErrno = originalReadErrno;
+  const int failedFd = m_fd;
+  m_fd = -1;
+  smbc_close(failedFd);
+  errno = originalReadErrno;
+  lock.unlock();
+
+  unsigned int attempts = 0;
+  for (const auto backoff : SMB_RECONNECT_BACKOFF)
+  {
+    ++attempts;
+    std::this_thread::sleep_for(backoff);
+    lock.lock();
+
+    if (!ReopenAtPositionLocked(failedReadOffset))
+    {
+      finalErrno = errno != 0 ? errno : EIO;
+      lock.unlock();
+      if (!SMBFileRecovery::IsReconnectableReadError(finalErrno))
+        break;
+      continue;
+    }
+
+    bytesRead = readLocked();
+    readErrno = errno;
+    if (bytesRead > 0)
+    {
+      m_readPosition += bytesRead;
+      CLog::Log(LOGWARNING, "SMB read recovered at offset {} on attempt {}", failedReadOffset,
+                attempts);
+      errno = 0;
+      return bytesRead;
+    }
+
+    if (bytesRead == 0 && SMBFileRecovery::IsValidEof(failedReadOffset, m_fileSize))
+    {
+      CLog::Log(LOGWARNING, "SMB read recovered at offset {} on attempt {}", failedReadOffset,
+                attempts);
+      errno = 0;
+      return 0;
+    }
+
+    const bool retryUnexpectedEof = bytesRead == 0;
+    finalErrno = retryUnexpectedEof ? originalReadErrno : readErrno;
+    const int replacementFd = m_fd;
+    m_fd = -1;
+    smbc_close(replacementFd);
+    errno = finalErrno;
+    lock.unlock();
+
+    if (!retryUnexpectedEof && !SMBFileRecovery::IsReconnectableReadError(finalErrno))
+      break;
+  }
+
+  lock.lock();
+  m_fd = -1;
+  m_reopenPath.clear();
+  m_readPosition = 0;
+  lock.unlock();
+
+  CLog::Log(LOGERROR, "SMB read recovery failed at offset {} after {} attempts: errno {}",
+            failedReadOffset, attempts, finalErrno);
+  errno = finalErrno;
+
+  return -1;
 }
 
 int64_t CSMBFile::Seek(int64_t iFilePosition, int iWhence)
@@ -876,20 +1023,26 @@ int64_t CSMBFile::Seek(int64_t iFilePosition, int iWhence)
     return -1;
   }
 
+  if (!m_reopenPath.empty())
+    m_readPosition = pos;
+
   return pos;
 }
 
 void CSMBFile::Close()
 {
-  if (m_fd != -1)
-  {
-    CLog::Log(LOGDEBUG, "CSMBFile::Close closing fd {}", m_fd);
-    std::unique_lock lock(smb);
-    if (!smb.IsSmbValid())
-      return;
-    smbc_close(m_fd);
-  }
+  std::unique_lock lock(smb);
+
+  const int fd = m_fd;
   m_fd = -1;
+  m_reopenPath.clear();
+  m_readPosition = 0;
+
+  if (fd != -1 && smb.IsSmbValid())
+  {
+    CLog::Log(LOGDEBUG, "CSMBFile::Close closing fd {}", fd);
+    smbc_close(fd);
+  }
 }
 
 ssize_t CSMBFile::Write(const void* lpBuf, size_t uiBufSize)
