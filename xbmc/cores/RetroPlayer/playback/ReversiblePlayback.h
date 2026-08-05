@@ -29,7 +29,6 @@ class CGameClient;
 
 namespace RETRO
 {
-class CCheevos;
 class CGUIGameMessenger;
 class CRPRenderManager;
 class CSavestateDatabase;
@@ -42,7 +41,6 @@ class CReversiblePlayback : public IPlayback, public IGameLoopCallback, public O
 public:
   CReversiblePlayback(GAME::CGameClient* gameClient,
                       CRPRenderManager& renderManager,
-                      CCheevos* cheevos,
                       CGUIGameMessenger& guiMessenger,
                       double fps,
                       size_t serializeSize);
@@ -87,7 +85,6 @@ private:
   // Construction parameter
   GAME::CGameClient* const m_gameClient;
   CRPRenderManager& m_renderManager;
-  CCheevos* const m_cheevos;
   CGUIGameMessenger& m_guiMessenger;
 
   // Gameplay functionality
