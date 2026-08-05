@@ -394,6 +394,24 @@ bool CCheevos::LoadData()
     CLog::Log(LOGWARNING, "CCheevos::LoadData -- game title missing from RA response for game {}",
               m_gameId);
   }
+
+  // When RetroAchievements doesn't recognise a ROM's hash it still resolves it,
+  // to a placeholder game titled "Unsupported Game Version (<real game>)" that
+  // holds a single always-true achievement. Left alone that achievement fires
+  // immediately, which reads as an unlock and then as having mastered a
+  // one-achievement game. Treat the placeholder as an unsupported game instead.
+  //
+  // Keyed on the title because that is what the server sends; there is no flag
+  // for it in the response.
+  if (raTitle.compare(0, 24, "Unsupported Game Version") == 0)
+  {
+    CLog::Log(LOGINFO, "CCheevos::LoadData -- '{}' - this ROM version has no achievements",
+              raTitle);
+
+    CServiceBroker::GetGameServices().AchievementRuntime().Clear();
+    return false;
+  }
+
   file->SetLabel(raTitle);
 
   if (GAME::CGameInfoTag* tag = file->GetGameInfoTag(); tag != nullptr)
@@ -520,7 +538,20 @@ bool CCheevos::LoadData()
       }
     }
     info.lockedBadgeUrl = fields.size() > 5 ? fields[5] : "";
-    info.rarity = fields.size() > 6 ? fields[6] : "";
+    if (fields.size() > 6)
+    {
+      try
+      {
+        info.rarity = std::stof(fields[6]);
+      }
+      catch (const std::exception&)
+      {
+        CLog::Log(LOGWARNING,
+                  "CCheevos::LoadData -- invalid rarity value '{}' for achievement {}, using 0",
+                  fields[6], id);
+        info.rarity = 0.0f;
+      }
+    }
     info.earned = false;
     achieveState.achievements.push_back(std::move(info));
   }
@@ -598,9 +629,15 @@ bool CCheevos::LoadData()
         {
           info.earned = true;
 
-          // Format timestamp as "Unlocked Jan 01 2026"
+          // Store the date only; the achievements dialog adds the localized
+          // "Unlocked {0:s}" wrapper.
+          //
+          // The format must be a std::string. Passing a string literal picks
+          // the GetAsLocalizedDate(bool) overload instead, because
+          // const char* -> bool is a standard conversion and beats
+          // const char* -> std::string, which silently gave the long date.
           const CDateTime unlockedDate(earnedIt->second);
-          info.unlockedDate = "Unlocked " + unlockedDate.GetAsLocalizedDate("MMM dd yyyy");
+          info.unlockedDate = unlockedDate.GetAsLocalizedDate(std::string{"MMM dd yyyy"});
         }
       }
     }
@@ -857,9 +894,14 @@ void CCheevos::CallbackUrlId(const std::string& achievementUrl, unsigned int che
 
   // Atomically mark the achievement earned and update the shared unlocked count
   {
+    // Earned just now, formatted to match the dates built for achievements
+    // that were already earned when the game loaded
+    const std::string unlockedDate =
+        CDateTime::GetCurrentDateTime().GetAsLocalizedDate(std::string{"MMM dd yyyy"});
+
     bool newlyEarned = false;
-    const auto state =
-        CServiceBroker::GetGameServices().AchievementRuntime().MarkEarned(cheevoId, newlyEarned);
+    const auto state = CServiceBroker::GetGameServices().AchievementRuntime().MarkEarned(
+        cheevoId, unlockedDate, newlyEarned);
 
     // Mastery notification — all achievements unlocked
     if (newlyEarned && state.totalAchievements > 0 &&
