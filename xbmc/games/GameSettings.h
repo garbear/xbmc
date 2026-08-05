@@ -43,6 +43,17 @@ public:
 
   bool GetAchievementsLoggedIn() const;
 
+  /*!
+   * \brief Record whether the player is logged in to RetroAchievements
+   *
+   * Called when the game add-on reports the outcome of a login attempt, so
+   * that a rejected token doesn't leave the UI claiming the player is logged
+   * in. Saves the settings only when the state actually changes.
+   *
+   * \param loggedIn True if the player is logged in
+   */
+  void SetAchievementsLoggedIn(bool loggedIn);
+
   // Inherited from ISettingCallback
   void OnSettingChanged(const std::shared_ptr<const CSetting>& setting) override;
 

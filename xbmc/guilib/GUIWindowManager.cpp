@@ -149,6 +149,7 @@
 #include "games/agents/windows/GUIAgentWindow.h"
 #include "games/controllers/windows/GUIControllerWindow.h"
 #include "games/dialogs/disc/DialogGameDiscManager.h"
+#include "games/dialogs/osd/DialogGameAchievements.h"
 #include "games/dialogs/osd/DialogGameAdvancedSettings.h"
 #include "games/dialogs/osd/DialogGameOSD.h"
 #include "games/dialogs/osd/DialogGameSaves.h"
@@ -354,6 +355,7 @@ void CGUIWindowManager::CreateWindows()
   Add(new GAME::CDialogInGameSaves);
   Add(new GAME::CGUIAgentWindow);
   Add(new GAME::CDialogGameDiscManager);
+  Add(new GAME::CDialogGameAchievements);
   Add(new RETRO::CGameWindowFullScreen);
 }
 
