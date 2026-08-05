@@ -15,6 +15,16 @@
 namespace KODI::GAME
 {
 
+/*!
+ * \brief Progress towards a single measured achievement
+ */
+struct AchievementProgress
+{
+  unsigned int id{0};
+  float measuredPercent{0.0f};
+  std::string measuredProgress;
+};
+
 struct AchievementInfo
 {
   unsigned int id{0};
@@ -22,10 +32,37 @@ struct AchievementInfo
   std::string description;
   std::string badgeUrl;
   std::string lockedBadgeUrl;
-  std::string rarity;
+
+  /*!
+   * \brief Percentage of players who have earned this achievement, or 0.0 if
+   *        the rarity is unknown
+   */
+  float rarity{0.0f};
+
+  /*!
+   * \brief Localized date the achievement was earned, empty if it was not
+   */
   std::string unlockedDate;
+
   unsigned int points{0};
   bool earned{false};
+
+  /*!
+   * \brief Progress towards the achievement from 0.0 to 100.0, or 0.0 if the
+   *        achievement doesn't count anything
+   *
+   * \sa measuredProgress
+   */
+  float measuredPercent{0.0f};
+
+  /*!
+   * \brief Human-readable progress such as "45/100", empty if not measured
+   *
+   * Only achievements with a counting trigger have this. It is supplied by
+   * the add-on rather than formatted here, because only the add-on knows
+   * what is being counted.
+   */
+  std::string measuredProgress;
 };
 
 struct AchievementState
@@ -44,16 +81,60 @@ struct AchievementState
  *
  * This state is published by RetroPlayer and consumed by GUI info providers.
  * It is not persisted as a game setting.
+ *
+ * Mutating accessors are targeted rather than read-modify-write, so that
+ * concurrent updates from the game thread and the GUI thread cannot clobber
+ * each other.
  */
 class CAchievementRuntime
 {
 public:
   void SetState(const AchievementState& state);
   void Clear();
+
+  /*!
+   * \brief Get a copy of the whole state, including the achievement list
+   *
+   * This copies every achievement and its strings, so it is only for callers
+   * that need the list itself. GUI info providers must use the targeted
+   * accessors below, which are queried on every rendered frame.
+   */
   AchievementState GetState() const;
-  AchievementState MarkEarned(unsigned int achievementId, bool& newlyEarned);
+
+  /*!
+   * \brief Mark an achievement as earned
+   *
+   * \param achievementId The achievement
+   * \param unlockedDate Localized date to show against it. Supplied by the
+   *        caller rather than formatted here, so that the runtime stays free
+   *        of locale handling and the string matches the one built for
+   *        achievements that were already earned when the game loaded.
+   * \param[out] newlyEarned True if this changed the achievement's state
+   */
+  AchievementState MarkEarned(unsigned int achievementId,
+                              const std::string& unlockedDate,
+                              bool& newlyEarned);
   void SetRichPresence(const std::string& richPresence);
   std::string GetRichPresence() const;
+
+  /*!
+   * \brief Update progress for the measured achievements of the current game
+   *
+   * IDs that don't belong to the loaded game are ignored, so a late update
+   * arriving after the game changed can't corrupt the new game's list.
+   */
+  unsigned int SetAchievementProgress(const std::vector<AchievementProgress>& progress);
+
+  /*!
+   * \name Targeted accessors for the progress info label
+   *
+   * The skin queries this once per frame per control, so these read a single
+   * field under the lock rather than copying the achievement list.
+   */
+  //@{
+  unsigned int GetTotalAchievements() const;
+  unsigned int GetUnlockedAchievements() const;
+  //@}
 
 private:
   mutable std::mutex m_mutex;

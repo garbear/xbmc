@@ -1152,6 +1152,140 @@ public:
   ///
   virtual GAME_ERROR RCResetRuntime() { return GAME_ERROR_NOT_IMPLEMENTED; }
 
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Notify Kodi that a game has been identified by the achievement runtime
+  ///
+  /// @param[in] data The achievement set of the game
+  ///
+  /// @remarks Only called from the add-on itself. The pointers inside @p data
+  ///          need only stay valid for the duration of the call.
+  ///
+  /// @note Added in Game API 7.1.0
+  ///
+  void KodiRCOnGameLoaded(const game_rc_game_loaded& data)
+  {
+    m_instanceData->toKodi->RCOnGameLoaded(m_instanceData->toKodi->kodiInstance, &data);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Notify Kodi that the player has earned an achievement
+  ///
+  /// @param[in] data The achievement that was earned
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 7.1.0
+  ///
+  void KodiRCOnAchievementTriggered(const game_rc_achievement_triggered& data)
+  {
+    m_instanceData->toKodi->RCOnAchievementTriggered(m_instanceData->toKodi->kodiInstance, &data);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Notify Kodi that every achievement of the game has been earned
+  ///
+  /// @param[in] title The title of the completed game
+  /// @param[in] hardcore True if the game was completed in hardcore mode
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 7.1.0
+  ///
+  void KodiRCOnGameCompleted(const std::string& title, bool hardcore)
+  {
+    m_instanceData->toKodi->RCOnGameCompleted(m_instanceData->toKodi->kodiInstance, title.c_str(),
+                                              hardcore);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Publish the current rich presence evaluation to Kodi
+  ///
+  /// @param[in] evaluation What the player is currently doing in the game
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 7.1.0
+  ///
+  void KodiRCOnRichPresenceUpdated(const std::string& evaluation)
+  {
+    m_instanceData->toKodi->RCOnRichPresenceUpdated(m_instanceData->toKodi->kodiInstance,
+                                                    evaluation.c_str());
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Notify Kodi of the outcome of a login attempt
+  ///
+  /// @param[in] data The login result
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 7.1.0
+  ///
+  void KodiRCOnLoginResult(const game_rc_login_result& data)
+  {
+    m_instanceData->toKodi->RCOnLoginResult(m_instanceData->toKodi->kodiInstance, &data);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Publish progress towards the game's measured achievements
+  ///
+  /// Sent whenever the reported progress changes. Achievements without a
+  /// measured trigger condition are omitted.
+  ///
+  /// @param[in] progress Progress of each measured achievement
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 7.1.0
+  ///
+  void KodiRCOnAchievementProgress(const std::vector<game_rc_achievement_progress>& progress)
+  {
+    m_instanceData->toKodi->RCOnAchievementProgress(m_instanceData->toKodi->kodiInstance,
+                                                    progress.empty() ? nullptr : progress.data(),
+                                                    static_cast<unsigned int>(progress.size()));
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Report an error returned by the RetroAchievements server
+  ///
+  /// @param[in] message The error as reported by the server
+  /// @param[in] api The API call that failed, or an empty string
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 7.1.0
+  ///
+  void KodiRCOnServerError(const std::string& message, const std::string& api)
+  {
+    m_instanceData->toKodi->RCOnServerError(m_instanceData->toKodi->kodiInstance, message.c_str(),
+                                            api.c_str());
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Report a change in connectivity to the RetroAchievements server
+  ///
+  /// Unlocks earned while disconnected are held by the add-on and submitted
+  /// once the connection returns.
+  ///
+  /// @param[in] connected True if the server is reachable again
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 7.1.0
+  ///
+  void KodiRCOnConnectionChanged(bool connected)
+  {
+    m_instanceData->toKodi->RCOnConnectionChanged(m_instanceData->toKodi->kodiInstance, connected);
+  }
+
   //----------------------------------------------------------------------------
 
   ///@}
