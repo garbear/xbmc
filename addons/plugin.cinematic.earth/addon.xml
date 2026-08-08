@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.cinematic.earth" name="cinematic.earth" version="1.0.0" provider-name="Rick Memsic">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <import addon="inputstream.adaptive"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="resources/lib/plugin.py" manifest="data:application/json;base64,eyJ2ZXJzaW9uIjoxLCJpZCI6ImNpbmVtYXRpYy5lYXJ0aCIsIm5hbWUiOiJjaW5lbWF0aWMuZWFydGgiLCJjYXRhbG9nIjoic3BlY2lhbDovL3hibWMvYWRkb25zL3BsdWdpbi5jaW5lbWF0aWMuZWFydGgvcmVzb3VyY2VzL2NhdGFsb2cuanNvbiJ9">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">cinematic.earth plugin</summary>
+        <description lang="en_GB">cinematic.earth provides immersive nature experiences, curated by Emmy-award-winning cinematographer Rick Memsic.</description>
+        <platform>all</platform>
+        <license>AGPL-3.0-or-later</license>
+        <website>https://cinematic.earth</website>
+        <source>https://github.com/eigendude/cinematic.earth</source>
+        <reuselanguageinvoker>true</reuselanguageinvoker>
+        <assets>
+            <icon>resources/icon-1500x1500.png</icon>
+        </assets>
+    </extension>
+</addon>
