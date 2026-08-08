@@ -32,7 +32,10 @@ bool Fail(Error* error, Error value) noexcept
   return false;
 }
 
-Error ParseVersion1(const CVariant& document, std::string& id, std::string& name)
+Error ParseVersion1(const CVariant& document,
+                    std::string& id,
+                    std::string& name,
+                    std::string& catalog)
 {
   if (!document.isMember("id"))
     return Error::MISSING_ID;
@@ -55,6 +58,17 @@ Error ParseVersion1(const CVariant& document, std::string& id, std::string& name
   name = nameValue.asString();
   if (name.empty())
     return Error::EMPTY_NAME;
+
+  if (document.isMember("catalog"))
+  {
+    const CVariant& catalogValue = document["catalog"];
+    if (!catalogValue.isString())
+      return Error::INVALID_CATALOG_TYPE;
+
+    catalog = catalogValue.asString();
+    if (catalog.empty())
+      return Error::EMPTY_CATALOG;
+  }
 
   return Error::NONE;
 }
@@ -115,7 +129,8 @@ try
   switch (version)
   {
     case 1:
-      parseError = ParseVersion1(document, parsedManifest.m_id, parsedManifest.m_name);
+      parseError = ParseVersion1(document, parsedManifest.m_id, parsedManifest.m_name,
+                                 parsedManifest.m_catalog);
       break;
     default:
       return Fail(error, Error::UNSUPPORTED_VERSION);
