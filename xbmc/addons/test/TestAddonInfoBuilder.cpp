@@ -10,6 +10,7 @@
 #include "addons/AddonBuilder.h"
 #include "addons/PluginSource.h"
 #include "addons/Repository.h"
+#include "addons/ServiceCatalog.h"
 #include "addons/ServiceManifest.h"
 #include "addons/addoninfo/AddonInfo.h"
 #include "addons/addoninfo/AddonInfoBuilder.h"
@@ -225,6 +226,38 @@ TEST_F(TestAddonInfoBuilder, PluginSourceLoadsEmbeddedServiceManifest)
   EXPECT_EQ(1U, manifest.Version());
   EXPECT_EQ("cinematic.earth", manifest.ID());
   EXPECT_EQ("cinematic.earth", manifest.Name());
+}
+
+TEST_F(TestAddonInfoBuilder, CinematicEarthServiceCatalogIntegration)
+{
+  const AddonInfoPtr addonInfo =
+      CAddonInfoBuilder::Generate("special://xbmc/addons/plugin.cinematic.earth");
+  ASSERT_NE(nullptr, addonInfo);
+
+  const auto plugin = std::dynamic_pointer_cast<CPluginSource>(
+      CAddonBuilder::Generate(addonInfo, AddonType::PLUGIN));
+  ASSERT_NE(nullptr, plugin);
+
+  CServiceManifest manifest;
+  CServiceManifest::Error manifestError{CServiceManifest::Error::UNKNOWN};
+  ASSERT_TRUE(plugin->LoadServiceManifest(manifest, &manifestError))
+      << "manifest URI: " << plugin->Manifest()
+      << ", error: " << static_cast<int>(manifestError);
+  EXPECT_EQ(CServiceManifest::Error::NONE, manifestError);
+  EXPECT_EQ(1U, manifest.Version());
+  EXPECT_EQ("cinematic.earth", manifest.ID());
+  EXPECT_EQ("cinematic.earth", manifest.Name());
+  EXPECT_EQ("special://xbmc/addons/plugin.cinematic.earth/resources/catalog.json",
+            manifest.Catalog());
+
+  CServiceCatalog catalog;
+  CServiceCatalog::Error catalogError{CServiceCatalog::Error::UNKNOWN};
+  ASSERT_TRUE(CServiceCatalog::Load(manifest.Catalog(), catalog, &catalogError))
+      << "catalog URI: " << manifest.Catalog()
+      << ", error: " << static_cast<int>(catalogError);
+  EXPECT_EQ(CServiceCatalog::Error::NONE, catalogError);
+  EXPECT_EQ(1U, catalog.Version());
+  EXPECT_TRUE(catalog.Items().empty());
 }
 
 TEST_F(TestAddonInfoBuilder, PluginSourceWithoutManifest)
