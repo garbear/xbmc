@@ -26,6 +26,7 @@ set(SOURCES Addon.cpp
             Scraper.cpp
             ScreenSaver.cpp
             Service.cpp
+            ServiceManifest.cpp
             ShaderPreset.cpp
             Skin.cpp
             UISoundsResource.cpp
@@ -69,6 +70,7 @@ set(HEADERS Addon.h
             Scraper.h
             ScreenSaver.h
             Service.h
+            ServiceManifest.h
             ShaderPreset.h
             Skin.h
             UISoundsResource.h
