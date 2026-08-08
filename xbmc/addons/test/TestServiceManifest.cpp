@@ -90,18 +90,30 @@ TEST(TestServiceManifest, ParseMinimalVersionOne)
   EXPECT_EQ(1U, manifest.Version());
   EXPECT_EQ("cinematic.earth", manifest.ID());
   EXPECT_EQ("cinematic.earth", manifest.Name());
+  EXPECT_TRUE(manifest.Catalog().empty());
+}
+
+TEST(TestServiceManifest, ParseVersionOneWithCatalog)
+{
+  constexpr std::string_view json =
+      R"({"version":1,"id":"cinematic.earth","name":"cinematic.earth","catalog":"https://example.test/catalog.json"})";
+  CServiceManifest manifest;
+
+  ASSERT_TRUE(CServiceManifest::Parse(std::string{json}, manifest));
+  EXPECT_EQ("https://example.test/catalog.json", manifest.Catalog());
 }
 
 TEST(TestServiceManifest, ParseIgnoresUnknownFields)
 {
   constexpr std::string_view json =
-      R"({"version":1,"id":"cinematic.earth","name":"cinematic.earth","unknown":{"anything":true}})";
+      R"({"version":1,"id":"cinematic.earth","name":"cinematic.earth","catalog":"https://example.test/catalog.json","unknown":{"anything":true}})";
   CServiceManifest manifest;
 
   ASSERT_TRUE(CServiceManifest::Parse(std::string{json}, manifest));
   EXPECT_EQ(1U, manifest.Version());
   EXPECT_EQ("cinematic.earth", manifest.ID());
   EXPECT_EQ("cinematic.earth", manifest.Name());
+  EXPECT_EQ("https://example.test/catalog.json", manifest.Catalog());
 }
 
 TEST(TestServiceManifest, ParsePreservesStringContents)
@@ -115,6 +127,16 @@ TEST(TestServiceManifest, ParsePreservesStringContents)
   EXPECT_EQ("  Service Name / v1  ", manifest.Name());
 }
 
+TEST(TestServiceManifest, ParsePreservesCatalogContents)
+{
+  constexpr std::string_view json =
+      R"({"version":1,"id":"cinematic.earth","name":"cinematic.earth","catalog":"  data:application/json,%7B%7D  "})";
+  CServiceManifest manifest;
+
+  ASSERT_TRUE(CServiceManifest::Parse(std::string{json}, manifest));
+  EXPECT_EQ("  data:application/json,%7B%7D  ", manifest.Catalog());
+}
+
 TEST(TestServiceManifest, ParseFailureDoesNotModifyManifest)
 {
   CServiceManifest manifest;
@@ -126,6 +148,24 @@ TEST(TestServiceManifest, ParseFailureDoesNotModifyManifest)
   EXPECT_EQ(1U, manifest.Version());
   EXPECT_EQ("cinematic.earth", manifest.ID());
   EXPECT_EQ("cinematic.earth", manifest.Name());
+}
+
+TEST(TestServiceManifest, InvalidCatalogDoesNotModifyManifest)
+{
+  constexpr std::string_view validJson =
+      R"({"version":1,"id":"existing.id","name":"Existing Name","catalog":"data:application/json,%7B%7D"})";
+  constexpr std::string_view invalidJson =
+      R"({"version":1,"id":"replacement.id","name":"Replacement Name","catalog":null})";
+  CServiceManifest manifest;
+  ASSERT_TRUE(CServiceManifest::Parse(std::string{validJson}, manifest));
+
+  Error error{Error::NONE};
+  EXPECT_FALSE(CServiceManifest::Parse(std::string{invalidJson}, manifest, &error));
+  EXPECT_EQ(Error::INVALID_CATALOG_TYPE, error);
+  EXPECT_EQ(1U, manifest.Version());
+  EXPECT_EQ("existing.id", manifest.ID());
+  EXPECT_EQ("Existing Name", manifest.Name());
+  EXPECT_EQ("data:application/json,%7B%7D", manifest.Catalog());
 }
 
 TEST(TestServiceManifest, ParseRejectsMalformedJson)
@@ -169,12 +209,27 @@ TEST(TestServiceManifest, ParseRejectsWrongFieldTypes)
                      Error::INVALID_NAME_TYPE);
   ExpectParseFailure(R"({"version":1,"id":"cinematic.earth","name":null})",
                      Error::INVALID_NAME_TYPE);
+  ExpectParseFailure(
+      R"({"version":1,"id":"cinematic.earth","name":"cinematic.earth","catalog":null})",
+      Error::INVALID_CATALOG_TYPE);
+  ExpectParseFailure(
+      R"({"version":1,"id":"cinematic.earth","name":"cinematic.earth","catalog":123})",
+      Error::INVALID_CATALOG_TYPE);
+  ExpectParseFailure(
+      R"({"version":1,"id":"cinematic.earth","name":"cinematic.earth","catalog":{}})",
+      Error::INVALID_CATALOG_TYPE);
+  ExpectParseFailure(
+      R"({"version":1,"id":"cinematic.earth","name":"cinematic.earth","catalog":[]})",
+      Error::INVALID_CATALOG_TYPE);
 }
 
 TEST(TestServiceManifest, ParseRejectsEmptyStrings)
 {
   ExpectParseFailure(R"({"version":1,"id":"","name":"cinematic.earth"})", Error::EMPTY_ID);
   ExpectParseFailure(R"({"version":1,"id":"cinematic.earth","name":""})", Error::EMPTY_NAME);
+  ExpectParseFailure(
+      R"({"version":1,"id":"cinematic.earth","name":"cinematic.earth","catalog":""})",
+      Error::EMPTY_CATALOG);
 }
 
 TEST(TestServiceManifest, ParseRejectsUnsupportedVersions)

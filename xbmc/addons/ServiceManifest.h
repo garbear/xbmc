@@ -34,6 +34,8 @@ public:
     MISSING_NAME,
     INVALID_NAME_TYPE,
     EMPTY_NAME,
+    INVALID_CATALOG_TYPE,
+    EMPTY_CATALOG,
     OUT_OF_MEMORY,
     UNKNOWN,
   };
@@ -50,11 +52,16 @@ public:
   unsigned int Version() const { return m_version; }
   const std::string& ID() const { return m_id; }
   const std::string& Name() const { return m_name; }
+  /*! \brief Get the resource URI declared by the service manifest.
+   *  \return The declared resource URI, or an empty string if no catalog was declared.
+   */
+  const std::string& Catalog() const { return m_catalog; }
 
 private:
   unsigned int m_version{0};
   std::string m_id;
   std::string m_name;
+  std::string m_catalog;
 };
 
 } // namespace ADDON
