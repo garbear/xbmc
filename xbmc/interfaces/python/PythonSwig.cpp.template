@@ -59,6 +59,8 @@ Helper.setup(this,classes,
       (Pattern.compile('''std::shared_ptr<\\(.*\\)>''')) : new File('typemaps/python.smart_ptr.outtm'),
       (Pattern.compile('''std::unique_ptr<\\(.*\\)>''')) : new File('typemaps/python.smart_ptr.outtm'),
       (Pattern.compile('''(p.){0,1}std::vector<\\(.*\\)>''')) : new File('typemaps/python.vector.outtm'),
+      // Convert the legacy API dictionary type recursively to a native Python dict.
+      (Pattern.compile('''(p.){0,1}XBMCAddon::Dictionary<\\(.*\\)>''')) : new File('typemaps/python.dict.outtm'),
       (Pattern.compile('''(p.){0,1}Tuple<\\(.*\\)>''')) : new File('typemaps/python.Tuple.outtm'),
       (Pattern.compile('''(p.){0,1}Alternative<\\(.*\\)>''')) : new File('typemaps/python.Alternative.outtm')
     ], '${result} = makePythonInstance(${api},true);',

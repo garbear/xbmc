@@ -1,0 +1,43 @@
+<%
+/*
+ *  Copyright (C) 2026 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
+ *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
+ */
+    List templateArgs = swigTypeParser.SwigType_templateparmlist(type)
+    valtype = templateArgs[0]
+    boolean ispointer = swigTypeParser.SwigType_ispointer(type)
+    String accessor = ispointer ? '->' : '.'
+    int seq = sequence.increment()
+
+    if (ispointer)
+    {
+%>
+    if (${api} == nullptr)
+    {
+      Py_INCREF(Py_None);
+      ${result} = Py_None;
+    }
+    else
+    {
+<%  }  %>
+      ${result} = PyDict_New();
+      for (auto dictIter${seq} = ${api}${accessor}begin();
+           dictIter${seq} != ${api}${accessor}end(); ++dictIter${seq})
+      {
+        PyObject* pyvalue${seq};
+        ${helper.getOutConversion(valtype, 'result', method,
+                                  ['result': 'pyvalue' + seq,
+                                   'api': 'dictIter' + seq + '->second',
+                                   'sequence': sequence])}
+        PyDict_SetItemString(${result}, dictIter${seq}->first.c_str(), pyvalue${seq});
+        Py_DECREF(pyvalue${seq});
+      }
+<%
+    if (ispointer)
+    {
+%>
+    }
+<%  }  %>

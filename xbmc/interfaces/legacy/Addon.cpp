@@ -12,6 +12,8 @@
 #include "LanguageHook.h"
 #include "ServiceBroker.h"
 #include "addons/AddonManager.h"
+#include "addons/PluginSource.h"
+#include "addons/ServiceCatalog.h"
 #include "addons/addoninfo/AddonInfo.h"
 #include "addons/gui/GUIDialogAddonSettings.h"
 #include "addons/settings/AddonSettings.h"
@@ -27,6 +29,48 @@ namespace XBMCAddon
 {
   namespace xbmcaddon
   {
+    std::unique_ptr<ServiceCatalog> GetServiceCatalog(const ADDON::AddonPtr& addon)
+    {
+      const auto plugin = std::dynamic_pointer_cast<CPluginSource>(addon);
+      if (!plugin || plugin->Manifest().empty())
+        return {};
+
+      CServiceManifest manifest;
+      CServiceManifest::Error manifestError{CServiceManifest::Error::NONE};
+      if (!plugin->LoadServiceManifest(manifest, &manifestError))
+      {
+        throw AddonException("Failed to load service manifest for addon '%s' (error %d).",
+                             addon->ID().c_str(), static_cast<int>(manifestError));
+      }
+
+      if (manifest.Catalog().empty())
+        return {};
+
+      CServiceCatalog catalog;
+      CServiceCatalog::Error catalogError{CServiceCatalog::Error::NONE};
+      if (!CServiceCatalog::Load(manifest.Catalog(), catalog, &catalogError))
+      {
+        throw AddonException("Failed to load service catalog for addon '%s' (error %d).",
+                             addon->ID().c_str(), static_cast<int>(catalogError));
+      }
+
+      auto result = std::make_unique<ServiceCatalog>();
+      (*result)["version"].former() = catalog.Version();
+
+      auto& items = (*result)["items"].later();
+      items.reserve(catalog.Items().size());
+      for (const auto& catalogItem : catalog.Items())
+      {
+        ServiceCatalogItem item;
+        item.emplace("id", catalogItem.id);
+        item.emplace("name", catalogItem.name);
+        item.emplace("media", catalogItem.media);
+        items.emplace_back(std::move(item));
+      }
+
+      return result;
+    }
+
     String Addon::getDefaultId() { return languageHook == NULL ? emptyString : languageHook->GetAddonId(); }
 
     String Addon::getAddonVersion() { return languageHook == NULL ? emptyString : languageHook->GetAddonVersion(); }
@@ -75,6 +119,11 @@ namespace XBMCAddon
     Addon::~Addon()
     {
       CServiceBroker::GetAddonMgr().RemoveFromUpdateableAddons(pAddon);
+    }
+
+    std::unique_ptr<ServiceCatalog> Addon::getServiceCatalog()
+    {
+      return GetServiceCatalog(pAddon);
     }
 
     String Addon::getLocalizedString(int id)

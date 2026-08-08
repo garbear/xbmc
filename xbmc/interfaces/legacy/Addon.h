@@ -10,15 +10,28 @@
 
 #include "AddonClass.h"
 #include "AddonString.h"
+#include "Alternative.h"
+#include "Dictionary.h"
 #include "Exception.h"
 #include "Settings.h"
 #include "addons/IAddon.h"
+
+#include <memory>
+#include <vector>
 
 namespace XBMCAddon
 {
   namespace xbmcaddon
   {
     XBMCCOMMONS_STANDARD_EXCEPTION(AddonException);
+
+    using ServiceCatalogItem = Dictionary<String>;
+    using ServiceCatalogValue = Alternative<unsigned int, std::vector<ServiceCatalogItem>>;
+    using ServiceCatalog = Dictionary<ServiceCatalogValue>;
+
+#ifndef SWIG
+    std::unique_ptr<ServiceCatalog> GetServiceCatalog(const ADDON::AddonPtr& addon);
+#endif
 
     ///
     /// \addtogroup python_xbmcaddon
@@ -69,6 +82,37 @@ namespace XBMCAddon
     public:
       explicit Addon(const char* id = NULL);
       ~Addon() override;
+
+#ifdef DOXYGEN_SHOULD_USE_THIS
+      ///
+      /// \ingroup python_xbmcaddon
+      /// @brief \python_func{ xbmcaddon.Addon([id]).getServiceCatalog() }
+      /// Loads the service catalog declared by this add-on.
+      ///
+      /// @return A dictionary containing the catalog `version` and ordered `items`, where each
+      /// item contains `id`, `name`, and `media`; or `None` when the add-on declares no service
+      /// manifest or catalog.
+      ///
+      /// @note Loading occurs synchronously each time this method is called. A declared manifest
+      /// or catalog that cannot be loaded raises `RuntimeError`.
+      ///
+      /// ----------------------------------------------------------------------
+      /// @python_v23 New function added.
+      ///
+      /// **Example:**
+      /// ~~~~~~~~~~~~~{.py}
+      /// ..
+      /// catalog = xbmcaddon.Addon().getServiceCatalog()
+      /// if catalog is not None:
+      ///     for item in catalog["items"]:
+      ///         print(item["name"], item["media"])
+      /// ..
+      /// ~~~~~~~~~~~~~
+      ///
+      getServiceCatalog(...);
+#else
+      std::unique_ptr<ServiceCatalog> getServiceCatalog();
+#endif
 
 #ifdef DOXYGEN_SHOULD_USE_THIS
       ///

@@ -31,8 +31,8 @@ using namespace xbmcaddon;
 
 %include "interfaces/legacy/swighelper.h"
 %include "interfaces/legacy/AddonString.h"
+%include "interfaces/legacy/Dictionary.h"
 
 %include "interfaces/legacy/Addon.h"
 %nodefaultctor Settings;
 %include "interfaces/legacy/Settings.h"
-
