@@ -7,7 +7,10 @@
  */
 
 #include "CompileInfo.h"
+#include "addons/AddonBuilder.h"
+#include "addons/PluginSource.h"
 #include "addons/Repository.h"
+#include "addons/ServiceManifest.h"
 #include "addons/addoninfo/AddonInfo.h"
 #include "addons/addoninfo/AddonInfoBuilder.h"
 #include "addons/addoninfo/AddonType.h"
@@ -15,6 +18,7 @@
 
 #include <set>
 #include <string>
+#include <string_view>
 
 #include <gtest/gtest.h>
 
@@ -53,6 +57,11 @@ const std::string addonXML = R"xml(
 
 namespace
 {
+constexpr std::string_view CINEMATIC_EARTH_MANIFEST_URI =
+    "data:application/json;base64,"
+    "eyJ2ZXJzaW9uIjoxLCJpZCI6ImNpbmVtYXRpYy5lYXJ0aCIsIm5hbWUiOiJjaW5lbWF0aWMu"
+    "ZWFydGgifQ==";
+
 AddonInfoPtr GenerateWithLibrary(const std::string& libraryName)
 {
   const std::string xml = R"xml(
@@ -71,6 +80,29 @@ AddonInfoPtr GenerateWithLibrary(const std::string& libraryName)
   CXBMCTinyXML2 doc;
   EXPECT_TRUE(doc.Parse(xml));
   return CAddonInfoBuilder::Generate(doc.RootElement(), RepositoryDirInfo{});
+}
+
+std::shared_ptr<CPluginSource> GeneratePluginSource(const std::string& manifestAttribute)
+{
+  const std::string xml = R"xml(
+<addon id="plugin.video.example"
+       name="Example Video Add-on"
+       version="1.0.0"
+       provider-name="Team Kodi">
+  <extension point="xbmc.python.pluginsource"
+             library="resources/lib/plugin.py")xml" +
+                          manifestAttribute + R"xml(>
+    <provides>video</provides>
+  </extension>
+</addon>
+)xml";
+
+  CXBMCTinyXML2 doc;
+  EXPECT_TRUE(doc.Parse(xml));
+  const AddonInfoPtr addonInfo =
+      CAddonInfoBuilder::Generate(doc.RootElement(), RepositoryDirInfo{});
+  return std::dynamic_pointer_cast<CPluginSource>(
+      CAddonBuilder::Generate(addonInfo, AddonType::PLUGIN));
 }
 } // namespace
 
@@ -174,6 +206,74 @@ TEST_F(TestAddonInfoBuilder, BinaryDetection_RejectsNonSharedLibrary)
 
   EXPECT_FALSE(GenerateWithLibrary("blablabla.xml")->IsBinary());
   EXPECT_FALSE(GenerateWithLibrary("default.py")->IsBinary());
+}
+
+TEST_F(TestAddonInfoBuilder, PluginSourceLoadsEmbeddedServiceManifest)
+{
+  const auto plugin =
+      GeneratePluginSource(" manifest=\"" + std::string{CINEMATIC_EARTH_MANIFEST_URI} + "\"");
+
+  ASSERT_NE(nullptr, plugin);
+  EXPECT_EQ(CINEMATIC_EARTH_MANIFEST_URI, plugin->Manifest());
+  EXPECT_EQ("resources/lib/plugin.py", plugin->AddonInfo()->Type(AddonType::PLUGIN)->LibName());
+  EXPECT_TRUE(plugin->Provides(CPluginSource::Content::VIDEO));
+
+  CServiceManifest manifest;
+  CServiceManifest::Error error{CServiceManifest::Error::UNKNOWN};
+  ASSERT_TRUE(plugin->LoadServiceManifest(manifest, &error));
+  EXPECT_EQ(CServiceManifest::Error::NONE, error);
+  EXPECT_EQ(1U, manifest.Version());
+  EXPECT_EQ("cinematic.earth", manifest.ID());
+  EXPECT_EQ("cinematic.earth", manifest.Name());
+}
+
+TEST_F(TestAddonInfoBuilder, PluginSourceWithoutManifest)
+{
+  const auto plugin = GeneratePluginSource("");
+
+  ASSERT_NE(nullptr, plugin);
+  EXPECT_TRUE(plugin->Manifest().empty());
+  EXPECT_EQ("resources/lib/plugin.py", plugin->AddonInfo()->Type(AddonType::PLUGIN)->LibName());
+  EXPECT_TRUE(plugin->Provides(CPluginSource::Content::VIDEO));
+
+  CServiceManifest manifest;
+  EXPECT_FALSE(plugin->LoadServiceManifest(manifest));
+}
+
+TEST_F(TestAddonInfoBuilder, BrokenServiceManifestDoesNotInvalidatePluginSource)
+{
+  constexpr std::string_view missingManifestUri = "/kodi-test-missing/plugin-service-manifest.json";
+  const auto plugin = GeneratePluginSource(" manifest=\"" + std::string{missingManifestUri} + "\"");
+
+  ASSERT_NE(nullptr, plugin);
+  EXPECT_EQ(missingManifestUri, plugin->Manifest());
+  EXPECT_TRUE(plugin->Provides(CPluginSource::Content::VIDEO));
+
+  CServiceManifest manifest;
+  ASSERT_TRUE(CServiceManifest::Parse(
+      R"({"version":1,"id":"unchanged.example","name":"Unchanged"})", manifest));
+
+  CServiceManifest::Error error{CServiceManifest::Error::UNKNOWN};
+  EXPECT_FALSE(plugin->LoadServiceManifest(manifest, &error));
+  EXPECT_EQ(CServiceManifest::Error::OPEN_FAILED, error);
+  EXPECT_EQ(1U, manifest.Version());
+  EXPECT_EQ("unchanged.example", manifest.ID());
+  EXPECT_EQ("Unchanged", manifest.Name());
+}
+
+TEST_F(TestAddonInfoBuilder, InvalidServiceManifestDoesNotInvalidatePluginSource)
+{
+  constexpr std::string_view invalidManifestUri = "data:application/json,%7B%22version%22%3A1%7D";
+  const auto plugin = GeneratePluginSource(" manifest=\"" + std::string{invalidManifestUri} + "\"");
+
+  ASSERT_NE(nullptr, plugin);
+  EXPECT_EQ(invalidManifestUri, plugin->Manifest());
+  EXPECT_TRUE(plugin->Provides(CPluginSource::Content::VIDEO));
+
+  CServiceManifest manifest;
+  CServiceManifest::Error error{CServiceManifest::Error::UNKNOWN};
+  EXPECT_FALSE(plugin->LoadServiceManifest(manifest, &error));
+  EXPECT_EQ(CServiceManifest::Error::MISSING_ID, error);
 }
 
 TEST_F(TestAddonInfoBuilder, TestGenerate_DBEntry)

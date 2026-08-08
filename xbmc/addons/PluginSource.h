@@ -9,6 +9,7 @@
 #pragma once
 
 #include "addons/Addon.h"
+#include "addons/ServiceManifest.h"
 
 #include <set>
 #include <string_view>
@@ -44,6 +45,10 @@ public:
     return m_providedContent.size() > 1;
   }
 
+  const std::string& Manifest() const { return m_manifest; }
+  bool LoadServiceManifest(CServiceManifest& manifest,
+                           CServiceManifest::Error* error = nullptr) const noexcept;
+
   const ContentPathMap& MediaLibraryScanPaths() const
   {
     return m_mediaLibraryScanPaths;
@@ -58,6 +63,7 @@ private:
    */
   void SetProvides(const std::string &content);
   std::set<Content> m_providedContent;
+  std::string m_manifest;
   ContentPathMap m_mediaLibraryScanPaths;
 };
 

@@ -19,7 +19,8 @@ namespace ADDON
 {
 
 CPluginSource::CPluginSource(const AddonInfoPtr& addonInfo, AddonType addonType)
-  : CAddon(addonInfo, addonType)
+  : CAddon(addonInfo, addonType),
+    m_manifest(addonInfo->Type(addonType)->GetValue("@manifest").asString())
 {
   std::string provides = addonInfo->Type(addonType)->GetValue("provides").asString();
 
@@ -39,6 +40,15 @@ CPluginSource::CPluginSource(const AddonInfoPtr& addonInfo, AddonType addonType)
   }
 
   SetProvides(provides);
+}
+
+bool CPluginSource::LoadServiceManifest(CServiceManifest& manifest,
+                                        CServiceManifest::Error* error) const noexcept
+{
+  if (m_manifest.empty())
+    return false;
+
+  return CServiceManifest::Load(m_manifest, manifest, error);
 }
 
 void CPluginSource::SetProvides(const std::string &content)
@@ -85,4 +95,3 @@ bool CPluginSource::HasType(AddonType type) const
 }
 
 } /*namespace ADDON*/
-
