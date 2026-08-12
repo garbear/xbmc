@@ -388,6 +388,19 @@ public:
   /// @return The error, or @ref GAME_ERROR_NO_ERROR if there was no error
   ///
   virtual GAME_ERROR RunFrame() { return GAME_ERROR_NOT_IMPLEMENTED; }
+
+  //==========================================================================
+  /// @brief Tell the client the frontend is ready for audio
+  ///
+  /// Only implemented by clients that asked for the asynchronous audio
+  /// interface. Such a client produces no audio of its own accord: it waits to
+  /// be asked, then writes what it has through AddStreamData() on the thread
+  /// this was called from.
+  ///
+  /// @return The error, or GAME_ERROR_NO_ERROR if audio was handled
+  ///
+  virtual GAME_ERROR AudioAvailable() { return GAME_ERROR_NOT_IMPLEMENTED; }
+  //--------------------------------------------------------------------------
   //----------------------------------------------------------------------------
 
   //============================================================================
@@ -1238,6 +1251,7 @@ private:
     instance->game->toAddon->GetRegion = ADDON_GetRegion;
     instance->game->toAddon->RequiresGameLoop = ADDON_RequiresGameLoop;
     instance->game->toAddon->RunFrame = ADDON_RunFrame;
+    instance->game->toAddon->AudioAvailable = ADDON_AudioAvailable;
     instance->game->toAddon->Reset = ADDON_Reset;
 
     instance->game->toAddon->HwContextReset = ADDON_HwContextReset;
@@ -1338,6 +1352,11 @@ private:
   inline static bool ADDON_RequiresGameLoop(const AddonInstance_Game* instance)
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->RequiresGameLoop();
+  }
+
+  inline static GAME_ERROR ADDON_AudioAvailable(const AddonInstance_Game* instance)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->AudioAvailable();
   }
 
   inline static GAME_ERROR ADDON_RunFrame(const AddonInstance_Game* instance)

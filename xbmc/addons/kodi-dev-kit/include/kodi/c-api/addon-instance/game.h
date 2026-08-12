@@ -1319,6 +1319,19 @@ extern "C"
     char*(__cdecl* GetImagePath)(const AddonInstance_Game*, unsigned int);
     char*(__cdecl* GetImageLabel)(const AddonInstance_Game*, unsigned int);
     void(__cdecl* FreeString)(const AddonInstance_Game*, char*);
+
+    /*!
+     * @brief Tell the client the frontend is ready for audio
+     *
+     * Only for clients that asked for the asynchronous audio interface. Such a
+     * client produces no audio of its own accord; it waits to be asked, and
+     * writes what it has through AddStreamData() on the thread this was called
+     * from. A client that is never asked stays silent, and on a frontend that
+     * paces itself on audio it also runs unthrottled.
+     *
+     * Clients using the ordinary synchronous audio path ignore this.
+     */
+    GAME_ERROR(__cdecl* AudioAvailable)(const AddonInstance_Game*);
   } KodiToAddonFuncTable_Game;
 
   /*!
