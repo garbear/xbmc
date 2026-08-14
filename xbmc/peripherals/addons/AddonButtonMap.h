@@ -59,6 +59,20 @@ public:
   void AddScalar(const KODI::JOYSTICK::FeatureName& feature,
                  const KODI::JOYSTICK::CDriverPrimitive& primitive) override;
 
+private:
+  /*!
+   * \brief Position of a motor among the motors this controller declares
+   *
+   * Motors are never mapped by the configuration wizard, because a motor is
+   * not something the user can activate on request. Position is what the
+   * drivers order them by, so it is what they are matched on here.
+   *
+   * \return True if the controller declares this feature as a motor
+   */
+  bool GetMotorIndex(const KODI::JOYSTICK::FeatureName& feature, unsigned int& motorIndex) const;
+
+public:
+
   bool GetAnalogStick(const KODI::JOYSTICK::FeatureName& feature,
                       KODI::JOYSTICK::ANALOG_STICK_DIRECTION direction,
                       KODI::JOYSTICK::CDriverPrimitive& primitive) override;
