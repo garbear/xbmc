@@ -174,6 +174,7 @@ bool CGameClient::Initialize(void)
   m_ifc.game->toKodi->EnableHardwareRendering = cb_enable_hardware_rendering;
   m_ifc.game->toKodi->CloseGame = cb_close_game;
   m_ifc.game->toKodi->GetPlaybackSpeed = cb_get_playback_speed;
+  m_ifc.game->toKodi->SetGameTiming = cb_set_game_timing;
   m_ifc.game->toKodi->OpenStream = cb_open_stream;
   m_ifc.game->toKodi->GetStreamBuffer = cb_get_stream_buffer;
   m_ifc.game->toKodi->AddStreamData = cb_add_stream_data;
@@ -711,6 +712,17 @@ double CGameClient::cb_get_playback_speed(KODI_HANDLE kodiInstance)
     return 0.0;
 
   return gameClient->m_playbackSpeed;
+}
+
+void CGameClient::cb_set_game_timing(KODI_HANDLE kodiInstance, const game_system_timing* timingInfo)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr || timingInfo == nullptr)
+    return;
+
+  gameClient->m_framerate = timingInfo->fps;
+  gameClient->m_samplerate = timingInfo->sample_rate;
+  gameClient->Streams().SetGameTiming(*timingInfo);
 }
 
 KODI_GAME_STREAM_HANDLE CGameClient::cb_open_stream(KODI_HANDLE kodiInstance,
