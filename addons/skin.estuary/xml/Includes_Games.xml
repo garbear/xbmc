@@ -951,6 +951,14 @@
 			<align>left</align>
 		</control>
 	</include>
+	<variable name="GameAchievementBadgeTintVar">
+		<description>
+			Dims the badge of an achievement the player hasn't earned. The add-on
+			supplies a separate greyscale badge, but not every achievement has one.
+		</description>
+		<value condition="String.IsEmpty(ListItem.Property(achievement.earned))">60FFFFFF</value>
+		<value>FFFFFFFF</value>
+	</variable>
 	<include name="GameAchievementItem">
 		<description>
 			Only the focused row scrolls its title and criteria. Scrolling every

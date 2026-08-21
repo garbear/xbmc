@@ -483,6 +483,7 @@ bool CGUIWindowManager::DestroyWindows()
     DestroyWindow(WINDOW_DIALOG_IN_GAME_SAVES);
     DestroyWindow(WINDOW_DIALOG_GAME_AGENTS);
     DestroyWindow(WINDOW_DIALOG_GAME_DISC_MANAGER);
+    DestroyWindow(WINDOW_DIALOG_GAME_ACHIEVEMENTS);
     DestroyWindow(WINDOW_FULLSCREEN_GAME);
 
     Remove(WINDOW_SETTINGS_SERVICE);

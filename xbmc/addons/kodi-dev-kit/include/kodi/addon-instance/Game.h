@@ -1163,7 +1163,7 @@ public:
   ///
   /// @note Added in Game API 7.1.0
   ///
-  void KodiRCOnGameLoaded(const game_rc_game_loaded& data)
+  void RCOnGameLoaded(const game_rc_game_loaded& data)
   {
     m_instanceData->toKodi->RCOnGameLoaded(m_instanceData->toKodi->kodiInstance, &data);
   }
@@ -1178,7 +1178,7 @@ public:
   ///
   /// @note Added in Game API 7.1.0
   ///
-  void KodiRCOnAchievementTriggered(const game_rc_achievement_triggered& data)
+  void RCOnAchievementTriggered(const game_rc_achievement_triggered& data)
   {
     m_instanceData->toKodi->RCOnAchievementTriggered(m_instanceData->toKodi->kodiInstance, &data);
   }
@@ -1194,7 +1194,7 @@ public:
   ///
   /// @note Added in Game API 7.1.0
   ///
-  void KodiRCOnGameCompleted(const std::string& title, bool hardcore)
+  void RCOnGameCompleted(const std::string& title, bool hardcore)
   {
     m_instanceData->toKodi->RCOnGameCompleted(m_instanceData->toKodi->kodiInstance, title.c_str(),
                                               hardcore);
@@ -1210,7 +1210,7 @@ public:
   ///
   /// @note Added in Game API 7.1.0
   ///
-  void KodiRCOnRichPresenceUpdated(const std::string& evaluation)
+  void RCOnRichPresenceUpdated(const std::string& evaluation)
   {
     m_instanceData->toKodi->RCOnRichPresenceUpdated(m_instanceData->toKodi->kodiInstance,
                                                     evaluation.c_str());
@@ -1226,7 +1226,7 @@ public:
   ///
   /// @note Added in Game API 7.1.0
   ///
-  void KodiRCOnLoginResult(const game_rc_login_result& data)
+  void RCOnLoginResult(const game_rc_login_result& data)
   {
     m_instanceData->toKodi->RCOnLoginResult(m_instanceData->toKodi->kodiInstance, &data);
   }
@@ -1244,7 +1244,7 @@ public:
   ///
   /// @note Added in Game API 7.1.0
   ///
-  void KodiRCOnAchievementProgress(const std::vector<game_rc_achievement_progress>& progress)
+  void RCOnAchievementProgress(const std::vector<game_rc_achievement_progress>& progress)
   {
     m_instanceData->toKodi->RCOnAchievementProgress(m_instanceData->toKodi->kodiInstance,
                                                     progress.empty() ? nullptr : progress.data(),
@@ -1262,7 +1262,7 @@ public:
   ///
   /// @note Added in Game API 7.1.0
   ///
-  void KodiRCOnServerError(const std::string& message, const std::string& api)
+  void RCOnServerError(const std::string& message, const std::string& api)
   {
     m_instanceData->toKodi->RCOnServerError(m_instanceData->toKodi->kodiInstance, message.c_str(),
                                             api.c_str());
@@ -1281,7 +1281,7 @@ public:
   ///
   /// @note Added in Game API 7.1.0
   ///
-  void KodiRCOnConnectionChanged(bool connected)
+  void RCOnConnectionChanged(bool connected)
   {
     m_instanceData->toKodi->RCOnConnectionChanged(m_instanceData->toKodi->kodiInstance, connected);
   }

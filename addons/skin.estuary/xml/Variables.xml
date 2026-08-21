@@ -947,12 +947,4 @@
 		<value condition="!RetroPlayer.DiscEjected">60FFFFFF</value>
 		<value>FFFFFFFF</value>
 	</variable>
-	<variable name="GameAchievementBadgeTintVar">
-		<description>
-			Dims the badge of an achievement the player hasn't earned. The add-on
-			supplies a separate greyscale badge, but not every achievement has one.
-		</description>
-		<value condition="String.IsEmpty(ListItem.Property(achievement.earned))">60FFFFFF</value>
-		<value>FFFFFFFF</value>
-	</variable>
 </includes>

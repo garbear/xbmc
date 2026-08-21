@@ -1413,13 +1413,6 @@ extern "C"
     game_proc_address_t (*HwGetProcAddress)(KODI_HANDLE kodiInstance, const char* symbol);
     bool (*InputEvent)(KODI_HANDLE kodiInstance, const struct game_input_event* event);
 
-    /*
-     * RetroAchievements events, added in Game API 7.1.0.
-     *
-     * New members must be appended here so that the offsets of the members
-     * above stay valid for add-ons built against an older version of this
-     * header.
-     */
     void (*RCOnGameLoaded)(KODI_HANDLE kodiInstance, const struct game_rc_game_loaded* data);
     void (*RCOnAchievementTriggered)(KODI_HANDLE kodiInstance,
                                      const struct game_rc_achievement_triggered* data);
