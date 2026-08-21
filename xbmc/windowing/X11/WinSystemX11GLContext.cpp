@@ -17,6 +17,7 @@
 #include "application/ApplicationComponents.h"
 #include "application/ApplicationSkinHandling.h"
 #include "cores/RetroPlayer/process/X11/RPProcessInfoX11.h"
+#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererFBO.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGL.h"
 #include "cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.h"
 #include "cores/VideoPlayer/Process/X11/ProcessInfoX11.h"
@@ -92,24 +93,31 @@ void* CWinSystemX11GLContext::GetGlxContext() const
   return GLXGetContext(m_pGLContext);
 }
 
+// X11 runs on EGL by default but can be asked for GLX instead, in which case
+// there are no EGL handles to hand out. Callers that find this window system by
+// its EGL interface get the null handles and can decline.
 EGLDisplay CWinSystemX11GLContext::GetEGLDisplay() const
 {
-  return static_cast<CGLContextEGL*>(m_pGLContext)->m_eglDisplay;
+  auto* context = dynamic_cast<CGLContextEGL*>(m_pGLContext);
+  return context != nullptr ? context->m_eglDisplay : EGL_NO_DISPLAY;
 }
 
 EGLSurface CWinSystemX11GLContext::GetEGLSurface() const
 {
-  return static_cast<CGLContextEGL*>(m_pGLContext)->m_eglSurface;
+  auto* context = dynamic_cast<CGLContextEGL*>(m_pGLContext);
+  return context != nullptr ? context->m_eglSurface : EGL_NO_SURFACE;
 }
 
 EGLContext CWinSystemX11GLContext::GetEGLContext() const
 {
-  return static_cast<CGLContextEGL*>(m_pGLContext)->m_eglContext;
+  auto* context = dynamic_cast<CGLContextEGL*>(m_pGLContext);
+  return context != nullptr ? context->m_eglContext : EGL_NO_CONTEXT;
 }
 
 EGLConfig CWinSystemX11GLContext::GetEGLConfig() const
 {
-  return static_cast<CGLContextEGL*>(m_pGLContext)->m_eglConfig;
+  auto* context = dynamic_cast<CGLContextEGL*>(m_pGLContext);
+  return context != nullptr ? context->m_eglConfig : nullptr;
 }
 
 bool CWinSystemX11GLContext::BindTextureUploadContext()
@@ -283,6 +291,10 @@ bool CWinSystemX11GLContext::RefreshGLContext(bool force)
   VIDEOPLAYER::CProcessInfoX11::Register();
   RETRO::CRPProcessInfoX11::Register();
   RETRO::CRPProcessInfoX11::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGL);
+  // Registered after the others: renderer selection takes the first factory
+  // that accepts the stream, and only a hardware-rendered one reaches this.
+  // Declines at context creation if X11 was asked for GLX instead of EGL.
+  RETRO::CRPProcessInfoX11::RegisterRendererFactory(new RETRO::CRendererFactoryFBO);
   CDVDFactoryCodec::ClearHWAccels();
   VIDEOPLAYER::CRendererFactory::ClearRenderer();
   CLinuxRendererGL::Register();

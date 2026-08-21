@@ -124,7 +124,7 @@ void CReversiblePlayback::PauseAsync()
 std::string CReversiblePlayback::CreateSavestate(bool autosave,
                                                  const std::string& savestatePath /* = "" */)
 {
-  const size_t memorySize = m_gameClient->SerializeSize();
+  const size_t memorySize = m_gameClient->GetSerializeSize();
 
   // Game client must support serialization
   if (memorySize == 0)
@@ -197,7 +197,7 @@ void CReversiblePlayback::CommitSavestate(bool autosave,
   std::unique_ptr<ISavestate> savestate = CSavestateDatabase::AllocateSavestate();
   std::unique_ptr<ISavestate> loadedSavestate;
 
-  const size_t memorySize = m_gameClient->SerializeSize();
+  const size_t memorySize = m_gameClient->GetSerializeSize();
   uint8_t* const memoryData = savestate->GetMemoryBuffer(memorySize);
 
   // Separate from the emulator's memory; see savestate.fbs
@@ -287,7 +287,7 @@ void CReversiblePlayback::CommitSavestate(bool autosave,
 
 bool CReversiblePlayback::LoadSavestate(const std::string& savestatePath)
 {
-  const size_t memorySize = m_gameClient->SerializeSize();
+  const size_t memorySize = m_gameClient->GetSerializeSize();
 
   // Game client must support serialization
   if (memorySize == 0)
@@ -371,7 +371,16 @@ void CReversiblePlayback::RewindEvent()
 
 void CReversiblePlayback::EndEvent()
 {
-  m_renderManager.DestroyContext();
+  // Deliberately does not destroy the rendering context.
+  //
+  // The game loop ends before the client is unloaded, and a hardware-rendering
+  // client releases its GPU resources as it unloads. Destroying the context
+  // here leaves those calls to land on whatever context is current by then --
+  // Kodi's own -- where they unbind the vertex array object every one of its
+  // draws depends on, and the GUI renders nothing from that point on.
+  //
+  // The context is destroyed when the rendering stream closes, which happens
+  // while the client is unloading and its context is still current.
 }
 
 void CReversiblePlayback::AddFrame()
@@ -461,7 +470,7 @@ void CReversiblePlayback::UpdateMemoryStream()
 
   GAME::CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
 
-  if (m_gameClient->SerializeSize() > 0)
+  if (m_gameClient->GetSerializeSize() > 0)
     bRewindEnabled = gameSettings.RewindEnabled();
 
   if (bRewindEnabled)
@@ -474,7 +483,7 @@ void CReversiblePlayback::UpdateMemoryStream()
 
     if (!m_memoryStream)
     {
-      const size_t memorySize = m_gameClient->SerializeSize();
+      const size_t memorySize = m_gameClient->GetSerializeSize();
 
       // Ceiling, not the real cost: the buffer keeps xor deltas of changed
       // words only. Worth logging because a large state and a long window put

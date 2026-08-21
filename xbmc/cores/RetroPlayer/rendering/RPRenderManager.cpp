@@ -11,6 +11,7 @@
 #include "RenderContext.h"
 #include "RenderSettings.h"
 #include "RenderTranslator.h"
+#include "ServiceBroker.h"
 #include "URL.h"
 #include "cores/RetroPlayer/buffers/IRenderBuffer.h"
 #include "cores/RetroPlayer/buffers/IRenderBufferPool.h"
@@ -25,6 +26,7 @@
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "cores/RetroPlayer/streams/RetroPlayerVideo.h"
 #include "filesystem/File.h"
+#include "games/GameServices.h"
 #include "pictures/Picture.h"
 #include "threads/SingleLock.h"
 #include "utils/ColorUtils.h"
@@ -306,41 +308,223 @@ void CRPRenderManager::Flush()
   m_bFlush = true;
 }
 
+bool CRPRenderManager::BeginClientFrame()
+{
+  bool bSuccess = true;
+
+  // Broadcast, because this can be called before a pool has been chosen -- a
+  // client may build its resources while its stream is still being opened.
+  for (IRenderBufferPool* bufferPool : m_processInfo.GetBufferManager().GetBufferPools())
+  {
+    if (!bufferPool->BeginClientFrame())
+      bSuccess = false;
+  }
+
+  return bSuccess;
+}
+
+void CRPRenderManager::EndClientFrame()
+{
+  for (IRenderBufferPool* bufferPool : m_processInfo.GetBufferManager().GetBufferPools())
+    bufferPool->EndClientFrame();
+}
+
+bool CRPRenderManager::CreateContext(const HwContextProperties& properties)
+{
+  bool bSuccess = true;
+
+  for (IRenderBufferPool* bufferPool : m_processInfo.GetBufferManager().GetBufferPools())
+  {
+    if (!bufferPool->CreateContext(properties))
+      bSuccess = false;
+  }
+
+  // The client is always inside a bracketed call when its stream opens, but
+  // that bracket ran before this context existed and so bound nothing. Join it
+  // now, and the matching EndClientFrame will release the thread when the call
+  // the client is in returns.
+  if (bSuccess)
+    BeginClientFrame();
+
+  return bSuccess;
+}
+
 void CRPRenderManager::DestroyContext()
 {
+  // The framebuffers and textures belong to the context being torn down, so
+  // they have to go first, on this thread, while it is still current. The game
+  // loop arrives here through IGameLoopCallback::EndEvent as it ends, which is
+  // the only place that holds -- the stream is closed later, from whichever
+  // thread stopped the player, where deleting them is undefined and hangs.
+  ReleaseHwRenderBuffer();
+
   for (IRenderBufferPool* bufferPool : m_processInfo.GetBufferManager().GetBufferPools())
     bufferPool->DestroyContext();
 }
 
 bool CRPRenderManager::Create(unsigned int width, unsigned int height)
 {
-  //! @todo
+  if (width == 0 || height == 0)
+    return false;
+
+  ReleaseHwRenderBuffer();
+
+  // Buffers are built in the client's context, which nests harmlessly inside
+  // the client's frame when the stream is opened from one
+  BeginClientFrame();
+
+  // A pool is normally configured when the rendering thread builds a renderer
+  // for it. The client needs its framebuffer before any of that has happened,
+  // so configure the pool that serves hardware streams here instead. The
+  // software pools decline this pixel format and are left untouched.
+  for (IRenderBufferPool* bufferPool : m_processInfo.GetBufferManager().GetBufferPools())
+  {
+    if (!bufferPool->IsConfigured() && !bufferPool->Configure(m_format))
+      continue;
+
+    IRenderBuffer* renderBuffer = bufferPool->GetBuffer(width, height);
+    if (renderBuffer != nullptr && renderBuffer->GetCurrentFramebuffer() == 0)
+    {
+      renderBuffer->Release();
+      renderBuffer = nullptr;
+    }
+
+    if (renderBuffer == nullptr)
+      continue;
+
+    m_hwRenderBuffer = renderBuffer;
+    m_hwBufferPool = bufferPool;
+    m_hwBufferWidth = width;
+    m_hwBufferHeight = height;
+
+    CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: Allocated a {}x{} framebuffer for the game client",
+              width, height);
+
+    EndClientFrame();
+
+    return true;
+  }
+
+  EndClientFrame();
+
+  CLog::Log(LOGERROR, "RetroPlayer[RENDER]: No buffer pool could provide a {}x{} framebuffer", width,
+            height);
+
   return false;
+}
+
+void CRPRenderManager::ReleaseHwRenderBuffer()
+{
+  if (m_hwRenderBuffer == nullptr)
+    return;
+
+  {
+    std::unique_lock lock(m_bufferMutex);
+
+    // The renderer may still be holding this buffer
+    for (IRenderBuffer* renderBuffer : m_renderBuffers)
+      renderBuffer->Release();
+    m_renderBuffers.clear();
+  }
+
+  m_hwRenderBuffer->Release();
+  m_hwRenderBuffer = nullptr;
+  m_hwBufferPool = nullptr;
+  m_hwBufferWidth = 0;
+  m_hwBufferHeight = 0;
 }
 
 uintptr_t CRPRenderManager::GetCurrentFramebuffer(unsigned int width, unsigned int height)
 {
-  for (IRenderBufferPool* bufferPool : m_processInfo.GetBufferManager().GetBufferPools())
+  // Handing back 0 points the client at the default framebuffer, which has no
+  // attachments in the context it renders with. A client that asks every frame
+  // loses that frame; one that caches the answer for the frame, as Dolphin
+  // does, draws the whole frame into nothing. Worth knowing it happened.
+  if (m_bFlush || m_hwRenderBuffer == nullptr)
   {
-    if (!bufferPool->HasVisibleRenderer())
-      continue;
+    CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: No framebuffer to give the client ({})",
+              m_bFlush ? "flushing" : "no render buffer");
+    return 0;
+  }
 
-    IRenderBuffer* renderBuffer = bufferPool->GetBuffer(width, height);
-    if (renderBuffer != nullptr)
+  // Clients ask for their framebuffer from inside HwContextReset(), before the
+  // rendering thread has built a renderer, so unlike the software path this
+  // deliberately does not wait for a visible renderer. Rendering into a
+  // framebuffer nobody samples yet merely wastes a frame; handing back 0 would
+  // send the drawing to the default framebuffer instead.
+  // Measured against the size the framebuffer was allocated at, not the size of
+  // the last frame drawn into it. Those are the same until a client presents a
+  // frame smaller than its framebuffer, after which asking the buffer would say
+  // the space had shrunk to that frame -- and rebuild the framebuffer, every
+  // frame, while the client kept drawing into the one it had cached.
+  if (width > m_hwBufferWidth || height > m_hwBufferHeight)
+  {
+    CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: Client wants {}x{}, larger than the {}x{} framebuffer",
+              width, height, m_hwBufferWidth, m_hwBufferHeight);
+
+    if (!Create(width, height))
     {
-      // A framebuffer is lent here, not memory, so there is no CPU access open
-      // on the buffer and nothing for the client to hand back
-      m_pendingBuffers.emplace_back(PendingBuffer{renderBuffer, nullptr});
-      return renderBuffer->GetCurrentFramebuffer();
+      CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Failed to grow the client's framebuffer to {}x{}",
+                width, height);
+      return 0;
     }
   }
 
-  return 0;
+  const uintptr_t framebuffer = m_hwRenderBuffer->GetCurrentFramebuffer();
+
+  // Clients cache this and render against it for the rest of the session, so
+  // it is worth seeing once what they were given
+  if (framebuffer != m_loggedFramebuffer)
+  {
+    CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: Client is rendering into framebuffer {} ({}x{})",
+              framebuffer, width, height);
+    m_loggedFramebuffer = framebuffer;
+  }
+
+  return framebuffer;
 }
 
-void CRPRenderManager::RenderFrame()
+void CRPRenderManager::RenderFrame(unsigned int width, unsigned int height)
 {
-  //! @todo
+  if (m_bFlush || m_hwRenderBuffer == nullptr)
+    return;
+
+  // The client has finished drawing into its framebuffer. Publish a copy rather
+  // than the framebuffer itself: the client draws into the same one every frame,
+  // so publishing it directly leaves the rendering thread sampling a frame while
+  // the next is drawn into it. Taken here, on the client's thread and between
+  // its frames, the copy is of a whole frame.
+  IRenderBuffer* publishBuffer = nullptr;
+
+  if (m_hwBufferPool != nullptr)
+    publishBuffer = m_hwBufferPool->CaptureClientFrame(m_hwRenderBuffer, width, height);
+
+  // A pool that cannot spare a buffer publishes the client's own, which is what
+  // this did before and is still better than dropping the frame.
+  if (publishBuffer == nullptr)
+    publishBuffer = m_hwRenderBuffer;
+
+  publishBuffer->Acquire();
+
+  std::unique_lock lock(m_bufferMutex);
+
+  for (IRenderBuffer* renderBuffer : m_renderBuffers)
+    renderBuffer->Release();
+  m_renderBuffers = {publishBuffer};
+
+  // Report what the client actually drew, not the size of the framebuffer it
+  // drew into. The renderer works out the image's shape and position on screen
+  // from this, and would otherwise show the whole framebuffer, image and unused
+  // remainder alike.
+  if (width > 0 && height > 0)
+    publishBuffer->SetSize(width, height);
+
+  publishBuffer->SetDisplayAspectRatio(m_nominalDisplayAspectRatio);
+  publishBuffer->SetRotation(0);
+
+  // The client rendered straight into the texture, so there is nothing to
+  // upload; mark it ready so RenderInternal() does not try.
+  publishBuffer->SetLoaded(true);
 }
 
 void CRPRenderManager::SetSpeed(double speed)
@@ -602,6 +786,12 @@ std::shared_ptr<CRPBaseRenderer> CRPRenderManager::GetRendererForPool(
     return renderer;
   }
 
+  // Don't build a renderer for a pool that cannot accept the stream's format.
+  // The pool remembers the refusal, so this costs nothing after the first frame
+  // and keeps the software pools quiet while a hardware stream is playing.
+  if (!bufferPool->IsConfigured() && !bufferPool->Configure(m_format))
+    return renderer;
+
   std::unique_lock<std::mutex> lock{m_oldRenderersMutex};
 
   // Get compatible renderer for this buffer pool
@@ -857,6 +1047,10 @@ CRenderVideoSettings CRPRenderManager::GetEffectiveSettings(
 
 void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
 {
+  // A hardware-rendered savestate carries no thumbnail
+  if (IsHardwareRendering())
+    return;
+
   // Get a suitable render buffer for capturing the video data, or use the
   // cached frame if a readable buffer can't be found
   IRenderBuffer* renderBuffer = nullptr;
@@ -894,6 +1088,7 @@ void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
   if (sourceFormat == AV_PIX_FMT_NONE)
   {
     CLog::Log(LOGERROR, "Failed to get a video frame for savestate thumbnail");
+    FreeVideoFrame(renderBuffer, std::move(cachedFrame));
     return;
   }
 
@@ -931,6 +1126,12 @@ void CRPRenderManager::SaveThumbnail(const std::string& thumbnailPath)
 
 void CRPRenderManager::CacheVideoFrame(const std::string& savestatePath)
 {
+  // The game client renders into these buffers itself, and there is only ever
+  // one. Holding a reference to it for a savestate would starve the client of
+  // the framebuffer it is drawing the next frame into.
+  if (IsHardwareRendering())
+    return;
+
   std::unique_lock lock(m_bufferMutex);
 
   // Get the render buffers for this savestate path
@@ -950,6 +1151,11 @@ void CRPRenderManager::CacheVideoFrame(const std::string& savestatePath)
 
 void CRPRenderManager::SaveVideoFrame(const std::string& savestatePath, ISavestate& savestate)
 {
+  // A hardware-rendered savestate carries the game's state but no video frame,
+  // so it restores without a preview of the moment it was taken
+  if (IsHardwareRendering())
+    return;
+
   // Get a suitable render buffer for capturing the video data, or use the
   // cached frame if a readable buffer can't be found
   IRenderBuffer* readableBuffer = nullptr;
@@ -1086,6 +1292,11 @@ void CRPRenderManager::LoadVideoFrameAsync(const std::string& savestatePath)
 
 void CRPRenderManager::LoadVideoFrameSync(const std::string& savestatePath)
 {
+  // Savestates taken while the client renders on the GPU hold no video frame,
+  // and the only buffer to load one into is the one the client is drawing to
+  if (IsHardwareRendering())
+    return;
+
   if (!XFILE::CFile::Exists(savestatePath))
   {
     CLog::Log(LOGERROR, "Failed to load savestate: doesn't exist at path {}",
