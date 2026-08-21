@@ -212,7 +212,8 @@ std::string CGameSettings::LoginToRA(const std::string& username,
 
         CLog::Log(LOGINFO, "CGameSettings::LoginToRA -- logged in successfully as '{}'", username);
 
-        // "RetroAchievements", "Logged in as {0:s}"
+        // "RetroAchievements"
+        // "Logged in as {0:s}"
         CServiceBroker::GetEventLog()->AddWithNotification(EventPtr(new CNotificationEvent(
             35264,
             StringUtils::Format(
@@ -227,7 +228,8 @@ std::string CGameSettings::LoginToRA(const std::string& username,
         const std::string errorMsg = data["Error"].asString();
         CLog::Log(LOGWARNING, "CGameSettings::LoginToRA -- server rejected: {}", errorMsg);
 
-        // "RetroAchievements", the server's reason or "Incorrect User/Password!"
+        // "RetroAchievements"
+        // the server's reason or "Incorrect User/Password!"
         CServiceBroker::GetEventLog()->AddWithNotification(EventPtr(new CNotificationEvent(
             35264,
             errorMsg.empty()

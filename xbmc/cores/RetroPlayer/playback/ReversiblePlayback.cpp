@@ -433,13 +433,15 @@ void CReversiblePlayback::UpdateMemoryStream()
     {
       const size_t memorySize = m_gameClient->SerializeSize();
 
-      // The rewind buffer holds one serialized state per frame, so its cost is
-      // the state size multiplied by the whole rewind window. Logged because
-      // a large state and a long window together run to gigabytes, which is
-      // otherwise invisible until the process is killed.
+      // The rewind buffer keeps xor deltas between frames rather than whole
+      // states, and only the words that changed, so what it actually costs
+      // depends on how much of the state a game touches per frame. The figure
+      // below is the ceiling -- every word changing, every frame -- which a
+      // real game will not reach, but which is worth knowing because a large
+      // state and a long window together put that ceiling in the gigabytes.
       CLog::Log(LOGINFO,
-                "RetroPlayer[SAVE]: Rewind buffer: {} frames of {} bytes ({:.1f} MB) for {} "
-                "seconds at {:.2f} fps",
+                "RetroPlayer[SAVE]: Rewind buffer: {} frames of up to {} bytes ({:.1f} MB "
+                "worst case) for {} seconds at {:.2f} fps",
                 frameCount, memorySize,
                 static_cast<double>(memorySize) * frameCount / (1024.0 * 1024.0), rewindBufferSec,
                 m_gameLoop.FPS());

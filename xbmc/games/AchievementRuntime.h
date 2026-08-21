@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "XBDateTime.h"
+
 #include <mutex>
 #include <string>
 #include <vector>
@@ -40,9 +42,9 @@ struct AchievementInfo
   float rarity{0.0f};
 
   /*!
-   * \brief Localized date the achievement was earned, empty if it was not
+   * \brief When the achievement was earned, invalid if it was not
    */
-  std::string unlockedDate;
+  CDateTime unlockedDate;
 
   unsigned int points{0};
   bool earned{false};
@@ -105,14 +107,13 @@ public:
    * \brief Mark an achievement as earned
    *
    * \param achievementId The achievement
-   * \param unlockedDate Localized date to show against it. Supplied by the
-   *        caller rather than formatted here, so that the runtime stays free
-   *        of locale handling and the string matches the one built for
-   *        achievements that were already earned when the game loaded.
+   * \param unlockedDate When it was earned. Carried as a date rather than
+   *        formatted text so the runtime stays free of locale handling and
+   *        the formatting happens where it is displayed.
    * \param[out] newlyEarned True if this changed the achievement's state
    */
   AchievementState MarkEarned(unsigned int achievementId,
-                              const std::string& unlockedDate,
+                              const CDateTime& unlockedDate,
                               bool& newlyEarned);
   void SetRichPresence(const std::string& richPresence);
   std::string GetRichPresence() const;

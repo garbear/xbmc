@@ -93,17 +93,14 @@ void NotifyDialogs()
 }
 
 /*!
- * \brief Convert a Unix timestamp to a localized date, or empty if unset
+ * \brief Convert a Unix timestamp to a date, invalid if unset
  */
-std::string LocalizedDate(int64_t unixTime)
+CDateTime UnlockTime(int64_t unixTime)
 {
   if (unixTime <= 0)
     return {};
 
-  // The format must be a std::string. Passing a string literal picks the
-  // GetAsLocalizedDate(bool) overload instead, because const char* -> bool is a
-  // standard conversion and beats const char* -> std::string
-  return CDateTime(static_cast<time_t>(unixTime)).GetAsLocalizedDate(std::string{"MMM dd yyyy"});
+  return CDateTime{static_cast<time_t>(unixTime)};
 }
 } // namespace
 
@@ -115,16 +112,6 @@ CGameClientCheevos::CGameClientCheevos(CGameClient& gameClient, AddonInstance_Ga
     m_struct(addonStruct)
 {
 }
-
-
-
-
-
-
-
-
-
-
 
 void CGameClientCheevos::OnGameLoaded(const game_rc_game_loaded& data)
 {
@@ -160,7 +147,7 @@ void CGameClientCheevos::OnGameLoaded(const game_rc_game_loaded& data)
     info.points = achievement.points;
     info.earned = achievement.unlock_state != GAME_RC_UNLOCK_STATE_LOCKED;
     if (info.earned)
-      info.unlockedDate = LocalizedDate(achievement.unlock_time);
+      info.unlockedDate = UnlockTime(achievement.unlock_time);
 
     if (info.earned)
       ++achievementState.unlockedAchievements;
@@ -213,7 +200,7 @@ void CGameClientCheevos::OnAchievementTriggered(const game_rc_achievement_trigge
   // the date is "now". Formatted the same way as the dates that come back with
   // the achievement list, otherwise a freshly earned achievement would be
   // styled differently from one earned in an earlier session.
-  const std::string unlockedDate = LocalizedDate(std::time(nullptr));
+  const CDateTime unlockedDate = CDateTime::GetCurrentDateTime();
 
   bool newlyEarned = false;
   CServiceBroker::GetGameServices().AchievementRuntime().MarkEarned(data.id, unlockedDate,

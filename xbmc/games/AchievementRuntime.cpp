@@ -31,7 +31,7 @@ AchievementState CAchievementRuntime::GetState() const
 }
 
 AchievementState CAchievementRuntime::MarkEarned(unsigned int achievementId,
-                                                 const std::string& unlockedDate,
+                                                 const CDateTime& unlockedDate,
                                                  bool& newlyEarned)
 {
   std::lock_guard<std::mutex> lock(m_mutex);

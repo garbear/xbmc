@@ -12,7 +12,7 @@
 #include "../addon_base.h"
 
 #include <stddef.h> /* size_t */
-#include <stdint.h> /* int64_t, uint8_t */
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -1412,7 +1412,6 @@ extern "C"
     void (*CloseStream)(KODI_HANDLE, KODI_GAME_STREAM_HANDLE);
     game_proc_address_t (*HwGetProcAddress)(KODI_HANDLE kodiInstance, const char* symbol);
     bool (*InputEvent)(KODI_HANDLE kodiInstance, const struct game_input_event* event);
-
     void (*RCOnGameLoaded)(KODI_HANDLE kodiInstance, const struct game_rc_game_loaded* data);
     void (*RCOnAchievementTriggered)(KODI_HANDLE kodiInstance,
                                      const struct game_rc_achievement_triggered* data);

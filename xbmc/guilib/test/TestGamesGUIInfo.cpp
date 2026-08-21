@@ -122,21 +122,24 @@ TEST_F(TestGamesGUIInfo, MarkEarnedOnlyCountsTheFirstUnlock)
   CAchievementRuntime achievementRuntime;
   achievementRuntime.SetState(MakeAchievementState());
 
+  const CDateTime firstUnlock{2026, 8, 5, 19, 20, 0};
+  const CDateTime laterUnlock{2026, 8, 6, 8, 15, 0};
+
   bool newlyEarned = false;
-  AchievementState state = achievementRuntime.MarkEarned(2, "2026-08-05 19:20", newlyEarned);
+  AchievementState state = achievementRuntime.MarkEarned(2, firstUnlock, newlyEarned);
   EXPECT_TRUE(newlyEarned);
   EXPECT_EQ(state.unlockedAchievements, 2U);
-  EXPECT_EQ(state.achievements[1].unlockedDate, "2026-08-05 19:20");
+  EXPECT_EQ(state.achievements[1].unlockedDate, firstUnlock);
 
   // The achievement runtime re-reports achievements earned in an earlier
   // session, which must not inflate the count or replace the unlock date
-  state = achievementRuntime.MarkEarned(2, "2026-08-06 08:15", newlyEarned);
+  state = achievementRuntime.MarkEarned(2, laterUnlock, newlyEarned);
   EXPECT_FALSE(newlyEarned);
   EXPECT_EQ(state.unlockedAchievements, 2U);
-  EXPECT_EQ(state.achievements[1].unlockedDate, "2026-08-05 19:20");
+  EXPECT_EQ(state.achievements[1].unlockedDate, firstUnlock);
 
   // An unknown ID must not change anything
-  state = achievementRuntime.MarkEarned(99, "2026-08-07 12:00", newlyEarned);
+  state = achievementRuntime.MarkEarned(99, CDateTime{2026, 8, 7, 12, 0, 0}, newlyEarned);
   EXPECT_FALSE(newlyEarned);
   EXPECT_EQ(state.unlockedAchievements, 2U);
 }

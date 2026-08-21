@@ -670,8 +670,7 @@ bool CGameClient::LogError(GAME_ERROR error, const char* strMethod) const
   if (error != GAME_ERROR_NO_ERROR)
   {
     // Optional parts of the API are declined rather than failed, so don't
-    // report them as errors. Add-ons that own achievements, for instance,
-    // decline the entry points the in-tree implementation would otherwise use.
+    // report them as errors.
     const int level = (error == GAME_ERROR_NOT_IMPLEMENTED) ? LOGDEBUG : LOGERROR;
 
     CLog::Log(level, "GAME - {} - addon '{}' returned: {}", strMethod, ID(),
