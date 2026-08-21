@@ -52,10 +52,18 @@ bool CBaseRenderBufferPool::HasVisibleRenderer() const
 
 bool CBaseRenderBufferPool::Configure(AVPixelFormat format)
 {
+  // A pool that has already declined this format will decline it again, and
+  // configuration is attempted for every pool on every frame, so remember the
+  // refusal rather than retrying and logging it each time.
+  if (m_bConfigureFailed && m_format == format)
+    return false;
+
   m_format = format;
 
   if (ConfigureInternal())
     m_bConfigured = true;
+  else
+    m_bConfigureFailed = true;
 
   return m_bConfigured;
 }
@@ -153,4 +161,5 @@ void CBaseRenderBufferPool::Flush()
 
   m_free.clear();
   m_bConfigured = false;
+  m_bConfigureFailed = false;
 }

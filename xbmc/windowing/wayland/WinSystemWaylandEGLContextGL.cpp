@@ -11,6 +11,7 @@
 #include "OptionalsReg.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererDMAOpenGL.h"
+#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererFBO.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGL.h"
 #include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
 #include "rendering/gl/ScreenshotSurfaceGL.h"
@@ -44,6 +45,10 @@ bool CWinSystemWaylandEGLContextGL::InitWindowSystem()
   CLinuxRendererGL::Register();
   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryDMAOpenGL);
   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGL);
+  // Registered last: buffer pools are tried in registration order and the
+  // search stops at the first match, so software streams settle on DMA or
+  // sysmem without ever consulting the hardware-only FBO pool.
+  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryFBO);
 
   bool general, deepColor;
   m_vaapiProxy.reset(WAYLAND::VaapiProxyCreate());
