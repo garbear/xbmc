@@ -19,10 +19,6 @@ struct game_rc_login_result;
 
 namespace KODI
 {
-namespace RETRO
-{
-enum class RConsoleID;
-}
 
 namespace GAME
 {
@@ -37,30 +33,6 @@ class CGameClientCheevos
 public:
   CGameClientCheevos(CGameClient& gameClient, AddonInstance_Game& addonStruct);
 
-  bool RCGenerateHashFromFile(std::string& hash,
-                              RETRO::RConsoleID consoleID,
-                              const std::string& filePath);
-  bool RCGetGameIDUrl(std::string& url, const std::string& hash);
-  bool RCGetPatchFileUrl(std::string& url,
-                         const std::string& username,
-                         const std::string& token,
-                         unsigned int gameID);
-  void SetRetroAchievementsCredentials(const std::string& username, const std::string& token);
-  bool RCPostRichPresenceUrl(std::string& url,
-                             std::string& postData,
-                             const std::string& username,
-                             const std::string& token,
-                             unsigned gameID,
-                             const std::string& richPresence);
-  void RCEnableRichPresence(const std::string& script);
-  void RCGetRichPresenceEvaluation(std::string& evaluation, RETRO::RConsoleID consoleID);
-
-  void ActivateAchievement(unsigned int cheevoId, const std::string& memAddrExpression);
-  void GetAchievementUrlId(const std::function<void(const std::string& achievementUrl,
-                                                    unsigned int cheevoId)>& callback);
-
-  // When the game is reset, the runtime should also be reset
-  void RCResetRuntime();
 
   /*!
    * \name RetroAchievements events received from the add-on

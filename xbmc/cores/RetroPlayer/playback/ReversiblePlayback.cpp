@@ -11,13 +11,13 @@
 #include "ServiceBroker.h"
 #include "XBDateTime.h"
 #include "addons/AddonVersion.h"
-#include "cores/RetroPlayer/cheevos/Cheevos.h"
 #include "cores/RetroPlayer/guibridge/GUIGameMessenger.h"
 #include "cores/RetroPlayer/rendering/RPRenderManager.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "cores/RetroPlayer/streams/memory/DeltaPairMemoryStream.h"
 #include "filesystem/File.h"
+#include "games/AchievementRuntime.h"
 #include "games/GameServices.h"
 #include "games/GameSettings.h"
 #include "games/addons/GameClient.h"
@@ -36,13 +36,11 @@ using namespace RETRO;
 
 CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
                                          CRPRenderManager& renderManager,
-                                         CCheevos* cheevos,
                                          CGUIGameMessenger& guiMessenger,
                                          double fps,
                                          size_t serializeSize)
   : m_gameClient(gameClient),
     m_renderManager(renderManager),
-    m_cheevos(cheevos),
     m_guiMessenger(guiMessenger),
     m_gameLoop(this, fps),
     m_savestateDatabase(new CSavestateDatabase)
@@ -226,7 +224,7 @@ void CReversiblePlayback::CommitSavestate(bool autosave,
     }
   }
 
-  const std::string caption = m_cheevos->GetRichPresenceEvaluation();
+  const std::string caption = CServiceBroker::GetGameServices().AchievementRuntime().GetRichPresence();
   const std::string gameFileName = URIUtils::GetFileName(m_gameClient->GetGamePath());
   const double timestampWallClock =
       (timestampFrames /
@@ -308,7 +306,6 @@ bool CReversiblePlayback::LoadSavestate(const std::string& savestatePath)
     }
   }
 
-  m_cheevos->ResetRuntime();
 
   return bSuccess;
 }
