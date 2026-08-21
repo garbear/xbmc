@@ -8,13 +8,16 @@
 
 #pragma once
 
-#include "cores/RetroPlayer/process/RPProcessInfo.h"
+#include "cores/RetroPlayer/process/egl/RPProcessInfoEGL.h"
 
 namespace KODI
 {
 namespace RETRO
 {
-class CRPProcessInfoX11 : public CRPProcessInfo
+// Based on the EGL process info so a hardware-rendering client can resolve GL
+// functions. X11 runs on EGL unless it is asked for GLX, in which case there is
+// no hardware rendering to be had and it is refused before a client relies on it.
+class CRPProcessInfoX11 : public CRPProcessInfoEGL
 {
 public:
   CRPProcessInfoX11();

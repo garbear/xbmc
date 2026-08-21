@@ -45,4 +45,15 @@ if(("gbm" IN_LIST CORE_PLATFORM_NAME_LC OR "wayland" IN_LIST CORE_PLATFORM_NAME_
   endif()
 endif()
 
+# The FBO pool creates a shared EGL context off the windowing system, so it
+# requires EGL in addition to desktop GL -- but nothing from DMA, and no
+# particular windowing system. Desktop GL and GLES are both served: the pool
+# asks EGL for whichever this build renders with.
+if((TARGET ${APP_NAME_LC}::OpenGl OR TARGET ${APP_NAME_LC}::OpenGLES) AND TARGET ${APP_NAME_LC}::EGL)
+  list(APPEND SOURCES RenderBufferFBO.cpp
+                      RenderBufferPoolFBO.cpp)
+  list(APPEND HEADERS RenderBufferFBO.h
+                      RenderBufferPoolFBO.h)
+endif()
+
 core_add_library(rp-buffers)

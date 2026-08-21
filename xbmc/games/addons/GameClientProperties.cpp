@@ -117,6 +117,27 @@ const char** CGameClientProperties::GetResourceDirectories(void)
 {
   if (m_resourceDirectories.empty())
   {
+    // One folder the user can drop a BIOS into for every emulator, ahead of
+    // everything else. Cores look for BIOSes by name, so the same file serves
+    // every core that wants it -- 5200.rom is wanted by both the a5200 and
+    // atari800 cores, and the PlayStation set by three of them -- and until now
+    // each needed its own copy, in a directory named after the add-on, which
+    // add-on updates then clobbered.
+    //
+    // First in the list because the user's own file has to win. It is the only
+    // way to replace a bad dump supplied by a game resource add-on, which a
+    // user cannot edit.
+    const std::string sharedBios = CSpecialProtocol::TranslatePath(GAME_BIOS_DIRECTORY);
+    if (!CDirectory::Exists(sharedBios))
+    {
+      CLog::Log(LOGDEBUG, "Creating shared BIOS directory: {}", sharedBios);
+      CDirectory::Create(sharedBios);
+    }
+
+    char* sharedBiosDir = new char[sharedBios.length() + 1];
+    std::strcpy(sharedBiosDir, sharedBios.c_str());
+    m_resourceDirectories.push_back(sharedBiosDir);
+
     // Add all other game resources
     const auto& dependencies = m_parent.GetDependencies();
     for (auto it = dependencies.begin(); it != dependencies.end(); ++it)

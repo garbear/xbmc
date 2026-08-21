@@ -52,6 +52,7 @@ protected:
 
   // Configuration parameters
   bool m_bConfigured = false;
+  bool m_bConfigureFailed = false;
   AVPixelFormat m_format = AV_PIX_FMT_NONE;
 
 private:

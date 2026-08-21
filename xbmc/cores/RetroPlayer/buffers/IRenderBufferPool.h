@@ -27,6 +27,39 @@ class CRenderVideoSettings;
 class CRPBaseRenderer;
 class IRenderBuffer;
 
+/*!
+ * \brief The rendering context a game client asked for
+ *
+ * A rendering-system-agnostic description of the client's request, so the
+ * buffer layer doesn't have to reach into the Game API for it.
+ */
+struct HwContextProperties
+{
+  //! \brief Request a core profile rather than a compatibility profile
+  bool coreProfile{true};
+
+  //! \brief Request an OpenGL ES context rather than desktop OpenGL
+  bool embedded{false};
+
+  //! \brief Minimum context version, or 0 to let the driver decide
+  unsigned int versionMajor{0};
+  unsigned int versionMinor{0};
+
+  //! \brief The core needs a depth attachment on the framebuffer
+  bool depth{false};
+
+  //! \brief The core needs a stencil attachment on the framebuffer
+  bool stencil{false};
+
+  /*!
+   * \brief The client renders with OpenGL's bottom-left origin
+   *
+   * When false the client uses top-left origin semantics and the image has to
+   * be flipped vertically as it is sampled.
+   */
+  bool bottomLeftOrigin{true};
+};
+
 class IRenderBufferPool : public std::enable_shared_from_this<IRenderBufferPool>
 {
 public:
@@ -72,11 +105,76 @@ public:
   virtual std::shared_ptr<IRenderBufferPool> GetPtr() { return shared_from_this(); }
 
   /*!
+   * \brief Whether this pool can give a client a framebuffer to render into
+   *
+   * False for every pool that holds frames a client has drawn elsewhere. Only
+   * a pool that owns a rendering context can answer otherwise, and a build
+   * without one has no pool that does.
+   */
+  virtual bool SupportsHardwareRendering() const { return false; }
+
+
+  /*!
+   * \brief Create the resources tied to the rendering context
+   *
+   * Called on the thread that will render into the pool's buffers, before the
+   * client is told the context is ready. Pools that own a GL context must
+   * create it and make it current here, as a context can only be current on
+   * one thread. Pools with no context of their own need do nothing.
+   *
+   * \param properties The context the client asked for
+   *
+   * \return True if the context is ready, or the pool has none to create
+   */
+  virtual bool CreateContext(const HwContextProperties& properties) { return true; }
+
+  /*!
+   * \brief Make the client's rendering context current on this thread
+   *
+   * Bracket every call into a hardware-rendering client with this and
+   * EndClientFrame(). Which thread the client renders on is its own business:
+   * some open their stream from the game loop, others during load on Kodi's
+   * rendering thread. A context binding is per-thread, so implementations must
+   * restore whatever the thread had, or Kodi loses the surface it presents
+   * with. Calls nest.
+   */
+  virtual bool BeginClientFrame() { return true; }
+
+  /*!
+   * \brief Give this thread back the binding it had before BeginClientFrame()
+   */
+  virtual void EndClientFrame() {}
+
+  /*!
+   * \brief Take a copy of the frame a hardware-rendering client has just drawn
+   *
+   * A client draws into the same surface every frame, and clients cache it
+   * rather than asking for it again, so it cannot be swapped out from under
+   * them. Publishing that surface directly means the rendering thread samples
+   * it while the next frame is being drawn into it, and what comes out missing
+   * is whatever the game draws last.
+   *
+   * Called on the client's thread, between its frames, so the copy is of a
+   * whole frame. Pools that do not render in hardware have nothing to copy.
+   *
+   * \return The buffer holding the copy, or nullptr to publish the client's
+   *         own buffer as before
+   */
+  virtual IRenderBuffer* CaptureClientFrame(IRenderBuffer* clientBuffer,
+                                            unsigned int width,
+                                            unsigned int height)
+  {
+    return nullptr;
+  }
+
+  /*!
    * \brief Release resources tied to the rendering context
    *
    * This function is called when the render context is being destroyed.
    * Implementations should free any context-specific resources so that the
    * pool can be safely recreated.
+   *
+   * Must run on the same thread that called CreateContext().
    */
   virtual void DestroyContext() {}
 };
