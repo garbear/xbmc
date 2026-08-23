@@ -1456,26 +1456,38 @@ bool CSettingString::Deserialize(const TiXmlNode *node, bool update /* = false *
       else
       {
         m_translatableOptions.clear();
+        m_options.clear();
+        bool hasTranslatableOptions = false;
+        TranslatableStringSettingOptions parsedOptions;
         auto optionElement = options->FirstChildElement(SETTING_XML_ELM_OPTION);
         while (optionElement)
         {
-          TranslatableStringSettingOption entry;
-          if (optionElement->QueryIntAttribute(SETTING_XML_ATTR_LABEL, &entry.first) == TIXML_SUCCESS && entry.first > 0)
+          const std::string value = optionElement->FirstChild()->Value();
+          int label = 0;
+          if (optionElement->QueryIntAttribute(SETTING_XML_ATTR_LABEL, &label) == TIXML_SUCCESS &&
+              label > 0)
           {
-            entry.second = optionElement->FirstChild()->Value();
-            m_translatableOptions.push_back(entry);
+            parsedOptions.emplace_back(label, value);
+            hasTranslatableOptions = true;
           }
           else
           {
-            const std::string value = optionElement->FirstChild()->Value();
             // if a specific "label" attribute is present use it otherwise use the value as label
-            std::string label = value;
-            optionElement->QueryStringAttribute(SETTING_XML_ATTR_LABEL, &label);
+            std::string labelText = value;
+            optionElement->QueryStringAttribute(SETTING_XML_ATTR_LABEL, &labelText);
 
-            m_options.emplace_back(label, value);
+            parsedOptions.emplace_back(labelText, value);
           }
 
           optionElement = optionElement->NextSiblingElement(SETTING_XML_ELM_OPTION);
+        }
+
+        if (hasTranslatableOptions)
+          m_translatableOptions = std::move(parsedOptions);
+        else
+        {
+          for (const auto& option : parsedOptions)
+            m_options.emplace_back(option.labelText, option.value);
         }
       }
     }

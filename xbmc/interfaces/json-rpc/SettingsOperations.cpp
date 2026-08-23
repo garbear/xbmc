@@ -595,8 +595,10 @@ bool CSettingsOperations::SerializeSettingString(
       {
         CVariant varOption(CVariant::VariantTypeObject);
         varOption["label"] =
-            CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(itOption.first);
-        varOption["value"] = itOption.second;
+            itOption.IsTranslatable()
+                ? CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(itOption.label)
+                : itOption.labelText;
+        varOption["value"] = itOption.value;
         obj["options"].push_back(varOption);
       }
       break;

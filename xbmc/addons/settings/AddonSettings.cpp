@@ -1646,7 +1646,7 @@ bool CAddonSettings::ParseOldCondition(const std::shared_ptr<const CSetting>& se
           const TranslatableStringSettingOptions& options{
               referencedSettingString->GetTranslatableOptions()};
           if (options.size() > valueIndex)
-            expression.m_value = options.at(valueIndex).second;
+            expression.m_value = options.at(valueIndex).value;
           break;
         }
 

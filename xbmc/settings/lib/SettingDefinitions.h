@@ -117,7 +117,30 @@ struct TranslatableIntegerSettingOption
 
 using TranslatableIntegerSettingOptions = std::vector<TranslatableIntegerSettingOption>;
 using IntegerSettingOptions = std::vector<IntegerSettingOption>;
-using TranslatableStringSettingOption = std::pair<int, std::string>;
+
+struct TranslatableStringSettingOption
+{
+  TranslatableStringSettingOption() = default;
+
+  TranslatableStringSettingOption(int _label, const std::string& _value)
+    : label(_label),
+      value(_value)
+  {
+  }
+
+  TranslatableStringSettingOption(const std::string& _label, const std::string& _value)
+    : labelText(_label),
+      value(_value)
+  {
+  }
+
+  bool IsTranslatable() const { return label > 0; }
+
+  int label = 0;
+  std::string labelText;
+  std::string value;
+};
+
 using TranslatableStringSettingOptions = std::vector<TranslatableStringSettingOption>;
 using StringSettingOptions = std::vector<StringSettingOption>;
 

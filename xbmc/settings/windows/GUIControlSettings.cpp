@@ -232,8 +232,12 @@ bool GetStringOptions(const SettingConstPtr& setting,
     {
       const TranslatableStringSettingOptions& settingOptions =
           pSettingString->GetTranslatableOptions();
-      for (const auto& [id, value] : settingOptions)
-        options.emplace_back(Localize(id, localizer), value);
+      for (const auto& option : settingOptions)
+      {
+        options.emplace_back(option.IsTranslatable() ? Localize(option.label, localizer)
+                                                     : option.labelText,
+                             option.value);
+      }
       break;
     }
 

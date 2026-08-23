@@ -1,4 +1,5 @@
-set(SOURCES TestSettingsManager.cpp
+set(SOURCES TestSettingString.cpp
+            TestSettingsManager.cpp
             TestSettingsMigration.cpp
             TestSettingsMigrationPrimitive.cpp)
 
