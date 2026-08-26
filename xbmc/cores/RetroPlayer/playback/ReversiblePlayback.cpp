@@ -11,13 +11,13 @@
 #include "ServiceBroker.h"
 #include "XBDateTime.h"
 #include "addons/AddonVersion.h"
-#include "cores/RetroPlayer/cheevos/Cheevos.h"
 #include "cores/RetroPlayer/guibridge/GUIGameMessenger.h"
 #include "cores/RetroPlayer/rendering/RPRenderManager.h"
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "cores/RetroPlayer/streams/memory/DeltaPairMemoryStream.h"
 #include "filesystem/File.h"
+#include "games/AchievementRuntime.h"
 #include "games/GameServices.h"
 #include "games/GameSettings.h"
 #include "games/addons/GameClient.h"
@@ -36,13 +36,11 @@ using namespace RETRO;
 
 CReversiblePlayback::CReversiblePlayback(GAME::CGameClient* gameClient,
                                          CRPRenderManager& renderManager,
-                                         CCheevos* cheevos,
                                          CGUIGameMessenger& guiMessenger,
                                          double fps,
                                          size_t serializeSize)
   : m_gameClient(gameClient),
     m_renderManager(renderManager),
-    m_cheevos(cheevos),
     m_guiMessenger(guiMessenger),
     m_gameLoop(this, fps),
     m_savestateDatabase(new CSavestateDatabase)
@@ -171,12 +169,11 @@ std::string CReversiblePlayback::CreateSavestate(bool autosave,
     std::unique_lock lock(m_savestateMutex);
 
     // Prune any finished autosave threads
-    m_savestateThreads.erase(std::remove_if(m_savestateThreads.begin(), m_savestateThreads.end(),
-                                            [](std::future<void>& task) {
-                                              return task.wait_for(std::chrono::seconds(0)) ==
-                                                     std::future_status::ready;
-                                            }),
-                             m_savestateThreads.end());
+    m_savestateThreads.erase(
+        std::remove_if(
+            m_savestateThreads.begin(), m_savestateThreads.end(), [](std::future<void>& task)
+            { return task.wait_for(std::chrono::seconds(0)) == std::future_status::ready; }),
+        m_savestateThreads.end());
 
     // Save async to not block game loop
     std::future<void> task =
@@ -215,6 +212,19 @@ void CReversiblePlayback::CommitSavestate(bool autosave,
     }
   }
 
+  // Separate from the emulator's memory; see savestate.fbs
+  if (const size_t achievementSize = m_gameClient->GetAchievementStateSize(); achievementSize > 0)
+  {
+    if (uint8_t* const achievementData = savestate->GetAchievementBuffer(achievementSize))
+    {
+      if (!m_gameClient->SerializeAchievements(achievementData, achievementSize))
+      {
+        savestate->GetAchievementBuffer(0);
+        CLog::Log(LOGDEBUG, "RetroPlayer[SAVE]: No achievement state to store");
+      }
+    }
+  }
+
   // Attempt to get existing properties
   {
     std::unique_lock lock(m_savestateMutex);
@@ -226,7 +236,8 @@ void CReversiblePlayback::CommitSavestate(bool autosave,
     }
   }
 
-  const std::string caption = m_cheevos->GetRichPresenceEvaluation();
+  const std::string caption =
+      CServiceBroker::GetGameServices().AchievementRuntime().GetRichPresence();
   const std::string gameFileName = URIUtils::GetFileName(m_gameClient->GetGamePath());
   const double timestampWallClock =
       (timestampFrames /
@@ -300,6 +311,11 @@ bool CReversiblePlayback::LoadSavestate(const std::string& savestatePath)
 
       if (m_gameClient->Deserialize(savestate->GetMemoryData(), memorySize))
       {
+        // After the emulator, so the runtime matches its machine state. Absent
+        // on older savestates, which is not a failure.
+        if (const size_t achievementSize = savestate->GetAchievementSize(); achievementSize > 0)
+          m_gameClient->DeserializeAchievements(savestate->GetAchievementData(), achievementSize);
+
         m_totalFrameCount = savestate->TimestampFrames();
         bSuccess = true;
         if (savestate->Type() == SAVE_TYPE::AUTO)
@@ -307,8 +323,6 @@ bool CReversiblePlayback::LoadSavestate(const std::string& savestatePath)
       }
     }
   }
-
-  m_cheevos->ResetRuntime();
 
   return bSuccess;
 }
@@ -434,8 +448,20 @@ void CReversiblePlayback::UpdateMemoryStream()
 
     if (!m_memoryStream)
     {
+      const size_t memorySize = m_gameClient->SerializeSize();
+
+      // Ceiling, not the real cost: the buffer keeps xor deltas of changed
+      // words only. Worth logging because a large state and a long window put
+      // that ceiling in the gigabytes.
+      CLog::Log(LOGINFO,
+                "RetroPlayer[SAVE]: Rewind buffer: {} frames of up to {} bytes ({:.1f} MB "
+                "worst case) for {} seconds at {:.2f} fps",
+                frameCount, memorySize,
+                static_cast<double>(memorySize) * frameCount / (1024.0 * 1024.0), rewindBufferSec,
+                m_gameLoop.FPS());
+
       m_memoryStream = std::make_unique<CDeltaPairMemoryStream>();
-      m_memoryStream->Init(m_gameClient->SerializeSize(), frameCount);
+      m_memoryStream->Init(memorySize, frameCount);
     }
 
     if (m_memoryStream->MaxFrameCount() != frameCount)

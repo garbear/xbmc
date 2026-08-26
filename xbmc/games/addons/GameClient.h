@@ -190,6 +190,19 @@ public:
   bool Serialize(uint8_t* data, size_t size);
   bool Deserialize(const uint8_t* data, size_t size);
 
+  /*!
+   * \brief How many bytes the client's achievement state needs right now
+   *
+   * Separate from the emulator's state, which must keep the exact size the
+   * client reports. See savestate.fbs.
+   *
+   * \return The size, or 0 if the client has no achievement state to save
+   */
+  size_t GetAchievementStateSize();
+
+  bool SerializeAchievements(uint8_t* data, size_t size);
+  bool DeserializeAchievements(const uint8_t* data, size_t size);
+
   // Implementation of IHwFramebufferCallback
   void HardwareContextReset() override;
 
@@ -241,6 +254,17 @@ private:
   static void cb_close_stream(KODI_HANDLE kodiInstance, KODI_GAME_STREAM_HANDLE stream);
   static game_proc_address_t cb_hw_get_proc_address(KODI_HANDLE kodiInstance, const char* sym);
   static bool cb_input_event(KODI_HANDLE kodiInstance, const game_input_event* event);
+  static void cb_rc_on_game_loaded(KODI_HANDLE kodiInstance, const game_rc_game_loaded* data);
+  static void cb_rc_on_achievement_triggered(KODI_HANDLE kodiInstance,
+                                             const game_rc_achievement_triggered* data);
+  static void cb_rc_on_game_completed(KODI_HANDLE kodiInstance, const char* title, bool hardcore);
+  static void cb_rc_on_rich_presence_updated(KODI_HANDLE kodiInstance, const char* evaluation);
+  static void cb_rc_on_login_result(KODI_HANDLE kodiInstance, const game_rc_login_result* data);
+  static void cb_rc_on_achievement_progress(KODI_HANDLE kodiInstance,
+                                            const game_rc_achievement_progress* progress,
+                                            unsigned int count);
+  static void cb_rc_on_server_error(KODI_HANDLE kodiInstance, const char* message, const char* api);
+  static void cb_rc_on_connection_changed(KODI_HANDLE kodiInstance, bool connected);
   //@}
 
   /*!

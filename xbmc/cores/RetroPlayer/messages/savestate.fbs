@@ -66,6 +66,13 @@ table Savestate {
   video_data_compression:CompressionType = None (id: 28);
   video_data_uncompressed_size:uint64 = 0 (id: 29);
 
+  // Achievement properties
+  //
+  // Separate from memory_data: a savestate whose emulator memory does not match
+  // retro_serialize_size() is refused before the core sees it, so achievement
+  // state cannot be appended to it.
+  achievement_data:[uint8] (id: 30);
+
   // Memory properties
   memory_data:[uint8] (id: 10);
   memory_data_compressed:[uint8] (id: 24);

@@ -183,6 +183,14 @@ bool CGameClient::Initialize(void)
   m_ifc.game->toKodi->CloseStream = cb_close_stream;
   m_ifc.game->toKodi->HwGetProcAddress = cb_hw_get_proc_address;
   m_ifc.game->toKodi->InputEvent = cb_input_event;
+  m_ifc.game->toKodi->RCOnGameLoaded = cb_rc_on_game_loaded;
+  m_ifc.game->toKodi->RCOnAchievementTriggered = cb_rc_on_achievement_triggered;
+  m_ifc.game->toKodi->RCOnGameCompleted = cb_rc_on_game_completed;
+  m_ifc.game->toKodi->RCOnRichPresenceUpdated = cb_rc_on_rich_presence_updated;
+  m_ifc.game->toKodi->RCOnLoginResult = cb_rc_on_login_result;
+  m_ifc.game->toKodi->RCOnAchievementProgress = cb_rc_on_achievement_progress;
+  m_ifc.game->toKodi->RCOnServerError = cb_rc_on_server_error;
+  m_ifc.game->toKodi->RCOnConnectionChanged = cb_rc_on_connection_changed;
 
   memset(m_ifc.game->toAddon, 0, sizeof(KodiToAddonFuncTable_Game));
 
@@ -644,6 +652,65 @@ bool CGameClient::Deserialize(const uint8_t* data, size_t size)
   return bSuccess;
 }
 
+size_t CGameClient::GetAchievementStateSize()
+{
+  if (!m_bIsPlaying)
+    return 0;
+
+  std::unique_lock lock(m_critSection);
+
+  try
+  {
+    return m_ifc.game->toAddon->AchievementStateSize(m_ifc.game);
+  }
+  catch (...)
+  {
+    LogException("AchievementStateSize()");
+  }
+
+  return 0;
+}
+
+bool CGameClient::SerializeAchievements(uint8_t* data, size_t size)
+{
+  if (data == nullptr || size == 0 || !m_bIsPlaying)
+    return false;
+
+  std::unique_lock lock(m_critSection);
+
+  try
+  {
+    return LogError(m_ifc.game->toAddon->SerializeAchievements(m_ifc.game, data, size),
+                    "SerializeAchievements()");
+  }
+  catch (...)
+  {
+    LogException("SerializeAchievements()");
+  }
+
+  return false;
+}
+
+bool CGameClient::DeserializeAchievements(const uint8_t* data, size_t size)
+{
+  if (data == nullptr || size == 0 || !m_bIsPlaying)
+    return false;
+
+  std::unique_lock lock(m_critSection);
+
+  try
+  {
+    return LogError(m_ifc.game->toAddon->DeserializeAchievements(m_ifc.game, data, size),
+                    "DeserializeAchievements()");
+  }
+  catch (...)
+  {
+    LogException("DeserializeAchievements()");
+  }
+
+  return false;
+}
+
 void CGameClient::LogAddonProperties(void) const
 {
   CLog::Log(LOGINFO, "GAME: ------------------------------------");
@@ -661,7 +728,11 @@ bool CGameClient::LogError(GAME_ERROR error, const char* strMethod) const
 {
   if (error != GAME_ERROR_NO_ERROR)
   {
-    CLog::Log(LOGERROR, "GAME - {} - addon '{}' returned an error: {}", strMethod, ID(),
+    // Optional parts of the API are declined rather than failed, so don't
+    // report them as errors.
+    const int level = (error == GAME_ERROR_NOT_IMPLEMENTED) ? LOGDEBUG : LOGERROR;
+
+    CLog::Log(level, "GAME - {} - addon '{}' returned: {}", strMethod, ID(),
               CGameClientTranslator::ToString(error));
     return false;
   }
@@ -823,6 +894,89 @@ bool CGameClient::cb_input_event(KODI_HANDLE kodiInstance, const game_input_even
     return false;
 
   return gameClient->Input().ReceiveInputEvent(*event);
+}
+
+void CGameClient::cb_rc_on_game_loaded(KODI_HANDLE kodiInstance, const game_rc_game_loaded* data)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr || data == nullptr)
+    return;
+
+  gameClient->Cheevos().OnGameLoaded(*data);
+}
+
+void CGameClient::cb_rc_on_achievement_triggered(KODI_HANDLE kodiInstance,
+                                                 const game_rc_achievement_triggered* data)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr || data == nullptr)
+    return;
+
+  gameClient->Cheevos().OnAchievementTriggered(*data);
+}
+
+void CGameClient::cb_rc_on_game_completed(KODI_HANDLE kodiInstance,
+                                          const char* title,
+                                          bool hardcore)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr)
+    return;
+
+  gameClient->Cheevos().OnGameCompleted(title != nullptr ? title : "", hardcore);
+}
+
+void CGameClient::cb_rc_on_rich_presence_updated(KODI_HANDLE kodiInstance, const char* evaluation)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr)
+    return;
+
+  gameClient->Cheevos().OnRichPresenceUpdated(evaluation != nullptr ? evaluation : "");
+}
+
+void CGameClient::cb_rc_on_login_result(KODI_HANDLE kodiInstance, const game_rc_login_result* data)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr || data == nullptr)
+    return;
+
+  gameClient->Cheevos().OnLoginResult(*data);
+}
+
+void CGameClient::cb_rc_on_achievement_progress(KODI_HANDLE kodiInstance,
+                                                const game_rc_achievement_progress* progress,
+                                                unsigned int count)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr)
+    return;
+
+  // A null array with a non-zero count would be the add-on misbehaving
+  if (progress == nullptr)
+    count = 0;
+
+  gameClient->Cheevos().OnAchievementProgress(progress, count);
+}
+
+void CGameClient::cb_rc_on_server_error(KODI_HANDLE kodiInstance,
+                                        const char* message,
+                                        const char* api)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr)
+    return;
+
+  gameClient->Cheevos().OnServerError(message != nullptr ? message : "", api != nullptr ? api : "");
+}
+
+void CGameClient::cb_rc_on_connection_changed(KODI_HANDLE kodiInstance, bool connected)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr)
+    return;
+
+  gameClient->Cheevos().OnConnectionChanged(connected);
 }
 
 std::pair<std::string, std::string> CGameClient::ParseLibretroName(const std::string& addonName)
