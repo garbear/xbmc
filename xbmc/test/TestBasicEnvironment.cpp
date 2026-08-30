@@ -111,7 +111,9 @@ void TestBasicEnvironment::TearDown()
 
   // The VFS machinery is not usable once the services are deinitialized.
   std::error_code ec;
-  std::filesystem::remove_all(m_tempPath, ec);
+  std::filesystem::remove_all(std::filesystem::u8path(m_tempPath), ec);
+  if (ec)
+    ADD_FAILURE() << "Failed to remove the test profile at " << m_tempPath << ": " << ec.message();
 
   CServiceBroker::UnregisterAppMessenger();
 
