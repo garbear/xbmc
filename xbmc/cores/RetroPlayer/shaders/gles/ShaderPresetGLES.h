@@ -31,7 +31,7 @@ public:
 
 protected:
   // Implementation of CShaderPreset
-  bool CreateShaders() override;
+  ShaderPresetState CreateShaders() override;
   bool CreateLayouts() override { return true; }
   bool CreateBuffers() override { return true; }
   bool CreateShaderTextures() override;

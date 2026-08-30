@@ -9,6 +9,8 @@
 #include "ShaderPresetFactory.h"
 
 #include "IShaderPresetLoader.h"
+#include "ShaderArtifactStore.h"
+#include "ShaderCompileService.h"
 #include "addons/AddonEvents.h"
 #include "addons/AddonManager.h"
 #include "addons/ShaderPreset.h"
@@ -20,10 +22,22 @@
 #include <algorithm>
 #include <string>
 
+#if defined(HAS_DX)
+#include "cores/RetroPlayer/shaders/windows/ShaderCompilerDX.h"
+#endif
+
 using namespace KODI::SHADER;
 
-CShaderPresetFactory::CShaderPresetFactory(ADDON::CAddonMgr& addons) : m_addons(addons)
+CShaderPresetFactory::CShaderPresetFactory(ADDON::CAddonMgr& addons)
+  : m_addons(addons),
+    m_compileService(std::make_unique<CShaderCompileService>())
 {
+#if defined(HAS_DX)
+  m_compileService->RegisterCompiler(
+      std::make_shared<CShaderCompilerDX>(),
+      std::make_shared<CShaderArtifactStore>("special://temp/retroplayer/shaders/dx11/v1/", ".fxc",
+                                             1, 64ULL * 1024ULL * 1024ULL));
+#endif
   UpdateAddons();
 
   m_addons.Events().Subscribe(this,
@@ -37,6 +51,11 @@ CShaderPresetFactory::CShaderPresetFactory(ADDON::CAddonMgr& addons) : m_addons(
                                   UpdateAddons();
                                 }
                               });
+}
+
+CShaderCompileService& CShaderPresetFactory::CompileService()
+{
+  return *m_compileService;
 }
 
 CShaderPresetFactory::~CShaderPresetFactory()

@@ -18,6 +18,7 @@ extern "C"
 #include <libavutil/pixfmt.h>
 }
 
+#include <atomic>
 #include <memory>
 #include <stdint.h>
 
@@ -30,6 +31,13 @@ class IShaderPreset;
 
 namespace RETRO
 {
+struct ShaderWakeToken
+{
+  explicit ShaderWakeToken(std::uint64_t generation_) : generation(generation_) {}
+  const std::uint64_t generation;
+  std::atomic_bool ready{false};
+};
+
 class CRenderContext;
 class IRenderBuffer;
 class IRenderBufferPool;
@@ -107,6 +115,8 @@ protected:
 
   bool m_bShadersNeedUpdate = true;
   bool m_bUseShaderPreset = false;
+  std::uint64_t m_shaderGeneration{0};
+  std::shared_ptr<ShaderWakeToken> m_shaderWakeToken;
 
 private:
   /*!

@@ -1,4 +1,5 @@
 set(SOURCES RPWinOutputShader.cpp
+            ShaderCompilerDX.cpp
             ShaderDX.cpp
             ShaderLutDX.cpp
             ShaderPresetDX.cpp
@@ -8,6 +9,7 @@ set(SOURCES RPWinOutputShader.cpp
             ShaderUtilsDX.cpp)
 
 set(HEADERS RPWinOutputShader.h
+            ShaderCompilerDX.h
             ShaderDX.h
             ShaderLutDX.h
             ShaderPresetDX.h

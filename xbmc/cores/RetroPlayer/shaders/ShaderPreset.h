@@ -45,13 +45,17 @@ public:
                     const float2& viewportSize) override;
   void SetSpeed(double speed) override { m_speed = speed; }
   void SetVideoSize(unsigned int videoWidth, unsigned int videoHeight) override;
-  bool SetShaderPreset(const std::string& shaderPresetPath) override;
+  ShaderPresetState SetShaderPreset(const std::string& shaderPresetPath) override;
+  void SetCompletionCallback(std::function<void()> callback) override
+  {
+    m_completionCallback = std::move(callback);
+  }
   const std::string& GetShaderPreset() const override;
   std::vector<ShaderPass>& GetPasses() override { return m_passes; }
 
 protected:
   // Shader interface
-  virtual bool CreateShaders() = 0;
+  virtual ShaderPresetState CreateShaders() = 0;
   virtual bool CreateLayouts() = 0;
   virtual bool CreateBuffers() = 0;
   virtual bool CreateShaderTextures() = 0;
@@ -70,6 +74,7 @@ protected:
                            const float2& prevSize,
                            float2& scaledSize);
   void DisposeShaders();
+  void DisposeGpuShaders();
   void DisposeShaderTextures();
   bool HasPathFailed(const std::string& path) const;
   ShaderParameterMap GetShaderParameters(const std::vector<ShaderParameter>& parameters,
@@ -94,6 +99,7 @@ protected:
 
   // Intermediate textures used for pixel shader passes
   std::vector<std::unique_ptr<IShaderTexture>> m_pShaderTextures;
+  std::function<void()> m_completionCallback;
 
   // Was the shader preset changed during the last frame?
   bool m_bPresetNeedsUpdate = true;

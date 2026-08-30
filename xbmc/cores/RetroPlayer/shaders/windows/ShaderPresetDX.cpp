@@ -8,11 +8,16 @@
 
 #include "ShaderPresetDX.h"
 
+#include "ServiceBroker.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
+#include "cores/RetroPlayer/shaders/ShaderCompileService.h"
+#include "cores/RetroPlayer/shaders/ShaderPresetFactory.h"
+#include "cores/RetroPlayer/shaders/windows/ShaderCompilerDX.h"
 #include "cores/RetroPlayer/shaders/windows/ShaderDX.h"
 #include "cores/RetroPlayer/shaders/windows/ShaderLutDX.h"
 #include "cores/RetroPlayer/shaders/windows/ShaderTextureDX.h"
 #include "cores/RetroPlayer/shaders/windows/ShaderTypesDX.h"
+#include "games/GameServices.h"
 #include "rendering/dx/RenderSystemDX.h"
 #include "utils/log.h"
 
@@ -28,8 +33,25 @@ CShaderPresetDX::CShaderPresetDX(RETRO::CRenderContext& context,
 {
 }
 
-bool CShaderPresetDX::CreateShaders()
+ShaderPresetState CShaderPresetDX::CreateShaders()
 {
+  if (m_compilePresetPath != m_presetPath)
+  {
+    m_compileGroup.reset();
+    m_compilePresetPath = m_presetPath;
+    DisposeGpuShaders();
+  }
+
+  auto& service = CServiceBroker::GetGameServices().VideoShaders().CompileService();
+  if (!m_compileGroup)
+    m_compileGroup = service.RequestGroup(CShaderCompilerDX::BACKEND_ID, m_passes, m_presetPath,
+                                          m_completionCallback);
+
+  const ShaderPresetState compileState = m_compileGroup->GetState();
+  if (compileState != ShaderPresetState::READY)
+    return compileState;
+
+  DisposeGpuShaders();
   std::vector<std::shared_ptr<IShaderLut>> presetLUTsDX;
 
   if (!m_passes.empty())
@@ -49,20 +71,28 @@ bool CShaderPresetDX::CreateShaders()
   for (unsigned int shaderIdx = 0; shaderIdx < numPasses; ++shaderIdx)
   {
     const ShaderPass& pass = m_passes[shaderIdx];
-
-    const std::string& shaderSource = pass.vertexSource; // Also contains fragment source
-    const std::string& shaderPath = pass.sourcePath;
+    const auto handle = m_compileGroup->GetHandles()[shaderIdx];
+    const auto artifact = handle->GetArtifact();
+    if (!artifact || !artifact->bytecode)
+      return ShaderPresetState::FAILED;
 
     // Get only the parameters belonging to this specific shader
     ShaderParameterMap passParameters = GetShaderParameters(pass.parameters, pass.vertexSource);
 
     // Create the shader
     auto videoShader = std::make_unique<CShaderDX>();
-    if (!videoShader->Create(shaderIdx, pass.alias, shaderPath, shaderSource,
-                             std::move(passParameters), presetLUTsDX, pass.frameCountMod))
+    const ShaderCreateResult result = videoShader->CreateFromBytecode(
+        shaderIdx, pass.alias, pass.sourcePath, artifact->bytecode, std::move(passParameters),
+        presetLUTsDX, pass.frameCountMod);
+    if (result != ShaderCreateResult::READY)
     {
       CLog::Log(LOGERROR, "CShaderPresetDX::CreateShaders: Couldn't create a video shader");
-      return false;
+      DisposeGpuShaders();
+      if (result == ShaderCreateResult::EFFECT_CREATION_FAILED &&
+          artifact->origin == ShaderArtifactOrigin::DISK &&
+          service.RejectDiskArtifact(handle, handle->GetGeneration()))
+        return ShaderPresetState::PENDING;
+      return ShaderPresetState::FAILED;
     }
     m_pShaders.push_back(std::move(videoShader));
 
@@ -77,7 +107,7 @@ bool CShaderPresetDX::CreateShaders()
     */
   }
 
-  return true;
+  return ShaderPresetState::READY;
 }
 
 bool CShaderPresetDX::CreateLayouts()
@@ -87,8 +117,7 @@ bool CShaderPresetDX::CreateLayouts()
     auto* videoShaderDX = static_cast<CShaderDX*>(videoShader.get());
     if (!videoShaderDX->CreateVertexBuffer(4, sizeof(CUSTOMVERTEX)))
     {
-      CLog::Log(LOGERROR,
-                "CShaderPresetDX::CreateLayouts: Failed to create shader vertex buffers");
+      CLog::Log(LOGERROR, "CShaderPresetDX::CreateLayouts: Failed to create shader vertex buffers");
       return false;
     }
 

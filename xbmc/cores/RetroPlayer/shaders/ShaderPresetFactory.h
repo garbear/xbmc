@@ -23,6 +23,7 @@ class CShaderPresetAddon;
 
 namespace KODI::SHADER
 {
+class CShaderCompileService;
 class IShaderPresetLoader;
 
 class CShaderPresetFactory
@@ -77,11 +78,14 @@ public:
    */
   bool CanLoadPreset(const std::string& presetPath) const;
 
+  CShaderCompileService& CompileService();
+
 private:
   void UpdateAddons();
 
   // Construction parameters
   ADDON::CAddonMgr& m_addons;
+  std::unique_ptr<CShaderCompileService> m_compileService;
 
   std::map<std::string, IShaderPresetLoader*, std::less<>> m_loaders;
   std::map<std::string, std::unique_ptr<ADDON::CShaderPresetAddon>, std::less<>> m_shaderAddons;

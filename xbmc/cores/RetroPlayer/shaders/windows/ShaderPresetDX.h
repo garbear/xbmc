@@ -24,6 +24,7 @@ namespace SHADER
 {
 class IShader;
 class IShaderTexture;
+class CShaderCompileGroup;
 
 class CShaderPresetDX : public CShaderPreset
 {
@@ -36,7 +37,7 @@ public:
 
 protected:
   // Implementation of CShaderPreset
-  bool CreateShaders() override;
+  ShaderPresetState CreateShaders() override;
   bool CreateLayouts() override;
   bool CreateBuffers() override;
   bool CreateShaderTextures() override;
@@ -51,6 +52,8 @@ private:
 
   // Linear sampler
   Microsoft::WRL::ComPtr<ID3D11SamplerState> m_pSampLinear;
+  std::shared_ptr<CShaderCompileGroup> m_compileGroup;
+  std::string m_compilePresetPath;
 };
 } // namespace SHADER
 } // namespace KODI

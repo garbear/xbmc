@@ -95,6 +95,33 @@ bool CShaderDX::Create(unsigned int passIdx,
   return true;
 }
 
+ShaderCreateResult CShaderDX::CreateFromBytecode(unsigned int passIdx,
+                                                 std::string passAlias,
+                                                 std::string shaderPath,
+                                                 std::shared_ptr<const EffectBytecode> bytecode,
+                                                 ShaderParameterMap shaderParameters,
+                                                 std::vector<std::shared_ptr<IShaderLut>> luts,
+                                                 unsigned int frameCountMod)
+{
+  if (shaderPath.empty() || !bytecode || bytecode->empty())
+    return ShaderCreateResult::EFFECT_CREATION_FAILED;
+
+  m_passIdx = passIdx;
+  m_passAlias = std::move(passAlias);
+  m_shaderPath = std::move(shaderPath);
+  m_shaderSource.clear();
+  m_shaderParameters = std::move(shaderParameters);
+  m_luts = std::move(luts);
+  m_frameCountMod = frameCountMod;
+
+  if (!m_effect.Create(std::move(bytecode)))
+    return ShaderCreateResult::EFFECT_CREATION_FAILED;
+  if (!m_effect.SetTechnique("TEQ") ||
+      !m_effect.Get()->GetTechniqueByName("TEQ")->GetPassByName("P0")->IsValid())
+    return ShaderCreateResult::INVALID_TECHNIQUE;
+  return ShaderCreateResult::READY;
+}
+
 void CShaderDX::Render(IShaderTexture& sourceTexture, IShaderTexture& targetTexture)
 {
   if (!m_parametersReady)

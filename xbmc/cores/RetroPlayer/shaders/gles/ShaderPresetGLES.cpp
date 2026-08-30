@@ -27,7 +27,7 @@ CShaderPresetGLES::CShaderPresetGLES(RETRO::CRenderContext& context,
 {
 }
 
-bool CShaderPresetGLES::CreateShaders()
+ShaderPresetState CShaderPresetGLES::CreateShaders()
 {
   std::vector<std::shared_ptr<IShaderLut>> presetLUTsGL;
 
@@ -64,12 +64,12 @@ bool CShaderPresetGLES::CreateShaders()
                 "CShaderPresetGLES::CreateShaders: Failed to create shader: preset={}, pass={}, "
                 "alias={}, shader={}",
                 m_presetPath, shaderIdx, pass.alias.empty() ? "<none>" : pass.alias, shaderPath);
-      return false;
+      return ShaderPresetState::FAILED;
     }
     m_pShaders.push_back(std::move(videoShader));
   }
 
-  return true;
+  return ShaderPresetState::READY;
 }
 
 bool CShaderPresetGLES::CreateShaderTextures()

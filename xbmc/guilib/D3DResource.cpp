@@ -579,11 +579,26 @@ CD3DEffect::~CD3DEffect()
 bool CD3DEffect::Create(const std::string &effectString, DefinesMap* defines)
 {
   Release();
+  m_effectBytecode.reset();
   m_effectString = effectString;
   m_defines.clear();
   if (defines != nullptr)
     m_defines = *defines; //FIXME: is this a copy of all members?
   if (CreateEffect())
+  {
+    Register();
+    return true;
+  }
+  return false;
+}
+
+bool CD3DEffect::Create(std::shared_ptr<const EffectBytecode> effectBytecode)
+{
+  Release();
+  m_effectString.clear();
+  m_defines.clear();
+  m_effectBytecode = std::move(effectBytecode);
+  if (CreateEffectFromBytecode())
   {
     Register();
     return true;
@@ -606,7 +621,10 @@ void CD3DEffect::OnDestroyDevice(bool fatal)
 
 void CD3DEffect::OnCreateDevice()
 {
-  CreateEffect();
+  if (m_effectBytecode)
+    CreateEffectFromBytecode();
+  else
+    CreateEffect();
 }
 
 HRESULT CD3DEffect::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
@@ -846,6 +864,23 @@ bool CD3DEffect::CreateEffect()
     CLog::Log(LOGERROR, "CD3DEffect::CreateEffect(): call to D3DXCreateEffect() failed with {}",
               hr);
   return false;
+}
+
+bool CD3DEffect::CreateEffectFromBytecode()
+{
+  if (!m_effectBytecode || m_effectBytecode->empty() ||
+      !DX::DeviceResources::Get()->GetD3DDevice())
+    return false;
+
+  const HRESULT result = D3DX11CreateEffectFromMemory(
+      m_effectBytecode->data(), m_effectBytecode->size(), 0,
+      DX::DeviceResources::Get()->GetD3DDevice(), m_effect.ReleaseAndGetAddressOf(), "");
+  if (FAILED(result))
+  {
+    CLog::Log(LOGERROR, "CD3DEffect::CreateEffectFromBytecode(): failed with {}", result);
+    return false;
+  }
+  return true;
 }
 
 CD3DBuffer::CD3DBuffer()

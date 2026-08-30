@@ -87,32 +87,37 @@ void CShaderPreset::SetVideoSize(unsigned int videoWidth, unsigned int videoHeig
   }
 }
 
-bool CShaderPreset::SetShaderPreset(const std::string& shaderPresetPath)
+ShaderPresetState CShaderPreset::SetShaderPreset(const std::string& shaderPresetPath)
 {
   auto updateFailed = [this](const std::string& msg)
   {
     m_failedPaths.insert(m_presetPath);
     CLog::Log(LOGWARNING, "CShaderPreset::SetShaderPreset: {}: preset={}", msg, m_presetPath);
     DisposeShaders();
-    return false;
+    return ShaderPresetState::FAILED;
   };
 
+  const bool retryPending =
+      m_presetPath == shaderPresetPath && !m_passes.empty() && m_pShaders.empty();
   m_presetPath = shaderPresetPath;
 
   if (m_presetPath.empty())
     // No preset should load, just return false, we shouldn't add "" to the failed paths
-    return false;
+    return ShaderPresetState::FAILED;
 
-  if (!ReadPresetFile(m_presetPath))
+  if (!retryPending && !ReadPresetFile(m_presetPath))
   {
     CLog::Log(LOGERROR, "CShaderPreset::SetShaderPreset: Couldn't read shader files for {}",
               m_presetPath);
-    return false;
+    return ShaderPresetState::FAILED;
   }
 
   if (!HasPathFailed(m_presetPath))
   {
-    if (!CreateShaders())
+    const ShaderPresetState shaderState = CreateShaders();
+    if (shaderState == ShaderPresetState::PENDING)
+      return ShaderPresetState::PENDING;
+    if (shaderState == ShaderPresetState::FAILED)
       return updateFailed("Failed to initialize shaders");
 
     if (!CreateLayouts())
@@ -126,10 +131,10 @@ bool CShaderPreset::SetShaderPreset(const std::string& shaderPresetPath)
   }
 
   if (m_pShaders.empty())
-    return false;
+    return ShaderPresetState::FAILED;
 
   m_bPresetNeedsUpdate = true;
-  return true;
+  return ShaderPresetState::READY;
 }
 
 const std::string& CShaderPreset::GetShaderPreset() const
@@ -246,10 +251,14 @@ void CShaderPreset::CalculateScaledSize(const KODI::SHADER::ShaderPass& pass,
 
 void CShaderPreset::DisposeShaders()
 {
-  DisposeShaderTextures();
-
-  m_pShaders.clear();
+  DisposeGpuShaders();
   m_passes.clear();
+}
+
+void CShaderPreset::DisposeGpuShaders()
+{
+  DisposeShaderTextures();
+  m_pShaders.clear();
 }
 
 void CShaderPreset::DisposeShaderTextures()

@@ -14,7 +14,9 @@
 #include "utils/Geometry.h"
 
 #include <map>
+#include <memory>
 #include <set>
+#include <vector>
 
 #include <DirectXMath.h>
 #include <d3dx11effect.h>
@@ -180,6 +182,7 @@ protected:
 };
 
 typedef std::map<std::string, std::string> DefinesMap;
+using EffectBytecode = std::vector<std::uint8_t>;
 
 class CD3DEffect : public ID3DResource, public ID3DInclude
 {
@@ -187,6 +190,7 @@ public:
   CD3DEffect();
   virtual ~CD3DEffect();
   bool Create(const std::string &effectString, DefinesMap* defines);
+  bool Create(std::shared_ptr<const EffectBytecode> effectBytecode);
   void Release();
   bool SetFloatArray(LPCSTR handle, const float* val, unsigned int count);
   bool SetMatrix(LPCSTR handle, const float* mat);
@@ -213,9 +217,11 @@ public:
 
 private:
   bool CreateEffect();
+  bool CreateEffectFromBytecode();
 
   std::string m_effectString;
   DefinesMap m_defines;
+  std::shared_ptr<const EffectBytecode> m_effectBytecode;
   Microsoft::WRL::ComPtr<ID3DX11Effect> m_effect;
   Microsoft::WRL::ComPtr<ID3DX11EffectTechnique> m_techniquie;
   Microsoft::WRL::ComPtr<ID3DX11EffectPass> m_currentPass;

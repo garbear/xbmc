@@ -152,6 +152,17 @@ void CRPBaseRenderer::SetShaderPreset(const std::string& presetPath)
   if (presetPath != m_renderSettings.VideoSettings().GetShaderPreset())
   {
     m_renderSettings.VideoSettings().SetShaderPreset(presetPath);
+    m_shaderWakeToken = std::make_shared<ShaderWakeToken>(++m_shaderGeneration);
+    if (m_shaderPreset)
+    {
+      std::weak_ptr<ShaderWakeToken> weakToken = m_shaderWakeToken;
+      m_shaderPreset->SetCompletionCallback(
+          [weakToken]
+          {
+            if (const auto token = weakToken.lock())
+              token->ready = true;
+          });
+    }
     m_bShadersNeedUpdate = true;
   }
 }
@@ -267,11 +278,28 @@ void CRPBaseRenderer::MarkDirty()
  */
 void CRPBaseRenderer::Updateshaders()
 {
+  if (!m_shaderWakeToken)
+    m_shaderWakeToken = std::make_shared<ShaderWakeToken>(++m_shaderGeneration);
+
+  if (m_shaderWakeToken->generation == m_shaderGeneration &&
+      m_shaderWakeToken->ready.exchange(false))
+    m_bShadersNeedUpdate = true;
+
   if (m_bShadersNeedUpdate)
   {
     if (m_shaderPreset)
-      m_bUseShaderPreset =
+    {
+      std::weak_ptr<ShaderWakeToken> weakToken = m_shaderWakeToken;
+      m_shaderPreset->SetCompletionCallback(
+          [weakToken]
+          {
+            if (const auto token = weakToken.lock())
+              token->ready = true;
+          });
+      const SHADER::ShaderPresetState state =
           m_shaderPreset->SetShaderPreset(m_renderSettings.VideoSettings().GetShaderPreset());
+      m_bUseShaderPreset = state == SHADER::ShaderPresetState::READY;
+    }
     m_bShadersNeedUpdate = false;
   }
 }

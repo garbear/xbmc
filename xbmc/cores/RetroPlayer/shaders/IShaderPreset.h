@@ -8,9 +8,11 @@
 
 #pragma once
 
+#include "ShaderCompileTypes.h"
 #include "ShaderTypes.h"
 #include "cores/RetroPlayer/RetroPlayerTypes.h"
 
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -69,7 +71,8 @@ public:
    *
    * \return Returns false if loading the preset failed, true otherwise
    */
-  virtual bool SetShaderPreset(const std::string& shaderPresetPath) = 0;
+  virtual ShaderPresetState SetShaderPreset(const std::string& shaderPresetPath) = 0;
+  virtual void SetCompletionCallback(std::function<void()> callback) = 0;
 
   /*!
    * \brief Gets the full path to the shader preset

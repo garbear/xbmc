@@ -23,6 +23,13 @@ namespace KODI::SHADER
 class IShaderLut;
 class IShaderSampler;
 
+enum class ShaderCreateResult
+{
+  READY,
+  EFFECT_CREATION_FAILED,
+  INVALID_TECHNIQUE,
+};
+
 class CShaderDX : protected CRPWinShader, public IShader
 {
 public:
@@ -37,6 +44,13 @@ public:
               ShaderParameterMap shaderParameters,
               std::vector<std::shared_ptr<IShaderLut>> luts,
               unsigned int frameCountMod = 0) override;
+  ShaderCreateResult CreateFromBytecode(unsigned int passIdx,
+                                        std::string passAlias,
+                                        std::string shaderPath,
+                                        std::shared_ptr<const EffectBytecode> bytecode,
+                                        ShaderParameterMap shaderParameters,
+                                        std::vector<std::shared_ptr<IShaderLut>> luts,
+                                        unsigned int frameCountMod = 0);
   void Render(IShaderTexture& sourceTexture, IShaderTexture& targetTexture) override;
   void SetSizes(const float2& nextSize,
                 const float2& prevSize = float2{},
