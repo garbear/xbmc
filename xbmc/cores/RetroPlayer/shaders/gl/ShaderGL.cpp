@@ -76,6 +76,9 @@ bool CShaderGL::Create(unsigned int passIdx,
     glGetShaderInfoLog(vShader, maxLength, &maxLength, errorLog.data());
     CLog::Log(LOGERROR, "CShaderGL::Create: Vertex shader compile error:\n{}",
               std::string(errorLog.begin(), errorLog.end()));
+    glDeleteShader(vShader);
+    Delete();
+    return false;
   }
 
   fShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -91,6 +94,10 @@ bool CShaderGL::Create(unsigned int passIdx,
     glGetShaderInfoLog(fShader, maxLength, &maxLength, errorLog.data());
     CLog::Log(LOGERROR, "CShaderGL::Create: Fragment shader compile error:\n{}",
               std::string(errorLog.begin(), errorLog.end()));
+    glDeleteShader(vShader);
+    glDeleteShader(fShader);
+    Delete();
+    return false;
   }
 
   glAttachShader(m_shaderProgram, vShader);
