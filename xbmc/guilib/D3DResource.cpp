@@ -566,11 +566,13 @@ void CD3DTexture::DrawQuad(const CRect& rect,
   DrawQuad(points, color, numViews, view, texCoords, options, depth);
 }
 
-CD3DEffect::CD3DEffect() : CD3DEffect(nullptr)
+CD3DEffect::CD3DEffect()
 {
+  m_includePaths.insert("special://xbmc/system/shaders/");
 }
 
-CD3DEffect::CD3DEffect(ID3D11Device* device) : m_device(device)
+CD3DEffect::CD3DEffect(ID3D11Device& device, ID3D11DeviceContext& context)
+  : m_device(&device), m_context(&context)
 {
   m_includePaths.insert("special://xbmc/system/shaders/");
 }
@@ -796,7 +798,7 @@ bool CD3DEffect::BeginPass(UINT pass)
       m_currentPass = nullptr;
       return false;
     }
-    return (S_OK == m_currentPass->Apply(0, DX::DeviceResources::Get()->GetD3DContext()));
+    return (S_OK == m_currentPass->Apply(0, GetContext()));
   }
   return false;
 }
@@ -893,6 +895,13 @@ ID3D11Device* CD3DEffect::GetDevice() const
   if (m_device)
     return m_device.Get();
   return DX::DeviceResources::Get()->GetD3DDevice();
+}
+
+ID3D11DeviceContext* CD3DEffect::GetContext() const
+{
+  if (m_context)
+    return m_context.Get();
+  return DX::DeviceResources::Get()->GetD3DContext();
 }
 
 CD3DBuffer::CD3DBuffer()

@@ -253,9 +253,16 @@ TEST_F(TestShaderCompileService, TerminalSnapshotCannotMissConvergingRequest)
 
   CEvent firstCompleted;
   first->AddCompletionCallback([&] { firstCompleted.Set(); });
+
+  // Install the converger callback while preparation is blocked, before the worker can take the
+  // request and canonical-entry locks used by the attach barrier.
+  compiler->prepareEntered.Reset();
+  compiler->prepareRelease.Reset();
   auto second = service->Request("fake", Pass("converger", "race"), {});
+  ASSERT_TRUE(compiler->prepareEntered.Wait(5s));
   CEvent secondCompleted;
   second->AddCompletionCallback([&] { secondCompleted.Set(); });
+  compiler->prepareRelease.Set();
   ASSERT_TRUE(attachEntered.Wait(5s));
 
   compiler->compileRelease.Set();

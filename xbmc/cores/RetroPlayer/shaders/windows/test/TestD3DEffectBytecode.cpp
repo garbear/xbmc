@@ -29,9 +29,9 @@ class TestD3DEffectBytecode : public testing::Test
 protected:
   void SetUp() override
   {
-    ASSERT_TRUE(
-        SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, 0, nullptr, 0,
-                                    D3D11_SDK_VERSION, device.GetAddressOf(), nullptr, nullptr)));
+    ASSERT_TRUE(SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, 0, nullptr, 0,
+                                            D3D11_SDK_VERSION, device.GetAddressOf(), nullptr,
+                                            context.GetAddressOf())));
     Microsoft::WRL::ComPtr<ID3DBlob> blob;
     Microsoft::WRL::ComPtr<ID3DBlob> errors;
     ++compileCount;
@@ -43,6 +43,7 @@ protected:
   }
 
   Microsoft::WRL::ComPtr<ID3D11Device> device;
+  Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
   std::shared_ptr<const EffectBytecode> bytecode;
   std::atomic_uint compileCount{0};
 };
@@ -50,17 +51,23 @@ protected:
 
 TEST_F(TestD3DEffectBytecode, CreatesNamedTechniqueFromD3DCompileBytecode)
 {
-  CD3DEffect effect(device.Get());
+  CD3DEffect effect(*device.Get(), *context.Get());
   ASSERT_TRUE(effect.Create(bytecode));
   ASSERT_NE(nullptr, effect.Get());
   ASSERT_TRUE(effect.SetTechnique("TEQ"));
+  UINT passes{};
+  ASSERT_TRUE(effect.Begin(&passes, 0));
+  ASSERT_EQ(1u, passes);
+  ASSERT_TRUE(effect.BeginPass(0));
+  EXPECT_TRUE(effect.EndPass());
+  EXPECT_TRUE(effect.End());
   EXPECT_TRUE(effect.Get()->GetTechniqueByName("TEQ")->GetPassByName("P0")->IsValid());
 }
 
 TEST_F(TestD3DEffectBytecode, TwoEffectsFromOneArtifactKeepIndependentScalars)
 {
-  CD3DEffect first(device.Get());
-  CD3DEffect second(device.Get());
+  CD3DEffect first(*device.Get(), *context.Get());
+  CD3DEffect second(*device.Get(), *context.Get());
   ASSERT_TRUE(first.Create(bytecode));
   ASSERT_TRUE(second.Create(bytecode));
   ASSERT_TRUE(first.SetScalar("Value", 1.0f));
@@ -77,7 +84,7 @@ TEST_F(TestD3DEffectBytecode, TwoEffectsFromOneArtifactKeepIndependentScalars)
 
 TEST_F(TestD3DEffectBytecode, DeviceRecreationUsesRetainedBytecodeWithoutCompile)
 {
-  CD3DEffect effect(device.Get());
+  CD3DEffect effect(*device.Get(), *context.Get());
   ASSERT_TRUE(effect.Create(bytecode));
   bytecode.reset();
 

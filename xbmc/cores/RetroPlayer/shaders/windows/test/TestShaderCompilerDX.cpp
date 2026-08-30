@@ -172,15 +172,16 @@ TEST(TestShaderCompilerDX, DefinesAndNestedIncludesMatchLegacyEffects11Compilati
   ASSERT_EQ(1u, *compileCount);
 
   Microsoft::WRL::ComPtr<ID3D11Device> device;
-  ASSERT_TRUE(
-      SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, 0, nullptr, 0,
-                                  D3D11_SDK_VERSION, device.GetAddressOf(), nullptr, nullptr)));
-  CD3DEffect bytecodeEffect(device.Get());
+  Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+  ASSERT_TRUE(SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, 0, nullptr, 0,
+                                          D3D11_SDK_VERSION, device.GetAddressOf(), nullptr,
+                                          context.GetAddressOf())));
+  CD3DEffect bytecodeEffect(*device.Get(), *context.Get());
   auto bytecode = std::make_shared<const EffectBytecode>(compiled.bytecode);
   ASSERT_TRUE(bytecodeEffect.Create(std::move(bytecode)));
 
   DefinesMap defines{{"HLSL_4", ""}, {"HLSL_FX", ""}, {"PARAMETER_UNIFORM", ""}};
-  CD3DEffect legacyEffect(device.Get());
+  CD3DEffect legacyEffect(*device.Get(), *context.Get());
   legacyEffect.AddIncludePath(root.path);
   ASSERT_TRUE(legacyEffect.Create(source, &defines));
 
