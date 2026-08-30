@@ -216,9 +216,8 @@ std::vector<std::shared_ptr<RequestState>> MigrateRequests(
       beforeOwnerAttach();
     const bool terminal = IsTerminal(targetEntry->state);
     request->entry = targetEntry;
-    if (request == owner)
-      request->disposition = terminal ? ShaderRequestDisposition::MEMORY_HIT
-                                      : ShaderRequestDisposition::COALESCED;
+    request->disposition = terminal ? ShaderRequestDisposition::MEMORY_HIT
+                                    : ShaderRequestDisposition::COALESCED;
     targetEntry->requests.emplace_back(request);
     if (terminal)
       terminalRequests.emplace_back(request);

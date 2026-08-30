@@ -360,6 +360,24 @@ TEST_F(TestShaderWarmup, LaterReopenRevalidatesAndUsesReadyEntries)
   EXPECT_EQ(1u, compiler->compileCount);
 }
 
+TEST_F(TestShaderWarmup, LaterReopenCountsCoalescedReadyFollowersAsMemoryHits)
+{
+  auto first = Pass("shared");
+  auto second = Pass("shared");
+  second.sourcePath = first.sourcePath;
+  Set(A, {first, second});
+
+  factory->WarmupPresets("warmup", {A});
+  EXPECT_EQ(1u, sink.Wait(1).queued);
+
+  factory->WarmupPresets("warmup", {A});
+  const auto summary = sink.Wait(2);
+  EXPECT_EQ(1u, summary.unique);
+  EXPECT_EQ(1u, summary.memoryHits);
+  EXPECT_EQ(0u, summary.queued);
+  EXPECT_EQ(1u, compiler->compileCount);
+}
+
 TEST_F(TestShaderWarmup, UnsupportedBackendReturnsBeforeParsing)
 {
   Set(A, {Pass("a")});
