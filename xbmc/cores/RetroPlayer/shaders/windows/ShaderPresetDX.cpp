@@ -21,6 +21,7 @@
 #include "rendering/dx/RenderSystemDX.h"
 #include "utils/log.h"
 
+#include <cassert>
 #include <cstddef>
 #include <regex>
 
@@ -88,8 +89,7 @@ ShaderPresetState CShaderPresetDX::CreateShaders()
     {
       CLog::Log(LOGERROR, "CShaderPresetDX::CreateShaders: Couldn't create a video shader");
       DisposeGpuShaders();
-      if (result == ShaderCreateResult::EFFECT_CREATION_FAILED &&
-          artifact->origin == ShaderArtifactOrigin::DISK &&
+      if (ShouldRetryDiskArtifact(result, artifact->origin) &&
           service.RejectDiskArtifact(handle, handle->GetGeneration()))
         return ShaderPresetState::PENDING;
       return ShaderPresetState::FAILED;
@@ -275,9 +275,11 @@ void CShaderPresetDX::RenderShader(IShader& shader,
                                    IShaderTexture& sourceTexture,
                                    IShaderTexture& targetTexture)
 {
+  assert(m_context != nullptr);
+
   const CRect newViewPort(0.f, 0.f, targetTexture.GetWidth(), targetTexture.GetHeight());
-  m_context.SetViewPort(newViewPort);
-  m_context.SetScissors(newViewPort);
+  m_context->SetViewPort(newViewPort);
+  m_context->SetScissors(newViewPort);
 
   auto& targetDX = static_cast<CShaderTextureDX&>(targetTexture);
   const FLOAT clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};

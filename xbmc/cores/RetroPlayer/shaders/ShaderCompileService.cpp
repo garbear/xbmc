@@ -60,6 +60,7 @@ struct ServiceState
   std::map<std::string, std::shared_ptr<CanonicalEntry>, std::less<>> canonical;
   std::map<std::string, std::shared_ptr<CanonicalEntry>, std::less<>> preparationFailures;
   std::map<std::string, CompilerRegistration, std::less<>> compilers;
+  std::function<void()> beforeCanonicalAttach;
 };
 
 struct Dispatcher
@@ -271,15 +272,21 @@ void PrepareRequest(const std::shared_ptr<ServiceState>& state,
 
   if (!ownsCanonical)
   {
+    bool terminal{false};
     {
-      std::unique_lock lock(entry->mutex);
+      std::unique_lock requestLock(request->mutex);
+      std::unique_lock entryLock(entry->mutex);
       existingState = entry->state;
+      if (state->beforeCanonicalAttach)
+        state->beforeCanonicalAttach();
+      terminal = IsTerminal(existingState);
+      request->entry = entry;
+      request->disposition =
+          terminal ? ShaderRequestDisposition::MEMORY_HIT : ShaderRequestDisposition::QUEUED;
+      entry->requests.emplace_back(request);
     }
-    AttachRequest(request, entry,
-                  IsTerminal(existingState) ? ShaderRequestDisposition::MEMORY_HIT
-                                            : ShaderRequestDisposition::QUEUED);
     RemoveProvisional(state, provisionalIdentity, request);
-    if (IsTerminal(existingState))
+    if (terminal)
       NotifyRequest(request);
     return;
   }
@@ -406,11 +413,16 @@ void CShaderCompileHandle::AddCompletionCallback(std::function<void()> callback)
     callback();
 }
 
-CShaderCompileService::CShaderCompileService()
+CShaderCompileService::CShaderCompileService() : CShaderCompileService(std::function<void()>{})
+{
+}
+
+CShaderCompileService::CShaderCompileService(std::function<void()> beforeCanonicalAttach)
   : m_state(std::make_shared<INTERNAL::ServiceState>()),
     m_dispatcher(std::make_shared<INTERNAL::Dispatcher>()),
     m_queue(std::make_unique<CJobQueue>(false, 2, CJob::PRIORITY_LOW))
 {
+  m_state->beforeCanonicalAttach = std::move(beforeCanonicalAttach);
   m_dispatcher->queue = m_queue.get();
 }
 

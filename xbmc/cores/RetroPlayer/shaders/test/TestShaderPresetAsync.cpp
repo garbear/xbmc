@@ -4,63 +4,152 @@
  */
 
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPBaseRenderer.h"
-#include "cores/RetroPlayer/shaders/ShaderCompileTypes.h"
-#include "cores/RetroPlayer/shaders/windows/ShaderDX.h"
+#include "cores/RetroPlayer/shaders/IShader.h"
+#include "cores/RetroPlayer/shaders/IShaderTexture.h"
+#include "cores/RetroPlayer/shaders/ShaderPreset.h"
 
+#include <deque>
 #include <memory>
-#include <set>
 #include <string>
+#include <utility>
 
 #include <gtest/gtest.h>
 
 using namespace KODI::RETRO;
 using namespace KODI::SHADER;
 
+namespace
+{
+class CTestShaderPreset : public CShaderPreset
+{
+public:
+  explicit CTestShaderPreset(std::deque<ShaderPresetState> states) : m_states(std::move(states)) {}
+
+  bool ReadPresetFile(const std::string& presetPath) override
+  {
+    ++m_readCount;
+    m_passes.emplace_back();
+    return !presetPath.empty();
+  }
+
+  bool HasFailed(const std::string& path) const { return HasPathFailed(path); }
+  unsigned int CreateCount() const { return m_createCount; }
+  unsigned int ReadCount() const { return m_readCount; }
+
+  void Complete()
+  {
+    if (m_completionCallback)
+      m_completionCallback();
+  }
+
+protected:
+  ShaderPresetState CreateShaders() override
+  {
+    ++m_createCount;
+    const ShaderPresetState state = m_states.front();
+    m_states.pop_front();
+    if (state == ShaderPresetState::READY)
+      m_pShaders.emplace_back();
+    return state;
+  }
+
+  bool CreateLayouts() override { return true; }
+  bool CreateBuffers() override { return true; }
+  bool CreateShaderTextures() override { return true; }
+  bool CreateSamplers() override { return true; }
+  void RenderShader(IShader&, IShaderTexture&, IShaderTexture&) override {}
+
+private:
+  std::deque<ShaderPresetState> m_states;
+  unsigned int m_createCount{0};
+  unsigned int m_readCount{0};
+};
+
+class CRendererShaderActivationAccess : public CRPBaseRenderer
+{
+public:
+  static void InstallCompletionCallback(IShaderPreset& preset,
+                                        const std::shared_ptr<ShaderWakeToken>& token)
+  {
+    CRPBaseRenderer::InstallShaderCompletionCallback(preset, token);
+  }
+
+  static void Update(IShaderPreset* preset,
+                     const std::string& presetPath,
+                     std::uint64_t generation,
+                     const std::shared_ptr<ShaderWakeToken>& token,
+                     bool& shadersNeedUpdate,
+                     bool& useShaderPreset)
+  {
+    CRPBaseRenderer::UpdateShaderPresetActivation(preset, presetPath, generation, token,
+                                                  shadersNeedUpdate, useShaderPreset);
+  }
+};
+} // namespace
+
 TEST(TestShaderPresetAsync, QueuedPassReturnsPendingWithoutFailedPath)
 {
-  std::set<std::string> failedPaths;
-  const ShaderPresetState state = ShaderPresetState::PENDING;
-  if (state == ShaderPresetState::FAILED)
-    failedPaths.insert("preset.slangp");
-  EXPECT_TRUE(failedPaths.empty());
+  CTestShaderPreset preset({ShaderPresetState::PENDING});
+
+  EXPECT_EQ(ShaderPresetState::PENDING, preset.SetShaderPreset("preset.slangp"));
+  EXPECT_FALSE(preset.HasFailed("preset.slangp"));
+  EXPECT_EQ(1u, preset.ReadCount());
+}
+
+TEST(TestShaderPresetAsync, FailedPassMarksFailedPath)
+{
+  CTestShaderPreset preset({ShaderPresetState::FAILED});
+
+  EXPECT_EQ(ShaderPresetState::FAILED, preset.SetShaderPreset("preset.slangp"));
+  EXPECT_TRUE(preset.HasFailed("preset.slangp"));
 }
 
 TEST(TestShaderPresetAsync, CompletionWakesRenderThreadAndRealizesOnce)
 {
+  CTestShaderPreset preset({ShaderPresetState::PENDING, ShaderPresetState::READY});
   auto token = std::make_shared<ShaderWakeToken>(7);
-  std::weak_ptr<ShaderWakeToken> weak = token;
-  auto completion = [weak]
-  {
-    if (auto locked = weak.lock())
-      locked->ready = true;
-  };
-  completion();
-  EXPECT_TRUE(token->ready.exchange(false));
-  EXPECT_FALSE(token->ready.exchange(false));
+  bool shadersNeedUpdate = true;
+  bool useShaderPreset = false;
+
+  CRendererShaderActivationAccess::Update(&preset, "preset.slangp", 7, token, shadersNeedUpdate,
+                                          useShaderPreset);
+  EXPECT_EQ(1u, preset.CreateCount());
+  EXPECT_FALSE(useShaderPreset);
+
+  preset.Complete();
+  CRendererShaderActivationAccess::Update(&preset, "preset.slangp", 7, token, shadersNeedUpdate,
+                                          useShaderPreset);
+  EXPECT_EQ(2u, preset.CreateCount());
+  EXPECT_EQ(1u, preset.ReadCount());
+  EXPECT_TRUE(useShaderPreset);
+
+  CRendererShaderActivationAccess::Update(&preset, "preset.slangp", 7, token, shadersNeedUpdate,
+                                          useShaderPreset);
+  EXPECT_EQ(2u, preset.CreateCount());
 }
 
 TEST(TestShaderPresetAsync, StaleSelectionCannotWakeNewSelection)
 {
+  CTestShaderPreset preset({ShaderPresetState::PENDING});
   auto oldToken = std::make_shared<ShaderWakeToken>(1);
-  std::weak_ptr<ShaderWakeToken> oldWeak = oldToken;
-  auto current = std::make_shared<ShaderWakeToken>(2);
+  CRendererShaderActivationAccess::InstallCompletionCallback(preset, oldToken);
+
   oldToken.reset();
-  if (auto stale = oldWeak.lock())
-    stale->ready = true;
-  EXPECT_FALSE(current->ready);
+  auto currentToken = std::make_shared<ShaderWakeToken>(2);
+  preset.Complete();
+
+  EXPECT_FALSE(currentToken->ready);
 }
 
 TEST(TestShaderPresetAsync, RendererDestructionBeforeCompletionIsSafe)
 {
+  CTestShaderPreset preset({ShaderPresetState::PENDING});
   auto token = std::make_shared<ShaderWakeToken>(3);
-  std::weak_ptr<ShaderWakeToken> weak = token;
-  token.reset();
-  EXPECT_FALSE(weak.lock());
-}
+  CRendererShaderActivationAccess::InstallCompletionCallback(preset, token);
+  std::weak_ptr<ShaderWakeToken> weakToken = token;
 
-TEST(TestShaderPresetAsync, MissingTechniqueIsTerminalWithoutDiskRetry)
-{
-  const ShaderCreateResult result = ShaderCreateResult::INVALID_TECHNIQUE;
-  EXPECT_EQ(ShaderCreateResult::INVALID_TECHNIQUE, result);
-  EXPECT_NE(ShaderCreateResult::EFFECT_CREATION_FAILED, result);
+  token.reset();
+  preset.Complete();
+
+  EXPECT_FALSE(weakToken.lock());
 }

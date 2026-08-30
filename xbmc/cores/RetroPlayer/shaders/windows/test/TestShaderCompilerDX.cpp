@@ -11,6 +11,7 @@
 #include "cores/RetroPlayer/shaders/windows/ShaderCompilerDX.h"
 #include "filesystem/Directory.h"
 #include "filesystem/File.h"
+#include "guilib/D3DResource.h"
 #include "jobs/JobManager.h"
 #include "threads/Event.h"
 #include "utils/StringUtils.h"
@@ -161,25 +162,33 @@ TEST(TestShaderCompilerDX, DefinesAndNestedIncludesMatchLegacyEffects11Compilati
   CompilerRoot root;
   root.Write("outer.inc", "#include \"inner.inc\"\n");
   root.Write("inner.inc", "#define INCLUDED 1\n");
-  const std::string source =
-      "#include \"outer.inc\"\n#define HLSL_4\n#define HLSL_FX\n#define PARAMETER_UNIFORM\n" +
-      std::string{EFFECT};
-  CShaderCompilerDX compiler;
+  const std::string source = "#include \"outer.inc\"\n" + std::string{EFFECT};
+  auto compileCount = std::make_shared<std::atomic_uint>(0);
+  CShaderCompilerDX compiler(compileCount);
   const auto prepared = Prepare(compiler, Pass(root, source));
   ASSERT_TRUE(prepared.prepared) << prepared.error;
   const auto compiled = compiler.Compile(*prepared.prepared);
   ASSERT_FALSE(compiled.bytecode.empty()) << compiled.error;
+  ASSERT_EQ(1u, *compileCount);
 
   Microsoft::WRL::ComPtr<ID3D11Device> device;
   ASSERT_TRUE(
       SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, 0, nullptr, 0,
                                   D3D11_SDK_VERSION, device.GetAddressOf(), nullptr, nullptr)));
-  Microsoft::WRL::ComPtr<ID3DX11Effect> effect;
-  ASSERT_TRUE(
-      SUCCEEDED(D3DX11CreateEffectFromMemory(compiled.bytecode.data(), compiled.bytecode.size(), 0,
-                                             device.Get(), effect.GetAddressOf(), "")));
-  ASSERT_TRUE(effect->GetTechniqueByName("TEQ")->IsValid());
-  EXPECT_TRUE(effect->GetTechniqueByName("TEQ")->GetPassByName("P0")->IsValid());
+  CD3DEffect bytecodeEffect(device.Get());
+  auto bytecode = std::make_shared<const EffectBytecode>(compiled.bytecode);
+  ASSERT_TRUE(bytecodeEffect.Create(std::move(bytecode)));
+
+  DefinesMap defines{{"HLSL_4", ""}, {"HLSL_FX", ""}, {"PARAMETER_UNIFORM", ""}};
+  CD3DEffect legacyEffect(device.Get());
+  legacyEffect.AddIncludePath(root.path);
+  ASSERT_TRUE(legacyEffect.Create(source, &defines));
+
+  ASSERT_EQ(1u, *compileCount);
+  ASSERT_TRUE(bytecodeEffect.Get()->GetTechniqueByName("TEQ")->IsValid());
+  ASSERT_TRUE(legacyEffect.Get()->GetTechniqueByName("TEQ")->IsValid());
+  EXPECT_TRUE(bytecodeEffect.Get()->GetTechniqueByName("TEQ")->GetPassByName("P0")->IsValid());
+  EXPECT_TRUE(legacyEffect.Get()->GetTechniqueByName("TEQ")->GetPassByName("P0")->IsValid());
 }
 
 TEST(TestShaderCompilerDX, PersistentHitSkipsD3DCompileAfterServiceReconstruction)

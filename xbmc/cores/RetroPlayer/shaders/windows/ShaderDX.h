@@ -11,6 +11,7 @@
 #include "ShaderTextureDX.h"
 #include "ShaderTypesDX.h"
 #include "cores/RetroPlayer/shaders/IShader.h"
+#include "cores/RetroPlayer/shaders/ShaderCompileTypes.h"
 #include "cores/RetroPlayer/shaders/windows/RPWinOutputShader.h"
 #include "guilib/D3DResource.h"
 
@@ -29,6 +30,8 @@ enum class ShaderCreateResult
   EFFECT_CREATION_FAILED,
   INVALID_TECHNIQUE,
 };
+
+bool ShouldRetryDiskArtifact(ShaderCreateResult result, ShaderArtifactOrigin origin);
 
 class CShaderDX : protected CRPWinShader, public IShader
 {

@@ -17,6 +17,7 @@
 #include "utils/URIUtils.h"
 #include "utils/log.h"
 
+#include <cassert>
 #include <regex>
 
 using namespace KODI::SHADER;
@@ -24,7 +25,7 @@ using namespace KODI::SHADER;
 CShaderPreset::CShaderPreset(RETRO::CRenderContext& context,
                              unsigned videoWidth,
                              unsigned videoHeight)
-  : m_context(context),
+  : m_context(&context),
     m_videoSize(videoWidth, videoHeight)
 {
 }
@@ -43,9 +44,11 @@ bool CShaderPreset::RenderUpdate(IShaderTexture& sourceTexture,
                                  IShaderTexture& targetTexture,
                                  const float2& viewportSize)
 {
+  assert(m_context != nullptr);
+
   // Save the viewport
   CRect viewPort;
-  m_context.GetViewPort(viewPort);
+  m_context->GetViewPort(viewPort);
 
   // Handle target resizing
   UpdateOutputSize(viewportSize);
@@ -70,8 +73,8 @@ bool CShaderPreset::RenderUpdate(IShaderTexture& sourceTexture,
   }
 
   // Restore our viewport
-  m_context.SetViewPort(viewPort);
-  m_context.SetScissors(viewPort);
+  m_context->SetViewPort(viewPort);
+  m_context->SetScissors(viewPort);
 
   m_frameCount += static_cast<float>(m_speed);
   return true;

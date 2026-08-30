@@ -1,6 +1,7 @@
 set(SOURCES TestD3DEffectBytecode.cpp
             TestRPWinOutputShaderDX.cpp
             TestShaderCompilerDX.cpp
+            TestShaderPresetDXAsync.cpp
             TestShaderUtilsDX.cpp
             TestShaderVertexDX.cpp)
 

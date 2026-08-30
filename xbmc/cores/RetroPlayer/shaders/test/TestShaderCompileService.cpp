@@ -25,6 +25,19 @@
 using namespace KODI::SHADER;
 using namespace std::chrono_literals;
 
+namespace KODI::SHADER
+{
+class CShaderCompileServiceTestAccess
+{
+public:
+  static std::unique_ptr<CShaderCompileService> Create(std::function<void()> beforeCanonicalAttach)
+  {
+    return std::unique_ptr<CShaderCompileService>(
+        new CShaderCompileService(std::move(beforeCanonicalAttach)));
+  }
+};
+} // namespace KODI::SHADER
+
 namespace
 {
 ShaderCompileKey MakeKey(std::string_view value)
@@ -219,6 +232,42 @@ TEST_F(TestShaderCompileService, DifferentProvisionalRequestsConvergeOnOneCanoni
   ExpectTerminal(first);
   ExpectTerminal(second);
   EXPECT_EQ(1u, compiler->compileCount);
+}
+
+TEST_F(TestShaderCompileService, TerminalSnapshotCannotMissConvergingRequest)
+{
+  // The canonical listener insertion and terminal-state observation must be one atomic operation.
+  CEvent attachEntered;
+  CEvent releaseAttach{true};
+  service = CShaderCompileServiceTestAccess::Create(
+      [&]
+      {
+        attachEntered.Set();
+        releaseAttach.Wait();
+      });
+  service->RegisterCompiler(compiler, store);
+
+  compiler->compileRelease.Reset();
+  auto first = service->Request("fake", Pass("winner", "race"), {});
+  ASSERT_TRUE(compiler->compileEntered.Wait(5s));
+
+  CEvent firstCompleted;
+  first->AddCompletionCallback([&] { firstCompleted.Set(); });
+  auto second = service->Request("fake", Pass("converger", "race"), {});
+  CEvent secondCompleted;
+  second->AddCompletionCallback([&] { secondCompleted.Set(); });
+  ASSERT_TRUE(attachEntered.Wait(5s));
+
+  compiler->compileRelease.Set();
+  ASSERT_TRUE(compiler->compileFinished.Wait(5s));
+  const bool winnerCompletedBeforeAttach = firstCompleted.Wait(250ms);
+  releaseAttach.Set();
+
+  EXPECT_FALSE(winnerCompletedBeforeAttach);
+  if (!winnerCompletedBeforeAttach)
+    EXPECT_TRUE(firstCompleted.Wait(5s));
+  EXPECT_TRUE(secondCompleted.Wait(5s));
+  EXPECT_EQ(ShaderCompileState::READY, second->GetState());
 }
 
 TEST_F(TestShaderCompileService, SharedPassAcrossPresetContextsCompilesOnce)

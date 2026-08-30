@@ -69,9 +69,11 @@ public:
                           std::uint64_t generation);
 
 private:
+  explicit CShaderCompileService(std::function<void()> beforeCanonicalAttach);
   std::shared_ptr<INTERNAL::ServiceState> m_state;
   std::shared_ptr<INTERNAL::Dispatcher> m_dispatcher;
   std::unique_ptr<CJobQueue> m_queue;
+  friend class CShaderCompileServiceTestAccess;
 };
 
 class CShaderCompileGroup

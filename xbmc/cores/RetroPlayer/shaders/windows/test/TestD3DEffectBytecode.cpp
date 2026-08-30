@@ -42,14 +42,6 @@ protected:
     bytecode = std::make_shared<const EffectBytecode>(begin, begin + blob->GetBufferSize());
   }
 
-  Microsoft::WRL::ComPtr<ID3DX11Effect> CreateEffect() const
-  {
-    Microsoft::WRL::ComPtr<ID3DX11Effect> effect;
-    EXPECT_TRUE(SUCCEEDED(D3DX11CreateEffectFromMemory(bytecode->data(), bytecode->size(), 0,
-                                                       device.Get(), effect.GetAddressOf(), "")));
-    return effect;
-  }
-
   Microsoft::WRL::ComPtr<ID3D11Device> device;
   std::shared_ptr<const EffectBytecode> bytecode;
   std::atomic_uint compileCount{0};
@@ -58,33 +50,48 @@ protected:
 
 TEST_F(TestD3DEffectBytecode, CreatesNamedTechniqueFromD3DCompileBytecode)
 {
-  const auto effect = CreateEffect();
-  ASSERT_NE(nullptr, effect);
-  ASSERT_TRUE(effect->GetTechniqueByName("TEQ")->IsValid());
-  EXPECT_TRUE(effect->GetTechniqueByName("TEQ")->GetPassByName("P0")->IsValid());
+  CD3DEffect effect(device.Get());
+  ASSERT_TRUE(effect.Create(bytecode));
+  ASSERT_NE(nullptr, effect.Get());
+  ASSERT_TRUE(effect.SetTechnique("TEQ"));
+  EXPECT_TRUE(effect.Get()->GetTechniqueByName("TEQ")->GetPassByName("P0")->IsValid());
 }
 
 TEST_F(TestD3DEffectBytecode, TwoEffectsFromOneArtifactKeepIndependentScalars)
 {
-  const auto first = CreateEffect();
-  const auto second = CreateEffect();
-  ASSERT_TRUE(SUCCEEDED(first->GetVariableByName("Value")->AsScalar()->SetFloat(1.0f)));
-  ASSERT_TRUE(SUCCEEDED(second->GetVariableByName("Value")->AsScalar()->SetFloat(2.0f)));
+  CD3DEffect first(device.Get());
+  CD3DEffect second(device.Get());
+  ASSERT_TRUE(first.Create(bytecode));
+  ASSERT_TRUE(second.Create(bytecode));
+  ASSERT_TRUE(first.SetScalar("Value", 1.0f));
+  ASSERT_TRUE(second.SetScalar("Value", 2.0f));
   float firstValue{};
   float secondValue{};
-  ASSERT_TRUE(SUCCEEDED(first->GetVariableByName("Value")->AsScalar()->GetFloat(&firstValue)));
-  ASSERT_TRUE(SUCCEEDED(second->GetVariableByName("Value")->AsScalar()->GetFloat(&secondValue)));
+  ASSERT_TRUE(
+      SUCCEEDED(first.Get()->GetVariableByName("Value")->AsScalar()->GetFloat(&firstValue)));
+  ASSERT_TRUE(
+      SUCCEEDED(second.Get()->GetVariableByName("Value")->AsScalar()->GetFloat(&secondValue)));
   EXPECT_FLOAT_EQ(1.0f, firstValue);
   EXPECT_FLOAT_EQ(2.0f, secondValue);
 }
 
 TEST_F(TestD3DEffectBytecode, DeviceRecreationUsesRetainedBytecodeWithoutCompile)
 {
-  auto effect = CreateEffect();
-  effect.Reset();
-  effect = CreateEffect();
-  effect.Reset();
-  effect = CreateEffect();
+  CD3DEffect effect(device.Get());
+  ASSERT_TRUE(effect.Create(bytecode));
+  bytecode.reset();
+
+  effect.OnDestroyDevice(false);
+  EXPECT_EQ(nullptr, effect.Get());
+  effect.OnCreateDevice();
+  ASSERT_NE(nullptr, effect.Get());
+
+  effect.OnDestroyDevice(false);
+  EXPECT_EQ(nullptr, effect.Get());
+  effect.OnCreateDevice();
+
   EXPECT_EQ(1u, compileCount);
-  EXPECT_TRUE(effect->GetTechniqueByName("TEQ")->IsValid());
+  ASSERT_NE(nullptr, effect.Get());
+  EXPECT_TRUE(effect.SetTechnique("TEQ"));
+  EXPECT_TRUE(effect.Get()->GetTechniqueByName("TEQ")->GetPassByName("P0")->IsValid());
 }

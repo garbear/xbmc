@@ -54,6 +54,9 @@ public:
   std::vector<ShaderPass>& GetPasses() override { return m_passes; }
 
 protected:
+  // Allows state-only unit fakes that never access rendering methods.
+  CShaderPreset() = default;
+
   // Shader interface
   virtual ShaderPresetState CreateShaders() = 0;
   virtual bool CreateLayouts() = 0;
@@ -81,7 +84,8 @@ protected:
                                          const std::string& sourceStr) const;
 
   // Construction parameters
-  RETRO::CRenderContext& m_context;
+  // Non-null for normal construction; rendering methods assert this invariant.
+  RETRO::CRenderContext* const m_context{nullptr};
 
   // Relative path of the currently loaded shader preset
   // If empty, it means that a preset is not currently loaded

@@ -566,7 +566,11 @@ void CD3DTexture::DrawQuad(const CRect& rect,
   DrawQuad(points, color, numViews, view, texCoords, options, depth);
 }
 
-CD3DEffect::CD3DEffect()
+CD3DEffect::CD3DEffect() : CD3DEffect(nullptr)
+{
+}
+
+CD3DEffect::CD3DEffect(ID3D11Device* device) : m_device(device)
 {
   m_includePaths.insert("special://xbmc/system/shaders/");
 }
@@ -586,7 +590,8 @@ bool CD3DEffect::Create(const std::string &effectString, DefinesMap* defines)
     m_defines = *defines; //FIXME: is this a copy of all members?
   if (CreateEffect())
   {
-    Register();
+    if (!m_device)
+      Register();
     return true;
   }
   return false;
@@ -600,7 +605,8 @@ bool CD3DEffect::Create(std::shared_ptr<const EffectBytecode> effectBytecode)
   m_effectBytecode = std::move(effectBytecode);
   if (CreateEffectFromBytecode())
   {
-    Register();
+    if (!m_device)
+      Register();
     return true;
   }
   return false;
@@ -614,9 +620,10 @@ void CD3DEffect::Release()
 
 void CD3DEffect::OnDestroyDevice(bool fatal)
 {
-  m_effect = nullptr;
-  m_techniquie = nullptr;
+  // Effects11 child objects are owned by the parent effect and must be released first.
   m_currentPass = nullptr;
+  m_techniquie = nullptr;
+  m_effect = nullptr;
 }
 
 void CD3DEffect::OnCreateDevice()
@@ -849,8 +856,7 @@ bool CD3DEffect::CreateEffect()
 
   hr = D3DX11CompileEffectFromMemory(
       m_effectString.c_str(), m_effectString.length(), "", &definemacros[0], this, dwShaderFlags,
-      0, DX::DeviceResources::Get()->GetD3DDevice(), m_effect.ReleaseAndGetAddressOf(),
-      pError.GetAddressOf());
+      0, GetDevice(), m_effect.ReleaseAndGetAddressOf(), pError.GetAddressOf());
 
   if(hr == S_OK)
     return true;
@@ -868,19 +874,25 @@ bool CD3DEffect::CreateEffect()
 
 bool CD3DEffect::CreateEffectFromBytecode()
 {
-  if (!m_effectBytecode || m_effectBytecode->empty() ||
-      !DX::DeviceResources::Get()->GetD3DDevice())
+  if (!m_effectBytecode || m_effectBytecode->empty() || !GetDevice())
     return false;
 
   const HRESULT result = D3DX11CreateEffectFromMemory(
       m_effectBytecode->data(), m_effectBytecode->size(), 0,
-      DX::DeviceResources::Get()->GetD3DDevice(), m_effect.ReleaseAndGetAddressOf(), "");
+      GetDevice(), m_effect.ReleaseAndGetAddressOf(), "");
   if (FAILED(result))
   {
     CLog::Log(LOGERROR, "CD3DEffect::CreateEffectFromBytecode(): failed with {}", result);
     return false;
   }
   return true;
+}
+
+ID3D11Device* CD3DEffect::GetDevice() const
+{
+  if (m_device)
+    return m_device.Get();
+  return DX::DeviceResources::Get()->GetD3DDevice();
 }
 
 CD3DBuffer::CD3DBuffer()

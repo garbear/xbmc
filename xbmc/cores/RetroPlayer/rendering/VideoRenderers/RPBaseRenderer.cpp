@@ -154,15 +154,7 @@ void CRPBaseRenderer::SetShaderPreset(const std::string& presetPath)
     m_renderSettings.VideoSettings().SetShaderPreset(presetPath);
     m_shaderWakeToken = std::make_shared<ShaderWakeToken>(++m_shaderGeneration);
     if (m_shaderPreset)
-    {
-      std::weak_ptr<ShaderWakeToken> weakToken = m_shaderWakeToken;
-      m_shaderPreset->SetCompletionCallback(
-          [weakToken]
-          {
-            if (const auto token = weakToken.lock())
-              token->ready = true;
-          });
-    }
+      InstallShaderCompletionCallback(*m_shaderPreset, m_shaderWakeToken);
     m_bShadersNeedUpdate = true;
   }
 }
@@ -281,26 +273,42 @@ void CRPBaseRenderer::Updateshaders()
   if (!m_shaderWakeToken)
     m_shaderWakeToken = std::make_shared<ShaderWakeToken>(++m_shaderGeneration);
 
-  if (m_shaderWakeToken->generation == m_shaderGeneration &&
-      m_shaderWakeToken->ready.exchange(false))
-    m_bShadersNeedUpdate = true;
+  UpdateShaderPresetActivation(
+      m_shaderPreset.get(), m_renderSettings.VideoSettings().GetShaderPreset(), m_shaderGeneration,
+      m_shaderWakeToken, m_bShadersNeedUpdate, m_bUseShaderPreset);
+}
 
-  if (m_bShadersNeedUpdate)
+void CRPBaseRenderer::InstallShaderCompletionCallback(SHADER::IShaderPreset& preset,
+                                                      const std::shared_ptr<ShaderWakeToken>& token)
+{
+  std::weak_ptr<ShaderWakeToken> weakToken = token;
+  preset.SetCompletionCallback(
+      [weakToken]
+      {
+        if (const auto lockedToken = weakToken.lock())
+          lockedToken->ready = true;
+      });
+}
+
+void CRPBaseRenderer::UpdateShaderPresetActivation(SHADER::IShaderPreset* preset,
+                                                   const std::string& presetPath,
+                                                   std::uint64_t generation,
+                                                   const std::shared_ptr<ShaderWakeToken>& token,
+                                                   bool& shadersNeedUpdate,
+                                                   bool& useShaderPreset)
+{
+  if (token->generation == generation && token->ready.exchange(false))
+    shadersNeedUpdate = true;
+
+  if (shadersNeedUpdate)
   {
-    if (m_shaderPreset)
+    if (preset)
     {
-      std::weak_ptr<ShaderWakeToken> weakToken = m_shaderWakeToken;
-      m_shaderPreset->SetCompletionCallback(
-          [weakToken]
-          {
-            if (const auto token = weakToken.lock())
-              token->ready = true;
-          });
-      const SHADER::ShaderPresetState state =
-          m_shaderPreset->SetShaderPreset(m_renderSettings.VideoSettings().GetShaderPreset());
-      m_bUseShaderPreset = state == SHADER::ShaderPresetState::READY;
+      InstallShaderCompletionCallback(*preset, token);
+      const SHADER::ShaderPresetState state = preset->SetShaderPreset(presetPath);
+      useShaderPreset = state == SHADER::ShaderPresetState::READY;
     }
-    m_bShadersNeedUpdate = false;
+    shadersNeedUpdate = false;
   }
 }
 

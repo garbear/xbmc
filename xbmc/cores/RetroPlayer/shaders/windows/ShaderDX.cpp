@@ -25,6 +25,12 @@ using namespace KODI::SHADER;
 
 CShaderDX::CShaderDX() = default;
 
+bool KODI::SHADER::ShouldRetryDiskArtifact(ShaderCreateResult result, ShaderArtifactOrigin origin)
+{
+  return result == ShaderCreateResult::EFFECT_CREATION_FAILED &&
+         origin == ShaderArtifactOrigin::DISK;
+}
+
 std::array<CUSTOMVERTEX, 4> KODI::SHADER::CreateShaderQuad(float width, float height)
 {
   const float left = -width / 2.0f;

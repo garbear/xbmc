@@ -111,6 +111,14 @@ protected:
 
   // Video shaders
   void Updateshaders();
+  static void InstallShaderCompletionCallback(SHADER::IShaderPreset& preset,
+                                              const std::shared_ptr<ShaderWakeToken>& token);
+  static void UpdateShaderPresetActivation(SHADER::IShaderPreset* preset,
+                                           const std::string& presetPath,
+                                           std::uint64_t generation,
+                                           const std::shared_ptr<ShaderWakeToken>& token,
+                                           bool& shadersNeedUpdate,
+                                           bool& useShaderPreset);
   std::unique_ptr<SHADER::IShaderPreset> m_shaderPreset;
 
   bool m_bShadersNeedUpdate = true;

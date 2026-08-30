@@ -188,6 +188,7 @@ class CD3DEffect : public ID3DResource, public ID3DInclude
 {
 public:
   CD3DEffect();
+  explicit CD3DEffect(ID3D11Device* device);
   virtual ~CD3DEffect();
   bool Create(const std::string &effectString, DefinesMap* defines);
   bool Create(std::shared_ptr<const EffectBytecode> effectBytecode);
@@ -216,6 +217,7 @@ public:
   __declspec(nothrow) HRESULT __stdcall Close(LPCVOID pData) override;
 
 private:
+  ID3D11Device* GetDevice() const;
   bool CreateEffect();
   bool CreateEffectFromBytecode();
 
@@ -226,6 +228,7 @@ private:
   Microsoft::WRL::ComPtr<ID3DX11EffectTechnique> m_techniquie;
   Microsoft::WRL::ComPtr<ID3DX11EffectPass> m_currentPass;
   std::set<std::string> m_includePaths;
+  Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 };
 
 class CD3DBuffer : public ID3DResource
