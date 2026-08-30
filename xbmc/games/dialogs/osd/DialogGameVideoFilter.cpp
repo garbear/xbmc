@@ -25,11 +25,11 @@
 #include "guilib/GUIWindowManager.h"
 #include "guilib/WindowIDs.h"
 #include "jobs/JobManager.h"
+#include "jobs/LambdaJob.h"
 #include "resources/LocalizeStrings.h"
 #include "resources/ResourcesComponent.h"
 #include "settings/GameSettings.h"
 #include "settings/MediaSettings.h"
-#include "threads/SystemClock.h"
 #include "utils/StringUtils.h"
 #include "utils/URIUtils.h"
 #include "utils/Variant.h"
@@ -38,9 +38,9 @@
 
 #include <stdlib.h>
 
+
 using namespace KODI;
 using namespace GAME;
-using namespace std::chrono_literals;
 
 namespace
 {
@@ -72,6 +72,48 @@ void GetProperties(const CFileItem& item, std::string& videoFilter)
 CDialogGameVideoFilter::CDialogGameVideoFilter()
   : CDialogGameVideoSelect(WINDOW_DIALOG_GAME_VIDEO_FILTER)
 {
+}
+
+CDialogGameVideoFilter::~CDialogGameVideoFilter()
+{
+  if (CServiceBroker::IsServiceManagerUp())
+    CServiceBroker::GetGameServices().VideoShaders().Events().Unsubscribe(this);
+}
+
+void CDialogGameVideoFilter::OnInitWindow()
+{
+  CServiceBroker::GetGameServices().VideoShaders().Events().Subscribe(
+      this,
+      [](const SHADER::ShaderPresetLoadersChanged&)
+      {
+        if (CGUIComponent* gui = CServiceBroker::GetGUI())
+        {
+          CGUIMessage message(GUI_MSG_REFRESH_LIST, WINDOW_DIALOG_GAME_VIDEO_FILTER,
+                              CONTROL_VIDEO_THUMBS);
+          gui->GetWindowManager().SendThreadMessage(message, WINDOW_DIALOG_GAME_VIDEO_FILTER);
+        }
+      });
+  CDialogGameVideoSelect::OnInitWindow();
+}
+
+void CDialogGameVideoFilter::OnDeinitWindow(int nextWindowID)
+{
+  if (CServiceBroker::IsServiceManagerUp())
+    CServiceBroker::GetGameServices().VideoShaders().Events().Unsubscribe(this);
+  CDialogGameVideoSelect::OnDeinitWindow(nextWindowID);
+}
+
+bool CDialogGameVideoFilter::OnMessage(CGUIMessage& message)
+{
+  if (message.GetMessage() == GUI_MSG_REFRESH_LIST &&
+      message.GetSenderId() == WINDOW_DIALOG_GAME_VIDEO_FILTER &&
+      message.GetControlId() == CONTROL_VIDEO_THUMBS)
+  {
+    if (!IsActive())
+      return true;
+    m_regenerateList = true;
+  }
+  return CDialogGameVideoSelect::OnMessage(message);
 }
 
 std::string CDialogGameVideoFilter::GetHeading()
@@ -141,12 +183,16 @@ void CDialogGameVideoFilter::InitVideoFilters()
 
   //! @todo Have the add-on give us the xml as a string (or parse it)
   std::string xmlFilename;
+  std::string shaderBackendId;
 #if defined(HAS_GLES)
   xmlFilename = "ShaderPresetsGLSLP_GLES.xml";
+  shaderBackendId = "gles";
 #elif defined(HAS_GL)
   xmlFilename = "ShaderPresetsGLSLP.xml";
+  shaderBackendId = "gl";
 #else
   xmlFilename = "ShaderPresetsHLSLP.xml";
+  shaderBackendId = "d3d11-fx";
 #endif
 
   const std::string homeAddonPath = CSpecialProtocol::TranslatePath(
@@ -205,6 +251,7 @@ void CDialogGameVideoFilter::InitVideoFilters()
   CLog::Log(LOGDEBUG, "Loaded {} shader presets from default XML, {}", videoFilters.size(),
             CURL::GetRedacted(xmlPath));
 
+  std::vector<std::string> presetPaths;
   for (const auto& videoFilter : videoFilters)
   {
     bool canLoadPreset =
@@ -219,7 +266,11 @@ void CDialogGameVideoFilter::InitVideoFilters()
     item->SetArt("icon", ICON_VIDEO);
 
     m_items.Add(std::move(item));
+    if (CURL::IsFullPath(videoFilter.path))
+      presetPaths.emplace_back(videoFilter.path);
   }
+  CServiceBroker::GetGameServices().VideoShaders().WarmupPresets(shaderBackendId,
+                                                                 std::move(presetPaths));
 }
 
 void CDialogGameVideoFilter::InitGetMoreButton()
@@ -348,56 +399,31 @@ void CDialogGameVideoFilter::OnGetMore()
   if (!jobManager)
     return;
 
-  jobManager->Submit(
-      [this]()
-      {
-        using namespace ADDON;
+  const std::string addonId = PRESETS_ADDON_NAME;
+  const unsigned int jobId = jobManager->AddJob(
+      new CLambdaJob([addonId]()
+                     {
+                       using namespace ADDON;
 
-        CAddonMgr& addonManager = CServiceBroker::GetAddonMgr();
+                       CAddonMgr& addonManager = CServiceBroker::GetAddonMgr();
 
-        bool success = false;
-        if (addonManager.IsAddonDisabled(PRESETS_ADDON_NAME))
-        {
-          success = addonManager.EnableAddon(PRESETS_ADDON_NAME);
-        }
-        else if (!addonManager.IsAddonInstalled(PRESETS_ADDON_NAME))
-        {
-          AddonPtr addon;
-          success = CAddonInstaller::GetInstance().InstallModal(PRESETS_ADDON_NAME, addon,
-                                                                InstallModalPrompt::CHOICE_NO);
-        }
-
-        if (success)
-          OnGetMoreComplete();
-      });
-}
-
-void CDialogGameVideoFilter::OnGetMoreComplete()
-{
-  CGUIComponent* gui = CServiceBroker::GetGUI();
-  if (gui == nullptr)
-    return;
-
-  // Shader preset add-ons are loaded async, so wait until the new
-  // add-on is fully loaded. Bail after a reasonable timeout to avoid
-  // waiting indefinitely.
-  XbmcThreads::EndTime<> timeout(5s);
-  while (!CServiceBroker::GetGameServices().VideoShaders().HasAddons() && !timeout.IsTimePast())
-  {
-    // Should take on the order of 100-200ms
-    KODI::TIME::Sleep(50ms);
-  }
-
-  if (timeout.IsTimePast())
-    CLog::Log(LOGERROR, "Timed out waiting for shader presets to load");
-
-  if (CServiceBroker::GetGameServices().VideoShaders().HasAddons())
-  {
-    // Indicate that the new presets should be loaded
-    m_regenerateList = true;
-
-    // Send the GUI message to reload the list
-    CGUIMessage msg(GUI_MSG_REFRESH_LIST, GetID(), CONTROL_VIDEO_THUMBS);
-    gui->GetWindowManager().SendThreadMessage(msg, GetID());
-  }
+                       bool success = false;
+                       if (addonManager.IsAddonDisabled(addonId))
+                       {
+                         success = addonManager.EnableAddon(addonId);
+                       }
+                       else if (!addonManager.IsAddonInstalled(addonId))
+                       {
+                         AddonPtr addon;
+                         success = CAddonInstaller::GetInstance().InstallModal(
+                             addonId, addon, InstallModalPrompt::CHOICE_NO);
+                       }
+                       if (!success)
+                         CLog::Log(LOGERROR,
+                                   "Failed to enable or install shader preset add-on '{}'",
+                                   addonId);
+                     }),
+      nullptr, CJob::PRIORITY_LOW);
+  if (jobId == 0)
+    CLog::Log(LOGERROR, "Failed to queue shader preset add-on installation");
 }

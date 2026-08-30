@@ -9,6 +9,7 @@
 #pragma once
 
 #include <array>
+#include <compare>
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -36,7 +37,24 @@ enum class ShaderRequestDisposition
 {
   MEMORY_HIT,
   DISK_HIT,
-  QUEUED
+  QUEUED,
+  COALESCED
+};
+
+enum class ShaderCompileIdentityKind
+{
+  CANONICAL,
+  PREPARATION_FAILURE
+};
+
+struct ShaderCompileIdentity
+{
+  ShaderCompileIdentityKind kind{ShaderCompileIdentityKind::CANONICAL};
+  std::string backendId;
+  std::string value;
+
+  bool operator==(const ShaderCompileIdentity&) const = default;
+  auto operator<=>(const ShaderCompileIdentity&) const = default;
 };
 
 enum class ShaderPresetState
@@ -65,6 +83,15 @@ struct ShaderCompiledArtifact
   ShaderCompileKey key;
   std::shared_ptr<const std::vector<std::uint8_t>> bytecode;
   ShaderArtifactOrigin origin{ShaderArtifactOrigin::COMPILED};
+};
+
+struct ShaderCompileTerminal
+{
+  ShaderCompileIdentity identity;
+  std::uint64_t generation{0};
+  ShaderCompileState state{ShaderCompileState::UNKNOWN};
+  ShaderRequestDisposition disposition{ShaderRequestDisposition::QUEUED};
+  std::optional<ShaderArtifactOrigin> artifactOrigin;
 };
 
 enum class ShaderCacheLoadState

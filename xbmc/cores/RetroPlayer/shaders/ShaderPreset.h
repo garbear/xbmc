@@ -51,7 +51,7 @@ public:
     m_completionCallback = std::move(callback);
   }
   const std::string& GetShaderPreset() const override;
-  std::vector<ShaderPass>& GetPasses() override { return m_passes; }
+  const std::vector<ShaderPass>& GetPasses() const override { return m_passes; }
 
 protected:
   // Allows state-only unit fakes that never access rendering methods.

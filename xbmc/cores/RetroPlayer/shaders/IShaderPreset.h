@@ -86,6 +86,6 @@ public:
    *
    * \return All the video shader passes of the currently loaded preset
    */
-  virtual std::vector<ShaderPass>& GetPasses() = 0;
+  virtual const std::vector<ShaderPass>& GetPasses() const = 0;
 };
 } // namespace KODI::SHADER

@@ -8,11 +8,19 @@
 
 #pragma once
 
-#include "IShaderPreset.h"
+#include "ShaderTypes.h"
 #include "addons/Addon.h"
+#include "utils/EventStream.h"
 
 #include <map>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <set>
 #include <string>
+#include <string_view>
+#include <vector>
 
 namespace ADDON
 {
@@ -23,8 +31,17 @@ class CShaderPresetAddon;
 
 namespace KODI::SHADER
 {
+class CShaderCompileHandle;
 class CShaderCompileService;
 class IShaderPresetLoader;
+class CShaderPresetFactoryTestAccess;
+
+namespace INTERNAL
+{
+class CShaderPresetLoaderSlot;
+struct ShaderPresetLoaderRegistry;
+struct ShaderWarmupState;
+} // namespace INTERNAL
 
 class CShaderPresetFactory
 {
@@ -34,21 +51,6 @@ public:
    */
   explicit CShaderPresetFactory(ADDON::CAddonMgr& addons);
   ~CShaderPresetFactory();
-
-  /*!
-   * \brief Register an object that can load shader presets
-   *
-   * \param loader The instance of a preset loader
-   * \param extension The extension for which the loader can load presets
-   */
-  void RegisterLoader(IShaderPresetLoader* loader, const std::string& extension);
-
-  /*!
-   * \brief Unregister the shader preset loader
-   *
-   * \param load The loader that was passed to RegisterLoader()
-   */
-  void UnregisterLoader(const IShaderPresetLoader* loader);
 
   /*!
    * \brief Check if any shader preset add-ons have been loaded
@@ -63,11 +65,11 @@ public:
    * \brief Load a preset from the given path
    *
    * \param presetPath The path to the shader preset
-   * \param[out] shaderPreset The loaded shader preset
+   * \param[out] definition The loaded data-only preset definition
    *
    * \return True if the preset was loaded, false otherwise
    */
-  bool LoadPreset(const std::string& presetPath, IShaderPreset& shaderPreset);
+  bool LoadPreset(std::string_view presetPath, ShaderPresetDefinition& definition) const;
 
   /*!
    * \brief Check if a registered loader can load a given preset
@@ -79,16 +81,38 @@ public:
   bool CanLoadPreset(const std::string& presetPath) const;
 
   CShaderCompileService& CompileService();
+  void WarmupPresets(std::string backendId, std::vector<std::string> presetPaths);
+  CEventStream<ShaderPresetLoadersChanged>& Events() { return m_events; }
 
 private:
-  void UpdateAddons();
+  CShaderPresetFactory();
+  void UpdateAddons(std::string_view reinstallId = {});
+  void PublishLoader(const std::shared_ptr<IShaderPresetLoader>& loader,
+                     const std::vector<std::string>& extensions);
+  void ReplaceLoader(const std::shared_ptr<IShaderPresetLoader>& oldLoader,
+                     const std::shared_ptr<IShaderPresetLoader>& newLoader,
+                     const std::vector<std::string>& extensions);
+  void RemoveLoader(const std::shared_ptr<IShaderPresetLoader>& loader);
+  void SetWarmupSummaryCallback(std::function<void(const ShaderWarmupSummary&)> callback);
+  void SetWarmupRequestCallback(
+      std::function<void(const std::shared_ptr<CShaderCompileHandle>&)> callback);
+  void BlockReinstall(std::string addonId);
+  void ClearReinstallBlock(std::string_view addonId);
+  bool IsReinstallBlocked(std::string_view addonId) const;
+  bool ShouldSkipBlockedReinstall(std::string_view addonId, bool oldGenerationActive);
 
   // Construction parameters
-  ADDON::CAddonMgr& m_addons;
-  std::unique_ptr<CShaderCompileService> m_compileService;
+  ADDON::CAddonMgr* m_addons{nullptr};
+  std::shared_ptr<CShaderCompileService> m_compileService;
+  std::shared_ptr<INTERNAL::ShaderPresetLoaderRegistry> m_registry;
+  std::shared_ptr<INTERNAL::ShaderWarmupState> m_warmup;
 
-  std::map<std::string, IShaderPresetLoader*, std::less<>> m_loaders;
-  std::map<std::string, std::unique_ptr<ADDON::CShaderPresetAddon>, std::less<>> m_shaderAddons;
-  std::map<std::string, std::unique_ptr<ADDON::CShaderPresetAddon>, std::less<>> m_failedAddons;
+  mutable std::mutex m_addonMutex;
+  std::mutex m_reconcileMutex;
+  std::map<std::string, std::shared_ptr<ADDON::CShaderPresetAddon>, std::less<>> m_shaderAddons;
+  std::map<std::string, std::shared_ptr<ADDON::CShaderPresetAddon>, std::less<>> m_failedAddons;
+  std::set<std::string, std::less<>> m_blockedReinstallIds;
+  CEventSource<ShaderPresetLoadersChanged> m_events;
+  friend class CShaderPresetFactoryTestAccess;
 };
 } // namespace KODI::SHADER

@@ -81,14 +81,17 @@ bool CJobQueue::AddJob(CJob* job)
     return false;
   }
 
+  const std::uint64_t queueId = ++m_nextQueueId;
   if (m_lifo)
-    m_jobQueue.emplace_back(job);
+    m_jobQueue.emplace_back(job, queueId);
   else
-    m_jobQueue.emplace_front(job);
+    m_jobQueue.emplace_front(job, queueId);
 
   QueueNextJob();
-
-  return true;
+  const auto hasQueueId = [queueId](const CJobPointer& pointer)
+  { return pointer.GetQueueId() == queueId; };
+  return std::ranges::find_if(m_jobQueue, hasQueueId) != m_jobQueue.end() ||
+         std::ranges::find_if(m_processing, hasQueueId) != m_processing.end();
 }
 
 void CJobQueue::OnJobNotify(const CJob* job)

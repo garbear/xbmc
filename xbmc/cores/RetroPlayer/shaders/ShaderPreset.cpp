@@ -37,7 +37,11 @@ CShaderPreset::~CShaderPreset()
 
 bool CShaderPreset::ReadPresetFile(const std::string& presetPath)
 {
-  return CServiceBroker::GetGameServices().VideoShaders().LoadPreset(presetPath, *this);
+  ShaderPresetDefinition definition;
+  if (!CServiceBroker::GetGameServices().VideoShaders().LoadPreset(presetPath, definition))
+    return false;
+  m_passes = std::move(definition.passes);
+  return true;
 }
 
 bool CShaderPreset::RenderUpdate(IShaderTexture& sourceTexture,
@@ -102,6 +106,8 @@ ShaderPresetState CShaderPreset::SetShaderPreset(const std::string& shaderPreset
 
   const bool retryPending =
       m_presetPath == shaderPresetPath && !m_passes.empty() && m_pShaders.empty();
+  if (!retryPending)
+    m_passes.clear();
   m_presetPath = shaderPresetPath;
 
   if (m_presetPath.empty())
@@ -110,6 +116,7 @@ ShaderPresetState CShaderPreset::SetShaderPreset(const std::string& shaderPreset
 
   if (!retryPending && !ReadPresetFile(m_presetPath))
   {
+    m_passes.clear();
     CLog::Log(LOGERROR, "CShaderPreset::SetShaderPreset: Couldn't read shader files for {}",
               m_presetPath);
     return ShaderPresetState::FAILED;

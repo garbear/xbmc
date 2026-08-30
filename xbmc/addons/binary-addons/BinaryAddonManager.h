@@ -26,6 +26,7 @@ namespace ADDON
 
   class CAddonDll;
   class CBinaryAddonBase;
+  class CBinaryAddonManagerTestAccess;
 
   class CBinaryAddonManager
   {
@@ -85,6 +86,7 @@ namespace ADDON
     AddonPtr GetRunningAddon(const std::string& addonId) const;
 
   private:
+    friend class CBinaryAddonManagerTestAccess;
     mutable CCriticalSection m_critSection;
 
     std::map<std::string, std::shared_ptr<CBinaryAddonBase>, std::less<>> m_runningAddons;

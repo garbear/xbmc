@@ -11,7 +11,6 @@
 #include "addons/addoninfo/AddonInfo.h"
 #include "addons/addoninfo/AddonType.h"
 #include "addons/binary-addons/BinaryAddonBase.h"
-#include "cores/RetroPlayer/shaders/IShaderPreset.h"
 #include "filesystem/SpecialProtocol.h"
 #include "utils/StringUtils.h"
 #include "utils/URIUtils.h"
@@ -110,12 +109,13 @@ void CShaderPresetAddon::ResetProperties(void)
   memset(m_ifc.shaderpreset->toAddon, 0, sizeof(KodiToAddonFuncTable_ShaderPreset));
 }
 
-bool CShaderPresetAddon::LoadPreset(const std::string& presetPath,
-                                    SHADER::IShaderPreset& shaderPreset)
+bool CShaderPresetAddon::LoadPreset(std::string_view presetPath,
+                                    SHADER::ShaderPresetDefinition& definition)
 {
+  std::unique_lock lock(m_dllSection);
   bool bSuccess = false;
 
-  std::string translatedPath = CSpecialProtocol::TranslatePath(presetPath);
+  std::string translatedPath = CSpecialProtocol::TranslatePath(std::string{presetPath});
 
   preset_file file =
       m_ifc.shaderpreset->toAddon->PresetFileNew(m_ifc.shaderpreset, translatedPath.c_str());
@@ -127,7 +127,7 @@ bool CShaderPresetAddon::LoadPreset(const std::string& presetPath,
     video_shader videoShader = {};
     if (shaderPresetAddon->ReadShaderPreset(videoShader))
     {
-      TranslateShaderPreset(videoShader, shaderPreset);
+      TranslateShaderPreset(videoShader, definition);
       bSuccess = true;
       shaderPresetAddon->FreeShaderPreset(videoShader);
     }
@@ -140,7 +140,7 @@ bool CShaderPresetAddon::LoadPreset(const std::string& presetPath,
 //! later in GetShaderParameters, we should resolve which param goes to which
 //! shader in the add-on
 void CShaderPresetAddon::TranslateShaderPreset(const video_shader& shader,
-                                               SHADER::IShaderPreset& shaderPreset)
+                                               SHADER::ShaderPresetDefinition& definition)
 {
   if (shader.passes != nullptr)
   {
@@ -169,7 +169,7 @@ void CShaderPresetAddon::TranslateShaderPreset(const video_shader& shader,
         }
       }
 
-      shaderPreset.GetPasses().emplace_back(std::move(shaderPass));
+      definition.passes.emplace_back(std::move(shaderPass));
     }
   }
 }

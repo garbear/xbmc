@@ -93,8 +93,8 @@ public:
   const std::vector<std::string>& GetExtensions() const { return m_extensions; }
 
   // Implementation of IShaderPresetLoader
-  bool LoadPreset(const std::string& presetPath,
-                  KODI::SHADER::IShaderPreset& shaderPreset) override;
+  bool LoadPreset(std::string_view presetPath,
+                  KODI::SHADER::ShaderPresetDefinition& definition) override;
 
 private:
   /*!
@@ -103,7 +103,7 @@ private:
   void ResetProperties(void);
 
   static void TranslateShaderPreset(const video_shader& shader,
-                                    KODI::SHADER::IShaderPreset& shaderPreset);
+                                    KODI::SHADER::ShaderPresetDefinition& definition);
   static void TranslateShaderPass(const video_shader_pass& pass,
                                   KODI::SHADER::ShaderPass& shaderPass);
   static void TranslateShaderLut(const video_shader_lut& lut, KODI::SHADER::ShaderLut& shaderLut);

@@ -10,6 +10,7 @@
 
 #include <deque>
 #include <memory>
+#include <set>
 #include <string>
 #include <utility>
 
@@ -28,6 +29,8 @@ public:
   bool ReadPresetFile(const std::string& presetPath) override
   {
     ++m_readCount;
+    if (m_failedReads.contains(presetPath))
+      return false;
     m_passes.emplace_back();
     return !presetPath.empty();
   }
@@ -35,6 +38,7 @@ public:
   bool HasFailed(const std::string& path) const { return HasPathFailed(path); }
   unsigned int CreateCount() const { return m_createCount; }
   unsigned int ReadCount() const { return m_readCount; }
+  void FailRead(std::string path) { m_failedReads.emplace(std::move(path)); }
 
   void Complete()
   {
@@ -63,6 +67,7 @@ private:
   std::deque<ShaderPresetState> m_states;
   unsigned int m_createCount{0};
   unsigned int m_readCount{0};
+  std::set<std::string, std::less<>> m_failedReads;
 };
 
 class CRendererShaderActivationAccess : public CRPBaseRenderer
@@ -102,6 +107,18 @@ TEST(TestShaderPresetAsync, FailedPassMarksFailedPath)
 
   EXPECT_EQ(ShaderPresetState::FAILED, preset.SetShaderPreset("preset.slangp"));
   EXPECT_TRUE(preset.HasFailed("preset.slangp"));
+}
+
+TEST(TestShaderPresetAsync, ParseFailureCannotReusePassesFromPreviousPath)
+{
+  CTestShaderPreset preset({ShaderPresetState::PENDING, ShaderPresetState::READY});
+  EXPECT_EQ(ShaderPresetState::PENDING, preset.SetShaderPreset("old.slangp"));
+  preset.FailRead("bad.slangp");
+
+  EXPECT_EQ(ShaderPresetState::FAILED, preset.SetShaderPreset("bad.slangp"));
+  EXPECT_EQ(ShaderPresetState::FAILED, preset.SetShaderPreset("bad.slangp"));
+  EXPECT_EQ(3u, preset.ReadCount());
+  EXPECT_EQ(1u, preset.CreateCount());
 }
 
 TEST(TestShaderPresetAsync, CompletionWakesRenderThreadAndRealizesOnce)

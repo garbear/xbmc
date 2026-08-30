@@ -14,6 +14,7 @@
 #include "threads/CriticalSection.h"
 
 #include <queue>
+#include <cstdint>
 #include <vector>
 
 /*!
@@ -130,7 +131,7 @@ private:
   class CJobPointer
   {
   public:
-    explicit CJobPointer(CJob* job) : m_job(job) {}
+    CJobPointer(CJob* job, std::uint64_t queueId) : m_job(job), m_queueId(queueId) {}
 
     void CancelJob();
 
@@ -143,10 +144,12 @@ private:
     CJob* GetJob() const { return m_job; }
     unsigned int GetId() const { return m_id; }
     void SetId(unsigned int jobId) { m_id = jobId; }
+    std::uint64_t GetQueueId() const { return m_queueId; }
 
   private:
     CJob* m_job{nullptr};
     unsigned int m_id{0};
+    std::uint64_t m_queueId{0};
   };
 
   void OnJobNotify(const CJob* job);
@@ -161,4 +164,5 @@ private:
   CJob::PRIORITY m_priority{CJob::PRIORITY::PRIORITY_LOW};
   mutable CCriticalSection m_section;
   bool m_lifo{false};
+  std::uint64_t m_nextQueueId{0};
 };

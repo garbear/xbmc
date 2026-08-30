@@ -92,6 +92,26 @@ struct ShaderPass
   std::vector<ShaderParameter> parameters;
 };
 
+struct ShaderPresetDefinition
+{
+  std::vector<ShaderPass> passes;
+};
+
+struct ShaderWarmupSummary
+{
+  std::size_t presets{0};
+  std::size_t passes{0};
+  std::size_t unique{0};
+  std::size_t memoryHits{0};
+  std::size_t diskHits{0};
+  std::size_t queued{0};
+  std::size_t failed{0};
+};
+
+struct ShaderPresetLoadersChanged
+{
+};
+
 struct float2
 {
   float2() : x(0.0f), y(0.0f) {}

@@ -12,6 +12,7 @@
 #include "threads/CriticalSection.h"
 #include "utils/log.h"
 
+#include <exception>
 #include <map>
 #include <mutex>
 #include <string>
@@ -23,18 +24,27 @@ namespace INTERNAL
 {
 struct RequestState;
 
+struct RequestCallback
+{
+  std::function<void()> callback;
+  std::optional<std::uint64_t> lastDeliveredGeneration;
+};
+
 struct CanonicalEntry
 {
   mutable CCriticalSection mutex;
   ShaderCompileState state{ShaderCompileState::UNKNOWN};
   std::uint64_t generation{0};
   ShaderCompileKey key;
+  std::optional<ShaderCompileIdentity> identity;
+  ShaderCompileContext context;
   std::shared_ptr<const ShaderCompiledArtifact> artifact;
   std::string error;
   std::shared_ptr<const IShaderPreparedUnit> prepared;
   std::shared_ptr<IShaderCompiler> compiler;
   std::shared_ptr<IShaderArtifactStore> store;
   bool diskRetrySpent{false};
+  bool failureLogged{false};
   std::vector<std::weak_ptr<RequestState>> requests;
 };
 
@@ -43,7 +53,7 @@ struct RequestState
   mutable CCriticalSection mutex;
   std::shared_ptr<CanonicalEntry> entry;
   ShaderRequestDisposition disposition{ShaderRequestDisposition::QUEUED};
-  std::vector<std::function<void()>> callbacks;
+  std::vector<RequestCallback> callbacks;
 };
 
 struct CompilerRegistration
@@ -72,10 +82,16 @@ struct Dispatcher
 
 struct GroupState
 {
+  struct Callback
+  {
+    std::function<void()> callback;
+    std::optional<std::string> lastDeliveredGeneration;
+  };
+
   mutable CCriticalSection mutex;
   std::vector<std::shared_ptr<CShaderCompileHandle>> handles;
-  std::vector<std::function<void()>> callbacks;
-  std::string lastCompletedGeneration;
+  std::vector<Callback> callbacks;
+  std::function<void()> beforeCallbackMark;
 };
 } // namespace INTERNAL
 
@@ -86,9 +102,73 @@ using INTERNAL::Dispatcher;
 using INTERNAL::RequestState;
 using INTERNAL::ServiceState;
 
+void InvokeCallbackNoexcept(const std::function<void()>& callback, std::string_view description)
+{
+  try
+  {
+    callback();
+  }
+  catch (const std::exception& exception)
+  {
+    CLog::Log(LOGERROR, "{} failed: {}", description, exception.what());
+  }
+  catch (...)
+  {
+    CLog::Log(LOGERROR, "{} failed with an unknown exception", description);
+  }
+}
+
+class CDiscardAwareShaderJob final : public CJob
+{
+public:
+  CDiscardAwareShaderJob(std::function<void()> work, std::function<void()> discarded)
+    : m_work(std::move(work)), m_discarded(std::move(discarded))
+  {
+  }
+
+  ~CDiscardAwareShaderJob() override
+  {
+    if (!m_handled)
+      Discard();
+  }
+
+  bool DoWork() override
+  {
+    try
+    {
+      m_work();
+      m_handled = true;
+    }
+    catch (...)
+    {
+      m_handled = true;
+      Discard();
+      throw;
+    }
+    return true;
+  }
+
+private:
+  void Discard() noexcept
+  {
+    InvokeCallbackNoexcept(m_discarded, "Shader job discard notification");
+  }
+
+  std::function<void()> m_work;
+  std::function<void()> m_discarded;
+  bool m_handled{false};
+};
+
 bool IsTerminal(ShaderCompileState state)
 {
   return state == ShaderCompileState::READY || state == ShaderCompileState::FAILED;
+}
+
+void LogCompileFailure(const ShaderCompileContext& context, std::string_view error)
+{
+  CLog::Log(LOGERROR,
+            "Shader compilation failed for preset '{}', pass {} ('{}'), shader '{}': {}",
+            context.presetPath, context.passIndex, context.passAlias, context.shaderPath, error);
 }
 
 std::shared_ptr<CanonicalEntry> GetEntry(const std::shared_ptr<RequestState>& request)
@@ -110,15 +190,62 @@ void AttachRequest(const std::shared_ptr<RequestState>& request,
   entry->requests.emplace_back(request);
 }
 
+std::vector<std::shared_ptr<RequestState>> MigrateRequests(
+    const std::shared_ptr<CanonicalEntry>& provisionalEntry,
+    const std::shared_ptr<CanonicalEntry>& targetEntry,
+    const std::shared_ptr<RequestState>& owner,
+    const std::function<void()>& beforeOwnerAttach = {})
+{
+  std::vector<std::shared_ptr<RequestState>> requests;
+  {
+    std::unique_lock lock(provisionalEntry->mutex);
+    for (auto& weakRequest : provisionalEntry->requests)
+      if (auto request = weakRequest.lock())
+        requests.emplace_back(std::move(request));
+    provisionalEntry->requests.clear();
+  }
+
+  std::vector<std::shared_ptr<RequestState>> terminalRequests;
+  for (const auto& request : requests)
+  {
+    std::unique_lock requestLock(request->mutex);
+    if (request->entry != provisionalEntry)
+      continue;
+    std::unique_lock targetLock(targetEntry->mutex);
+    if (request == owner && beforeOwnerAttach)
+      beforeOwnerAttach();
+    const bool terminal = IsTerminal(targetEntry->state);
+    request->entry = targetEntry;
+    if (request == owner)
+      request->disposition = terminal ? ShaderRequestDisposition::MEMORY_HIT
+                                      : ShaderRequestDisposition::COALESCED;
+    targetEntry->requests.emplace_back(request);
+    if (terminal)
+      terminalRequests.emplace_back(request);
+  }
+  return terminalRequests;
+}
+
 void NotifyRequest(const std::shared_ptr<RequestState>& request)
 {
   std::vector<std::function<void()>> callbacks;
   {
-    std::unique_lock lock(request->mutex);
-    callbacks = request->callbacks;
+    std::unique_lock requestLock(request->mutex);
+    std::unique_lock entryLock(request->entry->mutex);
+    if (!IsTerminal(request->entry->state))
+      return;
+    const std::uint64_t generation = request->entry->generation;
+    for (auto& record : request->callbacks)
+    {
+      if (!record.lastDeliveredGeneration || *record.lastDeliveredGeneration != generation)
+      {
+        record.lastDeliveredGeneration = generation;
+        callbacks.emplace_back(record.callback);
+      }
+    }
   }
   for (auto& callback : callbacks)
-    callback();
+    InvokeCallbackNoexcept(callback, "Shader completion callback");
 }
 
 void NotifyEntry(const std::shared_ptr<CanonicalEntry>& entry)
@@ -141,14 +268,19 @@ void NotifyEntry(const std::shared_ptr<CanonicalEntry>& entry)
     NotifyRequest(request);
 }
 
-template<typename F>
-bool Submit(const std::shared_ptr<Dispatcher>& dispatcher, F&& function)
+bool Submit(const std::shared_ptr<Dispatcher>& dispatcher,
+            std::function<void()> function,
+            std::function<void()> discarded)
 {
   std::unique_lock lock(dispatcher->mutex);
   if (dispatcher->stopping || dispatcher->queue == nullptr)
+  {
+    lock.unlock();
+    InvokeCallbackNoexcept(discarded, "Shader job discard notification");
     return false;
-  dispatcher->queue->Submit(std::forward<F>(function));
-  return true;
+  }
+  return dispatcher->queue->AddJob(
+      new CDiscardAwareShaderJob(std::move(function), std::move(discarded)));
 }
 
 void RemoveProvisional(const std::shared_ptr<ServiceState>& state,
@@ -159,6 +291,23 @@ void RemoveProvisional(const std::shared_ptr<ServiceState>& state,
   const auto it = state->provisional.find(identity);
   if (it != state->provisional.end() && it->second.lock() == request)
     state->provisional.erase(it);
+}
+
+void RemoveCanonical(const std::shared_ptr<ServiceState>& state,
+                     const std::shared_ptr<CanonicalEntry>& entry)
+{
+  std::optional<ShaderCompileIdentity> identity;
+  {
+    std::unique_lock lock(entry->mutex);
+    identity = entry->identity;
+  }
+  if (!identity || identity->kind != ShaderCompileIdentityKind::CANONICAL)
+    return;
+  const std::string key = identity->backendId + "\n" + identity->value;
+  std::unique_lock lock(state->mutex);
+  const auto it = state->canonical.find(key);
+  if (it != state->canonical.end() && it->second == entry)
+    state->canonical.erase(it);
 }
 
 void SetTerminal(const std::shared_ptr<CanonicalEntry>& entry,
@@ -172,6 +321,29 @@ void SetTerminal(const std::shared_ptr<CanonicalEntry>& entry,
     entry->artifact = std::move(artifact);
     entry->error = std::move(error);
   }
+  NotifyEntry(entry);
+}
+
+void SetFailureTerminal(const std::shared_ptr<CanonicalEntry>& entry,
+                        std::string error,
+                        bool allowLog = true)
+{
+  ShaderCompileContext context;
+  bool shouldLog{false};
+  {
+    std::unique_lock lock(entry->mutex);
+    entry->state = ShaderCompileState::FAILED;
+    entry->artifact.reset();
+    entry->error = error;
+    if (allowLog && !entry->failureLogged)
+    {
+      entry->failureLogged = true;
+      context = entry->context;
+      shouldLog = true;
+    }
+  }
+  if (shouldLog)
+    LogCompileFailure(context, error);
   NotifyEntry(entry);
 }
 
@@ -193,8 +365,9 @@ void CompileEntry(const std::shared_ptr<CanonicalEntry>& entry)
   const ShaderCompileResult result = compiler->Compile(*prepared);
   if (!result.error.empty() || result.bytecode.empty())
   {
-    SetTerminal(entry, ShaderCompileState::FAILED, {},
-                result.error.empty() ? "Shader compiler returned no bytecode" : result.error);
+    const std::string error =
+        result.error.empty() ? "Shader compiler returned no bytecode" : result.error;
+    SetFailureTerminal(entry, error);
     return;
   }
 
@@ -223,9 +396,11 @@ void PrepareRequest(const std::shared_ptr<ServiceState>& state,
   const ShaderPrepareResult prepared = compiler->Prepare(*input);
   if (!prepared.canonicalKey || !prepared.prepared)
   {
-    const std::string fingerprint = backendId + "\n" + prepared.failureFingerprint;
+    const std::string failureValue = prepared.failureFingerprint.empty()
+                                         ? "provisional:" + provisionalIdentity
+                                         : prepared.failureFingerprint;
+    const std::string fingerprint = backendId + "\n" + failureValue;
     std::shared_ptr<CanonicalEntry> failureEntry;
-    bool firstFailure{false};
     {
       std::unique_lock lock(state->mutex);
       const auto it = state->preparationFailures.find(fingerprint);
@@ -235,28 +410,41 @@ void PrepareRequest(const std::shared_ptr<ServiceState>& state,
       {
         failureEntry = provisionalEntry;
         state->preparationFailures.emplace(fingerprint, failureEntry);
-        firstFailure = true;
+      }
+      if (failureEntry != provisionalEntry)
+      {
+        const auto provisional = state->provisional.find(provisionalIdentity);
+        if (provisional != state->provisional.end() && provisional->second.lock() == request)
+          state->provisional.erase(provisional);
       }
     }
 
     if (failureEntry != provisionalEntry)
-      AttachRequest(request, failureEntry, ShaderRequestDisposition::MEMORY_HIT);
+    {
+      const auto terminalRequests =
+          MigrateRequests(provisionalEntry, failureEntry, request);
+      for (const auto& terminalRequest : terminalRequests)
+        NotifyRequest(terminalRequest);
+    }
     else
-      SetTerminal(failureEntry, ShaderCompileState::FAILED, {},
-                  prepared.error.empty() ? "Shader preparation failed" : prepared.error);
+    {
+      {
+        std::unique_lock lock(failureEntry->mutex);
+        failureEntry->identity = ShaderCompileIdentity{
+            ShaderCompileIdentityKind::PREPARATION_FAILURE, backendId,
+            failureValue};
+      }
+      SetFailureTerminal(
+          failureEntry, prepared.error.empty() ? "Shader preparation failed" : prepared.error);
+      RemoveProvisional(state, provisionalIdentity, request);
+    }
 
-    RemoveProvisional(state, provisionalIdentity, request);
-    if (failureEntry != provisionalEntry)
-      NotifyRequest(request);
-    if (firstFailure)
-      CLog::Log(LOGERROR, "Shader preparation failed: {}", prepared.error);
     return;
   }
 
   const std::string canonicalIdentity = backendId + "\n" + prepared.canonicalKey->hex;
   std::shared_ptr<CanonicalEntry> entry;
   bool ownsCanonical{false};
-  ShaderCompileState existingState{ShaderCompileState::UNKNOWN};
   {
     std::unique_lock lock(state->mutex);
     const auto it = state->canonical.find(canonicalIdentity);
@@ -268,32 +456,28 @@ void PrepareRequest(const std::shared_ptr<ServiceState>& state,
       state->canonical.emplace(canonicalIdentity, entry);
       ownsCanonical = true;
     }
+    if (!ownsCanonical)
+    {
+      const auto provisional = state->provisional.find(provisionalIdentity);
+      if (provisional != state->provisional.end() && provisional->second.lock() == request)
+        state->provisional.erase(provisional);
+    }
   }
 
   if (!ownsCanonical)
   {
-    bool terminal{false};
-    {
-      std::unique_lock requestLock(request->mutex);
-      std::unique_lock entryLock(entry->mutex);
-      existingState = entry->state;
-      if (state->beforeCanonicalAttach)
-        state->beforeCanonicalAttach();
-      terminal = IsTerminal(existingState);
-      request->entry = entry;
-      request->disposition =
-          terminal ? ShaderRequestDisposition::MEMORY_HIT : ShaderRequestDisposition::QUEUED;
-      entry->requests.emplace_back(request);
-    }
-    RemoveProvisional(state, provisionalIdentity, request);
-    if (terminal)
-      NotifyRequest(request);
+    const auto terminalRequests = MigrateRequests(
+        provisionalEntry, entry, request, state->beforeCanonicalAttach);
+    for (const auto& terminalRequest : terminalRequests)
+      NotifyRequest(terminalRequest);
     return;
   }
 
   {
     std::unique_lock lock(entry->mutex);
     entry->key = *prepared.canonicalKey;
+    entry->identity = ShaderCompileIdentity{ShaderCompileIdentityKind::CANONICAL, backendId,
+                                            prepared.canonicalKey->hex};
     entry->prepared = prepared.prepared;
     entry->compiler = compiler;
     entry->store = store;
@@ -325,10 +509,10 @@ ShaderPresetState GetGroupState(const std::vector<std::shared_ptr<CShaderCompile
   bool failed{false};
   for (const auto& handle : handles)
   {
-    const ShaderCompileState state = handle->GetState();
-    if (!IsTerminal(state))
+    const auto terminal = handle->GetTerminal();
+    if (!terminal)
       return ShaderPresetState::PENDING;
-    if (state == ShaderCompileState::FAILED || !handle->GetArtifact())
+    if (terminal->state == ShaderCompileState::FAILED || !terminal->artifactOrigin)
       failed = true;
   }
   return failed ? ShaderPresetState::FAILED : ShaderPresetState::READY;
@@ -341,23 +525,38 @@ void EvaluateGroup(const std::shared_ptr<INTERNAL::GroupState>& group)
     std::unique_lock lock(group->mutex);
     handles = group->handles;
   }
-  if (GetGroupState(handles) == ShaderPresetState::PENDING)
-    return;
 
   std::string generation;
   for (const auto& handle : handles)
-    generation += std::to_string(handle->GetGeneration()) + ":";
+  {
+    const auto terminal = handle->GetTerminal();
+    if (!terminal)
+      return;
+    generation += std::to_string(terminal->generation) + ":";
+  }
+
+  std::function<void()> beforeCallbackMark;
+  {
+    std::unique_lock lock(group->mutex);
+    beforeCallbackMark = group->beforeCallbackMark;
+  }
+  if (beforeCallbackMark)
+    beforeCallbackMark();
 
   std::vector<std::function<void()>> callbacks;
   {
     std::unique_lock lock(group->mutex);
-    if (group->lastCompletedGeneration == generation)
-      return;
-    group->lastCompletedGeneration = std::move(generation);
-    callbacks = group->callbacks;
+    for (auto& record : group->callbacks)
+    {
+      if (!record.lastDeliveredGeneration || *record.lastDeliveredGeneration != generation)
+      {
+        record.lastDeliveredGeneration = generation;
+        callbacks.emplace_back(record.callback);
+      }
+    }
   }
   for (auto& callback : callbacks)
-    callback();
+    InvokeCallbackNoexcept(callback, "Shader group completion callback");
 }
 } // namespace
 
@@ -386,6 +585,20 @@ ShaderRequestDisposition CShaderCompileHandle::GetDisposition() const
   return m_state->disposition;
 }
 
+std::optional<ShaderCompileTerminal> CShaderCompileHandle::GetTerminal() const
+{
+  std::unique_lock requestLock(m_state->mutex);
+  const auto& entry = m_state->entry;
+  std::unique_lock entryLock(entry->mutex);
+  if (!IsTerminal(entry->state) || !entry->identity)
+    return {};
+  return ShaderCompileTerminal{*entry->identity, entry->generation, entry->state,
+                               m_state->disposition,
+                               entry->artifact
+                                   ? std::optional<ShaderArtifactOrigin>{entry->artifact->origin}
+                                   : std::nullopt};
+}
+
 std::shared_ptr<const ShaderCompiledArtifact> CShaderCompileHandle::GetArtifact() const
 {
   const auto entry = GetEntry(m_state);
@@ -405,12 +618,14 @@ void CShaderCompileHandle::AddCompletionCallback(std::function<void()> callback)
   bool terminal{false};
   {
     std::unique_lock lock(m_state->mutex);
-    m_state->callbacks.emplace_back(callback);
     std::unique_lock entryLock(m_state->entry->mutex);
     terminal = IsTerminal(m_state->entry->state);
+    m_state->callbacks.emplace_back(
+        INTERNAL::RequestCallback{callback, terminal ? std::optional{m_state->entry->generation}
+                                                     : std::nullopt});
   }
   if (terminal)
-    callback();
+    InvokeCallbackNoexcept(callback, "Shader completion callback");
 }
 
 CShaderCompileService::CShaderCompileService() : CShaderCompileService(std::function<void()>{})
@@ -438,6 +653,14 @@ CShaderCompileService::~CShaderCompileService()
     m_dispatcher->queue = nullptr;
   }
   m_queue->CancelJobs();
+}
+
+void CShaderCompileService::SetGroupBeforeCallbackMark(
+    const std::shared_ptr<CShaderCompileGroup>& group,
+    std::function<void()> callback)
+{
+  std::unique_lock lock(group->m_state->mutex);
+  group->m_state->beforeCallbackMark = std::move(callback);
 }
 
 void CShaderCompileService::RegisterCompiler(std::shared_ptr<IShaderCompiler> compiler,
@@ -473,6 +696,9 @@ std::shared_ptr<CShaderCompileHandle> CShaderCompileService::Request(std::string
     auto entry = std::make_shared<CanonicalEntry>();
     entry->state = ShaderCompileState::FAILED;
     entry->error = "Unsupported shader compiler backend";
+    entry->identity = ShaderCompileIdentity{ShaderCompileIdentityKind::PREPARATION_FAILURE,
+                                            std::string{backendId}, "unsupported-backend"};
+    entry->context = context;
     auto request = std::make_shared<RequestState>();
     request->entry = entry;
     entry->requests.emplace_back(request);
@@ -497,18 +723,21 @@ std::shared_ptr<CShaderCompileHandle> CShaderCompileService::Request(std::string
     {
       auto entry = std::make_shared<CanonicalEntry>();
       entry->state = ShaderCompileState::QUEUED;
+      entry->context = compileRequest.context;
+      entry->identity = ShaderCompileIdentity{ShaderCompileIdentityKind::PREPARATION_FAILURE,
+                                              std::string{backendId},
+                                              "provisional:" + compileRequest.provisionalKey};
       request = std::make_shared<RequestState>();
       request->entry = entry;
       entry->requests.emplace_back(request);
       m_state->provisional[provisionalIdentity] = request;
       created = true;
     }
-  }
-
-  if (provisionalOwner)
-  {
-    request = std::make_shared<RequestState>();
-    AttachRequest(request, GetEntry(provisionalOwner), ShaderRequestDisposition::MEMORY_HIT);
+    else
+    {
+      request = std::make_shared<RequestState>();
+      AttachRequest(request, GetEntry(provisionalOwner), ShaderRequestDisposition::COALESCED);
+    }
   }
 
   auto handle = std::shared_ptr<CShaderCompileHandle>(new CShaderCompileHandle(request));
@@ -519,13 +748,23 @@ std::shared_ptr<CShaderCompileHandle> CShaderCompileService::Request(std::string
     const auto store = registration.store;
     const auto input = compileRequest.input;
     const std::string backend{backendId};
-    if (!Submit(m_dispatcher,
-                [state, compiler, store, input, request, provisionalIdentity, backend]
-                {
-                  PrepareRequest(state, compiler, store, input, request, provisionalIdentity,
-                                 backend);
-                }))
-      SetTerminal(GetEntry(request), ShaderCompileState::FAILED, {}, "Shader service is stopping");
+    Submit(m_dispatcher,
+           [state, compiler, store, input, request, provisionalIdentity, backend]
+           {
+             PrepareRequest(state, compiler, store, input, request, provisionalIdentity, backend);
+           },
+           [state, request, provisionalIdentity]
+           {
+             RemoveProvisional(state, provisionalIdentity, request);
+             const auto entry = GetEntry(request);
+             RemoveCanonical(state, entry);
+             bool stopping{false};
+             {
+               std::unique_lock lock(state->mutex);
+               stopping = state->stopping;
+             }
+             SetFailureTerminal(entry, "Shader job was discarded", !stopping);
+           });
   }
   return handle;
 }
@@ -544,7 +783,7 @@ std::shared_ptr<CShaderCompileGroup> CShaderCompileService::RequestGroup(
         Request(backendId, pass, {presetPath, index, pass.alias, pass.sourcePath}));
   }
   if (completion)
-    state->callbacks.emplace_back(std::move(completion));
+    state->callbacks.push_back({std::move(completion), std::nullopt});
 
   std::weak_ptr<INTERNAL::GroupState> weakState = state;
   for (const auto& handle : state->handles)
@@ -583,7 +822,20 @@ bool CShaderCompileService::RejectDiskArtifact(const std::shared_ptr<CShaderComp
 
   if (store)
     store->Remove(key);
-  return Submit(m_dispatcher, [entry] { CompileEntry(entry); });
+  const auto state = m_state;
+  if (Submit(m_dispatcher, [entry] { CompileEntry(entry); },
+             [state, entry]
+             {
+               bool stopping{false};
+               {
+                 std::unique_lock lock(state->mutex);
+                 stopping = state->stopping;
+               }
+               RemoveCanonical(state, entry);
+               SetFailureTerminal(entry, "Shader retry job was discarded", !stopping);
+             }))
+    return true;
+  return false;
 }
 
 CShaderCompileGroup::CShaderCompileGroup(std::shared_ptr<INTERNAL::GroupState> state)
@@ -606,7 +858,7 @@ void CShaderCompileGroup::AddCompletionCallback(std::function<void()> callback) 
 {
   {
     std::unique_lock lock(m_state->mutex);
-    m_state->callbacks.emplace_back(callback);
+    m_state->callbacks.push_back({std::move(callback), std::nullopt});
   }
   EvaluateGroup(m_state);
 }

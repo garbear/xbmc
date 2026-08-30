@@ -23,9 +23,12 @@ class CDialogGameVideoFilter : public CDialogGameVideoSelect
 {
 public:
   CDialogGameVideoFilter();
-  ~CDialogGameVideoFilter() override = default;
+  ~CDialogGameVideoFilter() override;
+  bool OnMessage(CGUIMessage& message) override;
 
 protected:
+  void OnInitWindow() override;
+  void OnDeinitWindow(int nextWindowID) override;
   // implementation of CDialogGameVideoSelect
   std::string GetHeading() override;
   void PreInit() override;
@@ -41,7 +44,6 @@ private:
   void InitVideoFilters();
   void InitGetMoreButton();
   void OnGetMore();
-  void OnGetMoreComplete();
 
   CFileItemList m_items;
 

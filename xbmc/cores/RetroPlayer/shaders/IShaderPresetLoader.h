@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <string>
+#include "ShaderTypes.h"
+
+#include <string_view>
 
 namespace KODI::SHADER
 {
-class IShaderPreset;
-
 /*!
  * \brief API for a class that can load shader presets
  */
@@ -30,6 +30,6 @@ public:
    *
    * \return True if the preset was loaded, false otherwise
    */
-  virtual bool LoadPreset(const std::string& presetPath, IShaderPreset& shaderPreset) = 0;
+  virtual bool LoadPreset(std::string_view presetPath, ShaderPresetDefinition& definition) = 0;
 };
 } // namespace KODI::SHADER

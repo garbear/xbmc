@@ -37,6 +37,7 @@ public:
   ShaderCompileState GetState() const;
   std::uint64_t GetGeneration() const;
   ShaderRequestDisposition GetDisposition() const;
+  std::optional<ShaderCompileTerminal> GetTerminal() const;
   std::shared_ptr<const ShaderCompiledArtifact> GetArtifact() const;
   std::string GetError() const;
   void AddCompletionCallback(std::function<void()> callback) const;
@@ -70,6 +71,8 @@ public:
 
 private:
   explicit CShaderCompileService(std::function<void()> beforeCanonicalAttach);
+  void SetGroupBeforeCallbackMark(const std::shared_ptr<CShaderCompileGroup>& group,
+                                  std::function<void()> callback);
   std::shared_ptr<INTERNAL::ServiceState> m_state;
   std::shared_ptr<INTERNAL::Dispatcher> m_dispatcher;
   std::unique_ptr<CJobQueue> m_queue;
