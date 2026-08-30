@@ -25,6 +25,19 @@ using namespace KODI::SHADER;
 
 CShaderDX::CShaderDX() = default;
 
+std::array<CUSTOMVERTEX, 4> KODI::SHADER::CreateShaderQuad(float width, float height)
+{
+  const float left = -width / 2.0f;
+  const float right = width / 2.0f;
+  const float top = -height / 2.0f;
+  const float bottom = height / 2.0f;
+
+  return {{{left, top, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+           {right, top, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f},
+           {right, bottom, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f},
+           {left, bottom, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}}};
+}
+
 CShaderDX::~CShaderDX()
 {
   if (m_pInputBuffer != nullptr)
@@ -74,6 +87,15 @@ bool CShaderDX::Create(unsigned int passIdx,
     return false;
   }
 
+  if (!m_effect.SetTechnique("TEQ"))
+  {
+    CLog::Log(LOGERROR,
+              "CShaderDX::Create: Shader has no valid FX11 technique: pass={}, alias={}, "
+              "shader={}, technique=TEQ",
+              m_passIdx, m_passAlias, m_shaderPath);
+    return false;
+  }
+
   return true;
 }
 
@@ -116,36 +138,8 @@ void CShaderDX::PrepareParameters(
 
   CUSTOMVERTEX* v;
   LockVertexBuffer(reinterpret_cast<void**>(&v));
-
-  // top left
-  v[0].x = -m_outputSize.x / 2;
-  v[0].y = -m_outputSize.y / 2;
-  // top right
-  v[1].x = m_outputSize.x / 2;
-  v[1].y = -m_outputSize.y / 2;
-  // bottom right
-  v[2].x = m_outputSize.x / 2;
-  v[2].y = m_outputSize.y / 2;
-  // bottom left
-  v[3].x = -m_outputSize.x / 2;
-  v[3].y = m_outputSize.y / 2;
-
-  // top left
-  v[0].z = 0;
-  v[0].tu = 0;
-  v[0].tv = 0;
-  // top right
-  v[1].z = 0;
-  v[1].tu = 1;
-  v[1].tv = 0;
-  // bottom right
-  v[2].z = 0;
-  v[2].tu = 1;
-  v[2].tv = 1;
-  // bottom left
-  v[3].z = 0;
-  v[3].tu = 0;
-  v[3].tv = 1;
+  const auto vertices = CreateShaderQuad(m_outputSize.x, m_outputSize.y);
+  memcpy(v, vertices.data(), sizeof(vertices));
 
   UnlockVertexBuffer();
   UpdateInputBuffer(frameCount);
@@ -167,7 +161,7 @@ bool CShaderDX::CreateVertexBuffer(unsigned int vertCount, unsigned int vertSize
 
 bool CShaderDX::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* layout, unsigned int numElements)
 {
-  return CRPWinShader::CreateInputLayout(layout, numElements);
+  return CRPWinShader::CreateInputLayout(layout, numElements, "TEQ");
 }
 
 bool CShaderDX::CreateInputBuffer()
