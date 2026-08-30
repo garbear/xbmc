@@ -39,10 +39,13 @@ public:
    *
    * \param source The source of the video frame, in its original resolution (unscaled)
    * \param target The target texture that the final result will be rendered to
+   * \param viewportSize Size of the output viewport in pixels
    *
    * \return Returns false if updating or rendering failed, true if both succeeded
    */
-  virtual bool RenderUpdate(IShaderTexture& sourceTexture, IShaderTexture& targetTexture) = 0;
+  virtual bool RenderUpdate(IShaderTexture& sourceTexture,
+                            IShaderTexture& targetTexture,
+                            const float2& viewportSize) = 0;
 
   /*!
    * \brief Informs about the speed of playback
