@@ -38,11 +38,7 @@ std::array<CUSTOMVERTEX, 4> KODI::SHADER::CreateShaderQuad(float width, float he
            {left, bottom, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}}};
 }
 
-CShaderDX::~CShaderDX()
-{
-  if (m_pInputBuffer != nullptr)
-    m_pInputBuffer->Release();
-}
+CShaderDX::~CShaderDX() = default;
 
 bool CShaderDX::Create(unsigned int passIdx,
                        std::string passAlias,
@@ -101,6 +97,9 @@ bool CShaderDX::Create(unsigned int passIdx,
 
 void CShaderDX::Render(IShaderTexture& sourceTexture, IShaderTexture& targetTexture)
 {
+  if (!m_parametersReady)
+    return;
+
   auto& sourceDX = static_cast<CShaderTextureDX&>(sourceTexture);
   auto& targetDX = static_cast<CShaderTextureDX&>(targetTexture);
 
@@ -133,16 +132,22 @@ void CShaderDX::PrepareParameters(
     const std::vector<std::unique_ptr<IShader>>& pShaders,
     uint64_t frameCount)
 {
+  m_parametersReady = false;
+
   // Set destination rectangle size
   m_destSize = m_outputSize;
 
-  CUSTOMVERTEX* v;
-  LockVertexBuffer(reinterpret_cast<void**>(&v));
+  CUSTOMVERTEX* v = nullptr;
+  if (!LockVertexBuffer(reinterpret_cast<void**>(&v)))
+    return;
+
   const auto vertices = CreateShaderQuad(m_outputSize.x, m_outputSize.y);
   memcpy(v, vertices.data(), sizeof(vertices));
 
-  UnlockVertexBuffer();
-  UpdateInputBuffer(frameCount);
+  if (!UnlockVertexBuffer())
+    return;
+
+  m_parametersReady = UpdateInputBuffer(frameCount);
 }
 
 void CShaderDX::UpdateMVP()
@@ -173,30 +178,45 @@ bool CShaderDX::CreateInputBuffer()
                                  D3D11_CPU_ACCESS_WRITE);
   D3D11_SUBRESOURCE_DATA initInputSubresource = {&inputInitData, 0, 0};
 
-  if (FAILED(pDevice->CreateBuffer(&cbInputDesc, &initInputSubresource, &m_pInputBuffer)))
+  Microsoft::WRL::ComPtr<ID3D11Buffer> inputBuffer;
+  const HRESULT result =
+      pDevice->CreateBuffer(&cbInputDesc, &initInputSubresource, inputBuffer.GetAddressOf());
+  if (FAILED(result))
   {
-    CLog::Log(LOGERROR, "CShaderDX::CreateInputBuffer: Failed to create constant buffer for video "
-                        "shader input data");
+    CLog::Log(LOGERROR,
+              "CShaderDX::CreateInputBuffer: Failed to create constant buffer for video shader "
+              "input data: result={}",
+              result);
     return false;
   }
 
+  m_pInputBuffer = std::move(inputBuffer);
   return true;
 }
 
-void CShaderDX::UpdateInputBuffer(uint64_t frameCount)
+bool CShaderDX::UpdateInputBuffer(uint64_t frameCount)
 {
+  if (!m_pInputBuffer)
+  {
+    CLog::Log(LOGERROR, "CShaderDX::UpdateInputBuffer: Constant buffer is unavailable");
+    return false;
+  }
+
   ID3D11DeviceContext1* pContext = DX::DeviceResources::Get()->GetD3DContext();
   cbInput input = GetInputData(frameCount);
-  cbInput* pData;
-  void** ppData = reinterpret_cast<void**>(&pData);
-  D3D11_MAPPED_SUBRESOURCE resource;
-
-  if (SUCCEEDED(pContext->Map(m_pInputBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource)))
+  D3D11_MAPPED_SUBRESOURCE resource{};
+  const HRESULT result =
+      pContext->Map(m_pInputBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+  if (FAILED(result))
   {
-    *ppData = resource.pData;
-    memcpy(*ppData, &input, sizeof(cbInput));
-    pContext->Unmap(m_pInputBuffer, 0);
+    CLog::Log(LOGERROR, "CShaderDX::UpdateInputBuffer: Failed to map constant buffer: result={}",
+              result);
+    return false;
   }
+
+  memcpy(resource.pData, &input, sizeof(cbInput));
+  pContext->Unmap(m_pInputBuffer.Get(), 0);
+  return true;
 }
 
 CShaderDX::cbInput CShaderDX::GetInputData(uint64_t frameCount) const
@@ -222,7 +242,7 @@ void CShaderDX::SetShaderParameters(const CD3DTexture& sourceTexture)
   m_effect.SetResources("decal", {const_cast<CD3DTexture&>(sourceTexture).GetAddressOfSRV()}, 1);
   m_effect.SetMatrix("modelViewProj", reinterpret_cast<const float*>(&m_MVP));
   //! @todo(optimization) Add frame_count to separate cbuffer
-  m_effect.SetConstantBuffer("input", m_pInputBuffer);
+  m_effect.SetConstantBuffer("input", m_pInputBuffer.Get());
 
   for (const auto& [paramName, paramValue] : m_shaderParameters)
     m_effect.SetFloatArray(paramName.c_str(), &paramValue, 1);

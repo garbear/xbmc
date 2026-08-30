@@ -75,6 +75,9 @@ public:
    */
   bool CreateInputBuffer();
 
+protected:
+  virtual bool UpdateInputBuffer(uint64_t frameCount);
+
 private:
   struct cbInput
   {
@@ -85,7 +88,6 @@ private:
     float frame_direction;
   };
 
-  void UpdateInputBuffer(uint64_t frameCount);
   cbInput GetInputData(uint64_t frameCount = 0) const;
   void SetShaderParameters(const CD3DTexture& sourceTexture);
 
@@ -126,7 +128,9 @@ private:
   unsigned int m_frameCountMod{0};
 
   // Holds the data bound to the input cbuffer (cbInput here)
-  ID3D11Buffer* m_pInputBuffer{nullptr};
+  Microsoft::WRL::ComPtr<ID3D11Buffer> m_pInputBuffer;
+
+  bool m_parametersReady{false};
 
   // Sampler state
   //ID3D11SamplerState* m_pSampler{nullptr};
