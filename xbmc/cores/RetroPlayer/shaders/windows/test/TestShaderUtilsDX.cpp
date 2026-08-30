@@ -71,6 +71,107 @@ float4 main_fragment() : SV_Target { return float4(1.0, 1.0, 1.0, 1.0); }
   EXPECT_FALSE(GetShaderPassDescription(effect.Get(), "TEQ", 0, passDesc));
 }
 
+TEST(TestShaderUtilsDX, ResolvesAbsoluteFinalPassTarget)
+{
+  ShaderPass pass;
+  pass.fbo.scaleX.scaleType = ScaleType::ABSOLUTE_SCALE;
+  pass.fbo.scaleX.abs = 256;
+  pass.fbo.scaleY.scaleType = ScaleType::ABSOLUTE_SCALE;
+  pass.fbo.scaleY.abs = 224;
+
+  const ShaderRenderTargetDX target = ResolveFinalPassTarget(pass, {1280.0f, 720.0f});
+
+  EXPECT_FLOAT_EQ(256.0f, target.size.x);
+  EXPECT_FLOAT_EQ(224.0f, target.size.y);
+  EXPECT_EQ(DXGI_FORMAT_B8G8R8A8_UNORM, target.format);
+}
+
+TEST(TestShaderUtilsDX, PreservesViewportTargetForNonAbsoluteFinalPass)
+{
+  ShaderPass pass;
+  pass.fbo.scaleX.scaleType = ScaleType::INPUT;
+  pass.fbo.scaleX.scale = 2.0f;
+  pass.fbo.scaleY.scaleType = ScaleType::VIEWPORT;
+  pass.fbo.scaleY.scale = 0.5f;
+
+  const ShaderRenderTargetDX target = ResolveFinalPassTarget(pass, {1280.0f, 720.0f});
+
+  EXPECT_FLOAT_EQ(1280.0f, target.size.x);
+  EXPECT_FLOAT_EQ(720.0f, target.size.y);
+  EXPECT_EQ(DXGI_FORMAT_B8G8R8A8_UNORM, target.format);
+}
+
+TEST(TestShaderUtilsDX, ResolvesAbsoluteFinalPassAxesIndependently)
+{
+  ShaderPass pass;
+  pass.fbo.scaleX.scaleType = ScaleType::ABSOLUTE_SCALE;
+  pass.fbo.scaleX.abs = 320;
+  pass.fbo.scaleY.scaleType = ScaleType::INPUT;
+  pass.fbo.scaleY.scale = 3.0f;
+
+  const ShaderRenderTargetDX target = ResolveFinalPassTarget(pass, {1920.0f, 1080.0f});
+
+  EXPECT_FLOAT_EQ(320.0f, target.size.x);
+  EXPECT_FLOAT_EQ(1080.0f, target.size.y);
+  EXPECT_EQ(DXGI_FORMAT_B8G8R8A8_UNORM, target.format);
+}
+
+TEST(TestShaderUtilsDX, ResolvesSrgbAbsoluteFinalPassTarget)
+{
+  ShaderPass pass;
+  pass.fbo.scaleX.scaleType = ScaleType::ABSOLUTE_SCALE;
+  pass.fbo.scaleX.abs = 640;
+  pass.fbo.scaleY.scaleType = ScaleType::ABSOLUTE_SCALE;
+  pass.fbo.scaleY.abs = 480;
+  pass.fbo.sRgbFramebuffer = true;
+
+  const ShaderRenderTargetDX target = ResolveFinalPassTarget(pass, {1920.0f, 1080.0f});
+
+  EXPECT_EQ(DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, target.format);
+}
+
+TEST(TestShaderUtilsDX, ResolvesFloatAbsoluteFinalPassTarget)
+{
+  ShaderPass pass;
+  pass.fbo.scaleX.scaleType = ScaleType::ABSOLUTE_SCALE;
+  pass.fbo.scaleX.abs = 640;
+  pass.fbo.scaleY.scaleType = ScaleType::ABSOLUTE_SCALE;
+  pass.fbo.scaleY.abs = 480;
+  pass.fbo.floatFramebuffer = true;
+
+  const ShaderRenderTargetDX target = ResolveFinalPassTarget(pass, {1920.0f, 1080.0f});
+
+  EXPECT_EQ(DXGI_FORMAT_R32G32B32A32_FLOAT, target.format);
+}
+
+TEST(TestShaderUtilsDX, PrefersFloatForAbsoluteFinalPassTarget)
+{
+  ShaderPass pass;
+  pass.fbo.scaleX.scaleType = ScaleType::ABSOLUTE_SCALE;
+  pass.fbo.scaleX.abs = 640;
+  pass.fbo.scaleY.scaleType = ScaleType::ABSOLUTE_SCALE;
+  pass.fbo.scaleY.abs = 480;
+  pass.fbo.floatFramebuffer = true;
+  pass.fbo.sRgbFramebuffer = true;
+
+  const ShaderRenderTargetDX target = ResolveFinalPassTarget(pass, {1920.0f, 1080.0f});
+
+  EXPECT_EQ(DXGI_FORMAT_R32G32B32A32_FLOAT, target.format);
+}
+
+TEST(TestShaderUtilsDX, PreservesLegacyFormatForNonAbsoluteFinalPass)
+{
+  ShaderPass pass;
+  pass.fbo.scaleX.scaleType = ScaleType::VIEWPORT;
+  pass.fbo.scaleY.scaleType = ScaleType::INPUT;
+  pass.fbo.floatFramebuffer = true;
+  pass.fbo.sRgbFramebuffer = true;
+
+  const ShaderRenderTargetDX target = ResolveFinalPassTarget(pass, {1920.0f, 1080.0f});
+
+  EXPECT_EQ(DXGI_FORMAT_B8G8R8A8_UNORM, target.format);
+}
+
 TEST(TestShaderUtilsDX, ResolvesNamedTechniqueInsteadOfFirstTechnique)
 {
   constexpr const char* source = R"(
