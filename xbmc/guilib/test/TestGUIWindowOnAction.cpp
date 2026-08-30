@@ -9,7 +9,6 @@
 #include "ServiceBroker.h"
 #include "guilib/GUIControl.h"
 #include "guilib/GUIControlGroup.h"
-#include "guilib/GUIMessage.h"
 #include "guilib/GUIWindow.h"
 #include "input/actions/Action.h"
 #include "input/actions/ActionIDs.h"
@@ -192,15 +191,10 @@ public:
     AddControl(control);
   }
 
-  bool OnMessage(CGUIMessage& message) override
+  bool OnMessage(CGUIMessage&) override
   {
-    if (message.GetMessage() == GUI_MSG_SETFOCUS)
-    {
-      ++m_focusRequests;
-      return true;
-    }
-
-    return CGUIWindow::OnMessage(message);
+    ++m_focusRequests;
+    return true;
   }
 
   int GetFocusRequests() const { return m_focusRequests; }
