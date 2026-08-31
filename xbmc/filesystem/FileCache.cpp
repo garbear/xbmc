@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cerrno>
 #include <inttypes.h>
 #include <memory>
 #include <stdexcept>
@@ -41,6 +42,7 @@ class CFileCacheSource final : public IFileCacheSource
 {
 public:
   bool Open(const CURL& url, unsigned int flags) override { return m_file.Open(url.Get(), flags); }
+  void Abort() override { m_file.Abort(); }
   void Close() override { m_file.Close(); }
   ssize_t Read(void* buffer, size_t size) override { return m_file.Read(buffer, size); }
   int64_t Seek(int64_t position, int whence) override { return m_file.Seek(position, whence); }
@@ -127,9 +129,23 @@ IFile *CFileCache::GetFileImp()
 
 bool CFileCache::Open(const CURL& url)
 {
-  Close();
-
   std::unique_lock lock(m_sync);
+
+  const uint64_t openGeneration = BeginOpen();
+  if (IsOpenCancelled(openGeneration))
+  {
+    SetLastError(ECANCELED);
+    return false;
+  }
+
+  {
+    std::unique_lock seekLock(m_seekSync);
+    m_abortRequested = false;
+    m_seekGeneration = 0;
+    m_seekCompletedGeneration = 0;
+    m_nSeekResult = 0;
+    m_seekError = 0;
+  }
 
   m_sourcePath = url.GetRedacted();
 
@@ -138,16 +154,40 @@ bool CFileCache::Open(const CURL& url)
   // Opening the source file.
   // The READ_NO_CACHE and READ_NO_BUFFER flags are required to avoid create other instances of
   // FileCache or StreamBuffer since CFile::Open is called again in loop
+  m_sourceActive = true;
+  if (IsOpenCancelled(openGeneration))
+  {
+    Close();
+    SetLastError(ECANCELED);
+    return false;
+  }
+
   if (!m_source->Open(url, READ_NO_CACHE | READ_TRUNCATED | READ_NO_BUFFER))
   {
+    const bool cancelled = IsOpenCancelled(openGeneration);
     CLog::Log(LOGERROR, "CFileCache::{} - <{}> failed to open", __FUNCTION__, m_sourcePath);
     Close();
+    if (cancelled)
+      SetLastError(ECANCELED);
+    return false;
+  }
+
+  if (IsOpenCancelled(openGeneration))
+  {
+    Close();
+    SetLastError(ECANCELED);
     return false;
   }
 
   const auto settings = CServiceBroker::GetSettingsComponent()->GetSettings();
   if (!settings)
+  {
+    const bool cancelled = IsOpenCancelled(openGeneration);
+    Close();
+    if (cancelled)
+      SetLastError(ECANCELED);
     return false;
+  }
 
   const unsigned int cacheMemSize =
       settings->GetInt(CSettings::SETTING_FILECACHE_MEMORYSIZE) * 1024 * 1024;
@@ -169,12 +209,20 @@ bool CFileCache::Open(const CURL& url)
 
   m_fileSize = m_source->GetLength();
 
+  if (IsOpenCancelled(openGeneration))
+  {
+    Close();
+    SetLastError(ECANCELED);
+    return false;
+  }
+
+  std::unique_ptr<CCacheStrategy> cache;
   if (!m_pCache)
   {
     if (cacheMemSize == 0)
     {
       // Use cache on disk
-      m_pCache = std::make_unique<CSimpleFileCache>();
+      cache = std::make_unique<CSimpleFileCache>();
       m_forwardCacheSize = 0;
       m_maxForward = m_fileSize;
     }
@@ -217,7 +265,7 @@ bool CFileCache::Open(const CURL& url)
       const size_t back = cacheSize / 4;
       const size_t front = cacheSize - back;
 
-      m_pCache = std::make_unique<CCircularCache>(front, back);
+      cache = std::make_unique<CCircularCache>(front, back);
       m_forwardCacheSize = front;
       m_maxForward = m_forwardCacheSize;
     }
@@ -225,15 +273,34 @@ bool CFileCache::Open(const CURL& url)
     if (m_flags & READ_MULTI_STREAM)
     {
       // If READ_MULTI_STREAM flag is set: Double buffering is required
-      m_pCache = std::make_unique<CDoubleCache>(m_pCache.release());
+      cache = std::make_unique<CDoubleCache>(cache.release());
     }
   }
 
   // open cache strategy
-  if (!m_pCache || m_pCache->Open() != CACHE_RC_OK)
+  bool cacheOpened = false;
   {
-    CLog::Log(LOGERROR, "CFileCache::{} - <{}> failed to open cache", __FUNCTION__, m_sourcePath);
+    std::unique_lock seekLock(m_seekSync);
+    if (!IsOpenCancelled(openGeneration))
+    {
+      if (cache)
+        m_pCache = std::move(cache);
+      cacheOpened = m_pCache && m_pCache->Open() == CACHE_RC_OK;
+      if (cacheOpened && !IsOpenCancelled(openGeneration))
+        m_pCache->ClearEndOfInput();
+      else
+        cacheOpened = false;
+    }
+  }
+
+  if (!cacheOpened)
+  {
+    const bool cancelled = IsOpenCancelled(openGeneration);
+    if (!cancelled)
+      CLog::Log(LOGERROR, "CFileCache::{} - <{}> failed to open cache", __FUNCTION__, m_sourcePath);
     Close();
+    if (cancelled)
+      SetLastError(ECANCELED);
     return false;
   }
 
@@ -247,7 +314,27 @@ bool CFileCache::Open(const CURL& url)
   m_seekEvent.Reset();
   m_seekEnded.Reset();
 
-  CThread::Create(false);
+  bool createCancelled;
+  {
+    std::unique_lock stopLock(m_stopSync);
+    createCancelled = IsOpenCancelled(openGeneration);
+    if (!createCancelled)
+      CThread::Create(false);
+  }
+
+  if (createCancelled)
+  {
+    Close();
+    SetLastError(ECANCELED);
+    return false;
+  }
+
+  if (IsOpenCancelled(openGeneration))
+  {
+    Close();
+    SetLastError(ECANCELED);
+    return false;
+  }
 
   return true;
 }
@@ -296,68 +383,111 @@ void CFileCache::Process()
       seekRequested = true;
     }
 
+    if (m_bStop)
+      break;
+
     // check for seek events
     if (seekRequested)
     {
-      const int64_t cacheMaxPos = m_pCache->CachedDataEndPosIfSeekTo(m_seekPos);
+      uint64_t seekGeneration;
+      int64_t seekPos;
+      {
+        std::unique_lock seekLock(m_seekSync);
+        if (m_seekCompletedGeneration >= m_seekGeneration)
+          continue;
+
+        seekGeneration = m_seekGeneration;
+        seekPos = m_seekPos;
+      }
+
+      const int64_t cacheMaxPos = m_pCache->CachedDataEndPosIfSeekTo(seekPos);
       const bool cacheReachEOF = (cacheMaxPos == m_fileSize);
 
       bool sourceSeekFailed = false;
+      int64_t seekResult = seekPos;
+      DWORD seekError = 0;
       if (!cacheReachEOF || !m_sourcePositionValid)
       {
         const int64_t sourceSeekResult = m_source->Seek(cacheMaxPos, SEEK_SET);
         const DWORD sourceSeekError = GetLastError();
+
+        if (m_abortRequested || m_bStop)
+          break;
+
         if (sourceSeekResult != cacheMaxPos)
         {
           CLog::Log(LOGERROR, "CFileCache::{} - <{}> error {} seeking. Seek returned {}",
                     __FUNCTION__, m_sourcePath,
                     sourceSeekError != 0 ? sourceSeekError : static_cast<DWORD>(EIO),
                     sourceSeekResult);
-          m_nSeekResult = -1;
-          m_seekError = sourceSeekError != 0 ? sourceSeekError : EIO;
+          seekResult = -1;
+          seekError = sourceSeekError != 0 ? sourceSeekError : EIO;
           m_seekPossible = m_source->IoControl(IOControl::SEEK_POSSIBLE, NULL);
           sourceSeekFailed = true;
           m_sourcePositionValid = false;
 
-          if (m_pCache->Seek(m_readPos) != m_readPos)
           {
-            const bool completeReset = m_pCache->Reset(m_readPos);
-            m_writePos = m_pCache->CachedDataEndPos();
-            average.Reset(m_writePos, completeReset);
-            limiter.Reset(m_writePos);
-            if (completeReset)
+            std::unique_lock seekLock(m_seekSync);
+            if (m_pCache->Seek(m_readPos) != m_readPos)
             {
-              m_bFilling = true;
-              m_writeRateLowSpeed = 0;
+              const bool completeReset = m_pCache->Reset(m_readPos);
+              m_writePos = m_pCache->CachedDataEndPos();
+              average.Reset(m_writePos, completeReset);
+              limiter.Reset(m_writePos);
+              if (completeReset)
+              {
+                m_bFilling = true;
+                m_writeRateLowSpeed = 0;
+              }
             }
+            m_pCache->EndOfInput();
           }
-          m_pCache->EndOfInput();
         }
       }
 
       if (!sourceSeekFailed)
       {
-        m_pCache->ClearEndOfInput();
-        const bool bCompleteReset = m_pCache->Reset(m_seekPos);
-        m_readPos = m_seekPos;
-        m_writePos = m_pCache->CachedDataEndPos();
+        bool bCompleteReset;
+        {
+          std::unique_lock seekLock(m_seekSync);
+          if (m_abortRequested || seekGeneration != m_seekGeneration ||
+              m_seekCompletedGeneration >= seekGeneration)
+            break;
+          m_pCache->ClearEndOfInput();
+          bCompleteReset = m_pCache->Reset(seekPos);
+          m_readPos = seekPos;
+          m_writePos = m_pCache->CachedDataEndPos();
+        }
+
         assert(m_writePos == cacheMaxPos);
         average.Reset(m_writePos, bCompleteReset); // Can only recalculate new average from scratch after a full reset (empty cache)
         limiter.Reset(m_writePos);
-        m_nSeekResult = m_seekPos;
-        m_seekError = 0;
         m_sourcePositionValid = true;
         if (bCompleteReset)
         {
           CLog::Log(LOGDEBUG,
                     "CFileCache::{} - <{}> cache completely reset for seek to position {}",
-                    __FUNCTION__, m_sourcePath, m_seekPos);
+                    __FUNCTION__, m_sourcePath, seekPos);
           m_bFilling = true;
           m_writeRateLowSpeed = 0;
         }
       }
 
-      m_seekEnded.Set();
+      bool publishResult = false;
+      {
+        std::unique_lock seekLock(m_seekSync);
+        if (!m_abortRequested && seekGeneration == m_seekGeneration &&
+            m_seekCompletedGeneration < seekGeneration)
+        {
+          m_nSeekResult = seekResult;
+          m_seekError = seekError;
+          m_seekCompletedGeneration = seekGeneration;
+          publishResult = true;
+        }
+      }
+      if (publishResult)
+        m_seekEnded.Set();
+
       if (sourceSeekFailed)
         continue;
     }
@@ -389,6 +519,9 @@ void CFileCache::Process()
       }
     }
 
+    if (m_bStop)
+      break;
+
     const int64_t maxWrite = m_pCache->GetMaxWriteSize(m_chunkSize);
     int64_t maxSourceRead = m_chunkSize;
     // Cap source read size by space available between current write position and EOF
@@ -408,6 +541,10 @@ void CFileCache::Process()
     ssize_t iRead = 0;
     if (maxSourceRead > 0)
       iRead = m_source->Read(buffer.get(), maxSourceRead);
+
+    if (m_bStop)
+      break;
+
     if (iRead <= 0)
     {
       // Check for actual EOF and retry as long as we still have data in our cache
@@ -448,9 +585,11 @@ void CFileCache::Process()
         // The thread event will now also cause the wait of an event to return a false.
         if (AbortableWait(m_seekEvent) == WAIT_SIGNALED)
         {
+          std::unique_lock seekLock(m_seekSync);
+          if (m_bStop)
+            break;
           m_pCache->ClearEndOfInput();
-          if (!m_bStop)
-            m_seekEvent.Set(); // hack so that later we realize seek is needed
+          m_seekEvent.Set(); // hack so that later we realize seek is needed
         }
         else
           break; // while (!m_bStop)
@@ -516,13 +655,7 @@ void CFileCache::Process()
 void CFileCache::OnExit()
 {
   m_bStop = true;
-
-  // make sure cache is set to mark end of file (read may be waiting).
-  if (m_pCache)
-    m_pCache->EndOfInput();
-
-  // just in case someone's waiting...
-  m_seekEnded.Set();
+  CancelPendingOperations(false);
 }
 
 bool CFileCache::Exists(const CURL& url)
@@ -542,6 +675,12 @@ ssize_t CFileCache::Read(void* lpBuf, size_t uiBufSize)
   {
     CLog::Log(LOGERROR, "CFileCache::{} - <{}> sanity failed. no cache strategy!", __FUNCTION__,
               m_sourcePath);
+    return -1;
+  }
+
+  if (m_abortRequested)
+  {
+    SetLastError(ECANCELED);
     return -1;
   }
   int64_t iRc;
@@ -568,6 +707,11 @@ retry:
 
     // just wait for some data to show up
     iRc = m_pCache->WaitForData(1, 10s);
+    if (m_abortRequested)
+    {
+      SetLastError(ECANCELED);
+      return -1;
+    }
     if (iRc > 0)
       goto retry;
     if (!m_sourcePositionValid)
@@ -611,6 +755,12 @@ int64_t CFileCache::Seek(int64_t iFilePosition, int iWhence)
     return -1;
   }
 
+  if (m_abortRequested)
+  {
+    SetLastError(ECANCELED);
+    return -1;
+  }
+
   int64_t iCurPos = m_readPos;
   int64_t iTarget = iFilePosition;
   if (iWhence == SEEK_END)
@@ -624,50 +774,93 @@ int64_t CFileCache::Seek(int64_t iFilePosition, int iWhence)
     return m_readPos;
 
   const bool sourcePositionInvalid = !m_sourcePositionValid;
-  if ((m_nSeekResult = m_pCache->Seek(iTarget)) != iTarget || sourcePositionInvalid)
+  const int64_t cacheSeekResult = m_pCache->Seek(iTarget);
+  if (m_abortRequested)
+  {
+    SetLastError(ECANCELED);
+    return -1;
+  }
+
+  if (cacheSeekResult != iTarget || sourcePositionInvalid)
   {
     if (m_seekPossible == 0)
     {
-      if (sourcePositionInvalid && m_nSeekResult == iTarget)
+      if (sourcePositionInvalid && cacheSeekResult == iTarget)
         m_pCache->Seek(m_readPos);
       if (sourcePositionInvalid)
       {
         SetLastError(m_seekError != 0 ? m_seekError : EIO);
         return -1;
       }
-      return m_nSeekResult;
+      return cacheSeekResult;
     }
 
     // Never request closer to end than one chunk. Speeds up tag reading
-    m_seekPos = std::min(iTarget, std::max((int64_t)0, m_fileSize - m_chunkSize));
-
-    m_nSeekResult = -1;
-    m_seekError = 0;
-    m_seekEnded.Reset();
-    m_seekEvent.Set();
-    while (!m_seekEnded.Wait(100ms))
+    const int64_t seekPos = std::min(iTarget, std::max((int64_t)0, m_fileSize - m_chunkSize));
+    uint64_t seekGeneration;
     {
-      // SeekEnded will never be set if FileCache thread is not running
-      if (!CThread::IsRunning())
+      std::unique_lock seekLock(m_seekSync);
+      if (m_abortRequested || !CThread::IsRunning())
+      {
+        SetLastError(ECANCELED);
         return -1;
+      }
+
+      seekGeneration = ++m_seekGeneration;
+      m_seekPos = seekPos;
+      m_nSeekResult = -1;
+      m_seekError = 0;
+      m_seekEnded.Reset();
+    }
+    m_seekEvent.Set();
+
+    int64_t seekResult;
+    DWORD seekError;
+    while (true)
+    {
+      const bool seekSignaled = m_seekEnded.Wait(100ms);
+
+      std::unique_lock seekLock(m_seekSync);
+      if (m_seekCompletedGeneration >= seekGeneration)
+      {
+        seekResult = m_nSeekResult;
+        seekError = m_seekError;
+        break;
+      }
+      if (!seekSignaled && !CThread::IsRunning())
+      {
+        seekResult = -1;
+        seekError = m_abortRequested ? ECANCELED : EIO;
+        break;
+      }
     }
 
-    if (m_nSeekResult != m_seekPos)
+    if (seekResult != seekPos)
     {
-      SetLastError(m_seekError);
+      SetLastError(seekError);
       return -1;
     }
 
     /* wait for any remaining data */
-    if(m_seekPos < iTarget)
+    if (seekPos < iTarget)
     {
       CLog::Log(LOGDEBUG, "CFileCache::{} - <{}> waiting for position {}", __FUNCTION__,
                 m_sourcePath, iTarget);
-      if (m_pCache->WaitForData(static_cast<uint32_t>(iTarget - m_seekPos), 10s) <
-          iTarget - m_seekPos)
+      if (m_pCache->WaitForData(static_cast<uint32_t>(iTarget - seekPos), 10s) < iTarget - seekPos)
       {
+        if (m_abortRequested)
+        {
+          SetLastError(ECANCELED);
+          return -1;
+        }
         CLog::Log(LOGWARNING, "CFileCache::{} - <{}> failed to get remaining data", __FUNCTION__,
                   m_sourcePath);
+        return -1;
+      }
+
+      if (m_abortRequested)
+      {
+        SetLastError(ECANCELED);
         return -1;
       }
       m_pCache->Seek(iTarget);
@@ -682,13 +875,63 @@ int64_t CFileCache::Seek(int64_t iFilePosition, int iWhence)
 
 void CFileCache::Close()
 {
+  BeginClose();
   StopThread();
 
   std::unique_lock lock(m_sync);
   if (m_pCache)
+  {
+    std::unique_lock seekLock(m_seekSync);
     m_pCache->Close();
+  }
 
+  m_sourceActive = false;
   m_source->Close();
+
+  {
+    std::unique_lock seekLock(m_seekSync);
+    m_abortRequested = false;
+  }
+  EndClose();
+}
+
+void CFileCache::Abort()
+{
+  RequestAbort();
+  StopThread(false);
+}
+
+uint64_t CFileCache::BeginOpen()
+{
+  std::unique_lock lock(m_lifecycleSync);
+  return m_lifecycleGeneration;
+}
+
+bool CFileCache::IsOpenCancelled(uint64_t generation)
+{
+  std::unique_lock lock(m_lifecycleSync);
+  return m_explicitAbortRequested || m_closeRequests != 0 || m_lifecycleGeneration != generation;
+}
+
+void CFileCache::BeginClose()
+{
+  std::unique_lock lock(m_lifecycleSync);
+  ++m_closeRequests;
+  ++m_lifecycleGeneration;
+}
+
+void CFileCache::EndClose()
+{
+  std::unique_lock lock(m_lifecycleSync);
+  if (--m_closeRequests == 0)
+    m_explicitAbortRequested = false;
+}
+
+void CFileCache::RequestAbort()
+{
+  std::unique_lock lock(m_lifecycleSync);
+  m_explicitAbortRequested = true;
+  ++m_lifecycleGeneration;
 }
 
 int64_t CFileCache::GetPosition()
@@ -703,10 +946,35 @@ int64_t CFileCache::GetLength()
 
 void CFileCache::StopThread(bool bWait /*= true*/)
 {
-  m_bStop = true;
-  //Process could be waiting for seekEvent
+  std::unique_lock lock(m_stopSync);
+  CThread::StopThread(false);
+  CancelPendingOperations(true);
+  if (bWait)
+    CThread::StopThread(true);
+}
+
+void CFileCache::CancelPendingOperations(bool abortSource)
+{
+  const bool firstAbort = !m_abortRequested.exchange(true);
+
+  {
+    std::unique_lock seekLock(m_seekSync);
+    if (m_seekCompletedGeneration < m_seekGeneration)
+    {
+      m_nSeekResult = -1;
+      m_seekError = ECANCELED;
+      m_seekCompletedGeneration = m_seekGeneration;
+    }
+
+    if (m_pCache)
+      m_pCache->EndOfInput();
+  }
+
   m_seekEvent.Set();
-  CThread::StopThread(bWait);
+  m_seekEnded.Set();
+
+  if (abortSource && firstAbort && m_sourceActive)
+    m_source->Abort();
 }
 
 const std::string CFileCache::GetProperty(XFILE::FileProperty type, const std::string &name) const
