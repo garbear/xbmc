@@ -27,6 +27,7 @@ public:
   virtual ~IFileCacheSource() = default;
 
   virtual bool Open(const CURL& url, unsigned int flags) = 0;
+  virtual void Abort() = 0;
   virtual void Close() = 0;
   virtual ssize_t Read(void* buffer, size_t size) = 0;
   virtual int64_t Seek(int64_t position, int whence) = 0;
@@ -49,6 +50,7 @@ public:
 
     // IFIle methods
     bool Open(const CURL& url) override;
+    void Abort() override;
     void Close() override;
     bool Exists(const CURL& url) override;
     int Stat(const CURL& url, struct __stat64* buffer) override;
@@ -74,14 +76,26 @@ public:
     CFileCache(unsigned int flags, std::unique_ptr<IFileCacheSource> source);
 
   private:
+    uint64_t BeginOpen();
+    bool IsOpenCancelled(uint64_t generation);
+    void BeginClose();
+    void EndClose();
+    void RequestAbort();
+    void CancelPendingOperations(bool abortSource);
+
     std::unique_ptr<CCacheStrategy> m_pCache;
     int m_seekPossible = 0;
     std::unique_ptr<IFileCacheSource> m_source;
     std::string m_sourcePath;
     CEvent m_seekEvent;
     CEvent m_seekEnded;
+    CCriticalSection m_seekSync;
+    uint64_t m_seekGeneration = 0;
+    uint64_t m_seekCompletedGeneration = 0;
     int64_t m_nSeekResult = 0;
     DWORD m_seekError = 0;
+    std::atomic<bool> m_abortRequested{false};
+    std::atomic<bool> m_sourceActive{false};
     std::atomic<bool> m_sourcePositionValid{true};
     int64_t m_seekPos = 0;
     int64_t m_readPos = 0;
@@ -96,6 +110,11 @@ public:
     std::atomic<int64_t> m_fileSize;
     unsigned int m_flags;
     CCriticalSection m_sync;
+    CCriticalSection m_stopSync;
+    CCriticalSection m_lifecycleSync;
+    uint64_t m_lifecycleGeneration = 0;
+    unsigned int m_closeRequests = 0;
+    bool m_explicitAbortRequested = false;
     std::chrono::milliseconds m_processWait{100ms};
   };
 

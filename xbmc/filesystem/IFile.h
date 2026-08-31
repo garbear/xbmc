@@ -130,6 +130,8 @@ public:
    */
   virtual ReadLineResult ReadLine(char* buffer, std::size_t bufferSize);
   virtual int64_t Seek(int64_t iFilePosition, int iWhence = SEEK_SET) = 0;
+  // Called from another thread to promptly interrupt in-flight operations without closing the file.
+  virtual void Abort() {}
   virtual void Close() = 0;
   virtual int64_t GetPosition() = 0;
   virtual int64_t GetLength() = 0;
