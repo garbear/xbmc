@@ -9,6 +9,9 @@
 #pragma once
 
 #include "DVDInputStream.h"
+#include "threads/CriticalSection.h"
+
+#include <memory>
 
 class CDVDInputStreamFile : public CDVDInputStream
 {
@@ -16,6 +19,7 @@ public:
   explicit CDVDInputStreamFile(const CFileItem& fileitem, unsigned int flags);
   ~CDVDInputStreamFile() override;
   bool Open() override;
+  void Abort() override;
   void Close() override;
   int Read(uint8_t* buf, int buf_size) override;
   int64_t Seek(int64_t offset, int whence) override;
@@ -27,7 +31,11 @@ public:
   bool GetCacheStatus(XFILE::SCacheStatus *status) override;
 
 protected:
-  XFILE::CFile* m_pFile = nullptr;
+  std::shared_ptr<XFILE::CFile> GetFile() const;
+
+  mutable CCriticalSection m_fileSync;
+  std::shared_ptr<XFILE::CFile> m_pFile;
+  bool m_abortRequested = false;
   bool m_eof = false;
   unsigned int m_flags = 0;
 };

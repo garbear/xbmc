@@ -30,6 +30,7 @@ public:
 
     int64_t Seek(int64_t pos) override;
     bool Reset(int64_t pos) override;
+    void EndOfInput() override;
 
     int64_t CachedDataEndPosIfSeekTo(int64_t iFilePosition) override;
     int64_t CachedDataStartPos() override;
