@@ -29,6 +29,12 @@
 #include "utils/URIUtils.h"
 #include "utils/log.h"
 
+#if !defined(TARGET_WINDOWS)
+#include "platform/posix/ConvUtils.h"
+#endif
+
+#include <cerrno>
+
 using namespace XFILE;
 
 //////////////////////////////////////////////////////////////////////
@@ -247,6 +253,12 @@ bool CFile::Open(const std::string& strFileName, const unsigned int flags)
 
 bool CFile::Open(const CURL& file, const unsigned int flags)
 {
+  if (WasAborted())
+  {
+    SetLastError(ECANCELED);
+    return false;
+  }
+
   if (m_pFile)
   {
     if ((flags & READ_REOPEN) == 0)
@@ -313,18 +325,20 @@ bool CFile::Open(const CURL& file, const unsigned int flags)
 
       if (m_flags & READ_CACHED)
       {
-        m_pFile = std::make_unique<CFileCache>(m_flags);
-
-        if (!m_pFile)
+        if (!SetFile(std::make_unique<CFileCache>(m_flags)))
           return false;
 
-        return m_pFile->Open(url);
+        const bool opened = m_pFile->Open(url);
+        if (WasAborted())
+        {
+          SetLastError(ECANCELED);
+          return false;
+        }
+        return opened;
       }
     }
 
-    m_pFile.reset(CFileFactory::CreateLoader(url));
-
-    if (!m_pFile)
+    if (!SetFile(std::unique_ptr<IFile>{CFileFactory::CreateLoader(url)}))
       return false;
 
     CURL authUrl = URIUtils::AddCredentials(url);
@@ -332,7 +346,11 @@ bool CFile::Open(const CURL& file, const unsigned int flags)
     try
     {
       if (!m_pFile->Open(authUrl))
+      {
+        if (WasAborted())
+          SetLastError(ECANCELED);
         return false;
+      }
     }
     catch (CRedirectException *pRedirectEx)
     {
@@ -342,20 +360,31 @@ bool CFile::Open(const CURL& file, const unsigned int flags)
       if (pRedirectEx && pRedirectEx->m_pNewFileImp)
       {
         std::unique_ptr<CURL> pNewUrl(pRedirectEx->m_pNewUrl);
-        m_pFile.reset(pRedirectEx->m_pNewFileImp);
+        std::unique_ptr<IFile> redirectedFile{pRedirectEx->m_pNewFileImp};
         delete pRedirectEx;
+
+        if (!SetFile(std::move(redirectedFile)))
+          return false;
 
         if (pNewUrl)
         {
           CURL newAuthUrl = URIUtils::AddCredentials(*pNewUrl);
 
           if (!m_pFile->Open(newAuthUrl))
+          {
+            if (WasAborted())
+              SetLastError(ECANCELED);
             return false;
+          }
         }
         else
         {
           if (!m_pFile->Open(authUrl))
+          {
+            if (WasAborted())
+              SetLastError(ECANCELED);
             return false;
+          }
         }
       }
     }
@@ -375,6 +404,12 @@ bool CFile::Open(const CURL& file, const unsigned int flags)
     {
       m_bitStreamStats = std::make_unique<BitstreamStats>();
       m_bitStreamStats->Start();
+    }
+
+    if (WasAborted())
+    {
+      SetLastError(ECANCELED);
+      return false;
     }
 
     return true;
@@ -411,16 +446,24 @@ bool CFile::OpenForWrite(const CURL& file, bool bOverWrite)
   try
   {
     CURL url = URIUtils::SubstitutePath(file);
-    m_pFile.reset(CFileFactory::CreateLoader(url));
+    if (!SetFile(std::unique_ptr<IFile>{CFileFactory::CreateLoader(url)}))
+      return false;
 
     CURL authUrl = URIUtils::AddCredentials(url);
 
     if (m_pFile && m_pFile->OpenForWrite(authUrl, bOverWrite))
     {
+      if (WasAborted())
+      {
+        SetLastError(ECANCELED);
+        return false;
+      }
       // add this file to our directory cache (if it's stored)
       g_directoryCache.AddFile(url);
       return true;
     }
+    if (WasAborted())
+      SetLastError(ECANCELED);
     return false;
   }
   XBMCCOMMONS_HANDLE_UNCHECKED
@@ -671,11 +714,13 @@ void CFile::Close()
 {
   try
   {
+    std::unique_lock lock(m_fileSync);
     if (m_pFile)
       m_pFile->Close();
 
     m_pBuffer.reset();
     m_pFile.reset();
+    m_abortRequested = false;
   }
   XBMCCOMMONS_HANDLE_UNCHECKED
   catch (...) { CLog::Log(LOGERROR, "{} - Unhandled exception", __FUNCTION__); }
@@ -690,6 +735,43 @@ void CFile::Flush()
   }
   XBMCCOMMONS_HANDLE_UNCHECKED
   catch (...) { CLog::Log(LOGERROR, "{} - Unhandled exception", __FUNCTION__); }
+}
+
+void CFile::Abort()
+{
+  try
+  {
+    std::unique_lock lock(m_fileSync);
+    m_abortRequested = true;
+    if (m_pFile)
+      m_pFile->Abort();
+  }
+  XBMCCOMMONS_HANDLE_UNCHECKED
+  catch (...)
+  {
+    CLog::Log(LOGERROR, "{} - Unhandled exception", __FUNCTION__);
+  }
+}
+
+bool CFile::SetFile(std::unique_ptr<IFile> file)
+{
+  std::unique_lock lock(m_fileSync);
+  if (m_abortRequested)
+  {
+    SetLastError(ECANCELED);
+    return false;
+  }
+  if (!file)
+    return false;
+
+  m_pFile = std::move(file);
+  return true;
+}
+
+bool CFile::WasAborted()
+{
+  std::unique_lock lock(m_fileSync);
+  return m_abortRequested;
 }
 
 //*********************************************************************************************

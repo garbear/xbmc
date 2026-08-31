@@ -14,13 +14,18 @@
 #include "utils/log.h"
 #include "video/VideoFileItemClassify.h"
 
+#if !defined(TARGET_WINDOWS)
+#include "platform/posix/ConvUtils.h"
+#endif
+
+#include <cerrno>
+
 using namespace KODI;
 using namespace XFILE;
 
 CDVDInputStreamFile::CDVDInputStreamFile(const CFileItem& fileitem, unsigned int flags)
   : CDVDInputStream(DVDSTREAM_TYPE_FILE, fileitem), m_flags(flags)
 {
-  m_pFile = NULL;
   m_eof = true;
 }
 
@@ -31,7 +36,7 @@ CDVDInputStreamFile::~CDVDInputStreamFile()
 
 bool CDVDInputStreamFile::IsEOF()
 {
-  return !m_pFile || m_eof;
+  return !GetFile() || m_eof;
 }
 
 bool CDVDInputStreamFile::Open()
@@ -39,9 +44,16 @@ bool CDVDInputStreamFile::Open()
   if (!CDVDInputStream::Open())
     return false;
 
-  m_pFile = new CFile();
-  if (!m_pFile)
-    return false;
+  auto file = std::make_shared<CFile>();
+  {
+    std::unique_lock lock(m_fileSync);
+    if (m_abortRequested)
+    {
+      SetLastError(ECANCELED);
+      return false;
+    }
+    m_pFile = file;
+  }
 
   unsigned int flags = m_flags;
 
@@ -61,39 +73,76 @@ bool CDVDInputStreamFile::Open()
     flags |= READ_MULTI_STREAM;
 
   // open file in binary mode
-  if (!m_pFile->Open(m_item.GetDynPath(), flags))
+  if (!file->Open(m_item.GetDynPath(), flags))
   {
-    delete m_pFile;
-    m_pFile = NULL;
+    std::unique_lock lock(m_fileSync);
+    if (m_pFile == file)
+      m_pFile.reset();
     return false;
   }
 
-  if (m_pFile->GetImplementation() && (content.empty() || content == "application/octet-stream"))
-    m_content = m_pFile->GetImplementation()->GetProperty(XFILE::FileProperty::CONTENT_TYPE);
+  {
+    std::unique_lock lock(m_fileSync);
+    if (m_abortRequested)
+    {
+      if (m_pFile == file)
+        m_pFile.reset();
+      SetLastError(ECANCELED);
+      return false;
+    }
+  }
+
+  if (file->GetImplementation() && (content.empty() || content == "application/octet-stream"))
+    m_content = file->GetImplementation()->GetProperty(XFILE::FileProperty::CONTENT_TYPE);
 
   m_eof = false;
   return true;
 }
 
+std::shared_ptr<CFile> CDVDInputStreamFile::GetFile() const
+{
+  std::unique_lock lock(m_fileSync);
+  return m_pFile;
+}
+
+void CDVDInputStreamFile::Abort()
+{
+  std::shared_ptr<CFile> file;
+  {
+    std::unique_lock lock(m_fileSync);
+    m_abortRequested = true;
+    file = m_pFile;
+  }
+
+  if (file)
+    file->Abort();
+}
+
 // close file and reset everything
 void CDVDInputStreamFile::Close()
 {
-  if (m_pFile)
   {
-    m_pFile->Close();
-    delete m_pFile;
+    std::shared_ptr<CFile> file;
+    {
+      std::unique_lock lock(m_fileSync);
+      file = std::move(m_pFile);
+      m_abortRequested = false;
+    }
+    if (file)
+      file->Close();
   }
 
   CDVDInputStream::Close();
-  m_pFile = NULL;
   m_eof = true;
 }
 
 int CDVDInputStreamFile::Read(uint8_t* buf, int buf_size)
 {
-  if(!m_pFile) return -1;
+  auto file = GetFile();
+  if (!file)
+    return -1;
 
-  ssize_t ret = m_pFile->Read(buf, buf_size);
+  ssize_t ret = file->Read(buf, buf_size);
 
   if (ret < 0)
     return -1; // player will retry read in case of error until playback is stopped
@@ -107,12 +156,14 @@ int CDVDInputStreamFile::Read(uint8_t* buf, int buf_size)
 
 int64_t CDVDInputStreamFile::Seek(int64_t offset, int whence)
 {
-  if(!m_pFile) return -1;
+  auto file = GetFile();
+  if (!file)
+    return -1;
 
   if (whence == DVDSTREAM_SEEK_POSSIBLE)
-    return m_pFile->IoControl(IOControl::SEEK_POSSIBLE, nullptr);
+    return file->IoControl(IOControl::SEEK_POSSIBLE, nullptr);
 
-  int64_t ret = m_pFile->Seek(offset, whence);
+  int64_t ret = file->Seek(offset, whence);
 
   /* if we succeed, we are not eof anymore */
   if( ret >= 0 ) m_eof = false;
@@ -122,14 +173,15 @@ int64_t CDVDInputStreamFile::Seek(int64_t offset, int whence)
 
 int64_t CDVDInputStreamFile::GetLength()
 {
-  if (m_pFile)
-    return m_pFile->GetLength();
+  if (auto file = GetFile())
+    return file->GetLength();
   return 0;
 }
 
 bool CDVDInputStreamFile::GetCacheStatus(XFILE::SCacheStatus *status)
 {
-  if (m_pFile && m_pFile->IoControl(IOControl::CACHE_STATUS, status) >= 0)
+  auto file = GetFile();
+  if (file && file->IoControl(IOControl::CACHE_STATUS, status) >= 0)
     return true;
   else
     return false;
@@ -137,11 +189,12 @@ bool CDVDInputStreamFile::GetCacheStatus(XFILE::SCacheStatus *status)
 
 BitstreamStats CDVDInputStreamFile::GetBitstreamStats() const
 {
-  if (!m_pFile)
+  auto file = GetFile();
+  if (!file)
     return m_stats; // dummy return. defined in CDVDInputStream
 
-  if(m_pFile->GetBitstreamStats())
-    return *m_pFile->GetBitstreamStats();
+  if (file->GetBitstreamStats())
+    return *file->GetBitstreamStats();
   else
     return m_stats;
 }
@@ -151,8 +204,8 @@ BitstreamStats CDVDInputStreamFile::GetBitstreamStats() const
 int CDVDInputStreamFile::GetBlockSize()
 {
   int chunk = 0;
-  if (m_pFile)
-    chunk = m_pFile->GetChunkSize();
+  if (auto file = GetFile())
+    chunk = file->GetChunkSize();
 
   return ((chunk > 1) ? chunk : 64 * 1024);
 }
@@ -162,7 +215,8 @@ void CDVDInputStreamFile::SetReadRate(uint32_t rate)
   // Increase requested rate by 10%:
   uint32_t maxrate = static_cast<uint32_t>(1.1 * rate);
 
-  if (m_pFile->IoControl(IOControl::CACHE_SETRATE, &maxrate) >= 0)
+  auto file = GetFile();
+  if (file && file->IoControl(IOControl::CACHE_SETRATE, &maxrate) >= 0)
     CLog::Log(LOGDEBUG,
               "CDVDInputStreamFile::SetReadRate - set cache throttle rate to {} bytes per second",
               maxrate);
