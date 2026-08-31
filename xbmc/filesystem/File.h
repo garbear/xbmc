@@ -16,6 +16,7 @@
 
 #include "IFileTypes.h"
 #include "URL.h"
+#include "threads/CriticalSection.h"
 
 #include <iostream>
 #include <memory>
@@ -121,6 +122,7 @@ public:
   ssize_t AddContent(const void* bufPtr, size_t bufSize, std::string& contentId);
   void Flush();
   int64_t Seek(int64_t iFilePosition, int iWhence = SEEK_SET);
+  void Abort();
   int Truncate(int64_t iSize);
   int64_t GetPosition() const;
   int64_t GetLength();
@@ -198,6 +200,9 @@ public:
   double GetDownloadSpeed();
 
 private:
+  bool SetFile(std::unique_ptr<IFile> file);
+  bool WasAborted();
+
   /*!
    * \brief Determines if CFileStreamBuffer should be used to read a file.
    *
@@ -217,6 +222,8 @@ private:
 
   unsigned int m_flags = 0;
   CURL                m_curl;
+  CCriticalSection m_fileSync;
+  bool m_abortRequested = false;
   std::unique_ptr<IFile> m_pFile;
   std::unique_ptr<CFileStreamBuffer> m_pBuffer;
   std::unique_ptr<BitstreamStats> m_bitStreamStats;

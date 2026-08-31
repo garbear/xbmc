@@ -10,6 +10,7 @@
 
 #include "threads/Event.h"
 
+#include <atomic>
 #include <stdint.h>
 #include <string>
 
@@ -57,7 +58,7 @@ public:
 
   CEvent m_space;
 protected:
-  bool  m_bEndOfInput = false;
+  std::atomic<bool> m_bEndOfInput{false};
 };
 
 /**
