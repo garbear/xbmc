@@ -22,6 +22,7 @@
 #include "cores/VideoPlayer/Interface/TimingConstants.h"
 #include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
 #include "guilib/DispResource.h"
+#include "threads/CriticalSection.h"
 #include "threads/SystemClock.h"
 #include "threads/Thread.h"
 #include "utils/LanguageTag.h"
@@ -501,6 +502,8 @@ protected:
   void CheckBetterStream(CCurrentStream& current, CDemuxStream* stream);
   void CheckStreamChanges(CCurrentStream& current, CDemuxStream* stream);
 
+  void AbortInputStream();
+  virtual std::shared_ptr<CDVDInputStream> CreateInputStream();
   bool OpenInputStream();
   bool OpenDemuxStream();
   void CloseDemuxer();
@@ -620,6 +623,8 @@ protected:
   CDVDClock m_clock;
   CDVDOverlayContainer m_overlayContainer;
 
+  CCriticalSection m_inputStreamSync;
+  bool m_inputStreamAbortRequested{false};
   std::shared_ptr<CDVDInputStream> m_pInputStream;
   std::unique_ptr<CDVDDemux> m_pDemuxer;
   std::shared_ptr<CDVDDemux> m_pSubtitleDemuxer;

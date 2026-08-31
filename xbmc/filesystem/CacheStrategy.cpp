@@ -258,7 +258,8 @@ bool CSimpleFileCache::Reset(int64_t iSourcePosition)
 void CSimpleFileCache::EndOfInput()
 {
   CCacheStrategy::EndOfInput();
-  m_hDataAvailEvent->Set();
+  if (m_hDataAvailEvent)
+    m_hDataAvailEvent->Set();
 }
 
 int64_t CSimpleFileCache::CachedDataEndPosIfSeekTo(int64_t iFilePosition)

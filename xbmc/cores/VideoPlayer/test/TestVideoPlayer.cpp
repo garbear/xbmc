@@ -6,13 +6,27 @@
  *  See LICENSES/README.md for more information.
  */
 
+#include "FileItem.h"
 #include "ServiceBroker.h"
 #include "cores/IPlayerCallback.h"
+#include "cores/VideoPlayer/DVDInputStreams/DVDInputStream.h"
+#include "cores/VideoPlayer/DVDInputStreams/DVDInputStreamFile.h"
 #include "cores/VideoPlayer/VideoPlayer.h"
+#include "filesystem/File.h"
+#include "filesystem/IFileTypes.h"
 #include "jobs/JobManager.h"
 #include "settings/AdvancedSettings.h"
 #include "settings/SettingsComponent.h"
+#include "threads/Event.h"
 
+#if !defined(TARGET_WINDOWS)
+#include "platform/posix/ConvUtils.h"
+#endif
+
+#include <atomic>
+#include <cerrno>
+#include <future>
+#include <memory>
 #include <stdexcept>
 
 #include <gtest/gtest.h>
@@ -74,6 +88,178 @@ public:
   {
     return CalcTimeOrPercentSeekTarget(time, maxTime, direction, ConvertTestSeekStep(step));
   }
+};
+
+struct CShutdownState
+{
+  CEvent seekEntered{true};
+  CEvent releaseSeek{true};
+  CEvent abortEntered{true};
+  CEvent allowAbortReturn{true};
+  CEvent abortReturned{true};
+  CEvent processReturned{true};
+  CEvent onExitEntered{true};
+  CEvent playerExited{true};
+  CEvent inputDestroyed{true};
+  std::atomic<unsigned int> sequence{0};
+  std::atomic<unsigned int> abortCalls{0};
+  std::atomic<unsigned int> abortOrder{0};
+  std::atomic<unsigned int> abortReturnOrder{0};
+  std::atomic<unsigned int> stopOrder{0};
+  std::atomic<unsigned int> destroyOrder{0};
+  std::atomic<int64_t> seekResult{0};
+};
+
+struct CFactoryShutdownState
+{
+  CEvent factoryEntered{true};
+  CEvent allowFactoryReturn{true};
+  CEvent processReturned{true};
+  std::atomic<unsigned int> inputOpenCalls{0};
+  std::atomic<bool> openResult{true};
+};
+
+class CFactoryInputStream : public CDVDInputStream
+{
+public:
+  CFactoryInputStream(const CFileItem& item, std::shared_ptr<CFactoryShutdownState> state)
+    : CDVDInputStream(DVDSTREAM_TYPE_FILE, item),
+      m_state(std::move(state))
+  {
+  }
+
+  bool Open() override
+  {
+    ++m_state->inputOpenCalls;
+    return true;
+  }
+  int Read(uint8_t* buf, int bufSize) override { return 0; }
+  int64_t Seek(int64_t offset, int whence) override { return offset; }
+  int64_t GetLength() override { return 0; }
+  bool IsEOF() override { return false; }
+
+private:
+  std::shared_ptr<CFactoryShutdownState> m_state;
+};
+
+class CFactoryShutdownVideoPlayer : public CVideoPlayer
+{
+public:
+  CFactoryShutdownVideoPlayer(IPlayerCallback& callback,
+                              std::shared_ptr<CFactoryShutdownState> state)
+    : CVideoPlayer(callback),
+      m_state(std::move(state))
+  {
+  }
+
+  void InvokeAbortInputStream() { AbortInputStream(); }
+
+protected:
+  void OnStartup() override {}
+  void Process() override
+  {
+    m_state->openResult = OpenInputStream();
+    m_state->processReturned.Set();
+  }
+  std::shared_ptr<CDVDInputStream> CreateInputStream() override
+  {
+    m_state->factoryEntered.Set();
+    m_state->allowFactoryReturn.Wait();
+    return std::make_shared<CFactoryInputStream>(CFileItem{"mock://server/movie.mkv", false},
+                                                 m_state);
+  }
+
+private:
+  std::shared_ptr<CFactoryShutdownState> m_state;
+};
+
+class CBlockingInputStream : public CDVDInputStream
+{
+public:
+  CBlockingInputStream(const CFileItem& item, std::shared_ptr<CShutdownState> state)
+    : CDVDInputStream(DVDSTREAM_TYPE_FILE, item),
+      m_state(std::move(state))
+  {
+  }
+
+  ~CBlockingInputStream() override
+  {
+    auto state = m_state;
+    state->destroyOrder = ++state->sequence;
+    state->inputDestroyed.Set();
+  }
+
+  int Read(uint8_t* buf, int bufSize) override { return 0; }
+  int64_t Seek(int64_t offset, int whence) override
+  {
+    m_state->seekEntered.Set();
+    m_state->releaseSeek.Wait();
+    if (m_aborted)
+    {
+      SetLastError(ECANCELED);
+      return -1;
+    }
+    return offset;
+  }
+  int64_t GetLength() override { return 1024 * 1024; }
+  bool IsEOF() override { return false; }
+  void Abort() override
+  {
+    auto state = m_state;
+    m_aborted = true;
+    ++state->abortCalls;
+    state->abortOrder = ++state->sequence;
+    state->releaseSeek.Set();
+    state->abortEntered.Set();
+    state->allowAbortReturn.Wait();
+    state->abortReturnOrder = ++state->sequence;
+    state->abortReturned.Set();
+  }
+
+private:
+  std::shared_ptr<CShutdownState> m_state;
+  std::atomic<bool> m_aborted{false};
+};
+
+class CShutdownVideoPlayer : public CVideoPlayer
+{
+public:
+  CShutdownVideoPlayer(IPlayerCallback& callback, std::shared_ptr<CShutdownState> state)
+    : CVideoPlayer(callback),
+      m_state(std::move(state))
+  {
+  }
+
+  void SetInputStream(std::shared_ptr<CDVDInputStream> input)
+  {
+    std::unique_lock lock(m_inputStreamSync);
+    m_pInputStream = std::move(input);
+  }
+
+  void StopThread(bool wait = true) override
+  {
+    m_state->stopOrder = ++m_state->sequence;
+    m_state->releaseSeek.Set();
+    CThread::StopThread(wait);
+  }
+
+protected:
+  void OnStartup() override {}
+  void Process() override
+  {
+    m_state->seekResult = m_pInputStream->Seek(256 * 1024, SEEK_SET);
+    m_state->processReturned.Set();
+  }
+  void OnExit() override
+  {
+    m_state->onExitEntered.Set();
+    std::unique_lock lock(m_inputStreamSync);
+    m_pInputStream.reset();
+    m_state->playerExited.Set();
+  }
+
+private:
+  std::shared_ptr<CShutdownState> m_state;
 };
 
 class TestVideoPlayer : public testing::Test
@@ -364,4 +550,96 @@ TEST_F(TestVideoPlayer, CalcTimeOrPercentSeekTargetSmooth)
   EXPECT_EQ(advancedSettings->m_videoTimeSeekBackward * 1000,
             CTestVideoPlayer::InvokeCalcTimeOrPercentSeekTarget(0, maxTime, Direction::BACKWARD,
                                                                 TestSeekStep::NORMAL));
+}
+
+TEST_F(TestVideoPlayer, FileInputAbortReachesFileCache)
+{
+  const std::string path{"special://temp/TestVideoPlayer-file-cache-abort.mkv"};
+  XFILE::CFile::Delete(path);
+
+  XFILE::CFile output;
+  ASSERT_TRUE(output.OpenForWrite(path, true));
+  const uint8_t contents[4]{0, 1, 2, 3};
+  ASSERT_EQ(4, output.Write(contents, sizeof(contents)));
+  output.Close();
+
+  CFileItem item{path, false};
+  item.SetMimeType("video/x-matroska");
+  CDVDInputStreamFile input{item, XFILE::READ_CACHED};
+  ASSERT_TRUE(input.Open());
+
+  input.Abort();
+
+  EXPECT_EQ(-1, input.Seek(0, SEEK_SET));
+  EXPECT_EQ(ECANCELED, GetLastError());
+  input.Close();
+  EXPECT_TRUE(XFILE::CFile::Delete(path));
+}
+
+TEST_F(TestVideoPlayer, CloseFileKeepsInputAliveUntilAbortReturns)
+{
+  auto state = std::make_shared<CShutdownState>();
+  CTestPlayerCallback callback;
+  CShutdownVideoPlayer player{callback, state};
+  CFileItem item{"mock://server/movie.mkv", false};
+  player.SetInputStream(std::make_shared<CBlockingInputStream>(item, state));
+  player.Create(false);
+
+  const bool seekEntered = state->seekEntered.Wait(5s);
+  auto closeResult = std::async(std::launch::async, [&]() { return player.CloseFile(); });
+  const bool abortEntered = state->abortEntered.Wait(5s);
+  const bool processReturned = state->processReturned.Wait(5s);
+  const bool onExitEntered = state->onExitEntered.Wait(5s);
+  const bool inputDestroyedDuringAbort = state->inputDestroyed.Signaled();
+  const bool closeWaitedForAbort = closeResult.wait_for(0ms) == std::future_status::timeout;
+
+  state->allowAbortReturn.Set();
+  state->releaseSeek.Set();
+  const bool closeFinished = closeResult.wait_for(5s) == std::future_status::ready;
+  bool closeSucceeded = false;
+  if (closeFinished)
+    closeSucceeded = closeResult.get();
+
+  EXPECT_TRUE(seekEntered);
+  EXPECT_TRUE(abortEntered);
+  EXPECT_TRUE(processReturned);
+  EXPECT_TRUE(onExitEntered);
+  EXPECT_FALSE(inputDestroyedDuringAbort);
+  EXPECT_TRUE(closeWaitedForAbort);
+  ASSERT_TRUE(closeFinished);
+  EXPECT_TRUE(closeSucceeded);
+  EXPECT_TRUE(state->abortReturned.Signaled());
+  EXPECT_TRUE(state->playerExited.Signaled());
+  EXPECT_TRUE(state->inputDestroyed.Signaled());
+  EXPECT_EQ(1U, state->abortCalls);
+  EXPECT_EQ(1U, state->abortOrder);
+  EXPECT_GT(state->abortReturnOrder, state->abortOrder);
+  EXPECT_GT(state->stopOrder, state->abortOrder);
+  EXPECT_GT(state->destroyOrder, state->abortReturnOrder);
+  EXPECT_EQ(-1, state->seekResult);
+}
+
+TEST_F(TestVideoPlayer, CloseFileCanCancelInputFactoryPublication)
+{
+  auto state = std::make_shared<CFactoryShutdownState>();
+  CTestPlayerCallback callback;
+  CFactoryShutdownVideoPlayer player{callback, state};
+  player.Create(false);
+
+  const bool factoryEntered = state->factoryEntered.Wait(5s);
+  auto abortResult = std::async(std::launch::async, [&]() { player.InvokeAbortInputStream(); });
+  const bool abortReadyBeforeFactoryReturn = abortResult.wait_for(1s) == std::future_status::ready;
+
+  state->allowFactoryReturn.Set();
+  const bool processReturned = state->processReturned.Wait(5s);
+  if (abortResult.wait_for(5s) == std::future_status::ready)
+    abortResult.get();
+  const bool closeSucceeded = player.CloseFile();
+
+  EXPECT_TRUE(factoryEntered);
+  EXPECT_TRUE(abortReadyBeforeFactoryReturn);
+  EXPECT_TRUE(processReturned);
+  EXPECT_TRUE(closeSucceeded);
+  EXPECT_FALSE(state->openResult);
+  EXPECT_EQ(0U, state->inputOpenCalls);
 }

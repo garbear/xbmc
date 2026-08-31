@@ -250,6 +250,12 @@ bool CCircularCache::Reset(int64_t pos)
   return true;
 }
 
+void CCircularCache::EndOfInput()
+{
+  CCacheStrategy::EndOfInput();
+  m_written.Set();
+}
+
 int64_t CCircularCache::CachedDataEndPosIfSeekTo(int64_t iFilePosition)
 {
   if (IsCachedPosition(iFilePosition))
