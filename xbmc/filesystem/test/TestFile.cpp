@@ -9,6 +9,10 @@
 #include "filesystem/File.h"
 #include "test/TestUtils.h"
 
+#if !defined(TARGET_WINDOWS)
+#include "platform/posix/ConvUtils.h"
+#endif
+
 #include <errno.h>
 #include <string>
 #include <string_view>
@@ -82,6 +86,19 @@ TEST(TestFile, Read)
   EXPECT_EQ(0, memcmp(firstBuf.c_str(), buf, firstBuf.length()));
   EXPECT_EQ(0, file.Seek(0, SEEK_SET));
   EXPECT_EQ(-1, file.Seek(-100, SEEK_SET));
+  file.Close();
+}
+
+TEST(TestFile, AbortBeforeOpenIsStickyUntilClose)
+{
+  XFILE::CFile file;
+
+  file.Abort();
+  EXPECT_FALSE(file.Open(XBMC_REF_FILE_PATH("/xbmc/filesystem/test/reffile.txt")));
+  EXPECT_EQ(ECANCELED, GetLastError());
+
+  file.Close();
+  EXPECT_TRUE(file.Open(XBMC_REF_FILE_PATH("/xbmc/filesystem/test/reffile.txt")));
   file.Close();
 }
 
