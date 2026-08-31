@@ -63,8 +63,13 @@
 #include "windowing/GraphicContext.h"
 #include "windowing/WinSystem.h"
 
+#if !defined(TARGET_WINDOWS)
+#include "platform/posix/ConvUtils.h"
+#endif
+
 #include <algorithm>
 #include <cassert>
+#include <cerrno>
 #include <chrono>
 #include <iterator>
 #include <limits>
@@ -841,6 +846,11 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
   m_item = file;
   m_playerOptions = options;
 
+  {
+    std::unique_lock lock(m_inputStreamSync);
+    m_inputStreamAbortRequested = false;
+  }
+
   m_processInfo->SetPlayTimes(0,0,0,0);
   m_bAbortRequest = false;
   m_error = false;
@@ -870,8 +880,7 @@ bool CVideoPlayer::CloseFile(bool reopen)
   if(m_pSubtitleDemuxer)
     m_pSubtitleDemuxer->Abort();
 
-  if(m_pInputStream)
-    m_pInputStream->Abort();
+  AbortInputStream();
 
   m_renderManager.UnInit();
 
@@ -918,32 +927,72 @@ void CVideoPlayer::OnStartup()
   UTILS::FONT::ClearTemporaryFonts();
 }
 
+std::shared_ptr<CDVDInputStream> CVideoPlayer::CreateInputStream()
+{
+  return CDVDFactoryInputStream::CreateInputStream(this, m_item, true);
+}
+
+void CVideoPlayer::AbortInputStream()
+{
+  std::unique_lock lock(m_inputStreamSync);
+  m_inputStreamAbortRequested = true;
+  if (m_pInputStream)
+    m_pInputStream->Abort();
+}
+
 bool CVideoPlayer::OpenInputStream()
 {
-  if (m_pInputStream.use_count() > 1)
-    throw std::runtime_error("m_pInputStream reference count is greater than 1");
-  m_pInputStream.reset();
+  {
+    std::unique_lock lock(m_inputStreamSync);
+    if (m_inputStreamAbortRequested)
+    {
+      SetLastError(ECANCELED);
+      return false;
+    }
+    if (m_pInputStream.use_count() > 1)
+      throw std::runtime_error("m_pInputStream reference count is greater than 1");
+    m_pInputStream.reset();
+  }
 
   CLog::Log(LOGINFO, "Creating InputStream");
 
-  m_pInputStream = CDVDFactoryInputStream::CreateInputStream(this, m_item, true);
-  if (m_pInputStream == nullptr)
+  auto inputStream = CreateInputStream();
+  if (inputStream == nullptr)
   {
     CLog::Log(LOGERROR, "CVideoPlayer::OpenInputStream - unable to create input stream for [{}]",
               CURL::GetRedacted(m_item.GetPath()));
     return false;
   }
 
-  if (!m_pInputStream->Open())
+  {
+    std::unique_lock lock(m_inputStreamSync);
+    if (m_inputStreamAbortRequested)
+    {
+      SetLastError(ECANCELED);
+      return false;
+    }
+    m_pInputStream = inputStream;
+  }
+
+  if (!inputStream->Open())
   {
     CLog::Log(LOGERROR, "CVideoPlayer::OpenInputStream - error opening [{}]",
               CURL::GetRedacted(m_item.GetPath()));
     return false;
   }
 
+  {
+    std::unique_lock lock(m_inputStreamSync);
+    if (m_inputStreamAbortRequested)
+    {
+      SetLastError(ECANCELED);
+      return false;
+    }
+  }
+
   // find any available external subtitles for non dvd files
-  if (!m_pInputStream->IsStreamType(DVDSTREAM_TYPE_DVD) &&
-      !m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER))
+  if (!inputStream->IsStreamType(DVDSTREAM_TYPE_DVD) &&
+      !inputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER))
   {
     // find any available external subtitles
     std::vector<std::string> filenames;
@@ -2910,8 +2959,16 @@ void CVideoPlayer::OnExit()
   // If we decide nothing was played then the state is cleared
   // For other input streams no action is taken (as NONE is returned by the default virtual function)
   constexpr double STREAM_FINISHED{std::numeric_limits<double>::max()};
-  const CDVDInputStream::UpdateState updateState{
-      m_pInputStream->UpdateItemFromSavedStates(fileItem, m_State.time, m_bCloseRequest)};
+  CDVDInputStream::UpdateState updateState{CDVDInputStream::UpdateState::NONE};
+  {
+    std::shared_ptr<CDVDInputStream> inputStream;
+    {
+      std::unique_lock lock(m_inputStreamSync);
+      inputStream = m_pInputStream;
+    }
+    if (inputStream)
+      updateState = inputStream->UpdateItemFromSavedStates(fileItem, m_State.time, m_bCloseRequest);
+  }
   switch (updateState)
   {
     using enum CDVDInputStream::UpdateState;
@@ -2936,7 +2993,8 @@ void CVideoPlayer::OnExit()
   // subtitles are added from video player. after video player has finished, overlays have to be cleared.
   CloseStream(m_CurrentSubtitle, false);  // clear overlay container
 
-  CServiceBroker::GetWinSystem()->UnregisterRenderLoop(this);
+  if (auto winSystem = CServiceBroker::GetWinSystem())
+    winSystem->UnregisterRenderLoop(this);
 
   IPlayerCallback *cb = &m_callback;
   CVideoSettings vs = m_processInfo->GetVideoSettings();
@@ -2964,9 +3022,12 @@ void CVideoPlayer::OnExit()
   m_pSubtitleDemuxer.reset();
   m_subtitleDemuxerMap.clear();
   m_pCCDemuxer.reset();
-  if (m_pInputStream.use_count() > 1)
-    throw std::runtime_error("m_pInputStream reference count is greater than 1");
-  m_pInputStream.reset();
+  {
+    std::unique_lock lock(m_inputStreamSync);
+    if (m_pInputStream.use_count() > 1)
+      throw std::runtime_error("m_pInputStream reference count is greater than 1");
+    m_pInputStream.reset();
+  }
 
   // clean up all selection streams
   m_SelectionStreams.Clear(StreamType::NONE, STREAM_SOURCE_NONE);
@@ -3036,9 +3097,12 @@ void CVideoPlayer::HandleMessages()
       m_pSubtitleDemuxer.reset();
       m_subtitleDemuxerMap.clear();
       m_pCCDemuxer.reset();
-      if (m_pInputStream.use_count() > 1)
-        throw std::runtime_error("m_pInputStream reference count is greater than 1");
-      m_pInputStream.reset();
+      {
+        std::unique_lock lock(m_inputStreamSync);
+        if (m_pInputStream.use_count() > 1)
+          throw std::runtime_error("m_pInputStream reference count is greater than 1");
+        m_pInputStream.reset();
+      }
 
       m_SelectionStreams.Clear(StreamType::NONE, STREAM_SOURCE_NONE);
 
