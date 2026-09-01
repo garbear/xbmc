@@ -289,6 +289,12 @@ bool CGameSettings::GetAchievementsLoggedIn() const
       SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN);
 }
 
+bool CGameSettings::GetAchievementsOnScreenIndicators() const
+{
+  return CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+      SETTING_GAMES_ACHIEVEMENTS_ONSCREEN_INDICATORS);
+}
+
 void CGameSettings::SetAchievementsLoggedIn(bool loggedIn)
 {
   const auto settingsComponent = CServiceBroker::GetSettingsComponent();

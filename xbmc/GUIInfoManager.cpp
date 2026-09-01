@@ -4514,6 +4514,65 @@ constexpr std::array<InfoMap, 88> videoplayer = {{
 ///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_AchievementsProgress `RetroPlayer.AchievementsProgress`\endlink
 ///     <p>
 ///   }
+///   \table_row3{   <b>`RetroPlayer.AchievementsChallengeTitle`</b>,
+///                  \anchor RetroPlayer_AchievementsChallengeTitle
+///                  _string_,
+///     @return The title of the achievement the player is inside an attempt at\,
+///     or an empty string if no attempt is under way or on-screen indicators are
+///     turned off.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_AchievementsChallengeTitle `RetroPlayer.AchievementsChallengeTitle`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.AchievementsChallengeBadge`</b>,
+///                  \anchor RetroPlayer_AchievementsChallengeBadge
+///                  _string_,
+///     @return The badge image of the achievement the player is inside an attempt
+///     at\, or an empty string if no attempt is under way or on-screen indicators
+///     are turned off.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_AchievementsChallengeBadge `RetroPlayer.AchievementsChallengeBadge`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.AchievementsIndicatorTitle`</b>,
+///                  \anchor RetroPlayer_AchievementsIndicatorTitle
+///                  _string_,
+///     @return The title of the measured achievement closest to being earned\, or
+///     an empty string if none is being counted or on-screen indicators are turned
+///     off.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_AchievementsIndicatorTitle `RetroPlayer.AchievementsIndicatorTitle`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.AchievementsIndicatorProgress`</b>,
+///                  \anchor RetroPlayer_AchievementsIndicatorProgress
+///                  _string_,
+///     @return How far along that measured achievement is\, as the client counts
+///     it (e.g. "13/180")\, or an empty string if none is being counted or
+///     on-screen indicators are turned off.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_AchievementsIndicatorProgress `RetroPlayer.AchievementsIndicatorProgress`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.AchievementsIndicatorBadge`</b>,
+///                  \anchor RetroPlayer_AchievementsIndicatorBadge
+///                  _string_,
+///     @return The badge image of that measured achievement\, or an empty string
+///     if none is being counted or on-screen indicators are turned off.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_AchievementsIndicatorBadge `RetroPlayer.AchievementsIndicatorBadge`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`RetroPlayer.AchievementsIndicatorPercent`</b>,
+///                  \anchor RetroPlayer_AchievementsIndicatorPercent
+///                  _integer_,
+///     @return How far along that measured achievement is as a percentage\, for
+///     driving a progress bar. Zero if none is being counted or on-screen
+///     indicators are turned off.
+///     <p><hr>
+///     @skinning_v22 **[New Infolabel]** \link RetroPlayer_AchievementsIndicatorPercent `RetroPlayer.AchievementsIndicatorPercent`\endlink
+///     <p>
+///   }
 ///   \table_row3{   <b>`RetroPlayer.RichPresence`</b>,
 ///                  \anchor RetroPlayer_RichPresence
 ///                  _string_,
@@ -4602,7 +4661,7 @@ constexpr std::array<InfoMap, 88> videoplayer = {{
 ///
 /// -----------------------------------------------------------------------------
 // clang-format off
-constexpr std::array<InfoMap, 19> retroplayer = {{
+constexpr std::array<InfoMap, 25> retroplayer = {{
     {"title", RETROPLAYER_TITLE},
     {"platform", RETROPLAYER_PLATFORM},
     {"genres", RETROPLAYER_GENRES},
@@ -4615,6 +4674,12 @@ constexpr std::array<InfoMap, 19> retroplayer = {{
     {"richpresence", RETROPLAYER_RICH_PRESENCE},
     {"achievementsloggedin", RETROPLAYER_ACHIEVEMENTS_LOGGED_IN},
     {"achievementsprogress", RETROPLAYER_ACHIEVEMENTS_PROGRESS},
+    {"achievementschallengetitle", RETROPLAYER_ACHIEVEMENTS_CHALLENGE_TITLE},
+    {"achievementschallengebadge", RETROPLAYER_ACHIEVEMENTS_CHALLENGE_BADGE},
+    {"achievementsindicatortitle", RETROPLAYER_ACHIEVEMENTS_INDICATOR_TITLE},
+    {"achievementsindicatorprogress", RETROPLAYER_ACHIEVEMENTS_INDICATOR_PROGRESS},
+    {"achievementsindicatorpercent", RETROPLAYER_ACHIEVEMENTS_INDICATOR_PERCENT},
+    {"achievementsindicatorbadge", RETROPLAYER_ACHIEVEMENTS_INDICATOR_BADGE},
     {"supportseject", RETROPLAYER_SUPPORTS_EJECT},
     {"discejected", RETROPLAYER_DISC_EJECTED},
     {"disclabel", RETROPLAYER_DISC_LABEL},

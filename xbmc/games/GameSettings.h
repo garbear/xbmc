@@ -21,6 +21,10 @@ namespace KODI
 namespace GAME
 {
 
+// Shared with the GUI info provider, which reads it without game services
+constexpr auto SETTING_GAMES_ACHIEVEMENTS_ONSCREEN_INDICATORS =
+    "gamesachievements.onscreenindicators";
+
 /*!
  * \ingroup games
  */
@@ -42,6 +46,8 @@ public:
   std::string GetRAToken() const;
 
   bool GetAchievementsLoggedIn() const;
+
+  bool GetAchievementsOnScreenIndicators() const;
 
   /*!
    * \brief Record whether the player is logged in to RetroAchievements
