@@ -317,6 +317,13 @@ void CGameClientCheevos::OnGameClosed()
   NotifyDialogs();
 }
 
+bool CGameClientCheevos::SendEncoreMode()
+{
+  const CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
+
+  return m_gameClient.SetEncoreModeEnabled(gameSettings.GetAchievementsEncore());
+}
+
 bool CGameClientCheevos::SendCredentials()
 {
   const CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();

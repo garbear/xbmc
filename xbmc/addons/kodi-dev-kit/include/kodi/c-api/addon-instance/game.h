@@ -1503,6 +1503,7 @@ extern "C"
     GAME_ERROR(__cdecl* DeserializeAchievements)
     (const struct AddonInstance_Game*, const uint8_t*, size_t);
     void(__cdecl* FreeString)(const AddonInstance_Game*, char*);
+    GAME_ERROR(__cdecl* RCSetEncoreModeEnabled)(const AddonInstance_Game*, bool);
   } KodiToAddonFuncTable_Game;
 
   /*!

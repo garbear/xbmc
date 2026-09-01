@@ -42,6 +42,7 @@ const std::string SETTING_GAMES_ACHIEVEMENTS_USERNAME = "gamesachievements.usern
 const std::string SETTING_GAMES_ACHIEVEMENTS_PASSWORD = "gamesachievements.password";
 const std::string SETTING_GAMES_ACHIEVEMENTS_TOKEN = "gamesachievements.token";
 const std::string SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN = "gamesachievements.loggedin";
+const std::string SETTING_GAMES_ACHIEVEMENTS_ENCORE = "gamesachievements.encore";
 
 constexpr auto LOGIN_TO_RETRO_ACHIEVEMENTS_URL =
     "https://retroachievements.org/dorequest.php?r=login2";
@@ -281,6 +282,11 @@ bool CGameSettings::IsAccountVerified(const std::string& username, const std::st
 
   CLog::Log(LOGERROR, "CGameSettings::IsAccountVerified -- verification request failed");
   return false;
+}
+
+bool CGameSettings::GetAchievementsEncore() const
+{
+  return m_settings->GetBool(SETTING_GAMES_ACHIEVEMENTS_ENCORE);
 }
 
 bool CGameSettings::GetAchievementsLoggedIn() const

@@ -72,6 +72,14 @@ public:
    */
   bool SendCredentials();
 
+  /*!
+   * \brief Tell the client whether to play for earned achievements again
+   *
+   * Sent on every load, because the achievement runtime is built per game and
+   * would otherwise keep whatever the last one was told.
+   */
+  bool SendEncoreMode();
+
 private:
   CGameClient& m_gameClient;
   AddonInstance_Game& m_struct;

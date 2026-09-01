@@ -230,6 +230,7 @@ public:
    * The account is held by Kodi, which owns the settings it is entered in.
    */
   bool SetRetroAchievementsCredentials(const std::string& username, const std::string& token);
+  bool SetEncoreModeEnabled(bool enabled);
 
   // Implementation of IHwFramebufferCallback
   void HardwareContextReset() override;

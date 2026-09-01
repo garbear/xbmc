@@ -263,6 +263,7 @@ bool CGameClient::OpenFile(const CFileItem& file,
 
   // Before the game loads: the client signs in as part of identifying it
   Cheevos().SendCredentials();
+  Cheevos().SendEncoreMode();
 
   try
   {
@@ -310,6 +311,7 @@ bool CGameClient::OpenStandalone(RETRO::IStreamManager& streamManager, IGameInpu
   // achievements too, and sending nothing is how a session left over from a
   // player who has since signed out gets dropped
   Cheevos().SendCredentials();
+  Cheevos().SendEncoreMode();
 
   try
   {
@@ -720,6 +722,23 @@ bool CGameClient::SetRetroAchievementsCredentials(const std::string& username,
   catch (...)
   {
     LogException("SetRetroAchievementsCredentials()");
+  }
+
+  return false;
+}
+
+bool CGameClient::SetEncoreModeEnabled(bool enabled)
+{
+  std::unique_lock lock(m_critSection);
+
+  try
+  {
+    return LogError(m_ifc.game->toAddon->RCSetEncoreModeEnabled(m_ifc.game, enabled),
+                    "RCSetEncoreModeEnabled()");
+  }
+  catch (...)
+  {
+    LogException("RCSetEncoreModeEnabled()");
   }
 
   return false;

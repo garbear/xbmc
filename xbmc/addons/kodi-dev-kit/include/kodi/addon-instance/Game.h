@@ -984,6 +984,23 @@ public:
   }
   //----------------------------------------------------------------------------
 
+  //============================================================================
+  /// @brief Turn encore mode on or off
+  ///
+  /// Encore mode re-activates achievements the player has already earned, so
+  /// they can be played for again. Nothing is submitted for them a second time.
+  ///
+  /// The achievement runtime is recreated for each game, so this is sent on
+  /// every load rather than only when the setting changes.
+  ///
+  /// @param[in] enabled True to enable encore mode
+  /// @return The add-on error, or @ref GAME_ERROR_NO_ERROR
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  virtual GAME_ERROR RCSetEncoreModeEnabled(bool enabled) { return GAME_ERROR_NOT_IMPLEMENTED; }
+  //----------------------------------------------------------------------------
+
   ///@}
 
   //--==----==----==----==----==----==----==----==----==----==----==----==----==--
@@ -1407,6 +1424,7 @@ private:
     instance->game->toAddon->AchievementStateSize = ADDON_AchievementStateSize;
     instance->game->toAddon->SerializeAchievements = ADDON_SerializeAchievements;
     instance->game->toAddon->DeserializeAchievements = ADDON_DeserializeAchievements;
+    instance->game->toAddon->RCSetEncoreModeEnabled = ADDON_RCSetEncoreModeEnabled;
 
     instance->game->toAddon->CheatReset = ADDON_CheatReset;
     instance->game->toAddon->GetMemory = ADDON_GetMemory;
@@ -1622,6 +1640,13 @@ private:
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
         ->DeserializeAchievements(data, size);
+  }
+
+  inline static GAME_ERROR ADDON_RCSetEncoreModeEnabled(const AddonInstance_Game* instance,
+                                                        bool enabled)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->RCSetEncoreModeEnabled(enabled);
   }
 
   // --- Cheat operations --------------------------------------------------------

@@ -19539,7 +19539,17 @@ msgctxt "#35299"
 msgid "Still looking this game up on RetroAchievements..."
 msgstr ""
 
-#empty strings from id 35300 to 35504
+#. Label of the setting that enables RetroAchievements encore mode
+msgctxt "#35300"
+msgid "Encore mode"
+msgstr ""
+
+#. Help text for the encore mode setting
+msgctxt "#35301"
+msgid "Play for achievements you have already earned. They are re-activated so they can be earned again, and nothing is submitted for them a second time."
+msgstr ""
+
+#empty strings from id 35302 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/pvr/addons/PVRClients.cpp

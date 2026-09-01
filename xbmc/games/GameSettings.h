@@ -43,6 +43,9 @@ public:
 
   bool GetAchievementsLoggedIn() const;
 
+  //! \brief Whether achievements already earned should be earnable again
+  bool GetAchievementsEncore() const;
+
   /*!
    * \brief Record whether the player is logged in to RetroAchievements
    *
