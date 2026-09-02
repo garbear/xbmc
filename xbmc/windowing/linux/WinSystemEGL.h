@@ -21,12 +21,15 @@ class CWinSystemEGL
 {
 public:
   CWinSystemEGL(EGLenum platform, std::string const& platformExtension);
-  ~CWinSystemEGL() = default;
+  virtual ~CWinSystemEGL() = default;
 
-  EGLDisplay GetEGLDisplay() const;
-  EGLSurface GetEGLSurface() const;
-  EGLContext GetEGLContext() const;
-  EGLConfig GetEGLConfig() const;
+  // Virtual so a window system that keeps its EGL handles somewhere other than
+  // the context below can still be found by a dynamic_cast to this class and
+  // asked for them
+  virtual EGLDisplay GetEGLDisplay() const;
+  virtual EGLSurface GetEGLSurface() const;
+  virtual EGLContext GetEGLContext() const;
+  virtual EGLConfig GetEGLConfig() const;
 
 protected:
   CEGLContextUtils m_eglContext;

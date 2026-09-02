@@ -83,5 +83,15 @@ using GameAgentVec = std::vector<GameAgentPtr>;
  * \brief Name of the resources directory for game clients
  */
 constexpr auto GAME_CLIENT_RESOURCES_DIRECTORY = "resources";
+
+/*!
+ * \ingroup games
+ *
+ * \brief The BIOS directory shared by every game client
+ *
+ * A file dropped here is offered to all of them, ahead of anything a game
+ * resource add-on or the client's own folder supplies.
+ */
+constexpr auto GAME_BIOS_DIRECTORY = "special://profile/games/bios";
 } // namespace GAME
 } // namespace KODI

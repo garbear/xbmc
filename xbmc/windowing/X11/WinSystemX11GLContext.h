@@ -11,6 +11,7 @@
 #include "WinSystemX11.h"
 #include "rendering/gl/RenderSystemGL.h"
 #include "windowing/X11/GLContext.h"
+#include "windowing/linux/WinSystemEGL.h"
 
 #include <memory>
 
@@ -28,10 +29,17 @@ namespace X11
 
 class CVaapiProxy;
 
-class CWinSystemX11GLContext : public CWinSystemX11, public CRenderSystemGL
+class CWinSystemX11GLContext : public CWinSystemX11,
+                               public CRenderSystemGL,
+                               public KODI::WINDOWING::LINUX::CWinSystemEGL
 {
 public:
-  CWinSystemX11GLContext() = default;
+  // The base's own EGL context is unused: X11 keeps its handles in the GL
+  // context it creates, and every accessor below is overridden to read those
+  CWinSystemX11GLContext()
+    : KODI::WINDOWING::LINUX::CWinSystemEGL{EGL_PLATFORM_X11_KHR, "EGL_KHR_platform_x11"}
+  {
+  }
   ~CWinSystemX11GLContext() override;
 
   static void Register();
@@ -56,10 +64,11 @@ public:
 
   XID GetWindow() const;
   void* GetGlxContext() const;
-  EGLDisplay GetEGLDisplay() const;
-  EGLSurface GetEGLSurface() const;
-  EGLContext GetEGLContext() const;
-  EGLConfig GetEGLConfig() const;
+  // X11 keeps these in its own GL context, which may not be an EGL one at all
+  EGLDisplay GetEGLDisplay() const override;
+  EGLSurface GetEGLSurface() const override;
+  EGLContext GetEGLContext() const override;
+  EGLConfig GetEGLConfig() const override;
 
   bool BindTextureUploadContext() override;
   bool UnbindTextureUploadContext() override;
