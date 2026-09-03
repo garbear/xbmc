@@ -1220,6 +1220,148 @@ public:
     m_instanceData->toKodi->RCOnConnectionChanged(m_instanceData->toKodi->kodiInstance, connected);
   }
 
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Show or hide the indicator for an achievement the player is attempting
+  ///
+  /// @param[in] data The achievement being attempted
+  /// @param[in] show True to show the indicator, false to hide it
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  void RCOnChallengeIndicator(const game_rc_achievement_challenge& data, bool show)
+  {
+    m_instanceData->toKodi->RCOnChallengeIndicator(m_instanceData->toKodi->kodiInstance, &data,
+                                                   show);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Give Kodi a new value for a measured achievement already on screen
+  ///
+  /// @param[in] data The achievement and how far along it is
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  void RCOnAchievementProgressUpdate(const game_rc_achievement_progress_indicator& data)
+  {
+    m_instanceData->toKodi->RCOnAchievementProgressUpdate(m_instanceData->toKodi->kodiInstance,
+                                                          &data);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Notify Kodi that an attempt at a leaderboard has begun
+  ///
+  /// @param[in] data The leaderboard being attempted
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  void RCOnLeaderboardStarted(const game_rc_leaderboard& data)
+  {
+    m_instanceData->toKodi->RCOnLeaderboardStarted(m_instanceData->toKodi->kodiInstance, &data);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Notify Kodi that an attempt at a leaderboard has been abandoned
+  ///
+  /// @param[in] data The leaderboard that was being attempted
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  void RCOnLeaderboardFailed(const game_rc_leaderboard& data)
+  {
+    m_instanceData->toKodi->RCOnLeaderboardFailed(m_instanceData->toKodi->kodiInstance, &data);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Notify Kodi that a leaderboard value has been sent to the server
+  ///
+  /// Where it placed arrives later, through
+  /// @ref KodiRCOnLeaderboardScoreboard, and may not arrive at all.
+  ///
+  /// @param[in] data The leaderboard and the value submitted
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  void RCOnLeaderboardSubmitted(const game_rc_leaderboard& data)
+  {
+    m_instanceData->toKodi->RCOnLeaderboardSubmitted(m_instanceData->toKodi->kodiInstance, &data);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Give Kodi a new value for an attempt already on screen
+  ///
+  /// @param[in] data The tracker and its current value
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  void RCOnLeaderboardTrackerUpdate(const game_rc_leaderboard_tracker& data)
+  {
+    m_instanceData->toKodi->RCOnLeaderboardTrackerUpdate(m_instanceData->toKodi->kodiInstance,
+                                                         &data);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Tell Kodi where a submitted attempt placed
+  ///
+  /// @param[in] data The new standing
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  void RCOnLeaderboardScoreboard(const game_rc_leaderboard_scoreboard& data)
+  {
+    m_instanceData->toKodi->RCOnLeaderboardScoreboard(m_instanceData->toKodi->kodiInstance, &data);
+  }
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Ask the frontend to reset the game
+  ///
+  /// Raised when hardcore mode is enabled, because a session started in casual
+  /// mode may not continue into hardcore.
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  void RCOnReset() { m_instanceData->toKodi->RCOnReset(m_instanceData->toKodi->kodiInstance); }
+
+
+  //============================================================================
+  /// @brief **Callback to Kodi Function**\n
+  /// Notify Kodi that every achievement of a subset has been earned
+  ///
+  /// @param[in] title The title of the completed subset
+  ///
+  /// @remarks Only called from the add-on itself
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  void RCOnSubsetCompleted(const std::string& title)
+  {
+    m_instanceData->toKodi->RCOnSubsetCompleted(m_instanceData->toKodi->kodiInstance,
+                                                title.c_str());
+  }
+
   //----------------------------------------------------------------------------
 
   ///@}
