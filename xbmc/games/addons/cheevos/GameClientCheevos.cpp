@@ -91,6 +91,25 @@ CGameClientCheevos::CGameClientCheevos(CGameClient& gameClient, AddonInstance_Ga
   : m_gameClient(gameClient),
     m_struct(addonStruct)
 {
+  CServiceBroker::GetGameServices().GameSettings().RegisterObserver(this);
+}
+
+CGameClientCheevos::~CGameClientCheevos()
+{
+  CServiceBroker::GetGameServices().GameSettings().UnregisterObserver(this);
+}
+
+void CGameClientCheevos::Notify(const Observable& obs, const ObservableMessage msg)
+{
+  if (msg != ObservableMessageSettingsChanged)
+    return;
+
+  // Hardcore switched on part-way through a session has to reach the client,
+  // which resets the game: RetroAchievements does not allow a session begun in
+  // casual mode to carry on into hardcore.
+  const CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
+  m_gameClient.SetHardcoreEnabled(gameSettings.GetAchievementsHardcore());
+  m_gameClient.SetEncoreModeEnabled(gameSettings.GetAchievementsEncore());
 }
 
 void CGameClientCheevos::OnGameLoaded(const game_rc_game_loaded& data)

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "utils/Observer.h"
+
 #include <string>
 
 struct AddonInstance_Game;
@@ -32,10 +34,14 @@ class CGameClient;
 /*!
  * \ingroup games
  */
-class CGameClientCheevos
+class CGameClientCheevos : public Observer
 {
 public:
   CGameClientCheevos(CGameClient& gameClient, AddonInstance_Game& addonStruct);
+  ~CGameClientCheevos() override;
+
+  // Implementation of Observer
+  void Notify(const Observable& obs, const ObservableMessage msg) override;
 
   /*!
    * \name RetroAchievements events received from the add-on
