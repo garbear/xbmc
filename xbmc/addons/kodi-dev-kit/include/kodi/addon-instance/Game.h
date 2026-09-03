@@ -1054,6 +1054,34 @@ public:
   {
     return GAME_ERROR_NOT_IMPLEMENTED;
   }
+
+  //============================================================================
+  /// @brief Set whether achievements are earned in hardcore mode
+  ///
+  /// The frontend enforces the restrictions hardcore requires. The client is
+  /// told so its runtime agrees, and so that anything the client itself can do
+  /// that hardcore forbids - cheats, for one - can be refused here too.
+  ///
+  /// @param[in] enabled True to earn in hardcore mode
+  ///
+  /// @return The error, or @ref GAME_ERROR_NO_ERROR on success
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  virtual GAME_ERROR RCSetHardcoreEnabled(bool enabled) { return GAME_ERROR_NOT_IMPLEMENTED; }
+  //----------------------------------------------------------------------------
+
+  //============================================================================
+  /// @brief Set whether already-earned achievements can be earned again
+  ///
+  /// @param[in] enabled True to re-earn achievements already unlocked
+  ///
+  /// @return The error, or @ref GAME_ERROR_NO_ERROR on success
+  ///
+  /// @note Added in Game API 8.1.0
+  ///
+  virtual GAME_ERROR RCSetEncoreModeEnabled(bool enabled) { return GAME_ERROR_NOT_IMPLEMENTED; }
+  //----------------------------------------------------------------------------
   //============================================================================
   /// @brief Activate an achievement
   ///
@@ -1556,6 +1584,8 @@ private:
 
     instance->game->toAddon->SetRetroAchievementsCredentials =
         ADDON_SetRetroAchievementsCredentials;
+    instance->game->toAddon->RCSetHardcoreEnabled = ADDON_RCSetHardcoreEnabled;
+    instance->game->toAddon->RCSetEncoreModeEnabled = ADDON_RCSetEncoreModeEnabled;
     instance->game->toAddon->ActivateAchievement = ADDON_ActivateAchievement;
     instance->game->toAddon->GetCheevoUrlId = ADDON_GetCheevoUrlId;
 
@@ -1800,6 +1830,20 @@ private:
 
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
         ->SetRetroAchievementsCredentials(username, token);
+  }
+
+  inline static GAME_ERROR ADDON_RCSetHardcoreEnabled(const AddonInstance_Game* instance,
+                                                      bool enabled)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->RCSetHardcoreEnabled(enabled);
+  }
+
+  inline static GAME_ERROR ADDON_RCSetEncoreModeEnabled(const AddonInstance_Game* instance,
+                                                        bool enabled)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)
+        ->RCSetEncoreModeEnabled(enabled);
   }
 
   inline static GAME_ERROR ADDON_ActivateAchievement(const AddonInstance_Game* instance,

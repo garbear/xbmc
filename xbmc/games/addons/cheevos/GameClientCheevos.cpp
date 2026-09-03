@@ -334,6 +334,11 @@ bool CGameClientCheevos::SendCredentials()
   if (username.empty() || token.empty())
     return m_gameClient.SetRetroAchievementsCredentials("", "");
 
+  // The modes go with them: the client's runtime has to agree with the
+  // frontend about which is in force before it identifies the game
+  m_gameClient.SetHardcoreEnabled(gameSettings.GetAchievementsHardcore());
+  m_gameClient.SetEncoreModeEnabled(gameSettings.GetAchievementsEncore());
+
   return m_gameClient.SetRetroAchievementsCredentials(username, token);
 }
 

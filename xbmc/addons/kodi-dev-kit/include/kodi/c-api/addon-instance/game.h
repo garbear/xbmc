@@ -1641,6 +1641,8 @@ extern "C"
     char*(__cdecl* GetImageLabel)(const AddonInstance_Game*, unsigned int);
     GAME_ERROR(__cdecl* SetRetroAchievementsCredentials)
     (const AddonInstance_Game*, const char*, const char*);
+    GAME_ERROR(__cdecl* RCSetHardcoreEnabled)(const AddonInstance_Game*, bool);
+    GAME_ERROR(__cdecl* RCSetEncoreModeEnabled)(const AddonInstance_Game*, bool);
     GAME_ERROR(__cdecl* ActivateAchievement)(const AddonInstance_Game*, unsigned int, const char*);
     GAME_ERROR(__cdecl* GetCheevoUrlId)
     (const AddonInstance_Game*,
