@@ -19539,7 +19539,169 @@ msgctxt "#35299"
 msgid "Still looking this game up on RetroAchievements..."
 msgstr ""
 
-#empty strings from id 35300 to 35504
+#. Label of the Manual action in the game OSD, and heading of its notifications
+#: addons/skin.estuary/xml/GameOSD.xml
+msgctxt "#35311"
+msgid "Manual"
+msgstr ""
+
+#. Notification shown when a game has no manual beside it. {0:s} is the game
+#: xbmc/interfaces/builtins/GameBuiltins.cpp
+msgctxt "#35312"
+msgid "No manual found for {0:s}"
+msgstr ""
+
+#. Shown when a game needs the graphics card directly but the display can't provide it
+#: xbmc/games/addons/GameClient.cpp
+msgctxt "#35300"
+msgid "This game renders with {0:s}, which isn't available on this display. It can't be played."
+msgstr ""
+
+#. Label of the setting that enables RetroAchievements hardcore mode
+#: system/settings/settings.xml
+msgctxt "#35301"
+msgid "Hardcore mode"
+msgstr ""
+
+#. Help text for the hardcore mode setting
+#: system/settings/settings.xml
+msgctxt "#35302"
+msgid "Earn achievements worth double points, with rewind, save state loading, cheats and slow motion disabled. Turning this on restarts the game."
+msgstr ""
+
+#. Label of the setting that enables RetroAchievements encore mode
+#: system/settings/settings.xml
+msgctxt "#35303"
+msgid "Encore mode"
+msgstr ""
+
+#. Help text for the encore mode setting
+#: system/settings/settings.xml
+msgctxt "#35304"
+msgid "Allow achievements you have already earned to be triggered again when replaying a game."
+msgstr ""
+
+#. Notification shown when hardcore mode blocks a feature, {0:s} is the feature
+#: xbmc/games/GameSettings.cpp
+msgctxt "#35305"
+msgid "{0:s} is not available in hardcore mode"
+msgstr ""
+
+#. Notification shown when hardcore mode is turned off during play
+#: xbmc/games/GameSettings.cpp
+msgctxt "#35306"
+msgid "Hardcore mode disabled. Achievements will be earned in casual mode."
+msgstr ""
+
+#. Notification shown when all achievements of a subset are earned, {0:s} is the subset
+#: xbmc/games/addons/cheevos/GameClientCheevos.cpp
+msgctxt "#35307"
+msgid "Subset completed"
+msgstr ""
+
+#. Name of the save state feature, used when hardcore mode blocks it
+#: xbmc/cores/RetroPlayer/playback/ReversiblePlayback.cpp
+msgctxt "#35308"
+msgid "Loading save states"
+msgstr ""
+
+#. Name of the rewind feature, used when hardcore mode blocks it
+#: xbmc/cores/RetroPlayer/playback/ReversiblePlayback.cpp
+msgctxt "#35309"
+msgid "Rewind"
+msgstr ""
+
+#. Name of the slow motion feature, used when hardcore mode blocks it
+#: xbmc/cores/RetroPlayer/playback/ReversiblePlayback.cpp
+msgctxt "#35310"
+msgid "Slow motion"
+msgstr ""
+
+#empty strings from id 35313 to 35349
+
+#. Heading for the player's own standing on a leaderboard
+#: xbmc/games/dialogs/osd/LeaderboardUtils.cpp
+msgctxt "#35350"
+msgid "Your best"
+msgstr ""
+
+#. Shown when the player has never submitted
+#: xbmc/games/dialogs/osd/LeaderboardUtils.cpp
+msgctxt "#35351"
+msgid "You have not set a time on this leaderboard yet"
+msgstr ""
+
+#. A leaderboard entry submitted last month
+msgctxt "#35352"
+msgid "Last month"
+msgstr ""
+
+#. A leaderboard entry submitted last year
+msgctxt "#35353"
+msgid "Last year"
+msgstr ""
+
+#. Notification heading when a leaderboard attempt begins
+msgctxt "#35354"
+msgid "Leaderboard attempt started"
+msgstr ""
+
+#. Notification heading when a leaderboard attempt is abandoned
+msgctxt "#35355"
+msgid "Leaderboard attempt failed"
+msgstr ""
+
+#. Notification heading when a leaderboard score is sent to the server
+msgctxt "#35356"
+msgid "Leaderboard attempt submitted"
+msgstr ""
+
+#. Where a submitted leaderboard score placed
+msgctxt "#35357"
+msgid "Your rank: {0:d} of {1:d}"
+msgstr ""
+
+#. Shown when a submitted score did not beat the player's existing best
+msgctxt "#35358"
+msgid "Your best is still {0:s}"
+msgstr ""
+
+#. Settings button that deletes every downloaded game manual
+msgctxt "#35359"
+msgid "Clear cached manuals"
+msgstr ""
+
+#. Help text for the clear cached manuals button
+msgctxt "#35360"
+msgid "Delete every manual that has been downloaded. They will be fetched again when next opened."
+msgstr ""
+
+#. Settings button that deletes the kept leaderboard standings
+msgctxt "#35361"
+msgid "Clear cached leaderboards"
+msgstr ""
+
+#. Help text for the clear cached leaderboards button
+msgctxt "#35362"
+msgid "Forget the leaderboard standings kept from previous sessions, so they are asked for again."
+msgstr ""
+
+#. Notification shown after a cache has been emptied
+msgctxt "#35363"
+msgid "Cache cleared"
+msgstr ""
+
+#. Setting to show the achievement being attempted over the game
+msgctxt "#35364"
+msgid "Show challenge indicator on screen"
+msgstr ""
+
+#. Help text for the challenge indicator setting
+msgctxt "#35365"
+msgid "Show the achievement you are inside an attempt at in the corner of the screen while you play."
+msgstr ""
+
+#empty strings from id 35366 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/pvr/addons/PVRClients.cpp

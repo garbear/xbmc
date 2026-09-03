@@ -41,6 +41,9 @@ const std::string SETTING_GAMES_REWINDTIME = "gamesgeneral.rewindtime";
 const std::string SETTING_GAMES_ACHIEVEMENTS_USERNAME = "gamesachievements.username";
 const std::string SETTING_GAMES_ACHIEVEMENTS_PASSWORD = "gamesachievements.password";
 const std::string SETTING_GAMES_ACHIEVEMENTS_TOKEN = "gamesachievements.token";
+const std::string SETTING_GAMES_ACHIEVEMENTS_HARDCORE = "gamesachievements.hardcore";
+const std::string SETTING_GAMES_ACHIEVEMENTS_ENCORE = "gamesachievements.encore";
+const std::string SETTING_GAMES_ACHIEVEMENTS_INDICATOR = "gamesachievements.challengeindicator";
 const std::string SETTING_GAMES_ACHIEVEMENTS_LOGGED_IN = "gamesachievements.loggedin";
 
 constexpr auto LOGIN_TO_RETRO_ACHIEVEMENTS_URL =
@@ -142,8 +145,12 @@ void CGameSettings::OnSettingChanged(const std::shared_ptr<const CSetting>& sett
 
   const std::string& settingId = setting->GetId();
 
-  if (settingId == SETTING_GAMES_ENABLEREWIND || settingId == SETTING_GAMES_REWINDTIME)
+  if (settingId == SETTING_GAMES_ENABLEREWIND || settingId == SETTING_GAMES_REWINDTIME ||
+      settingId == SETTING_GAMES_ACHIEVEMENTS_HARDCORE)
   {
+    // Hardcore belongs here as much as the rewind settings do: turning it on
+    // has to drop the rewind buffer, or the frames already in it stay
+    // rewindable for the rest of the session
     SetChanged();
     NotifyObservers(ObservableMessageSettingsChanged);
   }
@@ -281,6 +288,37 @@ bool CGameSettings::IsAccountVerified(const std::string& username, const std::st
 
   CLog::Log(LOGERROR, "CGameSettings::IsAccountVerified -- verification request failed");
   return false;
+}
+
+bool CGameSettings::GetAchievementsHardcore() const
+{
+  return CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+      SETTING_GAMES_ACHIEVEMENTS_HARDCORE);
+}
+
+void CGameSettings::SetAchievementsHardcore(bool hardcore)
+{
+  const auto settingsComponent = CServiceBroker::GetSettingsComponent();
+  if (!settingsComponent)
+    return;
+
+  const auto settings = settingsComponent->GetSettings();
+  if (!settings)
+    return;
+
+  settings->SetBool(SETTING_GAMES_ACHIEVEMENTS_HARDCORE, hardcore);
+}
+
+bool CGameSettings::GetAchievementsEncore() const
+{
+  return CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+      SETTING_GAMES_ACHIEVEMENTS_ENCORE);
+}
+
+bool CGameSettings::GetChallengeIndicator() const
+{
+  return CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+      SETTING_GAMES_ACHIEVEMENTS_INDICATOR);
 }
 
 bool CGameSettings::GetAchievementsLoggedIn() const

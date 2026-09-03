@@ -41,6 +41,38 @@ public:
   std::string GetRAUsername() const;
   std::string GetRAToken() const;
 
+  /*!
+   * \brief Whether achievements are earned in hardcore mode
+   *
+   * Hardcore doubles the points awarded, and requires the player to go without
+   * rewind, save state loading, cheats and slow motion. RetroAchievements does
+   * not allow a session started in casual mode to continue into hardcore, so
+   * turning this on mid-game resets it.
+   */
+  bool GetAchievementsHardcore() const;
+
+  /*!
+   * \brief Turn hardcore mode on or off
+   *
+   * Used to drop back to casual when a session resumes from a save state,
+   * which RetroAchievements requires.
+   */
+  void SetAchievementsHardcore(bool hardcore);
+
+  /*!
+   * \brief Whether achievements already earned can be triggered again
+   */
+  bool GetAchievementsEncore() const;
+
+  /*!
+   * \brief Whether to show the achievement being attempted over the game
+   *
+   * Some players want to know an attempt is live; others would rather nothing
+   * covered the picture. It is on by default, because an indicator nobody asked
+   * for is easier to turn off than one nobody knew existed.
+   */
+  bool GetChallengeIndicator() const;
+
   bool GetAchievementsLoggedIn() const;
 
   /*!

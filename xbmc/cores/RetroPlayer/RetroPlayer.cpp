@@ -30,6 +30,7 @@
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "cores/RetroPlayer/streams/RPStreamManager.h"
 #include "dialogs/GUIDialogYesNo.h"
+#include "dialogs/GUIDialogKaiToast.h"
 #include "games/GameServices.h"
 #include "games/GameSettings.h"
 #include "games/GameUtils.h"
@@ -672,6 +673,21 @@ void CRetroPlayer::CreatePlayback(const std::string& savestatePath)
     if (!bStandalone)
     {
       CLog::Log(LOGDEBUG, "RetroPlayer[SAVE]: Loading savestate");
+
+      // RetroAchievements requires a resumed session to drop to casual: the
+      // player did not earn the state being resumed from in this session. Done
+      // before the load, which is otherwise refused while hardcore is on.
+      GAME::CGameSettings& gameSettings = m_gameServices.GameSettings();
+      if (gameSettings.GetAchievementsHardcore())
+      {
+        CLog::Log(LOGINFO, "RetroPlayer[SAVE]: Resuming from a savestate, dropping to casual mode");
+        gameSettings.SetAchievementsHardcore(false);
+
+        // "Hardcore mode disabled. Achievements will be earned in casual mode."
+        const auto& strings = CServiceBroker::GetResourcesComponent().GetLocalizeStrings();
+        CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, strings.Get(35264),
+                                              strings.Get(35303));
+      }
 
       if (!SetPlayerState(savestatePath))
         CLog::Log(LOGERROR, "RetroPlayer[SAVE]: Failed to load savestate");
