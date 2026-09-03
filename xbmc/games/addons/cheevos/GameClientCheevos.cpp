@@ -335,3 +335,149 @@ bool CGameClientCheevos::SendCredentials()
 
   return m_gameClient.SetRetroAchievementsCredentials(username, token);
 }
+
+void CGameClientCheevos::OnChallengeIndicator(const game_rc_achievement_challenge& data, bool show)
+{
+  // Logged because there is no other way to tell whether this ever fired: the
+  // indicator is a skin element that simply does not appear, which looks the
+  // same as the event never arriving
+  CLog::Log(LOGDEBUG, "CGameClientCheevos: challenge indicator {} for achievement {} \"{}\"",
+            show ? "shown" : "hidden", data.id, SafeString(data.title));
+
+  // Published to the runtime rather than raised as a notification: this fires
+  // and clears repeatedly during play, so it belongs in an on-screen indicator
+  // the skin can show and hide, not in the notification queue
+  AchievementChallenge challenge;
+  challenge.id = data.id;
+  challenge.title = SafeString(data.title);
+  challenge.badgeUrl = SafeString(data.badge_url);
+
+  CServiceBroker::GetGameServices().AchievementRuntime().SetChallenge(challenge, show);
+}
+
+void CGameClientCheevos::OnAchievementProgressIndicator(
+    const game_rc_achievement_progress_indicator& data, bool show)
+{
+  CLog::Log(LOGDEBUG, "CGameClientCheevos: progress indicator {} for achievement {} \"{}\" at {}",
+            show ? "shown" : "hidden", data.id, SafeString(data.title),
+            SafeString(data.measured_progress));
+
+  // Published to the runtime rather than raised as a notification: this ticks
+  // up many times a second while the player works towards it, so it belongs in
+  // an on-screen indicator the skin can show and hide
+  AchievementProgressIndicator indicator;
+  indicator.id = data.id;
+  indicator.title = SafeString(data.title);
+  indicator.badgeUrl = SafeString(data.badge_url);
+  indicator.measuredProgress = SafeString(data.measured_progress);
+  indicator.measuredPercent = data.measured_percent;
+
+  CServiceBroker::GetGameServices().AchievementRuntime().SetProgressIndicator(indicator, show);
+}
+
+void CGameClientCheevos::OnLeaderboardStarted(const game_rc_leaderboard& data)
+{
+  const std::string title = SafeString(data.title);
+
+  CLog::Log(LOGINFO, "CGameClientCheevos: leaderboard {} \"{}\" started", data.id, title);
+
+  // "Leaderboard attempt started"
+  CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, Localize(35354), title,
+                                        TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
+}
+
+void CGameClientCheevos::OnLeaderboardFailed(const game_rc_leaderboard& data)
+{
+  const std::string title = SafeString(data.title);
+
+  CLog::Log(LOGINFO, "CGameClientCheevos: leaderboard {} \"{}\" failed", data.id, title);
+
+  // "Leaderboard attempt failed"
+  CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, Localize(35355), title,
+                                        TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
+}
+
+void CGameClientCheevos::OnLeaderboardSubmitted(const game_rc_leaderboard& data)
+{
+  const std::string title = SafeString(data.title);
+  const std::string value = SafeString(data.value);
+
+  CLog::Log(LOGINFO, "CGameClientCheevos: leaderboard {} \"{}\" submitted {}", data.id, title,
+            value);
+
+  // The value is worth more than the title here - "1:24.60" is what the player
+  // wants to see - so it leads, with the leaderboard named after it
+  const std::string message =
+      value.empty() ? title : StringUtils::Format("{}  ·  {}", value, title);
+
+  // "Leaderboard attempt submitted"
+  CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, Localize(35356), message,
+                                        TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
+}
+
+void CGameClientCheevos::OnLeaderboardTracker(const game_rc_leaderboard_tracker& data, bool show)
+{
+  // Same reasoning as the challenge indicator: silence here is indistinguishable
+  // from the event never arriving
+  CLog::Log(LOGDEBUG, "CGameClientCheevos: leaderboard tracker {} = \"{}\"",
+            show ? "shown" : "hidden", SafeString(data.display));
+
+  // Published to the runtime rather than raised as a notification: this updates
+  // many times a second while an attempt runs, so it belongs in an on-screen
+  // indicator the skin can show and hide
+  LeaderboardTracker tracker;
+  tracker.id = data.id;
+  tracker.display = SafeString(data.display);
+
+  CServiceBroker::GetGameServices().AchievementRuntime().SetLeaderboardTracker(tracker, show);
+}
+
+void CGameClientCheevos::OnLeaderboardScoreboard(const game_rc_leaderboard_scoreboard& data)
+{
+  const std::string submitted = SafeString(data.submitted_score);
+  const std::string best = SafeString(data.best_score);
+
+  CLog::Log(LOGINFO, "CGameClientCheevos: leaderboard {} placed {} of {} with {}", data.id,
+            data.new_rank, data.num_entries, submitted);
+
+  // The leaderboards list would otherwise show where the player stood before
+  // this attempt until the game is reloaded
+  CServiceBroker::GetGameServices().AchievementRuntime().SetLeaderboardStanding(
+      data.id, data.new_rank, best.empty() ? submitted : best, data.num_entries);
+
+  // Dropping the fetched page is not enough on its own: the kept copy in
+  // userdata was fetched before this submission, so it would be loaded straight
+  // back in and show the player a table they are no longer in the right place in
+  ForgetLeaderboardEntries(data.id);
+
+  // "Your rank: {0:d} of {1:d}"
+  std::string message = StringUtils::Format(Localize(35357), data.new_rank, data.num_entries);
+
+  // A worse attempt still gets a scoreboard, and saying so is kinder than
+  // showing a rank that did not move with no explanation
+  if (!best.empty() && !submitted.empty() && best != submitted)
+    message += StringUtils::Format("  ·  {}", StringUtils::Format(Localize(35358), best));
+
+  // "Leaderboard attempt submitted"
+  CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, Localize(35356), message,
+                                        TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
+}
+
+void CGameClientCheevos::OnReset()
+{
+  // RetroAchievements does not allow a session started in casual mode to
+  // continue into hardcore, so the runtime asks for a reset when hardcore is
+  // switched on. Honouring it is a hardcore compliance requirement.
+  CLog::Log(LOGINFO, "CGameClientCheevos: achievement runtime requested a game reset");
+
+  m_gameClient.Reset();
+}
+
+void CGameClientCheevos::OnSubsetCompleted(const std::string& title)
+{
+  CLog::Log(LOGINFO, "CGameClientCheevos: completed subset \"{}\"", title);
+
+  // "Subset completed"
+  CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, Localize(35307), title,
+                                        TOAST_DISPLAY_TIME_MS, false, TOAST_MESSAGE_TIME_MS);
+}
