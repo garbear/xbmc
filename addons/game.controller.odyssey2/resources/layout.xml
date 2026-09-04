@@ -7,4 +7,15 @@
 		<button name="down" type="digital" label="30004"/>
 		<button name="left" type="digital" label="30005"/>
 	</category>
+	<category name="hardware" label="35108">
+		<button name="vkbmove" type="digital" label="30006"/>
+		<button name="vkbtoggle" type="digital" label="30007"/>
+		<button name="num0" type="digital" label="30008"/>
+		<button name="num1" type="digital" label="30009"/>
+		<button name="num2" type="digital" label="30010"/>
+		<button name="num3" type="digital" label="30011"/>
+		<button name="num4" type="digital" label="30012"/>
+		<button name="num5" type="digital" label="30013"/>
+		<button name="num6" type="digital" label="30014"/>
+	</category>
 </layout>

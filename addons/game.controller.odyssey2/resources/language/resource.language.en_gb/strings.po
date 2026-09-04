@@ -51,3 +51,39 @@ msgstr ""
 msgctxt "#30005"
 msgid "Left"
 msgstr ""
+
+msgctxt "#30006"
+msgid "Move Keyboard"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Toggle Keyboard"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Key 0"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Key 1"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Key 2"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Key 3"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Key 4"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Key 5"
+msgstr ""
+
+msgctxt "#30014"
+msgid "Key 6"
+msgstr ""
