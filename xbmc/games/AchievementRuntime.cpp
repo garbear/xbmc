@@ -184,9 +184,8 @@ AchievementProgressIndicator CAchievementRuntime::GetProgressIndicator() const
 
   const auto& indicators = m_state.progressIndicators;
 
-  // Whichever is closest to being earned. A game counting two things at once
-  // used to hand the single slot back and forth between them every few
-  // milliseconds, so neither could be read.
+  // A game can count several things at once, and a corner indicator has room
+  // for one: the closest to being earned.
   const auto best = std::max_element(
       indicators.begin(), indicators.end(),
       [](const AchievementProgressIndicator& a, const AchievementProgressIndicator& b)

@@ -59,9 +59,8 @@ private:
   /*!
    * \brief Open the dialog if the runtime has something to show
    *
-   * Only ever opens: closing is decided in Process, on the GUI thread. Deciding
-   * both from the game thread meant posting a close and then testing whether it
-   * had happened, which raced.
+   * Only ever opens. Closing is decided in Process(), on the GUI thread, so
+   * that the two decisions are not raced across threads.
    */
   static void Show();
 

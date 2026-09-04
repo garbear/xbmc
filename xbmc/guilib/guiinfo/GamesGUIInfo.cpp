@@ -278,8 +278,7 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
     }
     case RETROPLAYER_LEADERBOARD_TRACKER:
     {
-      // Only the first attempt is surfaced. More than one at a time is rare,
-      // and a corner indicator has room for one.
+      // First only, as with the challenge indicator above
       const std::vector<LeaderboardTracker> trackers =
           AchievementRuntime().GetLeaderboardTrackers();
 
