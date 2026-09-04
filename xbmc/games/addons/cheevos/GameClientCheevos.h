@@ -105,6 +105,9 @@ public:
 private:
   CGameClient& m_gameClient;
   AddonInstance_Game& m_struct;
+
+  //! Only while a game is open; see the destructor for why not from construction
+  bool m_observingSettings{false};
 };
 } // namespace GAME
 } // namespace KODI

@@ -91,12 +91,15 @@ CGameClientCheevos::CGameClientCheevos(CGameClient& gameClient, AddonInstance_Ga
   : m_gameClient(gameClient),
     m_struct(addonStruct)
 {
-  CServiceBroker::GetGameServices().GameSettings().RegisterObserver(this);
 }
 
 CGameClientCheevos::~CGameClientCheevos()
 {
-  CServiceBroker::GetGameServices().GameSettings().UnregisterObserver(this);
+  // Registration is tied to the game session, not to this object: the
+  // subsystems are built while CGameServices itself is still being
+  // constructed, so the settings cannot be reached from the constructor.
+  if (m_observingSettings && CServiceBroker::IsServiceManagerUp())
+    CServiceBroker::GetGameServices().GameSettings().UnregisterObserver(this);
 }
 
 void CGameClientCheevos::Notify(const Observable& obs, const ObservableMessage msg)
@@ -332,6 +335,12 @@ void CGameClientCheevos::OnLoginResult(const game_rc_login_result& data)
 
 void CGameClientCheevos::OnGameClosed()
 {
+  if (m_observingSettings)
+  {
+    CServiceBroker::GetGameServices().GameSettings().UnregisterObserver(this);
+    m_observingSettings = false;
+  }
+
   CServiceBroker::GetGameServices().AchievementRuntime().Clear();
 
   NotifyDialogs();
@@ -339,7 +348,7 @@ void CGameClientCheevos::OnGameClosed()
 
 bool CGameClientCheevos::SendCredentials()
 {
-  const CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
+  CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
 
   const std::string username = gameSettings.GetRAUsername();
   const std::string token = gameSettings.GetRAToken();
@@ -352,6 +361,12 @@ bool CGameClientCheevos::SendCredentials()
   // The token is what the add-on signs in with; the password never leaves Kodi
   if (username.empty() || token.empty())
     return m_gameClient.SetRetroAchievementsCredentials("", "");
+
+  if (!m_observingSettings)
+  {
+    gameSettings.RegisterObserver(this);
+    m_observingSettings = true;
+  }
 
   // The modes go with them: the client's runtime has to agree with the
   // frontend about which is in force before it identifies the game
