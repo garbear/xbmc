@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol></defaultcontrol>
+	<animation effect="fade" time="200">WindowOpen</animation>
+	<animation effect="fade" time="200">WindowClose</animation>
+	<controls>
+		<description>
+			The corner indicators shown over a running game: the achievement being
+			attempted, how far along a measured one is, and the live value of a
+			leaderboard attempt.
+
+			These used to live in VideoFullScreen.xml and never appeared. Where the
+			game has its own DRM plane the GUI layer is only composited when
+			something dirties it, and a control quietly becoming visible was not
+			enough. Kodi opens this dialog instead, which is - and keeps the layer
+			compositing for as long as it is up.
+
+			Kodi only opens it while there is something to show, so an empty dialog
+			is never on screen.
+		</description>
+		<control type="grouplist">
+			<description>
+				A grouplist rather than three placed groups: one that is not showing
+				takes no room, so the rest close up on their own. Stacking them by
+				hand needed a slide animation per indicator conditioned on which of
+				the others happened to be visible, which does not survive a fourth.
+			</description>
+			<right>40</right>
+			<top>40</top>
+			<width>420</width>
+			<height>400</height>
+			<orientation>vertical</orientation>
+			<itemgap>10</itemgap>
+			<align>right</align>
+
+			<include content="GameIndicator">
+				<param name="condition" value="!String.IsEmpty(RetroPlayer.AchievementsChallengeTitle)" />
+				<param name="badge" value="RetroPlayer.AchievementsChallengeBadge" />
+				<param name="title" value="RetroPlayer.AchievementsChallengeTitle" />
+			</include>
+
+			<include content="GameIndicator">
+				<param name="condition" value="!String.IsEmpty(RetroPlayer.AchievementsIndicatorTitle)" />
+				<param name="badge" value="RetroPlayer.AchievementsIndicatorBadge" />
+				<param name="title" value="RetroPlayer.AchievementsIndicatorTitle" />
+				<param name="detail" value="RetroPlayer.AchievementsIndicatorProgress" />
+				<param name="bar" value="RetroPlayer.AchievementsIndicatorPercent" />
+			</include>
+
+			<include content="GameIndicator">
+				<param name="condition" value="!String.IsEmpty(RetroPlayer.LeaderboardTracker)" />
+				<param name="title" value="RetroPlayer.LeaderboardTracker" />
+				<param name="height" value="56" />
+			</include>
+		</control>
+	</controls>
+</window>

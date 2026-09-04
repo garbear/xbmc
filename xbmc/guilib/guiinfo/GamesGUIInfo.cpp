@@ -251,6 +251,72 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
 
       return true;
     }
+    case RETROPLAYER_ACHIEVEMENTS_CHALLENGE_TITLE:
+    case RETROPLAYER_ACHIEVEMENTS_CHALLENGE_BADGE:
+    {
+      // Answered empty rather than never recorded, so that turning it off while
+      // an attempt is live takes the indicator off screen at once
+      if (!CServiceBroker::GetGameServices().GameSettings().GetChallengeIndicator())
+      {
+        value.clear();
+        return true;
+      }
+
+      // Only the first attempt is surfaced. More than one at a time is rare,
+      // and a corner indicator has room for one.
+      const std::vector<AchievementChallenge> challenges = AchievementRuntime().GetChallenges();
+      if (challenges.empty())
+      {
+        value.clear();
+        return true;
+      }
+
+      value = (info.GetInfo() == RETROPLAYER_ACHIEVEMENTS_CHALLENGE_TITLE)
+                  ? challenges.front().title
+                  : challenges.front().badgeUrl;
+      return true;
+    }
+    case RETROPLAYER_LEADERBOARD_TRACKER:
+    {
+      // First only, as with the challenge indicator above
+      const std::vector<LeaderboardTracker> trackers =
+          AchievementRuntime().GetLeaderboardTrackers();
+
+      value = trackers.empty() ? "" : trackers.front().display;
+      return true;
+    }
+    case RETROPLAYER_ACHIEVEMENTS_INDICATOR_TITLE:
+    case RETROPLAYER_ACHIEVEMENTS_INDICATOR_BADGE:
+    case RETROPLAYER_ACHIEVEMENTS_INDICATOR_PROGRESS:
+    case RETROPLAYER_ACHIEVEMENTS_INDICATOR_PERCENT:
+    {
+      const AchievementProgressIndicator indicator = AchievementRuntime().GetProgressIndicator();
+
+      // The title being empty is what keeps the whole indicator hidden, so
+      // every field of an inactive one must come back empty rather than "0"
+      if (indicator.id == 0)
+      {
+        value.clear();
+        return true;
+      }
+
+      switch (info.GetInfo())
+      {
+        case RETROPLAYER_ACHIEVEMENTS_INDICATOR_TITLE:
+          value = indicator.title;
+          break;
+        case RETROPLAYER_ACHIEVEMENTS_INDICATOR_BADGE:
+          value = indicator.badgeUrl;
+          break;
+        case RETROPLAYER_ACHIEVEMENTS_INDICATOR_PROGRESS:
+          value = indicator.measuredProgress;
+          break;
+        default:
+          value = std::to_string(static_cast<int>(indicator.measuredPercent));
+          break;
+      }
+      return true;
+    }
     default:
       break;
   }
