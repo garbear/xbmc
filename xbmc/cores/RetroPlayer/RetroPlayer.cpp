@@ -686,7 +686,7 @@ void CRetroPlayer::CreatePlayback(const std::string& savestatePath)
         // "Hardcore mode disabled. Achievements will be earned in casual mode."
         const auto& strings = CServiceBroker::GetResourcesComponent().GetLocalizeStrings();
         CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, strings.Get(35264),
-                                              strings.Get(35303));
+                                              strings.Get(35306));
       }
 
       if (!SetPlayerState(savestatePath))

@@ -65,10 +65,11 @@ void NotifyBlockedByHardcore(uint32_t featureStringId)
 {
   const auto& strings = CServiceBroker::GetResourcesComponent().GetLocalizeStrings();
 
-  // "{0:s} is not available in hardcore mode"
+  // "Hardcore mode", "{0:s} is not available" - the mode heads the toast so the
+  // longest feature name still fits the notification's fixed width
   CGUIDialogKaiToast::QueueNotification(
-      CGUIDialogKaiToast::Info, strings.Get(35264),
-      StringUtils::Format(strings.Get(35302), strings.Get(featureStringId)), TOAST_DISPLAY_TIME_MS);
+      CGUIDialogKaiToast::Info, strings.Get(35301),
+      StringUtils::Format(strings.Get(35305), strings.Get(featureStringId)), TOAST_DISPLAY_TIME_MS);
 }
 } // namespace
 

@@ -107,11 +107,15 @@ void CGameClientCheevos::Notify(const Observable& obs, const ObservableMessage m
   if (msg != ObservableMessageSettingsChanged)
     return;
 
+  const CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
+
   // Hardcore switched on part-way through a session has to reach the client,
   // which resets the game: RetroAchievements does not allow a session begun in
   // casual mode to carry on into hardcore.
-  const CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
   m_gameClient.SetHardcoreEnabled(gameSettings.GetAchievementsHardcore());
+
+  // Encore is read when a game loads and ignored until the next one, so this
+  // only keeps the client in step for that
   m_gameClient.SetEncoreModeEnabled(gameSettings.GetAchievementsEncore());
 }
 

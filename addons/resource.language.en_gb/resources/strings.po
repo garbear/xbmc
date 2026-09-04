@@ -19584,7 +19584,7 @@ msgstr ""
 #. Notification shown when hardcore mode blocks a feature, {0:s} is the feature
 #: xbmc/games/GameSettings.cpp
 msgctxt "#35305"
-msgid "{0:s} is not available in hardcore mode"
+msgid "{0:s} is not available"
 msgstr ""
 
 #. Notification shown when hardcore mode is turned off during play
@@ -19617,7 +19617,27 @@ msgctxt "#35310"
 msgid "Slow motion"
 msgstr ""
 
-#empty strings from id 35313 to 35349
+#empty strings from id 35313 to 35330
+
+#. Label of the game OSD button that opens the leaderboards
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35331"
+msgid "Leaderboards"
+msgstr ""
+
+#. Shown in the leaderboards dialog: scores cannot be submitted yet
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35332"
+msgid "Leaderboards are read-only until this emulator is approved for hardcore mode"
+msgstr ""
+
+#. Shown when the player is not signed in
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35333"
+msgid "Sign in to RetroAchievements to see leaderboards"
+msgstr ""
+
+#empty strings from id 35334 to 35349
 
 #. Heading for the player's own standing on a leaderboard
 #: xbmc/games/dialogs/osd/LeaderboardUtils.cpp
