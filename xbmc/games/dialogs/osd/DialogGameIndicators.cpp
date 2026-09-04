@@ -28,11 +28,9 @@ CDialogGameIndicators::CDialogGameIndicators()
 
 void CDialogGameIndicators::Process(unsigned int currentTime, CDirtyRegionList& dirtyregions)
 {
-  // Closing is decided here rather than where the runtime changed, because this
-  // runs on the GUI thread and can act at once. Deciding it from the game thread
-  // meant posting a close and testing IsActive() before the post had been
-  // served, so a burst of starts and stops raced itself and left the dialog up
-  // several seconds after the last one ended.
+  // Closing is decided here, not where the runtime changed: this runs on the
+  // GUI thread and can act at once, so a burst of starts and stops cannot race
+  // itself.
   if (!AnythingToShow())
   {
     Close();

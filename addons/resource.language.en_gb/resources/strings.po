@@ -19637,7 +19637,101 @@ msgctxt "#35333"
 msgid "Sign in to RetroAchievements to see leaderboards"
 msgstr ""
 
-#empty strings from id 35334 to 35349
+#. Shown when the game defines none
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35334"
+msgid "This game has no leaderboards"
+msgstr ""
+
+#. How a time-based leaderboard ranks, lowest first
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35335"
+msgid "Fastest time"
+msgstr ""
+
+#. How a time-based leaderboard ranks, highest first
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35336"
+msgid "Longest time"
+msgstr ""
+
+#. How a scored leaderboard ranks, lowest first
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35337"
+msgid "Lowest score"
+msgstr ""
+
+#. How a scored leaderboard ranks, highest first
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35338"
+msgid "Highest score"
+msgstr ""
+
+#. How many players have submitted to a leaderboard
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35339"
+msgid "{0:d} entries"
+msgstr ""
+
+#. Where the player stands on a leaderboard
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35340"
+msgid "Your rank: {0:d}"
+msgstr ""
+
+#. Shown when the player has never submitted to a leaderboard
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35341"
+msgid "Not ranked"
+msgstr ""
+
+#. Shown while a leaderboard's entries are being fetched
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35342"
+msgid "Loading standings..."
+msgstr ""
+
+#. Shown when the request for a leaderboard's entries failed
+#: xbmc/games/dialogs/osd/DialogGameLeaderboards.cpp
+msgctxt "#35343"
+msgid "The standings could not be loaded"
+msgstr ""
+
+#. Column heading for a player's position on a leaderboard
+#: addons/skin.estuary/xml/Includes_Games.xml
+msgctxt "#35344"
+msgid "Rank"
+msgstr ""
+
+#. Column heading for a leaderboard value
+#: addons/skin.estuary/xml/Includes_Games.xml
+msgctxt "#35345"
+msgid "Score"
+msgstr ""
+
+#. A leaderboard entry submitted one day ago
+#: xbmc/games/dialogs/osd/LeaderboardUtils.cpp
+msgctxt "#35346"
+msgid "Yesterday"
+msgstr ""
+
+#. How long ago a leaderboard entry was submitted
+#: xbmc/games/dialogs/osd/LeaderboardUtils.cpp
+msgctxt "#35347"
+msgid "{0:d} days ago"
+msgstr ""
+
+#. How long ago a leaderboard entry was submitted
+#: xbmc/games/dialogs/osd/LeaderboardUtils.cpp
+msgctxt "#35348"
+msgid "{0:d} months ago"
+msgstr ""
+
+#. How long ago a leaderboard entry was submitted
+#: xbmc/games/dialogs/osd/LeaderboardUtils.cpp
+msgctxt "#35349"
+msgid "{0:d} years ago"
+msgstr ""
 
 #. Heading for the player's own standing on a leaderboard
 #: xbmc/games/dialogs/osd/LeaderboardUtils.cpp
