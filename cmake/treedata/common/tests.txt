@@ -18,6 +18,7 @@ xbmc/dbwrappers/test              test/dbwrappers
 xbmc/filesystem/test              test/filesystem
 xbmc/filesystem/ipfs/test         test/filesystem/ipfs
 xbmc/filesystem/VideoDatabaseDirectory/test test/videodatabasedirectory
+xbmc/games/addons/cheevos/test    test/games/addons/cheevos
 xbmc/games/addons/disc/test       test/games/addons/disc
 xbmc/games/addons/input/test      test/games/addons/input
 xbmc/games/agents/test       test/games/agents

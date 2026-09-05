@@ -93,26 +93,7 @@ CGameClientCheevos::CGameClientCheevos(CGameClient& gameClient, AddonInstance_Ga
 {
 }
 
-CGameClientCheevos::~CGameClientCheevos()
-{
-  // Registration is tied to the game session, not to this object: the
-  // subsystems are built while CGameServices itself is still being
-  // constructed, so the settings cannot be reached from the constructor.
-  if (m_observingSettings && CServiceBroker::IsServiceManagerUp())
-    CServiceBroker::GetGameServices().GameSettings().UnregisterObserver(this);
-}
-
-void CGameClientCheevos::Notify(const Observable& obs, const ObservableMessage msg)
-{
-  if (msg != ObservableMessageSettingsChanged)
-    return;
-
-  const CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
-
-  // Encore is read when a game loads and ignored until the next one, so this
-  // only keeps the client in step for that
-  m_gameClient.SetEncoreModeEnabled(gameSettings.GetAchievementsEncore());
-}
+CGameClientCheevos::~CGameClientCheevos() = default;
 
 void CGameClientCheevos::OnGameLoaded(const game_rc_game_loaded& data)
 {
@@ -190,6 +171,14 @@ void CGameClientCheevos::OnGameLoaded(const game_rc_game_loaded& data)
 
 void CGameClientCheevos::OnAchievementTriggered(const game_rc_achievement_triggered& data)
 {
+  OnAchievementTriggered(data, CServiceBroker::GetGameServices().AchievementRuntime(),
+                         m_encoreModeEnabled);
+}
+
+void CGameClientCheevos::OnAchievementTriggered(const game_rc_achievement_triggered& data,
+                                                CAchievementRuntime& runtime,
+                                                bool encoreModeEnabled)
+{
   const std::string title = SafeString(data.title);
 
   // The add-on carries no timestamp, so the date is "now" - formatted like the
@@ -197,12 +186,13 @@ void CGameClientCheevos::OnAchievementTriggered(const game_rc_achievement_trigge
   const CDateTime unlockedDate = CDateTime::GetCurrentDateTime();
 
   bool newlyEarned = false;
-  CServiceBroker::GetGameServices().AchievementRuntime().MarkEarned(data.id, unlockedDate,
-                                                                    newlyEarned);
+  const AchievementState state = runtime.MarkEarned(data.id, unlockedDate, newlyEarned);
 
-  // The runtime re-reports achievements that were already earned in an earlier
-  // session, so only announce the ones that changed state
-  if (!newlyEarned)
+  const bool encoreTrigger = encoreModeEnabled && state.loaded &&
+                             std::any_of(state.achievements.begin(), state.achievements.end(),
+                                         [&data](const AchievementInfo& achievement)
+                                         { return achievement.id == data.id; });
+  if (!newlyEarned && !encoreTrigger)
   {
     CLog::Log(LOGDEBUG, "CGameClientCheevos: achievement {} \"{}\" was already earned", data.id,
               title);
@@ -212,7 +202,8 @@ void CGameClientCheevos::OnAchievementTriggered(const game_rc_achievement_trigge
   CLog::Log(LOGINFO, "CGameClientCheevos: earned achievement {} \"{}\" ({} points){}", data.id,
             title, data.points, data.hardcore ? " in hardcore mode" : "");
 
-  NotifyDialogs();
+  if (newlyEarned)
+    NotifyDialogs();
 
   // "Achievement Unlocked" - the one notification that plays a sound
   CGUIDialogKaiToast::QueueNotification(SafeString(data.badge_url), Localize(35281),
@@ -334,11 +325,7 @@ void CGameClientCheevos::OnLoginResult(const game_rc_login_result& data)
 
 void CGameClientCheevos::OnGameClosed()
 {
-  if (m_observingSettings)
-  {
-    CServiceBroker::GetGameServices().GameSettings().UnregisterObserver(this);
-    m_observingSettings = false;
-  }
+  m_encoreModeEnabled = false;
 
   CServiceBroker::GetGameServices().AchievementRuntime().Clear();
 
@@ -347,6 +334,7 @@ void CGameClientCheevos::OnGameClosed()
 
 bool CGameClientCheevos::SendCredentials()
 {
+  m_encoreModeEnabled = false;
   CGameSettings& gameSettings = CServiceBroker::GetGameServices().GameSettings();
 
   const std::string username = gameSettings.GetRAUsername();
@@ -361,14 +349,9 @@ bool CGameClientCheevos::SendCredentials()
   if (username.empty() || token.empty())
     return m_gameClient.SetRetroAchievementsCredentials("", "");
 
-  if (!m_observingSettings)
-  {
-    gameSettings.RegisterObserver(this);
-    m_observingSettings = true;
-  }
-
   // Encore goes with them: the client reads it as it identifies the game
-  m_gameClient.SetEncoreModeEnabled(gameSettings.GetAchievementsEncore());
+  const bool encoreModeEnabled = gameSettings.GetAchievementsEncore();
+  m_encoreModeEnabled = m_gameClient.SetEncoreModeEnabled(encoreModeEnabled) && encoreModeEnabled;
 
   return m_gameClient.SetRetroAchievementsCredentials(username, token);
 }

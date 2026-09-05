@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "utils/Observer.h"
-
 #include <string>
 
 struct AddonInstance_Game;
@@ -29,19 +27,17 @@ namespace KODI
 namespace GAME
 {
 
+class CAchievementRuntime;
 class CGameClient;
 
 /*!
  * \ingroup games
  */
-class CGameClientCheevos : public Observer
+class CGameClientCheevos
 {
 public:
   CGameClientCheevos(CGameClient& gameClient, AddonInstance_Game& addonStruct);
-  ~CGameClientCheevos() override;
-
-  // Implementation of Observer
-  void Notify(const Observable& obs, const ObservableMessage msg) override;
+  ~CGameClientCheevos();
 
   /*!
    * \name RetroAchievements events received from the add-on
@@ -52,6 +48,9 @@ public:
   //@{
   void OnGameLoaded(const game_rc_game_loaded& data);
   void OnAchievementTriggered(const game_rc_achievement_triggered& data);
+  static void OnAchievementTriggered(const game_rc_achievement_triggered& data,
+                                     CAchievementRuntime& runtime,
+                                     bool encoreModeEnabled);
   void OnGameCompleted(const std::string& title, bool hardcore);
   void OnRichPresenceUpdated(const std::string& evaluation);
   void OnLoginResult(const game_rc_login_result& data);
@@ -106,8 +105,8 @@ private:
   CGameClient& m_gameClient;
   AddonInstance_Game& m_struct;
 
-  //! Only while a game is open; see the destructor for why not from construction
-  bool m_observingSettings{false};
+  //! Encore accepted by the add-on before loading; setting changes apply to the next game.
+  bool m_encoreModeEnabled{false};
 };
 } // namespace GAME
 } // namespace KODI
