@@ -2783,6 +2783,16 @@
           <default>true</default>
           <control type="toggle" />
         </setting>
+        <setting id="gamesgeneral.cheatspath" type="path" label="35320" help="35321">
+          <level>0</level>
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+          <control type="button" format="path">
+            <heading>35320</heading>
+          </control>
+        </setting>
         <setting id="gamesgeneral.enableautosave" type="boolean" label="35253" help="35254">
           <level>0</level>
           <default>true</default>

@@ -231,6 +231,18 @@ public:
    */
   bool SetRetroAchievementsCredentials(const std::string& username, const std::string& token);
 
+  /*!
+   * \brief Hand the client a cheat to apply, or take one away
+   *
+   * \param index The slot the code occupies, which is how it is turned off again
+   * \param enabled Whether the code should be applied
+   * \param code The code, in whatever form the emulated system uses
+   */
+  bool SetCheat(unsigned int index, bool enabled, const std::string& code);
+
+  //! \brief Drop every cheat the client is holding
+  bool CheatReset();
+
   // Implementation of IHwFramebufferCallback
   void HardwareContextReset() override;
 

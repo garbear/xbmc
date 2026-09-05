@@ -5,6 +5,7 @@ xbmc/games/addons/disc             games/addons/disc
 xbmc/games/addons/input            games/addons/input
 xbmc/games/addons/streams          games/addons/streams
 xbmc/games/agents/input            games/agents/input
+xbmc/games/cheats                  games/cheats
 xbmc/games/agents/windows          games/agents/windows
 xbmc/games/controllers             games/controllers
 xbmc/games/controllers/dialogs     games/controllers/dialogs

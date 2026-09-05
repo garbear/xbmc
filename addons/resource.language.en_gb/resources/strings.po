@@ -19539,7 +19539,24 @@ msgctxt "#35299"
 msgid "Still looking this game up on RetroAchievements..."
 msgstr ""
 
-#empty strings from id 35300 to 35504
+#empty strings from id 35300 to 35319
+
+#. Label of the setting that points at the folder holding cheat files
+msgctxt "#35320"
+msgid "Cheats folder"
+msgstr ""
+
+#. Help text for the cheats folder setting
+msgctxt "#35321"
+msgid "The folder holding libretro cheat files. Cheats are offered for a game when a matching cheat file is found here."
+msgstr ""
+
+#. Label of the Cheats button in the game OSD, and heading of the cheats dialog
+msgctxt "#35322"
+msgid "Cheats"
+msgstr ""
+
+#empty strings from id 35323 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/pvr/addons/PVRClients.cpp

@@ -20,6 +20,7 @@
 #include "cores/RetroPlayer/RetroPlayerUtils.h"
 #include "games/AchievementRuntime.h"
 #include "games/GameServices.h"
+#include "games/cheats/CheatRuntime.h"
 #include "games/GameSettings.h"
 #include "games/addons/GameClient.h"
 #include "games/tags/GameInfoTag.h"
@@ -306,6 +307,11 @@ bool CGamesGUIInfo::GetBool(bool& value,
     case RETROPLAYER_ACHIEVEMENTS_LOGGED_IN:
     {
       value = CServiceBroker::GetGameServices().GameSettings().GetAchievementsLoggedIn();
+      return true;
+    }
+    case RETROPLAYER_HAS_CHEATS:
+    {
+      value = CServiceBroker::GetGameServices().CheatRuntime().HasCheats();
       return true;
     }
     default:

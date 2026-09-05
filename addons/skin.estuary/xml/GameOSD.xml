@@ -241,6 +241,17 @@
 								<onclick>ActivateWindow(GameAchievements)</onclick>
 							</item>
 							<item>
+								<description>
+									Cheats button. Only shown when a cheat file was found for the
+									game, so a system with no cheats never offers a list with
+									nothing in it.
+								</description>
+								<visible>RetroPlayer.HasCheats</visible>
+								<label>$LOCALIZE[35322]</label>
+								<icon>osd/fullscreen/buttons/cheats.png</icon>
+								<onclick>ActivateWindow(GameCheats)</onclick>
+							</item>
+							<item>
 								<description>Reset button</description>
 								<label>$LOCALIZE[13007]</label>
 								<icon>osd/fullscreen/buttons/reset.png</icon>
@@ -446,6 +457,17 @@
 								<label2>$INFO[RetroPlayer.AchievementsProgress]</label2>
 								<icon>osd/fullscreen/buttons/rating.png</icon>
 								<onclick>ActivateWindow(GameAchievements)</onclick>
+							</item>
+							<item>
+								<description>
+									Cheats button. Only shown when a cheat file was found for the
+									game, so a system with no cheats never offers a list with
+									nothing in it.
+								</description>
+								<visible>RetroPlayer.HasCheats</visible>
+								<label>$LOCALIZE[35322]</label>
+								<icon>osd/fullscreen/buttons/cheats.png</icon>
+								<onclick>ActivateWindow(GameCheats)</onclick>
 							</item>
 							<item>
 								<description>Reset button</description>

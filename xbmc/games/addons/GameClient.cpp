@@ -22,6 +22,7 @@
 #include "filesystem/Directory.h"
 #include "filesystem/SpecialProtocol.h"
 #include "games/GameServices.h"
+#include "games/cheats/CheatRuntime.h"
 #include "games/addons/cheevos/GameClientCheevos.h"
 #include "games/addons/disc/GameClientDiscs.h"
 #include "games/addons/input/GameClientInput.h"
@@ -287,6 +288,11 @@ bool CGameClient::OpenFile(const CFileItem& file,
     return false;
   }
 
+  // After the game is up, so a cheat is applied to something that can take it
+  CCheatRuntime& cheatRuntime = CServiceBroker::GetGameServices().CheatRuntime();
+  cheatRuntime.SetGameClient(this);
+  cheatRuntime.Load(path);
+
   return true;
 }
 
@@ -522,6 +528,11 @@ void CGameClient::CloseFile()
 
   if (m_bIsPlaying)
   {
+    // While the client is still up, so the cheats can be switched off on it
+    CCheatRuntime& cheatRuntime = CServiceBroker::GetGameServices().CheatRuntime();
+    cheatRuntime.Clear();
+    cheatRuntime.SetGameClient(nullptr);
+
     m_inGameSaves->Save();
     m_inGameSaves.reset();
 
@@ -720,6 +731,39 @@ bool CGameClient::SetRetroAchievementsCredentials(const std::string& username,
   catch (...)
   {
     LogException("SetRetroAchievementsCredentials()");
+  }
+
+  return false;
+}
+
+bool CGameClient::SetCheat(unsigned int index, bool enabled, const std::string& code)
+{
+  std::unique_lock lock(m_critSection);
+
+  try
+  {
+    return LogError(m_ifc.game->toAddon->SetCheat(m_ifc.game, index, enabled, code.c_str()),
+                    "SetCheat()");
+  }
+  catch (...)
+  {
+    LogException("SetCheat()");
+  }
+
+  return false;
+}
+
+bool CGameClient::CheatReset()
+{
+  std::unique_lock lock(m_critSection);
+
+  try
+  {
+    return LogError(m_ifc.game->toAddon->CheatReset(m_ifc.game), "CheatReset()");
+  }
+  catch (...)
+  {
+    LogException("CheatReset()");
   }
 
   return false;

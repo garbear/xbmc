@@ -43,6 +43,7 @@ class CShaderPresetFactory;
 namespace GAME
 {
 class CAchievementRuntime;
+class CCheatRuntime;
 class CAgentInput;
 class CControllerManager;
 class CGameSettings;
@@ -87,6 +88,8 @@ public:
 
   CAchievementRuntime& AchievementRuntime() { return *m_achievementRuntime; }
 
+  CCheatRuntime& CheatRuntime() { return *m_cheatRuntime; }
+
   CGameSettings& GameSettings() { return *m_gameSettings; }
 
   RETRO::CGUIGameRenderManager& GameRenderManager() { return m_gameRenderManager; }
@@ -112,6 +115,7 @@ private:
 
   // Game services
   std::unique_ptr<CAchievementRuntime> m_achievementRuntime;
+  std::unique_ptr<CCheatRuntime> m_cheatRuntime;
   std::unique_ptr<CGameSettings> m_gameSettings;
   std::unique_ptr<CAgentInput> m_agentInput;
   std::unique_ptr<SHADER::CShaderPresetFactory> m_videoShaders;
