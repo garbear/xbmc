@@ -72,6 +72,7 @@
 #endif
 #include "filesystem/PluginDirectory.h"
 #include "filesystem/SpecialProtocol.h"
+#include "games/dialogs/osd/DialogGameIndicators.h"
 #include "guilib/GUIAudioManager.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIControlProfiler.h"
@@ -755,6 +756,11 @@ bool CApplication::Initialize()
   if (!m_ServiceManager->InitStageThree(profileManager))
   {
     CLog::Log(LOGERROR, "Application - Init3 failed");
+  }
+  else if (guiCreated)
+  {
+    // Game services are created after the windows.
+    GAME::CDialogGameIndicators::Register();
   }
 
   if (guiCreated)
