@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "DiscStateHistory.h"
 #include "GameLoop.h"
 #include "IPlayback.h"
 #include "threads/CriticalSection.h"
@@ -32,7 +33,7 @@ namespace RETRO
 class CGUIGameMessenger;
 class CRPRenderManager;
 class CSavestateDatabase;
-class IMemoryStream;
+class CDeltaPairMemoryStream;
 
 class CReversiblePlayback : public IPlayback, public IGameLoopCallback, public Observer
 {
@@ -71,14 +72,13 @@ public:
 private:
   void AddFrame();
   void UpdateFrameRate();
-  void RewindFrames(uint64_t frames);
-  void AdvanceFrames(uint64_t frames);
+  bool RewindFrames(uint64_t frames);
+  bool AdvanceFrames(uint64_t frames);
+  bool RestoreFrame();
+  void LatchRestoreFailure();
   void UpdatePlaybackStats();
   void UpdateMemoryStream();
-  void CommitSavestate(bool autosave,
-                       const std::string& savePath,
-                       const CDateTime& nowUTC,
-                       uint64_t timestampFrames);
+  void CommitSavestate(bool autosave, const std::string& savePath, const CDateTime& nowUTC);
 
   // Construction parameter
   GAME::CGameClient* const m_gameClient;
@@ -87,8 +87,10 @@ private:
 
   // Gameplay functionality
   CGameLoop m_gameLoop;
-  std::unique_ptr<IMemoryStream> m_memoryStream;
+  std::unique_ptr<CDeltaPairMemoryStream> m_memoryStream;
+  CDiscStateHistory m_discStateHistory;
   CCriticalSection m_mutex;
+  bool m_restoreFailed{false};
 
   // Savestate functionality
   std::unique_ptr<CSavestateDatabase> m_savestateDatabase;

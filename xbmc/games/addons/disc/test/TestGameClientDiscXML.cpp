@@ -11,6 +11,7 @@
 #include "games/addons/disc/GameClientDiscMergeUtils.h"
 #include "games/addons/disc/GameClientDiscModel.h"
 #include "games/addons/disc/GameClientDiscXML.h"
+#include "test/TestUtils.h"
 #include "utils/FileUtils.h"
 #include "utils/StringUtils.h"
 #include "utils/URIUtils.h"
@@ -350,3 +351,84 @@ INSTANTIATE_TEST_SUITE_P(InvalidMetadata,
                                          R"(<slot type="disc" path=""/>)",
                                          R"(<slot type="unknown" path="/roms/disc1.chd"/>)",
                                          R"(<slot path="/roms/disc1.chd"/>)"));
+
+class TestGameClientDiscXMLHistory : public testing::Test
+{
+protected:
+  void SetUp() override { CleanupStateFile(); }
+  void TearDown() override
+  {
+    CleanupStateFile();
+    for (auto* file : m_files)
+      EXPECT_TRUE(XBMC_DELETETEMPFILE(file));
+  }
+
+  std::string CreateMedia()
+  {
+    auto* file = XBMC_CREATETEMPFILE(".chd");
+    EXPECT_NE(file, nullptr);
+    if (!file)
+      return {};
+    m_files.push_back(file);
+    file->Close();
+    return XBMC_TEMPFILEPATH(file);
+  }
+
+private:
+  std::vector<XFILE::CFile*> m_files;
+};
+
+TEST_F(TestGameClientDiscXMLHistory, RemovedAndErasedMediaRemainResolvable)
+{
+  const std::string first = CreateMedia();
+  const std::string second = CreateMedia();
+  ASSERT_FALSE(first.empty());
+  ASSERT_FALSE(second.empty());
+  CGameClientDiscModel model;
+  model.AddDisc(first, "One");
+  model.AddDisc(second, "Two");
+  const auto state = model.GetState();
+  ASSERT_TRUE(model.MarkRemovedByIndex(0));
+  ASSERT_TRUE(model.EraseDiscByIndex(1));
+
+  CGameClientDiscXML xml;
+  ASSERT_TRUE(xml.Save(GAME_PATH, model));
+  CGameClientDiscModel loaded;
+  ASSERT_TRUE(xml.Load(GAME_PATH, loaded));
+  ASSERT_EQ(loaded.Size(), 1U);
+  EXPECT_TRUE(loaded.IsRemovedSlotByIndex(0));
+  EXPECT_TRUE(loaded.GetPathByIndex(0).empty());
+  EXPECT_FALSE(loaded.SetSelectedDiscByIndex(0));
+
+  CGameClientDiscModel restored;
+  ASSERT_TRUE(loaded.ResolveState(state, restored));
+  EXPECT_EQ(restored.GetPathByIndex(0), first);
+  EXPECT_EQ(restored.GetPathByIndex(1), second);
+  EXPECT_EQ(restored.GetLabelByIndex(1), "Two");
+}
+
+TEST_F(TestGameClientDiscXMLHistory, ReusedSlotRetainsFormerIdentity)
+{
+  const std::string former = CreateMedia();
+  const std::string replacement = CreateMedia();
+  ASSERT_FALSE(former.empty());
+  ASSERT_FALSE(replacement.empty());
+  CGameClientDiscModel model;
+  model.AddDisc(former);
+  const auto state = model.GetState();
+  ASSERT_TRUE(model.MarkRemovedByIndex(0));
+  model.SetDiscs({{GameClientDiscEntry::DiscSlotType::Disc,
+                   replacement,
+                   CGameClientDiscModel::DeriveBasename(replacement),
+                   {}}});
+
+  CGameClientDiscXML xml;
+  ASSERT_TRUE(xml.Save(GAME_PATH, model));
+  CGameClientDiscModel loaded;
+  ASSERT_TRUE(xml.Load(GAME_PATH, loaded));
+  EXPECT_EQ(loaded.GetPathByIndex(0), replacement);
+  CGameClientDiscModel restored;
+  ASSERT_TRUE(loaded.ResolveState(state, restored));
+  EXPECT_EQ(restored.GetPathByIndex(0), former);
+  EXPECT_EQ(loaded.Size(), 1U);
+}
