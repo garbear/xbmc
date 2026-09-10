@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="resource.games.cheats.libretro"
+       name="Libretro Cheats"
+       version="1.0.0"
+       provider-name="libretro">
+  <requires>
+    <import addon="kodi.resource" version="1.0.0"/>
+  </requires>
+  <extension point="kodi.resource.games" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">Cheat codes for retro games</summary>
+    <description lang="en_GB">The libretro cheat database, offered in the game OSD while you play. Codes are grouped by system and matched to a game by its filename.
+
+Cheat codes are collected by the libretro community from many sources.</description>
+    <disclaimer lang="en_GB">Cheats are not guaranteed to work, and may not suit different releases of a game.</disclaimer>
+    <license>CC-BY-SA-4.0</license>
+    <source>https://github.com/libretro/libretro-database</source>
+    <platform>all</platform>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  </extension>
+</addon>

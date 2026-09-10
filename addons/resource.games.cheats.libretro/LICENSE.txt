@@ -1,0 +1,11 @@
+The cheat files in resources/ come from the libretro cheat database:
+
+    https://github.com/libretro/libretro-database
+
+They are licensed under the Creative Commons Attribution-ShareAlike 4.0
+International Public License (CC-BY-SA-4.0). The full text is at:
+
+    https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+The files are shipped as published, one zip archive per system, with no
+changes to their contents.
