@@ -68,12 +68,16 @@ void CDialogGameOSD::Process(unsigned int currentTime, CDirtyRegionList& dirtyre
 {
   const auto* menu = dynamic_cast<CGUIControlGroupList*>(GetControl(CONTROL_MENU));
   auto* background = dynamic_cast<CGUIImage*>(GetControl(CONTROL_BACKGROUND));
-  if (menu && background && background->GetParentControl())
+  if (menu != nullptr && background != nullptr)
   {
-    // Match the cached menu height used by its parent grouplist for centering.
-    const float height = background->GetParentControl()->GetHeight() + menu->GetHeight();
-    if (background->GetHeight() != height)
-      background->SetHeight(height);
+    const auto* parentControl = background->GetParentControl();
+    if (parentControl != nullptr)
+    {
+      // Match the cached menu height used by its parent grouplist for centering.
+      const float height = parentControl->GetHeight() + menu->GetHeight();
+      if (background->GetHeight() != height)
+        background->SetHeight(height);
+    }
   }
 
   CGUIDialog::Process(currentTime, dirtyregions);
