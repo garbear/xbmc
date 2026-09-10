@@ -65,6 +65,35 @@ namespace
 {
 constexpr const char* GAME_PROPERTY_SUPPORTS_DISC_CONTROL = "supports_disc_control";
 
+/*!
+ * \brief Holds a hardware-rendering client's context current for a call into it
+ *
+ * A client may make rendering calls anywhere inside a call, so its context has
+ * to be current for the whole of it, on whichever thread the call runs on. It
+ * must not be left current afterwards: that thread is often Kodi's own
+ * rendering thread, which needs its binding back to present.
+ */
+class CClientFrameScope
+{
+public:
+  explicit CClientFrameScope(KODI::GAME::CGameClientStreams& streams) : m_streams(streams)
+  {
+    m_bBound = m_streams.BeginClientFrame();
+  }
+
+  ~CClientFrameScope() { m_streams.EndClientFrame(); }
+
+  //! \brief True if the client's context is current, or it needs none
+  bool IsBound() const { return m_bBound; }
+
+  CClientFrameScope(const CClientFrameScope&) = delete;
+  CClientFrameScope& operator=(const CClientFrameScope&) = delete;
+
+private:
+  KODI::GAME::CGameClientStreams& m_streams;
+  bool m_bBound{false};
+};
+
 /*
  * \brief Convert to lower case and canonicalize with a leading "."
  */
@@ -283,6 +312,13 @@ bool CGameClient::OpenFile(const CFileItem& file,
     GAME_ERROR loadError = GAME_ERROR_FAILED;
     try
     {
+      CClientFrameScope hwScope(Streams());
+      if (!hwScope.IsBound())
+      {
+        CLog::Log(LOGERROR, "GameClient: Failed to make the client's context current");
+        return GAME_ERROR_FAILED;
+      }
+
       LogError(loadError = m_ifc.game->toAddon->LoadGame(m_ifc.game, path.c_str()), "LoadGame()");
     }
     catch (...)
@@ -342,7 +378,16 @@ bool CGameClient::OpenStandalone(RETRO::IStreamManager& streamManager, IGameInpu
 
   try
   {
-    LogError(error = m_ifc.game->toAddon->LoadStandalone(m_ifc.game), "LoadStandalone()");
+    {
+      CClientFrameScope hwScope(Streams());
+      if (!hwScope.IsBound())
+      {
+        CLog::Log(LOGERROR, "GameClient: Failed to make the client's context current");
+        error = GAME_ERROR_FAILED;
+      }
+      else
+        LogError(error = m_ifc.game->toAddon->LoadStandalone(m_ifc.game), "LoadStandalone()");
+    }
   }
   catch (...)
   {
@@ -452,8 +497,14 @@ bool CGameClient::LoadGameInfo()
   bool bSuccess = false;
   try
   {
-    bSuccess =
-        LogError(m_ifc.game->toAddon->GetGameTiming(m_ifc.game, &timingInfo), "GetGameTiming()");
+    // A hardware-rendering client builds its GPU resources off the back of
+    // this call, once it has geometry to size them by, so it needs its context
+    CClientFrameScope hwScope(Streams());
+    if (!hwScope.IsBound())
+      CLog::Log(LOGERROR, "GameClient: Failed to make the client's context current");
+    else
+      bSuccess =
+          LogError(m_ifc.game->toAddon->GetGameTiming(m_ifc.game, &timingInfo), "GetGameTiming()");
   }
   catch (...)
   {
@@ -466,6 +517,17 @@ bool CGameClient::LoadGameInfo()
     return false;
   }
 
+  // A client declaring no frame rate leaves the loop with nothing to pace
+  // against, so it runs as fast as the machine allows; one declaring no sample
+  // rate gets no audio stream and plays silently.
+  CLog::Log(LOGINFO, "GameClient: {} declares {:.3f} fps, {:.0f} Hz audio", ID(), timingInfo.fps,
+            timingInfo.sample_rate);
+
+  if (timingInfo.fps <= 0.0)
+    CLog::Log(LOGERROR, "GameClient: {} declared no frame rate, the game will not be paced", ID());
+  if (timingInfo.sample_rate <= 0.0)
+    CLog::Log(LOGERROR, "GameClient: {} declared no sample rate, the game will be silent", ID());
+
   GAME_REGION region;
   try
   {
@@ -477,27 +539,19 @@ bool CGameClient::LoadGameInfo()
     return false;
   }
 
-  size_t serializeSize;
-  try
-  {
-    serializeSize = m_ifc.game->toAddon->SerializeSize(m_ifc.game);
-  }
-  catch (...)
-  {
-    LogException("SerializeSize()");
-    return false;
-  }
+  // Deliberately does not ask the client how large a savestate is. A client
+  // serializes the machine it emulates, and some clients build that machine
+  // while booting the game, so there is nothing to measure until a frame has
+  // run. Nothing needs the answer this early: it is asked for on first use.
 
   CLog::Log(LOGINFO, "GAME: ---------------------------------------");
   CLog::Log(LOGINFO, "GAME: Game loop:      {}", bRequiresGameLoop ? "true" : "false");
   CLog::Log(LOGINFO, "GAME: FPS:            {:f}", timingInfo.fps);
   CLog::Log(LOGINFO, "GAME: Sample Rate:    {:f}", timingInfo.sample_rate);
   CLog::Log(LOGINFO, "GAME: Region:         {}", CGameClientTranslator::TranslateRegion(region));
-  CLog::Log(LOGINFO, "GAME: Savestate size: {}", serializeSize);
   CLog::Log(LOGINFO, "GAME: ---------------------------------------");
 
   m_bRequiresGameLoop = bRequiresGameLoop;
-  m_serializeSize = serializeSize;
   m_framerate = timingInfo.fps;
   m_samplerate = timingInfo.sample_rate;
   m_region = region;
@@ -515,9 +569,34 @@ void CGameClient::NotifyError(GAME_ERROR error)
   // Check if hardware rendering was attempted
   if (Streams().HardwareRenderingAttempted())
   {
-    // Failed to play game
-    // This game requires OpenGL support for 3D rendering. OpenGL support is still under development.
-    MESSAGING::HELPERS::ShowOKDialogText(CVariant{35210}, CVariant{35271});
+    const std::string& wanted = Streams().HardwareRenderingRefusedWanted();
+    const std::string& available = Streams().HardwareRenderingRefusedAvailable();
+
+    if (!wanted.empty() && !available.empty())
+    {
+      // Failed to play game
+      // This game renders with {0:s}, but this system only provides {1:s}. ...
+      MESSAGING::HELPERS::ShowOKDialogText(
+          CVariant{35210},
+          CVariant{StringUtils::Format(
+              CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(35300), wanted,
+              available)});
+    }
+    else if (!wanted.empty())
+    {
+      // Failed to play game
+      // This game renders with {0:s}, which isn't available on this display. ...
+      MESSAGING::HELPERS::ShowOKDialogText(
+          CVariant{35210},
+          CVariant{StringUtils::Format(
+              CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(35301), wanted)});
+    }
+    else
+    {
+      // Failed to play game
+      // This game requires OpenGL support for 3D rendering. OpenGL support is still under development.
+      MESSAGING::HELPERS::ShowOKDialogText(CVariant{35210}, CVariant{35271});
+    }
   }
   else if (!missingResource.empty())
   {
@@ -574,7 +653,13 @@ void CGameClient::Reset()
   {
     try
     {
-      LogError(m_ifc.game->toAddon->Reset(m_ifc.game), "Reset()");
+      {
+        CClientFrameScope hwScope(Streams());
+        if (!hwScope.IsBound())
+          CLog::Log(LOGERROR, "GameClient: Failed to make the client's context current");
+        else
+          LogError(m_ifc.game->toAddon->Reset(m_ifc.game), "Reset()");
+      }
     }
     catch (...)
     {
@@ -596,6 +681,7 @@ void CGameClient::CloseFile()
     m_hasFrameRun = false;
     m_gamePath.clear();
     m_serializeSize = 0;
+    m_serializeSizeKnown = false;
     m_input = nullptr;
 
     Input().Stop();
@@ -605,7 +691,22 @@ void CGameClient::CloseFile()
 
     try
     {
-      LogError(m_ifc.game->toAddon->UnloadGame(m_ifc.game), "UnloadGame()");
+      {
+        CClientFrameScope hwScope(Streams());
+
+        // Tell a hardware-rendering client its context is going before the game
+        // is unloaded, rather than when the stream closes underneath the unload.
+        // Both happen inside this scope, so the context stays current for the
+        // client's cleanup and for whatever unloading the game does after it --
+        // but a client told only afterwards has already dismantled the state its
+        // context_destroy then walks.
+        if (hwScope.IsBound())
+          Streams().DestroyHwContext();
+        else
+          CLog::Log(LOGERROR, "GameClient: No context to tell the client is going");
+
+        LogError(m_ifc.game->toAddon->UnloadGame(m_ifc.game), "UnloadGame()");
+      }
     }
     catch (...)
     {
@@ -643,18 +744,20 @@ void CGameClient::RunFrame(bool pollInput)
   {
     try
     {
-      LogError(m_ifc.game->toAddon->RunFrame(m_ifc.game), "RunFrame()");
+      {
+        CClientFrameScope hwScope(Streams());
+        LogError(m_ifc.game->toAddon->RunFrame(m_ifc.game), "RunFrame()");
 
-      // A client using the asynchronous audio interface produces no audio of
-      // its own accord: it waits to be asked, once per frame, and writes what
-      // it has from this thread. One that is never asked is silent, and since
-      // the frame rate is paced against the audio it delivers, it also runs as
-      // fast as the machine allows. Clients on the ordinary synchronous path
-      // answer this with GAME_ERROR_NOT_IMPLEMENTED and are unaffected.
-      const GAME_ERROR audioError = m_ifc.game->toAddon->AudioAvailable(m_ifc.game);
-      if (audioError != GAME_ERROR_NO_ERROR && audioError != GAME_ERROR_NOT_IMPLEMENTED)
-        LogError(audioError, "AudioAvailable()");
-
+        // A client using the asynchronous audio interface produces no audio of
+        // its own accord: it waits to be asked, once per frame, and writes what
+        // it has from this thread. One that is never asked is silent, and since
+        // the frame rate is paced against the audio it delivers, it also runs as
+        // fast as the machine allows. Clients on the ordinary synchronous path
+        // answer this with GAME_ERROR_NOT_IMPLEMENTED and are unaffected.
+        const GAME_ERROR audioError = m_ifc.game->toAddon->AudioAvailable(m_ifc.game);
+        if (audioError != GAME_ERROR_NO_ERROR && audioError != GAME_ERROR_NOT_IMPLEMENTED)
+          LogError(audioError, "AudioAvailable()");
+      }
       m_hasFrameRun = true;
     }
     catch (...)
@@ -662,6 +765,35 @@ void CGameClient::RunFrame(bool pollInput)
       LogException("RunFrame()");
     }
   }
+}
+
+size_t CGameClient::GetSerializeSize() const
+{
+  // Ask the client the first time anything needs the answer, rather than while
+  // loading the game. A client that builds the machine it serializes during the
+  // game's boot cannot answer before it has run. Waiting for a frame costs
+  // nothing, because savestates and rewind cannot happen before one either.
+  if (!m_serializeSizeKnown && m_bIsPlaying && m_hasFrameRun)
+  {
+    std::unique_lock lock(m_critSection);
+
+    try
+    {
+      // Some clients serialize their video state along with the rest, so this
+      // reaches into GPU resources and needs the client's context
+      CClientFrameScope hwScope(const_cast<CGameClient*>(this)->Streams());
+      m_serializeSize = m_ifc.game->toAddon->SerializeSize(m_ifc.game);
+      m_serializeSizeKnown = true;
+
+      CLog::Log(LOGINFO, "GAME: Savestate size: {}", m_serializeSize);
+    }
+    catch (...)
+    {
+      const_cast<CGameClient*>(this)->LogException("SerializeSize()");
+    }
+  }
+
+  return m_serializeSize;
 }
 
 bool CGameClient::Serialize(uint8_t* data, size_t size)
@@ -676,6 +808,7 @@ bool CGameClient::Serialize(uint8_t* data, size_t size)
   {
     try
     {
+      CClientFrameScope hwScope(Streams());
       bSuccess = LogError(m_ifc.game->toAddon->Serialize(m_ifc.game, data, size), "Serialize()");
     }
     catch (...)
@@ -738,6 +871,7 @@ RestoreResult CGameClient::Deserialize(const uint8_t* data,
 
     try
     {
+      CClientFrameScope hwScope(Streams());
       return LogError(m_ifc.game->toAddon->Deserialize(m_ifc.game, data, size), "Deserialize()");
     }
     catch (...)
@@ -883,11 +1017,29 @@ void CGameClient::HardwareContextReset()
 {
   try
   {
-    LogError(m_ifc.game->toAddon->HwContextReset(m_ifc.game), "HwContextReset()");
+    {
+      CClientFrameScope hwScope(Streams());
+      LogError(m_ifc.game->toAddon->HwContextReset(m_ifc.game), "HwContextReset()");
+    }
   }
   catch (...)
   {
     LogException("HwContextReset()");
+  }
+}
+
+void CGameClient::HardwareContextDestroy()
+{
+  try
+  {
+    {
+      CClientFrameScope hwScope(Streams());
+      LogError(m_ifc.game->toAddon->HwContextDestroy(m_ifc.game), "HwContextDestroy()");
+    }
+  }
+  catch (...)
+  {
+    LogException("HwContextDestroy()");
   }
 }
 
