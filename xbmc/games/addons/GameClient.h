@@ -34,6 +34,7 @@ class IStreamManager;
 namespace GAME
 {
 
+class CGameClientCheats;
 class CGameClientCheevos;
 class CGameClientInGameSaves;
 class CGameClientInput;
@@ -125,6 +126,7 @@ public:
   ~CGameClient() override;
 
   // Game subsystems (const)
+  const CGameClientCheats& Cheats() const { return *m_subsystems.Cheats; }
   const CGameClientCheevos& Cheevos() const { return *m_subsystems.Cheevos; }
   const CGameClientDiscs& Discs() const { return *m_subsystems.Discs; }
   const CGameClientInput& Input() const { return *m_subsystems.Input; }
@@ -132,6 +134,7 @@ public:
   const CGameClientStreams& Streams() const { return *m_subsystems.Streams; }
 
   // Game subsystems (mutable)
+  CGameClientCheats& Cheats() { return *m_subsystems.Cheats; }
   CGameClientCheevos& Cheevos() { return *m_subsystems.Cheevos; }
   CGameClientDiscs& Discs() { return *m_subsystems.Discs; }
   CGameClientInput& Input() { return *m_subsystems.Input; }
@@ -223,6 +226,18 @@ public:
    * data: the client has to know the machine state jumped either way.
    */
   bool DeserializeAchievements(const uint8_t* data, size_t size);
+
+  /*!
+   * \brief Hand the client a cheat to apply, or take one away
+   *
+   * \param index The slot the code occupies, which is how it is turned off again
+   * \param enabled Whether the code should be applied
+   * \param code The code, in whatever form the emulated system uses
+   */
+  bool SetCheat(unsigned int index, bool enabled, const std::string& code);
+
+  //! \brief Drop every cheat the client is holding
+  bool CheatReset();
 
   // Implementation of IHwFramebufferCallback
   void HardwareContextReset() override;
