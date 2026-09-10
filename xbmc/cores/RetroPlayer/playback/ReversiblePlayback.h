@@ -94,6 +94,9 @@ private:
   bool m_restoreFailed{false};
   bool m_rewindFrameRendered{false};
 
+  //! Whether the rewind buffer has been sized against a client that has run
+  bool m_memoryStreamSized{false};
+
   // Savestate functionality
   std::unique_ptr<CSavestateDatabase> m_savestateDatabase;
   std::string m_autosavePath{};
