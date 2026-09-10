@@ -84,12 +84,13 @@ TEST(TestSavestateDiscState, RoundTripsNoDiscWithClosedTray)
   CSavestateFlatBuffer reader;
   ASSERT_TRUE(reader.Deserialize(Serialize(writer)));
   ASSERT_TRUE(reader.GetDiscState().has_value());
-  EXPECT_EQ(*reader.GetDiscState(),
-            GameClientDiscState({{DiscSlotType::Disc, "Disc 1.chd", "Disc One"},
-                                 {DiscSlotType::Removed, {}, "Removed Disc"},
-                                 {DiscSlotType::Unknown, {}, "Unknown Slot.chd"},
-                                 {DiscSlotType::Disc, "Disc 2.chd", "Disc Two"}},
-                                -1, false));
+  const GameClientDiscState expectedStored{{{DiscSlotType::Disc, "Disc 1.chd", "Disc One"},
+                                            {DiscSlotType::Removed, {}, "Removed Disc"},
+                                            {DiscSlotType::Unknown, {}, "Unknown Slot.chd"},
+                                            {DiscSlotType::Disc, "Disc 2.chd", "Disc Two"}},
+                                           -1,
+                                           false};
+  EXPECT_EQ(*reader.GetDiscState(), expectedStored);
 }
 
 TEST(TestSavestateDiscState, OldSavestateHasNoDiscState)

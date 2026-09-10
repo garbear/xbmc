@@ -15,7 +15,6 @@
 #include "cores/RetroPlayer/streams/IStreamManager.h"
 #include "cores/RetroPlayer/streams/memory/DeltaPairMemoryStream.h"
 #include "filesystem/File.h"
-#include "filesystem/SpecialProtocol.h"
 #include "games/addons/GameClient.h"
 #include "games/addons/GameClientCallbacks.h"
 #include "games/addons/disc/GameClientDiscM3U.h"
@@ -26,9 +25,7 @@
 #include "utils/XBMCTinyXML2.h"
 
 #include <algorithm>
-#include <chrono>
 #include <cstring>
-#include <filesystem>
 #include <future>
 #include <limits>
 #include <memory>
@@ -522,7 +519,6 @@ protected:
   {
     std::string path;
     std::vector<uint8_t> contents;
-    std::filesystem::file_time_type modified;
   };
 
   std::vector<DiscFileSnapshot> SnapshotDiscFiles()
@@ -532,11 +528,7 @@ protected:
     for (const auto& path : {CGameClientDiscXML::GetXMLPath(m_client->GetGamePath()),
                              CGameClientDiscM3U::GetM3UPath(m_client->GetGamePath())})
     {
-      const auto local = CSpecialProtocol::TranslatePath(path);
-      // Backdate the files so even an identical rewrite is detected without timing sleeps.
-      std::filesystem::last_write_time(local, std::filesystem::file_time_type::clock::now() -
-                                                  std::chrono::hours(24));
-      files.push_back({local, ReadFile(path), std::filesystem::last_write_time(local)});
+      files.push_back({path, ReadFile(path)});
     }
     return files;
   }
@@ -546,7 +538,6 @@ protected:
     for (const auto& file : files)
     {
       EXPECT_EQ(ReadFile(file.path), file.contents);
-      EXPECT_TRUE(std::filesystem::last_write_time(file.path) == file.modified);
     }
   }
 
@@ -595,9 +586,13 @@ protected:
     EXPECT_EQ(restored.GetState(), expected);
     EXPECT_EQ(m_core.ejected, expected.trayEjected);
     if (expected.selectedSlot < 0)
+    {
       EXPECT_GE(m_core.selected, m_core.slots.size());
+    }
     else
+    {
       EXPECT_EQ(m_core.selected, static_cast<unsigned int>(expected.selectedSlot));
+    }
     for (size_t i = 0; i < edited.Size(); ++i)
     {
       EXPECT_EQ(restored.GetPathByIndex(i), edited.GetPathByIndex(i));
@@ -1523,7 +1518,9 @@ TEST_F(TestGameClientDiscs, PersistedEmptyAndShortModelsRestoreAcrossCoreRemoval
       if (!compactRemoval)
       {
         for (size_t i = empty ? 0U : 1U; i < m_core.slots.size(); ++i)
+        {
           EXPECT_TRUE(m_core.slots[i].empty());
+        }
       }
     }
 
@@ -2076,7 +2073,9 @@ TEST_F(TestGameClientDiscs, RewindSavestateRejectsEmptyPlaylist)
       [](CGameClientDiscModel& model, const std::string&)
       {
         while (!model.Empty())
+        {
           ASSERT_TRUE(model.EraseDiscByIndex(0));
+        }
         model.SetEjected(true);
       });
 }

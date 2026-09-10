@@ -50,7 +50,9 @@ protected:
     for (const std::string& path : m_additionalFiles)
       XFILE::CFile::Delete(path);
     for (const std::string& directory : m_directories)
+    {
       EXPECT_TRUE(XFILE::CDirectory::Remove(directory));
+    }
     for (XFILE::CFile* file : m_files)
       XBMC_DELETETEMPFILE(file);
   }

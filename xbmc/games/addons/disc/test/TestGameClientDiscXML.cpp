@@ -350,7 +350,9 @@ protected:
   {
     CleanupStateFile();
     for (auto* file : m_files)
+    {
       EXPECT_TRUE(XBMC_DELETETEMPFILE(file));
+    }
   }
 
   std::string CreateMedia()
