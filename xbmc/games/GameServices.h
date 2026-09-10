@@ -88,6 +88,7 @@ public:
 
   CAchievementRuntime& AchievementRuntime() { return *m_achievementRuntime; }
 
+
   CGameSettings& GameSettings() { return *m_gameSettings; }
 
   RETRO::CGUIGameRenderManager& GameRenderManager() { return m_gameRenderManager; }
