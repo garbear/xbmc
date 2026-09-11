@@ -211,6 +211,7 @@ void CGameClientCheats::Clear()
     // would otherwise be offered the last game's cheats
     m_gamePath.clear();
     m_clientTakesCheats = false;
+    m_canInstall.reset();
   }
 
   if (m_gameClient.IsPlaying())
