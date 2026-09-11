@@ -33,4 +33,16 @@ if(("gbm" IN_LIST CORE_PLATFORM_NAME_LC OR "wayland" IN_LIST CORE_PLATFORM_NAME_
   endif()
 endif()
 
+# Pairs with the FBO buffer pool, which needs a shared EGL context but nothing
+# from DMA and no particular windowing system. The renderer itself is common to
+# desktop GL and GLES: it uses no vertex array objects, and reaches shaders and
+# matrices through the render context rather than either API directly.
+# GLES 2.0 has neither glBlitFramebuffer nor fence syncs, so the renderer
+# compiles to a factory that declines there rather than being left out of the
+# build, which keeps the build check out of every caller.
+if(TARGET ${APP_NAME_LC}::EGL)
+  list(APPEND SOURCES RPRendererFBO.cpp)
+  list(APPEND HEADERS RPRendererFBO.h)
+endif()
+
 core_add_library(rp-videorenderers)
