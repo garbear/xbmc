@@ -24,8 +24,10 @@
 				<orientation>vertical</orientation>
 				<onleft>9000</onleft>
 				<onright>5</onright>
-				<onup>20</onup>
-				<ondown>20</ondown>
+				<onup condition="String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)">9000</onup>
+				<onup condition="!String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)">20</onup>
+				<ondown condition="String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)">9000</ondown>
+				<ondown condition="!String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)">20</ondown>
 			</control>
 			<control type="button" id="10">
 				<description>Default Category Button</description>
@@ -34,6 +36,7 @@
 				<textoffsetx>20</textoffsetx>
 				<align>center</align>
 				<aligny>center</aligny>
+				<wrapmultiline>true</wrapmultiline>
 				<font>font25_title</font>
 				<texturenofocus border="40">buttons/dialogbutton-nofo.png</texturenofocus>
 			</control>
@@ -41,7 +44,7 @@
 				<left>410</left>
 				<top>80</top>
 				<width>1100</width>
-				<height>740</height>
+				<height>670</height>
 				<texture border="40">buttons/dialogbutton-nofo.png</texture>
 			</control>
 			<control type="grouplist" id="5">
@@ -49,21 +52,51 @@
 				<left>429</left>
 				<top>100</top>
 				<width>1060</width>
-				<height>700</height>
+				<height>630</height>
 				<pagecontrol>60</pagecontrol>
 				<onleft>3</onleft>
 				<onright>60</onright>
 				<onup>5</onup>
 				<ondown>5</ondown>
 			</control>
+			<control type="image">
+				<visible>!String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)</visible>
+				<left>429</left>
+				<top>740</top>
+				<width>1072</width>
+				<height>2</height>
+				<texture colordiffuse="button_focus" border="2">dialogs/separator-grey.png</texture>
+			</control>
+			<control type="image">
+				<visible>String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)</visible>
+				<left>50</left>
+				<top>740</top>
+				<width>1451</width>
+				<height>2</height>
+				<texture colordiffuse="button_focus" border="2">dialogs/separator-grey.png</texture>
+			</control>
 			<control type="textbox" id="6">
 				<description>description area</description>
-				<left>50</left>
-				<top>815</top>
-				<right>50</right>
-				<height>70</height>
+				<visible>!String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)</visible>
+				<left>450</left>
+				<top>750</top>
+				<right>330</right>
+				<height>140</height>
 				<font>font12</font>
-				<align>justify</align>
+				<align>left</align>
+				<textcolor>button_focus</textcolor>
+				<autoscroll time="3000" delay="5000" repeat="5000">true</autoscroll>
+			</control>
+			<control type="textbox">
+				<description>Game client description area</description>
+				<visible>Window.IsActive(addonsettings) + String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)</visible>
+				<left>50</left>
+				<top>750</top>
+				<right>330</right>
+				<height>140</height>
+				<font>font12</font>
+				<align>left</align>
+				<label>$INFO[Control.GetLabel(6)]</label>
 				<textcolor>button_focus</textcolor>
 				<autoscroll time="3000" delay="5000" repeat="5000">true</autoscroll>
 			</control>
@@ -162,6 +195,7 @@
 				</control>
 			</control>
 			<control type="radiobutton" id="20">
+				<visible>!String.IsEqual(Window(addonsettings).Property(Addon.Type),kodi.gameclient)</visible>
 				<left>29</left>
 				<top>700</top>
 				<width>390</width>
@@ -189,7 +223,7 @@
 				<left>1489</left>
 				<top>100</top>
 				<width>12</width>
-				<height>700</height>
+				<height>630</height>
 				<orientation>vertical</orientation>
 				<onleft>5</onleft>
 				<onright>9000</onright>
