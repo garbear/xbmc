@@ -132,21 +132,19 @@ CGameClientCheats::CGameClientCheats(CGameClient& gameClient,
                                      CCriticalSection& clientAccess)
   : CGameClientSubsystem(gameClient, addonStruct, clientAccess)
 {
+}
+
+CGameClientCheats::~CGameClientCheats() = default;
+
+void CGameClientCheats::Load(const std::string& gamePath)
+{
   CServiceBroker::GetAddonMgr().Events().Subscribe(this,
                                                    [this](const ADDON::AddonEvent& /*event*/)
                                                    {
                                                      std::lock_guard<std::mutex> lock(m_mutex);
                                                      m_canInstall.reset();
                                                    });
-}
 
-CGameClientCheats::~CGameClientCheats()
-{
-  CServiceBroker::GetAddonMgr().Events().Unsubscribe(this);
-}
-
-void CGameClientCheats::Load(const std::string& gamePath)
-{
   std::unique_lock clientLock(m_clientAccess);
 
   // Asked here rather than when a cheat is applied, which is too late to
@@ -200,6 +198,8 @@ void CGameClientCheats::LoadPack()
 
 void CGameClientCheats::Clear()
 {
+  CServiceBroker::GetAddonMgr().Events().Unsubscribe(this);
+
   std::unique_lock clientLock(m_clientAccess);
 
   {
