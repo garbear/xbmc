@@ -52,6 +52,9 @@ constexpr int HEADING_ENABLED = 305;
 //! "No cheats found for this game"
 constexpr int HEADING_NO_CHEATS = 35323;
 
+//! The control ID for the list of cheat settings
+constexpr int CONTROL_SETTINGS_LIST = 5;
+
 //! The label above the list of what is switched on, a size larger than the
 //! names below it, which a single control could not do: the text markup
 //! carries no size of its own
@@ -91,6 +94,31 @@ CDialogGameCheats::CDialogGameCheats()
 }
 
 CDialogGameCheats::~CDialogGameCheats() = default;
+
+bool CDialogGameCheats::OnMessage(CGUIMessage& message)
+{
+  switch (message.GetMessage())
+  {
+    case GUI_MSG_UPDATE:
+    {
+      if (message.GetSenderId() == WINDOW_DIALOG_GAME_CHEATS)
+      {
+        // Load the controls
+        CGUIDialogSettingsManualBase::SetupView();
+
+        // Focus the settings list
+        SET_CONTROL_FOCUS(CONTROL_SETTINGS_LIST, 0);
+
+        return true;
+      }
+      break;
+    }
+    default:
+      break;
+  }
+
+  return CGUIDialogSettingsManualBase::OnMessage(message);
+}
 
 void CDialogGameCheats::SetupView()
 {
@@ -247,8 +275,7 @@ void CDialogGameCheats::OnSettingAction(const std::shared_ptr<const CSetting>& s
                                                 CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(HEADING_NO_CHEATS));
         }
 
-        CGUIMessage message(GUI_MSG_UPDATE, WINDOW_DIALOG_GAME_CHEATS,
-                            WINDOW_DIALOG_GAME_CHEATS);
+        CGUIMessage message(GUI_MSG_UPDATE, WINDOW_DIALOG_GAME_CHEATS, -1);
         CServiceBroker::GetGUI()->GetWindowManager().SendThreadMessage(message,
                                                                        WINDOW_DIALOG_GAME_CHEATS);
       });
