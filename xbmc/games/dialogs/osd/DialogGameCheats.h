@@ -35,11 +35,10 @@ public:
   ~CDialogGameCheats() override;
 
 protected:
-  // Implementation of ISettingCallback
-  void OnSettingChanged(const std::shared_ptr<const CSetting>& setting) override;
-  void OnSettingAction(const std::shared_ptr<const CSetting>& setting) override;
+  // Implementation of CGUIControl via CGUIDialogSettingsManualBase
+  bool OnMessage(CGUIMessage& message) override;
 
-  // Implementation of CGUIDialogSettingsBase
+  // Implementation of CGUIDialogSettingsBase via CGUIDialogSettingsManualBase
   //! Each switch is built with the state the dialog opened in as its default,
   //! so the generic reset would re-apply that rather than restore anything, and
   //! switch cheats back on that were just switched off
@@ -51,6 +50,10 @@ protected:
 
   // Implementation of CGUIDialogSettingsManualBase
   void InitializeSettings() override;
+
+  // Implementation of ISettingCallback via CGUIDialogSettingsManualBase
+  void OnSettingChanged(const std::shared_ptr<const CSetting>& setting) override;
+  void OnSettingAction(const std::shared_ptr<const CSetting>& setting) override;
 
 private:
   //! \brief What is switched on, for the panel beside the list
