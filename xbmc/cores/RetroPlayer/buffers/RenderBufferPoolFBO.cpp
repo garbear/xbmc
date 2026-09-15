@@ -28,7 +28,12 @@
 #include "utils/StringUtils.h"
 #include "utils/log.h"
 #include "windowing/WinSystem.h"
+
+#if defined(TARGET_ANDROID)
+#include "windowing/android/WinSystemAndroidGLESContext.h"
+#else
 #include "windowing/linux/WinSystemEGL.h"
+#endif
 
 #include <string>
 #include <utility>
@@ -39,6 +44,12 @@ using namespace RETRO;
 
 namespace
 {
+#if defined(TARGET_ANDROID)
+using CWinSystemEGL = CWinSystemAndroidGLESContext;
+#else
+using CWinSystemEGL = KODI::WINDOWING::LINUX::CWinSystemEGL;
+#endif
+
 #if defined(HAS_GLES)
 constexpr EGLenum CLIENT_API = EGL_OPENGL_ES_API;
 #else
@@ -70,8 +81,7 @@ bool CRenderBufferPoolFBO::SupportsHardwareRendering() const
 {
   // Asked of the window system rather than the build: a build carrying this
   // pool can still be running where there is no EGL display to share.
-  auto* winSystem =
-      dynamic_cast<KODI::WINDOWING::LINUX::CWinSystemEGL*>(CServiceBroker::GetWinSystem());
+  auto* winSystem = dynamic_cast<CWinSystemEGL*>(CServiceBroker::GetWinSystem());
   if (winSystem == nullptr)
     return false;
 
@@ -101,6 +111,11 @@ bool CRenderBufferPoolFBO::ConfigureInternal()
 
 IRenderBuffer* CRenderBufferPoolFBO::CreateRenderBuffer(void* header /* = nullptr */)
 {
+  return CreateFBO(CRenderBufferFBO::Type::CAPTURE);
+}
+
+CRenderBufferFBO* CRenderBufferPoolFBO::CreateFBO(CRenderBufferFBO::Type type)
+{
   if (m_eglContext == EGL_NO_CONTEXT)
   {
     CLog::Log(LOGERROR, "RetroPlayer[RENDER]: No shared context; the stream must create one first");
@@ -118,7 +133,7 @@ IRenderBuffer* CRenderBufferPoolFBO::CreateRenderBuffer(void* header /* = nullpt
 
   auto buffer = std::make_unique<CRenderBufferFBO>(m_context, m_contextProperties.depth,
                                                    m_contextProperties.stencil,
-                                                   m_contextProperties.bottomLeftOrigin);
+                                                   m_contextProperties.bottomLeftOrigin, type);
   m_resources.emplace_back(buffer->m_resources);
   return buffer.release();
 }
@@ -140,8 +155,7 @@ bool CRenderBufferPoolFBO::CreateContext(const HwContextProperties& properties)
 
   m_contextProperties = properties;
 
-  auto winSystem =
-      dynamic_cast<KODI::WINDOWING::LINUX::CWinSystemEGL*>(CServiceBroker::GetWinSystem());
+  auto* winSystem = dynamic_cast<CWinSystemEGL*>(CServiceBroker::GetWinSystem());
   if (winSystem == nullptr)
   {
     CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Window system does not use EGL");
@@ -290,8 +304,17 @@ IRenderBuffer* CRenderBufferPoolFBO::GetBuffer(unsigned int width, unsigned int 
   std::unique_lock lock(m_contextMutex, std::try_to_lock);
   if (!lock.owns_lock() || m_clientFrameDepth == 0 || m_clientThread != std::this_thread::get_id())
     return nullptr;
+  if (!IsConfigured())
+    return nullptr;
   CollectBuffers();
-  return CBaseRenderBufferPool::GetBuffer(width, height);
+
+  // The stable client framebuffer retains alpha and never enters the capture pool.
+  std::unique_ptr<CRenderBufferFBO> buffer(CreateFBO(CRenderBufferFBO::Type::CLIENT));
+  if (!buffer || !buffer->Allocate(AV_PIX_FMT_NONE, width, height))
+    return nullptr;
+  buffer->Acquire(GetPtr());
+  buffer->Update();
+  return buffer.release();
 }
 
 void CRenderBufferPoolFBO::Return(IRenderBuffer* buffer)
@@ -300,7 +323,7 @@ void CRenderBufferPoolFBO::Return(IRenderBuffer* buffer)
   {
     auto lock = fbo->Lock();
     std::unique_lock captureLock(m_captureMutex);
-    if (fbo->TextureID() != 0 && !fbo->m_resources->retired &&
+    if (fbo->IsCapture() && fbo->TextureID() != 0 && !fbo->m_resources->retired &&
         fbo->TextureWidth() == m_captureWidth && fbo->TextureHeight() == m_captureHeight)
     {
       // Pool matching uses allocation size; published frame size can be smaller.
@@ -324,6 +347,12 @@ void CRenderBufferPoolFBO::CollectBuffers()
     else
       ++it;
   }
+}
+
+void CRenderBufferPoolFBO::Flush()
+{
+  std::unique_lock captureLock(m_captureMutex);
+  CBaseRenderBufferPool::Flush();
 }
 
 bool CRenderBufferPoolFBO::BeginClientFrame()
@@ -405,18 +434,8 @@ IRenderBuffer* CRenderBufferPoolFBO::CaptureClientFrame(IRenderBuffer* clientBuf
       client->GetCurrentFramebuffer() == 0)
     return nullptr;
 
-  {
-    std::unique_lock captureLock(m_captureMutex);
-    if (width != m_captureWidth || height != m_captureHeight)
-    {
-      m_captureWidth = width;
-      m_captureHeight = height;
-      CBaseRenderBufferPool::Flush();
-      Configure(AV_PIX_FMT_NONE);
-    }
-  }
-
-  auto* target = static_cast<CRenderBufferFBO*>(GetBuffer(width, height));
+  CollectBuffers();
+  auto* target = static_cast<CRenderBufferFBO*>(GetCaptureBuffer(width, height));
   if (!target)
     return nullptr;
 
@@ -447,6 +466,22 @@ IRenderBuffer* CRenderBufferPoolFBO::CaptureClientFrame(IRenderBuffer* clientBuf
   return target;
 }
 
+IRenderBuffer* CRenderBufferPoolFBO::GetCaptureBuffer(unsigned int width, unsigned int height)
+{
+  // The caller owns the context; exclude Flush() through configuration and allocation.
+  std::unique_lock captureLock(m_captureMutex);
+  if (width != m_captureWidth || height != m_captureHeight)
+  {
+    m_captureWidth = width;
+    m_captureHeight = height;
+    CBaseRenderBufferPool::Flush();
+  }
+  if (!Configure(AV_PIX_FMT_NONE))
+    return nullptr;
+
+  return CBaseRenderBufferPool::GetBuffer(width, height);
+}
+
 void CRenderBufferPoolFBO::DestroyContext()
 {
   std::unique_lock lock(m_contextMutex);
@@ -470,7 +505,7 @@ void CRenderBufferPoolFBO::DestroyContext()
   {
     std::unique_lock captureLock(m_captureMutex);
     m_captureWidth = m_captureHeight = 0;
-    Flush();
+    CBaseRenderBufferPool::Flush();
   }
 
   if (!eglDestroyContext(m_eglDisplay, m_eglContext))

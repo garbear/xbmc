@@ -64,6 +64,7 @@ public:
   bool ConfigureInternal() override;
   IRenderBuffer* GetBuffer(unsigned int width, unsigned int height) override;
   void Return(IRenderBuffer* buffer) override;
+  void Flush() override;
 
   bool SupportsHardwareRendering() const override;
   bool CreateContext(const HwContextProperties& properties) override;
@@ -76,6 +77,8 @@ public:
                                     unsigned int height) override;
 
 protected:
+  IRenderBuffer* GetCaptureBuffer(unsigned int width, unsigned int height);
+
   // Construction parameters
   CRenderContext& m_context;
 
@@ -96,6 +99,7 @@ protected:
   EGLContext m_eglContext{EGL_NO_CONTEXT};
 
 private:
+  CRenderBufferFBO* CreateFBO(CRenderBufferFBO::Type type);
   void CollectBuffers();
   std::vector<std::shared_ptr<CRenderBufferFBO::Resources>> m_resources;
   std::mutex m_captureMutex;

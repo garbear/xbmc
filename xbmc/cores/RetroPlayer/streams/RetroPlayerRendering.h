@@ -40,7 +40,8 @@ struct HwFramebufferProperties : public StreamProperties
                           bool cacheContext,
                           bool debugContext,
                           unsigned int maxWidth,
-                          unsigned int maxHeight)
+                          unsigned int maxHeight,
+                          float nominalDisplayAspectRatio)
     : contextType(contextType),
       depth(depth),
       stencil(stencil),
@@ -50,7 +51,8 @@ struct HwFramebufferProperties : public StreamProperties
       cacheContext(cacheContext),
       debugContext(debugContext),
       maxWidth(maxWidth),
-      maxHeight(maxHeight)
+      maxHeight(maxHeight),
+      nominalDisplayAspectRatio(nominalDisplayAspectRatio)
   {
   }
 
@@ -64,6 +66,7 @@ struct HwFramebufferProperties : public StreamProperties
   bool debugContext;
   unsigned int maxWidth;
   unsigned int maxHeight;
+  float nominalDisplayAspectRatio;
 };
 
 struct HwFramebufferBuffer : public StreamBuffer
@@ -77,10 +80,14 @@ struct HwFramebufferBuffer : public StreamBuffer
 struct HwFramebufferPacket : public StreamPacket
 {
   HwFramebufferPacket() = default;
-  HwFramebufferPacket(uintptr_t framebuffer, unsigned int width, unsigned int height)
+  HwFramebufferPacket(uintptr_t framebuffer,
+                      unsigned int width,
+                      unsigned int height,
+                      float displayAspectRatio)
     : framebuffer(framebuffer),
       width(width),
-      height(height)
+      height(height),
+      displayAspectRatio(displayAspectRatio)
   {
   }
 
@@ -89,6 +96,7 @@ struct HwFramebufferPacket : public StreamPacket
   //! \brief Size of the image the client drew, which the framebuffer may exceed
   unsigned int width{};
   unsigned int height{};
+  float displayAspectRatio{};
 };
 
 class CRetroPlayerRendering : public IRetroPlayerStream

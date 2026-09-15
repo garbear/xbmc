@@ -193,7 +193,7 @@ bool CRetroPlayerRendering::Configure(unsigned int width, unsigned int height)
   // to system memory, so they carry no pixel format. The FBO buffer pool keys
   // off this to tell itself apart from the software pools.
   const AVPixelFormat pixelFormat = AV_PIX_FMT_NONE;
-  const float displayAspectRatio = 0.0f; // 0.0f means square pixels
+  const float displayAspectRatio = m_hwProperties->nominalDisplayAspectRatio;
 
   CLog::Log(LOGDEBUG, "RetroPlayer[RENDERING]: Configuring rendering stream - width {}, height {}",
             width, height);
@@ -228,5 +228,5 @@ void CRetroPlayerRendering::AddStreamData(const StreamPacket& packet)
       hwPacket.height <= m_height &&
       hwPacket.framebuffer ==
           m_renderManager.GetCurrentFramebuffer(hwPacket.width, hwPacket.height))
-    m_renderManager.RenderFrame(hwPacket.width, hwPacket.height);
+    m_renderManager.RenderFrame(hwPacket.width, hwPacket.height, hwPacket.displayAspectRatio);
 }

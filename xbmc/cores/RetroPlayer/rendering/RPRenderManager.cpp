@@ -350,6 +350,9 @@ void CRPRenderManager::EndClientFrame()
 bool CRPRenderManager::CreateContext(const HwContextProperties& properties)
 {
   std::unique_lock lock(m_hwMutex);
+  // An explicit replacement ends the closed stream's context before rebinding.
+  if (m_destroyContextPending)
+    DestroyContextInternal();
   if (m_hwBufferPool)
     return false;
 
@@ -386,6 +389,11 @@ void CRPRenderManager::DestroyContext()
     m_destroyContextPending = true;
     return;
   }
+  DestroyContextInternal();
+}
+
+void CRPRenderManager::DestroyContextInternal()
+{
   m_destroyContextPending = false;
   if (m_hwContextBound)
   {
@@ -475,7 +483,9 @@ uintptr_t CRPRenderManager::GetCurrentFramebuffer(unsigned int width, unsigned i
   return framebuffer;
 }
 
-void CRPRenderManager::RenderFrame(unsigned int width, unsigned int height)
+void CRPRenderManager::RenderFrame(unsigned int width,
+                                   unsigned int height,
+                                   float displayAspectRatio)
 {
   std::unique_lock hwLock(m_hwMutex);
   if (m_bFlush || !m_hwContextBound || !m_hwRenderBuffer || width == 0 || height == 0 ||
@@ -488,7 +498,7 @@ void CRPRenderManager::RenderFrame(unsigned int width, unsigned int height)
     return;
 
   publishBuffer->SetSize(width, height);
-  publishBuffer->SetDisplayAspectRatio(m_nominalDisplayAspectRatio);
+  publishBuffer->SetDisplayAspectRatio(displayAspectRatio);
   publishBuffer->SetRotation(0);
   publishBuffer->SetLoaded(true);
 

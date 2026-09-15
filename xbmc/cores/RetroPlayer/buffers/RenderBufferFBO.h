@@ -40,7 +40,17 @@ class CRenderBufferPoolFBO;
 class CRenderBufferFBO : public CBaseRenderBuffer
 {
 public:
-  CRenderBufferFBO(CRenderContext& context, bool depth, bool stencil, bool bottomLeftOrigin);
+  enum class Type
+  {
+    CLIENT,
+    CAPTURE,
+  };
+
+  CRenderBufferFBO(CRenderContext& context,
+                   bool depth,
+                   bool stencil,
+                   bool bottomLeftOrigin,
+                   Type type = Type::CLIENT);
   ~CRenderBufferFBO() override;
 
   // implementation of IRenderBuffer via CRenderBufferSysMem
@@ -73,6 +83,7 @@ public:
 
   //! \brief True if the client rendered with OpenGL's bottom-left origin
   bool BottomLeftOrigin() const { return m_bottomLeftOrigin; }
+  bool IsCapture() const { return m_type == Type::CAPTURE; }
 
 protected:
   CRenderContext& m_context;
@@ -99,6 +110,7 @@ private:
   const bool m_depth;
   const bool m_stencil;
   const bool m_bottomLeftOrigin;
+  const Type m_type;
 };
 } // namespace RETRO
 } // namespace KODI

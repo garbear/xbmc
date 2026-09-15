@@ -30,9 +30,9 @@ public:
   virtual ~IHwFramebufferCallback() = default;
 
   /*!
-   * \brief Invalidates the current HW context and reinitializes GPU resources
+   * \brief Initialize client GPU resources with the hardware context current
    *
-   * Any GL state is lost, and must not be deinitialized explicitly.
+   * The add-on's stream handle must be installed before invoking this callback.
    */
   virtual bool HardwareContextReset() = 0;
 
@@ -58,6 +58,8 @@ public:
   void CloseStream() override;
   bool GetBuffer(unsigned int width, unsigned int height, game_stream_buffer& buffer) override;
   void AddData(const game_stream_packet& packet) override;
+
+  bool ResetHwContext();
 
   /*!
    * \brief Tell the client its context is going away, at most once
@@ -88,6 +90,8 @@ private:
 
   //! \brief Set once the client has been told its context is going away
   bool m_hwContextDestroyed{false};
+  bool m_hwContextResetStarted{false};
+  bool m_hwContextReady{false};
 
   // Hardware rendering parameters
   const std::unique_ptr<const game_hw_rendering_properties> m_hwProperties;

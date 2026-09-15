@@ -11,12 +11,17 @@
 #include "addons/addoninfo/AddonInfoBuilder.h"
 #include "cores/RetroPlayer/playback/ReversiblePlayback.h"
 #include "cores/RetroPlayer/playback/test/PlaybackTestEnvironment.h"
+#include "cores/RetroPlayer/savestates/SavestateDatabase.h"
+#include "cores/RetroPlayer/savestates/SavestateFlatBuffer.h"
 #include "cores/RetroPlayer/streams/IStreamManager.h"
 #include "cores/RetroPlayer/streams/RetroPlayerRendering.h"
+#include "cores/RetroPlayer/streams/RetroPlayerVideo.h"
+#include "filesystem/File.h"
 #include "games/addons/GameClient.h"
 #include "games/addons/streams/GameClientStreams.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
+#include "test/TestUtils.h"
 #include "utils/XBMCTinyXML2.h"
 #include "windowing/WinSystem.h"
 
@@ -30,6 +35,8 @@
 #include <string>
 
 #include <gtest/gtest.h>
+
+AddonGlobalInterface* kodi::addon::CPrivateBase::m_interface = nullptr;
 
 using namespace KODI;
 using namespace KODI::GAME;
@@ -103,9 +110,13 @@ struct Core
   unsigned int resets{0};
   unsigned int destroys{0};
   unsigned int readyFrame{1};
+  bool serializationNeedsReset{false};
+  bool deserializeNeedsFrame{false};
   GAME_ERROR frameResult{GAME_ERROR_NO_ERROR};
   GAME_ERROR resetResult{GAME_ERROR_NO_ERROR};
   std::function<void()> onFrame;
+  std::function<void()> onReset;
+  std::function<void()> onDestroy;
 };
 
 Core& GetCore(const AddonInstance_Game* game)
@@ -140,6 +151,15 @@ public:
   {
     ++m_state.opened;
     return m_open = m_state.openResult;
+  }
+  bool GetStreamBuffer(unsigned int width,
+                       unsigned int height,
+                       RETRO::StreamBuffer& buffer) override
+  {
+    if (!m_open || width == 0 || height == 0)
+      return false;
+    static_cast<RETRO::HwFramebufferBuffer&>(buffer).framebuffer = 42;
+    return true;
   }
   void CloseStream() override
   {
@@ -193,6 +213,54 @@ public:
   unsigned int closed{0};
   std::function<RETRO::StreamPtr()> factory;
 };
+class DevKitInstance
+{
+public:
+  explicit DevKitInstance(CGameClientStreams& streams)
+    : m_previous(kodi::addon::CPrivateBase::m_interface)
+  {
+    m_callbacks.kodiInstance = &streams;
+    m_callbacks.OpenStream = [](KODI_HANDLE instance,
+                                const game_stream_properties* properties) -> KODI_GAME_STREAM_HANDLE
+    { return static_cast<CGameClientStreams*>(instance)->OpenStream(*properties); };
+    m_callbacks.StartStream = [](KODI_HANDLE instance, KODI_GAME_STREAM_HANDLE stream)
+    {
+      return static_cast<CGameClientStreams*>(instance)->StartStream(
+          static_cast<IGameClientStream*>(stream));
+    };
+    m_callbacks.CloseStream = [](KODI_HANDLE instance, KODI_GAME_STREAM_HANDLE stream)
+    {
+      static_cast<CGameClientStreams*>(instance)->CloseStream(
+          static_cast<IGameClientStream*>(stream));
+    };
+    m_callbacks.GetStreamBuffer = [](KODI_HANDLE, KODI_GAME_STREAM_HANDLE stream,
+                                     unsigned int width, unsigned int height,
+                                     game_stream_buffer* buffer)
+    { return static_cast<IGameClientStream*>(stream)->GetBuffer(width, height, *buffer); };
+    m_instance.info = &m_info;
+    m_instance.functions = &m_functions;
+    m_instance.game = &m_game;
+    m_global.firstKodiInstance = &m_instance;
+    kodi::addon::CPrivateBase::m_interface = &m_global;
+    m_addon = std::make_unique<kodi::addon::CInstanceGame>();
+  }
+  ~DevKitInstance()
+  {
+    m_addon.reset();
+    kodi::addon::CPrivateBase::m_interface = m_previous;
+  }
+
+private:
+  AddonGlobalInterface* m_previous;
+  AddonToKodiFuncTable_Game m_callbacks{};
+  KodiToAddonFuncTable_Game m_addonCallbacks{};
+  AddonInstance_Game m_game{nullptr, &m_callbacks, &m_addonCallbacks};
+  KODI_ADDON_INSTANCE_INFO m_info{};
+  KODI_ADDON_INSTANCE_FUNC m_functions{};
+  KODI_ADDON_INSTANCE_STRUCT m_instance{};
+  AddonGlobalInterface m_global{};
+  std::unique_ptr<kodi::addon::CInstanceGame> m_addon;
+};
 } // namespace
 
 class TestGameClientHardwareRendering : public testing::Test
@@ -227,7 +295,9 @@ protected:
     {
       auto& core = GetCore(game);
       ++core.sizeQueries;
-      return core.frames >= core.readyFrame ? 1 : 0;
+      return core.frames >= core.readyFrame && (!core.serializationNeedsReset || core.resets == 1)
+                 ? 1
+                 : 0;
     };
     callbacks->Serialize = [](const AddonInstance_Game* game, uint8_t* data, size_t)
     {
@@ -237,17 +307,27 @@ protected:
     };
     callbacks->Deserialize = [](const AddonInstance_Game* game, const uint8_t*, size_t)
     {
-      ++GetCore(game).deserializations;
-      return GAME_ERROR_NO_ERROR;
+      auto& core = GetCore(game);
+      ++core.deserializations;
+      return !core.deserializeNeedsFrame || core.frames > 0 ? GAME_ERROR_NO_ERROR
+                                                            : GAME_ERROR_FAILED;
     };
+    callbacks->DeserializeAchievements = [](const AddonInstance_Game*, const uint8_t*, size_t)
+    { return GAME_ERROR_NOT_IMPLEMENTED; };
     callbacks->HwContextReset = [](const AddonInstance_Game* game)
     {
-      ++GetCore(game).resets;
-      return GetCore(game).resetResult;
+      auto& core = GetCore(game);
+      ++core.resets;
+      if (core.onReset)
+        core.onReset();
+      return core.resetResult;
     };
     callbacks->HwContextDestroy = [](const AddonInstance_Game* game)
     {
-      ++GetCore(game).destroys;
+      auto& core = GetCore(game);
+      ++core.destroys;
+      if (core.onDestroy)
+        core.onDestroy();
       return GAME_ERROR_NO_ERROR;
     };
     m_client.get()->*GetMember(Playing{}) = true;
@@ -281,7 +361,13 @@ protected:
     properties.type = GAME_STREAM_HW_FRAMEBUFFER;
     properties.hw_framebuffer.max_width = 640;
     properties.hw_framebuffer.max_height = 480;
-    return m_client->Streams().OpenStream(properties);
+    auto* stream = m_client->Streams().OpenStream(properties);
+    if (stream != nullptr && !m_client->Streams().StartStream(stream))
+    {
+      m_client->Streams().CloseStream(stream);
+      return nullptr;
+    }
+    return stream;
   }
 
   void UseRenderingStream(RETRO::CPlaybackTestEnvironment& environment,
@@ -290,6 +376,31 @@ protected:
   {
     m_manager.factory = [&environment, &process, &state]
     { return RETRO::StreamPtr(new RenderingStream(environment.Renderer(), process, state)); };
+  }
+
+  void CheckStartupRestore(RETRO::CPlaybackTestEnvironment& environment)
+  {
+    std::unique_ptr<XFILE::CFile> file(XBMC_CREATETEMPFILE(".sav"));
+    ASSERT_NE(file, nullptr);
+    const std::string path = XBMC_TEMPFILEPATH(file.get());
+    file->Close();
+    RETRO::CSavestateFlatBuffer savestate;
+    *savestate.GetMemoryBuffer(1) = 1;
+    savestate.Finalize();
+    RETRO::CSavestateDatabase database;
+    ASSERT_TRUE(database.AddSavestate(path, {}, savestate));
+    {
+      RETRO::CReversiblePlayback playback(m_client.get(), environment.Renderer(),
+                                          environment.Messenger(), 60.0, 0);
+      EXPECT_EQ(m_core.sizeQueries, 0U);
+      EXPECT_TRUE(playback.LoadSavestate(path));
+      EXPECT_EQ(m_core.frames, 0U);
+      EXPECT_EQ(m_core.sizeQueries, 1U);
+      EXPECT_EQ(m_core.deserializations, 1U);
+      EXPECT_EQ(m_client->GetSerializeSize(), 1U);
+      EXPECT_EQ(m_core.sizeQueries, 1U);
+    }
+    EXPECT_TRUE(XBMC_DELETETEMPFILE(file.release()));
   }
 
   Core m_core;
@@ -453,7 +564,7 @@ TEST_F(TestGameClientHardwareRendering, DeinitializeClosesStreamsAndNotifiesDest
   EXPECT_EQ(state.closed, 1U);
   EXPECT_EQ(state.deleted, 1U);
   EXPECT_EQ(m_manager.closed, 1U);
-  EXPECT_FALSE(m_client->Streams().HardwareRenderingAttempted());
+  EXPECT_FALSE(m_client->Streams().HardwareRenderingRefused());
 }
 
 TEST_F(TestGameClientHardwareRendering, ResetFailureClosesStreamAndAllowsRenegotiation)
@@ -524,4 +635,290 @@ TEST_F(TestGameClientHardwareRendering, RewindRetriesUntilSerializationBecomesAv
     EXPECT_EQ(m_core.sizeQueries, 3U);
   }
   settings->SetBool("gamesgeneral.enablerewind", rewindEnabled);
+}
+
+TEST_F(TestGameClientHardwareRendering, DevKitInstallsHandleBeforeSingleReset)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  DevKitInstance addon(m_client->Streams());
+  kodi::addon::CInstanceGame::CStream stream;
+  m_core.onReset = [&]
+  {
+    EXPECT_GT(m_manager.depth, 0U);
+    EXPECT_TRUE(stream.IsOpen());
+    game_stream_buffer buffer{};
+    buffer.type = GAME_STREAM_HW_FRAMEBUFFER;
+    EXPECT_TRUE(stream.GetBuffer(640, 480, buffer));
+    EXPECT_EQ(buffer.hw_framebuffer.framebuffer, 42U);
+  };
+  game_stream_properties properties{};
+  properties.type = GAME_STREAM_HW_FRAMEBUFFER;
+  properties.hw_framebuffer.max_width = 640;
+  properties.hw_framebuffer.max_height = 480;
+  EXPECT_TRUE(stream.Open(properties));
+  EXPECT_EQ(m_core.resets, 1U);
+  stream.Close();
+  stream.Close();
+  EXPECT_EQ(m_core.destroys, 1U);
+  EXPECT_EQ(state.closed, 1U);
+}
+
+TEST_F(TestGameClientHardwareRendering, PreparedStreamDoesNotResetUntilStarted)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  game_stream_properties properties{};
+  properties.type = GAME_STREAM_HW_FRAMEBUFFER;
+  properties.hw_framebuffer.max_width = 640;
+  properties.hw_framebuffer.max_height = 480;
+  auto* stream = m_client->Streams().OpenStream(properties);
+  ASSERT_NE(stream, nullptr);
+  EXPECT_EQ(m_core.resets, 0U);
+  EXPECT_TRUE(m_client->Streams().StartStream(stream));
+  EXPECT_TRUE(m_client->Streams().StartStream(stream));
+  EXPECT_EQ(m_core.resets, 1U);
+  m_core.onDestroy = [&] { EXPECT_GT(m_manager.depth, 0U); };
+  m_client->Streams().DestroyHwContext();
+  EXPECT_FALSE(m_client->Streams().StartStream(stream));
+  m_client->Streams().CloseStream(stream);
+  EXPECT_EQ(m_core.destroys, 1U);
+  EXPECT_EQ(state.closed, 1U);
+}
+
+TEST_F(TestGameClientHardwareRendering, DevKitResetFailureClosesOnceAndReopens)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  DevKitInstance addon(m_client->Streams());
+  kodi::addon::CInstanceGame::CStream stream;
+  m_core.onReset = [&]
+  {
+    EXPECT_TRUE(stream.IsOpen());
+    EXPECT_GT(m_manager.depth, 0U);
+  };
+  m_core.onDestroy = [&]
+  {
+    EXPECT_TRUE(stream.IsOpen());
+    EXPECT_GT(m_manager.depth, 0U);
+  };
+  game_stream_properties properties{};
+  properties.type = GAME_STREAM_HW_FRAMEBUFFER;
+  properties.hw_framebuffer.max_width = 640;
+  properties.hw_framebuffer.max_height = 480;
+  m_core.resetResult = GAME_ERROR_FAILED;
+  EXPECT_FALSE(stream.Open(properties));
+  EXPECT_FALSE(stream.IsOpen());
+  stream.Close();
+  EXPECT_EQ(m_core.resets, 1U);
+  EXPECT_EQ(m_core.destroys, 1U);
+  EXPECT_EQ(state.closed, 1U);
+  EXPECT_EQ(state.deleted, 1U);
+  EXPECT_EQ(m_manager.closed, 1U);
+
+  ASSERT_TRUE(Negotiate());
+  m_core.resetResult = GAME_ERROR_NO_ERROR;
+  EXPECT_TRUE(stream.Open(properties));
+  stream.Close();
+  EXPECT_EQ(m_core.resets, 2U);
+  EXPECT_EQ(m_core.destroys, 2U);
+  EXPECT_EQ(state.closed, 2U);
+}
+
+TEST_F(TestGameClientHardwareRendering, SoftwareStartupSavestateLoadsBeforeFirstFrame)
+{
+  RETRO::CPlaybackTestEnvironment environment;
+  m_core.readyFrame = 0;
+  CheckStartupRestore(environment);
+}
+
+TEST_F(TestGameClientHardwareRendering, HardwareStartupSavestateLoadsAfterResetBeforeFirstFrame)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  auto* stream = OpenHardwareStream();
+  ASSERT_NE(stream, nullptr);
+  m_core.readyFrame = 0;
+  m_core.serializationNeedsReset = true;
+  CheckStartupRestore(environment);
+  m_client->Streams().CloseStream(stream);
+}
+
+TEST_F(TestGameClientHardwareRendering, DeserializeRetainsFirstFrameFallback)
+{
+  m_core.deserializeNeedsFrame = true;
+  uint8_t data{1};
+  EXPECT_EQ(m_client->Deserialize(&data, 1), RestoreResult::Restored);
+  EXPECT_EQ(m_core.frames, 1U);
+  EXPECT_EQ(m_core.deserializations, 2U);
+}
+
+TEST_F(TestGameClientHardwareRendering, PreFrameZeroSizeDoesNotDisableLazyRetry)
+{
+  EXPECT_EQ(m_client->GetSerializeSize(CGameClient::SerializeSizeMode::Restore), 0U);
+  EXPECT_EQ(m_core.sizeQueries, 1U);
+  EXPECT_EQ(m_client->GetSerializeSize(), 0U);
+  EXPECT_EQ(m_core.sizeQueries, 1U);
+  m_client->RunFrame(false);
+  EXPECT_EQ(m_client->GetSerializeSize(), 1U);
+  EXPECT_EQ(m_client->GetSerializeSize(CGameClient::SerializeSizeMode::Restore), 1U);
+  EXPECT_EQ(m_core.sizeQueries, 2U);
+}
+
+TEST_F(TestGameClientHardwareRendering, AcceptedHardwarePreservesUnrelatedLoadErrors)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  EXPECT_FALSE(m_client->Streams().HardwareRenderingRefused());
+  auto* stream = OpenHardwareStream();
+  ASSERT_NE(stream, nullptr);
+  EXPECT_FALSE(m_client->Streams().HardwareRenderingRefused());
+  EXPECT_TRUE(m_client->Streams().HardwareRenderingRefusedWanted().empty());
+  m_client->Streams().CloseStream(stream);
+}
+
+TEST_F(TestGameClientHardwareRendering, RefusedHardwareClassifiesLoadFailure)
+{
+  game_hw_rendering_properties properties{};
+  properties.context_type = GAME_HW_CONTEXT_VULKAN;
+  EXPECT_FALSE(m_client->Streams().EnableHardwareRendering(properties));
+  EXPECT_TRUE(m_client->Streams().HardwareRenderingRefused());
+  EXPECT_EQ(m_client->Streams().HardwareRenderingRefusedWanted(), "Vulkan");
+}
+
+TEST_F(TestGameClientHardwareRendering, ContextCreationFailureRecordsRequest)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  state.openResult = false;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  EXPECT_EQ(OpenHardwareStream(), nullptr);
+  EXPECT_TRUE(m_client->Streams().HardwareRenderingRefused());
+  EXPECT_FALSE(m_client->Streams().HardwareRenderingRefusedWanted().empty());
+  EXPECT_FALSE(m_client->Streams().HardwareRenderingRefusedAvailable().empty());
+  EXPECT_EQ(m_core.resets, 0U);
+}
+
+TEST_F(TestGameClientHardwareRendering, SoftwareLoadErrorsHaveNoHardwareRefusal)
+{
+  EXPECT_FALSE(m_client->Streams().HardwareRenderingRefused());
+  EXPECT_TRUE(m_client->Streams().HardwareRenderingRefusedWanted().empty());
+}
+
+TEST_F(TestGameClientHardwareRendering, ResetMayCloseItsStreamWithoutDeletingActiveCallback)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  DevKitInstance addon(m_client->Streams());
+  kodi::addon::CInstanceGame::CStream stream;
+  m_core.onReset = [&] { stream.Close(); };
+  game_stream_properties properties{};
+  properties.type = GAME_STREAM_HW_FRAMEBUFFER;
+  properties.hw_framebuffer.max_width = 640;
+  properties.hw_framebuffer.max_height = 480;
+  EXPECT_FALSE(stream.Open(properties));
+  EXPECT_FALSE(stream.IsOpen());
+  EXPECT_EQ(m_core.resets, 1U);
+  EXPECT_EQ(m_core.destroys, 1U);
+  EXPECT_EQ(state.deleted, 1U);
+}
+
+TEST_F(TestGameClientHardwareRendering, FailedOuterResetDoesNotCloseReopenedStream)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  DevKitInstance addon(m_client->Streams());
+  kodi::addon::CInstanceGame::CStream stream;
+  game_stream_properties properties{};
+  properties.type = GAME_STREAM_HW_FRAMEBUFFER;
+  properties.hw_framebuffer.max_width = 640;
+  properties.hw_framebuffer.max_height = 480;
+  m_core.onReset = [&]
+  {
+    if (m_core.resets == 1)
+    {
+      stream.Close();
+      ASSERT_TRUE(Negotiate());
+      ASSERT_TRUE(stream.Open(properties));
+      m_core.resetResult = GAME_ERROR_FAILED;
+    }
+  };
+  EXPECT_FALSE(stream.Open(properties));
+  EXPECT_TRUE(stream.IsOpen());
+  EXPECT_EQ(m_core.resets, 2U);
+  EXPECT_EQ(m_core.destroys, 1U);
+  EXPECT_FALSE(m_client->Streams().HardwareRenderingRefused());
+  stream.Close();
+  EXPECT_EQ(m_core.destroys, 2U);
+  EXPECT_EQ(state.closed, 2U);
+  EXPECT_EQ(state.deleted, 2U);
+}
+
+TEST_F(TestGameClientHardwareRendering, SoftwareFallbackClearsHardwareRefusal)
+{
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  game_hw_rendering_properties hardware{};
+  hardware.context_type = GAME_HW_CONTEXT_VULKAN;
+  ASSERT_FALSE(m_client->Streams().EnableHardwareRendering(hardware));
+  ASSERT_TRUE(m_client->Streams().HardwareRenderingRefused());
+  m_manager.factory = [&]
+  { return RETRO::StreamPtr(new RETRO::CRetroPlayerVideo(environment.Renderer(), process)); };
+  game_stream_properties properties{};
+  properties.type = GAME_STREAM_VIDEO;
+  properties.video.format = GAME_PIXEL_FORMAT_0RGB8888;
+  properties.video.nominal_width = properties.video.max_width = 320;
+  properties.video.nominal_height = properties.video.max_height = 240;
+  auto* stream = m_client->Streams().OpenStream(properties);
+  ASSERT_NE(stream, nullptr);
+  EXPECT_FALSE(m_client->Streams().HardwareRenderingRefused());
+  EXPECT_EQ(m_core.resets, 0U);
+  m_client->Streams().CloseStream(stream);
 }

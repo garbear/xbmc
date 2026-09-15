@@ -40,6 +40,7 @@ public:
 
   // Stream management functions
   IGameClientStream* OpenStream(const game_stream_properties& properties);
+  bool StartStream(IGameClientStream* stream);
   void CloseStream(IGameClientStream* stream);
   void SetGameTiming(const game_system_timing& timingInfo);
 
@@ -70,10 +71,7 @@ public:
    */
   void DestroyHwContext();
 
-  bool HardwareRenderingAttempted() const
-  {
-    return m_hwProperties.context_type != GAME_HW_CONTEXT_NONE || !m_hwRefusedWanted.empty();
-  }
+  bool HardwareRenderingRefused() const { return !m_hwRefusedWanted.empty(); }
 
   /*!
    * \brief What the client asked to render with, if that had to be refused
@@ -84,15 +82,16 @@ public:
   const std::string& HardwareRenderingRefusedWanted() const { return m_hwRefusedWanted; }
 
   /*!
-   * \brief What this system can render with, if it is the reason for a refusal
+   * \brief The graphics API available on this display stack
    *
-   * Empty when the display could not provide hardware rendering at all, as
-   * opposed to providing too old a version of it.
+   * Empty when hardware rendering is unavailable. The GUI context version is
+   * not used as a limit on versions the driver can create for clients.
    */
   const std::string& HardwareRenderingRefusedAvailable() const { return m_hwRefusedAvailable; }
 
 private:
   // Utility functions
+  void RecordHardwareRenderingFailure(const game_hw_rendering_properties& properties);
   std::unique_ptr<IGameClientStream> CreateStream(GAME_STREAM_TYPE streamType) const;
 
   // Construction parameters
@@ -102,7 +101,12 @@ private:
   RETRO::IStreamManager* m_streamManager = nullptr;
 
   // Stream parameters
-  std::map<IGameClientStream*, RETRO::StreamPtr> m_streams;
+  struct StreamEntry
+  {
+    std::shared_ptr<IGameClientStream> gameStream;
+    RETRO::StreamPtr retroStream;
+  };
+  std::map<IGameClientStream*, StreamEntry> m_streams;
 
   // Hardware rendering parameters
   game_hw_rendering_properties m_hwProperties{};

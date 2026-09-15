@@ -188,7 +188,12 @@ public:
   void SetPlaybackSpeed(double speed) { m_playbackSpeed = speed; }
 
   // Access memory
-  size_t GetSerializeSize() const;
+  enum class SerializeSizeMode
+  {
+    Lazy,
+    Restore,
+  };
+  size_t GetSerializeSize(SerializeSizeMode mode = SerializeSizeMode::Lazy) const;
   bool Serialize(uint8_t* data, size_t size);
   RestoreResult Deserialize(const uint8_t* data,
                             size_t size,
@@ -264,6 +269,7 @@ private:
   static void cb_close_game(KODI_HANDLE kodiInstance);
   static double cb_get_playback_speed(KODI_HANDLE kodiInstance);
   static void cb_set_game_timing(KODI_HANDLE kodiInstance, const game_system_timing* timingInfo);
+  static bool cb_start_stream(KODI_HANDLE kodiInstance, KODI_GAME_STREAM_HANDLE stream);
   static KODI_GAME_STREAM_HANDLE cb_open_stream(KODI_HANDLE kodiInstance,
                                                 const game_stream_properties* properties);
   static bool cb_get_stream_buffer(KODI_HANDLE kodiInstance,
