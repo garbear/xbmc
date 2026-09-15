@@ -61,9 +61,8 @@ public:
   /*!
    * \brief Make a hardware-rendering client's context current on this thread
    *
-   * Goes through the manager rather than a stream, because a client builds its
-   * resources while its stream is still being opened, before there is a stream
-   * to ask.
+   * Calls that negotiate hardware rendering or prepare a stream also need a
+   * scope, before a hardware stream handle exists.
    */
   virtual bool BeginClientFrame() { return true; }
 

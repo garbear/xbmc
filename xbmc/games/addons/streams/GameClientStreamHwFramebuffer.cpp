@@ -44,25 +44,33 @@ bool CGameClientStreamHwFramebuffer::OpenStream(RETRO::IRetroPlayerStream* strea
     return false;
 
   m_hwContextDestroyed = false;
-  if (!m_callback.HardwareContextReset())
-  {
-    CloseStream();
-    return false;
-  }
-
+  m_hwContextResetStarted = false;
+  m_hwContextReady = false;
   return true;
+}
+
+bool CGameClientStreamHwFramebuffer::ResetHwContext()
+{
+  if (m_stream == nullptr || m_hwContextDestroyed)
+    return false;
+
+  if (!m_hwContextResetStarted)
+  {
+    m_hwContextResetStarted = true;
+    const bool reset = m_callback.HardwareContextReset();
+    m_hwContextReady = reset && m_stream != nullptr && !m_hwContextDestroyed;
+  }
+  return m_hwContextReady;
 }
 
 void CGameClientStreamHwFramebuffer::DestroyHwContext()
 {
-  if (m_stream == nullptr || m_hwContextDestroyed)
+  if (m_stream == nullptr || !m_hwContextResetStarted || m_hwContextDestroyed)
     return;
 
   m_hwContextDestroyed = true;
 
-  // Let the client release its GPU resources while its context is still
-  // current. The context itself outlives this call, so a client that rebuilds
-  // something on the way out still has one to do it in.
+  // The callback binds the client context before releasing its GPU resources.
   m_callback.HardwareContextDestroy();
 }
 
@@ -89,7 +97,8 @@ bool CGameClientStreamHwFramebuffer::GetBuffer(unsigned int width,
   {
     RETRO::HwFramebufferBuffer hwFramebufferBuffer;
     if (m_stream->GetStreamBuffer(width, height,
-                                  static_cast<RETRO::StreamBuffer&>(hwFramebufferBuffer)))
+                                  static_cast<RETRO::StreamBuffer&>(hwFramebufferBuffer)) &&
+        hwFramebufferBuffer.framebuffer != 0)
     {
       buffer.hw_framebuffer.framebuffer = hwFramebufferBuffer.framebuffer;
       return true;
@@ -109,7 +118,8 @@ void CGameClientStreamHwFramebuffer::AddData(const game_stream_packet& packet)
     const game_stream_hw_framebuffer_packet& hwFramebuffer = packet.hw_framebuffer;
 
     RETRO::HwFramebufferPacket hwFramebufferPacket{hwFramebuffer.framebuffer, hwFramebuffer.width,
-                                                   hwFramebuffer.height};
+                                                   hwFramebuffer.height,
+                                                   hwFramebuffer.display_aspect_ratio};
     m_stream->AddStreamData(static_cast<const RETRO::StreamPacket&>(hwFramebufferPacket));
   }
 }
@@ -170,5 +180,5 @@ std::unique_ptr<RETRO::HwFramebufferProperties> CGameClientStreamHwFramebuffer::
       hwProperties.context_type, hwProperties.depth, hwProperties.stencil,
       hwProperties.bottom_left_origin, hwProperties.version_major, hwProperties.version_minor,
       hwProperties.cache_context, hwProperties.debug_context, streamProperties.max_width,
-      streamProperties.max_height);
+      streamProperties.max_height, streamProperties.nominal_display_aspect_ratio);
 }
