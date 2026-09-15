@@ -10,10 +10,13 @@
 
 #ifdef HAS_RP_RENDERER_FBO
 
+#include "cores/RetroPlayer/buffers/RenderBufferManager.h"
 #include "cores/RetroPlayer/buffers/RenderBufferPoolFBO.h"
 #include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
 #include "cores/RetroPlayer/playback/test/PlaybackTestEnvironment.h"
+#include "cores/RetroPlayer/rendering/contexts/IHwRenderingContext.h"
 
+#include <future>
 #include <memory>
 
 #include <gtest/gtest.h>
@@ -83,15 +86,119 @@ TEST(TestRenderBufferPoolFBO, CaptureDimensionsCanChangeAfterFlush)
 
 namespace
 {
-class CEGLCapturePool : public CRenderBufferPoolFBO
+class CFailingContext : public IHwRenderingContext
 {
 public:
-  CEGLCapturePool(CRenderContext& context, EGLDisplay display, EGLContext eglContext)
-    : CRenderBufferPoolFBO(context)
+  bool SupportsHardwareRendering() const override { return available; }
+  bool Create(const HwContextProperties&) override
   {
-    m_eglDisplay = display;
-    m_eglContext = eglContext;
+    created = true;
+    return createSucceeds;
   }
+  bool IsCreated() const override { return created; }
+  bool MakeCurrent() override
+  {
+    ++bindAttempts;
+    return false;
+  }
+  void RestoreCurrent() override {}
+  void Destroy() override { created = false; }
+  bool available{false};
+  bool created{false};
+  bool createSucceeds{false};
+  unsigned int bindAttempts{0};
+};
+} // namespace
+
+TEST(TestRenderBufferPoolFBO, MissingNativeContextDoesNotAdvertiseHardware)
+{
+  CPlaybackTestEnvironment environment;
+  auto pool =
+      std::make_shared<CRenderBufferPoolFBO>(environment.ProcessInfo().GetRenderContext(), nullptr);
+  environment.ProcessInfo().GetBufferManager().RegisterPools(nullptr, {pool});
+  EXPECT_FALSE(environment.ProcessInfo().HasHardwareRendering());
+  EXPECT_FALSE(pool->CreateContext({}));
+  EXPECT_FALSE(pool->BeginClientFrame());
+}
+
+TEST(TestRenderBufferPoolFBO, NativeCapabilityPropagatesThroughProcessInfo)
+{
+  CPlaybackTestEnvironment environment;
+  auto context = std::make_unique<CFailingContext>();
+  context->available = true;
+  auto pool = std::make_shared<CRenderBufferPoolFBO>(environment.ProcessInfo().GetRenderContext(),
+                                                     std::move(context));
+  environment.ProcessInfo().GetBufferManager().RegisterPools(nullptr, {pool});
+  EXPECT_TRUE(environment.ProcessInfo().HasHardwareRendering());
+}
+
+TEST(TestRenderBufferPoolFBO, FailedCreationReleasesPartialNativeContext)
+{
+  CPlaybackTestEnvironment environment;
+  auto context = std::make_unique<CFailingContext>();
+  context->available = true;
+  auto* native = context.get();
+  auto pool = std::make_shared<CRenderBufferPoolFBO>(environment.ProcessInfo().GetRenderContext(),
+                                                     std::move(context));
+  EXPECT_FALSE(pool->CreateContext({}));
+  EXPECT_FALSE(pool->BeginClientFrame());
+  EXPECT_FALSE(native->created);
+  native->createSucceeds = true;
+  EXPECT_TRUE(pool->CreateContext({}));
+}
+
+TEST(TestRenderBufferPoolFBO, FailedBindingReleasesContextLock)
+{
+  CPlaybackTestEnvironment environment;
+  auto context = std::make_unique<CFailingContext>();
+  context->available = true;
+  context->createSucceeds = true;
+  auto* native = context.get();
+  auto pool = std::make_shared<CRenderBufferPoolFBO>(environment.ProcessInfo().GetRenderContext(),
+                                                     std::move(context));
+  ASSERT_TRUE(pool->CreateContext({}));
+  EXPECT_FALSE(pool->BeginClientFrame());
+  EXPECT_EQ(native->bindAttempts, 1);
+  EXPECT_FALSE(std::async(std::launch::async, [&] { return pool->BeginClientFrame(); }).get());
+  EXPECT_EQ(native->bindAttempts, 2);
+  pool->DestroyContext();
+  EXPECT_FALSE(pool->BeginClientFrame());
+}
+
+#if defined(HAS_EGL)
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+
+namespace
+{
+class CTestEGLContext : public IHwRenderingContext
+{
+public:
+  CTestEGLContext(EGLDisplay display, EGLContext context) : m_display(display), m_context(context)
+  {
+  }
+  ~CTestEGLContext() override { Destroy(); }
+  bool SupportsHardwareRendering() const override { return IsCreated(); }
+  bool Create(const HwContextProperties&) override { return IsCreated(); }
+  bool IsCreated() const override { return m_context != EGL_NO_CONTEXT; }
+  bool MakeCurrent() override
+  {
+    return eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, m_context) == EGL_TRUE;
+  }
+  void RestoreCurrent() override
+  {
+    eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+  }
+  void Destroy() override
+  {
+    if (IsCreated())
+      eglDestroyContext(m_display, m_context);
+    m_context = EGL_NO_CONTEXT;
+  }
+
+private:
+  EGLDisplay m_display;
+  EGLContext m_context;
 };
 } // namespace
 
@@ -137,8 +244,9 @@ protected:
     if (context == EGL_NO_CONTEXT)
       GTEST_SKIP() << "The required GL context is unavailable";
 
-    m_pool = std::make_shared<CEGLCapturePool>(m_environment.ProcessInfo().GetRenderContext(),
-                                               m_display, context);
+    m_pool = std::make_shared<CRenderBufferPoolFBO>(
+        m_environment.ProcessInfo().GetRenderContext(),
+        std::make_unique<CTestEGLContext>(m_display, context));
     m_current = m_pool->BeginClientFrame();
     if (!m_current)
       GTEST_SKIP() << "Surfaceless EGL contexts are unavailable";
@@ -157,7 +265,7 @@ protected:
   }
 
   CPlaybackTestEnvironment m_environment;
-  std::shared_ptr<CEGLCapturePool> m_pool;
+  std::shared_ptr<CRenderBufferPoolFBO> m_pool;
   EGLDisplay m_display{EGL_NO_DISPLAY};
   EGLenum m_previousAPI{EGL_NONE};
   bool m_initialized{false};
@@ -209,5 +317,7 @@ TEST_F(TestRenderBufferPoolFBOWithContext, CaptureDiscardsAlphaBeforeShaderCopy)
   EXPECT_EQ(glGetError(), GL_NO_ERROR);
   client->Release();
 }
+
+#endif
 
 #endif

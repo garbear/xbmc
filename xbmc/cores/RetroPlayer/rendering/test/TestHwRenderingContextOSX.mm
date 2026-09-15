@@ -1,0 +1,561 @@
+/*
+ *  Copyright (C) 2026 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
+ *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
+ */
+
+#include "cores/RetroPlayer/buffers/IRenderBufferPool.h"
+#include "cores/RetroPlayer/rendering/contexts/HwRenderingContextOSX.h"
+#include "cores/RetroPlayer/rendering/contexts/IHwRenderingContext.h"
+
+#if defined(TARGET_DARWIN_OSX) && defined(HAS_GL)
+#include "cores/RetroPlayer/buffers/RenderBufferPoolFBO.h"
+#include "cores/RetroPlayer/playback/test/PlaybackTestEnvironment.h"
+#endif
+
+#include <array>
+#include <thread>
+
+#import <AppKit/NSOpenGL.h>
+#include <OpenGL/OpenGL.h>
+#include <OpenGL/gl3.h>
+#include <gtest/gtest.h>
+
+using namespace KODI::RETRO;
+
+class TestHwRenderingContextOSX : public testing::Test
+{
+protected:
+  void SetUp() override
+  {
+    m_previousNSContext = [NSOpenGLContext currentContext];
+    m_previousCGLContext = CGLGetCurrentContext();
+    if (m_previousCGLContext)
+      CGLRetainContext(m_previousCGLContext);
+
+    const NSOpenGLPixelFormatAttribute attributes[] = {NSOpenGLPFAOpenGLProfile,
+                                                       NSOpenGLProfileVersion3_2Core,
+                                                       NSOpenGLPFAAccelerated,
+                                                       NSOpenGLPFANoRecovery,
+                                                       NSOpenGLPFAColorSize,
+                                                       32,
+                                                       NSOpenGLPFAAlphaSize,
+                                                       8,
+                                                       0};
+    NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+    m_guiContext = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
+    if (!m_guiContext)
+      GTEST_SKIP() << "An accelerated native core-profile context is unavailable";
+    [m_guiContext makeCurrentContext];
+    ASSERT_EQ(CGLGetCurrentContext(), [m_guiContext CGLContextObj]);
+  }
+
+  void TearDown() override
+  {
+    if (m_previousNSContext)
+      [m_previousNSContext makeCurrentContext];
+    else
+      [NSOpenGLContext clearCurrentContext];
+    CGLSetCurrentContext(m_previousCGLContext);
+    if (m_previousCGLContext)
+      CGLReleaseContext(m_previousCGLContext);
+    m_guiContext = nil;
+  }
+
+  NSOpenGLContext* m_guiContext{nil};
+  NSOpenGLContext* m_previousNSContext{nil};
+  CGLContextObj m_previousCGLContext{nullptr};
+};
+
+TEST(TestHwRenderingContextOSXUnavailable, MissingSharedContextRejectsHardwareRendering)
+{
+  auto context = CreateHwRenderingContextOSX(nil);
+  EXPECT_FALSE(context->SupportsHardwareRendering());
+  EXPECT_FALSE(context->Create({}));
+  EXPECT_FALSE(context->MakeCurrent());
+  EXPECT_FALSE(context->IsCreated());
+}
+
+TEST_F(TestHwRenderingContextOSX, CapabilityProbePreservesGuiContextAndState)
+{
+  GLuint vertexArray = 0;
+  glGenVertexArrays(1, &vertexArray);
+  glBindVertexArray(vertexArray);
+
+  auto context = CreateHwRenderingContextOSX(m_guiContext);
+  EXPECT_TRUE(context->SupportsHardwareRendering());
+  EXPECT_FALSE(context->IsCreated());
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_EQ(CGLGetCurrentContext(), [m_guiContext CGLContextObj]);
+  GLint currentVertexArray = 0;
+  glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentVertexArray);
+  EXPECT_EQ(currentVertexArray, vertexArray);
+  EXPECT_EQ(glGetError(), GL_NO_ERROR);
+  glDeleteVertexArrays(1, &vertexArray);
+}
+
+TEST_F(TestHwRenderingContextOSX, HigherActualVersionSatisfiesMinimum33)
+{
+  GLint major = 0;
+  GLint minor = 0;
+  glGetIntegerv(GL_MAJOR_VERSION, &major);
+  glGetIntegerv(GL_MINOR_VERSION, &minor);
+  if (major < 3 || (major == 3 && minor < 3))
+    GTEST_SKIP() << "The native renderer does not support OpenGL 3.3";
+
+  HwContextProperties properties;
+  properties.versionMajor = 3;
+  properties.versionMinor = 3;
+  auto context = CreateHwRenderingContextOSX(m_guiContext);
+  ASSERT_TRUE(context->Create(properties));
+  ASSERT_TRUE(context->MakeCurrent());
+  GLint actualMajor = 0;
+  GLint actualMinor = 0;
+  GLint profile = 0;
+  glGetIntegerv(GL_MAJOR_VERSION, &actualMajor);
+  glGetIntegerv(GL_MINOR_VERSION, &actualMinor);
+  glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
+  RecordProperty("GL_VERSION", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+  RecordProperty("GL_RENDERER", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+  EXPECT_TRUE(actualMajor > 3 || (actualMajor == 3 && actualMinor >= 3));
+  EXPECT_NE(profile & GL_CONTEXT_CORE_PROFILE_BIT, 0);
+  context->RestoreCurrent();
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+}
+
+TEST_F(TestHwRenderingContextOSX, RejectsUnsupportedVersionsAndProfiles)
+{
+  auto context = CreateHwRenderingContextOSX(m_guiContext);
+  HwContextProperties properties;
+  properties.versionMajor = 4;
+  properties.versionMinor = 2;
+  EXPECT_FALSE(context->Create(properties));
+  properties = {};
+  properties.coreProfile = false;
+  EXPECT_FALSE(context->Create(properties));
+  properties = {};
+  properties.embedded = true;
+  EXPECT_FALSE(context->Create(properties));
+  EXPECT_FALSE(context->IsCreated());
+  EXPECT_FALSE(context->MakeCurrent());
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_EQ(CGLGetCurrentContext(), [m_guiContext CGLContextObj]);
+}
+
+TEST_F(TestHwRenderingContextOSX, LegacyGuiProfileCannotAdvertiseSharedCoreContext)
+{
+  const NSOpenGLPixelFormatAttribute attributes[] = {
+      NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersionLegacy, NSOpenGLPFAAccelerated,
+      NSOpenGLPFANoRecovery, 0};
+  NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+  NSOpenGLContext* legacyContext = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
+  if (!legacyContext)
+    GTEST_SKIP() << "A legacy native context is unavailable";
+
+  auto context = CreateHwRenderingContextOSX(legacyContext);
+  EXPECT_FALSE(context->SupportsHardwareRendering());
+  EXPECT_FALSE(context->Create({}));
+  EXPECT_FALSE(context->MakeCurrent());
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_EQ(CGLGetCurrentContext(), [m_guiContext CGLContextObj]);
+}
+
+TEST_F(TestHwRenderingContextOSX, SharesTextureContentsWithGuiContext)
+{
+  const std::array<unsigned char, 4> expected{17, 83, 149, 255};
+  GLuint texture = 0;
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, expected.data());
+  glFlush();
+
+  auto context = CreateHwRenderingContextOSX(m_guiContext);
+  ASSERT_TRUE(context->Create({}));
+  ASSERT_TRUE(context->MakeCurrent());
+  EXPECT_NE([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_EQ(CGLGetShareGroup(CGLGetCurrentContext()),
+            CGLGetShareGroup([m_guiContext CGLContextObj]));
+  EXPECT_TRUE(glIsTexture(texture));
+  glBindTexture(GL_TEXTURE_2D, texture);
+  std::array<unsigned char, 4> actual{};
+  glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, actual.data());
+  EXPECT_EQ(actual, expected);
+  EXPECT_EQ(glGetError(), GL_NO_ERROR);
+  context->RestoreCurrent();
+  glDeleteTextures(1, &texture);
+}
+
+TEST_F(TestHwRenderingContextOSX, RestoresNullContextAfterProbeAndClientScope)
+{
+  [NSOpenGLContext clearCurrentContext];
+  auto context = CreateHwRenderingContextOSX(m_guiContext);
+  EXPECT_EQ([NSOpenGLContext currentContext], nil);
+  EXPECT_EQ(CGLGetCurrentContext(), nullptr);
+  ASSERT_TRUE(context->Create({}));
+  ASSERT_TRUE(context->MakeCurrent());
+  context->RestoreCurrent();
+  EXPECT_EQ([NSOpenGLContext currentContext], nil);
+  EXPECT_EQ(CGLGetCurrentContext(), nullptr);
+}
+
+TEST_F(TestHwRenderingContextOSX, RestoresRawCGLContext)
+{
+  CGLContextObj rawContext = nullptr;
+  ASSERT_EQ(CGLCreateContext([[m_guiContext pixelFormat] CGLPixelFormatObj], nullptr, &rawContext),
+            kCGLNoError);
+  [NSOpenGLContext clearCurrentContext];
+  ASSERT_EQ(CGLSetCurrentContext(rawContext), kCGLNoError);
+  NSOpenGLContext* previousNSContext = [NSOpenGLContext currentContext];
+  auto context = CreateHwRenderingContextOSX(m_guiContext);
+  EXPECT_EQ(CGLGetCurrentContext(), rawContext);
+  EXPECT_EQ([NSOpenGLContext currentContext], previousNSContext);
+  ASSERT_TRUE(context->Create({}));
+  ASSERT_TRUE(context->MakeCurrent());
+  context->RestoreCurrent();
+  EXPECT_EQ(CGLGetCurrentContext(), rawContext);
+  EXPECT_EQ([NSOpenGLContext currentContext], previousNSContext);
+  [m_guiContext makeCurrentContext];
+  CGLReleaseContext(rawContext);
+}
+
+TEST_F(TestHwRenderingContextOSX, GameThreadScopeLeavesGuiThreadCurrentContextUntouched)
+{
+  auto context = CreateHwRenderingContextOSX(m_guiContext);
+  ASSERT_TRUE(context->Create({}));
+  std::thread gameThread(
+      [&context]()
+      {
+        @autoreleasepool
+        {
+          EXPECT_EQ([NSOpenGLContext currentContext], nil);
+          ASSERT_TRUE(context->MakeCurrent());
+          EXPECT_NE(CGLGetCurrentContext(), nullptr);
+          context->RestoreCurrent();
+          EXPECT_EQ([NSOpenGLContext currentContext], nil);
+          EXPECT_EQ(CGLGetCurrentContext(), nullptr);
+        }
+      });
+  gameThread.join();
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_EQ(CGLGetCurrentContext(), [m_guiContext CGLContextObj]);
+}
+
+TEST_F(TestHwRenderingContextOSX, DestroyRestoresGuiAndAllowsRecreation)
+{
+  auto context = CreateHwRenderingContextOSX(m_guiContext);
+  ASSERT_TRUE(context->Create({}));
+  ASSERT_TRUE(context->MakeCurrent());
+  context->Destroy();
+  EXPECT_FALSE(context->IsCreated());
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_TRUE(context->SupportsHardwareRendering());
+  ASSERT_TRUE(context->Create({}));
+  ASSERT_TRUE(context->MakeCurrent());
+  context->RestoreCurrent();
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+}
+
+#if defined(TARGET_DARWIN_OSX) && defined(HAS_GL)
+namespace
+{
+struct CReleaseRenderBuffer
+{
+  void operator()(IRenderBuffer* buffer) const { buffer->Release(); }
+};
+using FBOBufferPtr = std::unique_ptr<CRenderBufferFBO, CReleaseRenderBuffer>;
+} // namespace
+
+class TestRenderBufferPoolFBOOSX : public TestHwRenderingContextOSX
+{
+protected:
+  void SetUp() override
+  {
+    TestHwRenderingContextOSX::SetUp();
+    if (!m_guiContext)
+      return;
+
+    m_environment = std::make_unique<CPlaybackTestEnvironment>();
+    m_pool = std::make_shared<CRenderBufferPoolFBO>(m_environment->ProcessInfo().GetRenderContext(),
+                                                    CreateHwRenderingContextOSX(m_guiContext));
+    ASSERT_TRUE(m_pool->SupportsHardwareRendering());
+    ASSERT_TRUE(m_pool->CreateContext({}));
+    ASSERT_TRUE(m_pool->Configure(AV_PIX_FMT_NONE));
+  }
+
+  void TearDown() override
+  {
+    if (m_pool)
+      m_pool->DestroyContext();
+    m_pool.reset();
+    m_environment.reset();
+    TestHwRenderingContextOSX::TearDown();
+  }
+
+  FBOBufferPtr GetClient(unsigned int width, unsigned int height)
+  {
+    return FBOBufferPtr(static_cast<CRenderBufferFBO*>(m_pool->GetBuffer(width, height)));
+  }
+
+  FBOBufferPtr Capture(IRenderBuffer* client, unsigned int width, unsigned int height)
+  {
+    return FBOBufferPtr(
+        static_cast<CRenderBufferFBO*>(m_pool->CaptureClientFrame(client, width, height)));
+  }
+
+  std::unique_ptr<CPlaybackTestEnvironment> m_environment;
+  std::shared_ptr<CRenderBufferPoolFBO> m_pool;
+};
+
+TEST_F(TestRenderBufferPoolFBOOSX, NestedScopesRestoreGuiOnlyAfterOutermostEnd)
+{
+  ASSERT_TRUE(m_pool->BeginClientFrame());
+  NSOpenGLContext* clientContext = [NSOpenGLContext currentContext];
+  ASSERT_NE(clientContext, m_guiContext);
+  ASSERT_TRUE(m_pool->BeginClientFrame());
+  EXPECT_EQ([NSOpenGLContext currentContext], clientContext);
+
+  std::thread otherThread(
+      [this]()
+      {
+        EXPECT_FALSE(m_pool->BeginClientFrame());
+        EXPECT_EQ(CGLGetCurrentContext(), nullptr);
+      });
+  otherThread.join();
+
+  m_pool->EndClientFrame();
+  EXPECT_EQ([NSOpenGLContext currentContext], clientContext);
+  m_pool->EndClientFrame();
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+}
+
+TEST_F(TestRenderBufferPoolFBOOSX, ClientFramebufferRemainsStableDuringGrowthAndRejectedAllocation)
+{
+  ASSERT_TRUE(m_pool->BeginClientFrame());
+  auto client = GetClient(4, 4);
+  ASSERT_NE(client, nullptr);
+  const GLuint framebuffer = client->GetCurrentFramebuffer();
+  ASSERT_NE(framebuffer, 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+  ASSERT_TRUE(client->Allocate(AV_PIX_FMT_NONE, 8, 8));
+  EXPECT_EQ(client->GetCurrentFramebuffer(), framebuffer);
+  EXPECT_EQ(client->TextureWidth(), 8);
+  EXPECT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+
+  GLint maximumTextureSize = 0;
+  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maximumTextureSize);
+  EXPECT_FALSE(client->Allocate(AV_PIX_FMT_NONE, maximumTextureSize + 1, 8));
+  EXPECT_EQ(client->GetCurrentFramebuffer(), framebuffer);
+  EXPECT_EQ(client->TextureWidth(), 8);
+  EXPECT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+  EXPECT_EQ(glGetError(), GL_NO_ERROR);
+}
+
+TEST_F(TestRenderBufferPoolFBOOSX, CapturedTextureIsOpaqueAndReadableThroughGuiFramebuffer)
+{
+  ASSERT_TRUE(m_pool->BeginClientFrame());
+  auto client = GetClient(4, 4);
+  ASSERT_NE(client, nullptr);
+  const GLuint framebuffer = client->GetCurrentFramebuffer();
+  glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+  glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  auto captured = Capture(client.get(), 4, 4);
+  ASSERT_NE(captured, nullptr);
+
+  std::array<unsigned char, 4> pixel{};
+  glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
+  EXPECT_EQ(pixel, (std::array<unsigned char, 4>{255, 0, 0, 0}));
+  EXPECT_EQ(client->GetCurrentFramebuffer(), framebuffer);
+  m_pool->EndClientFrame();
+  ASSERT_EQ([NSOpenGLContext currentContext], m_guiContext);
+
+  captured->WaitForCapture();
+  EXPECT_TRUE(glIsTexture(captured->TextureID()));
+  GLuint guiFramebuffer = 0;
+  glGenFramebuffers(1, &guiFramebuffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, guiFramebuffer);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, captured->TextureID(),
+                         0);
+  EXPECT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+  glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
+  EXPECT_EQ(pixel, (std::array<unsigned char, 4>{255, 0, 0, 255}));
+  captured->FinishRender();
+  glDeleteFramebuffers(1, &guiFramebuffer);
+  EXPECT_EQ(glGetError(), GL_NO_ERROR);
+}
+
+TEST_F(TestRenderBufferPoolFBOOSX, GuiShaderSamplesCapturedTextureWithNearestAndLinearFiltering)
+{
+  ASSERT_TRUE(m_pool->BeginClientFrame());
+  auto client = GetClient(4, 4);
+  ASSERT_NE(client, nullptr);
+  glBindFramebuffer(GL_FRAMEBUFFER, client->GetCurrentFramebuffer());
+  glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  auto captured = Capture(client.get(), 4, 4);
+  ASSERT_NE(captured, nullptr);
+  m_pool->EndClientFrame();
+  ASSERT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  captured->WaitForCapture();
+
+  struct ShaderDrawResources
+  {
+    ~ShaderDrawResources()
+    {
+      glUseProgram(0);
+      glDeleteProgram(program);
+      glDeleteShader(vertexShader);
+      glDeleteShader(fragmentShader);
+      glDeleteVertexArrays(1, &vertexArray);
+      glDeleteFramebuffers(1, &framebuffer);
+      glDeleteTextures(1, &texture);
+    }
+    GLuint program{0};
+    GLuint vertexShader{0};
+    GLuint fragmentShader{0};
+    GLuint vertexArray{0};
+    GLuint framebuffer{0};
+    GLuint texture{0};
+  } resources;
+
+  const char* vertexSource = R"(#version 150
+    out vec2 texcoord;
+    void main()
+    {
+      vec2 positions[3] = vec2[3](vec2(-1, -1), vec2(3, -1), vec2(-1, 3));
+      vec2 position = positions[gl_VertexID];
+      texcoord = (position + vec2(1)) * 0.5;
+      gl_Position = vec4(position, 0, 1);
+    }
+  )";
+  const char* fragmentSource = R"(#version 150
+    uniform sampler2D image;
+    in vec2 texcoord;
+    out vec4 color;
+    void main() { color = texture(image, texcoord); }
+  )";
+  const auto compileShader = [](GLenum type, const char* source)
+  {
+    GLuint shader = glCreateShader(type);
+    glShaderSource(shader, 1, &source, nullptr);
+    glCompileShader(shader);
+    GLint compiled = GL_FALSE;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+    std::array<char, 1024> log{};
+    glGetShaderInfoLog(shader, log.size(), nullptr, log.data());
+    EXPECT_EQ(compiled, GL_TRUE) << log.data();
+    return shader;
+  };
+  resources.vertexShader = compileShader(GL_VERTEX_SHADER, vertexSource);
+  resources.fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
+  resources.program = glCreateProgram();
+  glAttachShader(resources.program, resources.vertexShader);
+  glAttachShader(resources.program, resources.fragmentShader);
+  glLinkProgram(resources.program);
+  GLint linked = GL_FALSE;
+  glGetProgramiv(resources.program, GL_LINK_STATUS, &linked);
+  std::array<char, 1024> log{};
+  glGetProgramInfoLog(resources.program, log.size(), nullptr, log.data());
+  ASSERT_EQ(linked, GL_TRUE) << log.data();
+  glUseProgram(resources.program);
+  glUniform1i(glGetUniformLocation(resources.program, "image"), 0);
+
+  glGenTextures(1, &resources.texture);
+  glBindTexture(GL_TEXTURE_2D, resources.texture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+  glGenFramebuffers(1, &resources.framebuffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, resources.framebuffer);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resources.texture, 0);
+  ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+  glViewport(0, 0, 4, 4);
+  glGenVertexArrays(1, &resources.vertexArray);
+  glBindVertexArray(resources.vertexArray);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, captured->TextureID());
+  GLint minFilter = 0;
+  GLint sampler = 0;
+  glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, &minFilter);
+  glGetIntegerv(GL_SAMPLER_BINDING, &sampler);
+  EXPECT_EQ(minFilter, GL_LINEAR);
+  EXPECT_EQ(sampler, 0);
+  for (GLint filter : {GL_LINEAR, GL_NEAREST})
+  {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    std::array<unsigned char, 4> pixel{};
+    glReadPixels(2, 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
+    EXPECT_EQ(pixel, (std::array<unsigned char, 4>{255, 0, 0, 255}));
+    EXPECT_EQ(glGetError(), GL_NO_ERROR);
+  }
+  captured->FinishRender();
+}
+
+TEST_F(TestRenderBufferPoolFBOOSX, SameSizeCaptureResumesAfterFlushAcrossContextRecreation)
+{
+  for (unsigned int cycle = 0; cycle < 3; ++cycle)
+  {
+    ASSERT_TRUE(m_pool->BeginClientFrame());
+    auto client = GetClient(4, 4);
+    ASSERT_NE(client, nullptr);
+    glBindFramebuffer(GL_FRAMEBUFFER, client->GetCurrentFramebuffer());
+    glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    auto first = Capture(client.get(), 4, 4);
+    ASSERT_NE(first, nullptr);
+    first.reset();
+    m_pool->Flush();
+    EXPECT_FALSE(m_pool->IsConfigured());
+
+    auto second = Capture(client.get(), 4, 4);
+    ASSERT_NE(second, nullptr);
+    EXPECT_TRUE(m_pool->IsConfigured());
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, second->GetCurrentFramebuffer());
+    std::array<unsigned char, 4> pixel{};
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
+    EXPECT_EQ(pixel, (std::array<unsigned char, 4>{0, 255, 0, 255}));
+    EXPECT_EQ(glGetError(), GL_NO_ERROR);
+    second.reset();
+    client.reset();
+    m_pool->DestroyContext();
+    EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+    EXPECT_FALSE(m_pool->BeginClientFrame());
+
+    ASSERT_TRUE(m_pool->CreateContext({}));
+    ASSERT_TRUE(m_pool->Configure(AV_PIX_FMT_NONE));
+  }
+}
+
+TEST_F(TestRenderBufferPoolFBOOSX, TeardownPreservesGuiContainerObjectsAndBindings)
+{
+  GLuint guiVertexArray = 0;
+  GLuint guiFramebuffer = 0;
+  glGenVertexArrays(1, &guiVertexArray);
+  glGenFramebuffers(1, &guiFramebuffer);
+  glBindVertexArray(guiVertexArray);
+  glBindFramebuffer(GL_FRAMEBUFFER, guiFramebuffer);
+
+  ASSERT_TRUE(m_pool->BeginClientFrame());
+  auto client = GetClient(4, 4);
+  ASSERT_NE(client, nullptr);
+  m_pool->DestroyContext();
+  EXPECT_EQ(client->GetCurrentFramebuffer(), 0);
+  EXPECT_EQ(client->TextureID(), 0);
+  ASSERT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_TRUE(glIsVertexArray(guiVertexArray));
+  EXPECT_TRUE(glIsFramebuffer(guiFramebuffer));
+  GLint binding = 0;
+  glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &binding);
+  EXPECT_EQ(binding, guiVertexArray);
+  glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &binding);
+  EXPECT_EQ(binding, guiFramebuffer);
+  EXPECT_EQ(glGetError(), GL_NO_ERROR);
+  glDeleteFramebuffers(1, &guiFramebuffer);
+  glDeleteVertexArrays(1, &guiVertexArray);
+}
+#endif
