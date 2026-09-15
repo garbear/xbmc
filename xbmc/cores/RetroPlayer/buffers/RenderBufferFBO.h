@@ -26,9 +26,6 @@
 
 #include "system_gl.h"
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-
 namespace KODI
 {
 namespace RETRO

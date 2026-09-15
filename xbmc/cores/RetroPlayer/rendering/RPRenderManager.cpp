@@ -464,6 +464,7 @@ void CRPRenderManager::ReleaseHwRenderBuffer()
   m_hwRenderBuffer = nullptr;
   m_hwBufferWidth = m_hwBufferHeight = 0;
   m_loggedFramebuffer = 0;
+  m_loggedHardwareCapture = false;
 }
 
 uintptr_t CRPRenderManager::GetCurrentFramebuffer(unsigned int width, unsigned int height)
@@ -497,6 +498,12 @@ void CRPRenderManager::RenderFrame(unsigned int width,
   if (!publishBuffer)
     return;
 
+  if (!m_loggedHardwareCapture)
+  {
+    CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: First hardware frame captured on GPU ({}x{})",
+              width, height);
+    m_loggedHardwareCapture = true;
+  }
   publishBuffer->SetSize(width, height);
   publishBuffer->SetDisplayAspectRatio(displayAspectRatio);
   publishBuffer->SetRotation(0);

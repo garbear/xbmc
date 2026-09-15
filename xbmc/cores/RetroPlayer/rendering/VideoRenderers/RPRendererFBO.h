@@ -25,7 +25,7 @@
 //! desktop GL and GLES 3.0 upwards. The factory is declared either way and
 //! declines where the renderer is absent, so a caller registering it needs no
 //! build check of its own.
-#if defined(HAS_EGL) && (defined(HAS_GL) || HAS_GLES == 3)
+#if (defined(HAS_EGL) || defined(TARGET_DARWIN_OSX)) && (defined(HAS_GL) || HAS_GLES == 3)
 #define HAS_RP_RENDERER_FBO
 #endif
 
@@ -147,6 +147,7 @@ protected:
 
   //! \brief Set once anything has been logged, so the first frame always is
   bool m_bLoggedGeometry = false;
+  bool m_loggedHardwarePresentation{false};
 
   //! \brief Changes seen since the last line was written
   unsigned int m_geometryChanges = 0;

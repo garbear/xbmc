@@ -27,14 +27,13 @@
 
 #include "system_gl.h"
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
 
 namespace KODI
 {
 namespace RETRO
 {
 class CRenderContext;
+class IHwRenderingContext;
 
 /*!
  * \brief Framebuffers for game clients that render on the GPU themselves
@@ -54,6 +53,7 @@ class CRenderBufferPoolFBO : public CBaseRenderBufferPool
 {
 public:
   CRenderBufferPoolFBO(CRenderContext& context);
+  CRenderBufferPoolFBO(CRenderContext& context, std::unique_ptr<IHwRenderingContext> hwContext);
   ~CRenderBufferPoolFBO() override;
 
   // implementation of IRenderBufferPool via CRenderBufferPoolSysMem
@@ -86,19 +86,12 @@ protected:
   HwContextProperties m_contextProperties;
 
   // Context operations are serialized independently of Kodi's render thread.
-  std::recursive_mutex m_contextMutex;
+  mutable std::recursive_mutex m_contextMutex;
   unsigned int m_clientFrameDepth{0};
   std::thread::id m_clientThread;
-  EGLenum m_prevAPI{EGL_OPENGL_ES_API};
-  EGLDisplay m_prevDisplay{EGL_NO_DISPLAY};
-  EGLSurface m_prevDraw{EGL_NO_SURFACE};
-  EGLSurface m_prevRead{EGL_NO_SURFACE};
-  EGLContext m_prevContext{EGL_NO_CONTEXT};
-  EGLDisplay m_eglDisplay{EGL_NO_DISPLAY};
-  EGLConfig m_eglConfig{};
-  EGLContext m_eglContext{EGL_NO_CONTEXT};
 
 private:
+  std::unique_ptr<IHwRenderingContext> m_hwContext;
   CRenderBufferFBO* CreateFBO(CRenderBufferFBO::Type type);
   void CollectBuffers();
   std::vector<std::shared_ptr<CRenderBufferFBO::Resources>> m_resources;

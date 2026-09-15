@@ -45,12 +45,7 @@ if(("gbm" IN_LIST CORE_PLATFORM_NAME_LC OR "wayland" IN_LIST CORE_PLATFORM_NAME_
   endif()
 endif()
 
-# The FBO pool creates a shared EGL context off the windowing system, so it
-# requires EGL in addition to desktop GL -- but nothing from DMA, and no
-# particular windowing system. Desktop GL and GLES are both served: the pool
-# asks EGL for whichever this build renders with.
-# GLES 2.0 has neither glBlitFramebuffer nor fence syncs, both of which the
-# copy path needs, so this is built for desktop GL and for GLES 3.0 upwards
+# GPU capture requires framebuffer blits and fence syncs (desktop GL or GLES3).
 set(FBO_GL_SUPPORTED FALSE)
 if(TARGET ${APP_NAME_LC}::OpenGl)
   set(FBO_GL_SUPPORTED TRUE)
@@ -60,11 +55,20 @@ elseif(TARGET ${APP_NAME_LC}::OpenGLES)
     set(FBO_GL_SUPPORTED TRUE)
   endif()
 endif()
-if(FBO_GL_SUPPORTED AND TARGET ${APP_NAME_LC}::EGL)
+if(FBO_GL_SUPPORTED AND (TARGET ${APP_NAME_LC}::EGL OR CORE_SYSTEM_NAME STREQUAL "osx"))
   list(APPEND SOURCES RenderBufferFBO.cpp
-                      RenderBufferPoolFBO.cpp)
+                      RenderBufferPoolFBO.cpp
+                      ../rendering/contexts/HwRenderingContext.cpp)
   list(APPEND HEADERS RenderBufferFBO.h
-                      RenderBufferPoolFBO.h)
+                      RenderBufferPoolFBO.h
+                      ../rendering/contexts/IHwRenderingContext.h)
+  if(CORE_SYSTEM_NAME STREQUAL "osx")
+    list(APPEND SOURCES ../rendering/contexts/HwRenderingContextOSX.mm)
+    list(APPEND HEADERS ../rendering/contexts/HwRenderingContextOSX.h)
+  else()
+    list(APPEND SOURCES ../rendering/contexts/HwRenderingContextEGL.cpp)
+    list(APPEND HEADERS ../rendering/contexts/HwRenderingContextEGL.h)
+  endif()
 endif()
 
 core_add_library(rp-buffers)
