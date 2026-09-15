@@ -346,7 +346,8 @@ void CReversiblePlayback::CommitSavestate(bool autosave,
 
 bool CReversiblePlayback::LoadSavestate(const std::string& savestatePath)
 {
-  const size_t memorySize = m_gameClient->GetSerializeSize();
+  const size_t memorySize =
+      m_gameClient->GetSerializeSize(GAME::CGameClient::SerializeSizeMode::Restore);
 
   // Game client must support serialization
   if (memorySize == 0)

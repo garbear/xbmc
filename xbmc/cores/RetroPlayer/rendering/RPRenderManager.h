@@ -111,7 +111,7 @@ public:
   // Hardware rendering functions
   bool Create(unsigned int width, unsigned int height);
   uintptr_t GetCurrentFramebuffer(unsigned int width, unsigned int height);
-  void RenderFrame(unsigned int width, unsigned int height);
+  void RenderFrame(unsigned int width, unsigned int height, float displayAspectRatio);
 
   /*!
    * \brief Release the framebuffer the game client renders into
@@ -227,6 +227,7 @@ private:
   CRenderVideoSettings GetEffectiveSettings(const IGUIRenderSettings* settings) const;
 
   void CheckFlush();
+  void DestroyContextInternal();
 
   /*!
    * \brief True if the game client renders its own frames on the GPU

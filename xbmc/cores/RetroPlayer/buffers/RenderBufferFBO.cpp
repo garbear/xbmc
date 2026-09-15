@@ -25,14 +25,13 @@
 using namespace KODI;
 using namespace RETRO;
 
-CRenderBufferFBO::CRenderBufferFBO(CRenderContext& context,
-                                   bool depth,
-                                   bool stencil,
-                                   bool bottomLeftOrigin)
+CRenderBufferFBO::CRenderBufferFBO(
+    CRenderContext& context, bool depth, bool stencil, bool bottomLeftOrigin, Type type)
   : m_context(context),
     m_depth(depth),
     m_stencil(stencil),
-    m_bottomLeftOrigin(bottomLeftOrigin)
+    m_bottomLeftOrigin(bottomLeftOrigin),
+    m_type(type)
 {
 }
 
@@ -82,7 +81,9 @@ bool CRenderBufferFBO::Allocate(AVPixelFormat format, unsigned int width, unsign
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+  // RGB capture alpha is one for both texture sampling and framebuffer blits.
+  glTexImage2D(GL_TEXTURE_2D, 0, IsCapture() ? GL_RGB8 : GL_RGBA8, width, height, 0,
+               IsCapture() ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
   if (m_depth)
   {

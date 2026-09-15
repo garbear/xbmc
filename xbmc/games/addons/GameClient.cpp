@@ -218,6 +218,7 @@ bool CGameClient::Initialize(void)
   m_ifc.game->toKodi->GetPlaybackSpeed = cb_get_playback_speed;
   m_ifc.game->toKodi->SetGameTiming = cb_set_game_timing;
   m_ifc.game->toKodi->OpenStream = cb_open_stream;
+  m_ifc.game->toKodi->StartStream = cb_start_stream;
   m_ifc.game->toKodi->GetStreamBuffer = cb_get_stream_buffer;
   m_ifc.game->toKodi->AddStreamData = cb_add_stream_data;
   m_ifc.game->toKodi->ReleaseStreamBuffer = cb_release_stream_buffer;
@@ -592,8 +593,7 @@ void CGameClient::NotifyError(GAME_ERROR error)
   if (error == GAME_ERROR_RESTRICTED)
     missingResource = GetMissingResource();
 
-  // Check if hardware rendering was attempted
-  if (Streams().HardwareRenderingAttempted())
+  if (Streams().HardwareRenderingRefused())
   {
     const std::string& wanted = Streams().HardwareRenderingRefusedWanted();
     const std::string& available = Streams().HardwareRenderingRefusedAvailable();
@@ -601,7 +601,6 @@ void CGameClient::NotifyError(GAME_ERROR error)
     if (!wanted.empty() && !available.empty())
     {
       // Failed to play game
-      // This game renders with {0:s}, but this system only provides {1:s}. ...
       MESSAGING::HELPERS::ShowOKDialogText(
           CVariant{35210},
           CVariant{StringUtils::Format(
@@ -611,7 +610,6 @@ void CGameClient::NotifyError(GAME_ERROR error)
     else if (!wanted.empty())
     {
       // Failed to play game
-      // This game renders with {0:s}, which isn't available on this display. ...
       MESSAGING::HELPERS::ShowOKDialogText(
           CVariant{35210},
           CVariant{StringUtils::Format(
@@ -793,12 +791,12 @@ void CGameClient::RunFrame(bool pollInput)
   }
 }
 
-size_t CGameClient::GetSerializeSize() const
+size_t CGameClient::GetSerializeSize(SerializeSizeMode mode) const
 {
   std::unique_lock lock(m_critSection);
 
   // A zero size during boot may become usable after another frame.
-  if (m_serializeSize == 0 && m_bIsPlaying && m_hasFrameRun)
+  if (m_serializeSize == 0 && m_bIsPlaying && (m_hasFrameRun || mode == SerializeSizeMode::Restore))
   {
     try
     {
@@ -1169,6 +1167,13 @@ KODI_GAME_STREAM_HANDLE CGameClient::cb_open_stream(KODI_HANDLE kodiInstance,
     return nullptr;
 
   return gameClient->Streams().OpenStream(*properties);
+}
+
+bool CGameClient::cb_start_stream(KODI_HANDLE kodiInstance, KODI_GAME_STREAM_HANDLE stream)
+{
+  auto* gameClient = static_cast<CGameClient*>(kodiInstance);
+  return gameClient != nullptr &&
+         gameClient->Streams().StartStream(static_cast<IGameClientStream*>(stream));
 }
 
 bool CGameClient::cb_get_stream_buffer(KODI_HANDLE kodiInstance,

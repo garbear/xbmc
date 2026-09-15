@@ -10,7 +10,9 @@
 #include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
 #include "cores/RetroPlayer/playback/test/PlaybackTestEnvironment.h"
 #include "cores/RetroPlayer/rendering/VideoRenderers/RPBaseRenderer.h"
+#include "cores/RetroPlayer/streams/RetroPlayerRendering.h"
 #include "cores/RetroPlayer/streams/RetroPlayerVideo.h"
+#include "games/addons/streams/GameClientStreamHwFramebuffer.h"
 
 #include <functional>
 #include <future>
@@ -66,7 +68,7 @@ public:
   bool CreateContext(const HwContextProperties&) override
   {
     ++creates;
-    return true;
+    return createSucceeds;
   }
   bool BeginClientFrame() override
   {
@@ -91,6 +93,7 @@ public:
   unsigned int captures{0};
   bool failCapture{false};
   bool hardware{false};
+  bool createSucceeds{true};
   bool bindSucceeds{true};
   unsigned int creates{0};
   unsigned int begins{0};
@@ -119,6 +122,13 @@ public:
 
 protected:
   void RenderInternal(bool, uint8_t) override {}
+};
+
+class CTestHardwareCallback : public KODI::GAME::IHwFramebufferCallback
+{
+public:
+  bool HardwareContextReset() override { return true; }
+  void HardwareContextDestroy() override {}
 };
 
 class CTestRendererFactory : public IRendererFactory
@@ -355,12 +365,12 @@ TEST_F(TestRPRenderManager, CapturedFrameOwnsOneReferenceAndCanRemainInUse)
   ASSERT_TRUE(manager.BeginClientFrame());
   ASSERT_TRUE(manager.CreateContext({}));
   ASSERT_TRUE(manager.Create(1024, 768));
-  manager.RenderFrame(320, 240);
+  manager.RenderFrame(320, 240, 0.0f);
   auto* previous = m_pool->captured;
   ASSERT_NE(previous, nullptr);
   EXPECT_EQ(previous->References(), 1);
   previous->Acquire();
-  manager.RenderFrame(640, 400);
+  manager.RenderFrame(640, 400, 0.0f);
   EXPECT_NE(m_pool->captured, previous);
   EXPECT_EQ(previous->References(), 1);
   EXPECT_EQ(previous->GetWidth(), 320);
@@ -377,18 +387,61 @@ TEST_F(TestRPRenderManager, InvalidAndFailedCapturesKeepPreviousPublication)
   ASSERT_TRUE(manager.BeginClientFrame());
   ASSERT_TRUE(manager.CreateContext({}));
   ASSERT_TRUE(manager.Create(1024, 768));
-  manager.RenderFrame(640, 400);
+  manager.RenderFrame(640, 400, 0.0f);
   auto* previous = m_pool->captured;
   ASSERT_NE(previous, nullptr);
-  manager.RenderFrame(0, 400);
-  manager.RenderFrame(1280, 720);
+  manager.RenderFrame(0, 400, 0.0f);
+  manager.RenderFrame(1280, 720, 0.0f);
   EXPECT_EQ(m_pool->captures, 1);
   m_pool->failCapture = true;
-  manager.RenderFrame(1024, 768);
+  manager.RenderFrame(1024, 768, 0.0f);
   EXPECT_EQ(previous->References(), 1);
   EXPECT_FALSE(m_pool->clientBuffer->IsLoaded());
   manager.EndClientFrame();
   manager.DestroyContext();
+}
+
+TEST_F(TestRPRenderManager, HardwareStreamPreservesNominalAndCurrentDisplayAspectRatio)
+{
+  auto& manager = m_environment.Renderer();
+  m_pool->hardware = true;
+  manager.Initialize();
+  CRetroPlayerRendering rendering(manager, m_environment.ProcessInfo());
+  CTestHardwareCallback callback;
+  game_hw_rendering_properties context{};
+  context.context_type = GAME_HW_CONTEXT_OPENGL;
+  KODI::GAME::CGameClientStreamHwFramebuffer stream(callback, context);
+  game_stream_properties properties{};
+  properties.type = GAME_STREAM_HW_FRAMEBUFFER;
+  properties.hw_framebuffer.max_width = 320;
+  properties.hw_framebuffer.max_height = 240;
+  properties.hw_framebuffer.nominal_display_aspect_ratio = 16.0f / 9.0f;
+  ASSERT_TRUE(stream.OpenStream(&rendering, properties));
+  EXPECT_FLOAT_EQ(manager.GetNominalDisplayAspectRatio(), 16.0f / 9.0f);
+
+  game_stream_buffer buffer{};
+  buffer.type = GAME_STREAM_HW_FRAMEBUFFER;
+  ASSERT_TRUE(stream.GetBuffer(320, 240, buffer));
+  ASSERT_TRUE(manager.BeginClientFrame());
+  game_stream_packet packet{};
+  packet.type = GAME_STREAM_HW_FRAMEBUFFER;
+  packet.hw_framebuffer.framebuffer = buffer.hw_framebuffer.framebuffer;
+  packet.hw_framebuffer.width = 320;
+  packet.hw_framebuffer.height = 240;
+  packet.hw_framebuffer.display_aspect_ratio = 1.5f;
+  stream.AddData(packet);
+  ASSERT_NE(m_pool->captured, nullptr);
+  EXPECT_EQ(m_pool->captured->GetWidth(), 320);
+  EXPECT_EQ(m_pool->captured->GetHeight(), 240);
+  EXPECT_FLOAT_EQ(m_pool->captured->GetDisplayAspectRatio(), 1.5f);
+
+  packet.hw_framebuffer.display_aspect_ratio = 0.0f;
+  stream.AddData(packet);
+  ASSERT_NE(m_pool->captured, nullptr);
+  EXPECT_FLOAT_EQ(m_pool->captured->GetDisplayAspectRatio(), 0.0f);
+  EXPECT_FLOAT_EQ(manager.GetNominalDisplayAspectRatio(), 16.0f / 9.0f);
+  manager.EndClientFrame();
+  stream.CloseStream();
 }
 
 TEST_F(TestRPRenderManager, StreamClosureKeepsContextUntilClientCallReturns)
@@ -409,6 +462,77 @@ TEST_F(TestRPRenderManager, StreamClosureKeepsContextUntilClientCallReturns)
   EXPECT_TRUE(manager.CreateContext({}));
   manager.DestroyContext();
   EXPECT_EQ(m_pool->destroys, 2);
+}
+
+TEST_F(TestRPRenderManager, ReopenReplacesPendingContextInsideClientCall)
+{
+  auto& manager = m_environment.Renderer();
+  m_pool->hardware = true;
+  ASSERT_TRUE(manager.BeginClientFrame());
+  ASSERT_TRUE(manager.BeginClientFrame());
+  EXPECT_TRUE(manager.CreateContext({}));
+  manager.DestroyContext();
+  EXPECT_EQ(m_pool->destroys, 0U);
+
+  EXPECT_TRUE(manager.CreateContext({}));
+  EXPECT_EQ(m_pool->creates, 2U);
+  EXPECT_EQ(m_pool->destroys, 1U);
+  EXPECT_EQ(m_pool->begins, 2U);
+  EXPECT_EQ(m_pool->ends, 1U);
+  manager.EndClientFrame();
+  EXPECT_EQ(m_pool->ends, 1U);
+  manager.EndClientFrame();
+  EXPECT_EQ(m_pool->ends, 2U);
+  EXPECT_EQ(m_pool->destroys, 1U);
+  EXPECT_FALSE(manager.CreateContext({}));
+  manager.DestroyContext();
+  EXPECT_EQ(m_pool->destroys, 2U);
+}
+
+TEST_F(TestRPRenderManager, FailedReplacementCreationReleasesPendingContext)
+{
+  auto& manager = m_environment.Renderer();
+  m_pool->hardware = true;
+  ASSERT_TRUE(manager.BeginClientFrame());
+  EXPECT_TRUE(manager.CreateContext({}));
+  manager.DestroyContext();
+  m_pool->createSucceeds = false;
+  EXPECT_FALSE(manager.CreateContext({}));
+  EXPECT_EQ(m_pool->creates, 2U);
+  EXPECT_EQ(m_pool->destroys, 2U);
+  EXPECT_EQ(m_pool->begins, 1U);
+  EXPECT_EQ(m_pool->ends, 1U);
+  manager.EndClientFrame();
+  EXPECT_EQ(m_pool->ends, 1U);
+  EXPECT_EQ(m_pool->destroys, 2U);
+
+  m_pool->createSucceeds = true;
+  EXPECT_TRUE(manager.CreateContext({}));
+  manager.DestroyContext();
+  EXPECT_EQ(m_pool->destroys, 3U);
+}
+
+TEST_F(TestRPRenderManager, FailedReplacementBindAllowsAnotherOpenInsideClientCall)
+{
+  auto& manager = m_environment.Renderer();
+  m_pool->hardware = true;
+  ASSERT_TRUE(manager.BeginClientFrame());
+  EXPECT_TRUE(manager.CreateContext({}));
+  manager.DestroyContext();
+  m_pool->bindSucceeds = false;
+  EXPECT_FALSE(manager.CreateContext({}));
+  EXPECT_EQ(m_pool->destroys, 2U);
+  EXPECT_EQ(m_pool->begins, 2U);
+  EXPECT_EQ(m_pool->ends, 1U);
+
+  m_pool->bindSucceeds = true;
+  EXPECT_TRUE(manager.CreateContext({}));
+  EXPECT_EQ(m_pool->begins, 3U);
+  manager.EndClientFrame();
+  EXPECT_EQ(m_pool->ends, 2U);
+  EXPECT_EQ(m_pool->destroys, 2U);
+  manager.DestroyContext();
+  EXPECT_EQ(m_pool->destroys, 3U);
 }
 
 TEST_F(TestRPRenderManager, AllocationExceptionBalancesNestedScope)

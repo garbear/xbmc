@@ -74,8 +74,7 @@ IGameClientStream* CGameClientStreams::OpenStream(const game_stream_properties& 
               static_cast<int>(retroStreamType));
     if (properties.type == GAME_STREAM_HW_FRAMEBUFFER)
     {
-      m_hwRefusedWanted = CGameClientStreamHwFramebuffer::GetContextName(
-          m_hwProperties.context_type, m_hwProperties.version_major, m_hwProperties.version_minor);
+      RecordHardwareRenderingFailure(m_hwProperties);
       m_hwProperties = {};
     }
     return nullptr;
@@ -88,16 +87,45 @@ IGameClientStream* CGameClientStreams::OpenStream(const game_stream_properties& 
     m_streamManager->CloseStream(std::move(retroStream));
     if (properties.type == GAME_STREAM_HW_FRAMEBUFFER)
     {
-      m_hwRefusedWanted = CGameClientStreamHwFramebuffer::GetContextName(
-          m_hwProperties.context_type, m_hwProperties.version_major, m_hwProperties.version_minor);
+      RecordHardwareRenderingFailure(m_hwProperties);
       m_hwProperties = {};
     }
     return nullptr;
   }
 
-  m_streams[gameStream.get()] = std::move(retroStream);
+  IGameClientStream* handle = gameStream.get();
+  m_streams.emplace(handle, StreamEntry{std::move(gameStream), std::move(retroStream)});
+  if (properties.type == GAME_STREAM_VIDEO || properties.type == GAME_STREAM_SW_FRAMEBUFFER)
+  {
+    m_hwRefusedWanted.clear();
+    m_hwRefusedAvailable.clear();
+  }
 
-  return gameStream.release();
+  return handle;
+}
+
+bool CGameClientStreams::StartStream(IGameClientStream* stream)
+{
+  const auto it = m_streams.find(stream);
+  if (it == m_streams.end())
+    return false;
+
+  // Reset can close or replace the stream through the add-on callbacks.
+  const std::shared_ptr<IGameClientStream> streamHolder = it->second.gameStream;
+  if (auto* hwStream = dynamic_cast<CGameClientStreamHwFramebuffer*>(stream))
+  {
+    const bool ready = hwStream->ResetHwContext();
+    if (m_streams.find(stream) == m_streams.end())
+      return false;
+    if (!ready)
+    {
+      RecordHardwareRenderingFailure(m_hwProperties);
+      return false;
+    }
+    m_hwRefusedWanted.clear();
+    m_hwRefusedAvailable.clear();
+  }
+  return true;
 }
 
 void CGameClientStreams::CloseStream(IGameClientStream* stream)
@@ -106,8 +134,8 @@ void CGameClientStreams::CloseStream(IGameClientStream* stream)
   if (it == m_streams.end())
     return;
 
-  std::unique_ptr<IGameClientStream> streamHolder(stream);
-  RETRO::StreamPtr retroStream = std::move(it->second);
+  std::shared_ptr<IGameClientStream> streamHolder = std::move(it->second.gameStream);
+  RETRO::StreamPtr retroStream = std::move(it->second.retroStream);
   m_streams.erase(it);
 
   streamHolder->CloseStream();
@@ -151,8 +179,7 @@ bool CGameClientStreams::EnableHardwareRendering(const game_hw_rendering_propert
   if (m_streamManager == nullptr || !m_streamManager->HasHardwareRendering())
   {
     CLog::Log(LOGERROR, "GAME: {} is not available on this display stack", wanted);
-    m_hwRefusedWanted = wanted;
-    m_hwRefusedAvailable.clear();
+    RecordHardwareRenderingFailure(properties);
     return false;
   }
 
@@ -174,8 +201,7 @@ bool CGameClientStreams::EnableHardwareRendering(const game_hw_rendering_propert
     // accepted, so a refusal here is the ordinary path. The refusal is recorded,
     // and if nothing is accepted the client tells the user which API it wanted.
     CLog::Log(LOGDEBUG, "GAME: Client asked for {}, which this build does not provide", wanted);
-    m_hwRefusedWanted = wanted;
-    m_hwRefusedAvailable.clear();
+    RecordHardwareRenderingFailure(properties);
     return false;
   }
 
@@ -183,8 +209,7 @@ bool CGameClientStreams::EnableHardwareRendering(const game_hw_rendering_propert
        properties.context_type == GAME_HW_CONTEXT_OPENGLES_VERSION) &&
       properties.version_major == 0)
   {
-    m_hwRefusedWanted = wanted;
-    m_hwRefusedAvailable.clear();
+    RecordHardwareRenderingFailure(properties);
     return false;
   }
 
@@ -199,6 +224,22 @@ bool CGameClientStreams::EnableHardwareRendering(const game_hw_rendering_propert
   m_hwRefusedAvailable.clear();
 
   return true;
+}
+
+void CGameClientStreams::RecordHardwareRenderingFailure(
+    const game_hw_rendering_properties& properties)
+{
+  m_hwRefusedWanted = CGameClientStreamHwFramebuffer::GetContextName(
+      properties.context_type, properties.version_major, properties.version_minor);
+  m_hwRefusedAvailable.clear();
+  if (m_streamManager != nullptr && m_streamManager->HasHardwareRendering())
+  {
+#if defined(HAS_GLES) && HAS_GLES >= 3
+    m_hwRefusedAvailable = "OpenGL ES 3+";
+#elif defined(HAS_GL)
+    m_hwRefusedAvailable = "OpenGL";
+#endif
+  }
 }
 
 bool CGameClientStreams::BeginClientFrame()
