@@ -712,6 +712,13 @@ void CRPRendererFBO::Render(uint8_t alpha)
               (colour[3] / 255.0f));
 
   glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, 0);
+  if (!m_loggedHardwarePresentation)
+  {
+    CLog::Log(LOGDEBUG,
+              "RetroPlayer[RENDER]: First hardware frame presented from shared texture {}",
+              drawTexture);
+    m_loggedHardwarePresentation = true;
+  }
 
   glDisableVertexAttribArray(vertLoc);
   glDisableVertexAttribArray(loc);

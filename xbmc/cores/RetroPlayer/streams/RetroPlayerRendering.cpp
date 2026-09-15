@@ -63,6 +63,7 @@ bool CRetroPlayerRendering::OpenStream(const StreamProperties& properties)
   }
 
   m_bOpen = true;
+  m_loggedHardwareFrame = false;
 
   // Configure and allocate the framebuffer now, at the largest size the client
   // says it will render. Clients typically ask for their framebuffer from
@@ -228,5 +229,13 @@ void CRetroPlayerRendering::AddStreamData(const StreamPacket& packet)
       hwPacket.height <= m_height &&
       hwPacket.framebuffer ==
           m_renderManager.GetCurrentFramebuffer(hwPacket.width, hwPacket.height))
+  {
+    if (!m_loggedHardwareFrame)
+    {
+      CLog::Log(LOGDEBUG, "RetroPlayer[RENDERING]: First hardware frame submitted: FBO {} ({}x{})",
+                hwPacket.framebuffer, hwPacket.width, hwPacket.height);
+      m_loggedHardwareFrame = true;
+    }
     m_renderManager.RenderFrame(hwPacket.width, hwPacket.height, hwPacket.displayAspectRatio);
+  }
 }
