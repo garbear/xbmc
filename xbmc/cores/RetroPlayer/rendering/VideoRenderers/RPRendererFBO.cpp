@@ -18,6 +18,7 @@
 #include "cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h"
 #include "cores/RetroPlayer/shaders/gles/ShaderTextureGLES.h"
 #include "cores/RetroPlayer/shaders/gles/ShaderTextureGLESRef.h"
+#include "rendering/RenderSystem.h"
 #else
 #include "cores/RetroPlayer/shaders/gl/ShaderPresetGL.h"
 #include "cores/RetroPlayer/shaders/gl/ShaderTextureGL.h"
@@ -45,10 +46,11 @@ namespace
 class CFramebufferState
 {
 public:
-  CFramebufferState()
+  explicit CFramebufferState(bool separateBindings) : m_separateBindings(separateBindings)
   {
-    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &m_readFbo);
-    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &m_drawFbo);
+    if (m_separateBindings)
+      glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &m_readFbo);
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_drawFbo);
     glGetIntegerv(GL_VIEWPORT, m_viewport);
     glGetIntegerv(GL_SCISSOR_BOX, m_scissorBox);
     m_scissorEnabled = glIsEnabled(GL_SCISSOR_TEST);
@@ -62,8 +64,13 @@ public:
 
   ~CFramebufferState()
   {
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_readFbo);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_drawFbo);
+    if (m_separateBindings)
+    {
+      glBindFramebuffer(GL_READ_FRAMEBUFFER, m_readFbo);
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_drawFbo);
+    }
+    else
+      glBindFramebuffer(GL_FRAMEBUFFER, m_drawFbo);
     glViewport(m_viewport[0], m_viewport[1], m_viewport[2], m_viewport[3]);
     glScissor(m_scissorBox[0], m_scissorBox[1], m_scissorBox[2], m_scissorBox[3]);
     if (m_scissorEnabled)
@@ -79,6 +86,7 @@ public:
   }
 
 private:
+  const bool m_separateBindings;
   GLint m_readFbo{};
   GLint m_drawFbo{};
   GLint m_viewport[4]{};
@@ -116,6 +124,10 @@ CRPRendererFBO::CRPRendererFBO(const CRenderSettings& renderSettings,
 {
   m_clearColour = m_context.UseLimitedColor() ? (16.0f / 255.0f) : 0.0f;
 #if defined(HAS_GLES)
+  unsigned int major = 0, minor = 0;
+  if (auto* rendering = m_context.Rendering())
+    rendering->GetRenderVersion(major, minor);
+  m_guiSupportsGL3 = major >= 3;
   m_shaderPreset = std::make_unique<SHADER::CShaderPresetGLES>(m_context);
 #else
   m_shaderPreset = std::make_unique<SHADER::CShaderPresetGL>(m_context);
@@ -144,8 +156,9 @@ void CRPRendererFBO::RenderInternal(bool clear, uint8_t alpha)
 {
   GLint program;
   GLint arrayBuffer;
-  GLint unpackBuffer;
-  GLint vertexArray;
+  GLint unpackBuffer = 0;
+  GLint vertexArray = 0;
+  GLint elementBuffer = 0;
   GLint texture;
   GLint blendSrcRGB;
   GLint blendDstRGB;
@@ -154,19 +167,26 @@ void CRPRendererFBO::RenderInternal(bool clear, uint8_t alpha)
   GLfloat clearColour[4];
   glGetIntegerv(GL_CURRENT_PROGRAM, &program);
   glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &arrayBuffer);
-  glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &unpackBuffer);
-  glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vertexArray);
+  if (m_guiSupportsGL3)
+  {
+    glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &unpackBuffer);
+    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vertexArray);
+  }
+  else
+    glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &elementBuffer);
   glGetIntegerv(GL_TEXTURE_BINDING_2D, &texture);
   glGetIntegerv(GL_BLEND_SRC_RGB, &blendSrcRGB);
   glGetIntegerv(GL_BLEND_DST_RGB, &blendDstRGB);
   glGetIntegerv(GL_BLEND_SRC_ALPHA, &blendSrcAlpha);
   glGetIntegerv(GL_BLEND_DST_ALPHA, &blendDstAlpha);
   glGetFloatv(GL_COLOR_CLEAR_VALUE, clearColour);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-
-  if (m_vao == 0)
-    glGenVertexArrays(1, &m_vao);
-  glBindVertexArray(m_vao);
+  if (m_guiSupportsGL3)
+  {
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    if (m_vao == 0)
+      glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
+  }
 
   if (clear)
   {
@@ -179,9 +199,14 @@ void CRPRendererFBO::RenderInternal(bool clear, uint8_t alpha)
   Render(alpha);
 
   glUseProgram(program);
-  glBindVertexArray(vertexArray);
+  if (m_guiSupportsGL3)
+  {
+    glBindVertexArray(vertexArray);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
+  }
+  else
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texture);
   glBlendFuncSeparate(blendSrcRGB, blendDstRGB, blendSrcAlpha, blendDstAlpha);
@@ -316,7 +341,8 @@ void CRPRendererFBO::DrawBlackBars()
     count += 6;
   }
 
-  glBindVertexArray(m_vao);
+  if (m_guiSupportsGL3)
+    glBindVertexArray(m_vao);
 
   GLuint vertexVBO;
   glGenBuffers(1, &vertexVBO);
@@ -384,7 +410,8 @@ void CRPRendererFBO::Render(uint8_t alpha)
   GLuint drawTexture = renderBuffer->TextureID();
   bool bShaded = false;
 
-  glBindVertexArray(m_vao);
+  if (m_guiSupportsGL3)
+    glBindVertexArray(m_vao);
   Updateshaders();
 
   {
@@ -401,7 +428,7 @@ void CRPRendererFBO::Render(uint8_t alpha)
 
   if (m_bUseShaderPreset && !m_shaderPreset->GetPasses().empty())
   {
-    const CFramebufferState framebufferState;
+    const CFramebufferState framebufferState(m_guiSupportsGL3);
     const CSize destSize = CRenderGeometryFBO::GetShaderOutputSize(
         m_sourceRect, renderBuffer->GetWidth(), renderBuffer->GetHeight(), m_rotatedDestCoords);
     GLint maxTextureSize;
@@ -425,8 +452,10 @@ void CRPRendererFBO::Render(uint8_t alpha)
     {
       glActiveTexture(GL_TEXTURE0);
 #if defined(HAS_GLES)
+      // RGB keeps filter output opaque without requiring ES3 texture swizzles.
+      const GLenum format = m_guiSupportsGL3 ? GL_RGBA : GL_RGB;
       auto targetTexture = std::make_shared<SHADER::CShaderTextureGLES>(
-          destWidth, destHeight, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA, false);
+          destWidth, destHeight, GL_UNSIGNED_BYTE, format, format, false);
 #else
       auto targetTexture = std::make_shared<SHADER::CShaderTextureGL>(
           destWidth, destHeight, GL_UNSIGNED_BYTE, GL_RGBA8, GL_BGRA, false);
@@ -435,7 +464,7 @@ void CRPRendererFBO::Render(uint8_t alpha)
       if (targetTexture->BindFBO())
       {
         GLint targetFbo;
-        glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &targetFbo);
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &targetFbo);
         targetTexture->UnbindFBO();
         if (targetFbo != 0)
         {
@@ -552,7 +581,8 @@ void CRPRendererFBO::Render(uint8_t alpha)
   vertex[1].u1 = vertex[2].u1 = rect.x2;
   vertex[2].v1 = vertex[3].v1 = rect.y2;
 
-  glBindVertexArray(m_vao);
+  if (m_guiSupportsGL3)
+    glBindVertexArray(m_vao);
 
   GLuint vertexVBO;
   glGenBuffers(1, &vertexVBO);

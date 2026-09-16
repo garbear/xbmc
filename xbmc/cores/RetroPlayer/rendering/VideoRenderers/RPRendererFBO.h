@@ -117,6 +117,7 @@ protected:
 
   //! \brief Isolates vertex attributes and index bindings from the GUI
   GLuint m_vao{0};
+  bool m_guiSupportsGL3{true};
 
   std::shared_ptr<SHADER::IShaderTexture> m_shaderTargetTexture;
 

@@ -123,19 +123,21 @@ bool CHwRenderingContextEGL::SupportsHardwareRendering() const
     return false;
 
   auto* renderSystem = m_context.Rendering();
-  if (!renderSystem || winSystem->GetEGLDisplay() == EGL_NO_DISPLAY)
+  if (!renderSystem || winSystem->GetEGLDisplay() == EGL_NO_DISPLAY ||
+      winSystem->GetEGLContext() == EGL_NO_CONTEXT)
     return false;
   const EGLDisplay display = winSystem->GetEGLDisplay();
-  if (!SupportsEGLHardwareRendering(eglQueryString(display, EGL_VERSION),
-                                    eglQueryString(display, EGL_EXTENSIONS)))
-    return false;
   unsigned int major = 0, minor = 0;
   renderSystem->GetRenderVersion(major, minor);
 #if defined(HAS_GLES)
-  return major >= 3;
+  constexpr bool embedded = true;
 #else
-  return major > 3 || (major == 3 && minor >= 2);
+  constexpr bool embedded = false;
 #endif
+  // EGL validates the separate client's version and share group in Create().
+  return SupportsEGLHardwareRendering(eglQueryString(display, EGL_VERSION),
+                                      eglQueryString(display, EGL_EXTENSIONS), embedded, major,
+                                      minor);
 }
 
 bool CHwRenderingContextEGL::Create(const HwContextProperties& properties)
@@ -252,6 +254,7 @@ bool CHwRenderingContextEGL::Create(const HwContextProperties& properties)
     if (major != 0)
       contextName += StringUtils::Format(" {}.{}", major, minor);
 
+    // Different ES versions/configs may share; EGL rejects incompatible share groups.
     m_eglContext = eglCreateContext(m_eglDisplay, m_eglConfig, winSystem->GetEGLContext(),
                                     contextAttribs.data());
     if (m_eglContext != EGL_NO_CONTEXT)
@@ -347,12 +350,16 @@ void CHwRenderingContextEGL::Destroy()
     return;
   if (!eglDestroyContext(m_eglDisplay, m_eglContext))
   {
-    CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Failed to destroy EGL context (error {:#x})",
+    CLog::Log(LOGERROR,
+              "RetroPlayer[RENDER]: Abandoning EGL context after destruction failed (error {:#x})",
               eglGetError());
-    return;
   }
   m_eglContext = EGL_NO_CONTEXT;
   m_eglDisplay = EGL_NO_DISPLAY;
+  m_eglConfig = {};
+  m_prevContext = EGL_NO_CONTEXT;
+  m_prevDisplay = EGL_NO_DISPLAY;
+  m_prevDraw = m_prevRead = EGL_NO_SURFACE;
 }
 
 std::unique_ptr<IHwRenderingContext> KODI::RETRO::CreateHwRenderingContextEGL(

@@ -12,6 +12,25 @@
 
 using namespace KODI::RETRO;
 
+TEST(TestHwRenderingContextEGL, ES2GuiCanAttemptSeparateES3Client)
+{
+  EXPECT_TRUE(SupportsEGLHardwareRendering("1.5", nullptr, true, 2, 0));
+  EXPECT_TRUE(SupportsEGLHardwareRendering(
+      "1.4", "EGL_KHR_surfaceless_context EGL_KHR_create_context", true, 2, 0));
+  EXPECT_TRUE(SupportsEGLHardwareRendering("1.5", nullptr, true, 3, 0));
+  EXPECT_FALSE(SupportsEGLHardwareRendering("1.4", nullptr, true, 2, 0));
+  EXPECT_FALSE(SupportsEGLHardwareRendering("1.3", nullptr, true, 3, 0));
+  EXPECT_FALSE(SupportsEGLHardwareRendering(nullptr, nullptr, true, 3, 0));
+}
+
+TEST(TestHwRenderingContextEGL, DesktopGuiRequirementsAreUnchanged)
+{
+  EXPECT_FALSE(SupportsEGLHardwareRendering("1.5", nullptr, false, 2, 0));
+  EXPECT_FALSE(SupportsEGLHardwareRendering("1.5", nullptr, false, 3, 1));
+  EXPECT_TRUE(SupportsEGLHardwareRendering("1.5", nullptr, false, 3, 2));
+  EXPECT_TRUE(SupportsEGLHardwareRendering("1.5", nullptr, false, 4, 1));
+}
+
 TEST(TestHwRenderingContextEGL, EGL14RequiresBothExtensions)
 {
   EXPECT_FALSE(

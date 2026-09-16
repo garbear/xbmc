@@ -11,6 +11,7 @@
 #include "cores/RetroPlayer/rendering/contexts/IHwRenderingContext.h"
 
 #if defined(TARGET_DARWIN_OSX) && defined(HAS_GL)
+#include "cores/RetroPlayer/buffers/RenderBufferManager.h"
 #include "cores/RetroPlayer/buffers/RenderBufferPoolFBO.h"
 #include "cores/RetroPlayer/playback/test/PlaybackTestEnvironment.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
@@ -18,6 +19,8 @@
 #include "cores/RetroPlayer/shaders/gl/ShaderPresetGL.h"
 #include "cores/RetroPlayer/shaders/gl/ShaderTextureGL.h"
 #include "cores/RetroPlayer/shaders/gl/ShaderTextureGLRef.h"
+#include "cores/RetroPlayer/streams/RetroPlayerRendering.h"
+#include "games/addons/streams/GameClientStreamHwFramebuffer.h"
 #include "rendering/MatrixGL.h"
 #include "rendering/gl/RenderSystemGL.h"
 #include "settings/DisplaySettings.h"
@@ -295,6 +298,43 @@ struct CReleaseRenderBuffer
   void operator()(IRenderBuffer* buffer) const { buffer->Release(); }
 };
 using FBOBufferPtr = std::unique_ptr<CRenderBufferFBO, CReleaseRenderBuffer>;
+
+class CControlledContext : public IHwRenderingContext
+{
+public:
+  explicit CControlledContext(std::unique_ptr<IHwRenderingContext> context)
+    : m_context(std::move(context))
+  {
+  }
+  bool SupportsHardwareRendering() const override { return m_context->SupportsHardwareRendering(); }
+  bool Create(const HwContextProperties& properties) override
+  {
+    return m_context->Create(properties);
+  }
+  bool IsCreated() const override { return m_context->IsCreated(); }
+  bool MakeCurrent() override
+  {
+    ++binds;
+    return !failBind && m_context->MakeCurrent();
+  }
+  void RestoreCurrent() override
+  {
+    ++restores;
+    m_context->RestoreCurrent();
+  }
+  void Destroy() override
+  {
+    ++destroys;
+    m_context->Destroy();
+  }
+  bool failBind{false};
+  unsigned int binds{0};
+  unsigned int restores{0};
+  unsigned int destroys{0};
+
+private:
+  std::unique_ptr<IHwRenderingContext> m_context;
+};
 } // namespace
 
 class TestRenderBufferPoolFBOOSX : public TestHwRenderingContextOSX
@@ -307,8 +347,10 @@ protected:
       return;
 
     m_environment = std::make_unique<CPlaybackTestEnvironment>();
+    auto context = std::make_unique<CControlledContext>(CreateHwRenderingContextOSX(m_guiContext));
+    m_native = context.get();
     m_pool = std::make_shared<CRenderBufferPoolFBO>(m_environment->ProcessInfo().GetRenderContext(),
-                                                    CreateHwRenderingContextOSX(m_guiContext));
+                                                    std::move(context));
     ASSERT_TRUE(m_pool->SupportsHardwareRendering());
     ASSERT_TRUE(m_pool->CreateContext({}));
     ASSERT_TRUE(m_pool->Configure(AV_PIX_FMT_NONE));
@@ -336,7 +378,150 @@ protected:
 
   std::unique_ptr<CPlaybackTestEnvironment> m_environment;
   std::shared_ptr<CRenderBufferPoolFBO> m_pool;
+  CControlledContext* m_native{nullptr};
 };
+
+TEST_F(TestRenderBufferPoolFBOOSX, LostContextRetiresSurvivingBuffersAndAllowsRepeatedRecovery)
+{
+  for (unsigned int cycle = 0; cycle < 3; ++cycle)
+  {
+    ASSERT_TRUE(m_pool->BeginClientFrame());
+    auto client = GetClient(4, 4);
+    ASSERT_NE(client, nullptr);
+    auto captured = Capture(client.get(), 4, 4);
+    ASSERT_NE(captured, nullptr);
+    auto freeCapture = Capture(client.get(), 4, 4);
+    ASSERT_NE(freeCapture, nullptr);
+    freeCapture.reset();
+    m_pool->EndClientFrame();
+    captured->WaitForCapture();
+    captured->FinishRender();
+    const GLuint texture = captured->TextureID();
+    const GLuint clientTexture = client->TextureID();
+    const auto restores = m_native->restores;
+    const auto destroys = m_native->destroys;
+
+    m_native->failBind = true;
+    EXPECT_FALSE(m_pool->BeginClientFrame());
+    m_pool->DestroyContext();
+    EXPECT_FALSE(m_native->IsCreated());
+    EXPECT_EQ(m_native->destroys, destroys + 1);
+    EXPECT_EQ(m_native->restores, restores);
+    EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+    EXPECT_EQ(client->GetCurrentFramebuffer(), 0);
+    EXPECT_EQ(captured->TextureID(), 0);
+    EXPECT_FALSE(client->Allocate(AV_PIX_FMT_NONE, 8, 8));
+    EXPECT_FALSE(captured->SetReady());
+    captured->WaitForCapture();
+    captured->FinishRender();
+    EXPECT_TRUE(glIsTexture(texture));
+    EXPECT_TRUE(glIsTexture(clientTexture));
+    m_pool->DestroyContext();
+    EXPECT_EQ(m_native->destroys, destroys + 1);
+
+    m_native->failBind = false;
+    ASSERT_TRUE(m_pool->CreateContext({}));
+    ASSERT_TRUE(m_pool->Configure(AV_PIX_FMT_NONE));
+    ASSERT_TRUE(m_pool->BeginClientFrame());
+    auto next = GetClient(4, 4);
+    ASSERT_NE(next, nullptr);
+    auto nextCapture = Capture(next.get(), 4, 4);
+    ASSERT_NE(nextCapture, nullptr);
+    m_pool->EndClientFrame();
+    client.reset();
+    captured.reset();
+    EXPECT_TRUE(glIsTexture(texture));
+    EXPECT_TRUE(glIsTexture(clientTexture));
+    EXPECT_EQ(glGetError(), GL_NO_ERROR);
+    // These are known shared objects in the controlled, healthy test share group.
+    glDeleteTextures(1, &texture);
+    glDeleteTextures(1, &clientTexture);
+  }
+}
+
+TEST_F(TestRenderBufferPoolFBOOSX, OrdinaryDestructionDeletesResourcesAndRetiresHeldBuffers)
+{
+  ASSERT_TRUE(m_pool->BeginClientFrame());
+  auto client = GetClient(4, 4);
+  ASSERT_NE(client, nullptr);
+  auto captured = Capture(client.get(), 4, 4);
+  ASSERT_NE(captured, nullptr);
+  const GLuint texture = captured->TextureID();
+  m_pool->EndClientFrame();
+  m_pool->DestroyContext();
+  EXPECT_FALSE(m_native->IsCreated());
+  EXPECT_EQ(m_native->destroys, 1);
+  EXPECT_EQ(m_native->restores, 2);
+  EXPECT_FALSE(glIsTexture(texture));
+  EXPECT_EQ(client->GetCurrentFramebuffer(), 0);
+  EXPECT_EQ(captured->TextureID(), 0);
+  captured->FinishRender();
+  EXPECT_FALSE(captured->SetReady());
+  EXPECT_FALSE(client->Allocate(AV_PIX_FMT_NONE, 4, 4));
+  EXPECT_EQ(glGetError(), GL_NO_ERROR);
+}
+
+TEST_F(TestRenderBufferPoolFBOOSX, AbandonedGameStreamReleasesManagerAndPoolForNextGame)
+{
+  class CCallbacks : public KODI::GAME::IHwFramebufferCallback
+  {
+  public:
+    bool HardwareContextReset() override
+    {
+      ++resets;
+      return true;
+    }
+    void HardwareContextDestroy() override { ++destroys; }
+    unsigned int resets{0};
+    unsigned int destroys{0};
+  } callbacks;
+
+  m_pool->DestroyContext();
+  m_environment->ProcessInfo().GetBufferManager().RegisterPools(nullptr, {m_pool});
+  auto& manager = m_environment->Renderer();
+  CRetroPlayerRendering rendering(manager, m_environment->ProcessInfo());
+  game_hw_rendering_properties hardware{};
+  hardware.context_type = GAME_HW_CONTEXT_OPENGL_CORE;
+  hardware.version_major = 3;
+  hardware.version_minor = 2;
+  KODI::GAME::CGameClientStreamHwFramebuffer stream(callbacks, hardware);
+  game_stream_properties properties{};
+  properties.type = GAME_STREAM_HW_FRAMEBUFFER;
+  properties.hw_framebuffer.max_width = properties.hw_framebuffer.max_height = 4;
+
+  for (unsigned int cycle = 0; cycle < 4; ++cycle)
+  {
+    ASSERT_TRUE(stream.OpenStream(&rendering, properties));
+    ASSERT_TRUE(manager.BeginClientFrame());
+    ASSERT_TRUE(stream.ResetHwContext());
+    game_stream_buffer buffer{};
+    buffer.type = GAME_STREAM_HW_FRAMEBUFFER;
+    ASSERT_TRUE(stream.GetBuffer(4, 4, buffer));
+    EXPECT_NE(buffer.hw_framebuffer.framebuffer, 0);
+    manager.RenderFrame(4, 4, 1.0f, 0);
+    if (cycle == 3)
+      stream.DestroyHwContext();
+    manager.EndClientFrame();
+
+    if (cycle != 3)
+    {
+      m_native->failBind = true;
+      EXPECT_FALSE(manager.BeginClientFrame());
+      stream.AbandonHwContext();
+    }
+    const auto restores = m_native->restores;
+    stream.CloseStream();
+    EXPECT_FALSE(m_native->IsCreated());
+    EXPECT_EQ(callbacks.resets, cycle + 1);
+    EXPECT_EQ(callbacks.destroys, cycle == 3 ? 1 : 0);
+    EXPECT_EQ(m_native->restores, restores + (cycle == 3 ? 1 : 0));
+    stream.CloseStream();
+    EXPECT_EQ(m_native->destroys, cycle + 2);
+    m_native->failBind = false;
+  }
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_EQ(glGetError(), GL_NO_ERROR);
+}
 
 TEST_F(TestRenderBufferPoolFBOOSX, NestedScopesRestoreGuiOnlyAfterOutermostEnd)
 {

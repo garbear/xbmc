@@ -93,6 +93,7 @@ private:
     // The pool deletes GL objects in their owning context, even when a renderer
     // still holds the CPU buffer. The lock excludes drawing during teardown.
     void Destroy();
+    void Abandon();
     std::mutex mutex;
     GLuint framebuffer{0};
     GLuint texture{0};
@@ -108,6 +109,7 @@ private:
   const bool m_stencil;
   const bool m_bottomLeftOrigin;
   const Type m_type;
+  bool m_useSync{true};
 };
 } // namespace RETRO
 } // namespace KODI

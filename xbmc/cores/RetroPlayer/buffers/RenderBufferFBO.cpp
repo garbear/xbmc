@@ -20,6 +20,10 @@
 
 #include "RenderBufferFBO.h"
 
+#if defined(HAS_GLES)
+#include "cores/RetroPlayer/rendering/RenderContext.h"
+#include "rendering/RenderSystem.h"
+#endif
 #include "utils/log.h"
 
 using namespace KODI;
@@ -33,6 +37,12 @@ CRenderBufferFBO::CRenderBufferFBO(
     m_bottomLeftOrigin(type == Type::CLIENT && bottomLeftOrigin),
     m_type(type)
 {
+#if defined(HAS_GLES)
+  unsigned int major = 0, minor = 0;
+  if (auto* rendering = m_context.Rendering())
+    rendering->GetRenderVersion(major, minor);
+  m_useSync = major >= 3;
+#endif
 }
 
 CRenderBufferFBO::~CRenderBufferFBO() = default;
@@ -55,10 +65,22 @@ void CRenderBufferFBO::Resources::Destroy()
   glDeleteTextures(1, &texture);
   glDeleteRenderbuffers(1, &depthStencil);
   framebuffer = texture = depthStencil = 0;
+  retired = true;
+}
+
+void CRenderBufferFBO::Resources::Abandon()
+{
+  std::unique_lock lock(mutex);
+  framebuffer = texture = depthStencil = 0;
+  ready = rendered = nullptr;
+  retired = true;
 }
 
 bool CRenderBufferFBO::Allocate(AVPixelFormat format, unsigned int width, unsigned int height)
 {
+  if (m_resources->retired)
+    return false;
+
   GLint maxTextureSize = 0;
   glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
   if (width == 0 || height == 0 || maxTextureSize <= 0 ||
@@ -175,6 +197,15 @@ void CRenderBufferFBO::PrepareForCapture()
 
 bool CRenderBufferFBO::SetReady()
 {
+  if (m_resources->retired)
+    return false;
+
+  if (!m_useSync)
+  {
+    // ES2 cannot wait on the client's fence, so complete publication here.
+    glFinish();
+    return true;
+  }
   m_resources->ready = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
   glFlush();
   return m_resources->ready != nullptr;
@@ -188,6 +219,15 @@ void CRenderBufferFBO::WaitForCapture()
 
 void CRenderBufferFBO::FinishRender()
 {
+  if (m_resources->retired)
+    return;
+
+  if (!m_useSync)
+  {
+    // Complete ES2 sampling before the client can reuse this capture.
+    glFinish();
+    return;
+  }
   if (m_resources->rendered)
     glDeleteSync(m_resources->rendered);
   m_resources->rendered = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);

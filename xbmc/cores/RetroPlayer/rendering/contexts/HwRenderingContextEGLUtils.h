@@ -55,6 +55,16 @@ inline bool SupportsEGLHardwareRendering(const char* version, const char* extens
   return major == 1 && minor == 4 && surfaceless && createContext;
 }
 
+inline bool SupportsEGLHardwareRendering(const char* version,
+                                         const char* extensions,
+                                         bool embedded,
+                                         unsigned int guiMajor,
+                                         unsigned int guiMinor)
+{
+  return SupportsEGLHardwareRendering(version, extensions) &&
+         (embedded ? guiMajor >= 2 : guiMajor > 3 || (guiMajor == 3 && guiMinor >= 2));
+}
+
 #if defined(HAS_EGL)
 inline std::vector<EGLint> BuildEGLContextAttributes(const HwContextProperties& properties,
                                                      unsigned int major,
