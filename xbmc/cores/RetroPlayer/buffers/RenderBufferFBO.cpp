@@ -30,7 +30,7 @@ CRenderBufferFBO::CRenderBufferFBO(
   : m_context(context),
     m_depth(depth),
     m_stencil(stencil),
-    m_bottomLeftOrigin(bottomLeftOrigin),
+    m_bottomLeftOrigin(type == Type::CLIENT && bottomLeftOrigin),
     m_type(type)
 {
 }

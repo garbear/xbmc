@@ -133,6 +133,8 @@ private:
   std::unique_ptr<HwFramebufferProperties> m_hwProperties;
   unsigned int m_width = 0;
   unsigned int m_height = 0;
+  unsigned int m_frameWidth{0};
+  unsigned int m_frameHeight{0};
 };
 } // namespace RETRO
 } // namespace KODI

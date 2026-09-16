@@ -6,6 +6,7 @@
  *  See LICENSES/README.md for more information.
  */
 
+#include "cores/DataCacheCore.h"
 #include "cores/RetroPlayer/buffers/BaseRenderBufferPool.h"
 #include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
 #include "cores/RetroPlayer/playback/test/PlaybackTestEnvironment.h"
@@ -555,4 +556,49 @@ TEST_F(TestRPRenderManager, AllocationExceptionBalancesNestedScope)
                          })
                   .get());
   manager.DestroyContext();
+}
+
+TEST_F(TestRPRenderManager, HardwareProcessDimensionsFollowFramesWithoutResizingClient)
+{
+  CDataCacheCore cache;
+  auto& processInfo = m_environment.ProcessInfo();
+  processInfo.SetDataCache(&cache);
+  auto& manager = m_environment.Renderer();
+  m_pool->hardware = true;
+  manager.Initialize();
+  CRetroPlayerRendering rendering(manager, processInfo);
+  const HwFramebufferProperties properties{
+      GAME_HW_CONTEXT_OPENGL_CORE, false, false, true, 3, 3, false, false, 1920, 1080, 0.0f};
+  ASSERT_TRUE(rendering.OpenStream(properties));
+  HwFramebufferBuffer buffer;
+  ASSERT_TRUE(rendering.GetStreamBuffer(640, 480, buffer));
+  const auto framebuffer = buffer.framebuffer;
+  ASSERT_NE(framebuffer, 0);
+  ASSERT_TRUE(manager.BeginClientFrame());
+
+  for (const auto& [width, height] : {std::pair{640u, 480u}, {1280u, 720u}, {640u, 480u}})
+  {
+    ASSERT_TRUE(rendering.GetStreamBuffer(width, height, buffer));
+    EXPECT_EQ(buffer.framebuffer, framebuffer);
+    rendering.AddStreamData(HwFramebufferPacket{framebuffer, width, height, 0.0f});
+    EXPECT_EQ(cache.GetVideoWidth(), width);
+    EXPECT_EQ(cache.GetVideoHeight(), height);
+    EXPECT_EQ(m_pool->clientBuffer->GetWidth(), 1920);
+    EXPECT_EQ(m_pool->clientBuffer->GetHeight(), 1080);
+    EXPECT_EQ(m_pool->clientBuffer->allocations, 1);
+  }
+
+  for (const auto& packet : {HwFramebufferPacket{framebuffer, 0, 480, 0.0f},
+                             HwFramebufferPacket{framebuffer, 640, 0, 0.0f},
+                             HwFramebufferPacket{framebuffer, 1921, 1080, 0.0f},
+                             HwFramebufferPacket{framebuffer, 1920, 1081, 0.0f},
+                             HwFramebufferPacket{framebuffer + 1, 1280, 720, 0.0f},
+                             HwFramebufferPacket{0, 1280, 720, 0.0f}})
+    rendering.AddStreamData(packet);
+  EXPECT_EQ(cache.GetVideoWidth(), 640);
+  EXPECT_EQ(cache.GetVideoHeight(), 480);
+  EXPECT_EQ(m_pool->captures, 3);
+  manager.EndClientFrame();
+  rendering.CloseStream();
+  processInfo.SetDataCache(nullptr);
 }

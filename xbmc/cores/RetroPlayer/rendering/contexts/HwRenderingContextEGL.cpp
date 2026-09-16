@@ -8,6 +8,7 @@
 
 #include "HwRenderingContextEGL.h"
 
+#include "HwRenderingContextEGLUtils.h"
 #include "cores/RetroPlayer/buffers/IRenderBufferPool.h"
 #include "cores/RetroPlayer/rendering/RenderContext.h"
 #include "rendering/RenderSystem.h"
@@ -88,6 +89,10 @@ bool CHwRenderingContextEGL::SupportsHardwareRendering() const
 
   auto* renderSystem = m_context.Rendering();
   if (!renderSystem || winSystem->GetEGLDisplay() == EGL_NO_DISPLAY)
+    return false;
+  const EGLDisplay display = winSystem->GetEGLDisplay();
+  if (!SupportsEGLHardwareRendering(eglQueryString(display, EGL_VERSION),
+                                    eglQueryString(display, EGL_EXTENSIONS)))
     return false;
   unsigned int major = 0, minor = 0;
   renderSystem->GetRenderVersion(major, minor);

@@ -10,16 +10,11 @@
 
 #include "RPBaseRenderer.h"
 #include "cores/GameSettings.h"
-#include "cores/RetroPlayer/buffers/BaseRenderBufferPool.h"
-#include "cores/RetroPlayer/buffers/video/RenderBufferSysMem.h"
 #include "cores/RetroPlayer/process/RPProcessInfo.h"
 
-#include <atomic>
-#include <chrono>
 #include <memory>
 #include <stdint.h>
 #include <string>
-#include <vector>
 
 //! The renderer needs glBlitFramebuffer and fence syncs, so it is built for
 //! desktop GL and GLES 3.0 upwards. The factory is declared either way and
@@ -97,31 +92,11 @@ protected:
 
   virtual void Render(uint8_t alpha);
 
-  /*!
-   * \brief Copy the captured frame into a texture with a top-left origin
-   *
-   * Shader presets sample the entire texture and must process the frame in
-   * display order, including filters with directional effects.
-   *
-   * \param renderBuffer The buffer holding the captured frame
-   *
-   * \return True if the frame is in m_shaderSourceTexture and can be shaded
-   */
-  bool CopyFrameForShaders(CRenderBufferFBO* renderBuffer);
-
-  //! \brief Release the textures and framebuffer used to feed the shader chain
   void DestroyShaderResources();
 
   GLenum m_textureTarget = GL_TEXTURE_2D;
   float m_clearColour = 0.0f;
 
-  /*!
-   * \brief The geometry a frame was drawn with, as far as logging cares
-   *
-   * Compared exactly rather than with a tolerance: every field is copied or
-   * derived the same way each frame, so any difference at all is a real change
-   * and worth seeing.
-   */
   struct FrameGeometry
   {
     unsigned int frameWidth{0};
@@ -142,35 +117,9 @@ protected:
     bool operator!=(const FrameGeometry& rhs) const { return !(*this == rhs); }
   };
 
-  //! \brief The geometry reported by the last line written to the log
   FrameGeometry m_loggedGeometry;
-
-  //! \brief Set once anything has been logged, so the first frame always is
-  bool m_bLoggedGeometry = false;
   bool m_loggedHardwarePresentation{false};
 
-  //! \brief Changes seen since the last line was written
-  unsigned int m_geometryChanges = 0;
-
-  //! \brief When the last line was written, to keep a churning geometry quiet
-  std::chrono::steady_clock::time_point m_lastGeometryLog;
-
-  //! \brief Framebuffer used to blit the client's frame into a tight texture
-  GLuint m_shaderCopyFbo{0};
-
-  //! Reads the client's frame into the copy above. Its own object because a
-  //! framebuffer is not shared between contexts, only the texture it holds is
-  GLuint m_shaderReadFbo{0};
-
-  //! \brief The client's frame at its own size, as the shader chain wants it
-  GLuint m_shaderSourceTexture{0};
-
-  //! \brief The size m_shaderSourceTexture was created at
-  unsigned int m_shaderSourceWidth{0};
-  unsigned int m_shaderSourceHeight{0};
-
-  //! \brief Where the shader chain writes, and what is finally drawn
-  //! \brief Last reported filter state, so the log carries changes not frames
   std::string m_lastLoggedPreset{"\0"};
   bool m_bLastLoggedUsePreset{false};
 
@@ -179,7 +128,6 @@ protected:
 
   std::shared_ptr<SHADER::IShaderTexture> m_shaderTargetTexture;
 
-  //! \brief The size m_shaderTargetTexture was created at
   unsigned int m_shaderTargetWidth{0};
   unsigned int m_shaderTargetHeight{0};
 };

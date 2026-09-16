@@ -13,6 +13,15 @@
 #if defined(TARGET_DARWIN_OSX) && defined(HAS_GL)
 #include "cores/RetroPlayer/buffers/RenderBufferPoolFBO.h"
 #include "cores/RetroPlayer/playback/test/PlaybackTestEnvironment.h"
+#include "cores/RetroPlayer/rendering/RenderContext.h"
+#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererFBO.h"
+#include "cores/RetroPlayer/shaders/gl/ShaderPresetGL.h"
+#include "cores/RetroPlayer/shaders/gl/ShaderTextureGL.h"
+#include "cores/RetroPlayer/shaders/gl/ShaderTextureGLRef.h"
+#include "rendering/MatrixGL.h"
+#include "rendering/gl/RenderSystemGL.h"
+#include "settings/DisplaySettings.h"
+#include "settings/MediaSettings.h"
 #endif
 
 #include <array>
@@ -496,6 +505,69 @@ TEST_F(TestRenderBufferPoolFBOOSX, GuiShaderSamplesCapturedTextureWithNearestAnd
   captured->FinishRender();
 }
 
+TEST_F(TestRenderBufferPoolFBOOSX, CaptureNormalizesBothOriginsWithinLargerClientFramebuffer)
+{
+  for (bool bottomLeft : {false, true})
+  {
+    m_pool->DestroyContext();
+    HwContextProperties properties;
+    properties.bottomLeftOrigin = bottomLeft;
+    ASSERT_TRUE(m_pool->CreateContext(properties));
+    ASSERT_TRUE(m_pool->Configure(AV_PIX_FMT_NONE));
+    ASSERT_TRUE(m_pool->BeginClientFrame());
+    auto client = GetClient(16, 16);
+    ASSERT_NE(client, nullptr);
+    const auto framebuffer = client->GetCurrentFramebuffer();
+
+    for (unsigned int height : {4u, 8u, 2u})
+    {
+      glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+      glDisable(GL_SCISSOR_TEST);
+      glClearColor(0, 0, 1, 0);
+      glClear(GL_COLOR_BUFFER_BIT);
+      glEnable(GL_SCISSOR_TEST);
+      glScissor(0, bottomLeft ? height / 2 : 0, 4, height / 2);
+      glClearColor(1, 0, 0, 0);
+      glClear(GL_COLOR_BUFFER_BIT);
+      glScissor(0, bottomLeft ? 0 : height / 2, 4, height / 2);
+      glClearColor(0, 1, 0, 0);
+      glClear(GL_COLOR_BUFFER_BIT);
+      glReadBuffer(GL_NONE);
+      glViewport(1, 2, 3, 4);
+
+      auto captured = Capture(client.get(), 4, height);
+      ASSERT_NE(captured, nullptr);
+      EXPECT_FALSE(captured->BottomLeftOrigin());
+      EXPECT_EQ(captured->TextureWidth(), 4);
+      EXPECT_EQ(captured->TextureHeight(), height);
+      EXPECT_EQ(client->GetCurrentFramebuffer(), framebuffer);
+      EXPECT_EQ(client->TextureWidth(), 16);
+      EXPECT_EQ(client->TextureHeight(), 16);
+      GLint binding = 0;
+      glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &binding);
+      EXPECT_EQ(binding, framebuffer);
+      glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &binding);
+      EXPECT_EQ(binding, framebuffer);
+      glGetIntegerv(GL_READ_BUFFER, &binding);
+      EXPECT_EQ(binding, GL_NONE);
+      EXPECT_TRUE(glIsEnabled(GL_SCISSOR_TEST));
+      std::array<GLint, 4> viewport{};
+      glGetIntegerv(GL_VIEWPORT, viewport.data());
+      EXPECT_EQ(viewport, (std::array<GLint, 4>{1, 2, 3, 4}));
+      glReadBuffer(GL_COLOR_ATTACHMENT0);
+      glBindFramebuffer(GL_READ_FRAMEBUFFER, captured->GetCurrentFramebuffer());
+      std::array<unsigned char, 4> pixel{};
+      glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
+      EXPECT_EQ(pixel, (std::array<unsigned char, 4>{255, 0, 0, 255}));
+      glReadPixels(0, height - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
+      EXPECT_EQ(pixel, (std::array<unsigned char, 4>{0, 255, 0, 255}));
+      EXPECT_EQ(glGetError(), GL_NO_ERROR);
+    }
+    glDisable(GL_SCISSOR_TEST);
+    m_pool->EndClientFrame();
+  }
+}
+
 TEST_F(TestRenderBufferPoolFBOOSX, SameSizeCaptureResumesAfterFlushAcrossContextRecreation)
 {
   for (unsigned int cycle = 0; cycle < 3; ++cycle)
@@ -558,4 +630,207 @@ TEST_F(TestRenderBufferPoolFBOOSX, TeardownPreservesGuiContainerObjectsAndBindin
   glDeleteFramebuffers(1, &guiFramebuffer);
   glDeleteVertexArrays(1, &guiVertexArray);
 }
+
+namespace
+{
+class CTestGLWindow : public CWinSystemBase, public CRenderSystemGL
+{
+public:
+  CTestGLWindow() : m_previous(CServiceBroker::GetWinSystem())
+  {
+    CServiceBroker::RegisterWinSystem(this);
+    glMatrixProject.Push();
+    glMatrixModview.Push();
+  }
+  ~CTestGLWindow() override
+  {
+    DestroyRenderSystem();
+    glMatrixProject.Pop();
+    glMatrixModview.Pop();
+    CServiceBroker::RegisterWinSystem(m_previous);
+  }
+  CRenderSystemBase* GetRenderSystem() override { return this; }
+  bool CreateNewWindow(const std::string&, bool, RESOLUTION_INFO&) override { return true; }
+  bool ResizeWindow(int, int, int, int) override { return true; }
+  bool SetFullScreen(bool, RESOLUTION_INFO&, bool) override { return true; }
+  void Register(IDispResource*) override {}
+  void Unregister(IDispResource*) override {}
+  void SetVSyncImpl(bool) override {}
+  void PresentRenderImpl(bool) override {}
+
+private:
+  CWinSystemBase* m_previous;
+};
+
+class CDirectionalTestPreset : public KODI::SHADER::CShaderPresetGL
+{
+public:
+  explicit CDirectionalTestPreset(CRenderContext& context) : CShaderPresetGL(context)
+  {
+    m_presetPath = "directional-alpha-test";
+    KODI::SHADER::ShaderPass pass;
+    pass.sourcePath = "directional-alpha-test.glsl";
+    pass.filterType = KODI::SHADER::FilterType::NEAREST;
+    pass.vertexSource = R"(#version 150
+#ifdef VERTEX
+in vec4 VertexCoord;
+in vec2 TexCoord;
+uniform mat4 MVPMatrix;
+out vec2 texcoord;
+void main() { gl_Position = MVPMatrix * VertexCoord; texcoord = TexCoord; }
+#endif
+#ifdef FRAGMENT
+uniform sampler2D Texture;
+in vec2 texcoord;
+out vec4 color;
+void main()
+{
+  vec3 rgb = texture(Texture, texcoord).rgb;
+  rgb.b = texcoord.y < 0.5 ? 0.5 : 0.0;
+  color = vec4(rgb, 0.0);
+}
+#endif
+)";
+    m_passes.push_back(std::move(pass));
+    EXPECT_TRUE(CreateShaders());
+  }
+
+  bool RenderUpdate(KODI::SHADER::IShaderTexture& source,
+                    KODI::SHADER::IShaderTexture& target) override
+  {
+    sourceID = static_cast<KODI::SHADER::CShaderTextureGLRef&>(source).GetTextureID();
+    rendered = CShaderPresetGL::RenderUpdate(source, target);
+    return rendered;
+  }
+  GLuint sourceID{0};
+  bool rendered{false};
+};
+
+class CTestFBORenderer : public CRPRendererFBO
+{
+public:
+  using CRPRendererFBO::CRPRendererFBO;
+
+  CDirectionalTestPreset* UseDirectionalPreset()
+  {
+    auto preset = std::make_unique<CDirectionalTestPreset>(m_context);
+    auto* result = preset.get();
+    m_shaderPreset = std::move(preset);
+    m_bShadersNeedUpdate = false;
+    m_bUseShaderPreset = true;
+    return result;
+  }
+
+  void Draw(CRenderBufferFBO* buffer, const CRect& crop, unsigned int rotation)
+  {
+    SetBuffer(buffer);
+    m_sourceRect = crop;
+    m_rotatedDestCoords = CRenderUtils::ReorderDrawPoints({0, 0, 8, 8}, rotation);
+    m_shaderPreset->SetVideoSize(buffer->GetWidth(), buffer->GetHeight());
+    RenderInternal(false, 128);
+  }
+};
+} // namespace
+
+TEST_F(TestRenderBufferPoolFBOOSX, FilteredAndUnfilteredControlsPreserveOrientationCropAndAlpha)
+{
+  CTestGLWindow window;
+  ASSERT_TRUE(window.InitRenderSystem());
+  ASSERT_TRUE(window.ResetRenderSystem(8, 8));
+  CRenderContext context(&window, &window, window.GetGfxContext(), CDisplaySettings::GetInstance(),
+                         CMediaSettings::GetInstance(), CServiceBroker::GetGameServices(),
+                         CServiceBroker::GetGUI());
+  glMatrixProject->LoadIdentity();
+  glMatrixProject->Ortho2D(0, 8, 8, 0);
+  glMatrixModview->LoadIdentity();
+  KODI::SHADER::CShaderTextureGL output(8, 8, GL_UNSIGNED_BYTE, GL_RGBA8, GL_RGBA, true);
+  output.CreateTexture();
+
+  for (bool bottomLeft : {false, true})
+  {
+    m_pool->DestroyContext();
+    HwContextProperties properties;
+    properties.bottomLeftOrigin = bottomLeft;
+    ASSERT_TRUE(m_pool->CreateContext(properties));
+    ASSERT_TRUE(m_pool->Configure(AV_PIX_FMT_NONE));
+    ASSERT_TRUE(m_pool->BeginClientFrame());
+    auto client = GetClient(16, 16);
+    ASSERT_NE(client, nullptr);
+    for (unsigned int height : {4u, 8u})
+    {
+      glBindFramebuffer(GL_FRAMEBUFFER, client->GetCurrentFramebuffer());
+      glDisable(GL_SCISSOR_TEST);
+      glClearColor(0, 0, 1, 0);
+      glClear(GL_COLOR_BUFFER_BIT);
+      glEnable(GL_SCISSOR_TEST);
+      glScissor(0, bottomLeft ? height / 2 : 0, 4, height / 2);
+      glClearColor(1, 0, 0, 0);
+      glClear(GL_COLOR_BUFFER_BIT);
+      glScissor(0, bottomLeft ? 0 : height / 2, 4, height / 2);
+      glClearColor(0, 1, 0, 0);
+      glClear(GL_COLOR_BUFFER_BIT);
+      auto captured = Capture(client.get(), 4, height);
+      ASSERT_NE(captured, nullptr);
+      m_pool->EndClientFrame();
+
+      for (bool filtered : {false, true})
+      {
+        CTestFBORenderer renderer({}, context, m_pool);
+        auto* preset = filtered ? renderer.UseDirectionalPreset() : nullptr;
+        for (unsigned int rotation : {0u, 90u, 180u, 270u})
+        {
+          for (bool cropped : {false, true})
+          {
+            SCOPED_TRACE(testing::Message() << "bottomLeft=" << bottomLeft << " height=" << height
+                                            << " filtered=" << filtered << " rotation=" << rotation
+                                            << " cropped=" << cropped);
+            ASSERT_TRUE(output.BindFBO());
+            GLint framebuffer = 0;
+            glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &framebuffer);
+            glDisable(GL_SCISSOR_TEST);
+            glDisable(GL_DEPTH_TEST);
+            glViewport(0, 0, 8, 8);
+            glClearColor(0, 0, 1, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
+            const float inset = cropped ? height / 4.0f : 0.0f;
+            renderer.Draw(captured.get(), {0, inset, 4, height - inset}, rotation);
+            GLint restored = 0;
+            glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &restored);
+            EXPECT_EQ(restored, framebuffer);
+            glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &restored);
+            EXPECT_EQ(restored, framebuffer);
+            EXPECT_FALSE(glIsEnabled(GL_SCISSOR_TEST));
+            std::array<GLint, 4> viewport{};
+            glGetIntegerv(GL_VIEWPORT, viewport.data());
+            EXPECT_EQ(viewport, (std::array<GLint, 4>{0, 0, 8, 8}));
+            if (preset)
+            {
+              EXPECT_TRUE(preset->rendered);
+              EXPECT_EQ(preset->sourceID, captured->TextureID());
+            }
+            for (int y : {1, 6})
+            {
+              for (int x : {1, 6})
+              {
+                const bool top = rotation == 0     ? y > 4
+                                 : rotation == 90  ? x < 4
+                                 : rotation == 180 ? y < 4
+                                                   : x > 4;
+                std::array<unsigned char, 4> pixel{};
+                glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
+                EXPECT_NEAR(pixel[0], top ? 128 : 0, 1);
+                EXPECT_NEAR(pixel[1], top ? 0 : 128, 1);
+                EXPECT_NEAR(pixel[2], filtered && top ? 191 : 127, 1);
+              }
+            }
+            EXPECT_EQ(glGetError(), GL_NO_ERROR);
+          }
+        }
+      }
+      ASSERT_TRUE(m_pool->BeginClientFrame());
+    }
+    m_pool->EndClientFrame();
+  }
+}
+
 #endif

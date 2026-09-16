@@ -78,7 +78,7 @@ public:
   unsigned int TextureWidth() const { return m_textureWidth; }
   unsigned int TextureHeight() const { return m_textureHeight; }
 
-  //! \brief True if the client rendered with OpenGL's bottom-left origin
+  //! Captures are normalized to top-left origin; only client buffers can be bottom-left.
   bool BottomLeftOrigin() const { return m_bottomLeftOrigin; }
   bool IsCapture() const { return m_type == Type::CAPTURE; }
 

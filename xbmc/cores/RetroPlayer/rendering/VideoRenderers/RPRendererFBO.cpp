@@ -135,123 +135,9 @@ CRPRendererFBO::~CRPRendererFBO()
 
 void CRPRendererFBO::DestroyShaderResources()
 {
-  if (m_shaderCopyFbo != 0)
-  {
-    glDeleteFramebuffers(1, &m_shaderCopyFbo);
-    m_shaderCopyFbo = 0;
-  }
-
-  if (m_shaderReadFbo != 0)
-  {
-    glDeleteFramebuffers(1, &m_shaderReadFbo);
-    m_shaderReadFbo = 0;
-  }
-
-  if (m_shaderSourceTexture != 0)
-  {
-    glDeleteTextures(1, &m_shaderSourceTexture);
-    m_shaderSourceTexture = 0;
-  }
-
-  m_shaderSourceWidth = 0;
-  m_shaderSourceHeight = 0;
-
   m_shaderTargetTexture.reset();
   m_shaderTargetWidth = 0;
   m_shaderTargetHeight = 0;
-}
-
-bool CRPRendererFBO::CopyFrameForShaders(CRenderBufferFBO* renderBuffer)
-{
-  const unsigned int frameWidth = renderBuffer->GetWidth();
-  const unsigned int frameHeight = renderBuffer->GetHeight();
-
-  if (frameWidth == 0 || frameHeight == 0)
-    return false;
-
-  const CFramebufferState framebufferState;
-  glActiveTexture(GL_TEXTURE0);
-
-  // Rebuilt only when the frame changes size, which for most clients is never
-  if (m_shaderSourceTexture == 0 || m_shaderSourceWidth != frameWidth ||
-      m_shaderSourceHeight != frameHeight)
-  {
-    if (m_shaderSourceTexture != 0)
-      glDeleteTextures(1, &m_shaderSourceTexture);
-
-    glGenTextures(1, &m_shaderSourceTexture);
-    if (m_shaderSourceTexture == 0)
-      return false;
-
-    glBindTexture(m_textureTarget, m_shaderSourceTexture);
-    glTexImage2D(m_textureTarget, 0, GL_RGBA, frameWidth, frameHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 nullptr);
-    glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glBindTexture(m_textureTarget, 0);
-
-    m_shaderSourceWidth = frameWidth;
-    m_shaderSourceHeight = frameHeight;
-
-    if (m_shaderCopyFbo == 0)
-      glGenFramebuffers(1, &m_shaderCopyFbo);
-    if (m_shaderCopyFbo == 0)
-    {
-      DestroyShaderResources();
-      return false;
-    }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, m_shaderCopyFbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_textureTarget,
-                           m_shaderSourceTexture, 0);
-
-    const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-
-    if (status != GL_FRAMEBUFFER_COMPLETE)
-    {
-      CLog::Log(LOGERROR,
-                "RetroPlayer[RENDER]: Can't shade a {}x{} frame, its copy is incomplete ({:#x})",
-                frameWidth, frameHeight, status);
-      DestroyShaderResources();
-      return false;
-    }
-  }
-
-  // Only the corner the client drew into is copied, flipping a bottom-up
-  // client on the way so the chain is always handed a texture the conventional
-  // way up. Flipping at the end instead would run any filter that is not
-  // symmetrical upside down: scanlines, curvature, borders.
-  const GLint srcY0 = renderBuffer->BottomLeftOrigin() ? frameHeight : 0;
-  const GLint srcY1 = renderBuffer->BottomLeftOrigin() ? 0 : frameHeight;
-
-  // The client's framebuffer belongs to the client's context and naming it here
-  // would address whatever happens to carry that name in this one. The texture
-  // behind it is shared, so it is read through a framebuffer of our own.
-  if (m_shaderReadFbo == 0)
-    glGenFramebuffers(1, &m_shaderReadFbo);
-  if (m_shaderReadFbo == 0)
-    return false;
-
-  glBindFramebuffer(GL_READ_FRAMEBUFFER, m_shaderReadFbo);
-  glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                         renderBuffer->TextureID(), 0);
-
-  if (glCheckFramebufferStatus(GL_READ_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-  {
-    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-    return false;
-  }
-
-  glDisable(GL_SCISSOR_TEST);
-
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_shaderCopyFbo);
-  glBlitFramebuffer(0, srcY0, frameWidth, srcY1, 0, 0, frameWidth, frameHeight, GL_COLOR_BUFFER_BIT,
-                    GL_NEAREST);
-  glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-
-  return true;
 }
 
 void CRPRendererFBO::RenderInternal(bool clear, uint8_t alpha)
@@ -350,7 +236,6 @@ void CRPRendererFBO::DrawBlackBars()
   glUniform4f(uniCol, 0.0f, 0.0f, 0.0f, 1.0f);
   glUniform1f(m_context.GUIShaderGetDepth(), -1.0f);
 
-  // top quad
   if (destRect.y1 > 0.0f)
   {
     GLubyte quad = count;
@@ -371,7 +256,6 @@ void CRPRendererFBO::DrawBlackBars()
     count += 6;
   }
 
-  // bottom quad
   if (destRect.y2 < m_context.GetScreenHeight())
   {
     GLubyte quad = count;
@@ -392,7 +276,6 @@ void CRPRendererFBO::DrawBlackBars()
     count += 6;
   }
 
-  // left quad
   if (destRect.x1 > 0.0f)
   {
     GLubyte quad = count;
@@ -413,7 +296,6 @@ void CRPRendererFBO::DrawBlackBars()
     count += 6;
   }
 
-  // right quad
   if (destRect.x2 < m_context.GetScreenWidth())
   {
     GLubyte quad = count;
@@ -470,8 +352,6 @@ void CRPRendererFBO::Render(uint8_t alpha)
       m_sourceRect, renderBuffer->GetHeight(), renderBuffer->TextureWidth(),
       renderBuffer->TextureHeight(), renderBuffer->BottomLeftOrigin());
 
-  // Rate limited to one a second, carrying the number of changes it stands for,
-  // since a geometry that changes every frame would otherwise drown the log.
   const FrameGeometry geometry{renderBuffer->GetWidth(),
                                renderBuffer->GetHeight(),
                                renderBuffer->TextureWidth(),
@@ -480,30 +360,17 @@ void CRPRendererFBO::Render(uint8_t alpha)
                                rect,
                                renderBuffer->BottomLeftOrigin()};
 
-  if (!m_bLoggedGeometry || geometry != m_loggedGeometry)
+  if (geometry != m_loggedGeometry)
   {
-    ++m_geometryChanges;
-
-    const auto now = std::chrono::steady_clock::now();
-    const bool bQuietEnough =
-        !m_bLoggedGeometry || (now - m_lastGeometryLog) >= std::chrono::seconds(1);
-
-    if (bQuietEnough)
-    {
-      CLog::Log(LOGINFO,
-                "RetroPlayer[RENDER]: FBO geometry: frame {}x{}, texture {}x{}, source rect "
-                "({:.1f},{:.1f})-({:.1f},{:.1f}), sampling ({:.3f},{:.3f})-({:.3f},{:.3f}), "
-                "bottom-left origin {} ({} change(s))",
-                geometry.frameWidth, geometry.frameHeight, geometry.textureWidth,
-                geometry.textureHeight, geometry.sourceRect.x1, geometry.sourceRect.y1,
-                geometry.sourceRect.x2, geometry.sourceRect.y2, geometry.samplingRect.x1,
-                geometry.samplingRect.y1, geometry.samplingRect.x2, geometry.samplingRect.y2,
-                geometry.bottomLeftOrigin ? "yes" : "no", m_geometryChanges);
-
-      m_bLoggedGeometry = true;
-      m_lastGeometryLog = now;
-      m_geometryChanges = 0;
-    }
+    CLog::Log(LOGDEBUG,
+              "RetroPlayer[RENDER]: FBO geometry: frame {}x{}, texture {}x{}, source rect "
+              "({:.1f},{:.1f})-({:.1f},{:.1f}), sampling ({:.3f},{:.3f})-({:.3f},{:.3f}), "
+              "bottom-left origin {}",
+              geometry.frameWidth, geometry.frameHeight, geometry.textureWidth,
+              geometry.textureHeight, geometry.sourceRect.x1, geometry.sourceRect.y1,
+              geometry.sourceRect.x2, geometry.sourceRect.y2, geometry.samplingRect.x1,
+              geometry.samplingRect.y1, geometry.samplingRect.x2, geometry.samplingRect.y2,
+              geometry.bottomLeftOrigin ? "yes" : "no");
 
     m_loggedGeometry = geometry;
   }
@@ -562,7 +429,7 @@ void CRPRendererFBO::Render(uint8_t alpha)
           destWidth, destHeight, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA, false);
 #else
       auto targetTexture = std::make_shared<SHADER::CShaderTextureGL>(
-          destWidth, destHeight, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA, false);
+          destWidth, destHeight, GL_UNSIGNED_BYTE, GL_RGBA8, GL_BGRA, false);
 #endif
       targetTexture->CreateTexture();
       if (targetTexture->BindFBO())
@@ -579,21 +446,22 @@ void CRPRendererFBO::Render(uint8_t alpha)
       }
     }
 
-    if (m_shaderTargetTexture && CopyFrameForShaders(renderBuffer))
+    if (m_shaderTargetTexture)
     {
 #if defined(HAS_GLES)
-      SHADER::CShaderTextureGLESRef sourceTexture(m_shaderSourceWidth, m_shaderSourceHeight,
-                                                  m_shaderSourceTexture);
+      SHADER::CShaderTextureGLESRef sourceTexture(
+          renderBuffer->GetWidth(), renderBuffer->GetHeight(), renderBuffer->TextureID());
       auto* target = static_cast<SHADER::CShaderTextureGLES*>(m_shaderTargetTexture.get());
 #else
-      SHADER::CShaderTextureGLRef sourceTexture(m_shaderSourceWidth, m_shaderSourceHeight,
-                                                m_shaderSourceTexture);
+      SHADER::CShaderTextureGLRef sourceTexture(renderBuffer->GetWidth(), renderBuffer->GetHeight(),
+                                                renderBuffer->TextureID());
       auto* target = static_cast<SHADER::CShaderTextureGL*>(m_shaderTargetTexture.get());
 #endif
       const GLint filter =
           m_shaderPreset->GetPasses().front().filterType == SHADER::FilterType::LINEAR ? GL_LINEAR
                                                                                        : GL_NEAREST;
-      glBindTexture(m_textureTarget, m_shaderSourceTexture);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(m_textureTarget, renderBuffer->TextureID());
       glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, filter);
       glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, filter);
 
@@ -632,7 +500,7 @@ void CRPRendererFBO::Render(uint8_t alpha)
 
   // Unit 0, because that is where the GUI shader samples from. Binding without
   // selecting it leaves the texture on whichever unit something else last made
-  // active, and the shader then reads a unit this renderer never wrote to..
+  // active, and the shader then reads a unit this renderer never wrote to.
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(m_textureTarget, drawTexture);
 
