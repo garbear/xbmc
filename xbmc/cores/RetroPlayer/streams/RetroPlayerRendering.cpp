@@ -100,6 +100,8 @@ void CRetroPlayerRendering::CloseStream()
 
   m_width = 0;
   m_height = 0;
+  m_frameWidth = 0;
+  m_frameHeight = 0;
   m_hwProperties.reset();
   m_bOpen = false;
 }
@@ -186,7 +188,6 @@ bool CRetroPlayerRendering::Configure(unsigned int width, unsigned int height)
     return false;
   }
 
-  // Already configured at this size
   if (m_width == width && m_height == height)
     return true;
 
@@ -210,7 +211,6 @@ bool CRetroPlayerRendering::Configure(unsigned int width, unsigned int height)
     if (!m_renderManager.Configure(pixelFormat, width, height, displayAspectRatio, width, height))
       return false;
     m_processInfo.SetVideoPixelFormat(pixelFormat);
-    m_processInfo.SetVideoDimensions(width, height);
   }
 
   CLog::Log(LOGDEBUG, "RetroPlayer[RENDERING]: Render manager configured");
@@ -225,11 +225,17 @@ void CRetroPlayerRendering::AddStreamData(const StreamPacket& packet)
 {
   const HwFramebufferPacket& hwPacket = static_cast<const HwFramebufferPacket&>(packet);
 
-  if (m_bOpen && hwPacket.width != 0 && hwPacket.height != 0 && hwPacket.width <= m_width &&
-      hwPacket.height <= m_height &&
+  if (m_bOpen && hwPacket.framebuffer != 0 && hwPacket.width != 0 && hwPacket.height != 0 &&
+      hwPacket.width <= m_width && hwPacket.height <= m_height &&
       hwPacket.framebuffer ==
           m_renderManager.GetCurrentFramebuffer(hwPacket.width, hwPacket.height))
   {
+    if (hwPacket.width != m_frameWidth || hwPacket.height != m_frameHeight)
+    {
+      m_frameWidth = hwPacket.width;
+      m_frameHeight = hwPacket.height;
+      m_processInfo.SetVideoDimensions(m_frameWidth, m_frameHeight);
+    }
     if (!m_loggedHardwareFrame)
     {
       CLog::Log(LOGDEBUG, "RetroPlayer[RENDERING]: First hardware frame submitted: FBO {} ({}x{})",

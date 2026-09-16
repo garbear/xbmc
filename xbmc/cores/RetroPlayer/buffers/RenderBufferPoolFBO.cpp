@@ -236,7 +236,11 @@ IRenderBuffer* CRenderBufferPoolFBO::CaptureClientFrame(IRenderBuffer* clientBuf
   glGetIntegerv(GL_READ_BUFFER, &prevReadBuffer);
   glReadBuffer(GL_COLOR_ATTACHMENT0);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target->GetCurrentFramebuffer());
-  glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+  // Normalize the drawn rectangle before directional shader filters see it.
+  const GLint sourceY0 = client->BottomLeftOrigin() ? height : 0;
+  const GLint sourceY1 = client->BottomLeftOrigin() ? 0 : height;
+  glBlitFramebuffer(0, sourceY0, width, sourceY1, 0, 0, width, height, GL_COLOR_BUFFER_BIT,
+                    GL_NEAREST);
   const bool ready = target->SetReady();
   glReadBuffer(prevReadBuffer);
   glBindFramebuffer(GL_READ_FRAMEBUFFER, prevRead);

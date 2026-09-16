@@ -1,4 +1,5 @@
 set(SOURCES TestBaseRenderBufferPool.cpp
+            TestHwRenderingContextEGL.cpp
             TestRPRenderManager.cpp
             TestRenderBufferPoolFBO.cpp
             TestRenderGeometryFBO.cpp)
