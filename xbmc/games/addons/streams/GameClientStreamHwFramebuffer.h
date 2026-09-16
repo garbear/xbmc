@@ -69,6 +69,7 @@ public:
    * again, including from CloseStream(), does nothing.
    */
   void DestroyHwContext();
+  void AbandonHwContext();
 
   // Public utility functions
   static void LogHwProperties(const game_hw_rendering_properties& hwProperties);
@@ -88,8 +89,7 @@ private:
   // Stream parameters
   RETRO::IRetroPlayerStream* m_stream{nullptr};
 
-  //! \brief Set once the client has been told its context is going away
-  bool m_hwContextDestroyed{false};
+  bool m_hwContextEnded{false};
   bool m_hwContextResetStarted{false};
   bool m_hwContextReady{false};
 

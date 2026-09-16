@@ -263,13 +263,26 @@ void CGameClientStreams::DestroyHwContext()
   if (m_hwProperties.context_type == GAME_HW_CONTEXT_NONE)
     return;
 
-  for (const auto& [stream, retroStream] : m_streams)
+  // Destroy callbacks may close or replace the stream.
+  std::shared_ptr<CGameClientStreamHwFramebuffer> hwStream;
+  for (const auto& streamEntry : m_streams)
+  {
+    hwStream =
+        std::dynamic_pointer_cast<CGameClientStreamHwFramebuffer>(streamEntry.second.gameStream);
+    if (hwStream)
+      break;
+  }
+
+  if (hwStream)
+    hwStream->DestroyHwContext();
+}
+
+void CGameClientStreams::AbandonHwContext()
+{
+  for (const auto& [stream, entry] : m_streams)
   {
     if (auto* hwStream = dynamic_cast<CGameClientStreamHwFramebuffer*>(stream))
-    {
-      hwStream->DestroyHwContext();
-      return;
-    }
+      hwStream->AbandonHwContext();
   }
 }
 

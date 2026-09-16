@@ -11,6 +11,15 @@
 #include <charconv>
 #include <string_view>
 
+#if defined(HAS_EGL)
+#include "cores/RetroPlayer/buffers/IRenderBufferPool.h"
+
+#include <vector>
+
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#endif
+
 namespace KODI::RETRO
 {
 inline bool SupportsEGLHardwareRendering(const char* version, const char* extensions)
@@ -45,4 +54,38 @@ inline bool SupportsEGLHardwareRendering(const char* version, const char* extens
   }
   return major == 1 && minor == 4 && surfaceless && createContext;
 }
+
+#if defined(HAS_EGL)
+inline std::vector<EGLint> BuildEGLContextAttributes(const HwContextProperties& properties,
+                                                     unsigned int major,
+                                                     unsigned int minor,
+                                                     const char* eglVersion)
+{
+  std::vector<EGLint> attributes;
+  if (major != 0)
+  {
+    attributes.insert(attributes.end(),
+                      {EGL_CONTEXT_MAJOR_VERSION_KHR, static_cast<EGLint>(major),
+                       EGL_CONTEXT_MINOR_VERSION_KHR, static_cast<EGLint>(minor)});
+  }
+  if (!properties.embedded)
+  {
+    attributes.insert(attributes.end(),
+                      {EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR,
+                       properties.coreProfile ? EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR
+                                              : EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR});
+  }
+  if (properties.debugContext)
+  {
+    // EGL 1.5 replaces the KHR debug flag with a separate boolean attribute.
+    if (SupportsEGLHardwareRendering(eglVersion, nullptr))
+      attributes.insert(attributes.end(), {EGL_CONTEXT_OPENGL_DEBUG, EGL_TRUE});
+    else
+      attributes.insert(attributes.end(),
+                        {EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR});
+  }
+  attributes.push_back(EGL_NONE);
+  return attributes;
+}
+#endif
 } // namespace KODI::RETRO

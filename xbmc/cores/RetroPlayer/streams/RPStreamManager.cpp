@@ -22,6 +22,13 @@ CRPStreamManager::CRPStreamManager(CRPRenderManager& renderManager, CRPProcessIn
   : m_renderManager(renderManager),
     m_processInfo(processInfo)
 {
+  // Visual streams can overlap, so shared rendering resources belong to the session.
+  m_renderManager.Initialize();
+}
+
+CRPStreamManager::~CRPStreamManager()
+{
+  m_renderManager.Deinitialize();
 }
 
 void CRPStreamManager::EnableAudio(bool bEnable)

@@ -70,6 +70,8 @@ void CRPRenderManager::Deinitialize()
     task.wait();
   m_savestateThreads.clear();
 
+  DestroyContext();
+
   for (auto& pixelScalerMap : m_scalers)
   {
     for (auto& pixelScaler : pixelScalerMap.second)
@@ -85,6 +87,9 @@ void CRPRenderManager::Deinitialize()
     for (auto renderBuffer : m_renderBuffers)
       renderBuffer->Release();
     m_renderBuffers.clear();
+    m_cachedFrame.clear();
+    m_bHasCachedFrame = false;
+    m_cachedWidth = m_cachedHeight = 0;
   }
 
   for (const PendingBuffer& pending : m_pendingBuffers)
@@ -132,6 +137,13 @@ bool CRPRenderManager::Configure(AVPixelFormat format,
   m_maxHeight = maxHeight;
 
   std::unique_lock lock(m_stateMutex);
+
+  if (m_state != RENDER_STATE::UNCONFIGURED)
+  {
+    Flush();
+    std::unique_lock rendererLock(m_oldRenderersMutex);
+    m_oldRenderers.merge(m_renderers);
+  }
 
   m_state = RENDER_STATE::CONFIGURING;
 
@@ -456,9 +468,14 @@ void CRPRenderManager::ReleaseHwRenderBuffer()
     return;
   {
     std::unique_lock lock(m_bufferMutex);
-    for (IRenderBuffer* renderBuffer : m_renderBuffers)
-      renderBuffer->Release();
-    m_renderBuffers.clear();
+    std::erase_if(m_renderBuffers,
+                  [this](IRenderBuffer* renderBuffer)
+                  {
+                    if (renderBuffer->GetPool() != m_hwBufferPool)
+                      return false;
+                    renderBuffer->Release();
+                    return true;
+                  });
   }
   m_hwRenderBuffer->Release();
   m_hwRenderBuffer = nullptr;
@@ -486,7 +503,8 @@ uintptr_t CRPRenderManager::GetCurrentFramebuffer(unsigned int width, unsigned i
 
 void CRPRenderManager::RenderFrame(unsigned int width,
                                    unsigned int height,
-                                   float displayAspectRatio)
+                                   float displayAspectRatio,
+                                   unsigned int orientationDegCCW)
 {
   std::unique_lock hwLock(m_hwMutex);
   if (m_bFlush || !m_hwContextBound || !m_hwRenderBuffer || width == 0 || height == 0 ||
@@ -506,7 +524,7 @@ void CRPRenderManager::RenderFrame(unsigned int width,
   }
   publishBuffer->SetSize(width, height);
   publishBuffer->SetDisplayAspectRatio(displayAspectRatio);
-  publishBuffer->SetRotation(0);
+  publishBuffer->SetRotation(orientationDegCCW);
   publishBuffer->SetLoaded(true);
 
   std::unique_lock lock(m_bufferMutex);
@@ -569,6 +587,7 @@ void CRPRenderManager::CheckFlush()
       std::unique_lock<std::mutex> lock{m_oldRenderersMutex};
       for (const auto& renderer : m_renderers)
         renderer->Flush();
+      m_oldRenderers.clear();
     }
 
     m_processInfo.GetBufferManager().FlushPools();

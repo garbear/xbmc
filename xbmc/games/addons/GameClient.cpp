@@ -430,25 +430,6 @@ bool CGameClient::InitializeGameplay(const std::string& gamePath,
                                      RETRO::IStreamManager& streamManager,
                                      IGameInputCallback* input)
 {
-  const auto unloadGame = [this]()
-  {
-    bool success = false;
-    try
-    {
-      CClientFrameScope hwScope(Streams());
-      if (hwScope.IsBound())
-      {
-        Streams().DestroyHwContext();
-        success = LogError(m_ifc.game->toAddon->UnloadGame(m_ifc.game), "UnloadGame()");
-      }
-    }
-    catch (...)
-    {
-      LogException("UnloadGame()");
-    }
-    return success;
-  };
-
   bool gameInfoLoaded = LoadGameInfo();
   if (SupportsDiscControl() && Discs().HasPersistedState() &&
       (!gameInfoLoaded || !Discs().RestoreDiscList()))
@@ -456,7 +437,7 @@ bool CGameClient::InitializeGameplay(const std::string& gamePath,
     CLog::Log(
         LOGWARNING,
         "GameClient: Startup with persisted disc state failed; reloading original source media");
-    if (!unloadGame() || gamePath.empty())
+    if (!UnloadGame() || gamePath.empty())
       return false;
 
     Streams().Deinitialize();
@@ -480,7 +461,7 @@ bool CGameClient::InitializeGameplay(const std::string& gamePath,
 
   if (!gameInfoLoaded)
   {
-    unloadGame();
+    UnloadGame();
     return false;
   }
   if (SupportsDiscControl())
@@ -708,30 +689,35 @@ void CGameClient::CloseFile()
     if (SupportsDiscControl())
       Discs().Deinitialize();
 
-    try
-    {
-      {
-        CClientFrameScope hwScope(Streams());
-
-        if (hwScope.IsBound())
-        {
-          // GPU cleanup needs the game state that UnloadGame() releases.
-          Streams().DestroyHwContext();
-          LogError(m_ifc.game->toAddon->UnloadGame(m_ifc.game), "UnloadGame()");
-        }
-        else
-          CLog::Log(LOGERROR, "GameClient: No context to tell the client is going");
-      }
-    }
-    catch (...)
-    {
-      LogException("UnloadGame()");
-    }
+    UnloadGame();
 
     Cheevos().OnGameClosed();
 
     Streams().Deinitialize();
   }
+}
+
+bool CGameClient::UnloadGame()
+{
+  try
+  {
+    CClientFrameScope hwScope(Streams());
+    if (hwScope.IsBound())
+      Streams().DestroyHwContext();
+    else
+    {
+      CLog::Log(LOGERROR, "GameClient: Client context unavailable; skipping HwContextDestroy() and "
+                          "attempting UnloadGame() without a bound client context");
+      Streams().AbandonHwContext();
+    }
+
+    return LogError(m_ifc.game->toAddon->UnloadGame(m_ifc.game), "UnloadGame()");
+  }
+  catch (...)
+  {
+    LogException("UnloadGame()");
+  }
+  return false;
 }
 
 void CGameClient::PollInput()

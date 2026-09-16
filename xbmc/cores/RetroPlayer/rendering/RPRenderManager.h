@@ -111,7 +111,10 @@ public:
   // Hardware rendering functions
   bool Create(unsigned int width, unsigned int height);
   uintptr_t GetCurrentFramebuffer(unsigned int width, unsigned int height);
-  void RenderFrame(unsigned int width, unsigned int height, float displayAspectRatio);
+  void RenderFrame(unsigned int width,
+                   unsigned int height,
+                   float displayAspectRatio,
+                   unsigned int orientationDegCCW);
 
   /*!
    * \brief Release the framebuffer the game client renders into

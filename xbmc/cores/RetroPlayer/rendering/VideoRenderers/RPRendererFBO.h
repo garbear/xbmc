@@ -16,14 +16,6 @@
 #include <stdint.h>
 #include <string>
 
-//! The renderer needs glBlitFramebuffer and fence syncs, so it is built for
-//! desktop GL and GLES 3.0 upwards. The factory is declared either way and
-//! declines where the renderer is absent, so a caller registering it needs no
-//! build check of its own.
-#if (defined(HAS_EGL) || defined(TARGET_DARWIN_OSX)) && (defined(HAS_GL) || HAS_GLES == 3)
-#define HAS_RP_RENDERER_FBO
-#endif
-
 #include "system_gl.h"
 
 namespace KODI
@@ -57,7 +49,7 @@ public:
   RenderBufferPoolVector CreateBufferPools(CRenderContext& context) override;
 };
 
-#ifdef HAS_RP_RENDERER_FBO
+#if (defined(HAS_EGL) || defined(TARGET_DARWIN_OSX)) && (defined(HAS_GL) || HAS_GLES == 3)
 class CRPRendererFBO : public CRPBaseRenderer
 {
 public:

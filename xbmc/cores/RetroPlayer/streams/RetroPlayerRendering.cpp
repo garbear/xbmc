@@ -96,7 +96,6 @@ void CRetroPlayerRendering::CloseStream()
   // as it ends, because by then a hardware client's teardown calls would land
   // on Kodi's context instead of its own.
   m_renderManager.DestroyContext();
-  m_renderManager.Deinitialize();
 
   m_width = 0;
   m_height = 0;
@@ -175,6 +174,7 @@ HwContextProperties CRetroPlayerRendering::TranslateContextProperties(
   contextProperties.depth = properties.depth;
   contextProperties.stencil = properties.stencil;
   contextProperties.bottomLeftOrigin = properties.bottomLeftOrigin;
+  contextProperties.debugContext = properties.debugContext;
 
   return contextProperties;
 }
@@ -242,6 +242,22 @@ void CRetroPlayerRendering::AddStreamData(const StreamPacket& packet)
                 hwPacket.framebuffer, hwPacket.width, hwPacket.height);
       m_loggedHardwareFrame = true;
     }
-    m_renderManager.RenderFrame(hwPacket.width, hwPacket.height, hwPacket.displayAspectRatio);
+    unsigned int orientationDegCCW = 0;
+    switch (hwPacket.rotation)
+    {
+      case VideoRotation::ROTATION_90_CCW:
+        orientationDegCCW = 90;
+        break;
+      case VideoRotation::ROTATION_180_CCW:
+        orientationDegCCW = 180;
+        break;
+      case VideoRotation::ROTATION_270_CCW:
+        orientationDegCCW = 270;
+        break;
+      default:
+        break;
+    }
+    m_renderManager.RenderFrame(hwPacket.width, hwPacket.height, hwPacket.displayAspectRatio,
+                                orientationDegCCW);
   }
 }

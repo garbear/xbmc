@@ -83,11 +83,13 @@ struct HwFramebufferPacket : public StreamPacket
   HwFramebufferPacket(uintptr_t framebuffer,
                       unsigned int width,
                       unsigned int height,
-                      float displayAspectRatio)
+                      float displayAspectRatio,
+                      VideoRotation rotation)
     : framebuffer(framebuffer),
       width(width),
       height(height),
-      displayAspectRatio(displayAspectRatio)
+      displayAspectRatio(displayAspectRatio),
+      rotation(rotation)
   {
   }
 
@@ -97,6 +99,7 @@ struct HwFramebufferPacket : public StreamPacket
   unsigned int width{};
   unsigned int height{};
   float displayAspectRatio{};
+  VideoRotation rotation{VideoRotation::ROTATION_0};
 };
 
 class CRetroPlayerRendering : public IRetroPlayerStream

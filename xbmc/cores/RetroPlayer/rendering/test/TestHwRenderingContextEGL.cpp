@@ -51,3 +51,57 @@ TEST(TestHwRenderingContextEGL, ExtensionNamesMustBeCompleteTokens)
       "1.4",
       " EGL_KHR_surfaceless_context_extra EGL_KHR_create_context  EGL_KHR_surfaceless_context "));
 }
+
+#if defined(HAS_EGL)
+TEST(TestHwRenderingContextEGL, OrdinaryContextPreservesVersionAndProfile)
+{
+  HwContextProperties properties;
+  EXPECT_EQ(BuildEGLContextAttributes(properties, 4, 1, "1.5"),
+            (std::vector<EGLint>{EGL_CONTEXT_MAJOR_VERSION_KHR, 4, EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+                                 EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR,
+                                 EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR, EGL_NONE}));
+  properties.coreProfile = false;
+  EXPECT_EQ(BuildEGLContextAttributes(properties, 3, 2, "1.4"),
+            (std::vector<EGLint>{EGL_CONTEXT_MAJOR_VERSION_KHR, 3, EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+                                 EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR,
+                                 EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR, EGL_NONE}));
+}
+
+TEST(TestHwRenderingContextEGL, EGL15DebugUsesBooleanAttribute)
+{
+  HwContextProperties properties;
+  properties.debugContext = true;
+  EXPECT_EQ(BuildEGLContextAttributes(properties, 4, 1, "1.5 vendor"),
+            (std::vector<EGLint>{EGL_CONTEXT_MAJOR_VERSION_KHR, 4, EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+                                 EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR,
+                                 EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR, EGL_CONTEXT_OPENGL_DEBUG,
+                                 EGL_TRUE, EGL_NONE}));
+}
+
+TEST(TestHwRenderingContextEGL, EGL14DebugUsesKHRFlags)
+{
+  HwContextProperties properties;
+  properties.debugContext = true;
+  EXPECT_EQ(BuildEGLContextAttributes(properties, 3, 2, "1.4 vendor"),
+            (std::vector<EGLint>{EGL_CONTEXT_MAJOR_VERSION_KHR, 3, EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+                                 EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR,
+                                 EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR, EGL_CONTEXT_FLAGS_KHR,
+                                 EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR, EGL_NONE}));
+}
+
+TEST(TestHwRenderingContextEGL, EmbeddedDebugContextDoesNotRequestDesktopProfile)
+{
+  HwContextProperties properties;
+  properties.embedded = true;
+  properties.debugContext = true;
+  for (const char* version : {"1.4", "1.5"})
+  {
+    const bool coreAttributes = SupportsEGLHardwareRendering(version, nullptr);
+    EXPECT_EQ(BuildEGLContextAttributes(properties, 3, 0, version),
+              (std::vector<EGLint>{
+                  EGL_CONTEXT_MAJOR_VERSION_KHR, 3, EGL_CONTEXT_MINOR_VERSION_KHR, 0,
+                  coreAttributes ? EGL_CONTEXT_OPENGL_DEBUG : EGL_CONTEXT_FLAGS_KHR,
+                  coreAttributes ? EGL_TRUE : EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR, EGL_NONE}));
+  }
+}
+#endif

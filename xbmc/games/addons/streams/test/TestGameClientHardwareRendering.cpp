@@ -18,6 +18,8 @@
 #include "cores/RetroPlayer/streams/RetroPlayerVideo.h"
 #include "filesystem/File.h"
 #include "games/addons/GameClient.h"
+#include "games/addons/GameClientInGameSaves.h"
+#include "games/addons/disc/GameClientDiscs.h"
 #include "games/addons/streams/GameClientStreams.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
@@ -33,6 +35,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -101,6 +104,59 @@ struct FrameRate
 };
 template struct MemberAccess<FrameRate, &CGameClient::m_framerate>;
 
+struct InGameSaves
+{
+  using Type = std::unique_ptr<CGameClientInGameSaves> CGameClient::*;
+  friend Type GetMember(InGameSaves);
+};
+template struct MemberAccess<InGameSaves, &CGameClient::m_inGameSaves>;
+
+struct InitializeGameplay
+{
+  using Type = bool (CGameClient::*)(const std::string&,
+                                     RETRO::IStreamManager&,
+                                     IGameInputCallback*);
+  friend Type GetMember(InitializeGameplay);
+};
+template struct MemberAccess<InitializeGameplay, &CGameClient::InitializeGameplay>;
+
+struct SupportsDiscs
+{
+  using Type = bool CGameClient::*;
+  friend Type GetMember(SupportsDiscs);
+};
+template struct MemberAccess<SupportsDiscs, &CGameClient::m_supportsDiscControl>;
+
+struct PersistedDiscs
+{
+  using Type = bool CGameClientDiscs::*;
+  friend Type GetMember(PersistedDiscs);
+};
+template struct MemberAccess<PersistedDiscs, &CGameClientDiscs::m_hasPersistedState>;
+
+struct Initialized
+{
+  using Type = bool ADDON::CAddonDll::*;
+  friend Type GetMember(Initialized);
+};
+template struct MemberAccess<Initialized, &ADDON::CAddonDll::m_initialized>;
+
+std::weak_ptr<IGameClientStream> GetStreamLifetime(CGameClientStreams& streams,
+                                                   IGameClientStream* stream);
+bool HasStreams(CGameClientStreams& streams);
+
+template<auto member>
+struct StreamAccess
+{
+  friend bool HasStreams(CGameClientStreams& streams) { return !(streams.*member).empty(); }
+  friend std::weak_ptr<IGameClientStream> GetStreamLifetime(CGameClientStreams& streams,
+                                                            IGameClientStream* stream)
+  {
+    return (streams.*member).at(stream).gameStream;
+  }
+};
+template struct StreamAccess<&CGameClientStreams::m_streams>;
+
 struct Core
 {
   unsigned int frames{0};
@@ -109,14 +165,19 @@ struct Core
   unsigned int deserializations{0};
   unsigned int resets{0};
   unsigned int destroys{0};
+  unsigned int unloads{0};
+  unsigned int loads{0};
   unsigned int readyFrame{1};
   bool serializationNeedsReset{false};
   bool deserializeNeedsFrame{false};
   GAME_ERROR frameResult{GAME_ERROR_NO_ERROR};
   GAME_ERROR resetResult{GAME_ERROR_NO_ERROR};
+  GAME_ERROR unloadResult{GAME_ERROR_NO_ERROR};
   std::function<void()> onFrame;
   std::function<void()> onReset;
   std::function<void()> onDestroy;
+  std::function<void()> onUnload;
+  std::function<GAME_ERROR()> onLoad;
 };
 
 Core& GetCore(const AddonInstance_Game* game)
@@ -130,6 +191,7 @@ struct StreamState
   unsigned int opened{0};
   unsigned int closed{0};
   unsigned int deleted{0};
+  std::function<void()> onClose;
 };
 
 class ProcessInfo : public RETRO::CRPProcessInfo
@@ -164,7 +226,11 @@ public:
   void CloseStream() override
   {
     if (m_open)
+    {
       ++m_state.closed;
+      if (m_state.onClose)
+        m_state.onClose();
+    }
     m_open = false;
   }
 
@@ -271,7 +337,7 @@ protected:
     CXBMCTinyXML2 xml;
     const std::string addonXml =
         R"(<addon id="game.test.hardware" name="Hardware test" version="1.0.0">
-      <extension point="kodi.gameclient" library="test.so" />
+      <extension point="kodi.gameclient" library="test.so"><extensions>rom</extensions></extension>
       <extension point="kodi.addon.metadata"><platform>all</platform></extension>
     </addon>)";
     ASSERT_TRUE(xml.Parse(addonXml));
@@ -330,6 +396,34 @@ protected:
         core.onDestroy();
       return GAME_ERROR_NO_ERROR;
     };
+    callbacks->UnloadGame = [](const AddonInstance_Game* game)
+    {
+      auto& core = GetCore(game);
+      ++core.unloads;
+      if (core.onUnload)
+        core.onUnload();
+      return core.unloadResult;
+    };
+    callbacks->GetMemory = [](const AddonInstance_Game*, GAME_MEMORY, uint8_t**, size_t*)
+    { return GAME_ERROR_NOT_IMPLEMENTED; };
+    callbacks->CheatReset = [](const AddonInstance_Game*) { return GAME_ERROR_NOT_IMPLEMENTED; };
+    callbacks->LoadStandalone = [](const AddonInstance_Game* game)
+    {
+      auto& core = GetCore(game);
+      ++core.loads;
+      return core.onLoad ? core.onLoad() : GAME_ERROR_NO_ERROR;
+    };
+    callbacks->SetRetroAchievementsCredentials =
+        [](const AddonInstance_Game*, const char*, const char*)
+    { return GAME_ERROR_NOT_IMPLEMENTED; };
+    callbacks->RequiresGameLoop = [](const AddonInstance_Game*) { return true; };
+    callbacks->GetGameTiming = [](const AddonInstance_Game*, game_system_timing* timing)
+    {
+      timing->fps = 60;
+      timing->sample_rate = 48000;
+      return GAME_ERROR_NO_ERROR;
+    };
+    callbacks->GetRegion = [](const AddonInstance_Game*) { return GAME_REGION_NTSC; };
     m_client.get()->*GetMember(Playing{}) = true;
     m_client.get()->*GetMember(FrameRate{}) = 60.0;
     m_client->Streams().Initialize(m_manager);
@@ -340,6 +434,7 @@ protected:
     m_manager.bind = true;
     m_client->Streams().Deinitialize();
     m_client.get()->*GetMember(Playing{}) = false;
+    m_client.get()->*GetMember(Initialized{}) = false;
     m_client.reset();
     EXPECT_EQ(m_manager.depth, 0U);
   }
@@ -382,6 +477,11 @@ protected:
     { return RETRO::StreamPtr(new RenderingStream(environment.Renderer(), process, state)); };
   }
 
+  std::weak_ptr<IGameClientStream> ObserveStreamLifetime(IGameClientStream* stream)
+  {
+    return GetStreamLifetime(m_client->Streams(), stream);
+  }
+
   void CheckStartupRestore(RETRO::CPlaybackTestEnvironment& environment)
   {
     std::unique_ptr<XFILE::CFile> file(XBMC_CREATETEMPFILE(".sav"));
@@ -407,10 +507,201 @@ protected:
     EXPECT_TRUE(XBMC_DELETETEMPFILE(file.release()));
   }
 
+  void PrepareCloseFile()
+  {
+    m_client.get()->*GetMember(InGameSaves{}) =
+        std::make_unique<CGameClientInGameSaves>(m_client.get(), m_client->GetInstanceInterface());
+  }
+
+  void CheckFailedBindUnload(bool throws, GAME_ERROR result)
+  {
+    RETRO::CPlaybackTestEnvironment environment;
+    ProcessInfo process;
+    StreamState state;
+    UseRenderingStream(environment, process, state);
+    ASSERT_TRUE(Negotiate());
+    ASSERT_NE(OpenHardwareStream(), nullptr);
+    PrepareCloseFile();
+    std::vector<std::string> events;
+    state.onClose = [&events] { events.emplace_back("close"); };
+    m_core.unloadResult = result;
+    m_core.onUnload = [&]
+    {
+      events.emplace_back("unload");
+      EXPECT_EQ(m_manager.depth, 0U);
+      EXPECT_EQ(m_core.destroys, 0U);
+      // Recovery during unload must not resurrect a destroy callback after it.
+      m_manager.bind = true;
+      if (throws)
+        throw std::runtime_error("unload failed");
+    };
+    m_manager.bind = false;
+
+    EXPECT_NO_THROW(m_client->CloseFile());
+    EXPECT_FALSE(m_client->IsPlaying());
+    EXPECT_EQ(m_core.unloads, 1U);
+    EXPECT_EQ(m_core.destroys, 0U);
+    EXPECT_EQ(state.closed, 1U);
+    EXPECT_EQ(state.deleted, 1U);
+    EXPECT_EQ(events, (std::vector<std::string>{"unload", "close"}));
+    EXPECT_FALSE(HasStreams(m_client->Streams()));
+    m_client->CloseFile();
+    EXPECT_EQ(m_core.unloads, 1U);
+
+    m_core.onUnload = {};
+    m_core.unloadResult = GAME_ERROR_NO_ERROR;
+    m_core.onLoad = [&]
+    {
+      return Negotiate() && OpenHardwareStream() != nullptr ? GAME_ERROR_NO_ERROR
+                                                            : GAME_ERROR_FAILED;
+    };
+    m_client.get()->*GetMember(Initialized{}) = true;
+    ASSERT_TRUE(m_client->OpenStandalone(m_manager, nullptr));
+    EXPECT_EQ(m_core.loads, 1U);
+    EXPECT_TRUE(m_client->IsPlaying());
+    m_client->RunFrame(false);
+    EXPECT_EQ(m_core.frames, 1U);
+    m_client->CloseFile();
+    EXPECT_EQ(m_core.unloads, 2U);
+    EXPECT_EQ(m_core.destroys, 1U);
+    EXPECT_EQ(state.closed, 2U);
+    EXPECT_EQ(state.deleted, 2U);
+  }
+
   Core m_core;
   StreamManager m_manager;
   std::unique_ptr<CGameClient> m_client;
 };
+
+TEST_F(TestGameClientHardwareRendering, CloseFileDestroysBeforeUnloadAndStreamTeardown)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  ASSERT_NE(OpenHardwareStream(), nullptr);
+  PrepareCloseFile();
+  std::vector<std::string> events;
+  m_core.onDestroy = [&] { events.emplace_back("destroy"); };
+  m_core.onUnload = [&]
+  {
+    EXPECT_GT(m_manager.depth, 0U);
+    events.emplace_back("unload");
+  };
+  state.onClose = [&] { events.emplace_back("close"); };
+
+  m_client->CloseFile();
+  m_client->CloseFile();
+
+  EXPECT_EQ(events, (std::vector<std::string>{"destroy", "unload", "close"}));
+  EXPECT_EQ(m_core.unloads, 1U);
+  EXPECT_EQ(state.deleted, 1U);
+  EXPECT_FALSE(m_client->IsPlaying());
+}
+
+TEST_F(TestGameClientHardwareRendering, FailedBindStillUnloadsAndAllowsAnotherGame)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  CheckFailedBindUnload(false, GAME_ERROR_NO_ERROR);
+}
+
+TEST_F(TestGameClientHardwareRendering, FailedBindUnloadExceptionStillTearsDown)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  CheckFailedBindUnload(true, GAME_ERROR_NO_ERROR);
+}
+
+TEST_F(TestGameClientHardwareRendering, FailedBindUnloadErrorStillTearsDown)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  CheckFailedBindUnload(false, GAME_ERROR_FAILED);
+}
+
+TEST_F(TestGameClientHardwareRendering, FailedGameplayInitializationStillUnloadsWithoutContext)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  m_client.get()->*GetMember(Playing{}) = false;
+  for (const std::string path : {"game.rom", ""})
+  {
+    m_client->Streams().Initialize(m_manager);
+    m_manager.bind = true;
+    ASSERT_TRUE(Negotiate());
+    ASSERT_NE(OpenHardwareStream(), nullptr);
+    const auto unloads = m_core.unloads;
+    m_manager.bind = false;
+    m_core.onUnload = [&] { m_manager.bind = true; };
+
+    EXPECT_FALSE((m_client.get()->*GetMember(InitializeGameplay{}))(path, m_manager, nullptr));
+    m_client->Streams().Deinitialize();
+    m_client->CloseFile();
+
+    EXPECT_EQ(m_core.unloads, unloads + 1);
+    EXPECT_EQ(m_core.destroys, 0U);
+    EXPECT_FALSE(m_client->IsPlaying());
+    EXPECT_FALSE(HasStreams(m_client->Streams()));
+  }
+  EXPECT_EQ(state.deleted, 2U);
+}
+
+TEST_F(TestGameClientHardwareRendering, PersistedDiscRetryUnloadsWithoutContextBeforeReload)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  m_client.get()->*GetMember(Playing{}) = false;
+  m_client.get()->*GetMember(SupportsDiscs{}) = true;
+  m_client->Discs().*GetMember(PersistedDiscs{}) = true;
+  ASSERT_TRUE(Negotiate());
+  ASSERT_NE(OpenHardwareStream(), nullptr);
+  std::vector<std::string> events;
+  state.onClose = [&] { events.emplace_back("close"); };
+  m_core.onUnload = [&]
+  {
+    events.emplace_back("unload");
+    m_manager.bind = true;
+  };
+  m_core.onLoad = [&]
+  {
+    events.emplace_back("reload");
+    EXPECT_EQ(m_core.unloads, 1U);
+    EXPECT_EQ(m_core.destroys, 0U);
+    EXPECT_EQ(state.deleted, 1U);
+    EXPECT_FALSE(HasStreams(m_client->Streams()));
+    return GAME_ERROR_FAILED;
+  };
+  m_client->GetInstanceInterface()->toAddon->LoadGame =
+      [](const AddonInstance_Game* game, const char*) { return GetCore(game).onLoad(); };
+  m_manager.bind = false;
+
+  EXPECT_FALSE((m_client.get()->*GetMember(InitializeGameplay{}))("game.rom", m_manager, nullptr));
+  m_client->Streams().Deinitialize();
+  m_client->CloseFile();
+
+  EXPECT_EQ(events, (std::vector<std::string>{"unload", "close", "reload"}));
+  EXPECT_EQ(m_core.unloads, 1U);
+  EXPECT_EQ(m_core.destroys, 0U);
+  EXPECT_FALSE(m_client->IsPlaying());
+}
 
 TEST_F(TestGameClientHardwareRendering, FailedBindDoesNotInvokeClientOrRestoreAnotherScope)
 {
@@ -581,6 +872,124 @@ TEST_F(TestGameClientHardwareRendering, DeinitializeClosesStreamsAndNotifiesDest
   EXPECT_EQ(state.deleted, 1U);
   EXPECT_EQ(m_manager.closed, 1U);
   EXPECT_FALSE(m_client->Streams().HardwareRenderingRefused());
+}
+
+TEST_F(TestGameClientHardwareRendering, DestroyNotifiesOnceWithoutClosingStream)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  auto* stream = OpenHardwareStream();
+  ASSERT_NE(stream, nullptr);
+  const auto lifetime = ObserveStreamLifetime(stream);
+
+  m_client->Streams().DestroyHwContext();
+  m_client->Streams().DestroyHwContext();
+
+  EXPECT_EQ(m_core.destroys, 1U);
+  EXPECT_FALSE(lifetime.expired());
+  EXPECT_EQ(state.closed, 0U);
+  EXPECT_EQ(m_manager.closed, 0U);
+  m_client->Streams().CloseStream(stream);
+  EXPECT_TRUE(lifetime.expired());
+  EXPECT_EQ(m_core.destroys, 1U);
+  EXPECT_EQ(state.closed, 1U);
+  EXPECT_EQ(state.deleted, 1U);
+  EXPECT_EQ(m_manager.closed, 1U);
+}
+
+TEST_F(TestGameClientHardwareRendering, DestroyMayCloseItsStreamWithoutDeletingActiveCallback)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  auto* stream = OpenHardwareStream();
+  ASSERT_NE(stream, nullptr);
+  const auto lifetime = ObserveStreamLifetime(stream);
+  m_core.onDestroy = [&]
+  {
+    EXPECT_GT(m_manager.depth, 0U);
+    m_client->Streams().CloseStream(stream);
+    EXPECT_FALSE(lifetime.expired());
+    m_client->Streams().DestroyHwContext();
+  };
+
+  m_client->Streams().DestroyHwContext();
+
+  EXPECT_TRUE(lifetime.expired());
+  EXPECT_FALSE(m_client->Streams().StartStream(stream));
+  m_client->Streams().CloseStream(stream);
+  m_client->Streams().DestroyHwContext();
+  EXPECT_EQ(m_core.destroys, 1U);
+  EXPECT_EQ(state.closed, 1U);
+  EXPECT_EQ(state.deleted, 1U);
+  EXPECT_EQ(m_manager.closed, 1U);
+  EXPECT_EQ(m_manager.depth, 0U);
+
+  m_core.onDestroy = {};
+  ASSERT_TRUE(Negotiate());
+  auto* reopened = OpenHardwareStream();
+  ASSERT_NE(reopened, nullptr);
+  EXPECT_EQ(m_core.resets, 2U);
+  m_client->Streams().CloseStream(reopened);
+  EXPECT_EQ(m_core.destroys, 2U);
+  EXPECT_EQ(state.closed, 2U);
+  EXPECT_EQ(state.deleted, 2U);
+  EXPECT_EQ(m_manager.closed, 2U);
+}
+
+TEST_F(TestGameClientHardwareRendering, DestroyPreservesStreamReopenedByItsCallback)
+{
+  if (!HARDWARE_API_SUPPORTED)
+    GTEST_SKIP() << "This build has no supported hardware rendering API";
+
+  RETRO::CPlaybackTestEnvironment environment;
+  ProcessInfo process;
+  StreamState state;
+  UseRenderingStream(environment, process, state);
+  ASSERT_TRUE(Negotiate());
+  auto* stream = OpenHardwareStream();
+  ASSERT_NE(stream, nullptr);
+  const auto lifetime = ObserveStreamLifetime(stream);
+  IGameClientStream* reopened = nullptr;
+  m_core.onDestroy = [&]
+  {
+    m_client->Streams().CloseStream(stream);
+    EXPECT_FALSE(lifetime.expired());
+    ASSERT_TRUE(Negotiate());
+    reopened = OpenHardwareStream();
+  };
+
+  m_client->Streams().DestroyHwContext();
+  m_core.onDestroy = {};
+
+  EXPECT_TRUE(lifetime.expired());
+  ASSERT_NE(reopened, nullptr);
+  EXPECT_TRUE(m_client->Streams().StartStream(reopened));
+  EXPECT_EQ(m_core.resets, 2U);
+  EXPECT_EQ(m_core.destroys, 1U);
+  EXPECT_EQ(state.closed, 1U);
+  EXPECT_EQ(state.deleted, 1U);
+  EXPECT_EQ(m_manager.closed, 1U);
+  game_stream_buffer buffer{};
+  buffer.type = GAME_STREAM_HW_FRAMEBUFFER;
+  EXPECT_TRUE(reopened->GetBuffer(640, 480, buffer));
+  EXPECT_EQ(buffer.hw_framebuffer.framebuffer, 42U);
+  m_client->Streams().CloseStream(reopened);
+  EXPECT_EQ(m_core.destroys, 2U);
+  EXPECT_EQ(state.closed, 2U);
+  EXPECT_EQ(state.deleted, 2U);
+  EXPECT_EQ(m_manager.closed, 2U);
 }
 
 TEST_F(TestGameClientHardwareRendering, ResetFailureClosesStreamAndAllowsRenegotiation)

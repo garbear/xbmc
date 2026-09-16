@@ -88,11 +88,11 @@ IRenderBuffer* CBaseRenderBufferPool::GetBuffer(unsigned int width, unsigned int
     {
       std::unique_ptr<IRenderBuffer>& buffer = *it;
 
-      // Only return buffers of the same dimensions
+      // Buffers can return after the stream changes format.
       const unsigned int bufferWidth = buffer->GetWidth();
       const unsigned int bufferHeight = buffer->GetHeight();
 
-      if (bufferWidth == width && bufferHeight == height)
+      if (buffer->GetFormat() == m_format && bufferWidth == width && bufferHeight == height)
       {
         renderBuffer = buffer.release();
         renderBuffer->SetHeader(header);

@@ -86,6 +86,12 @@ public:
 
   bool Create(const HwContextProperties& properties) override
   {
+    if (properties.debugContext)
+    {
+      CLog::Log(LOGERROR, "RetroPlayer[RENDER]: Native macOS OpenGL cannot create a debug context");
+      return false;
+    }
+
     if (!m_supported || m_created || properties.embedded || !properties.coreProfile)
       return false;
 

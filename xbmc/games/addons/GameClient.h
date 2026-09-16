@@ -254,6 +254,7 @@ private:
                           RETRO::IStreamManager& streamManager,
                           IGameInputCallback* input);
   bool LoadGameInfo();
+  bool UnloadGame();
   void NotifyError(GAME_ERROR error);
   std::string GetMissingResource();
 

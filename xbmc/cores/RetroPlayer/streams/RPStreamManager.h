@@ -22,7 +22,7 @@ class CRPStreamManager : public IStreamManager
 {
 public:
   CRPStreamManager(CRPRenderManager& renderManager, CRPProcessInfo& processInfo);
-  ~CRPStreamManager() override = default;
+  ~CRPStreamManager() override;
 
   void EnableAudio(bool bEnable);
 

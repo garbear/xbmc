@@ -70,6 +70,7 @@ public:
    * rendering client, and nothing on a second call.
    */
   void DestroyHwContext();
+  void AbandonHwContext();
 
   bool HardwareRenderingRefused() const { return !m_hwRefusedWanted.empty(); }
 

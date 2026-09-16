@@ -209,10 +209,10 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
   else
   {
     m_input.reset();
-    m_streamManager.reset();
     if (m_gameClient)
       m_gameClient->Unload();
     m_gameClient.reset();
+    m_streamManager.reset();
   }
 
   return bSuccess;

@@ -15,6 +15,8 @@
 #include "utils/StringUtils.h"
 #include "utils/log.h"
 #include "windowing/WinSystem.h"
+
+#include "system_gl.h"
 #if defined(TARGET_ANDROID)
 #include "windowing/android/WinSystemAndroidGLESContext.h"
 #else
@@ -53,6 +55,37 @@ private:
   const EGLenum m_api{eglQueryAPI()};
 };
 
+bool IsDebugContext()
+{
+#if defined(HAS_GLES)
+  GLint major = 0, minor = 0;
+  glGetIntegerv(GL_MAJOR_VERSION, &major);
+  glGetIntegerv(GL_MINOR_VERSION, &minor);
+  bool supportsDebugOutput = major > 3 || (major == 3 && minor >= 2);
+  if (!supportsDebugOutput)
+  {
+    GLint count = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &count);
+    for (GLint index = 0; index < count; ++index)
+    {
+      const auto* extension = glGetStringi(GL_EXTENSIONS, index);
+      if (extension && std::string_view(reinterpret_cast<const char*>(extension)) == "GL_KHR_debug")
+      {
+        supportsDebugOutput = true;
+        break;
+      }
+    }
+  }
+  // ES 3.0/3.1 cannot query context flags; KHR_debug specifies this initial state instead.
+  return supportsDebugOutput && glIsEnabled(GL_DEBUG_OUTPUT_KHR) == GL_TRUE &&
+         glGetError() == GL_NO_ERROR;
+#else
+  GLint flags = 0;
+  glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+  return glGetError() == GL_NO_ERROR && (flags & GL_CONTEXT_FLAG_DEBUG_BIT) != 0;
+#endif
+}
+
 class CHwRenderingContextEGL : public IHwRenderingContext
 {
 public:
@@ -67,6 +100,8 @@ public:
   void Destroy() override;
 
 private:
+  bool RestorePreviousContext();
+
   CRenderContext& m_context;
   EGLenum m_prevAPI{EGL_OPENGL_ES_API};
   EGLDisplay m_prevDisplay{EGL_NO_DISPLAY};
@@ -208,27 +243,10 @@ bool CHwRenderingContextEGL::Create(const HwContextProperties& properties)
   // Ask the driver for each in turn rather than keeping a table of what it
   // supports. A refusal fails the stream cleanly and the client falls back.
   std::string contextName;
+  const char* eglVersion = eglQueryString(m_eglDisplay, EGL_VERSION);
   for (const auto& [major, minor] : versions)
   {
-    std::vector<EGLint> contextAttribs;
-
-    if (major != 0)
-    {
-      contextAttribs.push_back(EGL_CONTEXT_MAJOR_VERSION_KHR);
-      contextAttribs.push_back(static_cast<EGLint>(major));
-      contextAttribs.push_back(EGL_CONTEXT_MINOR_VERSION_KHR);
-      contextAttribs.push_back(static_cast<EGLint>(minor));
-    }
-
-    if (!properties.embedded)
-    {
-      contextAttribs.push_back(EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR);
-      contextAttribs.push_back(properties.coreProfile
-                                   ? EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR
-                                   : EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR);
-    }
-
-    contextAttribs.push_back(EGL_NONE);
+    const auto contextAttribs = BuildEGLContextAttributes(properties, major, minor, eglVersion);
 
     contextName = apiName;
     if (major != 0)
@@ -238,6 +256,20 @@ bool CHwRenderingContextEGL::Create(const HwContextProperties& properties)
                                     contextAttribs.data());
     if (m_eglContext != EGL_NO_CONTEXT)
     {
+      if (properties.debugContext)
+      {
+        const bool bound = MakeCurrent();
+        const bool debugContext = bound && IsDebugContext();
+        const bool restored = !bound || RestorePreviousContext();
+        if (!debugContext || !restored)
+        {
+          CLog::Log(LOGERROR,
+                    "RetroPlayer[RENDER]: Could not verify the requested {} debug context",
+                    contextName);
+          Destroy();
+          return false;
+        }
+      }
       CLog::Log(LOGINFO,
                 "RetroPlayer[RENDER]: Created a {} context for the game client, sharing Kodi's "
                 "objects",
@@ -255,9 +287,7 @@ bool CHwRenderingContextEGL::Create(const HwContextProperties& properties)
     return false;
   }
 
-  // Not made current here: a binding is per-thread, and the thread that opened
-  // the stream can be Kodi's own rendering thread, which would lose the window
-  // surface it presents with. BeginClientFrame() binds it around the work.
+  // Leave the caller's context and window surfaces current until BeginClientFrame().
   return true;
 }
 
@@ -284,6 +314,11 @@ bool CHwRenderingContextEGL::MakeCurrent()
 
 void CHwRenderingContextEGL::RestoreCurrent()
 {
+  RestorePreviousContext();
+}
+
+bool CHwRenderingContextEGL::RestorePreviousContext()
+{
   if (m_prevAPI != CLIENT_API)
     eglMakeCurrent(m_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
   eglBindAPI(m_prevAPI);
@@ -303,6 +338,7 @@ void CHwRenderingContextEGL::RestoreCurrent()
   m_prevDisplay = EGL_NO_DISPLAY;
   m_prevContext = EGL_NO_CONTEXT;
   m_prevDraw = m_prevRead = EGL_NO_SURFACE;
+  return restored == EGL_TRUE;
 }
 
 void CHwRenderingContextEGL::Destroy()

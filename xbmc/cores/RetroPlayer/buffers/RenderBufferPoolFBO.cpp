@@ -87,8 +87,9 @@ CRenderBufferFBO* CRenderBufferPoolFBO::CreateFBO(CRenderBufferFBO::Type type)
     return nullptr;
   }
 
-  auto buffer = std::make_unique<CRenderBufferFBO>(m_context, m_contextProperties.depth,
-                                                   m_contextProperties.stencil,
+  const bool client = type == CRenderBufferFBO::Type::CLIENT;
+  auto buffer = std::make_unique<CRenderBufferFBO>(m_context, client && m_contextProperties.depth,
+                                                   client && m_contextProperties.stencil,
                                                    m_contextProperties.bottomLeftOrigin, type);
   m_resources.emplace_back(buffer->m_resources);
   return buffer.release();

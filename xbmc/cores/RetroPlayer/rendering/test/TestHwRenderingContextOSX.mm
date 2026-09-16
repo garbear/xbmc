@@ -153,6 +153,27 @@ TEST_F(TestHwRenderingContextOSX, RejectsUnsupportedVersionsAndProfiles)
   EXPECT_EQ(CGLGetCurrentContext(), [m_guiContext CGLContextObj]);
 }
 
+TEST_F(TestHwRenderingContextOSX, RejectsDebugContextAndAllowsOrdinaryContextAfterwards)
+{
+  auto context = CreateHwRenderingContextOSX(m_guiContext);
+  HwContextProperties properties;
+  properties.debugContext = true;
+  EXPECT_FALSE(context->Create(properties));
+  EXPECT_FALSE(context->IsCreated());
+  EXPECT_FALSE(context->MakeCurrent());
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_EQ(CGLGetCurrentContext(), [m_guiContext CGLContextObj]);
+
+  properties.debugContext = false;
+  ASSERT_TRUE(context->Create(properties));
+  ASSERT_TRUE(context->MakeCurrent());
+  context->RestoreCurrent();
+  context->Destroy();
+  EXPECT_FALSE(context->IsCreated());
+  EXPECT_EQ([NSOpenGLContext currentContext], m_guiContext);
+  EXPECT_EQ(glGetError(), GL_NO_ERROR);
+}
+
 TEST_F(TestHwRenderingContextOSX, LegacyGuiProfileCannotAdvertiseSharedCoreContext)
 {
   const NSOpenGLPixelFormatAttribute attributes[] = {
@@ -603,6 +624,83 @@ TEST_F(TestRenderBufferPoolFBOOSX, SameSizeCaptureResumesAfterFlushAcrossContext
   }
 }
 
+class TestRenderBufferPoolFBOAttachmentsOSX
+  : public TestRenderBufferPoolFBOOSX,
+    public testing::WithParamInterface<std::array<bool, 2>>
+{
+};
+
+TEST_P(TestRenderBufferPoolFBOAttachmentsOSX,
+       CaptureRemainsColorOnlyAcrossReuseFlushAndContextRecreation)
+{
+  const auto expectAttachments = [](CRenderBufferFBO& buffer, bool depth, bool stencil)
+  {
+    glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(buffer.GetCurrentFramebuffer()));
+    EXPECT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+    GLint attachment = GL_NONE;
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &attachment);
+    EXPECT_EQ(attachment, GL_TEXTURE);
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &attachment);
+    EXPECT_EQ(attachment, depth ? GL_RENDERBUFFER : GL_NONE);
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &attachment);
+    EXPECT_EQ(attachment, stencil ? GL_RENDERBUFFER : GL_NONE);
+  };
+
+  HwContextProperties properties;
+  properties.depth = GetParam()[0];
+  properties.stencil = GetParam()[1];
+  for (unsigned int cycle = 0; cycle < 2; ++cycle)
+  {
+    SCOPED_TRACE(cycle);
+    m_pool->DestroyContext();
+    ASSERT_TRUE(m_pool->CreateContext(properties));
+    ASSERT_TRUE(m_pool->Configure(AV_PIX_FMT_NONE));
+    ASSERT_TRUE(m_pool->BeginClientFrame());
+    auto client = GetClient(4, 4);
+    ASSERT_NE(client, nullptr);
+    const auto clientFramebuffer = client->GetCurrentFramebuffer();
+    const auto clientTexture = client->TextureID();
+    uintptr_t captureFramebuffer = 0;
+    for (unsigned int frame = 0; frame < 3; ++frame)
+    {
+      SCOPED_TRACE(frame);
+      if (frame == 2)
+      {
+        m_pool->Flush();
+        EXPECT_FALSE(m_pool->IsConfigured());
+      }
+      expectAttachments(*client, properties.depth, properties.stencil);
+      glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+      glClear(GL_COLOR_BUFFER_BIT);
+      auto captured = Capture(client.get(), 4, 4);
+      ASSERT_NE(captured, nullptr);
+      EXPECT_TRUE(m_pool->IsConfigured());
+      expectAttachments(*captured, false, false);
+      std::array<unsigned char, 4> pixel{};
+      glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
+      EXPECT_EQ(pixel, (std::array<unsigned char, 4>{255, 0, 0, 255}));
+      if (frame == 1)
+        EXPECT_EQ(captured->GetCurrentFramebuffer(), captureFramebuffer);
+      captureFramebuffer = captured->GetCurrentFramebuffer();
+      EXPECT_EQ(client->GetCurrentFramebuffer(), clientFramebuffer);
+      EXPECT_EQ(client->TextureID(), clientTexture);
+      EXPECT_EQ(client->TextureWidth(), 4);
+      EXPECT_EQ(client->TextureHeight(), 4);
+      EXPECT_EQ(glGetError(), GL_NO_ERROR);
+    }
+    m_pool->EndClientFrame();
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(RequestedAttachments,
+                         TestRenderBufferPoolFBOAttachmentsOSX,
+                         testing::Values(std::array{false, false},
+                                         std::array{true, false},
+                                         std::array{true, true}));
+
 TEST_F(TestRenderBufferPoolFBOOSX, TeardownPreservesGuiContainerObjectsAndBindings)
 {
   GLuint guiVertexArray = 0;
@@ -721,14 +819,24 @@ public:
     return result;
   }
 
-  void Draw(CRenderBufferFBO* buffer, const CRect& crop, unsigned int rotation)
+  void Draw(CRenderBufferFBO* buffer, const CRect& crop)
   {
     SetBuffer(buffer);
-    m_sourceRect = crop;
-    m_rotatedDestCoords = CRenderUtils::ReorderDrawPoints({0, 0, 8, 8}, rotation);
-    m_shaderPreset->SetVideoSize(buffer->GetWidth(), buffer->GetHeight());
-    RenderInternal(false, 128);
+    m_crop = crop;
+    RenderFrame(false, 128);
   }
+
+protected:
+  void RenderInternal(bool clear, uint8_t alpha) override
+  {
+    m_sourceRect = m_crop;
+    m_shaderPreset->SetVideoSize(m_renderBuffer->GetWidth(), m_renderBuffer->GetHeight());
+    CRPRendererFBO::RenderInternal(clear, alpha);
+    EXPECT_FALSE(glIsEnabled(GL_SCISSOR_TEST));
+  }
+
+private:
+  CRect m_crop;
 };
 } // namespace
 
@@ -740,6 +848,7 @@ TEST_F(TestRenderBufferPoolFBOOSX, FilteredAndUnfilteredControlsPreserveOrientat
   CRenderContext context(&window, &window, window.GetGfxContext(), CDisplaySettings::GetInstance(),
                          CMediaSettings::GetInstance(), CServiceBroker::GetGameServices(),
                          CServiceBroker::GetGUI());
+  context.SetViewWindow(0, 0, 8, 8);
   glMatrixProject->LoadIdentity();
   glMatrixProject->Ortho2D(0, 8, 8, 0);
   glMatrixModview->LoadIdentity();
@@ -776,6 +885,7 @@ TEST_F(TestRenderBufferPoolFBOOSX, FilteredAndUnfilteredControlsPreserveOrientat
       for (bool filtered : {false, true})
       {
         CTestFBORenderer renderer({}, context, m_pool);
+        ASSERT_TRUE(renderer.Configure(AV_PIX_FMT_NONE));
         auto* preset = filtered ? renderer.UseDirectionalPreset() : nullptr;
         for (unsigned int rotation : {0u, 90u, 180u, 270u})
         {
@@ -793,13 +903,14 @@ TEST_F(TestRenderBufferPoolFBOOSX, FilteredAndUnfilteredControlsPreserveOrientat
             glClearColor(0, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
             const float inset = cropped ? height / 4.0f : 0.0f;
-            renderer.Draw(captured.get(), {0, inset, 4, height - inset}, rotation);
+            captured->SetRotation(rotation);
+            captured->SetDisplayAspectRatio(1.0f);
+            renderer.Draw(captured.get(), {0, inset, 4, height - inset});
             GLint restored = 0;
             glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &restored);
             EXPECT_EQ(restored, framebuffer);
             glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &restored);
             EXPECT_EQ(restored, framebuffer);
-            EXPECT_FALSE(glIsEnabled(GL_SCISSOR_TEST));
             std::array<GLint, 4> viewport{};
             glGetIntegerv(GL_VIEWPORT, viewport.data());
             EXPECT_EQ(viewport, (std::array<GLint, 4>{0, 0, 8, 8}));

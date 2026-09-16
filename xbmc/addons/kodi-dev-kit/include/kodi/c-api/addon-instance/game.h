@@ -451,6 +451,9 @@ extern "C"
     /// An aspect ratio of 0.0 indicates square pixels, i.e. a DAR of W/H.
     ///
     float display_aspect_ratio;
+
+    /// @brief Video rotation angle defined by @ref GAME_VIDEO_ROTATION
+    GAME_VIDEO_ROTATION rotation;
   } ATTR_PACKED game_stream_hw_framebuffer_packet;
   //----------------------------------------------------------------------------
 

@@ -566,6 +566,10 @@ public:
     ///
     /// @param[in] packet The data packet
     ///
+    /// Hardware packets carry the current frame size, display aspect ratio and
+    /// rotation. Rotation affects presentation geometry; it does not change
+    /// the framebuffer contents or the context's bottom-left-origin setting.
+    ///
     /// @remarks Only called from the add-on itself
     ///
     void AddData(const game_stream_packet& packet)

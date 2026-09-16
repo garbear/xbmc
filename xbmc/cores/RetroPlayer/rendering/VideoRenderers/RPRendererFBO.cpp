@@ -8,7 +8,7 @@
 
 #include "RPRendererFBO.h"
 
-#ifdef HAS_RP_RENDERER_FBO
+#if (defined(HAS_EGL) || defined(TARGET_DARWIN_OSX)) && (defined(HAS_GL) || HAS_GLES == 3)
 #include "RenderGeometryFBO.h"
 #include "cores/RetroPlayer/buffers/RenderBufferFBO.h"
 #include "cores/RetroPlayer/buffers/RenderBufferPoolFBO.h"
@@ -38,7 +38,7 @@ using namespace RETRO;
 
 // --- CRendererFactoryFBO ------------------------------------------------
 
-#ifdef HAS_RP_RENDERER_FBO
+#if (defined(HAS_EGL) || defined(TARGET_DARWIN_OSX)) && (defined(HAS_GL) || HAS_GLES == 3)
 namespace
 {
 // State not covered by CRPBaseRenderer's GUI state block.

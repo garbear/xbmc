@@ -45,6 +45,9 @@ struct HwContextProperties
   unsigned int versionMajor{0};
   unsigned int versionMinor{0};
 
+  //! \brief Require a debug rendering context
+  bool debugContext{false};
+
   //! \brief The core needs a depth attachment on the framebuffer
   bool depth{false};
 

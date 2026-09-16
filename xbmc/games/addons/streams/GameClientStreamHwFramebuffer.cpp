@@ -10,6 +10,7 @@
 
 #include "addons/kodi-dev-kit/include/kodi/addon-instance/Game.h"
 #include "cores/RetroPlayer/streams/RetroPlayerRendering.h"
+#include "games/addons/GameClientTranslator.h"
 #include "utils/StringUtils.h"
 #include "utils/log.h"
 
@@ -43,7 +44,7 @@ bool CGameClientStreamHwFramebuffer::OpenStream(RETRO::IRetroPlayerStream* strea
   if (m_stream == nullptr)
     return false;
 
-  m_hwContextDestroyed = false;
+  m_hwContextEnded = false;
   m_hwContextResetStarted = false;
   m_hwContextReady = false;
   return true;
@@ -51,27 +52,34 @@ bool CGameClientStreamHwFramebuffer::OpenStream(RETRO::IRetroPlayerStream* strea
 
 bool CGameClientStreamHwFramebuffer::ResetHwContext()
 {
-  if (m_stream == nullptr || m_hwContextDestroyed)
+  if (m_stream == nullptr || m_hwContextEnded)
     return false;
 
   if (!m_hwContextResetStarted)
   {
     m_hwContextResetStarted = true;
     const bool reset = m_callback.HardwareContextReset();
-    m_hwContextReady = reset && m_stream != nullptr && !m_hwContextDestroyed;
+    m_hwContextReady = reset && m_stream != nullptr && !m_hwContextEnded;
   }
   return m_hwContextReady;
 }
 
 void CGameClientStreamHwFramebuffer::DestroyHwContext()
 {
-  if (m_stream == nullptr || !m_hwContextResetStarted || m_hwContextDestroyed)
+  if (m_stream == nullptr || !m_hwContextResetStarted || m_hwContextEnded)
     return;
 
-  m_hwContextDestroyed = true;
+  m_hwContextEnded = true;
 
   // The callback binds the client context before releasing its GPU resources.
   m_callback.HardwareContextDestroy();
+}
+
+void CGameClientStreamHwFramebuffer::AbandonHwContext()
+{
+  // A lost context must never notify the client after its game state is unloaded.
+  m_hwContextEnded = true;
+  m_hwContextReady = false;
 }
 
 void CGameClientStreamHwFramebuffer::CloseStream()
@@ -117,9 +125,10 @@ void CGameClientStreamHwFramebuffer::AddData(const game_stream_packet& packet)
   {
     const game_stream_hw_framebuffer_packet& hwFramebuffer = packet.hw_framebuffer;
 
-    RETRO::HwFramebufferPacket hwFramebufferPacket{hwFramebuffer.framebuffer, hwFramebuffer.width,
-                                                   hwFramebuffer.height,
-                                                   hwFramebuffer.display_aspect_ratio};
+    RETRO::HwFramebufferPacket hwFramebufferPacket{
+        hwFramebuffer.framebuffer, hwFramebuffer.width, hwFramebuffer.height,
+        hwFramebuffer.display_aspect_ratio,
+        CGameClientTranslator::TranslateRotation(hwFramebuffer.rotation)};
     m_stream->AddStreamData(static_cast<const RETRO::StreamPacket&>(hwFramebufferPacket));
   }
 }
