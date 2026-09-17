@@ -288,7 +288,7 @@ bool CRetroPlayer::CanPause() const
   return m_playback->CanPause();
 }
 
-void CRetroPlayer::Pause()
+void CRetroPlayer::Pause(bool showOSD)
 {
   if (!CanPause())
     return;
@@ -300,7 +300,7 @@ void CRetroPlayer::Pause()
   else
     speed = 0.0f;
 
-  SetSpeed(speed);
+  SetSpeed(speed, showOSD);
 }
 
 bool CRetroPlayer::CanSeek() const
@@ -399,6 +399,11 @@ uint64_t CRetroPlayer::GetTotalTime()
 
 void CRetroPlayer::SetSpeed(float speed)
 {
+  SetSpeed(speed, true);
+}
+
+void CRetroPlayer::SetSpeed(float speed, bool showOSD)
+{
   if (m_playback->GetSpeed() != static_cast<double>(speed))
   {
     if (speed == 1.0f)
@@ -407,6 +412,9 @@ void CRetroPlayer::SetSpeed(float speed)
       m_callback.OnPlayBackPaused();
 
     SetSpeedInternal(static_cast<double>(speed));
+
+    if (!showOSD)
+      return;
 
     if (speed == 0.0f)
     {
