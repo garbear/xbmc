@@ -42,7 +42,7 @@ using namespace RETRO;
 #if (defined(HAS_EGL) || defined(TARGET_DARWIN_OSX)) && (defined(HAS_GL) || HAS_GLES == 3)
 namespace
 {
-// State not covered by CRPBaseRenderer's GUI state block.
+// Restore the GUI render target before presenting the filtered texture.
 class CFramebufferState
 {
 public:
@@ -53,7 +53,6 @@ public:
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_drawFbo);
     glGetIntegerv(GL_VIEWPORT, m_viewport);
     glGetIntegerv(GL_SCISSOR_BOX, m_scissorBox);
-    m_scissorEnabled = glIsEnabled(GL_SCISSOR_TEST);
 #if defined(HAS_GL)
     m_sRGBEnabled = glIsEnabled(GL_FRAMEBUFFER_SRGB);
 #endif
@@ -73,10 +72,6 @@ public:
       glBindFramebuffer(GL_FRAMEBUFFER, m_drawFbo);
     glViewport(m_viewport[0], m_viewport[1], m_viewport[2], m_viewport[3]);
     glScissor(m_scissorBox[0], m_scissorBox[1], m_scissorBox[2], m_scissorBox[3]);
-    if (m_scissorEnabled)
-      glEnable(GL_SCISSOR_TEST);
-    else
-      glDisable(GL_SCISSOR_TEST);
 #if defined(HAS_GL)
     if (m_sRGBEnabled)
       glEnable(GL_FRAMEBUFFER_SRGB);
@@ -91,7 +86,6 @@ private:
   GLint m_drawFbo{};
   GLint m_viewport[4]{};
   GLint m_scissorBox[4]{};
-  GLboolean m_scissorEnabled{};
 #if defined(HAS_GL)
   GLboolean m_sRGBEnabled{};
 #endif
@@ -157,8 +151,6 @@ void CRPRendererFBO::RenderInternal(bool clear, uint8_t alpha)
   GLint program;
   GLint arrayBuffer;
   GLint unpackBuffer = 0;
-  GLint vertexArray = 0;
-  GLint elementBuffer = 0;
   GLint texture;
   GLint blendSrcRGB;
   GLint blendDstRGB;
@@ -168,12 +160,13 @@ void CRPRendererFBO::RenderInternal(bool clear, uint8_t alpha)
   glGetIntegerv(GL_CURRENT_PROGRAM, &program);
   glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &arrayBuffer);
   if (m_guiSupportsGL3)
-  {
     glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &unpackBuffer);
-    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vertexArray);
-  }
-  else
-    glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &elementBuffer);
+#if defined(HAS_GLES)
+  // Unlike desktop GL, the GLES state block does not restore vertex bindings.
+  GLint vertexBinding;
+  glGetIntegerv(m_guiSupportsGL3 ? GL_VERTEX_ARRAY_BINDING : GL_ELEMENT_ARRAY_BUFFER_BINDING,
+                &vertexBinding);
+#endif
   glGetIntegerv(GL_TEXTURE_BINDING_2D, &texture);
   glGetIntegerv(GL_BLEND_SRC_RGB, &blendSrcRGB);
   glGetIntegerv(GL_BLEND_DST_RGB, &blendDstRGB);
@@ -199,13 +192,14 @@ void CRPRendererFBO::RenderInternal(bool clear, uint8_t alpha)
   Render(alpha);
 
   glUseProgram(program);
+#if defined(HAS_GLES)
   if (m_guiSupportsGL3)
-  {
-    glBindVertexArray(vertexArray);
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
-  }
+    glBindVertexArray(vertexBinding);
   else
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBinding);
+#endif
+  if (m_guiSupportsGL3)
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -412,21 +406,9 @@ void CRPRendererFBO::Render(uint8_t alpha)
 
   if (m_guiSupportsGL3)
     glBindVertexArray(m_vao);
-  Updateshaders();
+  UpdateShaders();
 
-  {
-    const std::string& presetPath = m_renderSettings.VideoSettings().GetShaderPreset();
-    const size_t passCount = m_shaderPreset ? m_shaderPreset->GetPasses().size() : 0;
-    if (presetPath != m_lastLoggedPreset || m_bUseShaderPreset != m_bLastLoggedUsePreset)
-    {
-      CLog::Log(LOGINFO, "RetroPlayer[RENDER]: Video filter is \"{}\", in use {}, {} passes",
-                presetPath.empty() ? "<none>" : presetPath, m_bUseShaderPreset, passCount);
-      m_lastLoggedPreset = presetPath;
-      m_bLastLoggedUsePreset = m_bUseShaderPreset;
-    }
-  }
-
-  if (m_bUseShaderPreset && !m_shaderPreset->GetPasses().empty())
+  if (m_bUseShaderPreset)
   {
     const CFramebufferState framebufferState(m_guiSupportsGL3);
     const CSize destSize = CRenderGeometryFBO::GetShaderOutputSize(

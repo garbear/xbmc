@@ -112,9 +112,6 @@ protected:
   FrameGeometry m_loggedGeometry;
   bool m_loggedHardwarePresentation{false};
 
-  std::string m_lastLoggedPreset{"\0"};
-  bool m_bLastLoggedUsePreset{false};
-
   //! \brief Isolates vertex attributes and index bindings from the GUI
   GLuint m_vao{0};
   bool m_guiSupportsGL3{true};
