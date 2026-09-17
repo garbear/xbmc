@@ -192,6 +192,7 @@ protected:
     cheats = static_cast<TestCheats*>(subsystems.Cheats.get());
     file = XBMC_CREATETEMPFILE(".cht");
     ASSERT_NE(file, nullptr);
+    file->Close();
     WritePack("cheats = 2\ncheat0_desc = Lives\ncheat0_code = AAA\n"
               "cheat1_desc = Health\ncheat1_code = BBB\n");
     cheats->sources = {{DATABASE, XBMC_TEMPFILEPATH(file), info}};
