@@ -17,11 +17,13 @@
 #include "addons/AddonInstaller.h"
 #include "addons/AddonManager.h"
 #include "addons/GameResource.h"
+#include "addons/addoninfo/AddonInfo.h"
 #include "addons/addoninfo/AddonType.h"
 #include "addons/kodi-dev-kit/include/kodi/c-api/addon-instance/game.h"
 #include "filesystem/Directory.h"
 #include "filesystem/File.h"
 #include "games/addons/GameClient.h"
+#include "games/cheats/CheatUtils.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIMessage.h"
 #include "guilib/GUIWindowManager.h"
@@ -30,7 +32,9 @@
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
 #include "threads/CriticalSection.h"
+#include "utils/StringUtils.h"
 #include "utils/URIUtils.h"
+#include "utils/XBMCTinyXML2.h"
 #include "utils/log.h"
 
 #include <algorithm>
@@ -44,65 +48,16 @@ namespace
 {
 constexpr auto SETTING_GAMES_CHEATS_PATH = "gamesgeneral.cheatspath";
 
-constexpr auto CHEAT_EXTENSION = ".cht";
-
 //! The add-on carrying the libretro cheat database, one zip per system
 constexpr auto CHEATS_ADDON = "resource.games.cheats.libretro";
 
-std::vector<std::string> SystemFolders(const std::string& cheatsFolder)
-{
-  std::vector<std::string> folders;
-
-  CFileItemList entries;
-  if (!XFILE::CDirectory::GetDirectory(cheatsFolder, entries, "", XFILE::DIR_FLAG_NO_FILE_DIRS))
-    return folders;
-
-  for (int i = 0; i < entries.Size(); ++i)
-  {
-    const CFileItemPtr& entry = entries[i];
-
-    if (entry->IsFolder())
-      folders.emplace_back(entry->GetPath());
-    else if (URIUtils::HasExtension(entry->GetPath(), ".zip"))
-      folders.emplace_back(URIUtils::CreateArchivePath("zip", CURL(entry->GetPath())).Get());
-  }
-
-  return folders;
-}
-
-CCheatPack FindCheats(const std::string& cheatsFolder, const std::string& fileName)
-{
-  const std::string direct = URIUtils::AddFileToFolder(cheatsFolder, fileName);
-  if (XFILE::CFile::Exists(direct))
-    return CCheatPack::Load(direct);
-
-  // A database laid out one folder per system can hold the same game name
-  // under more than one console, and nothing here says which is meant. Sending
-  // another console's codes is worse than sending none.
-  std::string match;
-  for (const std::string& system : SystemFolders(cheatsFolder))
-  {
-    const std::string path = URIUtils::AddFileToFolder(system, fileName);
-    if (!XFILE::CFile::Exists(path))
-      continue;
-
-    if (!match.empty())
-    {
-      CLog::Log(LOGDEBUG, "CGameClientCheats: \"{}\" is in more than one system, using none",
-                fileName);
-      return {};
-    }
-
-    match = path;
-  }
-
-  if (!match.empty())
-    return CCheatPack::Load(match);
-
-  return {};
-}
-
 } // namespace
+
+CGameClientCheats::Session::Session(std::string path)
+  : gamePath(std::move(path)),
+    fileName(CCheatUtils::GetCheatFileName(gamePath))
+{
+}
 
 CGameClientCheats::CGameClientCheats(CGameClient& gameClient,
                                      AddonInstance_Game& addonStruct,
@@ -132,12 +87,16 @@ void CGameClientCheats::Load(const std::string& gamePath)
   Reload(session, false);
 }
 
-bool CGameClientCheats::Reload(const std::shared_ptr<Session>& session, bool refreshDialog)
+bool CGameClientCheats::Reload(const std::shared_ptr<Session>& session,
+                               bool refreshDialog,
+                               const std::optional<std::string>& selection)
 {
+  unsigned int revision;
   {
     std::lock_guard lock(m_mutex);
     if (m_session != session || !m_clientTakesCheats)
       return false;
+    revision = m_availabilityRevision;
   }
 
   const auto sources = GetSources();
@@ -145,37 +104,62 @@ bool CGameClientCheats::Reload(const std::shared_ptr<Session>& session, bool ref
     std::lock_guard lock(m_mutex);
     if (m_session != session)
       return false;
-    if (m_sources && *m_sources == sources)
+    if (!selection && m_sources && *m_sources == sources)
       return true;
   }
 
-  std::string name = URIUtils::GetFileName(session->gamePath);
-  URIUtils::RemoveExtension(name);
-  CCheatPack pack;
-  std::optional<Source> packSource;
+  if (!session->choice)
+    session->choice = ReadChoice(session->gamePath);
+  const std::string& choice = selection ? *selection : *session->choice;
+  PackState packs;
+  std::optional<CCheatPack> customPack;
   if (!session->gamePath.empty())
   {
     for (const auto& source : sources)
     {
-      pack = ReadPack(source.path, name + CHEAT_EXTENSION);
-      if (!pack.IsEmpty())
+      auto candidates = FindCandidates(source, session->fileName);
+      if (source.id.empty() && candidates.size() == 1)
       {
-        packSource = source;
-        break;
+        customPack = ReadPack(candidates.front().path);
+        if (customPack->IsEmpty() && choice != candidates.front().id)
+        {
+          customPack.reset();
+          continue;
+        }
       }
+      packs.candidates.insert(packs.candidates.end(), candidates.begin(), candidates.end());
+      // A matching custom folder overrides installed resources.
+      if (source.id.empty() && !candidates.empty())
+        break;
     }
+  }
+
+  auto selected = std::find_if(packs.candidates.begin(), packs.candidates.end(),
+                               [&choice](const PackCandidate& pack) { return pack.id == choice; });
+  const bool accepted = selection && selected != packs.candidates.end();
+  if (selection && !accepted)
+    selected =
+        std::find_if(packs.candidates.begin(), packs.candidates.end(),
+                     [&session](const PackCandidate& pack) { return pack.id == *session->choice; });
+  if (selected == packs.candidates.end() && packs.candidates.size() == 1)
+    selected = packs.candidates.begin();
+
+  CCheatPack pack;
+  if (selected != packs.candidates.end())
+  {
+    packs.selected = selected->id;
+    pack = customPack ? std::move(*customPack) : ReadPack(selected->path);
   }
 
   // Archive searches must not hold either lock used by the player or GUI-info queries.
   std::unique_lock clientLock(m_clientAccess);
   {
     std::lock_guard lock(m_mutex);
-    if (m_session != session)
+    if (m_session != session || revision != m_availabilityRevision)
       return false;
 
     std::map<std::pair<std::string, std::string>, std::deque<bool>> enabled;
-    if (m_packSource && packSource && m_packSource->id == packSource->id &&
-        m_packSource->path == packSource->path)
+    if (!m_packs.selected.empty() && m_packs.selected == packs.selected)
     {
       const auto& oldCheats = m_pack.Cheats();
       for (size_t i = 0; i < oldCheats.size(); ++i)
@@ -195,14 +179,20 @@ bool CGameClientCheats::Reload(const std::shared_ptr<Session>& session, bool ref
         m_enabled.push_back(cheat.enabled);
     }
     m_pack = std::move(pack);
-    m_packSource = std::move(packSource);
+    m_packs = std::move(packs);
+    ++m_generation;
     m_sources = sources;
   }
   Apply();
   clientLock.unlock();
+  if (accepted)
+  {
+    session->choice = *selection;
+    SaveChoice(session->gamePath, *selection);
+  }
   if (refreshDialog)
     RefreshDialog();
-  return true;
+  return !selection || accepted;
 }
 
 void CGameClientCheats::Clear()
@@ -217,7 +207,8 @@ void CGameClientCheats::Clear()
     hadSession = m_session != nullptr;
     m_session.reset();
     m_sources.reset();
-    m_packSource.reset();
+    m_packs = {};
+    ++m_generation;
     m_pack = CCheatPack();
     m_enabled.clear();
     m_clientTakesCheats = false;
@@ -321,13 +312,19 @@ bool CGameClientCheats::HasCheats() const
   return m_clientTakesCheats && !m_pack.IsEmpty();
 }
 
+bool CGameClientCheats::SupportsCheats() const
+{
+  std::lock_guard lock(m_mutex);
+  return m_clientTakesCheats;
+}
+
 bool CGameClientCheats::CanOfferCheats() const
 {
   {
     std::lock_guard<std::mutex> lock(m_mutex);
     if (!m_clientTakesCheats)
       return false;
-    if (!m_pack.IsEmpty())
+    if (!m_pack.IsEmpty() || m_packs.candidates.size() > 1)
       return true;
   }
 
@@ -419,7 +416,9 @@ CGameClientCheats::InstallResult CGameClientCheats::InstallCheats(
     m_canInstall.reset();
     ++m_availabilityRevision;
     if (current)
-      result = m_pack.IsEmpty() ? InstallResult::NO_CHEATS : InstallResult::CHEATS_FOUND;
+      result = m_packs.NeedsSelection() ? InstallResult::CHOOSE_PACK
+               : m_pack.IsEmpty()       ? InstallResult::NO_CHEATS
+                                        : InstallResult::CHEATS_FOUND;
   }
 
   QueueReload(session);
@@ -451,9 +450,132 @@ bool CGameClientCheats::IsResourceAddon(const std::string& id) const
          nullptr;
 }
 
-CCheatPack CGameClientCheats::ReadPack(const std::string& path, const std::string& fileName)
+std::vector<CGameClientCheats::PackCandidate> CGameClientCheats::FindCandidates(
+    const Source& source, const std::string& fileName)
 {
-  return FindCheats(path, fileName);
+  std::vector<PackCandidate> candidates;
+  const std::string sourceId = source.id.empty() ? source.path : source.id;
+  const std::string sourceName = source.revision ? source.revision->Name() : "";
+  const std::string sourceLabel = sourceName.empty()
+                                      ? CURL::GetRedacted(sourceId)
+                                      : sourceName + " (" + CURL::GetRedacted(sourceId) + ")";
+  const auto add = [&](const std::string& system, const std::string& folder)
+  {
+    const std::string path = URIUtils::AddFileToFolder(folder, fileName);
+    if (!XFILE::CFile::Exists(path))
+      return;
+
+    std::string name = system;
+    if (name.empty())
+    {
+      name = source.path;
+      URIUtils::RemoveSlashAtEnd(name);
+      name = URIUtils::GetFileName(name);
+    }
+    URIUtils::RemoveSlashAtEnd(name);
+    if (URIUtils::HasExtension(name, ".zip"))
+      URIUtils::RemoveExtension(name);
+    candidates.push_back(
+        {CURL::Encode(sourceId) + "/" + CURL::Encode(system) + "/" + CURL::Encode(fileName), name,
+         sourceLabel + (system.empty() ? "" : " / " + system), path});
+  };
+
+  // A file at the source root takes precedence over its system folders and archives.
+  add("", source.path);
+  if (!candidates.empty())
+    return candidates;
+
+  CFileItemList entries;
+  if (XFILE::CDirectory::GetDirectory(source.path, entries, "", XFILE::DIR_FLAG_NO_FILE_DIRS))
+  {
+    for (int i = 0; i < entries.Size(); ++i)
+    {
+      const auto& entry = entries[i];
+      std::string system = entry->GetPath();
+      URIUtils::RemoveSlashAtEnd(system);
+      system = URIUtils::GetFileName(system);
+      if (entry->IsFolder())
+        add(system + "/", entry->GetPath());
+      else if (URIUtils::HasExtension(entry->GetPath(), ".zip"))
+        add(system, URIUtils::CreateArchivePath("zip", CURL(entry->GetPath())).Get());
+    }
+  }
+  std::sort(candidates.begin(), candidates.end(),
+            [](const PackCandidate& left, const PackCandidate& right)
+            { return left.id < right.id; });
+  return candidates;
+}
+
+CCheatPack CGameClientCheats::ReadPack(const std::string& path)
+{
+  return CCheatPack::Load(path);
+}
+
+std::string CGameClientCheats::GetSelectionPath(const std::string& gamePath) const
+{
+  return URIUtils::AddFileToFolder("special://masterprofile/games/cheats",
+                                   CCheatUtils::GetSelectionFileName(gamePath));
+}
+
+std::string CGameClientCheats::ReadChoice(const std::string& gamePath) const
+{
+  if (gamePath.empty())
+    return {};
+  CXBMCTinyXML2 xml;
+  if (xml.LoadFile(GetSelectionPath(gamePath)))
+  {
+    const auto* root = xml.FirstChildElement("cheatpack");
+    if (root && root->Attribute("game", gamePath.c_str()))
+    {
+      if (const char* candidate = root->Attribute("candidate"))
+        return candidate;
+    }
+  }
+  return {};
+}
+
+void CGameClientCheats::SaveChoice(const std::string& gamePath, const std::string& candidate) const
+{
+  const std::string path = GetSelectionPath(gamePath);
+  CXBMCTinyXML2 xml;
+  auto* root = xml.NewElement("cheatpack");
+  root->SetAttribute("game", gamePath.c_str());
+  root->SetAttribute("candidate", candidate.c_str());
+  xml.InsertEndChild(root);
+  if (!XFILE::CDirectory::Create(URIUtils::GetDirectory(path)) || !xml.SaveFile(path))
+    CLog::Log(LOGWARNING, "CGameClientCheats: Failed to save pack selection for {}",
+              CURL::GetRedacted(gamePath));
+}
+
+CGameClientCheats::PackState CGameClientCheats::GetPacks() const
+{
+  std::lock_guard lock(m_mutex);
+  PackState state = m_packs;
+  if (m_session)
+    state.fileName = m_session->fileName;
+  state.generation = m_generation;
+  state.cheats = m_pack.Cheats();
+  for (size_t i = 0; i < state.cheats.size(); ++i)
+    state.cheats[i].enabled = m_enabled[i];
+  return state;
+}
+
+std::function<bool(const std::string&)> CGameClientCheats::GetSelectionTask(
+    const PackState& expected)
+{
+  std::lock_guard lock(m_mutex);
+  if (!m_session || !m_clientTakesCheats || m_packs.candidates.size() < 2 ||
+      expected.generation != m_generation)
+    return {};
+  return [client = m_gameClient.weak_from_this(), session = m_session](const std::string& id)
+  {
+    if (const auto owner = client.lock())
+    {
+      std::unique_lock workLock(session->workMutex);
+      return std::static_pointer_cast<CGameClient>(owner)->Cheats().Reload(session, true, id);
+    }
+    return false;
+  };
 }
 
 std::vector<Cheat> CGameClientCheats::GetCheats() const
@@ -467,14 +589,18 @@ std::vector<Cheat> CGameClientCheats::GetCheats() const
   return cheats;
 }
 
-bool CGameClientCheats::SetEnabled(unsigned int index, bool enabled, const Cheat& expected)
+bool CGameClientCheats::SetEnabled(unsigned int index,
+                                   bool enabled,
+                                   const Cheat& expected,
+                                   uint64_t generation)
 {
   std::unique_lock clientLock(m_clientAccess);
 
   {
     std::lock_guard<std::mutex> lock(m_mutex);
 
-    if (index >= m_enabled.size() || m_pack.Cheats()[index].code != expected.code ||
+    if ((generation != 0 && generation != m_generation) || index >= m_enabled.size() ||
+        m_pack.Cheats()[index].code != expected.code ||
         m_pack.Cheats()[index].description != expected.description)
       return false;
 

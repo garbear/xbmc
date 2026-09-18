@@ -19,9 +19,12 @@
 #include "guilib/GUIWindowManager.h"
 #include "jobs/JobManager.h"
 #include "test/TestUtils.h"
+#include "utils/URIUtils.h"
 #include "utils/XBMCTinyXML2.h"
 
+#include <algorithm>
 #include <deque>
+#include <filesystem>
 #include <functional>
 #include <future>
 #include <memory>
@@ -91,11 +94,14 @@ public:
   int installs{0};
   int enables{0};
   int lookups{0};
+  bool realDiscovery{false};
+  std::string selectionDirectory;
   mutable int availabilityChecks{0};
   std::vector<Source> sources;
   std::deque<std::function<void()>> jobs;
   std::function<void()> onInstall;
   std::function<void()> onLookup;
+  std::function<void()> onDiscovery;
   std::function<void()> onSubmit;
 
   void RunJobs()
@@ -139,7 +145,24 @@ protected:
   {
     return id == DATABASE || id == "resource.games.other";
   }
-  CCheatPack ReadPack(const std::string& path, const std::string&) override
+  std::vector<PackCandidate> FindCandidates(const Source& source,
+                                            const std::string& fileName) override
+  {
+    if (realDiscovery)
+    {
+      auto candidates = CGameClientCheats::FindCandidates(source, fileName);
+      if (const auto callback = onDiscovery)
+        callback();
+      return candidates;
+    }
+    return {{source.id + source.path, source.id, source.id, source.path}};
+  }
+  std::string GetSelectionPath(const std::string& gamePath) const override
+  {
+    return URIUtils::AddFileToFolder(
+        selectionDirectory, URIUtils::GetFileName(CGameClientCheats::GetSelectionPath(gamePath)));
+  }
+  CCheatPack ReadPack(const std::string& path) override
   {
     ++lookups;
     if (const auto callback = onLookup)
@@ -193,6 +216,9 @@ protected:
     file = XBMC_CREATETEMPFILE(".cht");
     ASSERT_NE(file, nullptr);
     file->Close();
+    directory = XBMC_TEMPFILEPATH(file) + "_packs";
+    std::filesystem::create_directories(directory);
+    cheats->selectionDirectory = directory + "/choices";
     WritePack("cheats = 2\ncheat0_desc = Lives\ncheat0_code = AAA\n"
               "cheat1_desc = Health\ncheat1_code = BBB\n");
     cheats->sources = {{DATABASE, XBMC_TEMPFILEPATH(file), info}};
@@ -208,6 +234,7 @@ protected:
     }
     if (file)
       XBMC_DELETETEMPFILE(file);
+    std::filesystem::remove_all(directory);
     CServiceBroker::GetJobManager()->CancelJobs();
     CServiceBroker::UnregisterJobManager();
   }
@@ -219,6 +246,41 @@ protected:
     ASSERT_EQ(output.Write(contents.data(), contents.size()), contents.size());
   }
 
+  void AddPack(const std::string& source,
+               const std::string& system,
+               const std::string& filename = "game.cht")
+  {
+    const auto folder = std::filesystem::path(directory) / source / system;
+    std::filesystem::create_directories(folder);
+    ASSERT_TRUE(XFILE::CFile::Copy(XBMC_TEMPFILEPATH(file), (folder / filename).string()));
+  }
+
+  void Discover(std::vector<TestCheats::Source> sources)
+  {
+    cheats->realDiscovery = true;
+    cheats->database = State::AVAILABLE;
+    for (auto& source : sources)
+      source.revision = client->AddonInfo();
+    cheats->sources = std::move(sources);
+    cheats->Load("game.a26");
+  }
+
+  void Changed()
+  {
+    for (auto& source : cheats->sources)
+      source.revision = source.revision ? nullptr : client->AddonInfo();
+    cheats->OnAddonEvent(ADDON::AddonEvents::ReInstalled(DATABASE));
+    cheats->RunJobs();
+  }
+
+  bool Select(size_t index)
+  {
+    const auto state = cheats->GetPacks();
+    auto task = cheats->GetSelectionTask(state);
+    return task && index < state.candidates.size() && task(state.candidates[index].id);
+  }
+
+  std::string directory;
   using Result = CGameClientCheats::InstallResult;
   using State = TestCheats::DatabaseState;
   TestGUI gui;
@@ -382,8 +444,44 @@ TEST_F(TestGameClientCheats, UnsupportedClientsNeverSearchPacks)
   cheats->OnAddonEvent(ADDON::AddonEvents::Enabled(DATABASE));
   cheats->RunJobs();
   EXPECT_EQ(cheats->lookups, 0);
+  EXPECT_FALSE(cheats->SupportsCheats());
   EXPECT_FALSE(cheats->CanOfferCheats());
   EXPECT_FALSE(cheats->GetInstallTask());
+}
+
+TEST_F(TestGameClientCheats, SupportedClientWithNoMatchStillExposesCheatCapability)
+{
+  Discover({{DATABASE, directory, {}}});
+  const auto packs = cheats->GetPacks();
+  EXPECT_TRUE(cheats->SupportsCheats());
+  EXPECT_FALSE(cheats->CanInstallCheats());
+  EXPECT_FALSE(cheats->HasCheats());
+  EXPECT_FALSE(packs.HasMatch());
+  EXPECT_FALSE(packs.NeedsSelection());
+  EXPECT_TRUE(packs.selected.empty());
+  cheats->Clear();
+  EXPECT_FALSE(cheats->SupportsCheats());
+  EXPECT_TRUE(cheats->GetPacks().fileName.empty());
+}
+
+TEST_F(TestGameClientCheats, ExpectedFilenameUsesTheGamePathAndSurvivesAnEmptyLookup)
+{
+  cheats->realDiscovery = true;
+  cheats->database = State::AVAILABLE;
+  cheats->sources = {{DATABASE, directory, client->AddonInfo()}};
+  const std::string gamePath = "/Users/garrett/Library/Application Support/Kodi/userdata/"
+                               "addon_data/plugin.program.iagl/game_cache/Nintendo Game Boy/"
+                               "Frogger (USA).gb";
+  cheats->Load(gamePath);
+  EXPECT_EQ(cheats->GetPacks().fileName, "Frogger (USA).cht");
+  EXPECT_FALSE(cheats->GetPacks().HasMatch());
+  AddPack("", "Game Boy", "Frogger (USA).cht");
+  Changed();
+  EXPECT_EQ(cheats->GetPacks().fileName, "Frogger (USA).cht");
+  EXPECT_TRUE(cheats->GetPacks().HasMatch());
+  cheats->Load("/games/another.gb");
+  EXPECT_EQ(cheats->GetPacks().fileName, "another.cht");
+  EXPECT_FALSE(cheats->GetPacks().HasMatch());
 }
 
 TEST_F(TestGameClientCheats, PendingReloadAndInstallationCannotReachReplacementGame)
@@ -650,4 +748,337 @@ TEST_F(TestGameClientCheats, StaleDialogCannotEnableADifferentCheatAfterReload)
   EXPECT_FALSE(cheats->SetEnabled(0, true, displayed[0]));
   EXPECT_FALSE(cheats->GetCheats()[0].enabled);
   EXPECT_TRUE(applied.empty());
+}
+
+TEST_F(TestGameClientCheats, MultipleInstalledPacksWithOnlyOneMatchingFilenameLoadAutomatically)
+{
+  AddPack("first", "System A");
+  AddPack("second", "System B", "different.cht");
+  Discover(
+      {{DATABASE, directory + "/first", {}}, {"resource.games.other", directory + "/second", {}}});
+  EXPECT_EQ(cheats->GetPacks().candidates.size(), 1U);
+  EXPECT_TRUE(cheats->GetPacks().HasMatch());
+  EXPECT_FALSE(cheats->GetSelectionTask(cheats->GetPacks()));
+  EXPECT_TRUE(cheats->HasCheats());
+}
+
+TEST_F(TestGameClientCheats, MatchingSystemFoldersRequireAnExplicitChoice)
+{
+  AddPack("first", "System A");
+  AddPack("first", "System B");
+  Discover({{DATABASE, directory + "/first", {}}});
+  const auto packs = cheats->GetPacks();
+  ASSERT_EQ(packs.candidates.size(), 2U);
+  EXPECT_NE(packs.candidates[0].id, packs.candidates[1].id);
+  EXPECT_NE(packs.candidates[0].name, packs.candidates[1].name);
+  EXPECT_TRUE(packs.NeedsSelection());
+  EXPECT_TRUE(packs.HasMatch());
+  EXPECT_TRUE(packs.selected.empty());
+  EXPECT_TRUE(cheats->CanOfferCheats());
+  EXPECT_FALSE(cheats->HasCheats());
+  EXPECT_EQ(cheats->GetInstallTask()(), Result::CHOOSE_PACK);
+  EXPECT_TRUE(Select(1));
+  EXPECT_TRUE(cheats->HasCheats());
+  EXPECT_FALSE(cheats->GetPacks().NeedsSelection());
+  EXPECT_TRUE(cheats->GetPacks().HasMatch());
+  EXPECT_EQ(cheats->GetPacks().candidates.size(), 2U);
+  EXPECT_EQ(cheats->GetPacks().selected, packs.candidates[1].id);
+}
+
+TEST_F(TestGameClientCheats, MatchesAcrossAddonsRequireSelectionRegardlessOfOrder)
+{
+  AddPack("first", "System");
+  AddPack("second", "System");
+  Discover(
+      {{DATABASE, directory + "/first", {}}, {"resource.games.other", directory + "/second", {}}});
+  ASSERT_EQ(cheats->GetPacks().candidates.size(), 2U);
+  EXPECT_TRUE(cheats->GetPacks().NeedsSelection());
+  EXPECT_TRUE(Select(1));
+  const auto selected = cheats->GetPacks().selected;
+  std::reverse(cheats->sources.begin(), cheats->sources.end());
+  Changed();
+  EXPECT_EQ(cheats->GetPacks().selected, selected);
+}
+
+TEST_F(TestGameClientCheats, CustomFolderAndDirectFileKeepPrecedence)
+{
+  AddPack("custom", "System A");
+  AddPack("custom", "System B");
+  AddPack("addon", "System C");
+  Discover({{"", directory + "/custom", {}}, {DATABASE, directory + "/addon", {}}});
+  ASSERT_EQ(cheats->GetPacks().candidates.size(), 2U);
+  for (const auto& candidate : cheats->GetPacks().candidates)
+    EXPECT_NE(candidate.path.find("custom"), std::string::npos);
+
+  AddPack("custom", "");
+  Changed();
+  ASSERT_EQ(cheats->GetPacks().candidates.size(), 1U);
+  EXPECT_TRUE(cheats->HasCheats());
+  EXPECT_EQ(cheats->GetPacks().candidates[0].path, directory + "/custom/game.cht");
+
+  cheats->sources.erase(cheats->sources.begin());
+  Changed();
+  ASSERT_EQ(cheats->GetPacks().candidates.size(), 1U);
+  EXPECT_NE(cheats->GetPacks().candidates[0].path.find("addon"), std::string::npos);
+}
+
+TEST_F(TestGameClientCheats, CustomFolderWithoutMatchFallsBackToAddons)
+{
+  AddPack("custom", "System A", "different.cht");
+  AddPack("addon", "System B");
+  Discover({{"", directory + "/custom", {}}, {DATABASE, directory + "/addon", {}}});
+  ASSERT_EQ(cheats->GetPacks().candidates.size(), 1U);
+  EXPECT_TRUE(cheats->HasCheats());
+}
+
+TEST_F(TestGameClientCheats, ChoiceSurvivesReopeningAndANewEmulatorInstance)
+{
+  AddPack("first", "System A");
+  AddPack("first", "System B");
+  Discover({{DATABASE, directory + "/first", {}}});
+  ASSERT_TRUE(Select(1));
+  const auto selected = cheats->GetPacks().selected;
+  cheats->Clear();
+  cheats->Load("game.a26");
+  EXPECT_EQ(cheats->GetPacks().selected, selected);
+
+  cheats->Clear();
+  CXBMCTinyXML2 xml;
+  ASSERT_TRUE(xml.Parse(
+      std::string(R"(<addon id="game.test.another" name="Another emulator" version="1.0.0">
+    <extension point="kodi.gameclient" library="test.so"><extensions>rom</extensions></extension>
+    <extension point="kodi.addon.metadata"><platform>all</platform></extension>
+  </addon>)")));
+  auto info = ADDON::CAddonInfoBuilder::Generate(xml.RootElement(), ADDON::RepositoryDirInfo{});
+  auto other = std::make_shared<CGameClient>(info);
+  *other->GetInstanceInterface()->toAddon = *client->GetInstanceInterface()->toAddon;
+  other.get()->*GetMember(Playing{}) = true;
+  auto& subsystems = other.get()->*GetMember(Subsystems{});
+  auto replacement = std::make_unique<TestCheats>(*other, *other->GetInstanceInterface(),
+                                                  other.get()->*GetMember(ClientMutex{}));
+  replacement->realDiscovery = true;
+  replacement->database = State::AVAILABLE;
+  replacement->sources = cheats->sources;
+  replacement->selectionDirectory = cheats->selectionDirectory;
+  auto* otherCheats = replacement.get();
+  subsystems.Cheats = std::move(replacement);
+  otherCheats->Load("game.a26");
+  EXPECT_EQ(otherCheats->GetPacks().selected, selected);
+  otherCheats->Load("elsewhere/game.a26");
+  EXPECT_TRUE(otherCheats->GetPacks().NeedsSelection());
+  otherCheats->Clear();
+  other.get()->*GetMember(Playing{}) = false;
+}
+
+TEST_F(TestGameClientCheats, CancelledChooserDoesNotChangeSelectionOrEnabledCheats)
+{
+  AddPack("first", "System A");
+  AddPack("first", "System B");
+  Discover({{DATABASE, directory + "/first", {}}});
+  {
+    auto cancelled = cheats->GetSelectionTask(cheats->GetPacks());
+    ASSERT_TRUE(cancelled);
+  }
+  EXPECT_TRUE(cheats->GetPacks().NeedsSelection());
+  EXPECT_TRUE(applied.empty());
+  ASSERT_TRUE(Select(0));
+  ASSERT_TRUE(cheats->SetEnabled(0, true, cheats->GetCheats()[0]));
+  const auto selected = cheats->GetPacks().selected;
+  const int previousResets = resets;
+  {
+    auto cancelled = cheats->GetSelectionTask(cheats->GetPacks());
+    ASSERT_TRUE(cancelled);
+  }
+  EXPECT_EQ(cheats->GetPacks().selected, selected);
+  EXPECT_TRUE(cheats->GetCheats()[0].enabled);
+  EXPECT_EQ(resets, previousResets);
+  EXPECT_EQ(applied, (std::vector<std::string>{"AAA"}));
+}
+
+TEST_F(TestGameClientCheats, RemovedSelectionRequiresChoiceThenLoadsSoleRemainingMatch)
+{
+  for (const auto* system : {"A", "B", "C"})
+    AddPack("first", system);
+  Discover({{DATABASE, directory + "/first", {}}});
+  ASSERT_TRUE(Select(0));
+  ASSERT_TRUE(cheats->SetEnabled(0, true, cheats->GetCheats()[0]));
+  std::filesystem::remove_all(directory + "/first/A");
+  Changed();
+  EXPECT_TRUE(cheats->GetPacks().NeedsSelection());
+  EXPECT_FALSE(cheats->HasCheats());
+  EXPECT_TRUE(applied.empty());
+
+  std::filesystem::remove_all(directory + "/first/B");
+  Changed();
+  EXPECT_EQ(cheats->GetPacks().candidates.size(), 1U);
+  EXPECT_TRUE(cheats->HasCheats());
+  EXPECT_FALSE(cheats->GetCheats()[0].enabled);
+  EXPECT_FALSE(cheats->GetSelectionTask(cheats->GetPacks()));
+
+  std::filesystem::remove_all(directory + "/first/C");
+  Changed();
+  EXPECT_TRUE(cheats->GetPacks().candidates.empty());
+  EXPECT_FALSE(cheats->HasCheats());
+  EXPECT_FALSE(cheats->CanOfferCheats());
+  EXPECT_EQ(cheats->GetInstallTask()(), Result::NO_CHEATS);
+}
+
+TEST_F(TestGameClientCheats, SwitchingPacksResetsAppliedCheatsWithoutTransferringStates)
+{
+  AddPack("first", "System A");
+  AddPack("first", "System B");
+  Discover({{DATABASE, directory + "/first", {}}});
+  ASSERT_TRUE(Select(0));
+  ASSERT_TRUE(cheats->SetEnabled(0, true, cheats->GetCheats()[0]));
+  const auto previous = cheats->GetPacks();
+  ASSERT_TRUE(Select(1));
+  EXPECT_TRUE(applied.empty());
+  EXPECT_FALSE(cheats->GetCheats()[0].enabled);
+  EXPECT_FALSE(cheats->SetEnabled(0, true, previous.cheats[0], previous.generation));
+  ASSERT_TRUE(cheats->SetEnabled(1, true, cheats->GetCheats()[1]));
+  Changed();
+  EXPECT_TRUE(cheats->GetCheats()[1].enabled);
+  EXPECT_EQ(applied, (std::vector<std::string>{"BBB"}));
+}
+
+TEST_F(TestGameClientCheats, SelectionRevalidatesRemovedCandidatesBeforeCommitting)
+{
+  AddPack("first", "System A");
+  AddPack("first", "System B");
+  Discover({{DATABASE, directory + "/first", {}}});
+  const auto packs = cheats->GetPacks();
+  auto select = cheats->GetSelectionTask(packs);
+  ASSERT_TRUE(select);
+  ASSERT_EQ(packs.candidates.size(), 2U);
+  std::filesystem::remove_all(directory + "/first/System B");
+  EXPECT_FALSE(select(packs.candidates[1].id));
+  EXPECT_EQ(cheats->GetPacks().selected, packs.candidates[0].id);
+  EXPECT_EQ(cheats->GetPacks().candidates.size(), 1U);
+  cheats->Load("game.a26");
+  EXPECT_EQ(cheats->GetPacks().selected, packs.candidates[0].id);
+}
+
+TEST_F(TestGameClientCheats, StaleChooserCannotSelectForAReplacementSession)
+{
+  AddPack("first", "System A");
+  AddPack("first", "System B");
+  Discover({{DATABASE, directory + "/first", {}}});
+  const auto packs = cheats->GetPacks();
+  auto select = cheats->GetSelectionTask(packs);
+  ASSERT_TRUE(select);
+  ASSERT_EQ(packs.candidates.size(), 2U);
+  cheats->Load("game.a26");
+  EXPECT_FALSE(cheats->GetSelectionTask(packs));
+  EXPECT_FALSE(select(packs.candidates[0].id));
+  EXPECT_TRUE(cheats->GetPacks().NeedsSelection());
+}
+
+TEST_F(TestGameClientCheats, ClosingDuringSelectionDiscardsThePackAndPreference)
+{
+  AddPack("first", "System A");
+  AddPack("first", "System B");
+  Discover({{DATABASE, directory + "/first", {}}});
+  cheats->onLookup = [this] { cheats->Clear(); };
+  EXPECT_FALSE(Select(0));
+  EXPECT_FALSE(cheats->HasCheats());
+  EXPECT_TRUE(applied.empty());
+  cheats->onLookup = {};
+  cheats->Load("game.a26");
+  EXPECT_TRUE(cheats->GetPacks().NeedsSelection());
+}
+
+TEST_F(TestGameClientCheats, AddonChangeDuringSelectionDiscardsTheStaleResult)
+{
+  AddPack("first", "System A");
+  AddPack("first", "System B");
+  Discover({{DATABASE, directory + "/first", {}}});
+  cheats->onLookup = [this]
+  {
+    cheats->sources.clear();
+    cheats->OnAddonEvent(ADDON::AddonEvents::UnInstalled(DATABASE));
+  };
+  EXPECT_FALSE(Select(0));
+  EXPECT_TRUE(applied.empty());
+  cheats->RunJobs();
+  EXPECT_TRUE(cheats->GetPacks().candidates.empty());
+}
+
+TEST_F(TestGameClientCheats, TwoSystemArchivesInOneAddonAreDistinctPacks)
+{
+  std::filesystem::create_directories(directory + "/addon");
+  const auto archive = XBMC_REF_FILE_PATH("xbmc/games/addons/cheats/test/game.cht.zip");
+  ASSERT_TRUE(XFILE::CFile::Copy(archive, directory + "/addon/System A.zip"));
+  ASSERT_TRUE(XFILE::CFile::Copy(archive, directory + "/addon/System B.zip"));
+  Discover({{DATABASE, directory + "/addon", {}}});
+  const auto packs = cheats->GetPacks();
+  ASSERT_EQ(packs.candidates.size(), 2U);
+  EXPECT_TRUE(packs.NeedsSelection());
+  EXPECT_EQ(packs.candidates[0].name, "System A");
+  EXPECT_EQ(packs.candidates[1].name, "System B");
+  EXPECT_NE(packs.candidates[0].id, packs.candidates[1].id);
+  EXPECT_TRUE(Select(1));
+  EXPECT_TRUE(cheats->HasCheats());
+  EXPECT_EQ(cheats->GetPacks().selected, packs.candidates[1].id);
+}
+
+TEST_F(TestGameClientCheats, UnusableCustomFileKeepsFallbackToAddon)
+{
+  AddPack("addon", "System");
+  WritePack("cheats = 1\ncheat0_desc = Memory patch\ncheat0_code = \"\"\n");
+  AddPack("custom", "");
+  Discover({{"", directory + "/custom", {}}, {DATABASE, directory + "/addon", {}}});
+  ASSERT_EQ(cheats->GetPacks().candidates.size(), 1U);
+  EXPECT_TRUE(cheats->HasCheats());
+  EXPECT_NE(cheats->GetPacks().candidates[0].path.find("addon"), std::string::npos);
+}
+
+TEST_F(TestGameClientCheats, EmptyMatchingArchivesRemainAmbiguousUntilSelected)
+{
+  WritePack("cheats = 0\n");
+  AddPack("addon", "A");
+  AddPack("addon", "B");
+  Discover({{DATABASE, directory + "/addon", {}}});
+  EXPECT_TRUE(cheats->GetPacks().NeedsSelection());
+  EXPECT_TRUE(cheats->GetPacks().HasMatch());
+  EXPECT_EQ(cheats->GetInstallTask()(), Result::CHOOSE_PACK);
+  ASSERT_TRUE(Select(0));
+  EXPECT_FALSE(cheats->GetPacks().NeedsSelection());
+  EXPECT_TRUE(cheats->GetPacks().HasMatch());
+  EXPECT_FALSE(cheats->HasCheats());
+  EXPECT_TRUE(cheats->CanOfferCheats());
+  EXPECT_EQ(cheats->GetPacks().candidates.size(), 2U);
+  EXPECT_EQ(cheats->GetInstallTask()(), Result::NO_CHEATS);
+}
+
+TEST_F(TestGameClientCheats, ReplacementDuringAmbiguousDiscoveryDiscardsCandidates)
+{
+  AddPack("addon", "A");
+  AddPack("addon", "B");
+  cheats->onDiscovery = [this]
+  {
+    cheats->onDiscovery = {};
+    cheats->database = State::MISSING;
+    cheats->Load("replacement.a26");
+  };
+  Discover({{DATABASE, directory + "/addon", {}}});
+  EXPECT_TRUE(cheats->GetPacks().candidates.empty());
+  EXPECT_FALSE(cheats->HasCheats());
+  EXPECT_EQ(cheats->lookups, 0);
+}
+
+TEST_F(TestGameClientCheats, RememberedCustomSelectionRemainsValidWhenItsCheatsBecomeEmpty)
+{
+  AddPack("custom", "A");
+  AddPack("custom", "B");
+  AddPack("addon", "System");
+  Discover({{"", directory + "/custom", {}}, {DATABASE, directory + "/addon", {}}});
+  ASSERT_TRUE(Select(0));
+  const auto selected = cheats->GetPacks().selected;
+  WritePack("cheats = 0\n");
+  AddPack("custom", "A");
+  std::filesystem::remove_all(directory + "/custom/B");
+  Changed();
+  EXPECT_EQ(cheats->GetPacks().selected, selected);
+  EXPECT_EQ(cheats->GetPacks().candidates.size(), 1U);
+  EXPECT_FALSE(cheats->HasCheats());
 }

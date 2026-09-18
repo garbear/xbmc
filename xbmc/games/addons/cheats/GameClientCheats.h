@@ -11,13 +11,13 @@
 #include "games/addons/GameClientSubsystem.h"
 #include "games/cheats/CheatPack.h"
 
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <optional>
 #include <set>
 #include <string>
-#include <utility>
 #include <vector>
 
 namespace ADDON
@@ -47,9 +47,6 @@ public:
   /*!
    * \brief Look for cheats for a game and hold what is found
    *
-   * A game with no cheat file, or a cheats folder that has not been set, ends
-   * up with nothing, which is how the OSD knows not to offer them.
-   *
    * \param gamePath The path to the game for which cheats should be loaded
    */
   void Load(const std::string& gamePath);
@@ -63,6 +60,9 @@ public:
    * \brief True while the game being played has cheats to offer
    */
   bool HasCheats() const;
+
+  //! Whether the current game client implements the cheat API.
+  bool SupportsCheats() const;
 
   /*!
    * \brief True when the cheats dialog is worth opening
@@ -84,6 +84,7 @@ public:
     FAILED,
     NO_CHEATS,
     CHEATS_FOUND,
+    CHOOSE_PACK,
   };
 
   /*!
@@ -93,6 +94,31 @@ public:
    * Run the task on a job thread.
    */
   std::function<InstallResult()> GetInstallTask();
+
+  struct PackCandidate
+  {
+    std::string id;
+    std::string name;
+    std::string source;
+    std::string path;
+  };
+
+  struct PackState
+  {
+    std::string fileName;
+    std::vector<PackCandidate> candidates;
+    std::string selected;
+    std::vector<Cheat> cheats;
+    uint64_t generation{0};
+
+    bool HasMatch() const { return !candidates.empty(); }
+    bool NeedsSelection() const { return candidates.size() > 1 && selected.empty(); }
+  };
+
+  PackState GetPacks() const;
+
+  // Capture before opening the chooser; run only a confirmed choice on a job thread.
+  std::function<bool(const std::string&)> GetSelectionTask(const PackState& expected);
 
   /*!
    * \brief The cheats found for this game, and whether each is switched on
@@ -107,7 +133,7 @@ public:
    * The whole set is re-sent to the client afterwards. A stale displayed row
    * is rejected if a reload has replaced it.
    */
-  bool SetEnabled(unsigned int index, bool enabled, const Cheat& expected);
+  bool SetEnabled(unsigned int index, bool enabled, const Cheat& expected, uint64_t generation = 0);
 
 protected:
   enum class DatabaseState
@@ -132,25 +158,34 @@ protected:
   virtual bool EnableDatabase();
   virtual std::vector<Source> GetSources() const;
   virtual bool IsResourceAddon(const std::string& id) const;
-  virtual CCheatPack ReadPack(const std::string& path, const std::string& fileName);
+  virtual std::vector<PackCandidate> FindCandidates(const Source& source,
+                                                    const std::string& fileName);
+  virtual CCheatPack ReadPack(const std::string& path);
+  virtual std::string GetSelectionPath(const std::string& gamePath) const;
   virtual void Submit(std::function<void()> job);
   void OnAddonEvent(const ADDON::AddonEvent& event);
 
 private:
   struct Session
   {
-    explicit Session(std::string path) : gamePath(std::move(path)) {}
+    explicit Session(std::string path);
 
     const std::string gamePath;
+    const std::string fileName;
     // Clear invalidates the session without waiting for this worker lock.
     std::mutex workMutex;
     std::set<std::string> changedAddons;
     bool reloadQueued{false};
     bool installQueued{false};
+    std::optional<std::string> choice;
   };
 
   InstallResult InstallCheats(const std::shared_ptr<Session>& session);
-  bool Reload(const std::shared_ptr<Session>& session, bool refreshDialog = true);
+  bool Reload(const std::shared_ptr<Session>& session,
+              bool refreshDialog = true,
+              const std::optional<std::string>& selection = std::nullopt);
+  std::string ReadChoice(const std::string& gamePath) const;
+  void SaveChoice(const std::string& gamePath, const std::string& candidate) const;
   void QueueReload(const std::shared_ptr<Session>& session);
   void ProcessReload(const std::shared_ptr<Session>& session);
   static void RefreshDialog();
@@ -185,7 +220,8 @@ private:
   mutable std::mutex m_mutex;
   std::shared_ptr<Session> m_session;
   std::optional<std::vector<Source>> m_sources;
-  std::optional<Source> m_packSource;
+  PackState m_packs;
+  uint64_t m_generation{0};
   CCheatPack m_pack;
   std::vector<bool> m_enabled;
 
