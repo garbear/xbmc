@@ -160,8 +160,8 @@ bool CGameClientCheats::Reload(const std::shared_ptr<Session>& session,
       if (source != sourceId)
         source += " (" + sourceId + ")";
       auto sourceIdCopy = sourceId;
-      if (std::count_if(rows.begin(), rows.end(),
-                        [&sourceIdCopy](const auto& row) { return row.second == sourceIdCopy; }) > 1)
+      if (std::count_if(rows.begin(), rows.end(), [&sourceIdCopy](const auto& row)
+                        { return row.second == sourceIdCopy; }) > 1)
         source += " (" + std::to_string(i + 1) + ")";
     }
   }
