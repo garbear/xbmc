@@ -159,8 +159,9 @@ bool CGameClientCheats::Reload(const std::shared_ptr<Session>& session,
       auto& source = packs.candidates[index].source;
       if (source != sourceId)
         source += " (" + sourceId + ")";
+      auto sourceIdCopy = sourceId;
       if (std::count_if(rows.begin(), rows.end(),
-                        [&sourceId](const auto& row) { return row.second == sourceId; }) > 1)
+                        [&sourceIdCopy](const auto& row) { return row.second == sourceIdCopy; }) > 1)
         source += " (" + std::to_string(i + 1) + ")";
     }
   }
