@@ -51,6 +51,14 @@ public class XBMCProperties
         Log.e(TAG, "XBMCProperties: Error loading " + propfn + " (" + e.getMessage() + ")");
       }
     }
+
+    // Don't mark properties loaded here; external storage may become available later.
+    if (System.getProperty("xbmc.data", "").isEmpty())
+    {
+      System.setProperty("xbmc.data", mContext.getFilesDir().getAbsolutePath());
+      Log.i(TAG, "XBMCProperties: Defaulting xbmc.data to " +
+                   System.getProperty("xbmc.data"));
+    }
   }
 
   public static String getStringProperty(String key, String devValue)
