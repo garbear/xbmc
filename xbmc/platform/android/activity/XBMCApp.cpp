@@ -658,8 +658,9 @@ void CXBMCApp::run()
 
   SetupEnv();
 
-  // Wait for main window
-  if (!GetNativeWindow(30000))
+  // The window is published before surfaceCreated finishes checking m_firstrun.
+  // Wait for the callback to finish before clearing that flag.
+  if (!m_mainView->waitForSurface(30000) || !m_window)
     return;
 
   m_firstrun = false;
