@@ -8,7 +8,7 @@
 
 #include "DatabaseManager.h"
 #include "FileItem.h"
-#include "LangInfo.h"
+#include "language/LangInfo.h"
 #include "MediaSource.h"
 #include "ServiceBroker.h"
 #include "TextureCache.h"
