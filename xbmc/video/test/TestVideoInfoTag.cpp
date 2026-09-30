@@ -6,9 +6,9 @@
  *  See LICENSES/README.md for more information.
  */
 
-#include "LangInfo.h"
 #include "ServiceBroker.h"
 #include "filesystem/File.h"
+#include "language/LangInfo.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
 #include "test/TestUtils.h"
