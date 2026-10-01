@@ -13,6 +13,8 @@
 #include "utils/Geometry.h"
 #include "windowing/Resolution.h"
 
+#include <memory>
+
 class CCriticalSection;
 class CDisplaySettings;
 class CGameSettings;
@@ -21,6 +23,7 @@ class CGUIComponent;
 class CGUIShaderDX;
 class CMediaSettings;
 class CRenderSystemBase;
+class CTextureCache;
 class CWinSystemBase;
 class TransformMatrix;
 
@@ -49,12 +52,14 @@ public:
                  CDisplaySettings& displaySettings,
                  CMediaSettings& mediaSettings,
                  GAME::CGameServices& gameServices,
-                 CGUIComponent* guiComponent);
+                 CGUIComponent* guiComponent,
+                 std::shared_ptr<CTextureCache> textureCache);
 
   CRenderSystemBase* Rendering() { return m_rendering; }
   CWinSystemBase* Windowing() { return m_windowing; }
   CGraphicContext& GraphicsContext() { return m_graphicsContext; }
   CGUIComponent* GUI() { return m_guiComponent; }
+  std::shared_ptr<CTextureCache> TextureCache() { return m_textureCache; }
 
   // Rendering functions
   void SetViewPort(const CRect& viewPort);
@@ -116,6 +121,7 @@ private:
   CMediaSettings& m_mediaSettings;
   GAME::CGameServices& m_gameServices;
   CGUIComponent* const m_guiComponent;
+  const std::shared_ptr<CTextureCache> m_textureCache;
 };
 } // namespace RETRO
 } // namespace KODI

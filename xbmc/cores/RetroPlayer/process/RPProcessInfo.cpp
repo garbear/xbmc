@@ -45,7 +45,8 @@ CRPProcessInfo::CRPProcessInfo(std::string platformName)
                                        CDisplaySettings::GetInstance(),
                                        CMediaSettings::GetInstance(),
                                        CServiceBroker::GetGameServices(),
-                                       CServiceBroker::GetGUI()))
+                                       CServiceBroker::GetGUI(),
+                                       CServiceBroker::GetTextureCache()))
 {
   for (auto& rendererFactory : m_rendererFactories)
   {
