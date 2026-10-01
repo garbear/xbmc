@@ -20,6 +20,7 @@
 #include "application/Application.h"
 #include "application/ApplicationPlayer.h"
 #include "application/ApplicationPowerHandling.h"
+#include "dialogs/GUIDialogKaiToast.h"
 #include "guilib/GUIAudioManager.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h"
@@ -33,6 +34,8 @@
 #include "pvr/channels/PVRChannel.h"
 #include "pvr/guilib/PVRGUIActionsChannels.h"
 #include "pvr/recordings/PVRRecording.h"
+#include "resources/LocalizeStrings.h"
+#include "resources/ResourcesComponent.h"
 #include "settings/MediaSettings.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
@@ -423,6 +426,30 @@ static int PlayerControl(const std::vector<std::string>& params)
   else if (paramlow == "reset")
   {
     g_application.OnAction(CAction(ACTION_PLAYER_RESET));
+  }
+  else if (paramlow == "bezel")
+  {
+    // Turning on a bezel the game doesn't have would look as if nothing
+    // happened, so say where one goes instead
+    if (!appPlayer->HasBezel())
+    {
+      const auto& strings = CServiceBroker::GetResourcesComponent().GetLocalizeStrings();
+      // "Bezel", "None found for this game. Put a picture beside it named..."
+      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, strings.Get(35242),
+                                            strings.Get(35243));
+      return 0;
+    }
+
+    CGameSettings& gameSettings = CMediaSettings::GetInstance().GetCurrentGameSettings();
+    gameSettings.SetBezelEnabled(!gameSettings.BezelEnabled());
+
+    // Kept for the games that follow, as the other game video settings are
+    CGameSettings& defaultSettings = CMediaSettings::GetInstance().GetDefaultGameSettings();
+    if (defaultSettings != gameSettings)
+    {
+      defaultSettings = gameSettings;
+      CServiceBroker::GetSettingsComponent()->GetSettings()->Save();
+    }
   }
 
   return 0;
@@ -840,6 +867,7 @@ static int SubtitleShiftDown(const std::vector<std::string>& params)
 ///     | Partymode(path to .xsp) | Partymode for *.xsp-file               | Partymode for *.xsp-file    |             |
 ///     | ShowVideoMenu           | Shows the DVD/BR menu if available     | none                        |             |
 ///     | FrameAdvance(n) ***     | Advance video by _n_ frames            | none                        | Kodi v18    |
+///     | Bezel                   | Turns game bezels on or off            | none                        | Kodi v23    |
 ///     <br>
 ///     '*' = For these controls\, the PlayerControl built-in function can make use of the 'notify'-parameter. For example: PlayerControl(random\, notify)
 ///     <br>

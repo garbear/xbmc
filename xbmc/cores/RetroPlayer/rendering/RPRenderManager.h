@@ -35,6 +35,7 @@ namespace KODI
 namespace RETRO
 {
 class CGUIRenderTargetFactory;
+class CRenderBezel;
 class CRenderContext;
 class CRenderSettings;
 class CRPBaseRenderer;
@@ -124,6 +125,21 @@ public:
 
   // Functions called from the player
   void SetSpeed(double speed);
+
+  /*!
+   * \brief Frame the game with a bezel
+   *
+   * The picture loads in the background. Until it has, or if it has no window
+   * for the game, the game is drawn as it would be without one.
+   *
+   * \param url The bezel's picture
+   */
+  void SetBezel(const std::string& url);
+
+  /*!
+   * \brief True once a bezel has loaded that has a window for the game
+   */
+  bool HasBezel() const { return m_hasBezel; }
 
   // Functions called from render thread
   void FrameMove();
@@ -235,6 +251,11 @@ private:
 
   CRenderVideoSettings GetEffectiveSettings(const IGUIRenderSettings* settings) const;
 
+  /*!
+   * \brief Get the bezel, once it has loaded
+   */
+  std::shared_ptr<CRenderBezel> GetBezel();
+
   void CheckFlush();
   void DestroyContextInternal();
 
@@ -325,6 +346,10 @@ private:
   std::map<std::string, std::vector<IRenderBuffer*>>
       m_savestateBuffers; // Render buffers for savestates
   std::vector<std::future<void>> m_savestateThreads;
+  std::future<std::shared_ptr<CRenderBezel>> m_bezelLoad;
+  std::shared_ptr<CRenderBezel> m_bezel;
+  std::atomic<bool> m_hasBezel{false};
+  std::mutex m_bezelMutex;
 
   // State parameters
   enum class RENDER_STATE

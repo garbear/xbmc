@@ -46,6 +46,18 @@ public:
 
   // implementation of IPlayer
   bool OpenFile(const CFileItem& file, const CPlayerOptions& options) override;
+
+private:
+  /*!
+   * \brief Get the bezel to frame a game with
+   *
+   * The game's own art if it has one, or else a picture beside it: the game's
+   * name with -bezel.png for that game alone, or bezel.png for every game in
+   * the folder.
+   */
+  static std::string GetBezelForGame(const CFileItem& item);
+
+public:
   bool CloseFile(bool reopen = false) override;
   bool IsPlaying() const override;
   bool CanPause() const override;
@@ -70,6 +82,7 @@ public:
   bool IsDiscEjected() const override;
   std::string DiscLabel() const override;
   bool IsTrayEmpty() const override;
+  bool HasBezel() const override;
 
   // Implementation of IGameCallback
   std::string GameClientID() const override;

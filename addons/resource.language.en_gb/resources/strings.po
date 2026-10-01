@@ -19274,7 +19274,19 @@ msgctxt "#35241"
 msgid "The emulator \"{0:s}\" couldn't find files it needs, such as BIOS files."
 msgstr ""
 
-#empty strings from id 35242 to 35248
+#. Label of the in-game setting that frames the game with its bezel artwork
+#: addons/skin.estuary/xml/Includes_SettingsDialog.xml
+msgctxt "#35242"
+msgid "Bezel"
+msgstr ""
+
+#. Shown when bezels are turned on for a game that has none, with #35242 as its heading
+#: xbmc/interfaces/builtins/PlayerBuiltins.cpp
+msgctxt "#35243"
+msgid "None found for this game. Put a picture beside it named after the game with -bezel.png on the end, or bezel.png for every game in its folder."
+msgstr ""
+
+#empty strings from id 35244 to 35248
 
 #. Button to open the savestate manager from the game OSD
 #: addons/skin.estuary/xml/GameOSD.xml
