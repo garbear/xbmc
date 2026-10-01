@@ -8,6 +8,7 @@
 
 #include "RPRenderManager.h"
 
+#include "RenderBezel.h"
 #include "RenderContext.h"
 #include "RenderSettings.h"
 #include "RenderTranslator.h"
@@ -28,6 +29,7 @@
 #include "filesystem/File.h"
 #include "games/GameServices.h"
 #include "pictures/Picture.h"
+#include "settings/GameSettings.h"
 #include "threads/SingleLock.h"
 #include "utils/ColorUtils.h"
 #include "utils/ScopeGuard.h"
@@ -69,6 +71,12 @@ void CRPRenderManager::Deinitialize()
   for (std::future<void>& task : m_savestateThreads)
     task.wait();
   m_savestateThreads.clear();
+
+  {
+    std::unique_lock lock(m_bezelMutex);
+    if (m_bezelLoad.valid())
+      m_bezelLoad.wait();
+  }
 
   DestroyContext();
 
@@ -603,6 +611,30 @@ void CRPRenderManager::CheckFlush()
   }
 }
 
+void CRPRenderManager::SetBezel(const std::string& url)
+{
+  if (url.empty())
+    return;
+
+  std::unique_lock lock(m_bezelMutex);
+  m_bezelLoad = std::async(std::launch::async, [url]()
+                           { return std::shared_ptr<CRenderBezel>(CRenderBezel::Load(url)); });
+}
+
+std::shared_ptr<CRenderBezel> CRPRenderManager::GetBezel()
+{
+  std::unique_lock lock(m_bezelMutex);
+
+  if (m_bezelLoad.valid() &&
+      m_bezelLoad.wait_for(std::chrono::seconds::zero()) == std::future_status::ready)
+  {
+    m_bezel = m_bezelLoad.get();
+    m_hasBezel = static_cast<bool>(m_bezel);
+  }
+
+  return m_bezel;
+}
+
 void CRPRenderManager::RenderWindow(bool bClear, const RESOLUTION_INFO& coordsRes)
 {
   // Clear any old renderers on the rendering thread
@@ -624,7 +656,18 @@ void CRPRenderManager::RenderWindow(bool bClear, const RESOLUTION_INFO& coordsRe
   if (bClear && renderBuffer == nullptr)
     m_renderContext.Clear(UTILS::COLOR::BLACK);
 
+  const std::shared_ptr<CRenderBezel> bezel = GetBezel();
+  const CRect screen = m_renderContext.GetViewWindow();
+  if (bezel && m_renderContext.GetGameSettings().BezelEnabled())
+    renderer->SetBezelWindow(bezel->GetWindowRect(screen));
+
   RenderInternal(renderer, renderBuffer, bClear, 255);
+
+  if (renderer->IsBezelShown())
+    bezel->Render(screen);
+
+  // The renderer can be shared with a control, which has no bezel
+  renderer->SetBezelWindow({});
 
   m_renderContext.SetRenderingResolution(coordsRes, false);
 }
