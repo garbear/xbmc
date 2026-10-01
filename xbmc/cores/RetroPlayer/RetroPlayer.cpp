@@ -73,6 +73,14 @@ CRetroPlayer::~CRetroPlayer()
   CloseFile();
 }
 
+std::string CRetroPlayer::GetBezelForGame(const CFileItem& item)
+{
+  std::string bezel = item.GetArt("bezel");
+  if (bezel.empty())
+    bezel = item.FindLocalArt("bezel.png", true);
+  return bezel;
+}
+
 bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options)
 {
   // A dialog shown while a game opens, such as the one reporting that it
@@ -155,6 +163,9 @@ bool CRetroPlayer::Open(const CFileItem& file, const CPlayerOptions& options)
 
   m_guiMessenger = std::make_unique<CGUIGameMessenger>(*m_processInfo);
   m_renderManager = std::make_unique<CRPRenderManager>(*m_processInfo);
+
+  if (!bStandalone)
+    m_renderManager->SetBezel(GetBezelForGame(fileCopy));
 
   std::unique_lock lock(m_mutex);
 
@@ -529,6 +540,11 @@ bool CRetroPlayer::SupportsDiscControl() const
     return m_gameClient->Discs().SupportsDiscControl();
 
   return false;
+}
+
+bool CRetroPlayer::HasBezel() const
+{
+  return m_renderManager && m_renderManager->HasBezel();
 }
 
 bool CRetroPlayer::IsDiscEjected() const
