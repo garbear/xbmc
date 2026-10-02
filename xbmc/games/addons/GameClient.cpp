@@ -644,7 +644,7 @@ void CGameClient::NotifyError(GAME_ERROR error)
     const std::string& wanted = Streams().HardwareRenderingRefusedWanted();
     const std::string& available = Streams().HardwareRenderingRefusedAvailable();
 
-    if (!wanted.empty() && !available.empty())
+    if (!available.empty())
     {
       // Failed to play game
       MESSAGING::HELPERS::ShowOKDialogText(
@@ -653,19 +653,13 @@ void CGameClient::NotifyError(GAME_ERROR error)
               CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(35300), wanted,
               available)});
     }
-    else if (!wanted.empty())
+    else
     {
       // Failed to play game
       MESSAGING::HELPERS::ShowOKDialogText(
           CVariant{35210},
           CVariant{StringUtils::Format(
               CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(35301), wanted)});
-    }
-    else
-    {
-      // Failed to play game
-      // This game requires OpenGL support for 3D rendering. OpenGL support is still under development.
-      MESSAGING::HELPERS::ShowOKDialogText(CVariant{35210}, CVariant{35271});
     }
   }
   else if (!missingResource.empty())
