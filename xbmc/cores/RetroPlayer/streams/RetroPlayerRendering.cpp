@@ -225,6 +225,9 @@ void CRetroPlayerRendering::AddStreamData(const StreamPacket& packet)
 {
   const HwFramebufferPacket& hwPacket = static_cast<const HwFramebufferPacket&>(packet);
 
+  if (!m_bVideoEnabled)
+    return;
+
   if (m_bOpen && hwPacket.framebuffer != 0 && hwPacket.width != 0 && hwPacket.height != 0 &&
       hwPacket.width <= m_width && hwPacket.height <= m_height &&
       hwPacket.framebuffer ==

@@ -114,7 +114,7 @@ void CRetroPlayerAudio::AddStreamData(const StreamPacket& packet)
 {
   const AudioStreamPacket& audioPacket = static_cast<const AudioStreamPacket&>(packet);
 
-  if (m_bAudioEnabled)
+  if (m_bAudioEnabled && !m_bAudioSuppressed)
   {
     if (m_pAudioStream)
     {
