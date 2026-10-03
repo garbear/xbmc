@@ -39,6 +39,7 @@ addons/resource.language.en_gb/*
 addons/resource.uisounds.kodi/*
 addons/screensaver.xbmc.builtin.black/*
 addons/screensaver.xbmc.builtin.dim/*
+addons/script.game.manuals/*
 addons/script.module.certifi/*
 addons/script.module.chardet/*
 addons/script.module.dateutil/*
@@ -49,6 +50,7 @@ addons/script.module.pytz/*
 addons/script.module.requests/*
 addons/script.module.six/*
 addons/script.module.urllib3/*
+addons/service.manuals.regvaul/*
 addons/weather.openmeteo/*
 addons/webinterface.default/*
 addons/xbmc.addon/metadata.xsd
