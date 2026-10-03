@@ -71,9 +71,21 @@ public:
   void SetShaderPreset(const std::string& presetPath);
   void SetPixels(const std::string& pixelPath);
 
+  /*!
+   * \brief Draw the game inside a bezel's window, where the bezel frames it well
+   *
+   * \param window The window on screen, or an empty rectangle for no bezel
+   */
+  void SetBezelWindow(const CRect& window) { m_bezelWindow = window; }
+
   // Rendering properties
   bool IsVisible() const;
   IRenderBuffer* GetRenderBuffer() const;
+
+  /*!
+   * \brief True if the last frame was drawn inside the bezel's window
+   */
+  bool IsBezelShown() const { return m_bezelShown; }
 
 protected:
   // Protected renderer interface
@@ -100,6 +112,8 @@ protected:
   float m_lastTargetWidth{0.0f};
   float m_lastTargetHeight{0.0f};
   ViewportCoordinates m_rotatedDestCoords{};
+  CRect m_bezelWindow;
+  bool m_bezelShown{false};
 
   // Video shaders
   void UpdateShaders();
