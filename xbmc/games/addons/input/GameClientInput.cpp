@@ -777,9 +777,34 @@ bool CGameClientInput::SetRumble(const std::string& portAddress,
 
   auto it = m_joysticks.find(portAddress);
   if (it != m_joysticks.end())
-    bHandled = it->second->SetRumble(feature, magnitude);
+  {
+    if (m_holdRumble)
+    {
+      m_heldRumble[{portAddress, feature}] = magnitude;
+      bHandled = true;
+    }
+    else
+      bHandled = it->second->SetRumble(feature, magnitude);
+  }
 
   return bHandled;
+}
+
+void CGameClientInput::HoldRumble()
+{
+  m_holdRumble = true;
+}
+
+void CGameClientInput::ReleaseRumble(bool send)
+{
+  m_holdRumble = false;
+
+  if (send)
+  {
+    for (const auto& [motor, magnitude] : m_heldRumble)
+      SetRumble(motor.first, motor.second, magnitude);
+  }
+  m_heldRumble.clear();
 }
 
 ControllerVector CGameClientInput::GetControllers(const CGameClient& gameClient)
