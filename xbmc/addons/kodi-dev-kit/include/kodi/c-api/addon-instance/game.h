@@ -1700,6 +1700,10 @@ extern "C"
     GAME_ERROR(__cdecl* DeserializeAchievements)
     (const struct AddonInstance_Game*, const uint8_t*, size_t);
     void(__cdecl* FreeString)(const AddonInstance_Game*, char*);
+
+    // Entries added since 8.2.0 go last, so an add-on built against an older
+    // version still fills in the ones before them where Kodi looks for them
+    GAME_ERROR(__cdecl* RunFrameSpeculative)(const struct AddonInstance_Game*);
   } KodiToAddonFuncTable_Game;
 
   /*!

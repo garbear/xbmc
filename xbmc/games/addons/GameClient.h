@@ -178,6 +178,19 @@ public:
   void RunFrame(bool pollInput = true);
 
   /*!
+   * \brief Run a frame that will be rolled back, without the side effects of a
+   *        real one such as evaluating achievements
+   *
+   * \return False if the client can't, or the frame failed
+   */
+  bool RunFrameSpeculative();
+
+  /*!
+   * \brief Whether RunFrameSpeculative() may work, as far as is known yet
+   */
+  bool SupportsSpeculativeFrames() const;
+
+  /*!
    * \brief Tell the client what speed the player is running at
    *
    * \param speed The speed as a multiple of normal speed, with the player's own
@@ -201,6 +214,14 @@ public:
   RestoreResult Deserialize(const uint8_t* data,
                             size_t size,
                             const CGameClientDiscModel* discState = nullptr);
+
+  /*!
+   * \brief Put back a state this client produced moments ago
+   *
+   * Unlike Deserialize(), leaves the discs alone: the state was taken from the
+   * running client with the same media inserted.
+   */
+  bool RestoreState(const uint8_t* data, size_t size);
 
   /*!
    * \brief Hold the client still for the duration of a savestate snapshot
@@ -358,6 +379,7 @@ private:
   // Properties of the current playing file
   std::atomic_bool m_bIsPlaying; // True between OpenFile() and CloseFile()
   std::atomic_bool m_hasFrameRun{false};
+  std::atomic_bool m_speculativeSupported{true};
   // The speed the player is running at, as a multiple of normal speed. Written
   // by the thread that changes the speed and read by the client's own, so it is
   // atomic; a client asks for it from inside a call of its own, which can be on

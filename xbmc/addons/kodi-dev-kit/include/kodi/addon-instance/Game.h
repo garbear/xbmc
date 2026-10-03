@@ -391,6 +391,20 @@ public:
   //----------------------------------------------------------------------------
 
   //============================================================================
+  /// @brief Run a frame that the frontend will roll back afterwards
+  ///
+  /// Used for run-ahead. The emulator advances exactly as in RunFrame(), but
+  /// anything that must only happen once per real frame, such as evaluating
+  /// achievements, is skipped, because the frontend restores the emulator's
+  /// state afterwards.
+  ///
+  /// @return The error, or @ref GAME_ERROR_NOT_IMPLEMENTED if the add-on can't
+  ///         run a frame without side effects
+  ///
+  virtual GAME_ERROR RunFrameSpeculative() { return GAME_ERROR_NOT_IMPLEMENTED; }
+  //----------------------------------------------------------------------------
+
+  //============================================================================
   /// @brief Reset the current game
   ///
   /// @return The error, or @ref GAME_ERROR_NO_ERROR if the game was reset
@@ -1673,6 +1687,10 @@ private:
 
     instance->game->toAddon->FreeString = ADDON_FreeString;
 
+    // Added in 8.3.0. An older Kodi's table ends before this entry.
+    if (IsInstanceAPIVersionAtLeast(8, 3, 0))
+      instance->game->toAddon->RunFrameSpeculative = ADDON_RunFrameSpeculative;
+
     m_instanceData = instance->game;
     m_instanceData->toAddon->addonInstance = this;
   }
@@ -1730,6 +1748,11 @@ private:
   inline static GAME_ERROR ADDON_RunFrame(const AddonInstance_Game* instance)
   {
     return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->RunFrame();
+  }
+
+  inline static GAME_ERROR ADDON_RunFrameSpeculative(const AddonInstance_Game* instance)
+  {
+    return static_cast<CInstanceGame*>(instance->toAddon->addonInstance)->RunFrameSpeculative();
   }
 
   inline static GAME_ERROR ADDON_Reset(const AddonInstance_Game* instance)
