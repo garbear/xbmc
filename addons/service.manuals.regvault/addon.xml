@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="service.manuals.regvault"
+       name="Game Manuals (REG-Vault)"
+       version="0.4.1"
+       provider-name="Chris">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0"/>
+  </requires>
+  <!--
+    An ordinary plugin rather than an add-on type of its own. The "manuals"
+    token is what a manual provider is recognised by; nothing else in Kodi
+    parses it, and unknown tokens are kept as they are. "game" is what puts
+    this under Game add-ons, which is where someone would look for it.
+  -->
+  <extension point="xbmc.python.pluginsource" library="addon.py" provides="game manuals">
+    <provides>game manuals</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">Finds game manuals in the REG-Vault catalogue</summary>
+    <description lang="en_GB">Answers Kodi when it goes looking for a manual for a game that has none, using the REG-Vault catalogue.
+
+There is nothing to open here. Play a game, choose Manual from the game menu, and Kodi asks this add-on what it can find.
+
+Matching is exact: a game is found by the hash of the ROM itself, so a manual is either the right one or it is not offered. A ROM that is a different dump, region or revision to anything catalogued simply will not be found.
+
+Manuals remain the copyright of their publishers. REG-Vault catalogues them as a preservation archive.</description>
+    <platform>all</platform>
+    <license>GPL-2.0-or-later</license>
+    <source>https://github.com/sunlollyking/service.manuals.regvault</source>
+    <news>0.2.0 - Answers Kodi's find-a-manual dialog. The bulk scan is gone; Kodi asks per game now.</news>
+  </extension>
+</addon>
