@@ -1636,6 +1636,13 @@ extern "C"
      * must release the handle; Kodi calls HwContextDestroy before teardown.
      */
     bool (*StartStream)(KODI_HANDLE, KODI_GAME_STREAM_HANDLE);
+
+    /*!
+     * @brief Ask Kodi to fast-forward, or to stop a fast-forward it asked for.
+     *
+     * A ratio above 1 is the speed asked for; anything else leaves it to Kodi.
+     */
+    void (*SetFastForwarding)(KODI_HANDLE kodiInstance, bool fastForward, double ratio);
   } AddonToKodiFuncTable_Game;
 
   /*!
