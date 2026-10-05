@@ -633,6 +633,8 @@ const uint8_t* CReversiblePlayback::RunaheadFrame(unsigned int frames)
 
   if (serialized)
   {
+    unsigned int ran = 0;
+
     // Speculative frames don't poll, so they repeat the input of the real frame
     for (unsigned int frame = 1; frame <= frames && ranAhead; ++frame)
     {
@@ -640,9 +642,16 @@ const uint8_t* CReversiblePlayback::RunaheadFrame(unsigned int frames)
       m_streamManager.SuppressAudio(!lastFrame);
       m_streamManager.EnableVideo(lastFrame);
       ranAhead = m_gameClient->RunFrameSpeculative();
+      if (ranAhead)
+        ++ran;
     }
 
-    restored = m_gameClient->RestoreState(m_runaheadState.data(), memorySize);
+    // A client that refuses its first speculative frame is still at the real
+    // frame, and loading a state can upset one that is starting up, such as a
+    // C64 typing the command that loads its tape
+    const bool refused = !ranAhead && !m_gameClient->SupportsSpeculativeFrames();
+    if (ran > 0 || !refused)
+      restored = m_gameClient->RestoreState(m_runaheadState.data(), memorySize);
   }
 
   m_streamManager.SuppressAudio(false);
