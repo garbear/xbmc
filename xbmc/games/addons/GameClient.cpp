@@ -440,6 +440,10 @@ bool CGameClient::InitializeGameplay(const std::string& gamePath,
                                      RETRO::IStreamManager& streamManager,
                                      IGameInputCallback* input)
 {
+  // Whether frames can be run ahead is a property of the game as well as the
+  // client: a core may refuse for one game and not the next
+  m_speculativeSupported = true;
+
   bool gameInfoLoaded = LoadGameInfo();
   if (SupportsDiscControl() && Discs().HasPersistedState() &&
       (!gameInfoLoaded || !Discs().RestoreDiscList()))
