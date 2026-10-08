@@ -346,7 +346,13 @@ private:
   std::map<std::string, std::vector<IRenderBuffer*>>
       m_savestateBuffers; // Render buffers for savestates
   std::vector<std::future<void>> m_savestateThreads;
-  std::future<std::shared_ptr<CRenderBezel>> m_bezelLoad;
+  struct BezelLoad
+  {
+    std::mutex mutex;
+    bool done{false};
+    std::shared_ptr<CRenderBezel> bezel;
+  };
+  std::shared_ptr<BezelLoad> m_bezelLoad;
   std::shared_ptr<CRenderBezel> m_bezel;
   std::atomic<bool> m_hasBezel{false};
   std::mutex m_bezelMutex;

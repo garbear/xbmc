@@ -21,6 +21,7 @@ class CGameSettings;
 class CGraphicContext;
 class CGUIComponent;
 class CGUIShaderDX;
+class CJobManager;
 class CMediaSettings;
 class CRenderSystemBase;
 class CTextureCache;
@@ -53,13 +54,15 @@ public:
                  CMediaSettings& mediaSettings,
                  GAME::CGameServices& gameServices,
                  CGUIComponent* guiComponent,
-                 std::shared_ptr<CTextureCache> textureCache);
+                 std::shared_ptr<CTextureCache> textureCache,
+                 std::shared_ptr<CJobManager> jobManager);
 
   CRenderSystemBase* Rendering() { return m_rendering; }
   CWinSystemBase* Windowing() { return m_windowing; }
   CGraphicContext& GraphicsContext() { return m_graphicsContext; }
   CGUIComponent* GUI() { return m_guiComponent; }
   std::shared_ptr<CTextureCache> TextureCache() { return m_textureCache; }
+  CJobManager& JobManager() { return *m_jobManager; }
 
   // Rendering functions
   void SetViewPort(const CRect& viewPort);
@@ -122,6 +125,7 @@ private:
   GAME::CGameServices& m_gameServices;
   CGUIComponent* const m_guiComponent;
   const std::shared_ptr<CTextureCache> m_textureCache;
+  const std::shared_ptr<CJobManager> m_jobManager;
 };
 } // namespace RETRO
 } // namespace KODI
