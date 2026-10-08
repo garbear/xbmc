@@ -28,6 +28,7 @@
 #include "cores/RetroPlayer/streams/RetroPlayerVideo.h"
 #include "filesystem/File.h"
 #include "games/GameServices.h"
+#include "jobs/JobManager.h"
 #include "pictures/Picture.h"
 #include "settings/GameSettings.h"
 #include "threads/SingleLock.h"
@@ -71,12 +72,6 @@ void CRPRenderManager::Deinitialize()
   for (std::future<void>& task : m_savestateThreads)
     task.wait();
   m_savestateThreads.clear();
-
-  {
-    std::unique_lock lock(m_bezelMutex);
-    if (m_bezelLoad.valid())
-      m_bezelLoad.wait();
-  }
 
   DestroyContext();
 
@@ -616,20 +611,38 @@ void CRPRenderManager::SetBezel(const std::string& url)
   if (url.empty())
     return;
 
-  std::unique_lock lock(m_bezelMutex);
-  m_bezelLoad = std::async(std::launch::async, [url]()
-                           { return std::shared_ptr<CRenderBezel>(CRenderBezel::Load(url)); });
+  // A remote bezel can take as long as its server likes, so nothing waits for
+  // the load: it keeps its own result, which is dropped if the game has gone
+  auto load = std::make_shared<BezelLoad>();
+  {
+    std::unique_lock lock(m_bezelMutex);
+    m_bezelLoad = load;
+  }
+
+  CServiceBroker::GetJobManager()->Submit(
+      [load, url]()
+      {
+        std::shared_ptr<CRenderBezel> bezel = CRenderBezel::Load(url);
+        std::unique_lock lock(load->mutex);
+        load->bezel = std::move(bezel);
+        load->done = true;
+      });
 }
 
 std::shared_ptr<CRenderBezel> CRPRenderManager::GetBezel()
 {
   std::unique_lock lock(m_bezelMutex);
 
-  if (m_bezelLoad.valid() &&
-      m_bezelLoad.wait_for(std::chrono::seconds::zero()) == std::future_status::ready)
+  if (m_bezelLoad)
   {
-    m_bezel = m_bezelLoad.get();
-    m_hasBezel = static_cast<bool>(m_bezel);
+    std::unique_lock loadLock(m_bezelLoad->mutex);
+    if (m_bezelLoad->done)
+    {
+      m_bezel = std::move(m_bezelLoad->bezel);
+      m_hasBezel = static_cast<bool>(m_bezel);
+      loadLock.unlock();
+      m_bezelLoad.reset();
+    }
   }
 
   return m_bezel;
