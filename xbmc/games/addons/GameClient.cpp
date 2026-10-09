@@ -19,6 +19,8 @@
 #include "addons/BinaryAddonCache.h"
 #include "addons/addoninfo/AddonInfo.h"
 #include "addons/addoninfo/AddonType.h"
+#include "application/ApplicationComponents.h"
+#include "application/ApplicationPlayer.h"
 #include "filesystem/Directory.h"
 #include "filesystem/SpecialProtocol.h"
 #include "games/GameServices.h"
@@ -33,6 +35,7 @@
 #include "guilib/WindowIDs.h"
 #include "input/actions/Action.h"
 #include "input/actions/ActionIDs.h"
+#include "jobs/JobManager.h"
 #include "messaging/ApplicationMessenger.h"
 #include "messaging/helpers/DialogOKHelper.h"
 #include "resources/LocalizeStrings.h"
@@ -64,6 +67,10 @@ using namespace GAME;
 
 namespace
 {
+//! The speed a client gets when it asks to fast-forward and leaves the speed to
+//! Kodi. The game loop goes no faster than the client can run frames.
+constexpr double CLIENT_FAST_FORWARD_SPEED = 16.0;
+
 constexpr const char* GAME_PROPERTY_SUPPORTS_DISC_CONTROL = "supports_disc_control";
 constexpr const char* GAME_PROPERTY_PLATFORMS = "platforms";
 constexpr const char* GAME_PROPERTY_LIBRETRO_CORE = "libretro_core";
@@ -220,6 +227,7 @@ bool CGameClient::Initialize(void)
   m_ifc.game->toKodi->EnableHardwareRendering = cb_enable_hardware_rendering;
   m_ifc.game->toKodi->CloseGame = cb_close_game;
   m_ifc.game->toKodi->GetPlaybackSpeed = cb_get_playback_speed;
+  m_ifc.game->toKodi->SetFastForwarding = cb_set_fast_forwarding;
   m_ifc.game->toKodi->SetGameTiming = cb_set_game_timing;
   m_ifc.game->toKodi->OpenStream = cb_open_stream;
   m_ifc.game->toKodi->StartStream = cb_start_stream;
@@ -1089,6 +1097,40 @@ double CGameClient::cb_get_playback_speed(KODI_HANDLE kodiInstance)
     return 0.0;
 
   return gameClient->m_playbackSpeed;
+}
+
+void CGameClient::cb_set_fast_forwarding(KODI_HANDLE kodiInstance, bool fastForward, double ratio)
+{
+  CGameClient* gameClient = static_cast<CGameClient*>(kodiInstance);
+  if (gameClient == nullptr)
+    return;
+
+  double from;
+  double to;
+  if (fastForward)
+  {
+    from = 1.0;
+    to = ratio > 1.0 ? ratio : CLIENT_FAST_FORWARD_SPEED;
+    gameClient->m_fastForwardSpeed = to;
+  }
+  else
+  {
+    from = gameClient->m_fastForwardSpeed.exchange(0.0);
+    to = 1.0;
+    if (from == 0.0)
+      return;
+  }
+
+  // The call comes from inside a frame, and changing speed waits on the game loop
+  CServiceBroker::GetJobManager()->Submit(
+      [from, to]()
+      {
+        const auto appPlayer =
+            CServiceBroker::GetAppComponents().GetComponent<CApplicationPlayer>();
+        if (appPlayer && appPlayer->IsPlayingGame() &&
+            static_cast<double>(appPlayer->GetPlaySpeed()) == from)
+          appPlayer->SetPlaySpeed(static_cast<float>(to));
+      });
 }
 
 void CGameClient::cb_set_game_timing(KODI_HANDLE kodiInstance, const game_system_timing* timingInfo)
