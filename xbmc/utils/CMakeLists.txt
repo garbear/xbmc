@@ -188,6 +188,7 @@ set(HEADERS ActorProtocol.h
             TimeUtils.h
             TransformMatrix.h
             URIParser.h
+    URIPolicy.h
             URIUtils.h
             UrlOptions.h
             Utf8Utils.h
