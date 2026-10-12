@@ -30,3 +30,9 @@ TEST(TestCheatUtils, RememberedSelectionsDistinguishGamesWithTheSameBasename)
   EXPECT_EQ(first.find('/'), std::string::npos);
   EXPECT_TRUE(first.ends_with(".xml"));
 }
+
+TEST(TestCheatUtils, FilenameComponentsDoNotIntroduceSchemes)
+{
+  EXPECT_EQ("notes:2026.cht", CCheatUtils::GetCheatFileName("/games/notes:2026.gb"));
+  EXPECT_EQ("notes:2026.cht", CCheatUtils::GetCheatFileName("http://host/games/notes:2026.gb"));
+}
