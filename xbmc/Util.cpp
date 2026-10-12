@@ -37,6 +37,7 @@
 #include "filesystem/File.h"
 #include "filesystem/SpecialProtocol.h"
 #include "utils/StringUtils.h"
+#include "utils/URIPolicy.h"
 #include "utils/URIUtils.h"
 #include "utils/log.h"
 
@@ -1033,6 +1034,11 @@ std::string CUtil::MakeLegalPath(const std::string& strPathAndFile, LegalPath Le
 
 std::string CUtil::ValidatePath(std::string path, bool bFixDoubleSlashes /* = false */)
 {
+  if (const auto scheme = URIPolicy::GetScheme(path);
+      scheme && (!URIPolicy::GetPolicy(*scheme).legacy ||
+                 (!URIPolicy::IsLegacyURL(path) &&
+                  std::string_view{path}.substr(scheme->size() + 1, 2) != "\\\\")))
+    return path;
 
   // Don't do any stuff on URLs containing %-characters or protocols that embed
   // filenames. NOTE: Don't use IsInZip or IsInRar here since it will infinitely
@@ -1883,6 +1889,14 @@ void CUtil::GetVideoBasePathAndFileName(const std::string& videoPath,
                                         std::string& basePath,
                                         std::string& videoFileName)
 {
+  const CURL location{videoPath};
+  if (!location.SupportsPathOperations())
+  {
+    basePath.clear();
+    videoFileName.clear();
+    return;
+  }
+
   if (URIUtils::IsOpticalMediaFile(videoPath) || URIUtils::IsBlurayPath(videoPath))
   {
     const std::string path{URIUtils::IsBlurayPath(videoPath) ? URIUtils::GetDiscFile(videoPath)
@@ -1905,10 +1919,11 @@ void CUtil::GetVideoBasePathAndFileName(const std::string& videoPath,
   }
   else
   {
-    videoFileName = URIUtils::ReplaceExtension(URIUtils::GetFileName(videoPath), "");
-    CURL url(videoPath);
-    // Strip URL options (e.g., query/fragment) before computing the parent path
-    url.SetOptions("");
+    videoFileName = URIUtils::GetFileName(URIUtils::ReplaceExtension(videoPath, ""));
+    CURL url{location};
+    // Strip non-identity URL options before computing the parent path.
+    if (!url.PreservesQueryIdentity())
+      url.SetOptions("");
     basePath = URIUtils::GetParentPath(url.Get());
   }
 }
@@ -1954,13 +1969,14 @@ void CUtil::ScanPathsForAssociatedItems(const std::string& videoName,
     if (item->IsFolder())
       continue;
 
-    std::string strCandidate = URIUtils::GetFileName(item->GetPath());
+    std::string strCandidate = item->GetPath();
 
     // skip duplicates
     if (std::ranges::find(associatedFiles, item->GetPath()) != associatedFiles.end())
       continue;
 
     URIUtils::RemoveExtension(strCandidate);
+    strCandidate = URIUtils::GetFileName(strCandidate);
     // NOTE: We don't know if one of videoName or strCandidate is URL-encoded and the other is not, so try both
     if (StringUtils::StartsWithNoCase(strCandidate, videoName) ||
         (StringUtils::StartsWithNoCase(strCandidate, CURL::Decode(videoName))))
