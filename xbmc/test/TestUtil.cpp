@@ -999,6 +999,16 @@ TEST_F(TestCustomSubtitleFolder, AFolderThatExistsIsSearched)
   EXPECT_EQ(1U, found.size());
 }
 
+TEST(TestUtil, FoundationNativeAndNestedNormalization)
+{
+  EXPECT_EQ("relative?name#part+100%.mkv", CUtil::ValidatePath("relative?name#part+100%.mkv"));
+  EXPECT_EQ("C:relative", CUtil::ValidatePath("C:relative"));
+  EXPECT_EQ("./notes:2026", CUtil::ValidatePath("./notes:2026"));
+  EXPECT_EQ("zip://%2ftmp%2fa.zip/dir//a.mkv",
+            CUtil::ValidatePath("zip://%2ftmp%2fa.zip/dir//a.mkv", true));
+  EXPECT_EQ("http://server/a%2Fb//c", CUtil::ValidatePath("http://server/a%2Fb//c", true));
+}
+
 /*!
  * A percent-encoded path reaches here from any VFS that escapes its names - WebDAV among them.
  * Hiding the extension must not hand back the escaped form.
