@@ -930,3 +930,13 @@ TEST_P(TestExternalStreamDetails, GetExternalStreamDetailsFromFilename)
 INSTANTIATE_TEST_SUITE_P(GetExternalStreamDetailsFromFilename,
                          TestExternalStreamDetails,
                          ValuesIn(ExternalStreams));
+
+TEST(TestUtil, FoundationNativeAndNestedNormalization)
+{
+  EXPECT_EQ("relative?name#part+100%.mkv", CUtil::ValidatePath("relative?name#part+100%.mkv"));
+  EXPECT_EQ("C:relative", CUtil::ValidatePath("C:relative"));
+  EXPECT_EQ("./notes:2026", CUtil::ValidatePath("./notes:2026"));
+  EXPECT_EQ("zip://%2ftmp%2fa.zip/dir//a.mkv",
+            CUtil::ValidatePath("zip://%2ftmp%2fa.zip/dir//a.mkv", true));
+  EXPECT_EQ("http://server/a%2Fb//c", CUtil::ValidatePath("http://server/a%2Fb//c", true));
+}
