@@ -168,6 +168,8 @@ private:
     Unsupported,
   };
   RunaheadStatus m_runaheadStatus{RunaheadStatus::Ready};
+  //! Whether the client has loaded back a state it saved, which some can't
+  bool m_runaheadRestoreChecked{false};
   std::vector<uint8_t> m_runaheadState;
 
   // Savestate functionality
