@@ -185,6 +185,8 @@ struct Core
   unsigned int speculativeFrames{0};
   GAME_ERROR speculativeResult{GAME_ERROR_NO_ERROR};
   bool deserializeFails{false};
+  //! Restores fail once a speculative frame has run
+  bool deserializeFailsAhead{false};
   bool serializationNeedsReset{false};
   bool deserializeNeedsFrame{false};
   GAME_ERROR frameResult{GAME_ERROR_NO_ERROR};
@@ -409,7 +411,7 @@ protected:
     {
       auto& core = GetCore(game);
       ++core.deserializations;
-      if (core.deserializeFails)
+      if (core.deserializeFails || (core.deserializeFailsAhead && core.speculativeFrames > 0))
         return GAME_ERROR_FAILED;
       return !core.deserializeNeedsFrame || core.frames > 0 ? GAME_ERROR_NO_ERROR
                                                             : GAME_ERROR_FAILED;
@@ -1261,12 +1263,18 @@ TEST_F(TestGameClientHardwareRendering, RunaheadRestoresTheRealFrame)
   EXPECT_EQ(m_core.serializations, 1U);
   EXPECT_EQ(m_core.deserializations, 0U);
 
-  // Rewind reuses the state run-ahead restores to
+  // Rewind reuses the state run-ahead restores to. The first time, the client
+  // also loads it back before running ahead.
   playback.FrameEvent();
   EXPECT_EQ(m_core.frames, 2U);
   EXPECT_EQ(m_core.speculativeFrames, 2U);
   EXPECT_EQ(m_core.serializations, 2U);
-  EXPECT_EQ(m_core.deserializations, 1U);
+  EXPECT_EQ(m_core.deserializations, 2U);
+
+  playback.FrameEvent();
+  EXPECT_EQ(m_core.frames, 3U);
+  EXPECT_EQ(m_core.speculativeFrames, 4U);
+  EXPECT_EQ(m_core.deserializations, 3U);
 }
 
 TEST_F(TestGameClientHardwareRendering, RunaheadNeedsSpeculativeFrames)
@@ -1294,15 +1302,15 @@ TEST_F(TestGameClientHardwareRendering, RunaheadStopsWhenASpeculativeFrameFails)
   playback.FrameEvent();
   playback.FrameEvent();
   EXPECT_EQ(m_core.speculativeFrames, 1U);
-  EXPECT_EQ(m_core.deserializations, 1U);
+  EXPECT_EQ(m_core.deserializations, 2U);
 
   playback.FrameEvent();
   EXPECT_EQ(m_core.frames, 3U);
   EXPECT_EQ(m_core.speculativeFrames, 1U);
-  EXPECT_EQ(m_core.deserializations, 1U);
+  EXPECT_EQ(m_core.deserializations, 2U);
 }
 
-TEST_F(TestGameClientHardwareRendering, RunaheadStopsPlaybackWhenTheRealFrameIsLost)
+TEST_F(TestGameClientHardwareRendering, RunaheadStopsWhenTheClientCantRestoreItsState)
 {
   RETRO::CPlaybackTestEnvironment environment;
   CRunaheadSettings runahead(false);
@@ -1312,9 +1320,29 @@ TEST_F(TestGameClientHardwareRendering, RunaheadStopsPlaybackWhenTheRealFrameIsL
   playback.SetSpeed(1.0);
   playback.FrameEvent();
   playback.FrameEvent();
+  EXPECT_EQ(m_core.speculativeFrames, 0U);
+  EXPECT_EQ(m_core.deserializations, 1U);
+
+  // Found before running ahead, so the game plays on at the real frame
+  playback.FrameEvent();
+  EXPECT_EQ(m_core.frames, 3U);
+  EXPECT_EQ(m_core.speculativeFrames, 0U);
+  EXPECT_EQ(m_core.deserializations, 1U);
+}
+
+TEST_F(TestGameClientHardwareRendering, RunaheadStopsPlaybackWhenTheRealFrameIsLost)
+{
+  RETRO::CPlaybackTestEnvironment environment;
+  CRunaheadSettings runahead(false);
+  m_core.deserializeFailsAhead = true;
+  RETRO::CReversiblePlayback playback(m_client.get(), environment.Renderer(), environment.Streams(),
+                                      environment.Messenger(), 60.0, 0);
+  playback.SetSpeed(1.0);
+  playback.FrameEvent();
+  playback.FrameEvent();
   EXPECT_EQ(m_core.frames, 2U);
   EXPECT_EQ(m_core.speculativeFrames, 2U);
-  EXPECT_EQ(m_core.deserializations, 1U);
+  EXPECT_EQ(m_core.deserializations, 2U);
 
   // Playing on would continue from a frame that never really happened
   playback.FrameEvent();

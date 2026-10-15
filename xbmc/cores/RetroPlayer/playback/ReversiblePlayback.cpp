@@ -569,7 +569,10 @@ void CReversiblePlayback::FrameEvent()
 unsigned int CReversiblePlayback::PrepareRunahead()
 {
   if (m_runaheadReset.exchange(false))
+  {
     m_runaheadStatus = RunaheadStatus::Ready;
+    m_runaheadRestoreChecked = false;
+  }
 
   const unsigned int frames = m_runaheadFrames;
   if (frames == 0 || m_runaheadStatus == RunaheadStatus::Failed || m_gameLoop.GetSpeed() != 1.0)
@@ -631,7 +634,17 @@ const uint8_t* CReversiblePlayback::RunaheadFrame(unsigned int frames)
   bool ranAhead = serialized;
   bool restored = true;
 
-  if (serialized)
+  // A client that can't load back the state it saved would only find out after
+  // the frames ahead, past the real frame. Asked now, nothing has moved yet.
+  bool restoresState = true;
+  if (serialized && !m_runaheadRestoreChecked)
+  {
+    restoresState = m_gameClient->RestoreState(m_runaheadState.data(), memorySize);
+    m_runaheadRestoreChecked = restoresState;
+    ranAhead = restoresState;
+  }
+
+  if (serialized && restoresState)
   {
     unsigned int ran = 0;
 
@@ -674,7 +687,9 @@ const uint8_t* CReversiblePlayback::RunaheadFrame(unsigned int frames)
     if (m_gameClient->SupportsSpeculativeFrames())
     {
       CLog::Log(LOGERROR, "RetroPlayer[SAVE]: Run-ahead disabled: client failed to {}",
-                serialized ? "run a speculative frame" : "serialize its state");
+                !serialized      ? "serialize its state"
+                : !restoresState ? "restore its state"
+                                 : "run a speculative frame");
       m_runaheadStatus = RunaheadStatus::Failed;
     }
     return nullptr;
