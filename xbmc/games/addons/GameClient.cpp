@@ -68,6 +68,22 @@ namespace
 constexpr const char* GAME_PROPERTY_SUPPORTS_DISC_CONTROL = "supports_disc_control";
 constexpr const char* GAME_PROPERTY_PLATFORMS = "platforms";
 constexpr const char* GAME_PROPERTY_LIBRETRO_CORE = "libretro_core";
+constexpr const char* GAME_PROPERTY_SAVESTATE_FEATURES = "savestate_features";
+
+// Any other value is unknown, which RetroArch treats as deterministic
+CGameClient::SavestateFeatures ParseSavestateFeatures(const std::string& features)
+{
+  using SavestateFeatures = CGameClient::SavestateFeatures;
+  if (features == "disabled")
+    return SavestateFeatures::DISABLED;
+  if (features == "basic")
+    return SavestateFeatures::BASIC;
+  if (features == "serialized")
+    return SavestateFeatures::SERIALIZED;
+  if (features == "deterministic")
+    return SavestateFeatures::DETERMINISTIC;
+  return SavestateFeatures::UNKNOWN;
+}
 
 /*!
  * \brief Holds a hardware-rendering client's context current for a call into it
@@ -160,6 +176,8 @@ CGameClient::CGameClient(const ADDON::AddonInfoPtr& addonInfo)
 
   m_libretroCore =
       addonInfo->Type(AddonType::GAMEDLL)->GetValue(GAME_PROPERTY_LIBRETRO_CORE).asString();
+  m_savestateFeatures = ParseSavestateFeatures(
+      addonInfo->Type(AddonType::GAMEDLL)->GetValue(GAME_PROPERTY_SAVESTATE_FEATURES).asString());
 }
 
 CGameClient::~CGameClient(void)

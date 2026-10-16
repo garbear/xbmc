@@ -596,6 +596,24 @@ unsigned int CReversiblePlayback::PrepareRunahead()
     return 0;
   }
 
+  // Run-ahead restores a state every frame, which only works if running on
+  // from a restored state gives the same frames. libretro's core info says
+  // which cores do, and RetroArch holds run-ahead off for the rest.
+  using SavestateFeatures = GAME::CGameClient::SavestateFeatures;
+  const SavestateFeatures savestateFeatures = m_gameClient->GetSavestateFeatures();
+  if (savestateFeatures != SavestateFeatures::UNKNOWN &&
+      savestateFeatures != SavestateFeatures::DETERMINISTIC)
+  {
+    if (m_runaheadStatus != RunaheadStatus::NotDeterministic)
+    {
+      m_runaheadStatus = RunaheadStatus::NotDeterministic;
+      CLog::Log(LOGINFO,
+                "RetroPlayer[SAVE]: Run-ahead held off: {} rates its states below deterministic",
+                m_gameClient->ID());
+    }
+    return 0;
+  }
+
   const size_t memorySize = m_gameClient->GetSerializeSize();
   if (memorySize == 0)
     return 0;

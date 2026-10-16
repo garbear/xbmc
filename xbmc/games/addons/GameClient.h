@@ -158,6 +158,19 @@ public:
   const std::string& GetEmulatorName() const { return m_emulatorName; }
   const std::string& GetPlatforms() const { return m_platforms; }
   const std::string& GetLibretroCore() const { return m_libretroCore; }
+
+  /*!
+   * \brief How far the core's states can be trusted, from libretro's core info
+   */
+  enum class SavestateFeatures
+  {
+    UNKNOWN,
+    DISABLED,
+    BASIC,
+    SERIALIZED,
+    DETERMINISTIC,
+  };
+  SavestateFeatures GetSavestateFeatures() const { return m_savestateFeatures; }
   bool SupportsDiscControl() const { return m_supportsDiscControl; }
 
   // Start/stop gameplay
@@ -381,6 +394,7 @@ private:
   std::string m_emulatorName;
   std::string m_platforms;
   std::string m_libretroCore;
+  SavestateFeatures m_savestateFeatures{SavestateFeatures::UNKNOWN};
   bool m_supportsDiscControl{false};
 
   // Properties of the current playing file
