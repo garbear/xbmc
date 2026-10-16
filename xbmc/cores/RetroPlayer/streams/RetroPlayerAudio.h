@@ -60,6 +60,13 @@ public:
     m_bAudioEnabled = bEnabled;
   }
 
+  /*!
+   * \brief Hold back the sound of frames that are rolled back
+   *
+   * Separate from Enable(), so it can't undo muting or a speed change.
+   */
+  void Suppress(bool bSuppressed) { m_bAudioSuppressed = bSuppressed; }
+
   // implementation of IRetroPlayerStream
   bool OpenStream(const StreamProperties& properties) override;
   bool GetStreamBuffer(unsigned int width, unsigned int height, StreamBuffer& buffer) override
@@ -76,6 +83,7 @@ private:
   std::atomic<bool> m_restoreDelay{false};
   double m_playingDelay = 0.0;
   unsigned int m_framesToSkip = 0;
+  bool m_bAudioSuppressed = false;
 
   uint64_t m_droppedFrames = 0;
   uint64_t m_dropEvents = 0;
