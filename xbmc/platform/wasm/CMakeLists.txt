@@ -13,6 +13,8 @@ set(HEADERS CPUInfoWasm.h
             TitanWebApis.h
             TizenWebApis.h
             WasmAudioWorkletManager.h
+            WasmAudioWorkletManager.h
+            WasmMediaLayer.h
             WasmWebApis.h)
 
 core_add_library(platform_wasm)
