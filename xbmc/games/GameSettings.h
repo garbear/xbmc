@@ -42,6 +42,14 @@ public:
   unsigned int MaxRewindTimeSec();
   bool SyncPlaybackToDisplay();
   double SyncToDisplayLimit();
+  /*!
+   * \brief Whether a game shown with a video filter goes out in HDR
+   *
+   * Only on a display that accepts HDR. The filter's output is brightened
+   * into the display's headroom, which wins back the light a CRT filter's
+   * scanlines and phosphor mask take away.
+   */
+  bool HdrWithVideoFilters() const;
   std::string GetRAUsername() const;
   std::string GetRAToken() const;
 
