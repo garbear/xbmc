@@ -28,6 +28,7 @@ class CShaderTextureGLESRef;
 namespace RETRO
 {
 class CRenderBufferOpenGLES;
+class CRPHdrShaderGLES;
 
 class CRendererFactoryOpenGLES : public IRendererFactory
 {
@@ -55,6 +56,7 @@ public:
   SCALINGMETHOD GetDefaultScalingMethod() const override { return SCALINGMETHOD::NEAREST; }
 
   static bool SupportsScalingMethod(SCALINGMETHOD method);
+  bool SupportsHdr() const override { return !m_hdrShaderFailed; }
 
 protected:
   struct PackedVertex
@@ -74,7 +76,21 @@ protected:
   {
     std::shared_ptr<SHADER::CShaderTextureGLESRef> sourceTexture;
     std::shared_ptr<SHADER::CShaderTextureGLES> targetTexture;
+    std::shared_ptr<SHADER::CShaderTextureGLES> hdrTargetTexture;
   };
+
+  /*!
+   * \brief The texture a shader preset's last pass renders into
+   */
+  SHADER::CShaderTextureGLES& GetTargetTexture(RenderBufferTextures& textures, const CSize& size);
+
+  /*!
+   * \brief Draw the texture bound to unit 0 into the destination, for SDR or HDR
+   *
+   * \param alpha The frame's opacity
+   * \param width, height Size of the texture, which the source rectangle is in
+   */
+  void DrawFrame(uint8_t alpha, float width, float height);
 
   // Implementation of CRPBaseRenderer
   void RenderInternal(uint8_t alpha) override;
@@ -88,6 +104,12 @@ protected:
   GLuint m_mainVertexVBO;
 
   const GLenum m_textureTarget = GL_TEXTURE_2D;
+
+private:
+  bool LoadHdrShader();
+
+  std::unique_ptr<CRPHdrShaderGLES> m_hdrShader;
+  bool m_hdrShaderFailed{false};
 };
 } // namespace RETRO
 } // namespace KODI

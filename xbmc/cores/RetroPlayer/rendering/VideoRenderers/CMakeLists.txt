@@ -14,8 +14,10 @@ if(TARGET ${APP_NAME_LC}::OpenGl)
 endif()
 
 if(TARGET ${APP_NAME_LC}::OpenGLES)
-  list(APPEND SOURCES RPRendererOpenGLES.cpp)
-  list(APPEND HEADERS RPRendererOpenGLES.h)
+  list(APPEND SOURCES RPHdrShaderGLES.cpp
+                      RPRendererOpenGLES.cpp)
+  list(APPEND HEADERS RPHdrShaderGLES.h
+                      RPRendererOpenGLES.h)
 endif()
 
 if(("gbm" IN_LIST CORE_PLATFORM_NAME_LC OR "wayland" IN_LIST CORE_PLATFORM_NAME_LC) AND TARGET ${APP_NAME_LC}::EGL)
