@@ -129,7 +129,7 @@ public:
   void FrameMove();
 
   // Implementation of IRenderManager
-  void RenderWindow(bool bClear, const RESOLUTION_INFO& coordsRes) override;
+  void RenderWindow(bool bClear, const RESOLUTION_INFO& coordsRes, bool videoLayer) override;
   void RenderControl(bool bClear,
                      bool bUseAlpha,
                      const CRect& renderRegion,
@@ -154,6 +154,16 @@ public:
   void ClearVideoFrame(const std::string& savestatePath);
 
 private:
+  /*!
+   * \brief Show the game in HDR, or stop, as the settings and filter ask
+   */
+  void UpdateHdrOutput();
+
+  /*!
+   * \brief Put the display into HDR10 for the game, or take it out again
+   */
+  void SetHdrOutput(bool hdr);
+
   /*!
    * \brief Get or create a renderer compatible with the given render settings
    */
@@ -316,6 +326,10 @@ private:
   uintptr_t m_loggedFramebuffer{0};
   bool m_loggedHardwareCapture{false};
   std::vector<IRenderBuffer*> m_renderBuffers;
+  bool m_hdrOutput{false}; // Rendering thread only
+  bool m_hdrRefused{false}; // Rendering thread only
+  unsigned int m_hdrPeak{0}; // Rendering thread only, in nits
+  bool m_windowRendered{false}; // Rendering thread only
   std::map<AVPixelFormat, std::map<AVPixelFormat, SwsContext*>> m_scalers; // From -> to -> context
   std::vector<uint8_t> m_cachedFrame;
   unsigned int m_cachedWidth = 0;
