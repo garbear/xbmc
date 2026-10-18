@@ -652,5 +652,7 @@ CHDRCapabilities CWinSystemGbm::GetDisplayHDRCapabilities() const
   if (m_info->SupportsEOTF(UTILS::Eotf::HLG))
     caps.SetHLG();
 
+  caps.SetMaxLuminance(m_info->GetMaxLuminance());
+
   return caps;
 }
