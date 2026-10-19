@@ -129,7 +129,7 @@ IDirectory* CDirectoryFactory::Create(const CURL& url)
 
   // Load directory flag from the VFS. If the url is truly a directory, don't
   // attempt to use a file-directory loader.
-  bool canBeFileDirectory = true;
+  bool canBeFileDirectory = url.SupportsPathOperations();
 
   struct __stat64 st = {};
   static constexpr auto excludedProtocols =
@@ -138,7 +138,7 @@ IDirectory* CDirectoryFactory::Create(const CURL& url)
   // File-directory loaders are chosen by extension, so extensionless paths need no stat
   const bool exclude{excludedProtocols.contains(url.GetProtocol()) ||
                      URIUtils::IsInternetStream(url) || url.GetFileType().empty()};
-  if (!exclude && CFile::Stat(URIUtils::SubstitutePath(url), &st) == 0)
+  if (canBeFileDirectory && !exclude && CFile::Stat(URIUtils::SubstitutePath(url), &st) == 0)
   {
     item.SetFolder(S_ISDIR(st.st_mode));
     canBeFileDirectory = !item.IsFolder();
