@@ -347,6 +347,13 @@ bool CGamesGUIInfo::GetLabel(std::string& value,
       value = AchievementRuntime().GetShownLeaderboardTracker().display;
       return true;
     }
+    case RETROPLAYER_LEADERBOARD_TRACKER_TITLE:
+    {
+      value.clear();
+      if (!AchievementRuntime().GetShownLeaderboardTracker().display.empty())
+        value = StringUtils::Join(AchievementRuntime().GetLeaderboardAttemptTitles(), " · ");
+      return true;
+    }
     case RETROPLAYER_ACHIEVEMENTS_INDICATOR_TITLE:
     case RETROPLAYER_ACHIEVEMENTS_INDICATOR_BADGE:
     case RETROPLAYER_ACHIEVEMENTS_INDICATOR_PROGRESS:
