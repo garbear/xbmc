@@ -36,6 +36,12 @@ public:
   void SuppressAudio(bool bSuppress);
 
   /*!
+   * \brief Whether the client has sent sound from a thread other than the one
+   *        running its frames, which can't be held back with a frame
+   */
+  bool AudioSentOffFrameThread() const;
+
+  /*!
    * \brief Whether frames the client produces reach the screen
    */
   void EnableVideo(bool bEnable);

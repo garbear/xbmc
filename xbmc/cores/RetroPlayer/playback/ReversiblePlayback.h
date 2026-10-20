@@ -167,6 +167,7 @@ private:
     StateTooLarge,
     Unsupported,
     NotDeterministic,
+    AudioOffFrameThread,
   };
   RunaheadStatus m_runaheadStatus{RunaheadStatus::Ready};
   //! Whether the client has loaded back a state it saved, which some can't

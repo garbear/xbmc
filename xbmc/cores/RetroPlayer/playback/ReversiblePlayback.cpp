@@ -614,6 +614,20 @@ unsigned int CReversiblePlayback::PrepareRunahead()
     return 0;
   }
 
+  // Sound the client sends from its own thread can't be matched to a frame, so
+  // the sound of frames that are rolled back would be heard
+  if (m_streamManager.AudioSentOffFrameThread())
+  {
+    if (m_runaheadStatus != RunaheadStatus::AudioOffFrameThread)
+    {
+      m_runaheadStatus = RunaheadStatus::AudioOffFrameThread;
+      CLog::Log(LOGINFO,
+                "RetroPlayer[SAVE]: Run-ahead held off: {} sends sound from its own thread",
+                m_gameClient->ID());
+    }
+    return 0;
+  }
+
   const size_t memorySize = m_gameClient->GetSerializeSize();
   if (memorySize == 0)
     return 0;

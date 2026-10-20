@@ -45,6 +45,11 @@ void CRPStreamManager::SuppressAudio(bool bSuppress)
     m_audioStream->Suppress(bSuppress);
 }
 
+bool CRPStreamManager::AudioSentOffFrameThread() const
+{
+  return m_audioStream != nullptr && m_audioStream->SentOffFrameThread();
+}
+
 void CRPStreamManager::EnableVideo(bool bEnable)
 {
   m_videoEnabled = bEnable;

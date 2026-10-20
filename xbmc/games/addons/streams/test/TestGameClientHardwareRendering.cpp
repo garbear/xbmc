@@ -17,6 +17,7 @@
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "cores/RetroPlayer/savestates/SavestateFlatBuffer.h"
 #include "cores/RetroPlayer/streams/IStreamManager.h"
+#include "cores/RetroPlayer/streams/RetroPlayerAudio.h"
 #include "cores/RetroPlayer/streams/RetroPlayerRendering.h"
 #include "cores/RetroPlayer/streams/RetroPlayerVideo.h"
 #include "filesystem/File.h"
@@ -42,6 +43,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -1350,6 +1352,32 @@ TEST_F(TestGameClientHardwareRendering, RunaheadStopsPlaybackWhenTheRealFrameIsL
   playback.FrameEvent();
   EXPECT_EQ(m_core.frames, 2U);
   EXPECT_EQ(m_core.speculativeFrames, 2U);
+}
+
+TEST_F(TestGameClientHardwareRendering, RunaheadStopsForSoundSentFromAnotherThread)
+{
+  RETRO::CPlaybackTestEnvironment environment;
+  CRunaheadSettings runahead(false);
+  RETRO::CReversiblePlayback playback(m_client.get(), environment.Renderer(), environment.Streams(),
+                                      environment.Messenger(), 60.0, 0);
+  playback.SetSpeed(1.0);
+  RETRO::StreamPtr audio = environment.Streams().CreateStream(RETRO::StreamType::AUDIO);
+  playback.FrameEvent();
+  playback.FrameEvent();
+  EXPECT_EQ(m_core.speculativeFrames, 2U);
+
+  // Sent on the thread running the frames, as most clients do
+  audio->AddStreamData(RETRO::AudioStreamPacket(nullptr, 0));
+  playback.FrameEvent();
+  EXPECT_EQ(m_core.speculativeFrames, 4U);
+
+  std::thread([&audio] { audio->AddStreamData(RETRO::AudioStreamPacket(nullptr, 0)); }).join();
+
+  playback.FrameEvent();
+  EXPECT_EQ(m_core.frames, 4U);
+  EXPECT_EQ(m_core.speculativeFrames, 4U);
+
+  environment.Streams().CloseStream(std::move(audio));
 }
 
 TEST_F(TestGameClientHardwareRendering, DevKitLeavesSpeculativeFramesToNewerKodi)
