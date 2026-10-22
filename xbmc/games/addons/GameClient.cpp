@@ -1008,6 +1008,35 @@ RestoreResult CGameClient::Deserialize(const uint8_t* data,
   return bSuccess ? RestoreResult::Restored : RestoreResult::StateUncertain;
 }
 
+bool CGameClient::SerializeSpeculative(uint8_t* data, size_t size)
+{
+  if (m_ifc.game->toAddon->SerializeSpeculative == nullptr)
+    return Serialize(data, size);
+
+  if (data == nullptr || size == 0)
+    return false;
+
+  std::unique_lock lock(m_critSection);
+  if (!m_bIsPlaying)
+    return false;
+
+  try
+  {
+    // Refusing a state is expected while the client couldn't load it back, so
+    // it isn't logged as an error
+    CClientFrameScope hwScope(Streams());
+    if (hwScope.IsBound())
+      return m_ifc.game->toAddon->SerializeSpeculative(m_ifc.game, data, size) ==
+             GAME_ERROR_NO_ERROR;
+  }
+  catch (...)
+  {
+    LogException("SerializeSpeculative()");
+  }
+
+  return false;
+}
+
 bool CGameClient::RestoreState(const uint8_t* data, size_t size)
 {
   if (data == nullptr || size == 0)
@@ -1021,7 +1050,12 @@ bool CGameClient::RestoreState(const uint8_t* data, size_t size)
   {
     CClientFrameScope hwScope(Streams());
     if (hwScope.IsBound())
+    {
+      if (m_ifc.game->toAddon->DeserializeSpeculative != nullptr)
+        return LogError(m_ifc.game->toAddon->DeserializeSpeculative(m_ifc.game, data, size),
+                        "DeserializeSpeculative()");
       return LogError(m_ifc.game->toAddon->Deserialize(m_ifc.game, data, size), "Deserialize()");
+    }
   }
   catch (...)
   {

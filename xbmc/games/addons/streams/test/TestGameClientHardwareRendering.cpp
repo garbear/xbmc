@@ -186,6 +186,8 @@ struct Core
   unsigned int readyFrame{1};
   unsigned int speculativeFrames{0};
   GAME_ERROR speculativeResult{GAME_ERROR_NO_ERROR};
+  //! Run-ahead states to refuse before giving one
+  unsigned int refusedStates{0};
   bool deserializeFails{false};
   //! Restores fail once a speculative frame has run
   bool deserializeFailsAhead{false};
@@ -406,6 +408,18 @@ protected:
     callbacks->Serialize = [](const AddonInstance_Game* game, uint8_t* data, size_t)
     {
       ++GetCore(game).serializations;
+      *data = 1;
+      return GAME_ERROR_NO_ERROR;
+    };
+    callbacks->SerializeSpeculative = [](const AddonInstance_Game* game, uint8_t* data, size_t)
+    {
+      auto& core = GetCore(game);
+      ++core.serializations;
+      if (core.refusedStates > 0)
+      {
+        --core.refusedStates;
+        return GAME_ERROR_FAILED;
+      }
       *data = 1;
       return GAME_ERROR_NO_ERROR;
     };
@@ -1309,6 +1323,29 @@ TEST_F(TestGameClientHardwareRendering, RunaheadStopsWhenASpeculativeFrameFails)
   playback.FrameEvent();
   EXPECT_EQ(m_core.frames, 3U);
   EXPECT_EQ(m_core.speculativeFrames, 1U);
+  EXPECT_EQ(m_core.deserializations, 2U);
+}
+
+TEST_F(TestGameClientHardwareRendering, RunaheadWaitsWhileTheClientRefusesAState)
+{
+  RETRO::CPlaybackTestEnvironment environment;
+  CRunaheadSettings runahead(false);
+  m_core.refusedStates = 2;
+  RETRO::CReversiblePlayback playback(m_client.get(), environment.Renderer(), environment.Streams(),
+                                      environment.Messenger(), 60.0, 0);
+  playback.SetSpeed(1.0);
+
+  // Frames run as they are, and the client is asked again on each
+  for (int i = 0; i < 4; ++i)
+    playback.FrameEvent();
+  EXPECT_EQ(m_core.frames, 4U);
+  EXPECT_EQ(m_core.serializations, 3U);
+  EXPECT_EQ(m_core.speculativeFrames, 0U);
+  EXPECT_EQ(m_core.deserializations, 0U);
+
+  playback.FrameEvent();
+  EXPECT_EQ(m_core.frames, 5U);
+  EXPECT_EQ(m_core.speculativeFrames, 2U);
   EXPECT_EQ(m_core.deserializations, 2U);
 }
 

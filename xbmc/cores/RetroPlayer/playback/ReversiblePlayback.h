@@ -103,6 +103,12 @@ private:
    */
   const uint8_t* RunaheadFrame(unsigned int frames);
 
+  /*!
+   * \brief Run a frame as it is while the client refuses a state for run-ahead,
+   * then ask it again
+   */
+  void RunHeldFrame();
+
   void UpdateRunahead();
 
   //! \param runaheadState The client's current state if run-ahead took it
@@ -172,6 +178,8 @@ private:
   RunaheadStatus m_runaheadStatus{RunaheadStatus::Ready};
   //! Whether the client has loaded back a state it saved, which some can't
   bool m_runaheadRestoreChecked{false};
+  //! Whether the client refused its last state for run-ahead
+  bool m_runaheadHeld{false};
   std::vector<uint8_t> m_runaheadState;
 
   // Savestate functionality

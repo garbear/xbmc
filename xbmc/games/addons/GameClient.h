@@ -231,6 +231,15 @@ public:
                             const CGameClientDiscModel* discState = nullptr);
 
   /*!
+   * \brief Save the client's state to be put back by RestoreState() after
+   * running frames ahead
+   *
+   * The client may refuse while a state couldn't be loaded back, such as
+   * while a tape is loading.
+   */
+  bool SerializeSpeculative(uint8_t* data, size_t size);
+
+  /*!
    * \brief Put back a state this client produced moments ago
    *
    * Unlike Deserialize(), leaves the discs alone: the state was taken from the
