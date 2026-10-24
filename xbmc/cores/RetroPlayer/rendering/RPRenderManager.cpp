@@ -8,6 +8,7 @@
 
 #include "RPRenderManager.h"
 
+#include "HdrOutput.h"
 #include "RenderContext.h"
 #include "RenderSettings.h"
 #include "RenderTranslator.h"
@@ -25,14 +26,20 @@
 #include "cores/RetroPlayer/savestates/ISavestate.h"
 #include "cores/RetroPlayer/savestates/SavestateDatabase.h"
 #include "cores/RetroPlayer/streams/RetroPlayerVideo.h"
+#include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h"
 #include "filesystem/File.h"
 #include "games/GameServices.h"
+#include "games/GameSettings.h"
+#include "guilib/GUIComponent.h"
+#include "guilib/GUIWindowManager.h"
+#include "guilib/WindowIDs.h"
 #include "pictures/Picture.h"
 #include "threads/SingleLock.h"
 #include "utils/ColorUtils.h"
 #include "utils/ScopeGuard.h"
 #include "utils/TransformMatrix.h"
 #include "utils/log.h"
+#include "windowing/WinSystem.h"
 
 #include <cstring>
 #include <mutex>
@@ -64,6 +71,9 @@ void CRPRenderManager::Initialize()
 void CRPRenderManager::Deinitialize()
 {
   CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: Deinitializing render manager");
+
+  if (m_hdrOutput)
+    SetHdrOutput(false);
 
   // Wait for savestate tasks
   for (std::future<void>& task : m_savestateThreads)
@@ -586,9 +596,13 @@ void CRPRenderManager::FrameMove()
 
   if (bIsConfigured)
   {
-    std::unique_lock<std::mutex> lock{m_oldRenderersMutex};
-    for (auto& renderer : m_renderers)
-      renderer->FrameMove();
+    {
+      std::unique_lock<std::mutex> lock{m_oldRenderersMutex};
+      for (auto& renderer : m_renderers)
+        renderer->FrameMove();
+    }
+
+    UpdateHdrOutput();
   }
 }
 
@@ -628,8 +642,14 @@ void CRPRenderManager::CheckFlush()
   }
 }
 
-void CRPRenderManager::RenderWindow(bool bClear, const RESOLUTION_INFO& coordsRes)
+void CRPRenderManager::RenderWindow(bool bClear, const RESOLUTION_INFO& coordsRes, bool videoLayer)
 {
+  // In HDR the game goes under the GUI, which Kodi composites over it
+  if (!videoLayer)
+    m_windowRendered = true;
+  if (videoLayer != m_hdrOutput)
+    return;
+
   // Clear any old renderers on the rendering thread
   {
     std::unique_lock<std::mutex> lock{m_oldRenderersMutex};
@@ -650,9 +670,99 @@ void CRPRenderManager::RenderWindow(bool bClear, const RESOLUTION_INFO& coordsRe
     m_renderContext.Clear(m_renderContext.UseLimitedColor() ? UTILS::COLOR::LIMITED_BLACK
                                                             : UTILS::COLOR::BLACK);
 
+  if (m_hdrOutput)
+  {
+    // Kodi lays the GUI over HDR less opaquely than over SDR, and a game's
+    // highlights showed through a menu brighter than the menu's text. With
+    // a menu open, nothing in the game is brighter than paper white.
+    const CGUIWindowManager& windowManager = CServiceBroker::GetGUI()->GetWindowManager();
+    const bool menuOpen = windowManager.HasVisibleModalDialog() ||
+                          windowManager.IsWindowVisible(WINDOW_DIALOG_GAME_OSD);
+
+    renderer->SetHdrLuminance(HDR_REFERENCE_WHITE, menuOpen ? HDR_REFERENCE_WHITE : m_hdrPeak);
+  }
+
   RenderInternal(renderer, renderBuffer, bClear, 255);
 
+  // The renderer can be shared with a control, which is drawn in the GUI
+  renderer->SetHdrLuminance(0, 0);
+
   m_renderContext.SetRenderingResolution(coordsRes, false);
+}
+
+void CRPRenderManager::UpdateHdrOutput()
+{
+  const bool windowRendered = m_windowRendered;
+  m_windowRendered = false;
+
+  // HDR pays off with a video filter, whose scanlines and mask cost light
+  bool wanted = windowRendered &&
+                CServiceBroker::GetGameServices().GameSettings().HdrWithVideoFilters() &&
+                !GetEffectiveSettings(nullptr).GetShaderPreset().empty();
+  if (wanted)
+  {
+    const std::shared_ptr<CRPBaseRenderer> renderer = GetRendererForSettings(nullptr);
+    wanted = renderer && renderer->SupportsHdr();
+  }
+
+  // A display that refused HDR is asked again once something changes
+  if (!wanted)
+    m_hdrRefused = false;
+  else if (m_hdrRefused)
+    return;
+
+  if (wanted != m_hdrOutput)
+    SetHdrOutput(wanted);
+}
+
+void CRPRenderManager::SetHdrOutput(bool hdr)
+{
+  CWinSystemBase* windowing = m_renderContext.Windowing();
+  if (windowing == nullptr)
+    return;
+
+  if (!hdr)
+  {
+    windowing->SetGuiCompositing(0);
+    windowing->SetHDR(nullptr);
+    windowing->SetColorimetry(nullptr);
+    windowing->SetVideoOutput(nullptr);
+    m_hdrOutput = false;
+    CLog::Log(LOGINFO, "RetroPlayer[RENDER]: Showing the game in SDR");
+    return;
+  }
+
+  const unsigned int peak = GetHdrPeak(windowing->GetDisplayHDRCapabilities().GetMaxLuminance());
+
+  VideoPicture picture;
+  GetHdrOutputPicture(picture, HDR_REFERENCE_WHITE, peak);
+
+  if (!windowing->SetVideoOutput(&picture))
+  {
+    CLog::Log(LOGINFO, "RetroPlayer[RENDER]: The display has no 10-bit output for HDR");
+    windowing->SetVideoOutput(nullptr);
+    m_hdrRefused = true;
+    return;
+  }
+
+  windowing->SetColorimetry(&picture);
+
+  if (!windowing->SetHDR(&picture) ||
+      !windowing->SetGuiCompositing(static_cast<int>(picture.color_transfer)))
+  {
+    CLog::Log(LOGINFO, "RetroPlayer[RENDER]: The display can't show the game in HDR");
+    windowing->SetGuiCompositing(0);
+    windowing->SetHDR(nullptr);
+    windowing->SetColorimetry(nullptr);
+    windowing->SetVideoOutput(nullptr);
+    m_hdrRefused = true;
+    return;
+  }
+
+  m_hdrOutput = true;
+  m_hdrPeak = peak;
+  CLog::Log(LOGINFO, "RetroPlayer[RENDER]: Showing the game in HDR, white at {} nits, peak {} nits",
+            HDR_REFERENCE_WHITE, peak);
 }
 
 void CRPRenderManager::RenderControl(bool bClear,
