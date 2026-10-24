@@ -19285,7 +19285,13 @@ msgctxt "#35241"
 msgid "The emulator \"{0:s}\" couldn't find files it needs, such as BIOS files."
 msgstr ""
 
-#empty strings from id 35242 to 35248
+#. Label of the in-game setting that frames the game with its bezel artwork
+#: addons/skin.estuary/xml/Includes_SettingsDialog.xml
+msgctxt "#35242"
+msgid "Bezel"
+msgstr ""
+
+#empty strings from id 35243 to 35248
 
 #. Button to open the savestate manager from the game OSD
 #: addons/skin.estuary/xml/GameOSD.xml
