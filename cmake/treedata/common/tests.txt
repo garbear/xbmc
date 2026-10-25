@@ -60,4 +60,5 @@ xbmc/test                         test
 xbmc/threads/test                 test/threads
 xbmc/utils/test                   test/utils
 xbmc/video/test                   test/video
+xbmc/view/test                    test/view
 xbmc/windowing/test               test/windowing
