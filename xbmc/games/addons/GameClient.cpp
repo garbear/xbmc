@@ -74,7 +74,8 @@ constexpr const char* GAME_PROPERTY_SAVESTATE_FEATURES = "savestate_features";
 CGameClient::SavestateFeatures ParseSavestateFeatures(const std::string& features)
 {
   using SavestateFeatures = CGameClient::SavestateFeatures;
-  if (features == "disabled")
+  // libretro's core info rates a core without savestates "null"
+  if (features == "null" || features == "disabled")
     return SavestateFeatures::DISABLED;
   if (features == "basic")
     return SavestateFeatures::BASIC;
