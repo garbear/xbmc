@@ -29,6 +29,13 @@
 #define XML_EVENTLOG_LEVEL          "level"
 #define XML_EVENTLOG_LEVEL_HIGHER   "showhigherlevels"
 
+namespace
+{
+// Games' entry from before Name was one of its sorts, when Label was only ever its untouched
+// default
+constexpr char OLD_GAMES[] = "games";
+} // namespace
+
 CViewStateSettings::CViewStateSettings()
 {
   AddViewState("musicnavartists");
@@ -51,7 +58,7 @@ CViewStateSettings::CViewStateSettings()
   AddViewState("pictures", DEFAULT_VIEW_AUTO);
   AddViewState("videofiles", DEFAULT_VIEW_AUTO);
   AddViewState("musicfiles", DEFAULT_VIEW_AUTO);
-  AddViewState("games", DEFAULT_VIEW_AUTO);
+  AddViewState("gamefiles", DEFAULT_VIEW_AUTO, SortBy::FILE);
 
   Clear();
 }
@@ -85,6 +92,9 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
   for (std::map<std::string, CViewState*>::iterator viewState = m_viewStates.begin(); viewState != m_viewStates.end(); ++viewState)
   {
     const TiXmlNode* pViewState = pElement->FirstChildElement(viewState->first);
+    const bool oldGames = pViewState == nullptr && viewState->first == "gamefiles";
+    if (oldGames)
+      pViewState = pElement->FirstChildElement(OLD_GAMES);
     if (pViewState == NULL)
       continue;
 
@@ -114,6 +124,9 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
     if (XMLUtils::GetInt(pViewState, XML_SORTORDER, sortOrder, static_cast<int>(SortOrder::NONE),
                          static_cast<int>(SortOrder::DESCENDING)))
       viewState->second->m_sortDescription.sortOrder = (SortOrder)sortOrder;
+
+    if (oldGames && viewState->second->m_sortDescription.sortBy == SortBy::LABEL)
+      viewState->second->m_sortDescription.sortBy = SortBy::FILE;
   }
 
   pElement = settings->FirstChild(XML_GENERAL);
