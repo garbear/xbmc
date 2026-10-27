@@ -1966,6 +1966,9 @@ void CGUIMediaWindow::OnFilterItems(const std::string &filter)
     if (pItem->IsFolder())
     {
       CURL itemUrl(pItem->GetPath());
+      if (itemUrl.IsLosslessURI())
+        continue;
+
       if (!filterOption.empty())
         itemUrl.SetOption("filter", filterOption);
       else
