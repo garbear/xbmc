@@ -32,6 +32,7 @@ class CSettingGroup;
 class CSettingSection;
 class CSettingUpdate;
 
+class TiXmlDocument;
 class TiXmlElement;
 class TiXmlNode;
 
@@ -88,6 +89,8 @@ public:
   std::shared_ptr<ISettingControl> CreateControl(const std::string &controlType) const override;
 
   uint32_t GetVersion() const { return Version; }
+  const TiXmlDocument* GetValues() const { return m_values.get(); }
+  bool HasSettingChanged(const std::string& id) const;
   uint32_t GetMinimumSupportedVersion() const { return MinimumSupportedVersion; }
 
   /*!
@@ -512,10 +515,15 @@ public:
    * \return A pointer to the matching \c TiXmlElement, or nullptr if not found or there is an error.
    *         The returned pointer lifetime matches that of \p node.
    */
-  static const TiXmlElement* LocateSetting(const TiXmlNode* node, std::string_view settingId);
-  static TiXmlElement* LocateSetting(TiXmlNode* node, std::string_view settingId)
+  static const TiXmlElement* LocateSetting(const TiXmlNode* node,
+                                           std::string_view settingId,
+                                           uint32_t version = Version);
+  static TiXmlElement* LocateSetting(TiXmlNode* node,
+                                     std::string_view settingId,
+                                     uint32_t version = Version)
   {
-    return const_cast<TiXmlElement*>(LocateSetting(const_cast<const TiXmlNode*>(node), settingId));
+    return const_cast<TiXmlElement*>(
+        LocateSetting(const_cast<const TiXmlNode*>(node), settingId, version));
   }
 
 private:
@@ -593,6 +601,9 @@ private:
 
   bool m_initialized = false;
   bool m_loaded = false;
+
+  std::unique_ptr<TiXmlDocument> m_values;
+  std::map<std::string, std::pair<std::string, bool>, std::less<>> m_loadedValues;
 
   SettingMap m_settings;
   using SettingSectionMap = std::map<std::string, std::shared_ptr<CSettingSection>, std::less<>>;
