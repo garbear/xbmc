@@ -30,14 +30,15 @@ public:
     constexpr std::string_view oldSettingId = "dvds.autorun";
     constexpr std::string_view newSettingId = "dvds.autoaction";
 
-    bool ret = FAILURE != ConvertSettingBoolToInt(root, oldSettingId, newSettingId,
-                                                  {.m_default = 0, .m_false = 0, .m_true = 1});
+    bool ret =
+        FAILURE != ConvertSettingBoolToInt(root, TargetVersion() - 1, oldSettingId, newSettingId,
+                                           {.m_default = 0, .m_false = 0, .m_true = 1});
     const TiXmlElement* versions =
-        CSettingsManager::LocateSetting(root, "videolibrary.ignorevideoversions");
+        CSettingsManager::LocateSetting(root, "videolibrary.ignorevideoversions", TargetVersion() - 1);
     const char* isDefault = versions ? versions->Attribute(SETTING_XML_ELM_DEFAULT) : nullptr;
-    if (versions && !(isDefault && StringUtils::EqualsNoCase(isDefault, "true")) &&
-        CSettingsManager::LocateSetting(root, "videolibrary.similarvideoaction") == nullptr)
-      ret &= FAILURE != ConvertSettingBoolToInt(root, "videolibrary.ignorevideoversions",
+    if (versions && !(isDefault && StringUtils::EqualsNoCase(isDefault, "true")))
+      ret &= FAILURE != ConvertSettingBoolToInt(root, TargetVersion() - 1,
+                                                "videolibrary.ignorevideoversions",
                                                 "videolibrary.similarvideoaction",
                                                 {.m_default = 2, .m_false = 1, .m_true = 0});
     return ret;
@@ -59,7 +60,7 @@ public:
     for (const auto& [oldSettingId, newSettingId] : settingIds)
       ret &=
           impl::ConvertSingleSetting<CSettingInt, CSettingNumber>(
-              root, oldSettingId, newSettingId, [&defaultValue](int oldValue)
+              root, TargetVersion() - 1, oldSettingId, newSettingId, [&defaultValue](int oldValue)
               { return std::pair{static_cast<double>(oldValue - 89), defaultValue}; }) != FAILURE;
     return ret;
   }
@@ -75,7 +76,7 @@ public:
     constexpr std::string_view newSettingId = "input.useapplicationkeyboard";
 
     return FAILURE != impl::ConvertSingleSetting<CSettingBool, CSettingBool>(
-                          root, oldSettingId, newSettingId,
+                          root, TargetVersion() - 1, oldSettingId, newSettingId,
                           [](bool oldValue) { return std::pair{oldValue, false}; });
   }
 };
