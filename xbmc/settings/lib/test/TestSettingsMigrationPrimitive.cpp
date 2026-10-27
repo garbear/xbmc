@@ -157,7 +157,7 @@ TEST_P(TestConvertSingleSettingNotPresent, ReturnsNotPresentAndDocumentIsUnchang
 
   const auto result =
       impl::ConvertSingleSetting<MockSettingAlwaysSuccess, MockSettingAlwaysSuccess>(
-          doc.RootElement(), OLDSETTINGID, NEWSETTINGID, TrivialConverter);
+          doc.RootElement(), 2, OLDSETTINGID, NEWSETTINGID, TrivialConverter);
 
   EXPECT_EQ(SettingConversionResult::NOT_PRESENT, result);
   EXPECT_EQ(p.m_expectedXml, Serialize(doc));
@@ -196,7 +196,7 @@ TEST_P(TestConvertSingleSettingFailureCtorThrow, ReturnsFailureWhenFromTCtorThro
   ASSERT_TRUE(doc.Parse(p.m_xml));
 
   const auto result = impl::ConvertSingleSetting<MockSettingThrowOnCtor, MockSettingAlwaysSuccess>(
-      doc.RootElement(), OLDSETTINGID, NEWSETTINGID, TrivialConverter);
+      doc.RootElement(), 2, OLDSETTINGID, NEWSETTINGID, TrivialConverter);
 
   EXPECT_EQ(SettingConversionResult::FAILURE, result);
 }
@@ -208,7 +208,7 @@ TEST_P(TestConvertSingleSettingFailureCtorThrow, ReturnsFailureWhenToTCtorThrows
   ASSERT_TRUE(doc.Parse(p.m_xml));
 
   const auto result = impl::ConvertSingleSetting<MockSettingAlwaysSuccess, MockSettingThrowOnCtor>(
-      doc.RootElement(), OLDSETTINGID, NEWSETTINGID, TrivialConverter);
+      doc.RootElement(), 2, OLDSETTINGID, NEWSETTINGID, TrivialConverter);
 
   EXPECT_EQ(SettingConversionResult::FAILURE, result);
 }
@@ -249,7 +249,7 @@ TEST_P(TestConvertSingleSettingInvalid, ReturnsInvalidAndDocumentIsUnchanged)
   ASSERT_TRUE(doc.Parse(p.m_xml));
 
   const auto result = impl::ConvertSingleSetting<MockSettingAlwaysFail, MockSettingAlwaysSuccess>(
-      doc.RootElement(), OLDSETTINGID, NEWSETTINGID, TrivialConverter);
+      doc.RootElement(), 2, OLDSETTINGID, NEWSETTINGID, TrivialConverter);
 
   EXPECT_EQ(SettingConversionResult::INVALID, result);
   EXPECT_EQ(p.m_expectedXml, Serialize(doc));
@@ -271,18 +271,18 @@ class TestConvertSingleSettingConvertedStructural : public ::testing::Test,
 ConvertTest ConvertedStructuralTests[] = {
     // V2 format: only the old setting present
     {R"(<settings version="2"><setting id="a.b">anything</setting></settings>)",
-     R"(<settings version="2"><setting id="c.d">1</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">anything</setting><setting id="c.d">1</setting></settings>)"},
     // V2 format: unrelated sibling must survive; new node appended after it
     {R"(<settings version="2"><setting id="a.b">x</setting><setting id="foo.bar">y</setting></settings>)",
-     R"(<settings version="2"><setting id="foo.bar">y</setting><setting id="c.d">1</setting></settings>)"},
-    // V1 format: old node removed, new node in V2 format
+     R"(<settings version="2"><setting id="a.b" version="2">x</setting><setting id="foo.bar">y</setting><setting id="c.d">1</setting></settings>)"},
+    // V1 format: old node retained, new node in V2 format
     {R"(<settings><a><b>anything</b></a></settings>)",
-     R"(<settings><a /><setting id="c.d">1</setting></settings>)"},
+     R"(<settings><a><b version="2">anything</b></a><setting id="c.d">1</setting></settings>)"},
     // V1 format: unrelated sibling must survive
     {R"(<settings><a><b>x</b></a><foo><bar>y</bar></foo></settings>)",
-     R"(<settings><a /><foo><bar>y</bar></foo><setting id="c.d">1</setting></settings>)"},
+     R"(<settings><a><b version="2">x</b></a><foo><bar>y</bar></foo><setting id="c.d">1</setting></settings>)"},
     {R"(<settings><a><b>x</b><bar>y</bar></a></settings>)",
-     R"(<settings><a><bar>y</bar></a><setting id="c.d">1</setting></settings>)"},
+     R"(<settings><a><b version="2">x</b><bar>y</bar></a><setting id="c.d">1</setting></settings>)"},
 };
 
 TEST_P(TestConvertSingleSettingConvertedStructural, ReturnsConvertedAndDocumentIsCorrect)
@@ -294,7 +294,7 @@ TEST_P(TestConvertSingleSettingConvertedStructural, ReturnsConvertedAndDocumentI
   bool converterCalled = false;
   const auto result =
       impl::ConvertSingleSetting<MockSettingAlwaysSuccess, MockSettingAlwaysSuccess>(
-          doc.RootElement(), OLDSETTINGID, NEWSETTINGID,
+          doc.RootElement(), 2, OLDSETTINGID, NEWSETTINGID,
           [&converterCalled](int) -> std::pair<int, int>
           {
             converterCalled = true;
@@ -325,7 +325,7 @@ TEST(TestSettingsMigrationHelper, ConvertSingleSettingConverterInput)
   int receivedByConverter = -1;
   const auto result =
       impl::ConvertSingleSetting<MockSettingAlwaysSuccess, MockSettingAlwaysSuccess>(
-          doc.RootElement(), OLDSETTINGID, NEWSETTINGID,
+          doc.RootElement(), 2, OLDSETTINGID, NEWSETTINGID,
           [&receivedByConverter](int v) -> std::pair<int, int>
           {
             receivedByConverter = v;
@@ -357,9 +357,12 @@ public:
 };
 
 ConverterForwardingTest ConverterForwardingTests[] = {
-    {7, 7, R"(<settings version="2"><setting id="c.d" default="true">7</setting></settings>)"},
-    {7, 0, R"(<settings version="2"><setting id="c.d">7</setting></settings>)"},
-    {0, 0, R"(<settings version="2"><setting id="c.d" default="true">0</setting></settings>)"},
+    {7, 7,
+     R"(<settings version="2"><setting id="a.b" version="2">anything</setting><setting id="c.d" default="true">7</setting></settings>)"},
+    {7, 0,
+     R"(<settings version="2"><setting id="a.b" version="2">anything</setting><setting id="c.d">7</setting></settings>)"},
+    {0, 0,
+     R"(<settings version="2"><setting id="a.b" version="2">anything</setting><setting id="c.d" default="true">0</setting></settings>)"},
 };
 
 TEST_P(TestConvertSingleSettingConverterForwarding, ConverterOutputIsForwardedToSerializer)
@@ -370,7 +373,7 @@ TEST_P(TestConvertSingleSettingConverterForwarding, ConverterOutputIsForwardedTo
 
   const auto result =
       impl::ConvertSingleSetting<MockSettingAlwaysSuccess, MockSettingAlwaysSuccess>(
-          doc.RootElement(), OLDSETTINGID, NEWSETTINGID,
+          doc.RootElement(), 2, OLDSETTINGID, NEWSETTINGID,
           [&p](int) -> std::pair<int, int> { return {p.m_newValue, p.m_defaultValue}; });
 
   ASSERT_EQ(SettingConversionResult::CONVERTED, result);
@@ -406,18 +409,18 @@ ConvertSettingBoolToIntTest ConvertSettingBoolToIntTests[] = {
     // Convert a true value
     {R"(<settings version="2"><setting id="a.b">true</setting></settings>)",
      SettingConversionResult::CONVERTED,
-     R"(<settings version="2"><setting id="c.d">2</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">true</setting><setting id="c.d">2</setting></settings>)"},
     // Convert a false value
     {R"(<settings version="2"><setting id="a.b">false</setting></settings>)",
      SettingConversionResult::CONVERTED,
-     R"(<settings version="2"><setting id="c.d" default="true">1</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">false</setting><setting id="c.d" default="true">1</setting></settings>)"},
     // V1 format
     // Convert a true value
     {R"(<settings><a><b>true</b></a></settings>)", SettingConversionResult::CONVERTED,
-     R"(<settings><a /><setting id="c.d">2</setting></settings>)"},
+     R"(<settings><a><b version="2">true</b></a><setting id="c.d">2</setting></settings>)"},
     // Convert a false value
     {R"(<settings><a><b>false</b></a></settings>)", SettingConversionResult::CONVERTED,
-     R"(<settings><a /><setting id="c.d" default="true">1</setting></settings>)"},
+     R"(<settings><a><b version="2">false</b></a><setting id="c.d" default="true">1</setting></settings>)"},
 
     // Invalid old setting values
     // V2 format
@@ -457,7 +460,7 @@ TEST_P(TestConvertSettingBoolToInt, Convert)
   ASSERT_TRUE(doc.Parse(params.m_originalSettings));
 
   auto conversionResult =
-      ConvertSettingBoolToInt(doc.RootElement(), OLDSETTINGID, NEWSETTINGID, m_mapping);
+      ConvertSettingBoolToInt(doc.RootElement(), 2, OLDSETTINGID, NEWSETTINGID, m_mapping);
   ASSERT_EQ(params.m_result, conversionResult);
 
   EXPECT_EQ(
@@ -486,30 +489,30 @@ ConvertSettingBoolToIntMappingTest ConvertSettingBoolToIntMappingTests[] = {
     // True value
     {R"(<settings version="2"><setting id="a.b">true</setting></settings>)",
      {.m_default = 1, .m_false = 1, .m_true = 2},
-     R"(<settings version="2"><setting id="c.d">2</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">true</setting><setting id="c.d">2</setting></settings>)"},
     {R"(<settings version="2"><setting id="a.b">true</setting></settings>)",
      {.m_default = 2, .m_false = 1, .m_true = 2},
-     R"(<settings version="2"><setting id="c.d" default="true">2</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">true</setting><setting id="c.d" default="true">2</setting></settings>)"},
     {R"(<settings version="2"><setting id="a.b">true</setting></settings>)",
      {.m_default = 1, .m_false = 2, .m_true = 2},
-     R"(<settings version="2"><setting id="c.d">2</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">true</setting><setting id="c.d">2</setting></settings>)"},
     {R"(<settings version="2"><setting id="a.b">true</setting></settings>)",
      {.m_default = 2, .m_false = 2, .m_true = 2},
-     R"(<settings version="2"><setting id="c.d" default="true">2</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">true</setting><setting id="c.d" default="true">2</setting></settings>)"},
 
     // False value
     {R"(<settings version="2"><setting id="a.b">false</setting></settings>)",
      {.m_default = 1, .m_false = 1, .m_true = 2},
-     R"(<settings version="2"><setting id="c.d" default="true">1</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">false</setting><setting id="c.d" default="true">1</setting></settings>)"},
     {R"(<settings version="2"><setting id="a.b">false</setting></settings>)",
      {.m_default = 2, .m_false = 1, .m_true = 2},
-     R"(<settings version="2"><setting id="c.d">1</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">false</setting><setting id="c.d">1</setting></settings>)"},
     {R"(<settings version="2"><setting id="a.b">false</setting></settings>)",
      {.m_default = 2, .m_false = 1, .m_true = 1},
-     R"(<settings version="2"><setting id="c.d">1</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">false</setting><setting id="c.d">1</setting></settings>)"},
     {R"(<settings version="2"><setting id="a.b">false</setting></settings>)",
      {.m_default = 1, .m_false = 1, .m_true = 1},
-     R"(<settings version="2"><setting id="c.d" default="true">1</setting></settings>)"},
+     R"(<settings version="2"><setting id="a.b" version="2">false</setting><setting id="c.d" default="true">1</setting></settings>)"},
 };
 
 TEST_P(TestConvertSettingBoolToIntMapping, Convert)
@@ -520,7 +523,7 @@ TEST_P(TestConvertSettingBoolToIntMapping, Convert)
   ASSERT_TRUE(doc.Parse(params.m_originalSettings));
 
   auto conversionResult =
-      ConvertSettingBoolToInt(doc.RootElement(), OLDSETTINGID, NEWSETTINGID, params.m_mapping);
+      ConvertSettingBoolToInt(doc.RootElement(), 2, OLDSETTINGID, NEWSETTINGID, params.m_mapping);
   ASSERT_EQ(SettingConversionResult::CONVERTED, conversionResult);
 
   EXPECT_EQ(
