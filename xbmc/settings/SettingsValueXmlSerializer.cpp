@@ -15,6 +15,8 @@
 #include "utils/XMLUtils.h"
 #include "utils/log.h"
 
+#include <algorithm>
+
 static constexpr char SETTINGS_XML_ROOT[] = "settings";
 
 std::string CSettingsValueXmlSerializer::SerializeValues(
@@ -34,8 +36,51 @@ std::string CSettingsValueXmlSerializer::SerializeValues(
   for (const auto& section : sections)
     SerializeSection(xmlRoot, section);
 
+  if (const auto* original = settingsManager->GetValues())
+  {
+    TiXmlDocument merged(*original);
+    auto* root = merged.RootElement();
+    const auto runningVersion = settingsManager->GetVersion();
+    const auto fileVersion = settingsManager->ParseVersion(root);
+    root->SetAttribute(SETTING_XML_ROOT_VERSION, std::max(fileVersion, runningVersion));
+
+    for (const auto* value = xmlRoot->FirstChildElement(SETTING_XML_ELM_SETTING); value;
+         value = value->NextSiblingElement(SETTING_XML_ELM_SETTING))
+    {
+      const std::string id = value->Attribute(SETTING_XML_ATTR_ID);
+      if (!settingsManager->HasSettingChanged(id))
+        continue;
+
+      auto* target = CSettingsManager::LocateSetting(root, id, runningVersion);
+      if (fileVersion > runningVersion && (!target || !target->Attribute(SETTING_XML_ROOT_VERSION)))
+        target = nullptr;
+
+      if (!target)
+      {
+        target = root->InsertEndChild(*value)->ToElement();
+        if (fileVersion > runningVersion)
+          target->SetAttribute(SETTING_XML_ROOT_VERSION, runningVersion);
+      }
+      else
+      {
+        if (auto* text = target->FirstChild(); text && text->ToText())
+          text->SetValue(value->GetText() ? value->GetText() : "");
+        else
+          target->InsertEndChild(TiXmlText(value->GetText() ? value->GetText() : ""));
+        if (const char* isDefault = value->Attribute(SETTING_XML_ELM_DEFAULT))
+          target->SetAttribute(SETTING_XML_ELM_DEFAULT, isDefault);
+        else
+          target->RemoveAttribute(SETTING_XML_ELM_DEFAULT);
+      }
+    }
+
+    std::stringstream stream;
+    stream << merged;
+    return stream.str();
+  }
+
   std::stringstream stream;
-  stream << *xmlDoc.RootElement();
+  stream << xmlDoc;
 
   return stream.str();
 }
