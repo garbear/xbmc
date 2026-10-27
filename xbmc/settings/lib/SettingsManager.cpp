@@ -181,14 +181,11 @@ bool CSettingsManager::Load(const TiXmlElement* root,
                     MinimumSupportedVersion);
     return false;
   }
-  if (version > Version)
-  {
-    m_logger->error("unable to read setting values from version {} (current version: {})", version,
-                    Version);
-    return false;
-  }
 
   updated = false;
+  m_loadedValues.clear();
+
+  const TiXmlDocument* originalDocument = root->GetDocument();
 
   // Scoped to remain alive until the end of the function
   std::unique_ptr<TiXmlElement> writableRoot;
@@ -227,7 +224,21 @@ bool CSettingsManager::Load(const TiXmlElement* root,
     return false;
 
   if (triggerEvents)
+  {
     OnSettingsLoaded();
+    m_values = originalDocument ? std::make_unique<TiXmlDocument>(*originalDocument)
+                                : std::make_unique<TiXmlDocument>();
+    if (m_values->RootElement())
+      m_values->ReplaceChild(m_values->RootElement(), *root);
+    else
+      m_values->InsertEndChild(*root);
+  }
+
+  for (const auto& [id, setting] : m_settings)
+  {
+    if (setting.setting)
+      m_loadedValues.try_emplace(id, setting.setting->ToString(), setting.setting->IsDefault());
+  }
 
   return true;
 }
@@ -256,6 +267,8 @@ bool CSettingsManager::Save(
 void CSettingsManager::Unload()
 {
   std::unique_lock lock(m_settingsCritical);
+  m_values.reset();
+  m_loadedValues.clear();
   if (!m_loaded)
     return;
 
@@ -1145,14 +1158,43 @@ bool CSettingsManager::LoadSetting(const TiXmlNode* node, const SettingPtr& sett
     return false;
   }
 
+  m_loadedValues.erase(settingId);
+
   // check if we need to perform any update logic for the setting
   const std::set<CSettingUpdate>& updates = setting->GetUpdates();
-  for (const auto& update : updates)
-    updated |= UpdateSetting(node, setting, update);
+  const auto* root = node->ToElement();
+  bool migrated = false;
+  if (!updates.empty() && (!root || ParseVersion(root) <= Version ||
+                           settingElement->Attribute(SETTING_XML_ROOT_VERSION)))
+  {
+    decltype(m_loadedValues) beforeUpdate;
+    for (const auto& [id, value] : m_settings)
+    {
+      if (value.setting)
+        beforeUpdate.try_emplace(id, value.setting->ToString(), value.setting->IsDefault());
+    }
+
+    for (const auto& update : updates)
+      migrated |= UpdateSetting(node, setting, update);
+
+    if (migrated)
+    {
+      // Update callbacks can also convert settings other than the one being loaded.
+      for (const auto& [id, value] : beforeUpdate)
+      {
+        const auto current = GetSetting(id);
+        if (current && value != std::pair{current->ToString(), current->IsDefault()})
+        {
+          m_loadedValues.try_emplace(id, value);
+          updated = true;
+        }
+      }
+    }
+  }
 
   // the setting's value hasn't been updated and is the default value
   // so we can reset it to the default value (in case the default value has changed)
-  if (!updated && isDefault)
+  if (!migrated && isDefault)
     setting->Reset();
 
   return true;
@@ -1490,25 +1532,39 @@ std::pair<CSettingsManager::SettingMap::iterator, bool> CSettingsManager::Insert
 }
 
 const TiXmlElement* CSettingsManager::LocateSetting(const TiXmlNode* node,
-                                                    std::string_view settingId)
+                                                    std::string_view settingId,
+                                                    uint32_t version)
 {
   if (node == nullptr || settingId.empty())
     return nullptr;
 
   const TiXmlElement* settingElement = nullptr;
+  const TiXmlElement* legacyElement = nullptr;
+  uint32_t fileVersion = 0;
+  if (const auto* root = node->ToElement())
+    root->QueryUnsignedAttribute(SETTING_XML_ROOT_VERSION, &fileVersion);
 
   // Attempt v2 first, more likely to be found as the switch from v1 happened in 2013
 
   // check if the setting is stored using its full setting identifier (v2+)
-  settingElement = node->FirstChildElement(SETTING_XML_ELM_SETTING);
-  while (settingElement)
+  for (const auto* element = node->FirstChildElement(SETTING_XML_ELM_SETTING); element;
+       element = element->NextSiblingElement(SETTING_XML_ELM_SETTING))
   {
-    const char* id = settingElement->Attribute(SETTING_XML_ATTR_ID);
-    if (id && settingId.compare(id) == 0)
-      break;
+    const char* id = element->Attribute(SETTING_XML_ATTR_ID);
+    if (!id || settingId != id)
+      continue;
 
-    settingElement = settingElement->NextSiblingElement(SETTING_XML_ELM_SETTING);
+    uint32_t settingVersion = 0;
+    if (!element->Attribute(SETTING_XML_ROOT_VERSION))
+      settingElement = element;
+    else if (element->QueryUnsignedAttribute(SETTING_XML_ROOT_VERSION, &settingVersion) ==
+                 TIXML_SUCCESS &&
+             settingVersion == version)
+      legacyElement = element;
   }
+
+  if (legacyElement && (version < fileVersion || !settingElement))
+    return legacyElement;
 
   if (!settingElement)
   {
@@ -1525,5 +1581,19 @@ const TiXmlElement* CSettingsManager::LocateSetting(const TiXmlNode* node,
         settingElement = categoryNode->FirstChildElement(settingTag);
     }
   }
+  uint32_t settingVersion = 0;
+  if (settingElement && settingElement->Attribute(SETTING_XML_ROOT_VERSION) &&
+      (settingElement->QueryUnsignedAttribute(SETTING_XML_ROOT_VERSION, &settingVersion) !=
+           TIXML_SUCCESS ||
+       settingVersion != version))
+    return nullptr;
   return settingElement;
+}
+
+bool CSettingsManager::HasSettingChanged(const std::string& id) const
+{
+  const auto value = m_loadedValues.find(id);
+  const auto setting = GetSetting(id);
+  return value == m_loadedValues.end() || !setting ||
+         value->second != std::pair{setting->ToString(), setting->IsDefault()};
 }
