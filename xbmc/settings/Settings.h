@@ -648,6 +648,9 @@ private:
 
   bool Initialize(const std::string &file);
   bool Reset();
+  bool SerializeSubSettings(TiXmlNode* root) const;
+
+  std::string m_subSettingsValues;
 
   std::set<ISubSettings*> m_subSettings;
 };

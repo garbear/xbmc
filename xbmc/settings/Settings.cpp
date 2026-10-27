@@ -15,6 +15,7 @@
 #include "application/AppParams.h"
 #include "cores/VideoPlayer/VideoRenderers/BaseRenderer.h"
 #include "filesystem/File.h"
+#include "filesystem/SpecialProtocol.h"
 #include "guilib/GUIFontManager.h"
 #include "guilib/StereoscopicsManager.h"
 #include "input/keyboard/KeyboardLayoutManager.h"
@@ -25,7 +26,13 @@
 #include <mutex>
 #if defined(TARGET_DARWIN_TVOS)
 #include "platform/darwin/tvos/TVOSSettingsHandler.h"
+#include "platform/darwin/tvos/filesystem/TVOSFile.h"
 #endif // defined(TARGET_DARWIN_TVOS)
+#if defined(TARGET_WINDOWS)
+#include "platform/win32/WIN32Util.h"
+
+#include <filesystem>
+#endif
 #if defined(TARGET_DARWIN_EMBEDDED)
 #include "SettingAddon.h"
 #endif
@@ -48,8 +55,10 @@
 #include "utils/RssManager.h"
 #include "utils/StringUtils.h"
 #include "utils/SystemInfo.h"
+#include "utils/URIUtils.h"
 #include "utils/Variant.h"
 #include "utils/XBMCTinyXML.h"
+#include "utils/XMLUtils.h"
 #include "utils/log.h"
 #include "view/ViewStateSettings.h"
 
@@ -57,6 +66,83 @@
 
 using namespace KODI;
 using namespace XFILE;
+
+namespace
+{
+const TiXmlElement* FindSubSetting(const TiXmlNode* parent, const TiXmlElement* value)
+{
+  if (!parent)
+    return nullptr;
+
+  const auto* found = parent->FirstChildElement(value->Value());
+  // Calibrations are the repeated records in ISubSettings, identified by display mode.
+  if (value->ValueStr() == "resolution")
+  {
+    const auto* description = value->FirstChildElement("description");
+    const std::string_view mode =
+        description && description->GetText() ? description->GetText() : "";
+    for (; found; found = found->NextSiblingElement(value->Value()))
+    {
+      const auto* candidate = found->FirstChildElement("description");
+      const std::string_view candidateMode =
+          candidate && candidate->GetText() ? candidate->GetText() : "";
+      if (candidateMode == mode)
+        break;
+    }
+  }
+  return found;
+}
+
+void RemoveSubSettings(TiXmlElement* target, const TiXmlElement* baseline)
+{
+  for (const auto* child = baseline->FirstChildElement(); child;
+       child = child->NextSiblingElement())
+  {
+    if (auto* found = const_cast<TiXmlElement*>(FindSubSetting(target, child)))
+      RemoveSubSettings(found, child);
+  }
+  for (const auto* attribute = baseline->FirstAttribute(); attribute; attribute = attribute->Next())
+    target->RemoveAttribute(attribute->Name());
+  if (baseline->GetText() && target->FirstChild() && target->FirstChild()->ToText())
+    target->RemoveChild(target->FirstChild());
+  if (!target->FirstChild() && !target->FirstAttribute())
+    XMLUtils::RemoveNode(target);
+}
+
+void MergeSubSettings(TiXmlNode* target, const TiXmlNode* values, const TiXmlNode* baseline)
+{
+  for (const auto* value = values->FirstChildElement(); value; value = value->NextSiblingElement())
+  {
+    const auto* previous = FindSubSetting(baseline, value);
+    auto* destination = const_cast<TiXmlElement*>(FindSubSetting(target, value));
+    if (!destination)
+    {
+      if (!XMLUtils::AreNodesSerializationsEqual(previous, value))
+        target->InsertEndChild(*value);
+      continue;
+    }
+
+    MergeSubSettings(destination, value, previous);
+    if (!value->FirstChildElement() && !XMLUtils::AreNodesSerializationsEqual(previous, value))
+    {
+      const char* text = value->GetText();
+      if (auto* child = destination->FirstChild(); child && child->ToText())
+        child->SetValue(text ? text : "");
+      else if (text)
+        destination->InsertEndChild(TiXmlText(text));
+    }
+  }
+  for (const auto* previous = baseline ? baseline->FirstChildElement() : nullptr; previous;
+       previous = previous->NextSiblingElement())
+  {
+    if (!FindSubSetting(values, previous))
+    {
+      if (auto* destination = const_cast<TiXmlElement*>(FindSubSetting(target, previous)))
+        RemoveSubSettings(destination, previous);
+    }
+  }
+}
+} // namespace
 
 bool CSettings::Initialize()
 {
@@ -119,15 +205,17 @@ bool CSettings::Load(const std::string &file)
   CXBMCTinyXML xmlDoc;
   bool updated = false;
   const bool loaded = XFILE::CFile::Exists(file) && xmlDoc.LoadFile(file);
-  if (loaded && xmlDoc.RootElement() &&
-      GetSettingsManager()->ParseVersion(xmlDoc.RootElement()) > GetSettingsManager()->GetVersion())
-  {
-    CLog::Log(LOGERROR, "CSettings: refusing to reset newer settings file {}", file);
-    return false;
-  }
 
   if (!loaded || !Load(xmlDoc.RootElement(), updated))
   {
+    if (loaded && xmlDoc.RootElement() &&
+        GetSettingsManager()->ParseVersion(xmlDoc.RootElement()) >
+            GetSettingsManager()->GetVersion())
+    {
+      CLog::Log(LOGERROR, "CSettings: refusing to reset newer settings file {}", file);
+      return false;
+    }
+
     CLog::Log(LOGERROR, "CSettings: unable to load settings from {}, creating new default settings",
               file);
     if (!Reset())
@@ -158,6 +246,9 @@ bool CSettings::Save()
 
 bool CSettings::Save(const std::string& file) const
 {
+  static CCriticalSection saveCritical;
+  std::unique_lock lock(saveCritical);
+
   CXBMCTinyXML xmlDoc;
   if (!SaveValuesToXml(xmlDoc))
     return false;
@@ -169,10 +260,61 @@ bool CSettings::Save(const std::string& file) const
   if (!Save(root))
     return false;
 
-  return xmlDoc.SaveFile(file);
+  const std::string target =
+      URIUtils::SubstitutePath(CSpecialProtocol::TranslatePath(URIUtils::SubstitutePath(file)));
+#if defined(TARGET_DARWIN_TVOS)
+  // The tvOS backend replaces a single NSUserDefaults value without truncating it first.
+  if (XFILE::CTVOSFile::WantsFile(CURL(target)))
+    return xmlDoc.SaveFile(target);
+#endif
+
+  std::string temporary;
+  do
+  {
+    temporary = target + "." + StringUtils::CreateUUID() + ".tmp";
+  } while (XFILE::CFile::Exists(temporary, false));
+  if (!xmlDoc.SaveFile(temporary))
+  {
+    XFILE::CFile::Delete(temporary);
+    return false;
+  }
+
+  bool replaced = false;
+#if defined(TARGET_WINDOWS)
+  const CURL targetUrl(target);
+  if (targetUrl.IsLocal() || targetUrl.IsProtocol("smb"))
+  {
+    std::error_code error;
+    std::filesystem::rename(CWIN32Util::ConvertPathToWin32Form(CURL(temporary)),
+                            CWIN32Util::ConvertPathToWin32Form(targetUrl), error);
+    replaced = !error;
+  }
+  else
+#endif
+    replaced = XFILE::CFile::Rename(temporary, target);
+
+  if (!replaced)
+  {
+    XFILE::CFile::Delete(temporary);
+    return false;
+  }
+  return true;
 }
 
 bool CSettings::Save(TiXmlNode* root) const
+{
+  TiXmlElement values("settings");
+  if (!SerializeSubSettings(&values))
+    return false;
+
+  CXBMCTinyXML baseline;
+  if (GetSettingsManager()->GetValues() && !m_subSettingsValues.empty())
+    baseline.Parse(m_subSettingsValues);
+  MergeSubSettings(root, &values, baseline.RootElement());
+  return true;
+}
+
+bool CSettings::SerializeSubSettings(TiXmlNode* root) const
 {
   std::unique_lock lock(m_critical);
   // save any ISubSettings implementations
@@ -221,7 +363,15 @@ bool CSettings::Load(const TiXmlElement* root, bool& updated)
   if (!CSettingsBase::LoadValuesFromXml(root, updated))
     return false;
 
-  return Load(static_cast<const TiXmlNode*>(root));
+  if (!Load(static_cast<const TiXmlNode*>(root)))
+    return false;
+
+  TiXmlElement values("settings");
+  if (!SerializeSubSettings(&values))
+    return false;
+  m_subSettingsValues =
+      XMLUtils::NodeStringSerialization(&values, XMLUtils::SerializationFormat::COMPACT);
+  return true;
 }
 
 bool CSettings::Load(const TiXmlNode* settings)
@@ -679,6 +829,7 @@ bool CSettings::Reset()
 
   // unload any loaded settings
   Unload();
+  m_subSettingsValues.clear();
 
   // try to save the default settings
   if (!Save())
