@@ -10,12 +10,13 @@
 
 #include "Setting.h"
 #include "settings/SettingsValueXmlSerializer.h"
+#include "settings/lib/SettingDefinitions.h"
 #include "settings/lib/SettingsManager.h"
 #include "utils/XBMCTinyXML.h"
-#include "utils/XMLUtils.h"
 #include "utils/log.h"
 
 #include <concepts>
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <string>
@@ -33,6 +34,7 @@ enum class SettingConversionResult
   NOT_PRESENT, ///< The old setting ID could not be located.
   INVALID, ///< The old setting has a value incompatible with its data type.
   CONVERTED, ///< The conversion was successful.
+  ALREADY_PRESENT, ///< The destination already exists and was preserved.
 };
 
 namespace impl
@@ -57,7 +59,8 @@ concept SettingConverter =
  *
  * Looks up \p oldSettingId in the XML tree \p root, parses its value as setting of type \p FromT
  * (for example CSettingBool), passes that value to \p converter, and writes the result as a
- * setting of type \p ToT identified by \p newSettingId. The old node is removed on success.
+ * setting of type \p ToT identified by \p newSettingId. The old node is retained with its
+ * source version.
  *
  * \tparam FromT  A CTraitedSetting-derived type representing the old setting.
  *                Must satisfy the \c TraitedSetting concept.
@@ -67,6 +70,7 @@ concept SettingConverter =
  *                    \p ToT.
  *
  * \param[in,out] root          Root element of the settings XML document. Must not be \c nullptr.
+ * \param[in] sourceVersion Schema version of the source representation.
  * \param[in] oldSettingId  Dot-separated ID of the setting to migrate from.
  * \param[in] newSettingId  Dot-separated ID of the setting to migrate to.
  * \param[in] converter     Callable that converts the setting value from a \p FromT::Value to a
@@ -78,12 +82,47 @@ concept SettingConverter =
  */
 template<TraitedSetting FromT, TraitedSetting ToT, SettingConverter<FromT, ToT> ConvertFn>
 SettingConversionResult ConvertSingleSetting(TiXmlElement* root,
+                                             uint32_t sourceVersion,
                                              std::string_view oldSettingId,
                                              std::string_view newSettingId,
                                              ConvertFn converter)
 {
-  if (TiXmlElement* elem = CSettingsManager::LocateSetting(root, oldSettingId); elem != nullptr)
+  TiXmlElement* elem = CSettingsManager::LocateSetting(root, oldSettingId, sourceVersion);
+  for (auto* candidate = root->FirstChildElement(SETTING_XML_ELM_SETTING); candidate;
+       candidate = candidate->NextSiblingElement(SETTING_XML_ELM_SETTING))
   {
+    uint32_t version = 0;
+    const char* id = candidate->Attribute(SETTING_XML_ATTR_ID);
+    if (id && oldSettingId == id &&
+        candidate->QueryUnsignedAttribute(SETTING_XML_ROOT_VERSION, &version) == TIXML_SUCCESS &&
+        version == sourceVersion)
+      elem = candidate;
+  }
+
+  uint32_t fileVersion = 0;
+  root->QueryUnsignedAttribute(SETTING_XML_ROOT_VERSION, &fileVersion);
+  if (elem && !elem->Attribute(SETTING_XML_ROOT_VERSION) && fileVersion > sourceVersion)
+    elem = nullptr;
+
+  if (elem)
+  {
+    const auto* destination =
+        CSettingsManager::LocateSetting(root, newSettingId, sourceVersion + 1);
+    for (const auto* candidate = root->FirstChildElement(SETTING_XML_ELM_SETTING); candidate;
+         candidate = candidate->NextSiblingElement(SETTING_XML_ELM_SETTING))
+    {
+      uint32_t version = 0;
+      const char* id = candidate->Attribute(SETTING_XML_ATTR_ID);
+      if (id && newSettingId == id &&
+          candidate->QueryUnsignedAttribute(SETTING_XML_ROOT_VERSION, &version) == TIXML_SUCCESS &&
+          version > sourceVersion)
+        destination = candidate;
+    }
+    if (destination && destination != elem)
+    {
+      elem->SetAttribute(SETTING_XML_ROOT_VERSION, sourceVersion);
+      return SettingConversionResult::ALREADY_PRESENT;
+    }
     //! maybe future @todo: strategy - read/write settings without dependency on CSetting* classes?
     try
     {
@@ -109,11 +148,11 @@ SettingConversionResult ConvertSingleSetting(TiXmlElement* root,
       newSetting->SetDefault(defaultValue);
       newSetting->SetValue(newValue);
 
-      // Add the new setting and remove the old one
+      // The current representation is unversioned; retain the source for older readers.
       // The new setting doesn't have to be in the same place in the file as the old one.
-      if (!CSettingsValueXmlSerializer::SerializeSetting(root, newSetting) ||
-          !XMLUtils::RemoveNode(elem))
+      if (!CSettingsValueXmlSerializer::SerializeSetting(root, newSetting))
         return SettingConversionResult::FAILURE;
+      elem->SetAttribute(SETTING_XML_ROOT_VERSION, sourceVersion);
 
       CLog::LogF(LOGDEBUG,
                  "Successful conversion of old setting \"{}\" / \"{}\" to new "
@@ -144,6 +183,7 @@ struct SettingBoolToIntMapping
 };
 
 SettingConversionResult ConvertSettingBoolToInt(TiXmlElement* root,
+                                                uint32_t sourceVersion,
                                                 std::string_view oldSettingId,
                                                 std::string_view newSettingId,
                                                 const SettingBoolToIntMapping& mapping);

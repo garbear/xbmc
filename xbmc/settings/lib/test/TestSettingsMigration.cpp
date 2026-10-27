@@ -9,6 +9,7 @@
 #include "settings/lib/ISettingsMigrationStep.h"
 #include "settings/lib/SettingsManager.h"
 #include "settings/lib/SettingsMigration.h"
+#include "settings/lib/SettingsMigrationPrimitive.h"
 #include "utils/XBMCTinyXML.h"
 #include "utils/XMLUtils.h"
 
@@ -139,21 +140,25 @@ struct VideoVersionsMigrationTest
 
 constexpr VideoVersionsMigrationTest VideoVersionsMigrationTests[]{
     {R"(<setting id="videolibrary.ignorevideoversions">true</setting>)",
+     R"(<setting id="videolibrary.ignorevideoversions" version="2">true</setting>)"
      R"(<setting id="videolibrary.similarvideoaction">0</setting>)"},
     {R"(<setting id="videolibrary.ignorevideoversions">false</setting>)",
+     R"(<setting id="videolibrary.ignorevideoversions" version="2">false</setting>)"
      R"(<setting id="videolibrary.similarvideoaction">1</setting>)"},
     {R"(<setting id="videolibrary.ignorevideoversions" default="true">true</setting>)",
+     R"(<setting id="videolibrary.ignorevideoversions" default="true" version="2">true</setting>)"
      R"(<setting id="videolibrary.similarvideoaction">0</setting>)"},
     {"", ""},
     {R"(<setting id="videolibrary.ignorevideoversions">true</setting>)"
      R"(<setting id="videolibrary.similarvideoaction">1</setting>)",
-     R"(<setting id="videolibrary.ignorevideoversions">true</setting>)"
+     R"(<setting id="videolibrary.ignorevideoversions" version="2">true</setting>)"
      R"(<setting id="videolibrary.similarvideoaction">1</setting>)"},
     {R"(<setting id="videolibrary.ignorevideoversions">false</setting>)"
      R"(<setting id="videolibrary.similarvideoaction" default="true">2</setting>)"
      R"(<setting id="dvds.autorun">true</setting>)",
-     R"(<setting id="videolibrary.ignorevideoversions">false</setting>)"
+     R"(<setting id="videolibrary.ignorevideoversions" version="2">false</setting>)"
      R"(<setting id="videolibrary.similarvideoaction" default="true">2</setting>)"
+     R"(<setting id="dvds.autorun" version="2">true</setting>)"
      R"(<setting id="dvds.autoaction">1</setting>)"},
 };
 } // namespace
@@ -230,7 +235,10 @@ TEST_P(TestSettingsMigrationToV4ReplayGain, MigratesPreampSetting)
   CSettingsMigration migration;
   ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 3, 4));
 
-  EXPECT_EQ(nullptr, CSettingsManager::LocateSetting(doc.RootElement(), params.oldSettingId));
+  const auto* legacy = CSettingsManager::LocateSetting(doc.RootElement(), params.oldSettingId, 3);
+  ASSERT_NE(nullptr, legacy);
+  EXPECT_STREQ("3", legacy->Attribute("version"));
+  EXPECT_EQ(std::to_string(params.oldValue), legacy->GetText());
 
   const TiXmlElement* migratedSetting =
       CSettingsManager::LocateSetting(doc.RootElement(), params.newSettingId);
@@ -265,8 +273,11 @@ TEST_P(TestSettingsMigrationToV5ApplicationKeyboard, MigratesTvosKeyboardSetting
   CSettingsMigration migration;
   ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 4, 5));
 
-  EXPECT_EQ(nullptr,
-            CSettingsManager::LocateSetting(doc.RootElement(), "input.tvosusekodikeyboard"));
+  const auto* legacy =
+      CSettingsManager::LocateSetting(doc.RootElement(), "input.tvosusekodikeyboard", 4);
+  ASSERT_NE(nullptr, legacy);
+  EXPECT_STREQ("4", legacy->Attribute("version"));
+  EXPECT_EQ(value, legacy->GetText());
 
   const TiXmlElement* migratedSetting =
       CSettingsManager::LocateSetting(doc.RootElement(), "input.useapplicationkeyboard");
@@ -278,3 +289,206 @@ TEST_P(TestSettingsMigrationToV5ApplicationKeyboard, MigratesTvosKeyboardSetting
 INSTANTIATE_TEST_SUITE_P(TestSettingsMigration,
                          TestSettingsMigrationToV5ApplicationKeyboard,
                          testing::Values("true", "false"));
+
+TEST(TestSettingsMigration, FullUpgradePreservesEverySource)
+{
+  CXBMCTinyXML doc;
+  ASSERT_TRUE(doc.Parse(std::string{
+      R"(<settings version="2"><setting id="dvds.autorun">true</setting>
+         <setting id="videolibrary.ignorevideoversions">false</setting>
+         <setting id="musicplayer.replaygainpreamp">77</setting>
+         <setting id="musicplayer.replaygainnogainpreamp">101</setting>
+         <setting id="input.tvosusekodikeyboard">true</setting>
+         <setting id="lookandfeel.skin">skin.estuary</setting></settings>)"}));
+  CSettingsMigration migration;
+  ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 2, 5));
+  struct ExpectedSetting
+  {
+    const char* id;
+    const char* value;
+    unsigned int version;
+  };
+  const ExpectedSetting sources[]{
+      {"dvds.autorun", "true", 2},
+      {"videolibrary.ignorevideoversions", "false", 2},
+      {"musicplayer.replaygainpreamp", "77", 3},
+      {"musicplayer.replaygainnogainpreamp", "101", 3},
+      {"input.tvosusekodikeyboard", "true", 4},
+  };
+  for (const auto& source : sources)
+  {
+    const auto* setting =
+        CSettingsManager::LocateSetting(doc.RootElement(), source.id, source.version);
+    ASSERT_NE(nullptr, setting) << source.id;
+    EXPECT_STREQ(source.value, setting->GetText());
+    unsigned int version = 0;
+    EXPECT_EQ(TIXML_SUCCESS, setting->QueryUnsignedAttribute("version", &version));
+    EXPECT_EQ(source.version, version);
+  }
+  for (const char* id :
+       {"dvds.autoaction", "videolibrary.similarvideoaction", "musicplayer.replaygainpreampdb",
+        "musicplayer.replaygainnogainpreampdb", "input.useapplicationkeyboard", "lookandfeel.skin"})
+  {
+    const auto* setting = CSettingsManager::LocateSetting(doc.RootElement(), id);
+    ASSERT_NE(nullptr, setting) << id;
+    EXPECT_EQ(nullptr, setting->Attribute("version"));
+  }
+  const auto expected =
+      XMLUtils::NodeStringSerialization(doc.RootElement(), XMLUtils::SerializationFormat::COMPACT);
+  for (int i = 0; i < 3; ++i)
+  {
+    ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 2, 5));
+    EXPECT_EQ(expected, XMLUtils::NodeStringSerialization(doc.RootElement(),
+                                                          XMLUtils::SerializationFormat::COMPACT));
+  }
+}
+
+TEST(TestSettingsMigration, ExistingDestinationSurvivesLegacyEdits)
+{
+  CXBMCTinyXML doc;
+  ASSERT_TRUE(doc.Parse(std::string{
+      R"(<settings version="4"><setting id="input.tvosusekodikeyboard">false</setting>
+         <setting id="input.useapplicationkeyboard" extra="keep">true</setting></settings>)"}));
+  CSettingsMigration migration;
+  ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 4, 5));
+  const auto* current =
+      CSettingsManager::LocateSetting(doc.RootElement(), "input.useapplicationkeyboard");
+  ASSERT_NE(nullptr, current);
+  EXPECT_STREQ("true", current->GetText());
+  EXPECT_STREQ("keep", current->Attribute("extra"));
+  auto* legacy = CSettingsManager::LocateSetting(doc.RootElement(), "input.tvosusekodikeyboard", 4);
+  ASSERT_NE(nullptr, legacy);
+  EXPECT_STREQ("4", legacy->Attribute("version"));
+  legacy->FirstChild()->SetValue("true");
+  current = CSettingsManager::LocateSetting(doc.RootElement(), "input.useapplicationkeyboard");
+  const auto expected =
+      XMLUtils::NodeStringSerialization(current, XMLUtils::SerializationFormat::COMPACT);
+  ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 4, 5));
+  EXPECT_EQ(expected,
+            XMLUtils::NodeStringSerialization(
+                CSettingsManager::LocateSetting(doc.RootElement(), "input.useapplicationkeyboard"),
+                XMLUtils::SerializationFormat::COMPACT));
+}
+
+namespace
+{
+class CSameIdToV3 : public ISettingsMigrationStep
+{
+public:
+  int TargetVersion() const override { return 3; }
+  bool Apply(TiXmlElement* root) override
+  {
+    return ConvertSettingBoolToInt(root, 2, "test.value", "test.value",
+                                   {.m_default = 0, .m_false = 0, .m_true = 1}) !=
+           SettingConversionResult::FAILURE;
+  }
+};
+
+class CSameIdToV4 : public ISettingsMigrationStep
+{
+public:
+  int TargetVersion() const override { return 4; }
+  bool Apply(TiXmlElement* root) override
+  {
+    return impl::ConvertSingleSetting<CSettingInt, CSettingNumber>(
+               root, 3, "test.value", "test.value", [](int value)
+               { return std::pair{value + 0.5, 0.0}; }) != SettingConversionResult::FAILURE;
+  }
+};
+} // namespace
+
+TEST(TestSettingsMigration, ConsecutiveSameIdConversionsPreserveIntermediateValues)
+{
+  CXBMCTinyXML doc;
+  ASSERT_TRUE(doc.Parse(std::string{
+      R"(<settings version="2"><setting id="test.value" extra="keep">true</setting></settings>)"}));
+  CSettingsMigration migration({std::make_shared<CSameIdToV3>(), std::make_shared<CSameIdToV4>()});
+  ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 2, 4));
+  doc.RootElement()->SetAttribute("version", 4);
+  const auto* v2 = CSettingsManager::LocateSetting(doc.RootElement(), "test.value", 2);
+  const auto* v3 = CSettingsManager::LocateSetting(doc.RootElement(), "test.value", 3);
+  const auto* v4 = CSettingsManager::LocateSetting(doc.RootElement(), "test.value", 4);
+  ASSERT_NE(nullptr, v2);
+  ASSERT_NE(nullptr, v3);
+  ASSERT_NE(nullptr, v4);
+  EXPECT_STREQ("true", v2->GetText());
+  EXPECT_STREQ("keep", v2->Attribute("extra"));
+  EXPECT_STREQ("2", v2->Attribute("version"));
+  EXPECT_STREQ("1", v3->GetText());
+  EXPECT_STREQ("3", v3->Attribute("version"));
+  EXPECT_DOUBLE_EQ(1.5, std::stod(v4->GetText()));
+  EXPECT_EQ(nullptr, v4->Attribute("version"));
+  const auto expected =
+      XMLUtils::NodeStringSerialization(doc.RootElement(), XMLUtils::SerializationFormat::COMPACT);
+  for (int i = 0; i < 3; ++i)
+  {
+    ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 2, 4));
+    EXPECT_EQ(expected, XMLUtils::NodeStringSerialization(doc.RootElement(),
+                                                          XMLUtils::SerializationFormat::COMPACT));
+  }
+}
+
+TEST(TestSettingsMigration, ExistingIntermediateDestinationIsNotReplaced)
+{
+  CXBMCTinyXML doc;
+  ASSERT_TRUE(doc.Parse(std::string{
+      R"(<settings version="4"><setting id="test.value" version="2">true</setting>
+         <setting id="test.value" version="3">7</setting></settings>)"}));
+  CSettingsMigration migration({std::make_shared<CSameIdToV3>(), std::make_shared<CSameIdToV4>()});
+  ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 2, 4));
+  const auto* v3 = CSettingsManager::LocateSetting(doc.RootElement(), "test.value", 3);
+  const auto* v4 = CSettingsManager::LocateSetting(doc.RootElement(), "test.value", 4);
+  ASSERT_NE(nullptr, v3);
+  ASSERT_NE(nullptr, v4);
+  EXPECT_STREQ("7", v3->GetText());
+  EXPECT_DOUBLE_EQ(7.5, std::stod(v4->GetText()));
+}
+
+TEST(TestSettingsMigration, MissingAndInvalidSourcesDoNotDamageOtherSettings)
+{
+  CXBMCTinyXML doc;
+  ASSERT_TRUE(doc.Parse(std::string{
+      R"(<settings version="2"><setting id="dvds.autorun">invalid</setting>
+         <setting id="videolibrary.ignorevideoversions">invalid</setting>
+         <setting id="musicplayer.replaygainpreamp">invalid</setting>
+         <setting id="input.tvosusekodikeyboard">invalid</setting>
+         <future data="keep" /></settings>)"}));
+  const auto expected =
+      XMLUtils::NodeStringSerialization(doc.RootElement(), XMLUtils::SerializationFormat::COMPACT);
+  CSettingsMigration migration;
+  ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 2, 5));
+  EXPECT_EQ(expected, XMLUtils::NodeStringSerialization(doc.RootElement(),
+                                                        XMLUtils::SerializationFormat::COMPACT));
+}
+
+TEST(TestSettingsMigration, MissingCurrentValueCompletesConsecutiveMigrations)
+{
+  CXBMCTinyXML doc;
+  ASSERT_TRUE(doc.Parse(std::string{
+      R"(<settings version="4"><setting id="test.value" version="2">true</setting></settings>)"}));
+  CSettingsMigration migration({std::make_shared<CSameIdToV3>(), std::make_shared<CSameIdToV4>()});
+  ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 2, 4));
+  const auto* intermediate = CSettingsManager::LocateSetting(doc.RootElement(), "test.value", 3);
+  const auto* current = CSettingsManager::LocateSetting(doc.RootElement(), "test.value", 4);
+  ASSERT_NE(nullptr, intermediate);
+  ASSERT_NE(nullptr, current);
+  EXPECT_STREQ("3", intermediate->Attribute("version"));
+  EXPECT_STREQ("1", intermediate->GetText());
+  EXPECT_DOUBLE_EQ(1.5, std::stod(current->GetText()));
+  EXPECT_EQ(nullptr, current->Attribute("version"));
+  EXPECT_STREQ("4", doc.RootElement()->Attribute("version"));
+}
+
+TEST(TestSettingsMigration, ExistingCurrentValueIsNotTreatedAsAnIntermediate)
+{
+  CXBMCTinyXML doc;
+  ASSERT_TRUE(doc.Parse(std::string{
+      R"(<settings version="4"><setting id="test.value" version="2">true</setting>
+         <setting id="test.value">9.5</setting></settings>)"}));
+  const auto expected =
+      XMLUtils::NodeStringSerialization(doc.RootElement(), XMLUtils::SerializationFormat::COMPACT);
+  CSettingsMigration migration({std::make_shared<CSameIdToV3>(), std::make_shared<CSameIdToV4>()});
+  ASSERT_TRUE(migration.UpdateXMLSettings(doc.RootElement(), 2, 4));
+  EXPECT_EQ(expected, XMLUtils::NodeStringSerialization(doc.RootElement(),
+                                                        XMLUtils::SerializationFormat::COMPACT));
+}

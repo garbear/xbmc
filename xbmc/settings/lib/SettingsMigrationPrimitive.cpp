@@ -13,12 +13,13 @@
 namespace KODI::SETTINGS
 {
 SettingConversionResult ConvertSettingBoolToInt(TiXmlElement* root,
+                                                uint32_t sourceVersion,
                                                 std::string_view oldSettingId,
                                                 std::string_view newSettingId,
                                                 const SettingBoolToIntMapping& mapping)
 {
   return impl::ConvertSingleSetting<CSettingBool, CSettingInt>(
-      root, oldSettingId, newSettingId,
+      root, sourceVersion, oldSettingId, newSettingId,
       [&mapping](bool oldValue)
       {
         const int newValue = oldValue ? mapping.m_true : mapping.m_false;
