@@ -282,6 +282,27 @@ bool CProfileManager::LoadProfile(unsigned int index)
     return false;
   }
 
+  // @todo: why is m_settings not used here?
+  const std::shared_ptr<CSettings> settings = CServiceBroker::GetSettingsComponent()->GetSettings();
+  const std::string settingsFile =
+      index == MASTER_PROFILE_ID
+          ? "special://masterprofile/guisettings.xml"
+          : URIUtils::AddFileToFolder(GetUserDataFolder(), m_profiles[index].getDirectory(),
+                                      "guisettings.xml");
+  CXBMCTinyXML settingsDoc;
+  if (CFile::Exists(settingsFile) && settingsDoc.LoadFile(settingsFile) &&
+      settingsDoc.RootElement())
+  {
+    const auto* settingsManager = settings->GetSettingsManager();
+    const auto version = settingsManager->ParseVersion(settingsDoc.RootElement());
+    if (version > settingsManager->GetVersion())
+    {
+      CLog::LogF(LOGERROR, "Profile not loaded. Settings file {} has version {}, newer than {}",
+                 settingsFile, version, settingsManager->GetVersion());
+      return false;
+    }
+  }
+
   PrepareLoadProfile(index);
 
   if (index == MASTER_PROFILE_ID && IsMasterProfile())
@@ -301,9 +322,6 @@ bool CProfileManager::LoadProfile(unsigned int index)
   auto skin = CServiceBroker::GetGUI()->GetSkinInfo();
   if (skin && !m_previousProfileLoadedForLogin)
     skin->SaveSettings();
-
-  // @todo: why is m_settings not used here?
-  const std::shared_ptr<CSettings> settings = CServiceBroker::GetSettingsComponent()->GetSettings();
 
   // unload any old settings
   settings->Unload();
