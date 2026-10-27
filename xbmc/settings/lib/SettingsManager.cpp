@@ -15,6 +15,7 @@
 #include "SettingsMigration.h"
 #include "utils/StringUtils.h"
 #include "utils/XBMCTinyXML.h"
+#include "utils/XMLUtils.h"
 #include "utils/log.h"
 
 #include <algorithm>
@@ -190,25 +191,26 @@ bool CSettingsManager::Load(const TiXmlElement* root,
   // Scoped to remain alive until the end of the function
   std::unique_ptr<TiXmlElement> writableRoot;
 
-  if (version < Version)
+  if (version <= Version)
   {
+    bool migrated = false;
     // Local deep copy to keep the rest of the settings reading code const
     writableRoot = Clone(root);
 
     if (writableRoot != nullptr)
     {
       CSettingsMigration migration{};
-      if (migration.UpdateXMLSettings(writableRoot.get(), version, Version))
+      if (migration.UpdateXMLSettings(writableRoot.get(), std::min(version, 2u), Version))
       {
+        migrated = true;
+        updated =
+            version < Version || !XMLUtils::AreNodesSerializationsEqual(root, writableRoot.get());
         // Continue loading with the modified xml document
         root = writableRoot.get();
-        // Always mark settings updated to have them serialized with the new version number after load,
-        // even if no setting was modified (impacted setting not present in the file for example)
-        updated = true;
       }
     }
 
-    if (!updated)
+    if (!migrated)
     {
       m_logger->error(
           "Unable to create an in-memory copy of the settings for the settings upgrade, or "

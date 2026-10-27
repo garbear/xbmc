@@ -8,6 +8,7 @@
 
 #include "settings/lib/SettingsMigration.h"
 
+#include "settings/lib/SettingDefinitions.h"
 #include "settings/lib/SettingsMigrationSteps.h"
 #include "utils/log.h"
 
@@ -55,9 +56,54 @@ bool CSettingsMigration::UpdateXMLSettings(TiXmlElement* root,
       return true;
     }
 
+    int fileVersion = 0;
+    const bool hasVersion = root && root->Attribute(SETTING_XML_ROOT_VERSION);
+    std::vector<TiXmlElement*> currentValues;
+    if (root)
+    {
+      root->QueryIntAttribute(SETTING_XML_ROOT_VERSION, &fileVersion);
+      // Protect existing current values while completing missing legacy migration chains.
+      for (auto* value = root->FirstChildElement(SETTING_XML_ELM_SETTING); value;
+           value = value->NextSiblingElement(SETTING_XML_ELM_SETTING))
+      {
+        if (!value->Attribute(SETTING_XML_ROOT_VERSION))
+        {
+          currentValues.push_back(value);
+          value->SetAttribute(SETTING_XML_ROOT_VERSION, fileVersion);
+        }
+      }
+    }
+    const auto restoreCurrentValues = [&currentValues]()
+    {
+      for (auto* value : currentValues)
+        value->RemoveAttribute(SETTING_XML_ROOT_VERSION);
+      currentValues.clear();
+    };
+
     // All steps must succeed, stop on first error
-    return std::none_of(itFirst, itLast, [root](const std::shared_ptr<ISettingsMigrationStep>& step)
-                        { return !step->Apply(root); });
+    bool success = true;
+    for (auto step = itFirst; step != itLast; ++step)
+    {
+      if ((*step)->TargetVersion() > fileVersion)
+        restoreCurrentValues();
+      if (root)
+        root->SetAttribute(SETTING_XML_ROOT_VERSION,
+                           std::min(fileVersion, (*step)->TargetVersion() - 1));
+      if (!(*step)->Apply(root))
+      {
+        success = false;
+        break;
+      }
+    }
+    restoreCurrentValues();
+    if (root)
+    {
+      if (hasVersion)
+        root->SetAttribute(SETTING_XML_ROOT_VERSION, fileVersion);
+      else
+        root->RemoveAttribute(SETTING_XML_ROOT_VERSION);
+    }
+    return success;
   }
 
   return true;

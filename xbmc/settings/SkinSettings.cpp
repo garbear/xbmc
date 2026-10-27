@@ -18,6 +18,7 @@
 #include "utils/XBMCTinyXML.h"
 #include "utils/log.h"
 
+#include <algorithm>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -189,6 +190,7 @@ void CSkinSettings::MigrateSettings(const std::shared_ptr<ADDON::CSkinInfo>& ski
 
   bool settingsMigrated = false;
   const std::string& skinId = skin->ID();
+  const auto currentSettings = skin->GetSkinSettings();
   std::set<ADDON::CSkinSettingPtr> settingsCopy(m_settings.begin(), m_settings.end());
   for (const auto& setting : settingsCopy)
   {
@@ -196,6 +198,12 @@ void CSkinSettings::MigrateSettings(const std::shared_ptr<ADDON::CSkinInfo>& ski
       continue;
 
     std::string settingName = setting->name.substr(skinId.size() + 1);
+    if (std::ranges::any_of(currentSettings, [&settingName](const auto& current)
+                            { return StringUtils::EqualsNoCase(current->name, settingName); }))
+    {
+      m_settings.erase(setting);
+      continue;
+    }
 
     if (setting->GetType() == "string")
     {

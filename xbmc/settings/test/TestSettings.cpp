@@ -7,6 +7,9 @@
  */
 
 #include "ServiceBroker.h"
+#include "addons/Skin.h"
+#include "addons/addoninfo/AddonInfoBuilder.h"
+#include "addons/addoninfo/AddonType.h"
 #include "application/ApplicationSettingsHandling.h"
 #include "filesystem/File.h"
 #include "filesystem/SpecialProtocol.h"
@@ -15,6 +18,7 @@
 #include "settings/DisplaySettings.h"
 #include "settings/Settings.h"
 #include "settings/SettingsComponent.h"
+#include "settings/SkinSettings.h"
 #include "settings/lib/Setting.h"
 #include "settings/lib/SettingSection.h"
 #include "settings/lib/SettingsManager.h"
@@ -432,4 +436,101 @@ TEST_F(TestSettingsPersistence, SavesThroughPathSubstitution)
   EXPECT_TRUE(XFILE::CFile::Exists(redirected));
   EXPECT_FALSE(XFILE::CFile::Exists(m_file));
   XFILE::CFile::Delete(redirected);
+}
+
+TEST_F(TestSettingsPersistence, MigratesMissingCurrentRepresentationInCurrentFile)
+{
+  const auto action = std::make_shared<CSettingInt>("dvds.autoaction", nullptr);
+  ASSERT_TRUE(m_settings.GetSettingsManager()->AddSetting(
+      action, std::make_shared<CSettingSection>("dvds"), std::make_shared<CSettingCategory>("dvds"),
+      std::make_shared<CSettingGroup>("dvds")));
+  Write("<settings version=\"" + std::to_string(CSettingsManager::Version) +
+        "\"><setting id=\"dvds.autorun\" version=\"2\">true</setting></settings>");
+  ASSERT_TRUE(m_settings.Load(m_file));
+  EXPECT_EQ(1, action->GetValue());
+  CXBMCTinyXML xml;
+  ASSERT_TRUE(xml.LoadFile(m_file));
+  const auto* legacy = CSettingsManager::LocateSetting(xml.RootElement(), "dvds.autorun", 2);
+  const auto* current = CSettingsManager::LocateSetting(xml.RootElement(), "dvds.autoaction");
+  ASSERT_NE(nullptr, legacy);
+  ASSERT_NE(nullptr, current);
+  EXPECT_STREQ("true", legacy->GetText());
+  EXPECT_STREQ("2", legacy->Attribute("version"));
+  EXPECT_STREQ("1", current->GetText());
+  EXPECT_EQ(nullptr, current->Attribute("version"));
+  const auto saved = Read();
+  EXPECT_TRUE(m_settings.Load(m_file));
+  EXPECT_EQ(saved, Read());
+}
+
+TEST_F(TestSettingsPersistence, UpgradeSaveRetainsLegacyAndExistingDestination)
+{
+  const auto action = std::make_shared<CSettingInt>("dvds.autoaction", nullptr);
+  ASSERT_TRUE(m_settings.GetSettingsManager()->AddSetting(
+      action, std::make_shared<CSettingSection>("dvds"), std::make_shared<CSettingCategory>("dvds"),
+      std::make_shared<CSettingGroup>("dvds")));
+  Write(R"(<settings version="2"><setting id="dvds.autorun">true</setting>
+           <setting id="dvds.autoaction">0</setting><unknown data="keep" /></settings>)");
+  ASSERT_TRUE(m_settings.Load(m_file));
+  EXPECT_EQ(0, action->GetValue());
+  for (int i = 0; i < 3; ++i)
+  {
+    CXBMCTinyXML xml;
+    ASSERT_TRUE(xml.LoadFile(m_file));
+    auto* legacy = CSettingsManager::LocateSetting(xml.RootElement(), "dvds.autorun", 2);
+    ASSERT_NE(nullptr, legacy);
+    EXPECT_STREQ("2", legacy->Attribute("version"));
+    legacy->FirstChild()->SetValue(i % 2 ? "true" : "false");
+    ASSERT_TRUE(xml.SaveFile(m_file));
+    ASSERT_TRUE(m_settings.Load(m_file));
+    EXPECT_EQ(0, action->GetValue());
+    ASSERT_TRUE(m_settings.Save(m_file));
+    CXBMCTinyXML saved;
+    ASSERT_TRUE(saved.LoadFile(m_file));
+    EXPECT_EQ(CSettingsManager::Version,
+              m_settings.GetSettingsManager()->ParseVersion(saved.RootElement()));
+    EXPECT_NE(nullptr, saved.RootElement()->FirstChildElement("unknown"));
+    int nodes = 0;
+    for (const auto* node = saved.RootElement()->FirstChildElement("setting"); node;
+         node = node->NextSiblingElement("setting"))
+      ++nodes;
+    EXPECT_EQ(2, nodes);
+  }
+}
+
+namespace
+{
+class CTestSkin : public ADDON::CSkinInfo
+{
+public:
+  using CSkinInfo::CSkinInfo;
+  using CSkinInfo::SettingsFromXML;
+  bool SaveSettings(ADDON::AddonInstanceId = ADDON::ADDON_SETTINGS_ID) override { return true; }
+};
+} // namespace
+
+TEST_F(TestSettingsPersistence, RetainedSkinSettingsDoNotOverwriteCurrentValues)
+{
+  ADDON::CAddonInfoBuilderFromDB builder;
+  builder.SetId("skin.test");
+  builder.SetExtensions(ADDON::CAddonType(ADDON::AddonType::SKIN));
+  auto skin = std::make_shared<CTestSkin>(builder.get(), RESOLUTION_INFO{});
+  CXBMCTinyXML current;
+  ASSERT_TRUE(current.Parse(std::string{
+      R"(<settings><setting id="LABEL" type="string">edited</setting>
+         <setting id="enabled" type="bool">false</setting></settings>)"}));
+  ASSERT_TRUE(skin->SettingsFromXML(current, false));
+  auto& legacySettings = CSkinSettings::GetInstance();
+  CXBMCTinyXML legacy;
+  ASSERT_TRUE(legacy.Parse(std::string{
+      R"(<settings><skinsettings><setting name="skin.test.label" type="string">old</setting>
+         <setting name="skin.test.enabled" type="bool">true</setting></skinsettings></settings>)"}));
+  for (int i = 0; i < 3; ++i)
+  {
+    ASSERT_TRUE(legacySettings.Load(legacy.RootElement()));
+    legacySettings.MigrateSettings(skin);
+    EXPECT_EQ("edited", skin->GetString(skin->TranslateString("label")));
+    EXPECT_FALSE(skin->GetBool(skin->TranslateBool("enabled")));
+  }
+  legacySettings.Clear();
 }
