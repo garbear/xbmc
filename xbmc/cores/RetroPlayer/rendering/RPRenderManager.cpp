@@ -618,6 +618,19 @@ void CRPRenderManager::FrameMove()
     std::unique_lock<std::mutex> lock{m_oldRenderersMutex};
     for (auto& renderer : m_renderers)
       renderer->FrameMove();
+
+    // Release renderers nothing draws any more, such as a filter preview that
+    // has scrolled off screen
+    for (auto it = m_renderers.begin(); it != m_renderers.end();)
+    {
+      if ((*it)->IsUnused())
+      {
+        m_oldRenderers.insert(*it);
+        it = m_renderers.erase(it);
+      }
+      else
+        ++it;
+    }
   }
 }
 
@@ -956,6 +969,9 @@ std::shared_ptr<CRPBaseRenderer> CRPRenderManager::GetRendererForPool(
     if (!renderer && !shaderPreset.empty())
       m_failedShaderPresets.insert(shaderPreset);
   }
+
+  if (renderer)
+    renderer->SetUsed();
 
   return renderer;
 }
