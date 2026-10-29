@@ -9,8 +9,9 @@
 #include "ServiceBroker.h"
 #include "guilib/GUIFontTTF.h"
 #include "guilib/Texture.h"
-#include "guilib/test/TestGUIStubs.h"
+#include "rendering/RenderSystem.h"
 #include "test/TestUtils.h"
+#include "windowing/WinSystem.h"
 
 #include <array>
 #include <memory>
@@ -21,6 +22,51 @@
 
 namespace
 {
+class CTestRenderSystem : public CRenderSystemBase
+{
+public:
+  bool InitRenderSystem() override { return true; }
+  bool DestroyRenderSystem() override { return true; }
+  bool ResetRenderSystem(int width, int height) override { return true; }
+  bool BeginRender() override { return true; }
+  bool EndRender() override { return true; }
+  void PresentRender(bool rendered, bool videoLayer) override {}
+  bool ClearBuffers(KODI::UTILS::COLOR::Color color) override { return true; }
+  bool IsExtSupported(const char* extension) const override { return false; }
+  void SetViewPort(const CRect& viewPort) override {}
+  void GetViewPort(CRect& viewPort) override {}
+  void SetScissors(const CRect& rect) override {}
+  void ResetScissors() override {}
+  void CaptureStateBlock() override {}
+  void ApplyStateBlock() override {}
+  void SetCameraPosition(const CPoint& camera,
+                         int screenWidth,
+                         int screenHeight,
+                         float stereoFactor) override
+  {
+  }
+};
+
+class CTestWinSystem : public CWinSystemBase
+{
+public:
+  CRenderSystemBase* GetRenderSystem() override { return &m_renderSystem; }
+  bool CreateNewWindow(const std::string& name, bool fullScreen, RESOLUTION_INFO& res) override
+  {
+    return true;
+  }
+  bool ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop) override { return true; }
+  bool SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays) override
+  {
+    return true;
+  }
+  void Register(IDispResource* resource) override {}
+  void Unregister(IDispResource* resource) override {}
+
+private:
+  CTestRenderSystem m_renderSystem;
+};
+
 class CTestTexture : public CTexture
 {
 public:
@@ -92,7 +138,7 @@ protected:
       CServiceBroker::UnregisterWinSystem();
   }
 
-  KODI::GUILIB::TEST::CTestWinSystem m_winSystem;
+  CTestWinSystem m_winSystem;
   CWinSystemBase* m_previousWinSystem{nullptr};
   std::unique_ptr<CTestFont> m_font;
 };
