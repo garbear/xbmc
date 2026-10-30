@@ -62,6 +62,12 @@ struct AchievementInfo
    */
   CDateTime unlockedDate;
 
+  /*!
+   * \brief When an achievement that encore re-armed was earned before,
+   *        invalid otherwise
+   */
+  CDateTime previouslyUnlockedDate;
+
   unsigned int points{0};
   bool earned{false};
 
