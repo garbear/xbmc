@@ -706,9 +706,10 @@ void CGameClientCheevos::OnLeaderboardScoreboard(const game_rc_leaderboard_score
   std::string message = StringUtils::Format(Localize(35357), data.new_rank, data.num_entries);
 
   // A worse attempt still gets a scoreboard, and saying so is kinder than
-  // showing a rank that did not move with no explanation
+  // showing a rank that did not move with no explanation. It goes first, as a
+  // narrow notification cuts off the end of the line.
   if (!best.empty() && !submitted.empty() && best != submitted)
-    message += StringUtils::Format("  ·  {}", StringUtils::Format(Localize(35358), best));
+    message = StringUtils::Format("{}  ·  {}", StringUtils::Format(Localize(35358), best), message);
 
   // "Leaderboard attempt submitted"
   CGUIDialogKaiToast::QueueNotification(GameIcon(), Localize(35356), message, TOAST_DISPLAY_TIME_MS,
