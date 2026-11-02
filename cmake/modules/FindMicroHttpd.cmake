@@ -33,17 +33,12 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
       endif()
       find_program(MAKE_EXECUTABLE make REQUIRED)
 
-      set(HTTPS_OPTION --enable-https)
-      if(CORE_SYSTEM_NAME STREQUAL wasm)
-        set(HTTPS_OPTION --disable-https)
-      endif()
-
       set(CONFIGURE_COMMAND ./configure --prefix ${DEPENDS_PATH}
                                         --disable-shared
                                         --disable-doc
                                         --disable-examples
                                         --disable-curl
-                                        ${HTTPS_OPTION}
+                                        --enable-https
                                         ${EXTRA_ARGS})
 
       set(BUILD_COMMAND ${MAKE_EXECUTABLE})
