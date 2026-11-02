@@ -33,5 +33,8 @@ public:
   EVENT_RESULT OnMouseEvent(const CPoint& point, const KODI::MOUSE::CMouseEvent& event) override;
   bool CanFocus() const override;
   bool CanFocusFromPoint(const CPoint &point) const override;
+
+private:
+  bool m_renderingVideo{false};
 };
 

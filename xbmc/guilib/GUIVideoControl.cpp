@@ -38,8 +38,12 @@ void CGUIVideoControl::Process(unsigned int currentTime, CDirtyRegionList &dirty
   const auto appPlayer = components.GetComponent<CApplicationPlayer>();
   // Only fire for single-plane renderers where video draws via the GUI walk.
   // See CGUIWindowFullScreen::Process for full rationale.
-  if (!appPlayer->IsRenderingVideoLayer())
+  const bool renderingVideo =
+      appPlayer->IsRenderingVideo() && !appPlayer->IsRenderingVideoLayer();
+  // Once more after it stops, so the last frame doesn't stay on screen.
+  if (renderingVideo || m_renderingVideo)
     MarkDirtyRegion();
+  m_renderingVideo = renderingVideo;
 
   CGUIControl::Process(currentTime, dirtyregions);
 }
