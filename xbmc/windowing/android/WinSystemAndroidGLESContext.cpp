@@ -87,6 +87,12 @@ bool CWinSystemAndroidGLESContext::InitWindowSystem()
     return false;
   }
 
+  m_hasSurfacelessContext =
+      CEGLUtils::HasExtension(GetEGLDisplay(), "EGL_KHR_surfaceless_context") &&
+      eglMakeCurrent(GetEGLDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, GetEGLContext()) == EGL_TRUE;
+  if (m_hasSurfacelessContext)
+    eglMakeCurrent(GetEGLDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+
   return true;
 }
 
@@ -118,6 +124,24 @@ bool CWinSystemAndroidGLESContext::ResizeWindow(int newWidth, int newHeight, int
 {
   CRenderSystemGLES::ResetRenderSystem(newWidth, newHeight);
   return true;
+}
+
+bool CWinSystemAndroidGLESContext::DestroyWindow()
+{
+  bool contextBound = true;
+  if (m_guiComposite.IsActive())
+  {
+    m_pGLContext.DestroySurface();
+    // Background game cleanup still needs the context after the window is gone.
+    contextBound =
+        eglMakeCurrent(GetEGLDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, GetEGLContext()) == EGL_TRUE;
+    if (!contextBound)
+    {
+      m_hasSurfacelessContext = false;
+      CEGLUtils::Log(LOGERROR, "Failed to bind background game context");
+    }
+  }
+  return CWinSystemAndroid::DestroyWindow() && contextBound;
 }
 
 bool CWinSystemAndroidGLESContext::DestroyRenderSystem()
@@ -317,7 +341,7 @@ bool CWinSystemAndroidGLESContext::SetHDR(const VideoPicture* videoPicture)
 bool CWinSystemAndroidGLESContext::SupportsHDRGameOutput()
 {
   const auto player = CServiceBroker::GetAppComponents().GetComponent<CApplicationPlayer>();
-  if (!player->IsPlayingGame() || !m_nativeWindow || !m_hasHDRConfig ||
+  if (!player->IsPlayingGame() || !m_nativeWindow || !m_hasHDRConfig || !m_hasSurfacelessContext ||
       !m_hasEGL_BT2020_PQ_Colorspace_Extension || !m_hasEGL_ST2086_Extension ||
       !IsHDRDisplaySettingEnabled() || !GetDisplayHDRCapabilities().SupportsHDR10())
     return false;
