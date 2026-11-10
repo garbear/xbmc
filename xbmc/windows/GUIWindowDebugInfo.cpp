@@ -116,7 +116,7 @@ void CGUIWindowDebugInfo::Process(unsigned int currentTime, CDirtyRegionList &di
       strCores = "N/A";
     std::string lcAppName = CCompileInfo::GetAppName();
     StringUtils::ToLower(lcAppName);
-#if !defined(TARGET_POSIX)
+#if !defined(TARGET_POSIX) || defined(TARGET_WASM)
     info = StringUtils::Format("LOG: {}{}.log\nMEM: {} - FPS: {:2.1f} fps\nCPU: {}{}",
                                CSpecialProtocol::TranslatePath("special://logpath"), lcAppName,
                                memory,
