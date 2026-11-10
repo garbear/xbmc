@@ -154,13 +154,18 @@ void CGUIWindowSystemInfo::FrameMove()
   else if (m_section == CONTROL_BT_STORAGE)
   {
     SET_CONTROL_LABEL(40, CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(20155));
+#if !defined(TARGET_WASM)
     if (m_diskUsage.empty())
+#endif
       m_diskUsage = CServiceBroker::GetMediaManager().GetDiskUsage();
-
     for (size_t d = 0; d < m_diskUsage.size() && d <= CONTROL_TEXT_END - CONTROL_TEXT_START; ++d)
     {
       SET_CONTROL_LABEL(i++, m_diskUsage[d]);
     }
+#if defined(TARGET_WASM)
+    while (i <= CONTROL_TEXT_END)
+      SET_CONTROL_LABEL(i++, "");
+#endif
   }
 
   else if (m_section == CONTROL_BT_NETWORK)
