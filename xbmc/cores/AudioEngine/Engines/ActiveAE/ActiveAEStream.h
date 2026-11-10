@@ -252,6 +252,7 @@ protected:
   enum AVMatrixEncoding m_matrixEncoding;
   enum AVAudioServiceType m_audioServiceType;
   bool m_forceResampler;
+  bool m_realtime{false};
   IAEClockCallback *m_pClock;
   CSyncError m_syncError;
   double m_lastSyncError;

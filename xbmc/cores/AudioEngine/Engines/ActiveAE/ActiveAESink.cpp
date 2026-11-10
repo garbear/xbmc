@@ -263,6 +263,9 @@ void CActiveAESink::StateMachine(int signal, Protocol *port, Message *msg)
           m_extError = false;
           m_extSilenceTimer.Set(0ms);
           m_extStreaming = false;
+          m_extPadding = false;
+          if (m_stats)
+            m_stats->SetSinkStarved(false);
           ReturnBuffers();
           OpenSink();
 
@@ -303,6 +306,7 @@ void CActiveAESink::StateMachine(int signal, Protocol *port, Message *msg)
 
         case CSinkControlProtocol::FLUSH:
           ReturnBuffers();
+          m_extPadding = false;
           // Only discards device audio when asked to, as on a stream flush or pause.
           if (m_sink && *reinterpret_cast<const bool*>(msg->data))
             m_sink->Flush();
@@ -325,6 +329,8 @@ void CActiveAESink::StateMachine(int signal, Protocol *port, Message *msg)
             if (m_state == S_TOP_CONFIGURED_IDLE || m_state == S_TOP_CONFIGURED_PLAY ||
                 m_state == S_TOP_CONFIGURED_SILENCE)
             {
+              m_extPadding = false;
+              m_stats->SetSinkStarved(false);
               m_state = S_TOP_CONFIGURED_SUSPEND;
               m_extTimeout = 0ms;
             }
@@ -439,6 +445,8 @@ void CActiveAESink::StateMachine(int signal, Protocol *port, Message *msg)
         {
         case CSinkDataProtocol::DRAIN:
           m_sink->Drain();
+          m_extPadding = false;
+          m_stats->SetSinkStarved(false);
           msg->Reply(CSinkDataProtocol::ACC);
           m_state = S_TOP_CONFIGURED_IDLE;
           m_extTimeout = 10s;
@@ -447,6 +455,7 @@ void CActiveAESink::StateMachine(int signal, Protocol *port, Message *msg)
           CSampleBuffer *samples;
           unsigned int delay;
           samples = *((CSampleBuffer**)msg->data);
+          m_extPadding = false;
           delay = OutputSamples(samples);
           msg->Reply(CSinkDataProtocol::RETURNSAMPLE, &samples, sizeof(CSampleBuffer*));
           if (m_extError)
@@ -570,6 +579,8 @@ void CActiveAESink::StateMachine(int signal, Protocol *port, Message *msg)
           else
           {
             m_sink->Drain();
+            m_extPadding = false;
+            m_stats->SetSinkStarved(false);
             m_state = S_TOP_CONFIGURED_IDLE;
             if (m_extAppFocused)
               m_extTimeout = 10s;
@@ -589,6 +600,11 @@ void CActiveAESink::StateMachine(int signal, Protocol *port, Message *msg)
         switch (signal)
         {
         case CSinkControlProtocol::TIMEOUT:
+          if (!m_extPadding)
+          {
+            m_extPadding = true;
+            m_stats->SetSinkStarved(true);
+          }
           OutputSamples(&m_sampleOfSilence);
           if (m_extError)
           {
