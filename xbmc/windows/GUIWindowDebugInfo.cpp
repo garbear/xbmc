@@ -21,6 +21,8 @@
 #include "guilib/GUITextLayout.h"
 #include "guilib/GUIWindowManager.h"
 #include "input/WindowTranslator.h"
+#include "resources/LocalizeStrings.h"
+#include "resources/ResourcesComponent.h"
 #include "settings/AdvancedSettings.h"
 #include "settings/SettingsComponent.h"
 #include "utils/CPUInfo.h"
@@ -99,6 +101,13 @@ void CGUIWindowDebugInfo::Process(unsigned int currentTime, CDirtyRegionList &di
   {
     KODI::MEMORY::MemoryStatus stat;
     KODI::MEMORY::GetMemoryStatus(&stat);
+    std::string memory =
+        StringUtils::Format("{}/{} KB", stat.availPhys / 1024, stat.totalPhys / 1024);
+#if defined(TARGET_WASM)
+    if (stat.totalPhys == 0)
+      // "N/A"
+      memory = CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(10006);
+#endif
     std::string profiling = CGUIControlProfiler::IsRunning() ? " (profiling)" : "";
     std::string strCores;
     if (CServiceBroker::GetCPUInfo()->SupportsCPUUsage())
@@ -108,9 +117,9 @@ void CGUIWindowDebugInfo::Process(unsigned int currentTime, CDirtyRegionList &di
     std::string lcAppName = CCompileInfo::GetAppName();
     StringUtils::ToLower(lcAppName);
 #if !defined(TARGET_POSIX)
-    info = StringUtils::Format("LOG: {}{}.log\nMEM: {}/{} KB - FPS: {:2.1f} fps\nCPU: {}{}",
+    info = StringUtils::Format("LOG: {}{}.log\nMEM: {} - FPS: {:2.1f} fps\nCPU: {}{}",
                                CSpecialProtocol::TranslatePath("special://logpath"), lcAppName,
-                               stat.availPhys / 1024, stat.totalPhys / 1024,
+                               memory,
                                CServiceBroker::GetGUI()
                                    ->GetInfoManager()
                                    .GetInfoProviders()
@@ -122,10 +131,10 @@ void CGUIWindowDebugInfo::Process(unsigned int currentTime, CDirtyRegionList &di
     std::string ucAppName = lcAppName;
     StringUtils::ToUpper(ucAppName);
     info = StringUtils::Format("LOG: {}{}.log\n"
-                               "MEM: {}/{} KB - FPS: {:2.1f} fps\n"
+                               "MEM: {} - FPS: {:2.1f} fps\n"
                                "CPU: {} (CPU-{} {:4.2f}%{})",
                                CSpecialProtocol::TranslatePath("special://logpath"), lcAppName,
-                               stat.availPhys / 1024, stat.totalPhys / 1024,
+                               memory,
                                CServiceBroker::GetGUI()
                                    ->GetInfoManager()
                                    .GetInfoProviders()
