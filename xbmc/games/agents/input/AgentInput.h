@@ -98,6 +98,18 @@ public:
   float GetGamePortActivation(const std::string& address) const;
   float GetPeripheralActivation(const std::string& peripheralLocation) const;
 
+  /*!
+   * \brief Get the peripherals controlling the game's joysticks
+   *
+   * \return The peripherals in player order, with nullptr for players without one
+   */
+  PERIPHERALS::PeripheralVector GetPlayerPeripherals() const;
+
+  /*!
+   * \brief Warn once when a player's controller runs low on battery
+   */
+  void CheckBatteries();
+
 private:
   //! @todo De-duplicate these types
   using PortAddress = std::string;
@@ -125,6 +137,7 @@ private:
   void ProcessAgentControllers(const PERIPHERALS::PeripheralVector& peripherals,
                                PERIPHERALS::EventLockHandlePtr& inputHandlingLock,
                                bool updateJoysticks);
+  void OnPlayerControllerLost(const std::string& portAddress);
   void UpdateExpiredJoysticks(const PERIPHERALS::PeripheralVector& joysticks,
                               PERIPHERALS::EventLockHandlePtr& inputHandlingLock);
   void UpdateConnectedJoysticks(const PERIPHERALS::PeripheralVector& joysticks,
@@ -155,6 +168,7 @@ private:
   int m_initialMouseX{-1};
   int m_initialMouseY{-1};
   std::vector<std::shared_ptr<CAgentController>> m_controllers;
+  PERIPHERALS::PeripheralVector m_playerPeripherals; // In player order, nullptr for an empty port
 
   // Synchronization parameters
   mutable std::mutex m_controllerMutex;
@@ -172,6 +186,9 @@ private:
    * Not exposed to the game.
    */
   PortMap m_portMap;
+
+  // Peripheral locations of the controllers already warned about a low battery
+  std::set<std::string> m_lowBatteryWarned;
 
   /*!
    * \brief Map of keyboard input provider to keyboard port address

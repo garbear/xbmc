@@ -39,6 +39,7 @@
 #include "games/addons/GameClient.h"
 #include "games/addons/disc/GameClientDiscs.h"
 #include "games/addons/input/GameClientInput.h"
+#include "games/agents/input/AgentInput.h"
 #include "games/tags/GameInfoTag.h"
 #include "guilib/GUIComponent.h"
 #include "guilib/GUIWindowManager.h"
@@ -56,12 +57,18 @@
 #include "utils/log.h"
 #include "windowing/WinSystem.h"
 
+#include <chrono>
 #include <memory>
 #include <mutex>
 
 using namespace KODI;
 using namespace GAME;
 using namespace RETRO;
+
+namespace
+{
+constexpr auto BATTERY_CHECK_INTERVAL = std::chrono::seconds(10);
+} // namespace
 
 CRetroPlayer::CRetroPlayer(IPlayerCallback& callback)
   : IPlayer(callback),
@@ -529,6 +536,13 @@ void CRetroPlayer::FrameMove()
     m_playbackControl->FrameMove();
 
   LeaveSpeedRefusedInHardcore();
+
+  const auto now = std::chrono::steady_clock::now();
+  if (now >= m_nextBatteryCheck)
+  {
+    m_nextBatteryCheck = now + BATTERY_CHECK_INTERVAL;
+    m_gameServices.AgentInput().CheckBatteries();
+  }
 
   if (m_processInfo)
     m_processInfo->SetPlayTimes(0, GetTime(), 0, GetTotalTime());

@@ -16,6 +16,7 @@
 #include "guilib/DispResource.h"
 #include "threads/CriticalSection.h"
 
+#include <chrono>
 #include <memory>
 
 class CVideoReferenceClock;
@@ -147,6 +148,7 @@ private:
 
   // Construction parameters
   GAME::CGameServices& m_gameServices;
+  std::chrono::steady_clock::time_point m_nextBatteryCheck{};
 
   // Subsystems
   std::unique_ptr<CVideoReferenceClock> m_displayClock;
