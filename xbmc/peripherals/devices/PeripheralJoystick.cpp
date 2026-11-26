@@ -454,9 +454,28 @@ bool CPeripheralJoystick::OnAxisMotion(unsigned int axisIndex, float position)
   return bHandled;
 }
 
+void CPeripheralJoystick::OnMotion(unsigned int motionAxis, float value)
+{
+  if (motionAxis < m_motion.accelerometer.size())
+    m_motion.accelerometer[motionAxis] = value;
+  else if (motionAxis - m_motion.accelerometer.size() < m_motion.gyroscope.size())
+    m_motion.gyroscope[motionAxis - m_motion.accelerometer.size()] = value;
+  else
+    return;
+
+  m_motionChanged = true;
+}
+
 void CPeripheralJoystick::OnInputFrame(void)
 {
   std::unique_lock lock(m_handlerMutex);
+
+  if (m_motionChanged)
+  {
+    m_motionChanged = false;
+    for (auto& it : m_driverHandlers)
+      it.handler->OnMotion(m_motion);
+  }
 
   for (auto& it : m_driverHandlers)
     it.handler->OnInputFrame();
