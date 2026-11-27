@@ -217,8 +217,6 @@ bool CRPRenderManager::GetVideoBuffer(unsigned int width,
     renderBuffer = bufferPool->GetBuffer(width, height);
     if (renderBuffer != nullptr)
       break;
-    else
-      CLog::Log(LOGDEBUG, "RetroPlayer[RENDER]: Unable to get video buffer for frame");
   }
 
   if (renderBuffer == nullptr)
