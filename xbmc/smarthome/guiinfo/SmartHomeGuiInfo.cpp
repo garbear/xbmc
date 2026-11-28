@@ -10,12 +10,15 @@
 
 #include "GUIInfoManager.h"
 #include "LangInfo.h"
+#include "ServiceBroker.h"
 #include "guilib/guiinfo/GUIInfo.h"
 #include "guilib/guiinfo/GUIInfoLabels.h"
+#include "smarthome/SmartHomeServices.h"
 #include "smarthome/guiinfo/IPowerMeterHUD.h"
 #include "smarthome/guiinfo/ISystemHealthHUD.h"
 #include "smarthome/guiinfo/IVehicleHUD.h"
 #include "smarthome/guiinfo/SmartHomeProperty.h"
+#include "smarthome/ros2/IRos2.h"
 #include "utils/StringUtils.h"
 
 #include <algorithm>
@@ -220,6 +223,12 @@ bool CSmartHomeGuiInfo::GetLabel(std::string& value,
         return true;
       }
       break;
+    }
+    case SMARTHOME_CONTROLLER_BATTERY:
+    {
+      const auto* ros2 = CServiceBroker::GetSmartHomeServices().Ros2();
+      value = FormatPercent(ros2->GetControllerBattery(info.GetData3()));
+      return true;
     }
     case SMARTHOME_BATTERY_LOAD:
     {

@@ -11,6 +11,7 @@
 #include "smarthome/ImageSubscriptionKey.h"
 
 #include <memory>
+#include <optional>
 #include <string>
 
 namespace PERIPHERALS
@@ -52,6 +53,8 @@ public:
    */
   virtual std::shared_ptr<const PERIPHERALS::CPeripheral> GetRemotePeripheral(
       const std::string& hostname, const std::string& address) const = 0;
+
+  virtual std::optional<int> GetControllerBattery(const std::string& hostname) const = 0;
 
   // GUI interface
   virtual void RegisterImageTopic(const ImageSubscriptionKey& subscription) = 0;

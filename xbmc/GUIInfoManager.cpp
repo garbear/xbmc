@@ -4798,6 +4798,13 @@ constexpr std::array<InfoMap, 30> retroplayer = {{
 ///     @skinning_v24 **[New Infolabel]** \link SmartHome_System_BatteryCharge `SmartHome.System(name).BatteryCharge`\endlink
 ///     <p>
 ///   }
+///   \table_row3{   <b>`SmartHome.System(host).ControllerBattery`</b>,
+///                  \anchor SmartHome_System_ControllerBattery
+///                  _string_,
+///     @return The first joystick charge in the named host's peripheral scan order as a
+///     percentage, or an empty string when none is available.
+///     <p><hr>
+///   }
 ///   \table_row3{   <b>`SmartHome.System(name).BatteryLoad`</b>,
 ///                  \anchor SmartHome_System_BatteryLoad
 ///                  _string_,
@@ -12132,6 +12139,14 @@ int CGUIInfoManager::TranslateSingleString(const std::string& strCondition, bool
 
         if (systemName.empty())
           return 0;
+
+        if (info[2].Name() == "controllerbattery")
+        {
+          if (info[1].num_params() != 1 || info.size() != 3 || info[2].num_params() != 0)
+            return 0;
+
+          return AddMultiInfo(CGUIInfo(SMARTHOME_CONTROLLER_BATTERY, systemName));
+        }
 
         if (info[2].Name() == "property")
         {

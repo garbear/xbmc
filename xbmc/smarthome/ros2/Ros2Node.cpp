@@ -17,7 +17,9 @@
 #include "Ros2VideoSubscription.h"
 #include "ServiceBroker.h"
 #include "network/Network.h"
+#include "peripherals/devices/Peripheral.h"
 #include "platform/Environment.h"
+#include "smarthome/input/SmartHomeInputManager.h"
 #include "smarthome/utils/RosNameUtils.h"
 #include "threads/Thread.h"
 #include "utils/log.h"
@@ -70,10 +72,10 @@ void CRos2Node::Initialize()
   if (!CServiceBroker::GetNetwork().GetHostName(hostname) || hostname.empty())
     hostname = HOSTNAME_UNKNOWN;
 
-  hostname = NormalizeRosHostname(std::move(hostname));
+  m_localHostname = NormalizeRosHostname(std::move(hostname));
 
   // Can't make virtual calls from constructor
-  m_node = std::make_shared<rclcpp::Node>(NODE_NAME_PREFIX + hostname, m_rosNamespace);
+  m_node = std::make_shared<rclcpp::Node>(NODE_NAME_PREFIX + m_localHostname, m_rosNamespace);
   m_executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
   m_executor->add_node(m_node);
   m_thread = std::make_unique<CThread>(this, THREAD_NAME);
@@ -85,16 +87,16 @@ void CRos2Node::Initialize()
 
   // Publishers
   m_peripheralPublisher =
-      std::make_unique<CRos2InputPublisher>(m_node, m_inputManager, hostname, m_rosNamespace);
+      std::make_unique<CRos2InputPublisher>(m_node, m_inputManager, m_localHostname, m_rosNamespace);
   m_peripheralPublisher->Initialize();
   m_localPeripheralTopic = m_node->get_node_topics_interface()->resolve_topic_name(
-      BuildRosName(m_rosNamespace, {hostname, PERIPHERALS_TOPIC}));
+      BuildRosName(m_rosNamespace, {m_localHostname, PERIPHERALS_TOPIC}));
   DiscoverPeripheralPublishers();
   m_discoveryTimer = m_node->create_wall_timer(std::chrono::seconds(10),
                                                [this] { DiscoverPeripheralPublishers(); });
 
   m_nowPlayingPublisher =
-      std::make_unique<CRos2NowPlayingPublisher>(m_node, std::move(hostname), m_rosNamespace);
+      std::make_unique<CRos2NowPlayingPublisher>(m_node, m_localHostname, m_rosNamespace);
   m_nowPlayingPublisher->Initialize();
 
   // Create thread
@@ -194,6 +196,28 @@ std::shared_ptr<const PERIPHERALS::CPeripheral> CRos2Node::GetRemotePeripheral(
   std::lock_guard lock(m_peripheralMutex);
   const auto it = m_peripheralSubs.find(hostname);
   return it != m_peripheralSubs.end() ? it->second.devices->GetPeripheral(address) : nullptr;
+}
+
+std::optional<int> CRos2Node::GetControllerBattery(const std::string& hostname) const
+{
+  if (hostname == m_localHostname)
+  {
+    for (const auto& peripheral : m_inputManager.GetPeripherals())
+    {
+      if (peripheral->Type() == PERIPHERALS::PERIPHERAL_JOYSTICK)
+      {
+        const int level = peripheral->GetBattery().level;
+        if (level >= 0 && level <= 100)
+          return level;
+      }
+    }
+    return std::nullopt;
+  }
+
+  std::lock_guard lock(m_peripheralMutex);
+  const auto it = m_peripheralSubs.find(hostname);
+  return it != m_peripheralSubs.end() ? it->second.devices->GetControllerBattery()
+                                      : std::nullopt;
 }
 
 void CRos2Node::RegisterImageTopic(CSmartHomeGuiBridge& guiBridge,

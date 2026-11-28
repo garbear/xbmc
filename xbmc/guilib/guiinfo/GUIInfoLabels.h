@@ -593,6 +593,7 @@ constexpr uint32_t SMARTHOME_TILT                    = 870;
 constexpr uint32_t SMARTHOME_TILT_STD_DEV            = 871;
 constexpr uint32_t SMARTHOME_SYSTEM_POWER            = 872;
 constexpr uint32_t SMARTHOME_INPUT_VOLTAGE           = 873;
+constexpr uint32_t SMARTHOME_CONTROLLER_BATTERY      = 874;
 
 constexpr int      SLIDESHOW_LABELS_START            = 900;
 constexpr uint32_t SLIDESHOW_FILE_NAME               = SLIDESHOW_LABELS_START;

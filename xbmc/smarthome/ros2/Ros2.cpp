@@ -83,6 +83,11 @@ std::shared_ptr<const PERIPHERALS::CPeripheral> CRos2::GetRemotePeripheral(
   return m_node ? m_node->GetRemotePeripheral(hostname, address) : nullptr;
 }
 
+std::optional<int> CRos2::GetControllerBattery(const std::string& hostname) const
+{
+  return m_node ? m_node->GetControllerBattery(hostname) : std::nullopt;
+}
+
 void CRos2::RegisterImageTopic(const ImageSubscriptionKey& subscription)
 {
   if (!m_node)

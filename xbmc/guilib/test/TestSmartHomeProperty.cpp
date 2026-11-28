@@ -175,6 +175,7 @@ TEST(TestSmartHomeProperty, Translation)
   EXPECT_NE(0, infoManager.TranslateString(
                    "SmartHome.System(station).Property(traction_voltage,float32,{:.1f} V)"));
   EXPECT_NE(0, infoManager.TranslateString("SmartHome.System(station).IsActive(2)"));
+  EXPECT_NE(0, infoManager.TranslateString("SmartHome.System(megapegasus).ControllerBattery"));
 }
 
 TEST(TestSmartHomeProperty, SystemTelemetryLabels)

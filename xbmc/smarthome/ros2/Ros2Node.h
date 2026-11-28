@@ -14,6 +14,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 
 class CThread;
@@ -64,6 +65,8 @@ public:
   std::shared_ptr<const PERIPHERALS::CPeripheral> GetRemotePeripheral(
       const std::string& hostname, const std::string& address) const;
 
+  std::optional<int> GetControllerBattery(const std::string& hostname) const;
+
   // GUI interface
   void RegisterImageTopic(CSmartHomeGuiBridge& guiBridge, const ImageSubscriptionKey& subscription);
   void UnregisterImageTopic(const ImageSubscriptionKey& subscription);
@@ -96,6 +99,7 @@ private:
 
   mutable std::mutex m_peripheralMutex;
   std::map<std::string, PeripheralSubscription> m_peripheralSubs;
+  std::string m_localHostname;
   std::string m_localPeripheralTopic;
   std::shared_ptr<rclcpp::TimerBase> m_discoveryTimer;
 

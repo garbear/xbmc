@@ -36,6 +36,7 @@ public:
   void Deinitialize() override;
   std::shared_ptr<const PERIPHERALS::CPeripheral> GetRemotePeripheral(
       const std::string& hostname, const std::string& address) const override;
+  std::optional<int> GetControllerBattery(const std::string& hostname) const override;
   void RegisterImageTopic(const ImageSubscriptionKey& subscription) override;
   void UnregisterImageTopic(const ImageSubscriptionKey& subscription) override;
   ISystemHealthHUD* GetSystemHealthHUD() const override;

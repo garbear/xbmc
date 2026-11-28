@@ -103,6 +103,7 @@ CRos2PeripheralSubscriber::~CRos2PeripheralSubscriber()
 void CRos2PeripheralSubscriber::Update(const std::vector<Info>& peripherals)
 {
   std::lock_guard lock(m_mutex);
+  m_controllerBattery.reset();
   std::set<std::string_view> connected;
   for (const auto& info : peripherals)
   {
@@ -118,7 +119,10 @@ void CRos2PeripheralSubscriber::Update(const std::vector<Info>& peripherals)
         device->SetBattery({});
       device = std::make_shared<CRemotePeripheral>(m_manager, ReadDevice(info), nullptr);
     }
-    device->SetBattery(ReadBattery(info));
+    const auto battery = ReadBattery(info);
+    device->SetBattery(battery);
+    if (!m_controllerBattery && device->Type() == PERIPHERAL_JOYSTICK && battery.level >= 0)
+      m_controllerBattery = battery.level;
   }
   std::erase_if(m_peripherals,
                 [&connected](const auto& entry)
@@ -137,4 +141,10 @@ std::shared_ptr<const CPeripheral> CRos2PeripheralSubscriber::GetPeripheral(
   std::lock_guard lock(m_mutex);
   const auto it = m_peripherals.find(address);
   return it != m_peripherals.end() ? it->second : nullptr;
+}
+
+std::optional<int> CRos2PeripheralSubscriber::GetControllerBattery() const
+{
+  std::lock_guard lock(m_mutex);
+  return m_controllerBattery;
 }

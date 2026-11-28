@@ -97,3 +97,33 @@ TEST_F(TestRos2PeripheralSubscriber, RemovesAndRecreatesDevicesFromFullScans)
   EXPECT_NE(disconnected, reconnected);
   EXPECT_EQ(PeripheralBattery{}, reconnected->GetBattery());
 }
+
+TEST_F(TestRos2PeripheralSubscriber, SelectsControllerBatteryInScanOrder)
+{
+  using Types = oasis_msgs::msg::PeripheralConstants;
+  CPeripherals manager(m_input, m_controllers);
+  CRos2PeripheralSubscriber subscriber(manager);
+  Info first;
+  first.type = Types::TYPE_JOYSTICK;
+  first.address = "z";
+  first.battery_state = Info::BATTERY_STATE_DISCHARGING;
+  first.battery_charge = 85;
+  Info second = first;
+  second.address = "a";
+  second.battery_state = Info::BATTERY_STATE_WIRED;
+  second.battery_charge = 0;
+  Info keyboard = first;
+  keyboard.type = Types::TYPE_KEYBOARD;
+  keyboard.address = "keyboard";
+
+  subscriber.Update({keyboard, first, second});
+  EXPECT_EQ(85, subscriber.GetControllerBattery());
+  first.battery_charge = 101;
+  subscriber.Update({keyboard, first, second});
+  EXPECT_EQ(0, subscriber.GetControllerBattery());
+  subscriber.Update({keyboard});
+  EXPECT_FALSE(subscriber.GetControllerBattery());
+  first.battery_charge = 100;
+  subscriber.Update({first});
+  EXPECT_EQ(100, subscriber.GetControllerBattery());
+}

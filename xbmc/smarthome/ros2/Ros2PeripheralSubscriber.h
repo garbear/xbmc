@@ -11,6 +11,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -33,10 +34,13 @@ public:
   void Update(const std::vector<oasis_msgs::msg::PeripheralInfo>& peripherals);
   std::shared_ptr<const PERIPHERALS::CPeripheral> GetPeripheral(const std::string& address) const;
 
+  std::optional<int> GetControllerBattery() const;
+
 private:
   class CRemotePeripheral;
   PERIPHERALS::CPeripherals& m_manager;
   mutable std::mutex m_mutex;
+  std::optional<int> m_controllerBattery;
   std::map<std::string, std::shared_ptr<CRemotePeripheral>> m_peripherals;
 };
 } // namespace KODI::SMART_HOME
