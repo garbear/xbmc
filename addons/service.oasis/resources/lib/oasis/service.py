@@ -16,6 +16,7 @@ from oasis.utils.weather_utils import WeatherUtils
 from oasis.windows.battery_hud import BatteryHUD
 from oasis.windows.camera_view import CameraView
 from oasis.windows.swellpatrol_hud import SwellPatrolHUD
+from oasis.windows.train_hud import TrainHUD
 from oasis.windows.ventura_hud import VenturaHUD
 
 
@@ -66,9 +67,7 @@ class OasisService:
                 "WeatherHUD.xml", addon_path, "default", "1080i", False
             )
         elif hostname == "megapegasus":
-            window = SwellPatrolHUD(
-                "TrainHUD.xml", addon_path, "default", "1080i", False
-            )
+            window = TrainHUD("TrainHUD.xml", addon_path, "default", "1080i", False)
         elif hostname == "macbook_vm":
             window = BatteryHUD("BatteryHUD.xml", addon_path, "default", "1080i", False)
         elif hostname == "patio":

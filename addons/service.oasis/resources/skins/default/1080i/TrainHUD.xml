@@ -76,10 +76,10 @@
 		</control>
 		<control type="group">
 			<description>Train sensor area for volts and power</description>
-			<height>464</height>
+			<height>538</height>
 			<bottom>20</bottom>
 			<left>20</left>
-			<width>680</width>
+			<width>715</width>
 			<control type="image">
 				<description>Train sensor content area background</description>
 				<top>-20</top>
@@ -97,10 +97,10 @@
 				<top>10</top>
 				<bottom>10</bottom>
 				<orientation>horizontal</orientation>
-				<itemlayout width="680" height="74">
+				<itemlayout width="715" height="74">
 					<include content="OasisTrainSensorListItemPower" />
 				</itemlayout>
-				<focusedlayout width="680" height="74">
+				<focusedlayout width="715" height="74">
 					<include content="OasisTrainSensorListItemPower" />
 				</focusedlayout>
 				<content>

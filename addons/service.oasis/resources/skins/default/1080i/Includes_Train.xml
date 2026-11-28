@@ -5,16 +5,16 @@
             <description>System name</description>
             <left>30</left>
             <label>$INFO[ListItem.Label]</label>
-            <font>font45</font>
+            <font>font45_title</font>
             <shadowcolor>text_shadow</shadowcolor>
             <align>left</align>
             <aligny>center</aligny>
         </control>
         <control type="label">
             <description>CPU Usage</description>
-            <right>1160</right>
+            <right>1110</right>
             <label>$INFO[ListItem.Property(smarthome.cpuutilization)]</label>
-            <font>font45</font>
+            <font>font45_title</font>
             <shadowcolor>text_shadow</shadowcolor>
             <align>right</align>
             <aligny>center</aligny>
@@ -23,9 +23,9 @@
         </control>
         <control type="label">
             <description>CPU Temperature</description>
-            <right>935</right>
+            <right>838</right>
             <label>$INFO[ListItem.Property(smarthome.cputemperature)]</label>
-            <font>font45</font>
+            <font>font45_title</font>
             <shadowcolor>text_shadow</shadowcolor>
             <align>right</align>
             <aligny>center</aligny>
@@ -34,9 +34,9 @@
         </control>
         <control type="label">
             <description>RAM Usage</description>
-            <right>720</right>
+            <right>565</right>
             <label>$INFO[ListItem.Property(smarthome.ramutilization)]</label>
-            <font>font45</font>
+            <font>font45_title</font>
             <shadowcolor>text_shadow</shadowcolor>
             <align>right</align>
             <aligny>center</aligny>
@@ -45,29 +45,18 @@
         </control>
         <control type="label">
             <description>Total RAM</description>
-            <right>490</right>
+            <right>292</right>
             <label>$INFO[ListItem.Property(smarthome.ramtotal)]</label>
-            <font>font45</font>
+            <font>font45_title</font>
             <shadowcolor>text_shadow</shadowcolor>
             <align>right</align>
             <aligny>center</aligny>
         </control>
         <control type="label">
             <description>Input voltage</description>
-            <right>260</right>
-            <label>$INFO[ListItem.Property(smarthome.inputvoltage)]</label>
-            <font>font45</font>
-            <shadowcolor>text_shadow</shadowcolor>
-            <align>right</align>
-            <aligny>center</aligny>
-            <visible>!String.IsEmpty(ListItem.Property(smarthome.isactive))</visible>
-            <animation effect="fade" time="1500">VisibleChange</animation>
-        </control>
-        <control type="label">
-            <description>System power</description>
             <right>20</right>
-            <label>$INFO[ListItem.Property(smarthome.systempower)]</label>
-            <font>font45</font>
+            <label>$INFO[ListItem.Property(smarthome.inputvoltage)]</label>
+            <font>font45_title</font>
             <shadowcolor>text_shadow</shadowcolor>
             <align>right</align>
             <aligny>center</aligny>
@@ -84,7 +73,6 @@
             <property name="smarthome.ramutilization">RAM %</property>
             <property name="smarthome.ramtotal">Total</property>
             <property name="smarthome.inputvoltage">Volts</property>
-            <property name="smarthome.systempower">Watts</property>
         </item>
         <!--
         <item>
@@ -102,7 +90,6 @@
             <property name="smarthome.ramutilization">$INFO[SmartHome.System(falcon).RAMUtilization]</property>
             <property name="smarthome.ramtotal">8 GB</property>
             <property name="smarthome.inputvoltage">$INFO[SmartHome.System(falcon).InputVoltage]</property>
-            <property name="smarthome.systempower">$INFO[SmartHome.System(falcon).SystemPower]</property>
         </item>
         <!--
         <item>
@@ -120,7 +107,6 @@
             <property name="smarthome.ramutilization">$INFO[SmartHome.System(oceanplatform).RAMUtilization]</property>
             <property name="smarthome.ramtotal">32 GB</property>
             <property name="smarthome.inputvoltage">$INFO[SmartHome.System(oceanplatform).InputVoltage]</property>
-            <property name="smarthome.systempower">$INFO[SmartHome.System(oceanplatform).SystemPower]</property>
         </item>
         <item>
             <label>Visual Cortex</label>
@@ -130,7 +116,6 @@
             <property name="smarthome.ramutilization">$INFO[SmartHome.System(vision).RAMUtilization]</property>
             <property name="smarthome.ramtotal">128 GB</property>
             <property name="smarthome.inputvoltage">$INFO[SmartHome.System(vision).InputVoltage]</property>
-            <property name="smarthome.systempower">$INFO[SmartHome.System(vision).SystemPower]</property>
         </item>
         <item>
             <label>Motor Control</label>
@@ -140,7 +125,6 @@
             <property name="smarthome.ramutilization">$INFO[SmartHome.System(station).RAMUtilization]</property>
             <property name="smarthome.ramtotal">8 GB</property>
             <property name="smarthome.inputvoltage">$INFO[SmartHome.System(station).InputVoltage]</property>
-            <property name="smarthome.systempower">$INFO[SmartHome.System(station).SystemPower]</property>
             <property name="smarthome.cameratopic">/oasis/station/image_raw</property>
         </item>
     </include>
@@ -234,6 +218,11 @@
         <item>
             <label>Load</label>
             <label2>$INFO[SmartHome.System(oceanplatform).BatteryLoad]</label2> <!-- 100 W -->
+            <property name="smarthome.isactive">$VAR[SmartHomeSystemOceanPlatformIsActive]</property>
+        </item>
+        <item>
+            <label>Controller</label>
+            <label2>$INFO[Window.Property(ControllerBattery)]</label2>
             <property name="smarthome.isactive">$VAR[SmartHomeSystemOceanPlatformIsActive]</property>
         </item>
     </include>
